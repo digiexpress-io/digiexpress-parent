@@ -42,6 +42,7 @@ public class FormDbImpl implements FormDb {
   public static class FormDbBuilder {
     private ObjectMapper objectMapper;
     private RestTemplate restTemplate;
+    private FormDbCache cache;
     
     public FormDbBuilder objectMapper(ObjectMapper objectMapper) {
       this.objectMapper = objectMapper;
@@ -51,12 +52,17 @@ public class FormDbImpl implements FormDb {
       this.restTemplate = restTemplate;
       return this;
     }
+    public FormDbBuilder cache(FormDbCache cache) {
+      this.cache = cache;
+      return this;
+    }
     
     public FormDbImpl build() {
       Objects.requireNonNull(objectMapper, () -> "objectMapper must be defined");
       Objects.requireNonNull(restTemplate, () -> "restTemplate must be defined");
       final var http = new HttpClientImpl(restTemplate, objectMapper);
-      return new FormDbImpl(ImmutableFormDbProps.builder().client(http).build(), "default");
+      final var formDbCache = cache != null ? cache : new FormDbCacheImpl();
+      return new FormDbImpl(ImmutableFormDbProps.builder().client(http).cache(formDbCache).build(), "default");
     }
   }
   
@@ -67,5 +73,6 @@ public class FormDbImpl implements FormDb {
   @Value.Immutable
   public interface FormDbProps {
     HttpClient getClient();
+    FormDbCache getCache();
   }
 }
