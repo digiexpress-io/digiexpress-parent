@@ -65,7 +65,7 @@ export const GInputUpload: React.FC<GInputUploadProps> = (initProps) => {
       error: GInputError,
       label: GInputLabel,
       adornment: GInputAdornment,
-      input: UploadInput,
+      input: props.readOnly ? ReadOnlyUpload : UploadInput,
     },
     slotProps: {
       error: { id, errors },
@@ -80,6 +80,28 @@ export const GInputUpload: React.FC<GInputUploadProps> = (initProps) => {
   </GInputUploadRoot>);
 }
 
+
+const ReadOnlyUpload: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) => {
+  const fileNames: string[] = props.value ? JSON.parse(props.value) : [];
+  return (
+    <Table>
+      <TableBody>
+        {fileNames.map((name, index) => (
+          <TableRow key={index}>
+            <TableCell>
+              <TextField
+                fullWidth
+                slotProps={{ input: { readOnly: true } }}
+                label={<FormattedMessage id="attachment.fileName" values={{ index: index + 1 }} />}
+                value={name}
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
 
 const UploadInput: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) => {  
 
@@ -153,7 +175,7 @@ const UploadInput: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) =>
         <TableRow>
           <TableCell align="right" colSpan={2}>
               <input type='file' id='file' multiple ref={inputFile} style={{ display: 'none' }} onChange={handleFileUpload} accept='.jpg, .jpeg, .png, .pdf' />
-              <IconButton disabled={props.disabled || props.readOnly} onClick={() => inputFile.current?.click()}>
+              <IconButton disabled={props.disabled} onClick={() => inputFile.current?.click()}>
               <AddIcon color="primary" />
             </IconButton>
           </TableCell>
@@ -174,7 +196,7 @@ const UploadInput: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) =>
             </TableCell>
             <TableCell align="right">
               <Tooltip title={<FormattedMessage id='attachment.remove' />}>
-                <IconButton disabled={props.readOnly} onClick={() => handleFileDelete(index)}>
+                <IconButton onClick={() => handleFileDelete(index)}>
                   <ClearIcon />
                 </IconButton>
               </Tooltip>

@@ -62,7 +62,7 @@ export const GInputInt: React.FC<GInputIntProps> = (initProps) => {
     slots: {
       error: GInputError,
       label: GInputLabel,
-      input: IntInput,
+      input: props.readOnly ? ReadOnlyInt : IntInput,
       adornment: GInputAdornment
     },
     slotProps: {
@@ -86,6 +86,10 @@ const DEFAULT_FORMAT: numbro.Format = {
 }
 
 
+
+const ReadOnlyInt: React.FC<GInputBaseAnyProps & GInputIntProps> = (props) => {
+  return <TextField value={props.value ?? ''} slotProps={{ input: { readOnly: true } }} />;
+}
 
 const IntInput: React.FC<GInputBaseAnyProps & GInputIntProps> = (props) => {
 
@@ -120,7 +124,6 @@ const IntInput: React.FC<GInputBaseAnyProps & GInputIntProps> = (props) => {
   return (<>
     <InputHidden id={props.id} value={value} format={finalFormat} onChange={props.onChange}/>
     <TextField disabled={props.disabled} value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0}
-      slotProps={{ input: { readOnly: props.readOnly } }}
     />
     </>
   )

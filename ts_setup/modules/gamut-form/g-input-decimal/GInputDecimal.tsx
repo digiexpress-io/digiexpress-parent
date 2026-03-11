@@ -62,7 +62,7 @@ export const GInputDecimal: React.FC<GInputDecimalProps> = (initProps) => {
     slots: {
       error: GInputError,
       label: GInputLabel,
-      input: DecimalInput,
+      input: props.readOnly ? ReadOnlyDecimal : DecimalInput,
       adornment: GInputAdornment
     },
     slotProps: {
@@ -86,6 +86,10 @@ const DEFAULT_FORMAT: numbro.Format = {
 }
 
 
+
+const ReadOnlyDecimal: React.FC<GInputBaseAnyProps & GInputDecimalProps> = (props) => {
+  return <TextField value={props.value ?? ''} slotProps={{ input: { readOnly: true } }} />;
+}
 
 const DecimalInput: React.FC<GInputBaseAnyProps & GInputDecimalProps> = (props) => {
   const [value, setValue] = React.useState(format(props.value));
@@ -122,7 +126,6 @@ const DecimalInput: React.FC<GInputBaseAnyProps & GInputDecimalProps> = (props) 
   return <>
     <InputHidden id={props.id} value={value} format={finalFormat} onChange={props.onChange} />
     <TextField disabled={props.disabled} value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0}
-      slotProps={{ input: { readOnly: props.readOnly } }}
     />
   </>
 }
