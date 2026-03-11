@@ -8,9 +8,9 @@ import { GInputAdornment } from '../g-input-adornment';
 
 
 import { GInputListRoot, useUtilityClasses, MUI_NAME } from './useUtilityClasses';
-import { GInputRadio } from './GInputRadio';
+import { GInputRadio, ReadOnlyRadio } from './GInputRadio';
 import { GInputListProps } from './g-input-list-types';
-import { GInputDropdown } from './GInputDropdown';
+import { GInputDropdown, ReadOnlyDropdown } from './GInputDropdown';
 import { GInputAutoComplete } from '../g-input-autocomplete';
 
 
@@ -34,12 +34,12 @@ export const GInputList: React.FC<GInputListProps> = (initProps) => {
   const InputComponent = (() => {
     switch (variant) {
       case 'list-radio':
-        return GInputRadio;
+        return props.readOnly ? ReadOnlyRadio : GInputRadio;
       case 'autocomplete':
-        return GInputListAutocomplete;
+        return props.readOnly ? ReadOnlyDropdown : GInputListAutocomplete;
       case 'list':
       default:
-        return GInputDropdown;
+        return props.readOnly ? ReadOnlyDropdown : GInputDropdown;
     }
   })();
 

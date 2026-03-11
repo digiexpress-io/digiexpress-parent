@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography, Button } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
 import { CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@mui/icons-material';
 
@@ -53,6 +53,29 @@ const Checkbox: React.FC<{
     </Button>)
 
 }
+
+export const ReadOnlyCheckboxList: React.FC<GInputBaseAnyProps & GInputMultilistProps> = (props) => {
+  const { datasource } = props;
+  const classes = useUtilityClasses(props.id, props.variant);
+  const value = props.value ?? [];
+
+  return (
+    <GInput className={classes.input}>
+      <div className={classes.list}>
+        {datasource.entries.map(({ key, value: label }) => {
+          const checked = value.includes(key);
+          return (
+            <Box key={key} className={classes.option}>
+              {checked ? <CheckBoxIcon className={classes.optionIcon} /> : <CheckBoxOutlineBlankIcon className={classes.optionIcon} />}
+              <Typography className={classes.optionTitle}>{label}</Typography>
+            </Box>
+          );
+        })}
+      </div>
+    </GInput>
+  );
+}
+
 
 export const CheckboxList: React.FC<GInputBaseAnyProps & GInputMultilistProps> = (props) => {
   const { datasource } = props;

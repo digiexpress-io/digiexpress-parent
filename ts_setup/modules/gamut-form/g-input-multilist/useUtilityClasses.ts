@@ -27,6 +27,17 @@ export const GInputMultilistRoot = styled('div', {
       boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
     } : {}),
 
+    ...(ownerState.readOnly ? {
+      '& .GInputMultilist-option': {
+        cursor: 'not-allowed',
+      },
+      '& .GInputMultilist-tags': {
+        display: 'flex',
+        flexWrap: 'wrap' as const,
+        gap: theme.spacing(0.5),
+      }
+    } : {}),
+
     ...(ownerState.disabled ? {
       '& .MuiInputBase-root.Mui-disabled': {
         backgroundColor: theme.palette.background.paper,
@@ -95,7 +106,8 @@ export const useUtilityClasses = (itemId: string, variant: string | undefined) =
     list: ['list'],
     optionTitle: ['optionTitle'],
     optionIcon: ['optionIcon'],
-    option: ['option']
+    option: ['option'],
+    tags: ['tags']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});

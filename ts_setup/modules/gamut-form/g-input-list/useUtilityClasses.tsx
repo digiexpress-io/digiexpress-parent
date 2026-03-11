@@ -6,6 +6,12 @@ export const MUI_NAME = 'GInputList';
 
 
 
+interface OwnerState {
+  variant: string;
+  disabled: boolean;
+  readOnly?: boolean;
+}
+
 // ------------------- MATERIAL INFRA, ALLOWS STYLE OVERRIDES --------------
 export const GInputListRoot = styled('div', {
   name: MUI_NAME,
@@ -16,7 +22,25 @@ export const GInputListRoot = styled('div', {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
+})<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
+
+  if (ownerState.readOnly) {
+    return {
+      '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+      '& .MuiOutlinedInput-root': { backgroundColor: 'transparent' },
+      '& .MuiInputBase-input': {
+        cursor: 'not-allowed',
+        color: theme.palette.text.primary,
+        ...theme.typography.body1,
+      },
+      '& .GInputList-option': {
+        cursor: 'not-allowed',
+        display: 'flex',
+        alignItems: 'center',
+        gap: theme.spacing(1),
+      },
+    }
+  }
 
   if (ownerState.disabled) {
     return {

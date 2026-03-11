@@ -13,6 +13,9 @@ export const useUtilityClasses = (itemId: string) => {
     root: ['root', itemId],
     body: ['body'],
     label: ['label'],
+    labelContent: ['labelContent'],
+    labelRow: ['labelRow'],
+    requiredMark: ['requiredMark'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -71,6 +74,21 @@ export const GInputSurveyQuestionLabel = styled('div', {
     fontWeight: '600',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+
+    [`& .${MUI_NAME}-labelContent`]: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    [`& .${MUI_NAME}-labelRow`]: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+    },
+    [`& .${MUI_NAME}-requiredMark`]: {
+      display: 'flex',
+      alignItems: 'center',
+      marginLeft: theme.spacing(0.5),
+    },
   };
 });
