@@ -75,4 +75,8 @@ public class FormDbImpl implements FormDb {
     HttpClient getClient();
     FormDbCache getCache();
   }
+
+  public FormDbProps getFormDbProps() {
+    return formDbProps;
+  }
 }

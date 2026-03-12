@@ -2,12 +2,12 @@ package io.resys.limaone.tests;
 
 import java.time.Duration;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import io.dialob.api.form.Form;
-import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.limaone.spi.dialob.FormDbImpl;
 import io.resys.limaone.tests.support.TestTemplate;
 import io.resys.thena.test.DialobTest;
@@ -20,6 +20,7 @@ import io.vertx.core.json.JsonObject;
 @DialobTest( enabled = true )
 public class FormTest {
 
+  @SuppressWarnings("unused")
   @Test @DialobResetDB
   public void test(FormUrl formUrl) {
     final var formDb = getFormDb(formUrl);
@@ -37,9 +38,46 @@ public class FormTest {
         .formName(created.getName()).formVersion("my-first-tag")
         .build()
         .await().atMost(Duration.ofMinutes(1));
+    
+    final var tags = formDb.withTenant()
+        .formTagQuery().findAll()
+        .collect().asList()
+        .await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(1, tags.size(), "Expected exactly 1 created tag");
+    
+    
+    // form queries
+    {
+    final var form_byId = formDb.withTenant()
+        .formQuery().formId(created.getId()).findOne()
+        .await().atMost(Duration.ofMinutes(1));
+    Assertions.assertTrue(form_byId.isPresent(), "Expected exactly 1 created form by technical id");
+  
+    final var formByTag = formDb.withTenant()
+      .formQuery().formTag(created.getName(), "my-first-tag").findOne()
+      .await().atMost(Duration.ofMinutes(1));
+    Assertions.assertTrue(formByTag.isPresent(), "Expected exactly 1 created form by name and tag");
+    }
+    
+    // form queries without cache
+    {
+      formDb.getFormDbProps().getCache().evictAll();
+      final var form_byId = formDb.withTenant()
+          .formQuery().formId(created.getId()).findOne()
+          .await().atMost(Duration.ofMinutes(1));
+      Assertions.assertTrue(form_byId.isPresent(), "Expected exactly 1 created form by technical id");
+      
+      formDb.getFormDbProps().getCache().evictAll();
+      final var formByTag = formDb.withTenant()
+        .formQuery().formTag(created.getName(), "my-first-tag").findOne()
+        .await().atMost(Duration.ofMinutes(1));
+      Assertions.assertTrue(formByTag.isPresent(), "Expected exactly 1 created form by name and tag");
+    }
+    
+    
   }
   
-  private FormDb getFormDb(FormUrl formUrl) {
+  private FormDbImpl getFormDb(FormUrl formUrl) {
     final var restTemplate = new RestTemplate();
     restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(formUrl.getUrl() + "/api"));
     
