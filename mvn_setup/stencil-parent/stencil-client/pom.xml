@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.digiexpress</groupId>
     <artifactId>stencil-parent</artifactId>
-    <version>0.y-SNAPSHOT</version>
+    <version>5.3.4</version>
   </parent>
   <name>stencil-client</name>
   <artifactId>stencil-client</artifactId>
