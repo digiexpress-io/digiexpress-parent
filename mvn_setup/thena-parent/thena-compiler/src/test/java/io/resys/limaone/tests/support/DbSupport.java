@@ -203,7 +203,7 @@ public class DbSupport {
     final var workerTimeout = Duration.ofMinutes(1);
     final var workerPool = Infrastructure.getDefaultWorkerPool();
     return ImmutableAuthoringConfig.builder()
-        .astParser(AST_ParserImpl.builder().dev(true).formDb(formDb).build())
+        .astParser(AST_ParserImpl.builder().dev(true).build())
         .workerPool(workerPool)
         .workerTimeout(workerTimeout)
         .persistence(new WorldPersistenceFs(formDb, client, workerPool, workerTimeout))

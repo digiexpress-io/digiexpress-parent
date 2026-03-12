@@ -80,7 +80,7 @@ public class ArticleWorkflowParserImpl implements ArticleWorkflowParser {
     if(StringUtils.isBlank(workflow.getFormName()) || StringUtils.isBlank(workflow.getFormTag())) {
       errors.add(ImmutableModelError.builder().msg("Form name and tag must be defined!").build());
     } else {
-      final var dependencyId = getFormDep(workflow.getFormName(), workflow.getFormTag());
+      final var dependencyId = DialobFormParserImpl.getFormDep(workflow.getFormName(), workflow.getFormTag());
       dependencies.add(ImmutableDependency_AST.builder()
           .dependencyId(dependencyId)
           .type(BodyType.DIALOB_FORM)
@@ -98,7 +98,5 @@ public class ArticleWorkflowParserImpl implements ArticleWorkflowParser {
         .build();
   }
 
-  public static String getFormDep(String formName, String tagName) {
-    return formName + "/" + tagName;
-  }
+
 }

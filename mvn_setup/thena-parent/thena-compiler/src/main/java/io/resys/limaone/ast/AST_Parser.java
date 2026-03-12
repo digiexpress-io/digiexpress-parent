@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 
 import io.resys.limaone.model.ArticleWorkflow;
 import io.resys.limaone.model.DecisionTable.DecisionStatement;
+import io.resys.limaone.model.DialobForm;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
 
@@ -28,9 +29,7 @@ public interface AST_Parser {
   }
   
   interface DialobFormParser {
-    DialobFormParser formId(String formId);
-    DialobFormParser formName(String formName);
-    DialobFormParser formVersion(String formVersion);
+    DialobFormParser model(Model<DialobForm> workflow);
     DialobForm_AST parse();
   }
   

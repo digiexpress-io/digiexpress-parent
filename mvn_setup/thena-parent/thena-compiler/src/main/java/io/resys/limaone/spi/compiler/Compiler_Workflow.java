@@ -46,7 +46,6 @@ public class Compiler_Workflow implements CompilableUnit {
             Stream.concat(artifact.getErrors().stream(), extraErrors.stream()).toList(), 
             artifact.getAssociations());
       }
-    };
-    
+    }; 
   }
 }
