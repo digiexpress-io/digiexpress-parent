@@ -34,10 +34,12 @@ public class CompilerImpl implements Compiler {
   public BundleBuilder compile(ModelWorld world) {
     
     final Bundler bundler = new BundlerImpl();
+
+    // forms
+    final Stream<CompilableUnit> forms = world.getForms().values().stream().map(wk -> new Compiler_Dialob(world, wk));
     
-    // dialobs
-    final Stream<CompilableUnit> dialobs = world.getArticleWorkflows()
-      .values().stream().map(wk -> new Compiler_Dialob(world, wk));
+    // workflows
+    final Stream<CompilableUnit> workflows = world.getArticleWorkflows().values().stream().map(wk -> new Compiler_Dialob(world, wk));
 
     // main stencil article
     final Stream<CompilableUnit> article = world.getArticles().isEmpty() && world.getArticleWorkflows().isEmpty() ?
@@ -53,7 +55,7 @@ public class CompilerImpl implements Compiler {
     final Stream<CompilableUnit> decisions = world.getDecisionTables().values().stream().map(f -> new Compiler_DecisionTable(astParser, world, f));
     
     // combine all to single stream
-    final Stream<CompilableUnit> itemsToCompile =  Stream.of(dialobs, article, flows, flowTasks, decisions).flatMap(Function.identity());
+    final Stream<CompilableUnit> itemsToCompile =  Stream.of(forms, workflows, article, flows, flowTasks, decisions).flatMap(Function.identity());
     
     // bundle all 
     return Multi.createFrom().items(itemsToCompile)

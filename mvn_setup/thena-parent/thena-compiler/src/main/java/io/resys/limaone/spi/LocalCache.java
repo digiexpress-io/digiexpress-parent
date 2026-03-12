@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
+import io.resys.limaone.ast.ArticleWorkflow_AST;
 import io.resys.limaone.ast.DecisionTable_AST;
 import io.resys.limaone.ast.FlowTask_AST;
 import io.resys.limaone.ast.Flow_AST;
@@ -18,8 +19,17 @@ public class LocalCache {
   private static final ConcurrentHashMap<Flow_AST_CacheKey, Flow_AST> FLOW_CACHE = new ConcurrentHashMap<>();
   private static final ConcurrentHashMap<FlowTask_AST_CacheKey, FlowTask_AST> FLOW_TASK_CACHE = new ConcurrentHashMap<>();
   private static final ConcurrentHashMap<Bundle_CacheKey, Bundle> BUNDLE_CACHE = new ConcurrentHashMap<>();
+  
+  private static final ConcurrentHashMap<ArticleWorkflow_AST_CacheKey, ArticleWorkflow_AST> WK_CACHE = new ConcurrentHashMap<>();
+  
 
-
+  public static ArticleWorkflow_AST computeIfAbsent(
+      ArticleWorkflow_AST_CacheKey key, 
+      Function<ArticleWorkflow_AST_CacheKey, ArticleWorkflow_AST> mappingFunction) {
+    
+    return WK_CACHE.computeIfAbsent(key, mappingFunction);
+  }
+  
   public static Bundle computeIfAbsent( 
       Bundle_CacheKey key, 
       Function<Bundle_CacheKey, Bundle> mappingFunction) {
@@ -162,6 +172,33 @@ public class LocalCache {
     @Override
     public String toString() {
       return "Bundle_CacheKey{" + key + "}";
+    }
+  }
+  
+  public static class ArticleWorkflow_AST_CacheKey {
+    private final String key;
+    private final int hashCode;
+
+    public ArticleWorkflow_AST_CacheKey(String input) {
+      this.key = input != null ? input : "";
+      this.hashCode = this.key.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof ArticleWorkflow_AST_CacheKey)) return false;
+      return key.equals(((ArticleWorkflow_AST_CacheKey) o).key);
+    }
+
+    @Override
+    public int hashCode() {
+      return hashCode;
+    }
+
+    @Override
+    public String toString() {
+      return "ArticleWorkflow_AST_CacheKey{" + key + "}";
     }
   }
   

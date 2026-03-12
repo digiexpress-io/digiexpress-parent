@@ -60,11 +60,11 @@ public class Compiler_FlowDepsValidator {
   /**
    * Walk the entire Flow AST starting from the root statement
    */
-  public ValidatorResult walk() {
+  public List<ModelError> walk() {
     artifact.getChildDeps().forEach(dep -> childrenByName.put(dep.getDependencyId(), dep));
     visit(ast.getStatement(), NO_PROPS);
     toValidate.forEach(this::visitDepToValidate);
-    return REACHED_END;
+    return errors;
   }
   
 

@@ -34,6 +34,7 @@ public class WorkflowTest extends DbSupport {
       .astParser(authoring.getConfig().getAstParser())
       .build();
     
+    // magic asset resource... has all we need to run dialob/wrench/stencil
     final var world = authoring.worldQuery().findAllSync();
     final var bundle = compiler.compile(world);
   }

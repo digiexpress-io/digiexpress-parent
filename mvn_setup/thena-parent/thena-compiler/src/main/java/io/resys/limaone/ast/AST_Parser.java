@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import org.immutables.value.Value;
 
+import io.resys.limaone.model.ArticleWorkflow;
 import io.resys.limaone.model.DecisionTable.DecisionStatement;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
@@ -13,11 +14,18 @@ import io.resys.limaone.model.Model.ModelWorld;
 public interface AST_Parser {
 
   ArticleParser parseArticles();
+  ArticleWorkflowParser parseArticleWorkflow();
+  
   FlowParser parseFlow();
   FlowTaskParser parseFlowTask();
   DecsionTableParser parseDecisionTable();
   DialobFormParser parseDialobForm();
   
+  interface ArticleWorkflowParser {
+    ArticleWorkflowParser onDependency(Consumer<Dependency_AST> dependency);
+    ArticleWorkflowParser model(Model<ArticleWorkflow> workflow);
+    ArticleWorkflow_AST parse();
+  }
   
   interface DialobFormParser {
     DialobFormParser formId(String formId);
@@ -53,7 +61,6 @@ public interface AST_Parser {
   interface Dependency_AST {
     String getDependencyId();
     Model.BodyType getType();
-    
     Optional<Simple_AST> getArtifactAst();
   }
 }

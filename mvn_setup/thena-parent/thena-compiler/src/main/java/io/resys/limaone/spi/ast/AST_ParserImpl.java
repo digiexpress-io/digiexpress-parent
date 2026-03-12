@@ -38,8 +38,15 @@ public class AST_ParserImpl implements AST_Parser {
   public DecsionTableParser parseDecisionTable() {
     return new DecsionTableParserImpl(props);
   }
-
-  
+  @Override
+  public DialobFormParser parseDialobForm() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  @Override
+  public ArticleWorkflowParser parseArticleWorkflow() {
+    return new ArticleWorkflowParserImpl(props);
+  }
   @Value.Immutable
   public interface AST_ParserProps {
     boolean isDev();
@@ -84,12 +91,5 @@ public class AST_ParserImpl implements AST_Parser {
     public AST_ParserImpl build() {
       return new AST_ParserImpl(props());
     }
-  }
-
-
-  @Override
-  public DialobFormParser parseDialobForm() {
-    // TODO Auto-generated method stub
-    return null;
   }
 }
