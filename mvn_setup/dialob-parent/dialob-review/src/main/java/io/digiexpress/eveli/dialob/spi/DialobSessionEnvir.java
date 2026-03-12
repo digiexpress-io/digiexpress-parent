@@ -105,7 +105,15 @@ public class DialobSessionEnvir implements FormFinder {
       valueSetId -> formData.getValueSets().stream()
         .filter(valueSet -> valueSet.getId().equals(valueSetId.getValueSetId()))
         .findFirst()
-        .map(valueSet -> valueSet.getEntries().stream().map(entry -> ValueSetState.Entry.of(entry.getKey(), entry.getValue(), true)).toList())
+        .map(valueSet -> {
+          if(valueSet.getEntries() == null) {
+            return null;
+          }
+          
+          return valueSet.getEntries().stream()
+              .map(entry -> ValueSetState.Entry.of(entry.getKey(), entry.getValue(), true))
+              .toList();
+        })
         .orElse(Collections.emptyList()),
         
       formData.getMetadata().getCompleted(),

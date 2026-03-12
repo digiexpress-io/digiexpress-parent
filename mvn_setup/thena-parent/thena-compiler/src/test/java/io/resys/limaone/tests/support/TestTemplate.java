@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import com.google.common.hash.Hashing;
 
@@ -35,7 +37,9 @@ import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.decisiontable.DecisionCSTToCommands;
 import io.resys.limaone.spi.ast.decisiontable.MutableYamlDecision;
 import io.resys.limaone.spi.compiler.CompilerImpl;
+import io.resys.limaone.spi.dialob.FormDbImpl;
 import io.resys.limaone.spi.program.DefaultRuntime;
+import io.resys.thena.test.DialobTest.FormUrl;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -236,5 +240,17 @@ public class TestTemplate {
     public static Deps ftx(String syntax) {
       return new Deps(BodyType.FLOW_TASK, UUID.randomUUID().toString(), syntax);
     }
+  }
+  
+  
+  
+  public static FormDbImpl getFormDb(FormUrl formUrl) {
+    final var restTemplate = new RestTemplate();
+    restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(formUrl.getUrl() + "/api"));
+    
+    return FormDbImpl.builder()
+        .restTemplate(restTemplate)
+        .objectMapper(io.resys.thena.jackson.QuarkusJacksonJsonCodec.mapper())
+        .build();
   }
 }

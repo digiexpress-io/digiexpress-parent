@@ -1,5 +1,7 @@
 package io.resys.limaone.persistence.world;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import io.resys.limaone.model.Article;
@@ -8,8 +10,10 @@ import io.resys.limaone.model.ArticlePage;
 import io.resys.limaone.model.ArticleTemplate;
 import io.resys.limaone.model.ArticleWorkflow;
 import io.resys.limaone.model.DecisionTable;
+import io.resys.limaone.model.Deployment;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.FlowTask;
+import io.resys.limaone.model.ImmutableDeployment;
 import io.resys.limaone.model.ImmutableModel;
 import io.resys.limaone.model.ImmutableModelWorld;
 import io.resys.limaone.model.Locale;
@@ -20,6 +24,7 @@ import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.thena.fs.entities.Blob;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.entities.Tag;
 import io.vertx.core.json.JsonObject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +33,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WorldPersistenceMapper {
 
-  
   public static ModelWorld mapFrom(Ref ref) {
+    return mapFrom(ref, Collections.emptyList());
+  }
+  public static ModelWorld mapFrom(Ref ref, List<Tag> tags) {
     final var builder = ImmutableModelWorld.builder()
         .refId(ref.getId())
         .commitId(ref.getCommitId())
@@ -114,10 +121,35 @@ public class WorldPersistenceMapper {
 //          }
           default: return;
         }
-
     });
+    
+    for(final var tag : tags) {
+      final var deployment = ImmutableDeployment.builder()
+          .fromCommitId(tag.getCommitId())
+          .fromRefId(tag.getRefId().orElse(""))
+          .name(tag.getTagName())
+          .external(false)
+          .externalId(tag.getExternalId().orElse(null))
+          .cockpitId(null)
+          .createdBy(tag.getTagAuthor())
+          .createdAt(tag.getTagCreatedAt())
+          .description(tag.getTagDescription().orElse(""))
+          .status(Deployment.BundleStatus.UNKNOWN)
+          .build();
+
+      final Model<Deployment> model = ImmutableModel.<Deployment>builder()
+          .id(tag.getId())
+          .bodyHash(tag.getCommitId())
+          .bodyType(BodyType.DEPLOYMENT)
+          .body(deployment)
+          .build();
+      builder.putDeployments(tag.getId(), model);
+    }
     return builder.build();
   }
+  
+  
+  
   
   @Getter
   private static class ProxyBlob {

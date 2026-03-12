@@ -28,7 +28,7 @@ public class WorldBuilderImpl implements WorldBuilder {
   private final WorldPersistenceLogger logger = new WorldPersistenceLogger();
   private final List<String> blobTypes = new ArrayList<>();
   
-  private String branchName = "main";
+  public static String branchName = "main";
   private String commitId;
   private String author;
   private OffsetDateTime createdAt;

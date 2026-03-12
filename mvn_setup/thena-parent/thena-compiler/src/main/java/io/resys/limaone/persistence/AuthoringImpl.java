@@ -42,6 +42,11 @@ import lombok.RequiredArgsConstructor;
 public class AuthoringImpl implements Authoring {
 
   private final AuthoringConfig config;
+
+  @Override
+  public WorldQuery worldQuery() {
+    return config.getPersistence().worldQuery();
+  }
   
   @Override
   public ModifyModel modifyModel() {
@@ -140,4 +145,9 @@ public class AuthoringImpl implements Authoring {
     AST_Parser getAstParser();
     Supplier<String> getAuthor();
   }
+
+  public AuthoringConfig getConfig() {
+    return config;
+  }
+
 }

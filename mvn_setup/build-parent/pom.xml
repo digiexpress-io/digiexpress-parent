@@ -21,7 +21,7 @@
     <compiler.plugin.version>3.13.0</compiler.plugin.version>
     <surefire.plugin.version>3.5.4</surefire.plugin.version>
 
-    <spring.boot.version>3.5.6</spring.boot.version>
+    <spring.boot.version>3.5.11</spring.boot.version>
     <spring.security.version>6.5.5</spring.security.version>
 
     <spring.cloud.version>2025.0.0</spring.cloud.version>

@@ -15,6 +15,7 @@ import io.resys.limaone.persistence.AuthoringImpl;
 import io.resys.limaone.persistence.ImmutableAuthoringConfig;
 import io.resys.limaone.persistence.world.WorldPersistenceFs;
 import io.resys.limaone.spi.ast.AST_ParserImpl;
+import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant;
@@ -32,6 +33,7 @@ import io.resys.thena.test.ThenaTest;
 import io.resys.thena.test.ThenaTestDbConfig;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -191,13 +193,20 @@ public class DbSupport {
         .build();
     
   }
+
   
   public AuthoringImpl.AuthoringConfig createConfig() {
+    return createConfig(null);
+  }
+  
+  public AuthoringImpl.AuthoringConfig createConfig(@Nullable FormDb formDb) {
+    final var workerTimeout = Duration.ofMinutes(1);
+    final var workerPool = Infrastructure.getDefaultWorkerPool();
     return ImmutableAuthoringConfig.builder()
-        .astParser(AST_ParserImpl.builder().dev(true).build())
-        .workerPool(Infrastructure.getDefaultWorkerPool())
-        .workerTimeout(Duration.ofMinutes(1))
-        .persistence(new WorldPersistenceFs(client))
+        .astParser(AST_ParserImpl.builder().dev(true).formDb(formDb).build())
+        .workerPool(workerPool)
+        .workerTimeout(workerTimeout)
+        .persistence(new WorldPersistenceFs(client, workerPool, workerTimeout))
         .author(() -> "sam vimes")
         .build();
   }

@@ -1,5 +1,7 @@
 package io.resys.limaone.spi.ast;
 
+import java.util.Optional;
+
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer;
 import org.immutables.value.Value;
@@ -9,6 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import groovy.lang.GroovyClassLoader;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.spi.compiler.groovy.GroovyCompilationCustomizer;
+import io.resys.limaone.spi.dialob.FormDb;
+import io.resys.limaone.spi.dialob.FormDb_Empty;
 import io.resys.limaone.yaml.YamlMapper;
 import lombok.RequiredArgsConstructor;
 
@@ -41,6 +45,7 @@ public class AST_ParserImpl implements AST_Parser {
     boolean isDev();
     GroovyClassLoader getGroovy();
     ObjectMapper getYaml();
+    FormDb getFormDb();
   }
   
   
@@ -51,7 +56,12 @@ public class AST_ParserImpl implements AST_Parser {
   
   public static class Builder {
     private boolean dev;
-    
+    private FormDb formDb;
+
+    public Builder formDb(FormDb formDb) {
+      this.formDb = formDb;
+      return this;
+    }
     public Builder dev(boolean dev) {
       this.dev = dev;
       return this;
@@ -63,7 +73,12 @@ public class AST_ParserImpl implements AST_Parser {
       groovyConfig.addCompilationCustomizers(new GroovyCompilationCustomizer());
       groovyConfig.addCompilationCustomizers(new ASTTransformationCustomizer(groovy.transform.CompileStatic.class));
       final var groovy = new GroovyClassLoader(Thread.currentThread().getContextClassLoader(), groovyConfig);
-      return ImmutableAST_ParserProps.builder().groovy(groovy).isDev(dev).yaml(new YamlMapper().unwrap()).build();
+      return ImmutableAST_ParserProps.builder()
+          .groovy(groovy)
+          .isDev(dev)
+          .yaml(new YamlMapper().unwrap())
+          .formDb(Optional.ofNullable(formDb).orElseGet(() -> new FormDb_Empty()))
+          .build();
     }
     
     public AST_ParserImpl build() {

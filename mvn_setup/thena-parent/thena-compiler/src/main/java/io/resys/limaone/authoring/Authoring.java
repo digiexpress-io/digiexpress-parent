@@ -2,13 +2,27 @@ package io.resys.limaone.authoring;
 
 import java.time.OffsetDateTime;
 
+import io.resys.limaone.model.Model.BodyType;
+import io.resys.limaone.model.Model.ModelWorld;
+import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
+
+
 
 public interface Authoring {
 
+  WorldQuery worldQuery();
+  
   ModifyModel modifyModel();
   NewModel newModel();
   DeleteModel deleteModel();
+  
+  
+  interface WorldQuery {
+    WorldQuery docTypes(BodyType ... types); // narrow down some types... otherwise queries all 
+    Uni<ModelWorld> findAll();
+    ModelWorld findAllSync();
+  }
   
   
   interface ModifyModel {
@@ -54,7 +68,7 @@ public interface Authoring {
     @Nullable OffsetDateTime getCreatedAt();
   }
   
-  
+  // marker interface
   interface AuthoringModelProps {
  
   }
