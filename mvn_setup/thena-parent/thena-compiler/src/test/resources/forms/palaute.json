@@ -1,0 +1,2549 @@
+[
+  {
+    "_id": "ed9b7986e8dd40a61a1a44e36cb6000d",
+    "_rev": "456",
+    "name": "testi1",
+    "data": {
+      "familyWithChildrenList": {
+        "id": "familyWithChildrenList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "youthServiceMainList in ('familyWithChildren') ",
+        "valueSetId": "vs9"
+      },
+      "privateDayCareList": {
+        "id": "privateDayCareList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "preschoolMainList in('privateDayCare')",
+        "valueSetId": "vs141111"
+      },
+      "communicationGroup": {
+        "id": "communicationGroup",
+        "type": "group",
+        "items": [
+          "note12",
+          "communicationMainList"
+        ],
+        "activeWhen": "mainList in ('communication') and mainList is answered\n",
+        "props": {
+          "columns": 1
+        }
+      },
+      "employmentList": {
+        "id": "employmentList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "employmentImmigrationMainList in ('employment') ",
+        "valueSetId": "vs9211111"
+      },
+      "schoolMainList": {
+        "id": "schoolMainList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse aihe"
+        },
+        "required": "true",
+        "valueSetId": "vs811"
+      },
+      "constructionMainList": {
+        "id": "constructionMainList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse aihe"
+        },
+        "required": "true",
+        "valueSetId": "vs11"
+      },
+      "freeTimeCultureMainList": {
+        "id": "freeTimeCultureMainList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse aihe"
+        },
+        "required": "true",
+        "valueSetId": "vs10"
+      },
+      "preschoolMainList": {
+        "id": "preschoolMainList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse aihe"
+        },
+        "required": "true",
+        "valueSetId": "vs13"
+      },
+      "highSchoolList": {
+        "id": "highSchoolList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "schoolMainList in ('highSchool') ",
+        "valueSetId": "vs9111"
+      },
+      "streetMaintServiceList": {
+        "id": "streetMaintServiceList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "constructionMainList = 'streetMaintService'",
+        "valueSetId": "vs411"
+      },
+      "map": {
+        "id": "map",
+        "type": "group",
+        "items": [
+          "address"
+        ],
+        "activeWhen": "mainList is answered",
+        "props": {
+          "columns": 1
+        }
+      },
+      "communityPlanningList": {
+        "id": "communityPlanningList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "constructionMainList = 'communityPlanning'",
+        "valueSetId": "vs41111111"
+      },
+      "otherPreschoolList": {
+        "id": "otherPreschoolList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "preschoolMainList in('otherPreschool')",
+        "valueSetId": "vs1411"
+      },
+      "afternoonActivityList": {
+        "id": "afternoonActivityList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "schoolMainList in ('afternoonActivity') ",
+        "valueSetId": "vs921"
+      },
+      "feedBackTxt": {
+        "id": "feedBackTxt",
+        "type": "text",
+        "view": "textBox",
+        "label": {
+          "fi": "Kuvaus"
+        },
+        "required": "true"
+      },
+      "preschoolEducationGroup": {
+        "id": "preschoolEducationGroup",
+        "type": "group",
+        "items": [
+          "note10",
+          "preschoolMainList",
+          "publicPreschoolList",
+          "muncipalityPreschoolList",
+          "otherPreschoolList",
+          "privateDayCareList"
+        ],
+        "activeWhen": "mainList in ('preschoolEducation') and mainList is answered ",
+        "props": {
+          "columns": 1
+        }
+      },
+      "note3111": {
+        "id": "note3111",
+        "type": "note",
+        "label": {
+          "fi": "# Työllisyys, työikäiset, ikääntyneet ja maahanmuuttajat"
+        }
+      },
+      "note10": {
+        "id": "note10",
+        "type": "note",
+        "label": {
+          "fi": "# Varhaiskasvatus ja esiopetus"
+        }
+      },
+      "group1": {
+        "id": "group1",
+        "type": "group",
+        "label": {
+          "fi": "MINKÄLAISESTA PALAUTTEESTA ON KYSE?"
+        },
+        "items": [
+          "typeOfFeedback",
+          "feedBackTitle",
+          "feedBackTxt",
+          "attachment",
+          "text2"
+        ],
+        "props": {
+          "columns": 1
+        }
+      },
+      "group2": {
+        "id": "group2",
+        "type": "group",
+        "label": {
+          "fi": ""
+        },
+        "items": [
+          "group1",
+          "group4"
+        ],
+        "activeWhen": "mainList is answered and mainList is answered",
+        "props": {
+          "border": "true",
+          "columns": 1
+        }
+      },
+      "group3": {
+        "id": "group3",
+        "type": "group",
+        "label": {
+          "fi": "Anna meille palautetta tai vinkkaa kehitysehdotus"
+        },
+        "items": [
+          "note2",
+          "authentication",
+          "note6",
+          "mainList"
+        ],
+        "props": {
+          "border": true,
+          "columns": 1
+        }
+      },
+      "group4": {
+        "id": "group4",
+        "type": "group",
+        "label": {
+          "fi": "JULKAISULUPA JA KÄYTTÖEHDOT"
+        },
+        "items": [
+          "publicAnswerAllowed",
+          "group5",
+          "boolean11"
+        ],
+        "props": {
+          "columns": 1
+        }
+      },
+      "group5": {
+        "id": "group5",
+        "type": "group",
+        "label": {
+          "fi": "Käyttöehdot"
+        },
+        "items": [
+          "note7"
+        ],
+        "props": {
+          "border": "true",
+          "columns": "1",
+          "noPrint": "true",
+          "collapsible": "true"
+        }
+      },
+      "note11": {
+        "id": "note11",
+        "type": "note",
+        "label": {
+          "fi": "# Kaupunkiympäristö, rakentaminen ja asuminen"
+        },
+        "description": {
+          "fi": "tähän myös jotain"
+        }
+      },
+      "note12": {
+        "id": "note12",
+        "type": "note",
+        "label": {
+          "fi": "# Viestintä ja markkinointi"
+        }
+      },
+      "note13": {
+        "id": "note13",
+        "type": "note",
+        "label": {
+          "fi": "# Yhteistyö, elinkeinot ja matkailu"
+        }
+      },
+      "note14": {
+        "id": "note14",
+        "type": "note",
+        "label": {
+          "fi": "Palautelomake on tarkoitettu yleisluontoisten yhteydenottojen tekemiseen. Palautteen kuvaukseen ei tule koskaan kirjata yksityisyyden suojan tai tietosuojan alaista tietoa, kuten henkilön nimiä, henkilötunnuksia tai muita henkilötietoja kuten alaikäisen tai pankkitilin numeroita tai tietoa terveydestä. \n\nHuomioi myös, että henkilökohtaista asiointia ei hoideta palautepalvelussa. Palautelomakkeen kautta ei voi antaa virallista mielipidettä tai muistutusta nähtävillä olevista kaavahankkeista tai katu- ja puistosuunnitelmista."
+        },
+        "activeWhen": "mainList is answered",
+        "props": {
+          "noPrint": "true"
+        }
+      },
+      "feedBackTitle": {
+        "id": "feedBackTitle",
+        "type": "text",
+        "view": "text",
+        "label": {
+          "fi": "Otsikko"
+        },
+        "required": "true",
+        "defaultValue": "Default text here"
+      },
+      "note141": {
+        "id": "note141",
+        "type": "note",
+        "label": {
+          "fi": "Palaute välitetään suoraan alueurakoitsijalle"
+        },
+        "activeWhen": "mainList in ('roadMaintance')",
+        "props": {
+          "noPrint": "true"
+        }
+      },
+      "sportVenuesList": {
+        "id": "sportVenuesList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "exerciseMainList in ('sportVenues') ",
+        "valueSetId": "vs911"
+      },
+      "employmentImmigrationMainList": {
+        "id": "employmentImmigrationMainList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse aihe"
+        },
+        "required": "true",
+        "valueSetId": "vs8111"
+      },
+      "questionnaire": {
+        "id": "questionnaire",
+        "type": "questionnaire",
+        "items": [
+          "page1"
+        ]
+      },
+      "cooperationGroup": {
+        "id": "cooperationGroup",
+        "type": "group",
+        "items": [
+          "note13",
+          "cooperationMainList",
+          "employerList",
+          "entrepreneurshipList"
+        ],
+        "activeWhen": "mainList in ('cooperation') and mainList is answered\n",
+        "props": {
+          "columns": 1
+        }
+      },
+      "museumServicesMainList": {
+        "id": "museumServicesMainList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "freeTimeCultureMainList in ('museumServices')",
+        "valueSetId": "vs121111111"
+      },
+      "schoolGroup": {
+        "id": "schoolGroup",
+        "type": "group",
+        "items": [
+          "note311",
+          "schoolMainList",
+          "afternoonActivityList",
+          "highSchoolList",
+          "otherFeedbackList",
+          "elementarySchoolList"
+        ],
+        "activeWhen": "mainList in ('school') and mainList is answered",
+        "props": {
+          "columns": 1
+        }
+      },
+      "cooperationMainList": {
+        "id": "cooperationMainList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse aihe"
+        },
+        "required": "true",
+        "valueSetId": "vs17"
+      },
+      "elderlyList": {
+        "id": "elderlyList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "employmentImmigrationMainList in ('elderly') ",
+        "valueSetId": "vs9211"
+      },
+      "typeOfFeedback": {
+        "id": "typeOfFeedback",
+        "type": "list",
+        "label": {
+          "fi": "Palautteen laatu"
+        },
+        "required": "true",
+        "valueSetId": "vs5"
+      },
+      "authentication": {
+        "id": "authentication",
+        "type": "list",
+        "label": {
+          "fi": "Haluatko vastauksen palautteeseesi?"
+        },
+        "activeWhen": "SocialSecurityNumber = \"anon\"",
+        "valueSetId": "vs7"
+      },
+      "employerList": {
+        "id": "employerList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "cooperationMainList in ('employer')",
+        "valueSetId": "vs171"
+      },
+      "exerciseGroup": {
+        "id": "exerciseGroup",
+        "type": "group",
+        "items": [
+          "note31",
+          "exerciseMainList",
+          "sportVenuesList"
+        ],
+        "activeWhen": "mainList in ('exercise') and mainList is answered",
+        "props": {
+          "columns": 1
+        }
+      },
+      "boolean11": {
+        "id": "boolean11",
+        "type": "boolean",
+        "label": {
+          "fi": "Hyväksyn käyttöehdot"
+        },
+        "required": "true",
+        "props": {
+          "display": "checkbox"
+        }
+      },
+      "electionDetail": {
+        "id": "electionDetail",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "cityServiceMainList = 'election'",
+        "valueSetId": "vs4"
+      },
+      "buildingMaintServiceList": {
+        "id": "buildingMaintServiceList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "constructionMainList = 'buildingMaintService'",
+        "valueSetId": "vs4111"
+      },
+      "communicationMainList": {
+        "id": "communicationMainList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse aihe"
+        },
+        "required": "true",
+        "valueSetId": "vs15"
+      },
+      "employmentFeedbackList": {
+        "id": "employmentFeedbackList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "employmentImmigrationMainList in ('otherFeedback') ",
+        "valueSetId": "vs921111"
+      },
+      "note31": {
+        "id": "note31",
+        "type": "note",
+        "label": {
+          "fi": "# Liikunta"
+        }
+      },
+      "entrepreneurshipList": {
+        "id": "entrepreneurshipList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "cooperationMainList in ('entrepreneurship')",
+        "valueSetId": "vs1711"
+      },
+      "address": {
+        "id": "address",
+        "type": "text",
+        "view": "address",
+        "label": {
+          "fi": " Kirjoita osoite"
+        },
+        "required": "streetMaintServiceList in ('streetMaintService_10')",
+        "props": {
+          "address": "Järvenpää",
+          "country": [
+            "fi"
+          ],
+          "viewbox": "24.5,60.2,25.5,60.8"
+        }
+      },
+      "cityServiceGroup": {
+        "id": "cityServiceGroup",
+        "type": "group",
+        "label": {
+          "fi": ""
+        },
+        "items": [
+          "note1",
+          "cityServiceMainList",
+          "electionDetail"
+        ],
+        "activeWhen": "mainList in ('cityService') and mainList is answered",
+        "props": {
+          "border": "true",
+          "borders": "true",
+          "columns": 1
+        }
+      },
+      "muncipalityPreschoolList": {
+        "id": "muncipalityPreschoolList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "preschoolMainList in('muncipalityPreschool')",
+        "valueSetId": "vs141"
+      },
+      "mainList": {
+        "id": "mainList",
+        "type": "list",
+        "label": {
+          "fi": "Mistä aiheesta haluat antaa palautetta?"
+        },
+        "activeWhen": "authentication in ('no') and SocialSecurityNumber = \"anon\" \nor SocialSecurityNumber != \"anon\" ",
+        "valueSetId": "vs6"
+      },
+      "youthServiceMainList": {
+        "id": "youthServiceMainList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse aihe"
+        },
+        "required": "true",
+        "valueSetId": "vs8"
+      },
+      "jpAcademyMainList": {
+        "id": "jpAcademyMainList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "freeTimeCultureMainList in ('jpAcademy')",
+        "valueSetId": "vs121"
+      },
+      "youthServiceGroup": {
+        "id": "youthServiceGroup",
+        "type": "group",
+        "items": [
+          "note3",
+          "youthServiceMainList",
+          "familyWithChildrenList",
+          "youthServiceList"
+        ],
+        "activeWhen": "mainList in ('youthService') and mainList is answered",
+        "props": {
+          "columns": 1
+        }
+      },
+      "note1": {
+        "id": "note1",
+        "type": "note",
+        "label": {
+          "fi": "# Kaupunki ja asiakaspalvelu"
+        },
+        "description": {
+          "fi": "tähän myös jotain"
+        }
+      },
+      "note2": {
+        "id": "note2",
+        "type": "note",
+        "label": {
+          "fi": "Voit antaa meille palautetta ja kehitysideoita kaupungin palveluista, toiminnasta ja päätöksenteosta. Vain kirjautuneena annettuihin palautteisiin voidaan lähettää vastaus. Emme vastaa kirjautumattomana annettuihin palautteiseen. Julkaistut palautteet näet Palaute sivun alaosasta.\n\nPidätämme oikeuden palautteen vastaamiseen.\n\n"
+        },
+        "props": {
+          "noPrint": "true"
+        }
+      },
+      "note3": {
+        "id": "note3",
+        "type": "note",
+        "label": {
+          "fi": "# Lasten- ja nuorten palvelut"
+        }
+      },
+      "note4": {
+        "id": "note4",
+        "type": "note",
+        "label": {
+          "fi": "Huom. katujen ja puistojen kunnossapitoon liittyvät havainnot hoidetaan urakoitsijan toimesta. Palaute välitetään automaatisesti asiaa hoitavalle urakoitsijalle.\n\n* Katujen kunnossapito (auraus, hiekoitus/liukkaudentorjunta, katujen puhtaanapito, katupöly, reikä asfaltissa, sadevesikaivo tukossa, ojien tulviminen)\n\n* Puistojen kunnossapito (ruohon leikkaus, kitkentä, puiden kunto, vieraslajit, puhtaanapito, puistoroska-astiat)"
+        },
+        "activeWhen": "streetMaintServiceList in ('streetMaintService_10')",
+        "props": {
+          "noPrint": "true"
+        }
+      },
+      "note5": {
+        "id": "note5",
+        "type": "note",
+        "label": {
+          "fi": "Kaupugin Vesi: Vesitili-palvelun"
+        },
+        "activeWhen": "constructionMainList = 'wasteMaintService'"
+      },
+      "note6": {
+        "id": "note6",
+        "type": "note",
+        "label": {
+          "fi": "Valitse **Palaa** sivun vasemmasta yläkulmasta ja kirjaudu sisään asiontiportaaliin sisään **Tunnistaudu** valinnan kautta"
+        },
+        "activeWhen": "authentication in ('yes') and SocialSecurityNumber = \"anon\""
+      },
+      "note7": {
+        "id": "note7",
+        "type": "note",
+        "label": {
+          "fi": "Palaute - Käyttöehdot\n\nPalautelomakkeella antamaasi palautetta hyödynnetään Kaupungin toiminnan kehittämiseen.\n\nPalautteen kuvaukseen ei tule koskaan kirjata yksityisyyden suojan tai tietosuojan alaista tietoa, kuten henkilön nimiä, henkilötunnuksia tai muita henkilötietoja kuten alaikäisen tietoja. Lomakkeella antamasi tiedot tallentuvat Oma Asiointi-palvelun palautejärjestelmään. Jos palautteen  antajalta tarvitaan lisätietoja palautteen käsittelyä varten, annettu yhteystieto voidaan välittää eteenpäin asiaa hoitavalle taholle. Vain kirjautuneena annettuun palautteeseen voidaan lähettää vastaus. Emme vastaa kirjautumattomana annettuun palautteeseen.\n\nNämä käyttöehdot ovat voimassa toistaiseksi. Palvelun ylläpitäjällä on oikeus muuttaa käyttöehtoja."
+        }
+      },
+      "text2": {
+        "id": "text2",
+        "type": "text",
+        "view": "text",
+        "label": {
+          "fi": "Lisää liite tiedosto tästä"
+        },
+        "activeWhen": "attachment = true",
+        "props": {
+          "controlType": "fileUpload"
+        }
+      },
+      "note9": {
+        "id": "note9",
+        "type": "note",
+        "label": {
+          "fi": "# Vapaa-aika ja kultturi"
+        }
+      },
+      "note311": {
+        "id": "note311",
+        "type": "note",
+        "label": {
+          "fi": "# Peruskoulut"
+        }
+      },
+      "publicAnswerAllowed": {
+        "id": "publicAnswerAllowed",
+        "type": "boolean",
+        "label": {
+          "fi": "Annan luvan, että palautteen vastauksineen saa julkaista kaupungin verkkosivulla ja julkaisussa. Pidätämme oikeuden palautteen julkaisemiseen."
+        }
+      },
+      "freeTimeCultureGroup": {
+        "id": "freeTimeCultureGroup",
+        "type": "group",
+        "items": [
+          "note9",
+          "freeTimeCultureMainList",
+          "jpAcademyMainList",
+          "culturalEventsMainList",
+          "museumServicesMainList"
+        ],
+        "activeWhen": "mainList in ('freeTimeCulture') and mainList is answered",
+        "props": {
+          "columns": 1
+        }
+      },
+      "publicPreschoolList": {
+        "id": "publicPreschoolList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "preschoolMainList in('publicPreschool')",
+        "valueSetId": "vs14"
+      },
+      "exerciseMainList": {
+        "id": "exerciseMainList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse aihe"
+        },
+        "required": "true",
+        "valueSetId": "vs81"
+      },
+      "culturalEventsMainList": {
+        "id": "culturalEventsMainList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "freeTimeCultureMainList in ('culturalEvents')",
+        "valueSetId": "vs121111"
+      },
+      "otherFeedbackList": {
+        "id": "otherFeedbackList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "schoolMainList in ('otherFeedback') ",
+        "valueSetId": "vs91111"
+      },
+      "immigrantsList": {
+        "id": "immigrantsList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "employmentImmigrationMainList in ('immigrants') ",
+        "valueSetId": "vs92111"
+      },
+      "elementarySchoolList": {
+        "id": "elementarySchoolList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "schoolMainList in ('elementarySchool') ",
+        "valueSetId": "vs9111111"
+      },
+      "streetConstructionServiceList": {
+        "id": "streetConstructionServiceList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "constructionMainList = 'streetConstructionService'",
+        "valueSetId": "vs41"
+      },
+      "youthServiceList": {
+        "id": "youthServiceList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse tarkempi aihealue"
+        },
+        "required": "true",
+        "activeWhen": "youthServiceMainList in ('youthService') ",
+        "valueSetId": "vs91"
+      },
+      "cityServiceMainList": {
+        "id": "cityServiceMainList",
+        "type": "list",
+        "label": {
+          "fi": "Valitse aihe"
+        },
+        "required": "true",
+        "valueSetId": "vs1"
+      },
+      "page1": {
+        "id": "page1",
+        "type": "group",
+        "view": "page",
+        "items": [
+          "group3",
+          "note14",
+          "cityServiceGroup",
+          "cityConstructionGroup",
+          "youthServiceGroup",
+          "exerciseGroup",
+          "schoolGroup",
+          "employmentImmigrationGroup",
+          "freeTimeCultureGroup",
+          "preschoolEducationGroup",
+          "communicationGroup",
+          "cooperationGroup",
+          "map",
+          "group2"
+        ]
+      },
+      "attachment": {
+        "id": "attachment",
+        "type": "boolean",
+        "label": {
+          "fi": "Haluatko lisätä liitetiedoston?"
+        },
+        "activeWhen": "\nSocialSecurityNumber != \"anon\""
+      },
+      "cityConstructionGroup": {
+        "id": "cityConstructionGroup",
+        "type": "group",
+        "label": {
+          "fi": ""
+        },
+        "items": [
+          "note11",
+          "constructionMainList",
+          "streetConstructionServiceList",
+          "streetMaintServiceList",
+          "note4",
+          "buildingMaintServiceList",
+          "note141",
+          "note5",
+          "communityPlanningList"
+        ],
+        "activeWhen": "mainList in ('cityConstruction') and mainList is answered",
+        "props": {
+          "border": "true",
+          "borders": "true",
+          "columns": 1
+        }
+      },
+      "employmentImmigrationGroup": {
+        "id": "employmentImmigrationGroup",
+        "type": "group",
+        "items": [
+          "note3111",
+          "employmentImmigrationMainList",
+          "elderlyList",
+          "immigrantsList",
+          "employmentFeedbackList",
+          "employmentList"
+        ],
+        "activeWhen": "mainList in ('employmentImmigration') and mainList is answered",
+        "props": {
+          "columns": 1
+        }
+      }
+    },
+    "metadata": {
+      "label": "palaute",
+      "created": "2025-05-23T02:58:55.852Z",
+      "lastSaved": "2025-10-30T08:41:56.897Z",
+      "valid": true,
+      "creator": "unauthenticated",
+      "tenantId": "d4b4bb22-6dcd-45b1-a7dc-014892ee10ce",
+      "savedBy": "unauthenticated",
+      "labels": [
+        "demo",
+        "feedback"
+      ],
+      "languages": [
+        "en",
+        "fi"
+      ],
+      "defaultActiveLanguage": "fi",
+      "composer": {
+        "transient": {
+          "lastItem": {
+            "id": "note14",
+            "type": "note"
+          }
+        },
+        "contextValues": {
+          "Email": "tessa.testaaja@testi.com",
+          "pageID": "100",
+          "LastName": "Testaaja",
+          "FirstNames": "Tessa",
+          "SocialSecurityNumber": "anon"
+        },
+        "globalValueSets": [
+          {
+            "label": "Paikat",
+            "valueSetId": "vs2"
+          },
+          {
+            "label": "years",
+            "valueSetId": "vs3"
+          }
+        ]
+      }
+    },
+    "variables": [
+      {
+        "name": "FirstNames",
+        "context": true,
+        "contextType": "text"
+      },
+      {
+        "name": "LastName",
+        "context": true,
+        "contextType": "text"
+      },
+      {
+        "name": "Address",
+        "context": true,
+        "contextType": "text"
+      },
+      {
+        "name": "Email",
+        "context": true,
+        "contextType": "text"
+      },
+      {
+        "name": "SocialSecurityNumber",
+        "context": true,
+        "contextType": "text"
+      },
+      {
+        "name": "ProtectionOrder",
+        "context": true,
+        "contextType": "boolean"
+      },
+      {
+        "name": "pageId",
+        "context": true,
+        "contextType": "text"
+      },
+      {
+        "name": "localization",
+        "expression": "language"
+      }
+    ],
+    "valueSets": [
+      {
+        "id": "vs1",
+        "entries": [
+          {
+            "id": "info",
+            "label": {
+              "fi": "Info ja asiakaspalveluun"
+            }
+          },
+          {
+            "id": "strategy",
+            "label": {
+              "fi": "Kaupungin strategia ja päätöksenteko"
+            }
+          },
+          {
+            "id": "statistics",
+            "label": {
+              "fi": "Kaupunkitieto ja tilastot"
+            }
+          },
+          {
+            "id": "registry",
+            "label": {
+              "fi": "Kirjaamo"
+            }
+          },
+          {
+            "id": "invoice",
+            "label": {
+              "fi": "Laskutus ja maksut"
+            }
+          },
+          {
+            "id": "other",
+            "label": {
+              "fi": "Muu palaute (Kaupunki ja asiakaspalvelu)"
+            }
+          },
+          {
+            "id": "digitalization",
+            "label": {
+              "fi": "Sähköinen asiointi"
+            }
+          },
+          {
+            "id": "election",
+            "label": {
+              "fi": "Vaalijärjestelyt"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs2",
+        "entries": [
+          {
+            "id": "paikka1",
+            "label": {
+              "fi": "Eka paikka"
+            }
+          },
+          {
+            "id": "paikka2",
+            "label": {
+              "fi": "Toka paikka"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs3",
+        "entries": [
+          {
+            "id": "2024",
+            "label": {
+              "fi": "Vuosi 2024"
+            }
+          },
+          {
+            "id": "2023",
+            "label": {
+              "fi": "Vuosi 2023"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs4",
+        "entries": [
+          {
+            "id": "parlament",
+            "label": {
+              "fi": "Eduskuntavaalit"
+            }
+          },
+          {
+            "id": "muncipality",
+            "label": {
+              "fi": "Kuntavaalit"
+            }
+          },
+          {
+            "id": "region",
+            "label": {
+              "fi": "Maakuntavaalit"
+            }
+          },
+          {
+            "id": "president",
+            "label": {
+              "fi": "Presidentinvaalit"
+            }
+          },
+          {
+            "id": "sote",
+            "label": {
+              "fi": "Aluevaalit"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs5",
+        "entries": [
+          {
+            "id": "thanks",
+            "label": {
+              "fi": "Kiitos"
+            }
+          },
+          {
+            "id": "observation",
+            "label": {
+              "fi": "Havainto"
+            }
+          },
+          {
+            "id": "question",
+            "label": {
+              "fi": "Kysymys"
+            }
+          },
+          {
+            "id": "proposal",
+            "label": {
+              "fi": "Kehitysehdotus"
+            }
+          },
+          {
+            "id": "other",
+            "label": {
+              "fi": "Muut"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs6",
+        "entries": [
+          {
+            "id": "cityService",
+            "label": {
+              "fi": "Kaupunki ja asiakaspalvelu"
+            }
+          },
+          {
+            "id": "roadMaintance",
+            "label": {
+              "fi": "Katujen kunnossapitoon liittyvät palautteet (auraus, liukkauden torjunta, pöly/hiekanpoisto)"
+            }
+          },
+          {
+            "id": "cityConstruction",
+            "label": {
+              "fi": "Kaupunkiympäristö, rakentaminen ja asuminen "
+            },
+            "when": ""
+          },
+          {
+            "id": "youthService",
+            "label": {
+              "fi": "Lasten ja nuorten palvelut"
+            }
+          },
+          {
+            "id": "exercise",
+            "label": {
+              "fi": "Liikunta"
+            }
+          },
+          {
+            "id": "school",
+            "label": {
+              "fi": "Perusopetua ja lukio"
+            }
+          },
+          {
+            "id": "employmentImmigration",
+            "label": {
+              "fi": "Työllisyys, työikäiset, ikääntyneet ja maahanmuuttajat"
+            }
+          },
+          {
+            "id": "freeTimeCulture",
+            "label": {
+              "fi": "Vapaa-aika ja kulttuuri"
+            }
+          },
+          {
+            "id": "preschoolEducation",
+            "label": {
+              "fi": "Varhaiskasvatus ja esiopetus"
+            }
+          },
+          {
+            "id": "communication",
+            "label": {
+              "fi": "Viestintä ja markkinointi"
+            }
+          },
+          {
+            "id": "cooperation",
+            "label": {
+              "fi": "Yhteistyö, elinkeinot ja matkailu"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs7",
+        "entries": [
+          {
+            "id": "yes",
+            "label": {
+              "fi": "Kyllä"
+            }
+          },
+          {
+            "id": "no",
+            "label": {
+              "fi": "Ei"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs11",
+        "entries": [
+          {
+            "id": "streetConstructionService",
+            "label": {
+              "fi": "Katujen ja puistojen rakentamispalvelut"
+            }
+          },
+          {
+            "id": "streetMaintService",
+            "label": {
+              "fi": "Katujen ja puistojen ylläpito ja huoltopalvelut"
+            }
+          },
+          {
+            "id": "buildingMaintService",
+            "label": {
+              "fi": "Kaupungin omistamien kiinteistöjen ylläpito ja huoltopalvelut"
+            }
+          },
+          {
+            "id": "wasteMaintService",
+            "label": {
+              "fi": "Kunnallinen jätehuolto"
+            }
+          },
+          {
+            "id": "otherConstruct",
+            "label": {
+              "fi": "Muu palaute (Kaupunkiympäristö, rakentaminen ja asuminen)"
+            }
+          },
+          {
+            "id": "buildingSupervision",
+            "label": {
+              "fi": "Rakennusvalvonta"
+            }
+          },
+          {
+            "id": "communityPlanning",
+            "label": {
+              "fi": "Yhdyskuntasuunnittelu (Liikenne, kaavoitus, maankäyttö, karttapalvelut, asuminen)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs41",
+        "entries": [
+          {
+            "id": "streetConstructService_1",
+            "label": {
+              "fi": "Hulevesialtaat ja kuivatuksen rakentaminen"
+            }
+          },
+          {
+            "id": "streetConstructService_2",
+            "label": {
+              "fi": "Liikennemerkit"
+            }
+          },
+          {
+            "id": "streetConstructService_3",
+            "label": {
+              "fi": "Liikennevalot"
+            }
+          },
+          {
+            "id": "streetConstructService_4",
+            "label": {
+              "fi": "Muu palaute (Katujen ja puistojen rakentamispalvelu)"
+            }
+          },
+          {
+            "id": "streetConstructService_5",
+            "label": {
+              "fi": "Rakenteilla olevat kadut ja puistot (työmaa)"
+            }
+          },
+          {
+            "id": "streetConstructService_6",
+            "label": {
+              "fi": "Työmaa-aikaiset liikennejärjestelyt, ohjaus ja esteettömyys"
+            }
+          },
+          {
+            "id": "streetConstructService_7",
+            "label": {
+              "fi": "Esteettömyys"
+            }
+          },
+          {
+            "id": "streetConstructService_8",
+            "label": {
+              "fi": "Hulevesien ja kuivatusten suunnittelu"
+            }
+          },
+          {
+            "id": "streetConstructService_9",
+            "label": {
+              "fi": "Suunnitteilla olevat tai suunnittelun tarpeessa olevat kadut ja puistot"
+            }
+          },
+          {
+            "id": "streetConstructService_10",
+            "label": {
+              "fi": "Työmaan suunnittelu"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs411",
+        "entries": [
+          {
+            "id": "streetMaintService_1",
+            "label": {
+              "fi": "Jätehuolto"
+            }
+          },
+          {
+            "id": "streetMaintService_2",
+            "label": {
+              "fi": "Kadun kunto (Kuoppa, epätasaisuus, irronneet reunakivet)"
+            }
+          },
+          {
+            "id": "streetMaintService_3",
+            "label": {
+              "fi": "Leikkipuistot"
+            }
+          },
+          {
+            "id": "streetMaintService_4",
+            "label": {
+              "fi": "Liikennemerkkien ylläpito"
+            }
+          },
+          {
+            "id": "streetMaintService_5",
+            "label": {
+              "fi": "Liikennevaloviat"
+            }
+          },
+          {
+            "id": "streetMaintService_6",
+            "label": {
+              "fi": "Muu palaute (Katujen ja puistojen ylläpito ja huoltopalvelut)"
+            }
+          },
+          {
+            "id": "streetMaintService_7",
+            "label": {
+              "fi": "Ojat ja kaivot"
+            }
+          },
+          {
+            "id": "streetMaintService_8",
+            "label": {
+              "fi": "Puhtaanapito"
+            }
+          },
+          {
+            "id": "streetMaintService_9",
+            "label": {
+              "fi": "Puistometsät ja luonnonsuojelualueet"
+            }
+          },
+          {
+            "id": "streetMaintService_10",
+            "label": {
+              "fi": "Talvikunnossapito: Auraus, liukkauden torjunta ja hiekoitus"
+            },
+            "when": ""
+          },
+          {
+            "id": "streetMaintService_12",
+            "label": {
+              "fi": "Valaistuksen ylläpito"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs4111",
+        "entries": [
+          {
+            "id": "buildingMaintService_1",
+            "label": {
+              "fi": "Jäähalli"
+            }
+          },
+          {
+            "id": "buildingMaintService_3",
+            "label": {
+              "fi": "Koulut ja oppilaitokset"
+            }
+          },
+          {
+            "id": "buildingMaintService_4",
+            "label": {
+              "fi": "Musiikkiopisto"
+            }
+          },
+          {
+            "id": "buildingMaintService_5",
+            "label": {
+              "fi": "Muu palaute (Kaupungin omistamien kiinteistöjen ylläpito ja huoltopalvelut)"
+            }
+          },
+          {
+            "id": "buildingMaintService_6",
+            "label": {
+              "fi": "Piirosen kiinteistö"
+            }
+          },
+          {
+            "id": "buildingMaintService_7",
+            "label": {
+              "fi": "Seppälän kiinteistö"
+            }
+          },
+          {
+            "id": "buildingMaintService_8",
+            "label": {
+              "fi": "Seuratalo"
+            }
+          },
+          {
+            "id": "buildingMaintService_10",
+            "label": {
+              "fi": "Uimahalli"
+            }
+          },
+          {
+            "id": "buildingMaintService_11",
+            "label": {
+              "fi": "Vanhiksen kiinteistöt"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs41111111",
+        "entries": [
+          {
+            "id": "communityPlanning_1",
+            "label": {
+              "fi": "Asuminen"
+            }
+          },
+          {
+            "id": "communityPlanning_2",
+            "label": {
+              "fi": "Jalankulku, pyöräily, mopoilu, sähköpotkulauta"
+            }
+          },
+          {
+            "id": "communityPlanning_3",
+            "label": {
+              "fi": "Juna-asemien ympäristöt"
+            }
+          },
+          {
+            "id": "communityPlanning_4",
+            "label": {
+              "fi": "Kaupungin karttakauppa"
+            }
+          },
+          {
+            "id": "communityPlanning_5",
+            "label": {
+              "fi": "Kaupungin karttapalvelu"
+            }
+          },
+          {
+            "id": "communityPlanning_6",
+            "label": {
+              "fi": "Kaupungin asuntopalvelut"
+            }
+          },
+          {
+            "id": "communityPlanning_7",
+            "label": {
+              "fi": "Julkinen liikenne"
+            }
+          },
+          {
+            "id": "communityPlanning_8",
+            "label": {
+              "fi": "Kaavoitus"
+            }
+          },
+          {
+            "id": "communityPlanning_9",
+            "label": {
+              "fi": "Kaupunkisuunnittelu"
+            }
+          },
+          {
+            "id": "communityPlanning_10",
+            "label": {
+              "fi": "Kierrätys ja jätehuolto"
+            }
+          },
+          {
+            "id": "communityPlanning_11",
+            "label": {
+              "fi": "Kulttuuriympäristö (arvokkaat rakennukset, perinnemaisema)"
+            }
+          },
+          {
+            "id": "communityPlanning_12",
+            "label": {
+              "fi": "Laituri ja venepaikan vuokraus"
+            }
+          },
+          {
+            "id": "communityPlanning_13",
+            "label": {
+              "fi": "Liikennehaitat (melu, päästöt, liikennemäärät jne.)"
+            }
+          },
+          {
+            "id": "communityPlanning_14",
+            "label": {
+              "fi": "Liikenneturvallisuus"
+            }
+          },
+          {
+            "id": "communityPlanning_15",
+            "label": {
+              "fi": "Maankäyttö (tontit)"
+            }
+          },
+          {
+            "id": "communityPlanning_16",
+            "label": {
+              "fi": "Maisemasuunnittelu"
+            }
+          },
+          {
+            "id": "communityPlanning_17",
+            "label": {
+              "fi": "Metsät"
+            }
+          },
+          {
+            "id": "communityPlanning_18",
+            "label": {
+              "fi": "Muu palaute (Yhdyskuntasuunnittelu)"
+            }
+          },
+          {
+            "id": "communityPlanning_19",
+            "label": {
+              "fi": "Pysäköinti"
+            }
+          },
+          {
+            "id": "communityPlanning_21",
+            "label": {
+              "fi": "Viljelyspaikan vuokraus"
+            }
+          },
+          {
+            "id": "communityPlanning_22",
+            "label": {
+              "fi": "Ympäristöasiat (ilmastomuutos, hiilineutraalisuus)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs8",
+        "entries": [
+          {
+            "id": "familyWithChildren",
+            "label": {
+              "fi": "Lapsiperheiden palvelut"
+            }
+          },
+          {
+            "id": "youthService",
+            "label": {
+              "fi": "Nuorisopalvelut"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs9",
+        "entries": [
+          {
+            "id": "familyWithChildren_1",
+            "label": {
+              "fi": "Avoin kohtaamispaikkatoiminta"
+            }
+          },
+          {
+            "id": "familyWithChildren_2",
+            "label": {
+              "fi": "Muu palaute (Lapsiperheiden palvelut)"
+            }
+          },
+          {
+            "id": "familyWithChildren_3",
+            "label": {
+              "fi": "Ryhmä- ja tapahtumatoiminta"
+            }
+          },
+          {
+            "id": "familyWithChildren_4",
+            "label": {
+              "fi": "Yksilö- ja perhekohtainen työskentely"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs91",
+        "entries": [
+          {
+            "id": "youthService_1",
+            "label": {
+              "fi": "Etsivä nuorisotyö"
+            }
+          },
+          {
+            "id": "youthService_2",
+            "label": {
+              "fi": "Jalkautuva työ"
+            }
+          },
+          {
+            "id": "youthService_3",
+            "label": {
+              "fi": "Kerhot"
+            }
+          },
+          {
+            "id": "youthService_4",
+            "label": {
+              "fi": "Kouluilla tehtävä nuorisotyö"
+            }
+          },
+          {
+            "id": "youthService_5",
+            "label": {
+              "fi": "Loma-aikojen toiminta"
+            }
+          },
+          {
+            "id": "youthService_6",
+            "label": {
+              "fi": "Muu palaute (Nuorisopalvelut)"
+            }
+          },
+          {
+            "id": "youthService_7",
+            "label": {
+              "fi": "Nuorisotalo Oona"
+            }
+          },
+          {
+            "id": "youthService_8",
+            "label": {
+              "fi": "Ohjaavien alojen liitto"
+            }
+          },
+          {
+            "id": "youthService_9",
+            "label": {
+              "fi": "Tapahtumat"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs81",
+        "entries": [
+          {
+            "id": "exercise",
+            "label": {
+              "fi": "Lasten ja nuorten liikunta"
+            }
+          },
+          {
+            "id": "sportVenues",
+            "label": {
+              "fi": "Liikuntapaikat"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs911",
+        "entries": [
+          {
+            "id": "sportVenues_1",
+            "label": {
+              "fi": "Hiihtoladut"
+            }
+          },
+          {
+            "id": "sportVenues_2",
+            "label": {
+              "fi": "Jäähalli"
+            }
+          },
+          {
+            "id": "sportVenues_3",
+            "label": {
+              "fi": "Jääkentät"
+            }
+          },
+          {
+            "id": "sportVenues_4",
+            "label": {
+              "fi": "Keskustan liikuntapuisto"
+            }
+          },
+          {
+            "id": "sportVenues_5",
+            "label": {
+              "fi": "Kuntoradat"
+            }
+          },
+          {
+            "id": "sportVenues_6",
+            "label": {
+              "fi": "Liikuntahalli ja liikuntasalit"
+            }
+          },
+          {
+            "id": "sportVenues_7",
+            "label": {
+              "fi": "Kiirosen liikuntakeskus"
+            }
+          },
+          {
+            "id": "sportVenues_9",
+            "label": {
+              "fi": "Uimahalli"
+            }
+          },
+          {
+            "id": "sportVenues_10",
+            "label": {
+              "fi": "Uimarannat"
+            }
+          },
+          {
+            "id": "sportVenues_11",
+            "label": {
+              "fi": "Ulkoilureitit"
+            }
+          },
+          {
+            "id": "sportVenues_12",
+            "label": {
+              "fi": "Ulkokentät ja lähiliikuntapaikat"
+            }
+          },
+          {
+            "id": "sportVenues_13",
+            "label": {
+              "fi": "Muu palaute"
+            }
+          },
+          {
+            "id": "sportVenues_14",
+            "label": {
+              "fi": "Palaute ohjatusta liikunnasta"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs811",
+        "entries": [
+          {
+            "id": "afternoonActivity",
+            "label": {
+              "fi": "Iltapäivätoiminta"
+            }
+          },
+          {
+            "id": "highSchool",
+            "label": {
+              "fi": "Lukiot"
+            }
+          },
+          {
+            "id": "otherFeedback",
+            "label": {
+              "fi": "Muu palaute (Perusopetus ja lukio)"
+            }
+          },
+          {
+            "id": "studentSupportService",
+            "label": {
+              "fi": "Opiskeluhuoltopalvelut"
+            }
+          },
+          {
+            "id": "elementarySchool",
+            "label": {
+              "fi": "Peruskoulut"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs921",
+        "entries": [
+          {
+            "id": "afternoonActivity_1",
+            "label": {
+              "fi": "Anttilan koulu"
+            }
+          },
+          {
+            "id": "afternoonActivity_2",
+            "label": {
+              "fi": "Joen koulu"
+            }
+          },
+          {
+            "id": "afternoonActivity_3",
+            "label": {
+              "fi": "Karjulan koulu"
+            }
+          },
+          {
+            "id": "afternoonActivity_4",
+            "label": {
+              "fi": "Kaupungin yhteiskoulu"
+            }
+          },
+          {
+            "id": "afternoonActivity_5",
+            "label": {
+              "fi": "Kartanon koulu"
+            }
+          },
+          {
+            "id": "afternoonActivity_6",
+            "label": {
+              "fi": "Kinnarin koulu"
+            }
+          },
+          {
+            "id": "afternoonActivity_8",
+            "label": {
+              "fi": "Muu palaute (iltapäivätoiminta)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs9111",
+        "entries": [
+          {
+            "id": "highSchool_1",
+            "label": {
+              "fi": "Kaupungin lukiot"
+            }
+          },
+          {
+            "id": "highSchool_2",
+            "label": {
+              "fi": "Lukion aikuislinja"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs91111",
+        "entries": [
+          {
+            "id": "otherFeedback_1",
+            "label": {
+              "fi": "Hallinto"
+            }
+          },
+          {
+            "id": "otherFeedback_2",
+            "label": {
+              "fi": "Muu perusopetukseen ja lukioon liittyvä palaute"
+            }
+          },
+          {
+            "id": "otherFeedback_3",
+            "label": {
+              "fi": "Oppilaskuljetukset"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs9111111",
+        "entries": [
+          {
+            "id": "elementarySchool_1",
+            "label": {
+              "fi": "Anttilan koulu"
+            }
+          },
+          {
+            "id": "elementarySchool_2",
+            "label": {
+              "fi": "Joen koulu"
+            }
+          },
+          {
+            "id": "elementarySchool_3",
+            "label": {
+              "fi": "Karjulan koulu"
+            }
+          },
+          {
+            "id": "elementarySchool_4",
+            "label": {
+              "fi": "Kaupungin Yhteiskoulun"
+            }
+          },
+          {
+            "id": "elementarySchool_5",
+            "label": {
+              "fi": "Kartanon koulu"
+            }
+          },
+          {
+            "id": "elementarySchool_6",
+            "label": {
+              "fi": "Kinarin koulu"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs8111",
+        "entries": [
+          {
+            "id": "elderly",
+            "label": {
+              "fi": "Ikääntyneet"
+            }
+          },
+          {
+            "id": "immigrants",
+            "label": {
+              "fi": "Maahanmuuttajat"
+            }
+          },
+          {
+            "id": "otherFeedback",
+            "label": {
+              "fi": "Muu palaute (Työllisyys, työikäiset, ikääntyneet ja maahanmuuttajat)"
+            }
+          },
+          {
+            "id": "employment",
+            "label": {
+              "fi": "Työllisyys, työikäiset, osaamis- ja työllisyyspalvelut"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs9211",
+        "entries": [
+          {
+            "id": "elderly_1",
+            "label": {
+              "fi": "Lounaskahvila Operin kulma"
+            }
+          },
+          {
+            "id": "elderly_2",
+            "label": {
+              "fi": "Muut palvelut (Ikääntyneet)"
+            }
+          },
+          {
+            "id": "elderly_3",
+            "label": {
+              "fi": "Myllytien toimintakeskus"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs92111",
+        "entries": [
+          {
+            "id": "immigrants_1",
+            "label": {
+              "fi": "Maahanmuuttajien asiointipalvelu"
+            }
+          },
+          {
+            "id": "immigrants_2",
+            "label": {
+              "fi": "Muu palaute (Kotoutumispalvelut ja maahanmuuttajat)"
+            }
+          },
+          {
+            "id": "immigrants_3",
+            "label": {
+              "fi": "Pakolaisten vastaanotto"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs921111",
+        "entries": [
+          {
+            "id": "otherFeedback_1",
+            "label": {
+              "fi": "Operin kulman lounaskahvila (Kylätien toimintakeskus)"
+            }
+          },
+          {
+            "id": "otherFeedback_2",
+            "label": {
+              "fi": "Muu palaute"
+            }
+          },
+          {
+            "id": "otherFeedback_3",
+            "label": {
+              "fi": "Ryhmä- ja tapahtumatoiminta"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs9211111",
+        "entries": [
+          {
+            "id": "employment_1",
+            "label": {
+              "fi": "Ammatillinen työpajatoiminta"
+            }
+          },
+          {
+            "id": "employment_2",
+            "label": {
+              "fi": "Muu palaute (Osaamis- ja työllisyyspalvelut)"
+            }
+          },
+          {
+            "id": "employment_3",
+            "label": {
+              "fi": "Työllistämistuet työnantajille ja toiminta-avustukset"
+            }
+          },
+          {
+            "id": "employment_4",
+            "label": {
+              "fi": "Vaikuttamo/Ohjaamo"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs10",
+        "entries": [
+          {
+            "id": "jpHouse",
+            "label": {
+              "fi": "Kaupungin talo"
+            }
+          },
+          {
+            "id": "jpAcademy",
+            "label": {
+              "fi": "Kaupungin opisto"
+            }
+          },
+          {
+            "id": "musicAcademy",
+            "label": {
+              "fi": "Musiikkiopisto"
+            }
+          },
+          {
+            "id": "libraryServices",
+            "label": {
+              "fi": "Kirjastopalvelut"
+            }
+          },
+          {
+            "id": "culturalEvents",
+            "label": {
+              "fi": "Kulttuuritapahtumat"
+            }
+          },
+          {
+            "id": "culturalPremises",
+            "label": {
+              "fi": "Kulttuuritilat"
+            }
+          },
+          {
+            "id": "artCraft",
+            "label": {
+              "fi": "Kuvataide- ja käsityökoulu"
+            }
+          },
+          {
+            "id": "museumServices",
+            "label": {
+              "fi": "Museopalvelut"
+            }
+          },
+          {
+            "id": "otherFeedback",
+            "label": {
+              "fi": "Muu palaute (Vapaa-aika ja kulttuuri)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs121",
+        "entries": [
+          {
+            "id": "jpAcademy_1",
+            "label": {
+              "fi": "Asiakaspalvelu"
+            }
+          },
+          {
+            "id": "jpAcademy_2",
+            "label": {
+              "fi": "Kurssitoive"
+            }
+          },
+          {
+            "id": "jpAcademy_3",
+            "label": {
+              "fi": "Muu palaute "
+            }
+          },
+          {
+            "id": "jpAcademy_4",
+            "label": {
+              "fi": "Opetuksen laatu"
+            }
+          },
+          {
+            "id": "jpAcademy_5",
+            "label": {
+              "fi": "Opetustilat"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs121111",
+        "entries": [
+          {
+            "id": "culturalEvents_1",
+            "label": {
+              "fi": "Kulttuuritapahtumat"
+            }
+          },
+          {
+            "id": "culturalEvents_2",
+            "label": {
+              "fi": "Lastenkulttuuritapahtumat"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs121111111",
+        "entries": [
+          {
+            "id": "museumServices_1",
+            "label": {
+              "fi": "Arhoa"
+            }
+          },
+          {
+            "id": "museumServices_2",
+            "label": {
+              "fi": "Tola"
+            }
+          },
+          {
+            "id": "museumServices_3",
+            "label": {
+              "fi": "Kiviranta"
+            }
+          },
+          {
+            "id": "museumServices_4",
+            "label": {
+              "fi": "Taidemuseo"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs13",
+        "entries": [
+          {
+            "id": "publicPreschool",
+            "label": {
+              "fi": "Julkiset päiväkodit ja esiopetus"
+            }
+          },
+          {
+            "id": "muncipalityPreschool",
+            "label": {
+              "fi": "Kunnalliset päiväkodit ja esiopetus"
+            }
+          },
+          {
+            "id": "otherPreschool",
+            "label": {
+              "fi": "Muu palaute (Yleinen palaute Varhaiskasvatuksesta ja esiopetuksesta)"
+            }
+          },
+          {
+            "id": "familyDayCare",
+            "label": {
+              "fi": "Perhepäivähoito"
+            }
+          },
+          {
+            "id": "privateDayCare",
+            "label": {
+              "fi": "Yksityiset päiväkodit"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs14",
+        "entries": [
+          {
+            "id": "publicPreschool_1",
+            "label": {
+              "fi": "Karjulan päiväkoti ja esiopetus Karjulan koulu"
+            }
+          },
+          {
+            "id": "publicPreschool_2",
+            "label": {
+              "fi": "Kydön päiväkoti ja esiopetus Ankalan koulu"
+            }
+          },
+          {
+            "id": "publicPreschool_3",
+            "label": {
+              "fi": "Kartanokoulun esiopetus"
+            }
+          },
+          {
+            "id": "publicPreschool_4",
+            "label": {
+              "fi": "Keskustan päiväkoti"
+            }
+          },
+          {
+            "id": "publicPreschool_6",
+            "label": {
+              "fi": "Kyrölän päiväkoti ja esiopetus"
+            }
+          },
+          {
+            "id": "publicPreschool_11",
+            "label": {
+              "fi": "Päiväkoti Oper"
+            }
+          },
+          {
+            "id": "publicPreschool_12",
+            "label": {
+              "fi": "Päiväkoti Iso-Jaakko"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs141",
+        "entries": [
+          {
+            "id": "muncipalityPreschool_1",
+            "label": {
+              "fi": "Karjulan päiväkoti ja esiopetus Karjulan koulu"
+            }
+          },
+          {
+            "id": "muncipalityPreschool_2",
+            "label": {
+              "fi": "Kydön päiväkoti ja esiopetus Ankalan koulu"
+            }
+          },
+          {
+            "id": "muncipalityPreschool_3",
+            "label": {
+              "fi": "Keskustan päiväkoti"
+            }
+          },
+          {
+            "id": "muncipalityPreschool_6",
+            "label": {
+              "fi": "Märekadun päiväkoti ja esiopetus Haarajoen koulu"
+            }
+          },
+          {
+            "id": "muncipalityPreschool_9",
+            "label": {
+              "fi": "Päiväkoti Iso-Jaakko"
+            }
+          },
+          {
+            "id": "muncipalityPreschool_10",
+            "label": {
+              "fi": "Päiväkoti Jalanpiha ja esiopetus Kartanon koulu"
+            }
+          },
+          {
+            "id": "muncipalityPreschool_11",
+            "label": {
+              "fi": "Päiväkoti Pikkuvanha"
+            }
+          },
+          {
+            "id": "muncipalityPreschool_12",
+            "label": {
+              "fi": "Päiväkoti Polle ja esiopetus Järvenpään yhteiskoulu"
+            }
+          },
+          {
+            "id": "muncipalityPreschool_13",
+            "label": {
+              "fi": "Päiväkoti Satusauna"
+            }
+          },
+          {
+            "id": "muncipalityPreschool_14",
+            "label": {
+              "fi": "Päiväkoti Tahvontupa"
+            }
+          },
+          {
+            "id": "muncipalityPreschool_15",
+            "label": {
+              "fi": "Saunakallion päiväkoti ja esiopetus Saunakallion koulu"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs1411",
+        "entries": [
+          {
+            "id": "otherPreschool_1",
+            "label": {
+              "fi": "Esiopetuksen kuljetukset"
+            }
+          },
+          {
+            "id": "otherPreschool_2",
+            "label": {
+              "fi": "Muu varhaiskasvatukseen ja esiopetukseen liittyvä palaute"
+            }
+          },
+          {
+            "id": "otherPreschool_3",
+            "label": {
+              "fi": "Varhaiskasvatuksen laskutus ja maksut"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs141111",
+        "entries": [
+          {
+            "id": "privateDayCare_3",
+            "label": {
+              "fi": "Keinu"
+            }
+          },
+          {
+            "id": "privateDayCare_4",
+            "label": {
+              "fi": "Kulma"
+            }
+          },
+          {
+            "id": "privateDayCare_5",
+            "label": {
+              "fi": "Metso"
+            }
+          },
+          {
+            "id": "privateDayCare_6",
+            "label": {
+              "fi": "Petra"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs15",
+        "entries": [
+          {
+            "id": "brand",
+            "label": {
+              "fi": "Brändi ja visuaalinen ilme"
+            }
+          },
+          {
+            "id": "socialMedia",
+            "label": {
+              "fi": "Kaupunki sosiaalisessa mediassa"
+            }
+          },
+          {
+            "id": "jpNewspaper",
+            "label": {
+              "fi": "Kaupungin-asukaslehti"
+            }
+          },
+          {
+            "id": "jpWebPage",
+            "label": {
+              "fi": "Kaupungin verkkosivut"
+            }
+          },
+          {
+            "id": "marketing",
+            "label": {
+              "fi": "Markkinointi"
+            }
+          },
+          {
+            "id": "otherFeedback",
+            "label": {
+              "fi": "Muu palaute (Viestintä ja markkinointi)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs17",
+        "entries": [
+          {
+            "id": "employer",
+            "label": {
+              "fi": "Työnantajien tuet ja yhteistyö"
+            }
+          },
+          {
+            "id": "entrepreneurship",
+            "label": {
+              "fi": "Yrittäminen, työllisyys ja matkailu"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs171",
+        "entries": [
+          {
+            "id": "employer_1",
+            "label": {
+              "fi": "Palaute kesätyöllistämistuesta 3. sektorin työnantajille"
+            }
+          },
+          {
+            "id": "employer_2",
+            "label": {
+              "fi": "Palaute kesätyöllistämistuesta työnantajille"
+            }
+          },
+          {
+            "id": "employer_3",
+            "label": {
+              "fi": "Palaute työnantajayhteistyöstä"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vs1711",
+        "entries": [
+          {
+            "id": "entrepreneurship_1",
+            "label": {
+              "fi": "Anna palautetta Kaupungin Business palvelusta"
+            }
+          },
+          {
+            "id": "entrepreneurship_2",
+            "label": {
+              "fi": "Anna palautetta työllisyyspalveluista"
+            }
+          },
+          {
+            "id": "entrepreneurship_3",
+            "label": {
+              "fi": "Anna palautetta yritysyhteistyöstä"
+            }
+          },
+          {
+            "id": "entrepreneurship_4",
+            "label": {
+              "fi": "Majoitukset ja ravintolapalvelut (myös Kartanon Kahvila)"
+            }
+          },
+          {
+            "id": "entrepreneurship_5",
+            "label": {
+              "fi": "Matkailukohteet, ulkoilualueet ja kohteet"
+            }
+          },
+          {
+            "id": "entrepreneurship_6",
+            "label": {
+              "fi": "Matkailun kävijäkokemus"
+            }
+          },
+          {
+            "id": "entrepreneurship_7",
+            "label": {
+              "fi": "Muu palaute (Yrittäminen, työllisyys, matkailu)"
+            }
+          },
+          {
+            "id": "entrepreneurship_8",
+            "label": {
+              "fi": "Ohjelmapalvelut"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

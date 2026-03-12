@@ -1,17 +1,35 @@
-package io.resys.limaone.tests.support;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+package io.resys.thena.test;
+
+/*-
+ * #%L
+ * thena-test-client
+ * %%
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
+import io.resys.thena.test.DialobTest.FormUrl;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class DialobSupport {
+public class DialobTestContext {
   static Network network;
   static PostgreSQLContainer<?> postgres;
   static GenericContainer<?> redis;
@@ -20,8 +38,11 @@ public class DialobSupport {
   static String dialobBaseUrl;
 
   @SuppressWarnings("resource")
-  @BeforeAll
-  static void setup() {
+  public void initialize(DialobTest data) {
+    if(!data.enabled()) {
+      return;
+    }
+    
     network = Network.newNetwork();
     postgres = new PostgreSQLContainer<>("postgres:13")
         .withNetwork(network)
@@ -61,19 +82,19 @@ public class DialobSupport {
     postgres.start();
     redis.start();
     dialob.start();
-    dialobBaseUrl = "http://" + dialob.getHost() + ":" + dialob.getMappedPort(8081) + "/dialob";
+    dialobBaseUrl = "http://" + dialob.getHost() + ":" + dialob.getMappedPort(8081) + "/dialob";    
+    
+    log.info("Dialob Forms are running at: " + dialobBaseUrl);
   }
 
-  @AfterAll
-  static void teardown() {
+  public void cleanup() {
     dialob.stop();
     redis.stop();
     postgres.stop();
     network.close();
   }
-
-  @Test
-  void dialobIsUp() {
-    System.out.println("Dialob running at: " + dialobBaseUrl);
+  
+  public FormUrl getFormUrl() {
+    return new FormUrl(dialobBaseUrl);
   }
 }
