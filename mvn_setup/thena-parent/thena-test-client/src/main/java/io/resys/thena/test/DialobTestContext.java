@@ -2,6 +2,7 @@ package io.resys.thena.test;
 
 import java.time.Duration;
 
+import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 /*-
  * #%L
  * thena-test-client
@@ -33,6 +34,8 @@ import io.vertx.mutiny.pgclient.PgBuilder;
 import io.vertx.mutiny.sqlclient.Pool;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -47,12 +50,19 @@ public class DialobTestContext {
   private Vertx vertx;
   private Pool pool;
   
-
+  @SuppressWarnings("unused")
+  private static ValidatorFactory factory = Validation.byDefaultProvider()
+      .configure()
+      .messageInterpolator(new ParameterMessageInterpolator())
+      .buildValidatorFactory();
+  
   @SuppressWarnings("resource")
   public void initialize(DialobTest data) {
     if(!data.enabled()) {
       return;
     }
+    
+    
     
     network = Network.newNetwork();
     postgres = new PostgreSQLContainer<>("postgres:13")
@@ -68,7 +78,7 @@ public class DialobTestContext {
         .withExposedPorts(6379)
         .waitingFor(Wait.forListeningPort());
 
-    dialob = new GenericContainer<>("resys/dialob-boot:2.2.9")
+    dialob = new GenericContainer<>("resys/dialob-boot:2.4.0")
         .withNetwork(network)
         .withExposedPorts(8081)
         .withEnv("SPRING_REDIS_HOST", "redis")

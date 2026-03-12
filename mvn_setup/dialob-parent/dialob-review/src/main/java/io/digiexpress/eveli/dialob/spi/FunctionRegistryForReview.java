@@ -140,8 +140,12 @@ public class FunctionRegistryForReview implements FunctionRegistry {
    * @param functionName  Name of function to call
    * @param args          List of call arguments
    */
+  
+  
+
+  
   @Override
-  public void invokeFunction(final FunctionRegistry.FunctionCallback callback, @NonNull String functionName, Object... args) {
+  public void invokeFunction(final FunctionRegistry.FunctionCallback callback, @NonNull String functionName, List<?> args) {
     String failure;
     try {
       ConfiguredFunction configuredFunction = findConfiguredFunction(functionName, args);
@@ -183,7 +187,7 @@ public class FunctionRegistryForReview implements FunctionRegistry {
 
 
   @Override
-  public void invokeFunctionAsync(FunctionCallback callback, String functionName, Object... args) {
+  public void invokeFunctionAsync(FunctionCallback callback, String functionName, List<?> args) {
     throw new RuntimeException("Async function-s disabled for review!");
     
   }

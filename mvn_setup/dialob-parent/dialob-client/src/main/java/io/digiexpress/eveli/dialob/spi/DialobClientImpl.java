@@ -47,13 +47,10 @@ import io.dialob.api.form.FormTag;
 import io.dialob.api.form.FormTag.Type;
 import io.dialob.api.form.FormValueSet;
 import io.dialob.api.form.FormValueSetEntry;
-import io.dialob.api.form.ImmutableFormTag;
-import io.dialob.api.proto.ImmutableValueSet;
-import io.dialob.api.proto.ImmutableValueSetEntry;
+
 import io.dialob.api.proto.ValueSet;
 import io.dialob.api.proto.ValueSetEntry;
 import io.dialob.api.questionnaire.Answer;
-import io.dialob.api.questionnaire.ImmutableQuestionnaire;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.dialob.api.DialobClientProxy;
@@ -181,7 +178,7 @@ public class DialobClientImpl implements DialobClient {
   public FormTag createTag(String formId, String tagName) {
     try {
       final var headers = headers().toSingleValueMap();
-      final var body = objectMapper.writeValueAsString(ImmutableFormTag.builder()
+      final var body = objectMapper.writeValueAsString(new FormTag.Builder()
           .name(tagName)
           .formName(formId)
           .type(Type.NORMAL)
@@ -363,16 +360,19 @@ public class DialobClientImpl implements DialobClient {
     // add answer meta data
     try {
       for(final var answer : answers) {
-        correctedValueSets.add(ImmutableValueSet.builder()
+        correctedValueSets.add(new ValueSet.Builder()
             .id(LOOKUP + answer.getItem().getId())
-            .addEntries(LOOKUP, objectMapper.writeValueAsString(answer.getItem()))
+            .addEntries(new ValueSetEntry.Builder()
+                .key(LOOKUP)
+                .value(objectMapper.writeValueAsString(answer.getItem()))
+                .build())
             .build());
       }
     } catch(Exception e) {
       // ignore failure on purpose
     }
     
-    return ImmutableQuestionnaire.builder().from(questionnaire).valueSets(correctedValueSets).build();
+    return new Questionnaire.Builder().from(questionnaire).valueSets(correctedValueSets).build();
   }
   
   public static FormItem LOOKUP(Answer answer, Questionnaire q, ObjectMapper om) {
@@ -392,7 +392,7 @@ public class DialobClientImpl implements DialobClient {
       return valueset;
     }
     
-    final var correction = ImmutableValueSet.builder().from(valueset);
+    final var correction = new ValueSet.Builder().from(valueset);
     final var existing = valueset.getEntries().stream().map(e -> e.getKey()).toList();
     for(final var corrections : valuesetCorrections) {
       final var key = corrections.getAnswer().getValue().toString();
@@ -403,7 +403,7 @@ public class DialobClientImpl implements DialobClient {
       final var labels = corrections.getValueSetEntry().get().getLabel();
       
       for(final var label : labels.entrySet()) {
-        correction.addEntries(ImmutableValueSetEntry.builder()
+        correction.addEntries(new ValueSetEntry.Builder()
             .key(label.getKey())
             .value(label.getValue())
             .build());

@@ -82,7 +82,7 @@ public class FormQueryImpl implements FormQuery {
         
         return db.getClient()
           .httpQuery()
-          .uri(uri -> uri.append("forms").append(resolvedFormId).build())
+          .uri(uri -> uri.append("/dialob/api/forms").append(resolvedFormId).build())
           .method(Form.class)
           .findOneObject()
           .onItem().invoke(formOpt -> {

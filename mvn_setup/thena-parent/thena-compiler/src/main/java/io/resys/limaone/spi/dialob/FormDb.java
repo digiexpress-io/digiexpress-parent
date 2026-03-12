@@ -193,22 +193,22 @@ public interface FormDb {
     
     /**
      * Finds all form tags for a specific form.
-     * Returns tags for a single form by its technical ID.
+     * Returns tags for a single form by its 'lexical name'.
      * 
      * @param formId the technical form identifier
      * @return a {@link Multi} stream of form tags for the specified form
      */
-    Multi<FormTag> findAll(String formId);
+    Multi<FormTag> findAll(String formName);
     
     /**
-     * Gets a specific form tag by form ID and tag name.
+     * Gets a specific form tag by form 'lexical name' and tag name.
      * Direct access to a specific tagged version.
      * 
-     * @param formId the technical form identifier
+     * @param formName the 'lexical name' form identifier
      * @param tagName the tag/version name
      * @return a {@link Uni} containing the specific form tag
      */
-    Uni<FormTag> getOneTag(String formId, String tagName);
+    Uni<FormTag> getOneTag(String formName, String tagName);
     
     /**
      * Finds all form tags across all forms in the current tenant.
@@ -270,12 +270,12 @@ public interface FormDb {
   interface CreateFormTag {
     
     /**
-     * Sets the technical form ID to tag.
+     * Sets the form 'lexical name' to tag.
      * 
-     * @param formId the technical form identifier
+     * @param formName the 'lexical name' form identifier
      * @return this builder for method chaining
      */
-    CreateFormTag formId(String formId);
+    CreateFormTag formName(String formName);
     
     /**
      * Sets the human-readable version name for the tag.

@@ -43,8 +43,8 @@
     <commons-collections.version>4.5.0</commons-collections.version>
     <commons-validator.version>1.10.0</commons-validator.version>
     
-    <dialob.version>3.0.1</dialob.version>
-    <dialob-b.version>2.2.9</dialob-b.version>
+
+    <dialob.version>2.4.0</dialob.version>
     <expressly.version>6.0.0</expressly.version>
     
     <javafaker.version>1.0.2</javafaker.version>
@@ -225,20 +225,18 @@
         <artifactId>javapoet</artifactId>
         <version>${javapoet.version}</version>
       </dependency>
-      <dependency>
-        <groupId>io.dialob</groupId>
-        <artifactId>dialob-api</artifactId>
-        <version>${dialob.version}</version>
-      </dependency>
 
     
       <dependency>
         <groupId>io.dialob</groupId>
         <artifactId>dialob-bom</artifactId>
-        <version>${dialob-b.version}</version>
+        <version>${dialob.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      
+      
+      
       <dependency>
         <groupId>org.glassfish.expressly</groupId>
         <artifactId>expressly</artifactId>

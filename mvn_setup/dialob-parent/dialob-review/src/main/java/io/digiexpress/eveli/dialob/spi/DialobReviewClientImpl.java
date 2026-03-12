@@ -22,9 +22,6 @@ package io.digiexpress.eveli.dialob.spi;
 
 import io.dialob.api.form.Form;
 import io.dialob.api.proto.Actions;
-import io.dialob.api.proto.ImmutableActions;
-import io.dialob.api.questionnaire.ImmutableQuestionnaire;
-import io.dialob.api.questionnaire.ImmutableQuestionnaireMetadata;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.questionnaire.Questionnaire.Metadata;
 import io.dialob.questionnaire.service.api.FormActions;
@@ -58,10 +55,10 @@ public class DialobReviewClientImpl implements DialobReviewClient {
         DialobReviewAssert.notNull(formData, () -> "form data must be defined!");
         
         final var envir = new DialobSessionEnvir(form, 
-            ImmutableQuestionnaire.builder()
+            new Questionnaire.Builder()
               .from(formData)
               .id(formData.getId() + "-review") // wipe the ID, just in case
-              .metadata(ImmutableQuestionnaireMetadata.builder()
+              .metadata(new Questionnaire.Metadata.Builder()
                   .from(formData.getMetadata())
                   .status(Metadata.Status.OPEN)
                   .completed(null)
@@ -72,10 +69,7 @@ public class DialobReviewClientImpl implements DialobReviewClient {
         final var formActions = new FormActions();
         envir.buildFullForm(new FormActionsUpdatesCallback(formActions));
         
-        return ImmutableActions.builder()
-          .actions(formActions.getActions())
-          .rev(envir.getRevision())
-          .build();
+        return new Actions(envir.getRevision(), formActions.getActions());
       }
     };
   }
@@ -112,10 +106,10 @@ public class DialobReviewClientImpl implements DialobReviewClient {
         final var formActions = new FormActions();
         
         final var envir = new DialobSessionEnvir(form, 
-            ImmutableQuestionnaire.builder()
+            new Questionnaire.Builder()
               .from(formData)
               .id(formData.getId() + "-review") // wipe the ID, just in case
-              .metadata(ImmutableQuestionnaireMetadata.builder()
+              .metadata(new Questionnaire.Metadata.Builder()
                   .from(formData.getMetadata())
                   .status(Metadata.Status.OPEN)
                   .completed(null)
@@ -127,7 +121,7 @@ public class DialobReviewClientImpl implements DialobReviewClient {
         envir.buildFullForm(new FormActionsUpdatesCallback(formActions));
 
         
-        return ImmutableActions.builder()
+        return new Actions.Builder()
           .actions(formActions.getActions())
           .rev(envir.getRevision())
           .build();

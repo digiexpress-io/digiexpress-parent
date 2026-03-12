@@ -21,17 +21,17 @@ public class FormTagQueryImpl implements FormTagQuery {
   }
 
   @Override
-  public Uni<FormTag> getOneTag(String formId, String tagName) {
-    final var cached = db.getCache().getFormTag(formId, tagName);
+  public Uni<FormTag> getOneTag(String formName, String tagName) {
+    final var cached = db.getCache().getFormTag(formName, tagName);
     if (cached.isPresent()) {
       return Uni.createFrom().item(cached.get());
     }
     return db.getClient()
         .httpQuery()
-        .uri(uri -> uri.append("forms").append(formId).append("tags").append(tagName).build())
+        .uri(uri -> uri.append("forms").append(formName).append("tags").append(tagName).build())
         .method(FormTag.class)
         .getOneObject()
-        .onItem().invoke(tag -> db.getCache().putFormTag(formId, tagName, tag));
+        .onItem().invoke(tag -> db.getCache().putFormTag(formName, tagName, tag));
   }
 
   @Override

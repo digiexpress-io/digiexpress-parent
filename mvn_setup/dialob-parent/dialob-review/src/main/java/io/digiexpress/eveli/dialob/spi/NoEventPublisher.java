@@ -49,9 +49,6 @@ public class NoEventPublisher extends QuestionnaireEventPublisher {
   public void actions(String questionnaireId, Actions actions) {
   }
 
-  @Override
-  public void clientConnected(String questionnaireId, InetAddress client) {
-  }
 
   @Override
   public void clientDisconnected(String questionnaireId, InetAddress client, int closeStatus) {

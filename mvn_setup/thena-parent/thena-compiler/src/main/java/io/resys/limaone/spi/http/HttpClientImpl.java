@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,11 +58,11 @@ public class HttpClientImpl implements HttpClient {
   }
   
   private class UriBuilderImpl implements UriBuilder {
-    private final StringBuilder pathBuilder = new StringBuilder();
+    private final StringBuilder pathBuilder = new StringBuilder("");
     
     @Override
     public UriBuilder append(String uriFragment) {
-      if (pathBuilder.length() > 0 && !pathBuilder.toString().endsWith("/")) {
+      if (!pathBuilder.toString().endsWith("/")) {
         pathBuilder.append("/");
       }
       if (uriFragment.startsWith("/")) {
@@ -98,10 +100,53 @@ public class HttpClientImpl implements HttpClient {
           final var entity = new HttpEntity<>(body, headers);
           final var response = restTemplate.exchange(uriPath, HttpMethod.POST, entity, String.class);
           
-          log.debug("POST request successful, status: {}", response.getStatusCode());
-          log.trace("POST response body: {}", response.getBody());
+          if(response.getStatusCode().is2xxSuccessful()) {
+            log.debug("POST request successful, status: {}", response.getStatusCode());
+            log.trace("POST response body: {}", response.getBody());
+            
+          } else {
+            log.error("POST request unsuccessful, status: {}", response.getStatusCode());
+            log.error("POST response body: {}", response.getBody());
+            throw new HttpCodeException("Expected 2xx but was: " + response.getStatusCode());
+          }
           
           return objectMapper.readValue(response.getBody(), responseType);
+        } catch (JsonProcessingException e) {
+          log.error("Failed to serialize/deserialize JSON for POST request to: {}", uriPath, e);
+          throw new RuntimeException("JSON processing failed: " + e.getMessage(), e);
+        } catch (HttpServerErrorException e) {
+          log.error("Server error during POST request to: {}, status: {}", uriPath, e.getStatusCode(), e);
+          throw new RuntimeException("Server error: " + e.getMessage(), e);
+        } catch (HttpClientErrorException e) {
+          log.error("Client error during POST request to: {}, status: {}", uriPath, e.getStatusCode(), e);
+          throw new RuntimeException("Client error: " + e.getMessage(), e);
+        }
+      });
+    }
+    
+    @Override
+    public <K> Uni<K> postOneObject(T object, Function<JsonObject, K> resultMapper) {
+      log.debug("Executing POST request to: {} with object type: {}", uriPath, responseType.getSimpleName());
+      return Uni.createFrom().item(() -> {
+        try {
+          final var headers = createJsonHeaders();
+          final var body = objectMapper.writeValueAsString(object);
+          log.trace("POST request body: {}", body);
+          
+          final var entity = new HttpEntity<>(body, headers);
+          final var response = restTemplate.exchange(uriPath, HttpMethod.POST, entity, String.class);
+          
+          if(response.getStatusCode().is2xxSuccessful()) {
+            log.debug("POST request successful, status: {}", response.getStatusCode());
+            log.trace("POST response body: {}", response.getBody());
+            
+          } else {
+            log.error("POST request unsuccessful, status: {}", response.getStatusCode());
+            log.error("POST response body: {}", response.getBody());
+            throw new HttpCodeException("Expected 2xx but was: " + response.getStatusCode());
+          }
+          
+          return resultMapper.apply(new JsonObject(response.getBody()));
         } catch (JsonProcessingException e) {
           log.error("Failed to serialize/deserialize JSON for POST request to: {}", uriPath, e);
           throw new RuntimeException("JSON processing failed: " + e.getMessage(), e);
@@ -127,8 +172,16 @@ public class HttpClientImpl implements HttpClient {
           final var entity = new HttpEntity<>(body, headers);
           final var response = restTemplate.exchange(uriPath, HttpMethod.PUT, entity, String.class);
           
-          log.debug("PUT request successful, status: {}", response.getStatusCode());
-          log.trace("PUT response body: {}", response.getBody());
+          if(response.getStatusCode().is2xxSuccessful()) {
+            log.debug("PUT request successful, status: {}", response.getStatusCode());
+            log.trace("PUT response body: {}", response.getBody());
+            
+          } else {
+            log.error("PUT request unsuccessful, status: {}", response.getStatusCode());
+            log.error("PUT response body: {}", response.getBody());
+            throw new HttpCodeException("Expected 2xx but was: " + response.getStatusCode());
+          }
+          
           
           return objectMapper.readValue(response.getBody(), responseType);
         } catch (JsonProcessingException e) {
@@ -143,7 +196,41 @@ public class HttpClientImpl implements HttpClient {
         }
       });
     }
-    
+    @Override
+    public <K> Uni<K> putOneObject(T object, Function<JsonObject, K> resultMapper) {
+      log.debug("Executing PUT request to: {} with object type: {}", uriPath, responseType.getSimpleName());
+      return Uni.createFrom().item(() -> {
+        try {
+          final var headers = createJsonHeaders();
+          final var body = objectMapper.writeValueAsString(object);
+          log.trace("PUT request body: {}", body);
+          
+          final var entity = new HttpEntity<>(body, headers);
+          final var response = restTemplate.exchange(uriPath, HttpMethod.PUT, entity, String.class);
+          
+          if(response.getStatusCode().is2xxSuccessful()) {
+            log.debug("PUT request successful, status: {}", response.getStatusCode());
+            log.trace("PUT response body: {}", response.getBody());
+            
+          } else {
+            log.error("PUT request unsuccessful, status: {}", response.getStatusCode());
+            log.error("PUT response body: {}", response.getBody());
+            throw new HttpCodeException("Expected 2xx but was: " + response.getStatusCode());
+          }
+          
+          return resultMapper.apply(new JsonObject(response.getBody()));
+        } catch (JsonProcessingException e) {
+          log.error("Failed to serialize/deserialize JSON for PUT request to: {}", uriPath, e);
+          throw new RuntimeException("JSON processing failed: " + e.getMessage(), e);
+        } catch (HttpServerErrorException e) {
+          log.error("Server error during PUT request to: {}, status: {}", uriPath, e.getStatusCode(), e);
+          throw new RuntimeException("Server error: " + e.getMessage(), e);
+        } catch (HttpClientErrorException e) {
+          log.error("Client error during PUT request to: {}, status: {}", uriPath, e.getStatusCode(), e);
+          throw new RuntimeException("Client error: " + e.getMessage(), e);
+        }
+      });
+    }
     @SuppressWarnings("unchecked")
     @Override
     public Multi<T> findAllObjects() {
@@ -242,4 +329,16 @@ public class HttpClientImpl implements HttpClient {
       return headers;
     }
   }
+  
+  public class HttpCodeException extends RuntimeException {
+    private static final long serialVersionUID = 4905500192836989583L;
+
+    public HttpCodeException(String message, Throwable cause) {
+      super(message, cause);
+    }
+    public HttpCodeException(String message) {
+      super(message);
+    }
+  }
+
 }

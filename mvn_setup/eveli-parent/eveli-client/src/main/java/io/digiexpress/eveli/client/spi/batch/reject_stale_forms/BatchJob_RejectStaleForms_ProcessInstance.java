@@ -77,7 +77,7 @@ public class BatchJob_RejectStaleForms_ProcessInstance implements Executor<ProcA
                 return true;
               }
 
-              final var updated = e.getQuestionnaire().get().getMetadata().getLastAnswer().toInstant();
+              final var updated = e.getQuestionnaire().get().getMetadata().getLastAnswer();
               return updated.compareTo(e.getProcess().getUpdated().toInstant()) <= 0;
             });
       }

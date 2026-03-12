@@ -4,7 +4,7 @@ package io.digiexpress.eveli.dialob.spi;
  * #%L
  * dialob-review
  * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,8 @@ package io.digiexpress.eveli.dialob.spi;
  * #L%
  */
 
-import io.dialob.session.engine.program.EvalContext.UpdatedItemsVisitor.AsyncFunctionCallVisitor;
+import io.dialob.session.engine.program.EvalResult;
+import io.dialob.session.engine.program.EvalResult.UpdatedItemsVisitor.AsyncFunctionCallVisitor;
 import io.dialob.session.engine.session.AsyncFunctionCall;
 import io.dialob.session.engine.sp.AsyncFunctionInvoker;
 
@@ -31,7 +32,7 @@ public class NoFunctionInvoker extends AsyncFunctionInvoker {
   }
 
   @Override
-  public AsyncFunctionCallVisitor createVisitor(String sessionId) {
+  public EvalResult.UpdatedItemsVisitor.AsyncFunctionCallVisitor createVisitor(String sessionId) {
     return new AsyncFunctionCallVisitor() {
       @Override
       public void visitAsyncFunctionCall(AsyncFunctionCall asyncFunctionCall) {

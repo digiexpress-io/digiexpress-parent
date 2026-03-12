@@ -2,9 +2,11 @@ package io.resys.limaone.spi.http;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 
 /**
  * Reactive HTTP client interface for querying internal LimaOne dependencies and services.
@@ -83,6 +85,16 @@ public interface HttpClient {
     Uni<T> postOneObject(T object);
     
     /**
+     * Sends a POST request with the specified object as JSON payload.
+     * 
+     * @param object the object to send as JSON in the request body
+     * @param resultMapper mapper for response object
+     * @return a {@link Uni} containing the response mapped object
+     * @throws RuntimeException if the request fails (5xx status codes)
+     */
+    <K> Uni<K> postOneObject(T object, Function<JsonObject, K> resultMapper);
+    
+    /**
      * Sends a PUT request with the specified object as JSON payload.
      * 
      * @param object the object to send as JSON in the request body
@@ -90,6 +102,16 @@ public interface HttpClient {
      * @throws RuntimeException if the request fails (5xx status codes)
      */
     Uni<T> putOneObject(T object);
+    
+    /**
+     * Sends a PUT request with the specified object as JSON payload.
+     * 
+     * @param object the object to send as JSON in the request body
+     * @param resultMapper mapper for response object
+     * @return a {@link Uni} containing the response mapped object
+     * @throws RuntimeException if the request fails (5xx status codes)
+     */
+    <K> Uni<K> putOneObject(T object, Function<JsonObject, K> resultMapper);
     
     /**
      * Performs a GET request expecting multiple objects in the response.

@@ -1,24 +1,26 @@
 package io.resys.limaone.spi.dialob;
 
 import java.util.Objects;
+import java.util.Optional;
 
+import io.dialob.api.form.FormPutResponse;
 import io.dialob.api.form.FormTag;
-import io.dialob.api.form.ImmutableFormTag;
 import io.resys.limaone.spi.dialob.FormDb.CreateFormTag;
 import io.resys.limaone.spi.dialob.FormDbImpl.FormDbProps;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CreateFormTagImpl implements CreateFormTag {
   private final FormDbProps db;
   
-  private String formId;
+  private String formName;
   private String tagName;
   
   @Override
-  public CreateFormTag formId(String formId) {
-    this.formId = Objects.requireNonNull(formId, () -> "formId must be defined");
+  public CreateFormTag formName(String formName) {
+    this.formName = Objects.requireNonNull(formName, () -> "formId must be defined");
     return this;
   }
   
@@ -30,20 +32,39 @@ public class CreateFormTagImpl implements CreateFormTag {
 
   @Override
   public Uni<FormTag> build() {
-    Objects.requireNonNull(formId, () -> "formId must be defined");
+    Objects.requireNonNull(formName, () -> "formName must be defined");
     Objects.requireNonNull(tagName, () -> "tagName must be defined");
     
-    final var body = ImmutableFormTag.builder()
+    final var body = new FormTag.Builder()
       .name(tagName)
-      .formName(formId)
+      .formName(formName)
       .type(FormTag.Type.NORMAL)
       .build();
     
     return db.getClient()
         .httpQuery()
-        .uri(uri -> uri.append("forms").append(formId).append("tags").append(tagName).build())
+        .uri(uri -> uri.append("forms").append(formName).append("tags").build())
         .method(FormTag.class)
-        .postOneObject(body)
-        .onItem().transformToUni(ignore -> new FormTagQueryImpl(db).getOneTag(formId, tagName));
+        .postOneObject(body, this::mapResult)
+        .onItem().transformToUni(ignore -> new FormTagQueryImpl(db).getOneTag(formName, tagName));
+  }
+  
+  private String mapResult(JsonObject result) {
+    
+    // does'nt serialize directly... map it manually
+    final var resp = new FormPutResponse.Builder()
+      .id("")
+      .rev("")
+      .ok(result.getBoolean("ok"))
+      .error(result.getString("error"))
+      .build();
+    if(Boolean.TRUE.equals(resp.ok())) {
+      return "";
+    }
+    final var errors = Optional.ofNullable(result.getJsonArray("errors"))
+        .map(e -> ", errors:\n" + e.encodePrettily())
+        .orElse("");
+    
+    throw new DialobException("Failed to create form tag, error msg: " + resp.getError() + errors);
   }
 }

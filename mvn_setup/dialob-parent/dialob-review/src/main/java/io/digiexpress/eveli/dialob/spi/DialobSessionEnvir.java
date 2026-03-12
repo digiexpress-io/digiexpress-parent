@@ -41,6 +41,7 @@ import io.dialob.session.engine.session.model.DialobSession;
 import io.dialob.session.engine.session.model.IdUtils;
 import io.dialob.session.engine.session.model.ValueSetState;
 import io.dialob.session.engine.sp.DialobQuestionnaireSession;
+import io.dialob.session.engine.sp.DialobQuestionnaireSessionServiceFacade;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -77,17 +78,18 @@ public class DialobSessionEnvir implements FormFinder {
       form.getMetadata().getTenantId(),
       formData.getId(),
       formData.getMetadata().getLanguage(),
-      formData.getActiveItem(), (itemId, item) -> {
+      formData.getActiveItem(), 
+      (itemId, item) -> {
         final String id = IdUtils.toString(itemId);
         if (item instanceof VariableItem) {
           for (ContextValue contextValue : formData.getContext()) {
             if (id.equals(contextValue.getId())) {
-              return Optional.ofNullable(Utils.parse(item.getValueType(), contextValue.getValue()));
+              return Optional.ofNullable(Utils.parse(item.valueType(), contextValue.getValue()));
             }
           }
           for (VariableValue variableValue : formData.getVariableValues()) {
             if (id.equals(variableValue.getId())) {
-              return Optional.ofNullable(Utils.parse(item.getValueType(), variableValue.getValue()));
+              return Optional.ofNullable(Utils.parse(item.valueType(), variableValue.getValue()));
             }
           }
         } else {
@@ -120,9 +122,7 @@ public class DialobSessionEnvir implements FormFinder {
     try {
       dialobQuestionnaireSession = applyFormSettings(
         DialobQuestionnaireSession.builder()
-          .eventPublisher(eventPublisher)
-          .sessionContextFactory(context)
-          .asyncFunctionInvoker(asyncFunctionInvoker)
+          .serviceFacade(new DialobQuestionnaireSessionServiceFacade(eventPublisher, context, asyncFunctionInvoker))
           .dialobSession(dialobSession)
           .dialobProgram(program)
           .rev(formData.getRev())
