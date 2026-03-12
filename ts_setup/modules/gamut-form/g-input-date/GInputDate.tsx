@@ -11,7 +11,7 @@ import { GInputAdornment } from '../g-input-adornment';
 
 
 import { GInputDateRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
-import { DateAndCalendar, ReadOnlyDate } from './DateAndCalendar';
+import { DateAndCalendar, ReadOnlyDateAndCalendar } from './DateAndCalendar';
 
 
 
@@ -74,7 +74,7 @@ export const GInputDate: React.FC<GInputDateProps> = (initProps) => {
     slots: {
       error: GInputError,
       label: GInputLabel,
-      input: props.readOnly ? ReadOnlyDate : DateAndCalendar,
+      input: props.readOnly ? ReadOnlyDateAndCalendar : DateAndCalendar,
       adornment: GInputAdornment
     },
     slotProps: {

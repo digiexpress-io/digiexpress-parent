@@ -62,7 +62,7 @@ export const GInputText: React.FC<GInputTextProps> = (initProps) => {
       error: GInputError,
       label: GInputLabel,
       adornment: GInputAdornment,
-      input: props.readOnly ? ReadOnlyText : TextInput,
+      input: props.readOnly ? ReadOnlyTextInput : TextInput,
     },
     slotProps: {
       error: { id, errors },
@@ -80,7 +80,7 @@ export const GInputText: React.FC<GInputTextProps> = (initProps) => {
 }
 
 
-const ReadOnlyText: React.FC<GInputBaseAnyProps & GInputTextProps> = (props) => {
+const ReadOnlyTextInput: React.FC<GInputBaseAnyProps & GInputTextProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
   return (
     <TextField value={props.value || '--'} className={classes.input} slotProps={{ input: { readOnly: true } }} />

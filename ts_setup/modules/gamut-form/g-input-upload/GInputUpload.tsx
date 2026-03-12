@@ -65,7 +65,7 @@ export const GInputUpload: React.FC<GInputUploadProps> = (initProps) => {
       error: GInputError,
       label: GInputLabel,
       adornment: GInputAdornment,
-      input: props.readOnly ? ReadOnlyUpload : UploadInput,
+      input: props.readOnly ? ReadOnlyUploadInput : UploadInput,
     },
     slotProps: {
       error: { id, errors },
@@ -81,7 +81,7 @@ export const GInputUpload: React.FC<GInputUploadProps> = (initProps) => {
 }
 
 
-const ReadOnlyUpload: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) => {
+const ReadOnlyUploadInput: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) => {
   const fileNames: string[] = props.value ? JSON.parse(props.value) : [];
   return (
     <Table>

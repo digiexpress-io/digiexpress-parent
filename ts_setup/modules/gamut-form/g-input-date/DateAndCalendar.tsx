@@ -48,7 +48,7 @@ const input = React.forwardRef<any, DelegateInputProps>((props, _ref) => {
   />)
 })
 
-export const ReadOnlyDate: React.FC<GInputDateProps> = (props) => {
+export const ReadOnlyDateAndCalendar: React.FC<GInputDateProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
   const ownerState = { variant: props.variant ?? 'date' };
   const parsed = parseInit(props.value);

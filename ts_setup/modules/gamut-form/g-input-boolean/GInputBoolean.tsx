@@ -64,7 +64,7 @@ export const GInputBoolean: React.FC<GInputBooleanProps> = (initProps) => {
     slots: {
       error: GInputError,
       label: GInputLabel,
-      input: props.readOnly ? ReadOnlyBoolean : YesAndNoCheckbox,
+      input: props.readOnly ? ReadOnlyYesAndNoCheckbox : YesAndNoCheckbox,
       adornment: GInputAdornment
     },
     slotProps: {
@@ -81,7 +81,7 @@ export const GInputBoolean: React.FC<GInputBooleanProps> = (initProps) => {
 }
 
 
-const ReadOnlyBoolean: React.FC<GInputBaseAnyProps & GInputBooleanProps> = (props) => {
+const ReadOnlyYesAndNoCheckbox: React.FC<GInputBaseAnyProps & GInputBooleanProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
   const isYes = props.value === true;
   const isNo = props.value === false;

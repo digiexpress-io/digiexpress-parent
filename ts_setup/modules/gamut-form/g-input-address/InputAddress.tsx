@@ -10,7 +10,7 @@ import { useInput } from './InputProvider';
 
 
 
-export const ReadOnlyAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (props) => {
+export const ReadOnlyInputAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (props) => {
   return <TextField fullWidth value={props.value || '--'} slotProps={{ input: { readOnly: true } }} />;
 }
 

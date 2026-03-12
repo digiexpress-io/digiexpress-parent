@@ -11,7 +11,7 @@ function parseInit(value: string | undefined) {
   return value ?? null;
 }
 
-export const ReadOnlyTime: React.FC<GInputTimeProps> = (props) => {
+export const ReadOnlyTimeAndCalendar: React.FC<GInputTimeProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
   const ownerState = { variant: props.variant ?? 'time' };
   return (

@@ -8,7 +8,7 @@ import { GInputAutoComplete } from '../g-input-autocomplete';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
-export const ReadOnlyMultilist: React.FC<GInputBaseAnyProps & GInputMultilistProps> = (props) => {
+export const ReadOnlyMultilistAutocomplete: React.FC<GInputBaseAnyProps & GInputMultilistProps> = (props) => {
   const { datasource, id, variant } = props;
   const classes = useUtilityClasses(id, variant);
   const selectedValues = props.value ?? [];

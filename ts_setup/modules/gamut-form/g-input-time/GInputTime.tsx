@@ -11,7 +11,7 @@ import { GInputError } from '../g-input-error';
 import { GInputLabel } from '../g-input-label';
 
 import { GInputTimeRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
-import { TimeAndCalendar, ReadOnlyTime } from './TimeAndCalendar';
+import { TimeAndCalendar, ReadOnlyTimeAndCalendar } from './TimeAndCalendar';
 
 
 
@@ -62,7 +62,7 @@ export const GInputTime: React.FC<GInputTimeProps> = (initProps) => {
     slots: {
       error: GInputError,
       label: GInputLabel,
-      input: props.readOnly ? ReadOnlyTime : TimeAndCalendar,
+      input: props.readOnly ? ReadOnlyTimeAndCalendar : TimeAndCalendar,
       adornment: GInputAdornment
     },
     slotProps: {

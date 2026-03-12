@@ -12,7 +12,7 @@ import { GInputAdornment } from '../g-input-adornment';
 import { MUI_NAME, GInputMultilistRoot, useUtilityClasses } from './useUtilityClasses';
 import { GInputMultilistProps } from './g-input-multilist-types';
 import { CheckboxList, ReadOnlyCheckboxList } from './CheckboxList';
-import { MultilistAutocomplete, ReadOnlyMultilist } from './MultilistAutocomplete';
+import { MultilistAutocomplete, ReadOnlyMultilistAutocomplete } from './MultilistAutocomplete';
 
 
 
@@ -40,7 +40,7 @@ export const GInputMultilist: React.FC<GInputMultilistProps> = (initProps) => {
   const InputComponent = (() => {
     switch (variant) {
       case 'radio': return props.readOnly ? ReadOnlyCheckboxList : CheckboxList;
-      default: return props.readOnly ? ReadOnlyMultilist : MultilistAutocomplete;
+      default: return props.readOnly ? ReadOnlyMultilistAutocomplete : MultilistAutocomplete;
     }
   })();
 
