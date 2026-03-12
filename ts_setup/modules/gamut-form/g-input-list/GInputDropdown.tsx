@@ -56,9 +56,7 @@ export const ReadOnlyDropdown: React.FC<GInputListProps> = (props) => {
   const displayValue = selectedItem?.value ?? '--';
 
   return (
-    <TextField fullWidth value={displayValue} className={classes.input}
-      slotProps={{ input: { readOnly: true } }}
-    />
+    <TextField fullWidth value={displayValue} className={classes.input} slotProps={{ input: { readOnly: true } }} />
   );
 }
 

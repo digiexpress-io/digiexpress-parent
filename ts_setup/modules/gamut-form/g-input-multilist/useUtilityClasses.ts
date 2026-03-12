@@ -35,6 +35,7 @@ export const GInputMultilistRoot = styled('div', {
         display: 'flex',
         flexWrap: 'wrap' as const,
         gap: theme.spacing(0.5),
+        paddingLeft: theme.spacing(2), 
       }
     } : {}),
 
