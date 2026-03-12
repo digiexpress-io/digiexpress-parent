@@ -16,10 +16,7 @@ export const ReadOnlyMultilist: React.FC<GInputBaseAnyProps & GInputMultilistPro
 
   return (
     <div className={classes.tags}>
-      {selectedLabels.length === 0
-        ? '--'
-        : selectedLabels.map((label, i) => <Chip key={i} label={label} />)
-      }
+      {selectedLabels.length === 0 ? '--' : selectedLabels.map((label, i) => <Chip key={i} label={label} />)}
     </div>
   );
 }
