@@ -48,15 +48,22 @@ public class FormTest {
     
     // form queries
     {
-    final var form_byId = formDb.withTenant()
-        .formQuery().formId(created.getId()).findOne()
+      final var form_byId = formDb.withTenant()
+          .formQuery().formId(created.getId()).findOne()
+          .await().atMost(Duration.ofMinutes(1));
+      Assertions.assertTrue(form_byId.isPresent(), "Expected exactly 1 created form by technical id");
+    
+      
+      final var formByTag = formDb.withTenant()
+        .formQuery().formTag(created.getName(), "my-first-tag").findOne()
         .await().atMost(Duration.ofMinutes(1));
-    Assertions.assertTrue(form_byId.isPresent(), "Expected exactly 1 created form by technical id");
-  
-    final var formByTag = formDb.withTenant()
-      .formQuery().formTag(created.getName(), "my-first-tag").findOne()
-      .await().atMost(Duration.ofMinutes(1));
-    Assertions.assertTrue(formByTag.isPresent(), "Expected exactly 1 created form by name and tag");
+      Assertions.assertTrue(formByTag.isPresent(), "Expected exactly 1 created form by name and tag");
+      
+      
+      final var allForms = formDb.withTenant()
+          .formMetaQuery().findAll().collect().asList()
+          .await().atMost(Duration.ofMinutes(1));
+      Assertions.assertTrue(formByTag.isPresent(), "Expected exactly 1 created form");
     }
     
     // form queries without cache
@@ -67,11 +74,19 @@ public class FormTest {
           .await().atMost(Duration.ofMinutes(1));
       Assertions.assertTrue(form_byId.isPresent(), "Expected exactly 1 created form by technical id");
       
+      
       formDb.getFormDbProps().getCache().evictAll();
       final var formByTag = formDb.withTenant()
         .formQuery().formTag(created.getName(), "my-first-tag").findOne()
         .await().atMost(Duration.ofMinutes(1));
       Assertions.assertTrue(formByTag.isPresent(), "Expected exactly 1 created form by name and tag");
+      
+      
+      formDb.getFormDbProps().getCache().evictAll();
+      final var allForms = formDb.withTenant()
+          .formMetaQuery().findAll().collect().asList()
+          .await().atMost(Duration.ofMinutes(1));
+      Assertions.assertTrue(formByTag.isPresent(), "Expected exactly 1 created form");
     }
     
     
