@@ -34,8 +34,8 @@ public class WorkflowTest extends DbSupport {
       .astParser(authoring.getConfig().getAstParser())
       .build();
     
-    
-    final var bundle = compiler.compile(authoring.worldQuery().findAllSync());
+    final var world = authoring.worldQuery().findAllSync();
+    final var bundle = compiler.compile(world);
   }
   
   @SuppressWarnings("unused")

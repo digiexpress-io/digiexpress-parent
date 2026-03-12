@@ -33,10 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WorldPersistenceMapper {
 
-  public static ModelWorld mapFrom(Ref ref) {
-    return mapFrom(ref, Collections.emptyList());
-  }
-  public static ModelWorld mapFrom(Ref ref, List<Tag> tags) {
+
+  public static ImmutableModelWorld.Builder builder(Ref ref, List<Tag> tags) {
     final var builder = ImmutableModelWorld.builder()
         .refId(ref.getId())
         .commitId(ref.getCommitId())
@@ -46,82 +44,7 @@ public class WorldPersistenceMapper {
       .stream()
       .map(ProxyBlob::new)
       .filter(p -> p.getBodyType() != null)
-      .forEach(node -> {
-
-        switch(node.getBodyType()) {
-          case ARTICLE: {
-            final var p = node.mapTo(Article.class);
-            builder.putArticles(p.getId(), p);
-            return;
-          }
-          case LOCALE: {
-            final var p = node.mapTo(Locale.class);
-            builder.putLocales(p.getId(), p);
-            return;
-          }
-          case ARTICLE_LINK: {
-            final var p = node.mapTo(ArticleLink.class);
-            builder.putArticleLinks(p.getId(), p);
-            return;
-          }
-          case ARTICLE_WORKFLOW: {
-            final var p = node.mapTo(ArticleWorkflow.class);
-            builder.putArticleWorkflows(p.getId(), p);
-            return;
-          }
-          case ARTICLE_PAGE: {
-            final var p = node.mapTo(ArticlePage.class);
-            builder.putArticlePages(p.getId(), p);
-            return;
-          }
-          case ARTICLE_TEMPLATE: {
-            final var p = node.mapTo(ArticleTemplate.class);
-            builder.putArticleTemplates(p.getId(), p);
-            return;
-          }
-          case FLOW: {
-            final var p = node.mapTo(Flow.class);
-            builder.putFlows(p.getId(), p);
-            return;
-          }
-          case FLOW_TASK: {
-            final var p = node.mapTo(FlowTask.class);
-            builder.putFlowTasks(p.getId(), p);
-            return;
-          }
-          case DECISION_TABLE: {
-            final var p = node.mapTo(DecisionTable.class);
-            builder.putDecisionTables(p.getId(), p);
-            return;
-          }
-//          case DIALOB: {
-//            final var p = node.mapTo(Dialob.class);
-//            builder.putDialobs(p.getId(), p);
-//            return;
-//          }
-//          case PRINTOUT: {
-//            final var p = node.mapTo(Printout.class);
-//            builder.putPrintouts(p.getId(), p);
-//            return;
-//          }
-//          case PRINTOUT_PAGE: {
-//            final var p = node.mapTo(PrintoutPage.class);
-//            builder.putPrintoutPages(p.getId(), p);
-//            return;
-//          }
-//          case PRINTOUT_SCRIPT: {
-//            final var p = node.mapTo(PrintoutScript.class);
-//            builder.putPrintoutScripts(p.getId(), p);
-//            return;
-//          }
-//          case PRINTOUT_RESOURCE: {
-//            final var p = node.mapTo(PrintoutResource.class);
-//            builder.putPrintoutResources(p.getId(), p);
-//            return;
-//          }
-          default: return;
-        }
-    });
+      .forEach(node ->  mapFrom(node, builder));
     
     for(final var tag : tags) {
       final var deployment = ImmutableDeployment.builder()
@@ -145,10 +68,94 @@ public class WorldPersistenceMapper {
           .build();
       builder.putDeployments(tag.getId(), model);
     }
-    return builder.build();
+    return builder;
   }
   
   
+  
+  public static ModelWorld mapFrom(Ref ref) {
+    return mapFrom(ref, Collections.emptyList());
+  }
+  
+  public static ModelWorld mapFrom(Ref ref, List<Tag> tags) {
+    return builder(ref, tags).build();
+  }
+  
+  public static void mapFrom(ProxyBlob node, ImmutableModelWorld.Builder builder) {
+    switch(node.getBodyType()) {
+      case ARTICLE: {
+        final var p = node.mapTo(Article.class);
+        builder.putArticles(p.getId(), p);
+        return;
+      }
+      case LOCALE: {
+        final var p = node.mapTo(Locale.class);
+        builder.putLocales(p.getId(), p);
+        return;
+      }
+      case ARTICLE_LINK: {
+        final var p = node.mapTo(ArticleLink.class);
+        builder.putArticleLinks(p.getId(), p);
+        return;
+      }
+      case ARTICLE_WORKFLOW: {
+        final var p = node.mapTo(ArticleWorkflow.class);
+        builder.putArticleWorkflows(p.getId(), p);
+        return;
+      }
+      case ARTICLE_PAGE: {
+        final var p = node.mapTo(ArticlePage.class);
+        builder.putArticlePages(p.getId(), p);
+        return;
+      }
+      case ARTICLE_TEMPLATE: {
+        final var p = node.mapTo(ArticleTemplate.class);
+        builder.putArticleTemplates(p.getId(), p);
+        return;
+      }
+      case FLOW: {
+        final var p = node.mapTo(Flow.class);
+        builder.putFlows(p.getId(), p);
+        return;
+      }
+      case FLOW_TASK: {
+        final var p = node.mapTo(FlowTask.class);
+        builder.putFlowTasks(p.getId(), p);
+        return;
+      }
+      case DECISION_TABLE: {
+        final var p = node.mapTo(DecisionTable.class);
+        builder.putDecisionTables(p.getId(), p);
+        return;
+      }
+//      case DIALOB: {
+//        final var p = node.mapTo(Dialob.class);
+//        builder.putDialobs(p.getId(), p);
+//        return;
+//      }
+//      case PRINTOUT: {
+//        final var p = node.mapTo(Printout.class);
+//        builder.putPrintouts(p.getId(), p);
+//        return;
+//      }
+//      case PRINTOUT_PAGE: {
+//        final var p = node.mapTo(PrintoutPage.class);
+//        builder.putPrintoutPages(p.getId(), p);
+//        return;
+//      }
+//      case PRINTOUT_SCRIPT: {
+//        final var p = node.mapTo(PrintoutScript.class);
+//        builder.putPrintoutScripts(p.getId(), p);
+//        return;
+//      }
+//      case PRINTOUT_RESOURCE: {
+//        final var p = node.mapTo(PrintoutResource.class);
+//        builder.putPrintoutResources(p.getId(), p);
+//        return;
+//      }
+      default: return;
+    }
+  }
   
   
   @Getter

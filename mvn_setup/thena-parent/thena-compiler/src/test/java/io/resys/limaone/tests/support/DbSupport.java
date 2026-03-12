@@ -206,7 +206,7 @@ public class DbSupport {
         .astParser(AST_ParserImpl.builder().dev(true).formDb(formDb).build())
         .workerPool(workerPool)
         .workerTimeout(workerTimeout)
-        .persistence(new WorldPersistenceFs(client, workerPool, workerTimeout))
+        .persistence(new WorldPersistenceFs(formDb, client, workerPool, workerTimeout))
         .author(() -> "sam vimes")
         .build();
   }

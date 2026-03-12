@@ -11,6 +11,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import io.resys.limaone.authoring.Authoring.WorldQuery;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.thena.fs.api.FileSystem;
 import io.resys.thena.fs.entities.Tag;
 import io.smallrye.mutiny.Uni;
@@ -20,8 +21,8 @@ import lombok.RequiredArgsConstructor;
 public class WorldQueryImpl implements WorldQuery {
   private final ScheduledExecutorService workerPool;
   private final Duration workerTimeout;
-  
   private final FileSystem filesystem;
+  private final FormDb formDb;
   private final List<BodyType> userTypes = new ArrayList<>();
   
   @Override
@@ -55,8 +56,13 @@ public class WorldQueryImpl implements WorldQuery {
         tenant.tagQuery().findAll().collect().asList() :
         Uni.createFrom().item(Collections.emptyList());
     
-    return Uni.combine().all().unis(refUni, tagsUni)
-      .asTuple().onItem().transform(tuple -> WorldPersistenceMapper.mapFrom(tuple.getItem1(), tuple.getItem2()));
+    return Uni.combine().all().unis(refUni, tagsUni).asTuple()
+      .onItem().transform(tuple -> WorldPersistenceMapper.mapFrom(tuple.getItem1(), tuple.getItem2()))
+      .onItem().transformToUni(world -> join(world));
+  }
+  
+  private Uni<ModelWorld> join(ModelWorld world) {
+    
   }
 
   @Override
