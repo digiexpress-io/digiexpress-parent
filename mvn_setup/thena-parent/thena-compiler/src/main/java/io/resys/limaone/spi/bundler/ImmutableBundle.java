@@ -51,7 +51,7 @@ public class ImmutableBundle implements Bundle {
     final var flows = new BundleGroup<FlowProgram>(BodyType.FLOW);
     final var flowTasks = new BundleGroup<FlowTaskProgram>(BodyType.FLOW_TASK);
     final var decisions = new BundleGroup<DecisionProgram>(BodyType.DECISION_TABLE);
-    final var dialobs = new BundleGroup<WorkflowProgram>(BodyType.DIALOB);
+    final var dialobs = new BundleGroup<WorkflowProgram>(BodyType.DIALOB_FORM);
     
     programs.stream().forEach(program -> {
       articles.accept(program);

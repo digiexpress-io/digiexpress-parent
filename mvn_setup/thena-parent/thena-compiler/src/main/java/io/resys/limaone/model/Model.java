@@ -42,7 +42,7 @@ public interface Model<T extends Body>  extends Serializable {
     FLOW_TASK, 
     DECISION_TABLE,
     
-    DIALOB,
+    DIALOB_FORM,
     
     PRINTOUT,
     PRINTOUT_PAGE,
@@ -70,7 +70,7 @@ public interface Model<T extends Body>  extends Serializable {
     Map<String, Model<Flow>> getFlows();
     Map<String, Model<FlowTask>> getFlowTasks();
     Map<String, Model<Locale>> getLocales();
-    Map<String, Model<Dialob>> getForms();
+    Map<String, Model<DialobForm>> getForms();
     
 
     default Optional<Model<Locale>> findOneLocale(String idOrValue) {

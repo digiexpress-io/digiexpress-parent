@@ -35,7 +35,7 @@ public class NextWorldImpl implements NextWorld {
   public NextWorldImpl(CommitBuilder commitBuilder, Ref ref, String author, OffsetDateTime createdAt) {
     super();
     this.ref = ref;
-    this.world = WorldPersistenceMapper.mapFrom(ref);
+    this.world = WorldFactory.from(ref).build();
     this.commitBuilder = commitBuilder;
     this.commitAuthor = author;
     this.createdAt = createdAt;

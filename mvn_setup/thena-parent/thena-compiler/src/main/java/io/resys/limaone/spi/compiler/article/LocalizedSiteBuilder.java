@@ -229,7 +229,7 @@ public class LocalizedSiteBuilder {
       });
       
     newArtifact.requireDependnecy(ImmutableDependency_AST.builder()
-      .type(BodyType.DIALOB)
+      .type(BodyType.DIALOB_FORM)
       .dependencyId(link.getFormName() + "::" + link.getFormTag())
       .build(), new Validator() {
         

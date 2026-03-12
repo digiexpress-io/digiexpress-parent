@@ -57,12 +57,17 @@ public class WorldQueryImpl implements WorldQuery {
         Uni.createFrom().item(Collections.emptyList());
     
     return Uni.combine().all().unis(refUni, tagsUni).asTuple()
-      .onItem().transform(tuple -> WorldPersistenceMapper.mapFrom(tuple.getItem1(), tuple.getItem2()))
-      .onItem().transformToUni(world -> join(world));
-  }
-  
-  private Uni<ModelWorld> join(ModelWorld world) {
-    
+      .onItem().transformToUni(tuple -> {
+        
+        if(userTypes.contains(BodyType.DIALOB_FORM)) {
+          return WorldFactory
+            .from(tuple.getItem1())
+            .addTags(tuple.getItem2())
+            .buildWithForms(formDb);
+        }
+        final var world = WorldFactory.from(tuple.getItem1()).addTags(tuple.getItem2()).build();
+        return Uni.createFrom().item(world);
+      });
   }
 
   @Override
