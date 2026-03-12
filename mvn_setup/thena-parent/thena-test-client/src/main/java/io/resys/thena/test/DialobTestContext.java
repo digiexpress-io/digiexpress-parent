@@ -1,5 +1,7 @@
 package io.resys.thena.test;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * thena-test-client
@@ -25,17 +27,26 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 import io.resys.thena.test.DialobTest.FormUrl;
+import io.vertx.core.VertxOptions;
+import io.vertx.mutiny.core.Vertx;
+import io.vertx.mutiny.pgclient.PgBuilder;
+import io.vertx.mutiny.sqlclient.Pool;
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.sqlclient.PoolOptions;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
 public class DialobTestContext {
-  static Network network;
-  static PostgreSQLContainer<?> postgres;
-  static GenericContainer<?> redis;
-  static GenericContainer<?> dialob;
-
-  static String dialobBaseUrl;
+  private Network network;
+  private PostgreSQLContainer<?> postgres;
+  private GenericContainer<?> redis;
+  private GenericContainer<?> dialob;
+  private String dialobBaseUrl;
+  
+  private Vertx vertx;
+  private Pool pool;
+  
 
   @SuppressWarnings("resource")
   public void initialize(DialobTest data) {
@@ -84,17 +95,60 @@ public class DialobTestContext {
     dialob.start();
     dialobBaseUrl = "http://" + dialob.getHost() + ":" + dialob.getMappedPort(8081) + "/dialob";    
     
+    this.vertx = Vertx.vertx(new VertxOptions());
+    this.pool = PgBuilder.pool()
+        .with(new PoolOptions().setMaxSize(6))
+        .connectingTo(new PgConnectOptions()
+          .setDatabase(postgres.getDatabaseName())
+          .setHost(postgres.getHost())
+          .setPort(postgres.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT))
+          .setUser(postgres.getUsername())
+          .setPassword(postgres.getPassword()))
+        .using(vertx)
+        .build();
+    
+    // some hackaruu
+    waitUntilPostgresqlAcceptsConnections(pool);
+    
     log.info("Dialob Forms are running at: " + dialobBaseUrl);
   }
 
   public void cleanup() {
+    
+    vertx.close()
+    .onFailure()
+    .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
+    .await().atMost(Duration.ofSeconds(60));
+    
     dialob.stop();
     redis.stop();
     postgres.stop();
     network.close();
   }
   
+  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
+    // On some platforms there may be some delay before postgresql starts to respond.
+    // Try until postgresql connection is successfully opened.
+    final var connection = pool.getConnection()
+      .onFailure()
+      .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
+      .await().atMost(Duration.ofSeconds(60));
+    connection.closeAndForget();
+  }
+  
   public FormUrl getFormUrl() {
     return new FormUrl(dialobBaseUrl);
+  }
+  
+  
+  public void clearTestData() {
+    pool.withTransaction(tx -> {
+      return tx.query("delete from form").execute()
+          .flatMap(r -> tx.query("delete from form_archive").execute())
+          .flatMap(r -> tx.query("delete from form_rev").execute())
+          .flatMap(r -> tx.query("delete from form_rev_archive").execute())
+          .flatMap(r -> tx.query("delete from questionnaire").execute())
+          .flatMap(r -> tx.query("delete from form_document").execute());
+    }).await().indefinitely();
   }
 }

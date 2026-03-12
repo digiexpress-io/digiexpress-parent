@@ -41,4 +41,11 @@ public @interface DialobTest {
   public static class FormUrl {
     String url;
   }
+  
+  
+  @Target({ElementType.METHOD})
+  @Retention(RetentionPolicy.RUNTIME)
+  public @interface DialobResetDB {
+    boolean enabled() default true;
+  }
 }

@@ -24,14 +24,16 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
+import io.resys.thena.test.DialobTest.DialobResetDB;
 import io.resys.thena.test.DialobTest.FormUrl;
 
-public class DialobTestExtension implements BeforeAllCallback, AfterAllCallback, ParameterResolver {
+public class DialobTestExtension implements BeforeAllCallback, AfterAllCallback, ParameterResolver, BeforeEachCallback {
   private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(DialobTestExtension.class);
   
   @Override
@@ -82,6 +84,24 @@ public class DialobTestExtension implements BeforeAllCallback, AfterAllCallback,
   @Override
   public void afterAll(ExtensionContext context) throws Exception {
     
+  }
+  
+  
+  @Override
+  public void beforeEach(ExtensionContext context) throws Exception {
+    final var method = context.getRequiredTestMethod();
+    final var annotation = AnnotationSupport.findAnnotation(method, DialobResetDB.class);
+
+    if(annotation.isPresent()) {
+      final var dialobContext = getContext(context);
+      if (dialobContext.isPresent()) {
+        final var ctx = dialobContext.get();
+
+        if (annotation.get().enabled()) {
+            ctx.clearTestData();
+        }
+      }
+    }
   }
   
   private Optional<DialobTestContext> getContext(ExtensionContext context) {
