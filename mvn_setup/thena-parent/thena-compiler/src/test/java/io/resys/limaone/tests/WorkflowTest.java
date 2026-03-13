@@ -2,13 +2,17 @@ package io.resys.limaone.tests;
 
 import java.time.Duration;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.dialob.api.form.Form;
 import io.resys.limaone.model.ImmutableLocaleLabel;
 import io.resys.limaone.persistence.AuthoringImpl;
+import io.resys.limaone.program.ImmutableWorkflowAnonProps;
+import io.resys.limaone.program.ImmutableWorkflowIdentityProps;
 import io.resys.limaone.spi.compiler.CompilerImpl;
 import io.resys.limaone.spi.dialob.FormDb;
+import io.resys.limaone.spi.program.DefaultRuntime;
 import io.resys.limaone.tests.support.DbSupport;
 import io.resys.limaone.tests.support.TestTemplate;
 import io.resys.thena.test.DialobTest;
@@ -31,12 +35,29 @@ public class WorkflowTest extends DbSupport {
     
     final var authoring = new AuthoringImpl(createConfig(formDb));
     final var compiler = CompilerImpl.builder()
+      .formDb(formDb)
       .astParser(authoring.getConfig().getAstParser())
       .build();
     
     // magic asset resource... has all we need to run dialob/wrench/stencil
     final var world = authoring.worldQuery().findAllSync();
-    final var bundle = compiler.compile(world);
+    final var bundle = compiler.compile(world).id(world.getName()).build();
+    
+    final var workflow = bundle.queryWorkflows().name("form-1").getOne();
+    final var workflowProps = ImmutableWorkflowAnonProps.builder().build();
+    final var user = ImmutableWorkflowIdentityProps.builder().identity("user-1").build();
+    
+    // Assert questionnaire
+    final var workflowResult = workflow.run(DefaultRuntime.empty(), user, workflowProps).andGetBody();
+    
+    
+    Assertions.assertEquals(workflowResult.getUserDecision().getTaskAllowed(), true);
+    Assertions.assertEquals(workflowResult.getTaskDecision().isPresent(), true);
+    
+    Assertions.assertEquals(
+        workflowResult.getTaskDecision().get(), 
+        true);
+
   }
   
   @SuppressWarnings("unused")

@@ -11,11 +11,13 @@ import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.Runtime;
 import io.resys.limaone.program.WorkflowProgram;
+import io.resys.limaone.spi.dialob.FormDb;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class WorkflowProgramImpl implements WorkflowProgram {
+  private final FormDb formDb;
   private final Model<ArticleWorkflow> target;
   private final ArticleWorkflow_AST ast;
   private final ProgramStatus status;
@@ -58,10 +60,19 @@ public class WorkflowProgramImpl implements WorkflowProgram {
   }
 
   @Override
-  public WorkflowExecutor run(Runtime runtime, WorkflowIdentityProps identity,
-      WorkflowInputProps programInput) {
-    // TODO Auto-generated method stub
-    return null;
+  public WorkflowExecutor run(Runtime runtime, WorkflowIdentityProps identity, WorkflowInputProps programInput) {
+    return new WorkflowExecutor() {
+      @Override
+      public WorkflowResult andGetBody() {
+
+        if(target.getBody().getStartDate() == null) {
+          
+        }
+        
+        return null;
+      }
+    };
   }
+  
 
 }

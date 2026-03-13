@@ -1,5 +1,6 @@
 package io.resys.limaone.spi.dialob;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -9,6 +10,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.form.Form;
 import io.dialob.api.form.FormTag;
+import io.dialob.api.proto.Actions;
+import io.dialob.api.questionnaire.Questionnaire;
+import io.dialob.api.rest.IdAndRevision;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
@@ -314,5 +318,28 @@ public interface FormDb {
      * @return the form's metadata object
      */
     Form.Metadata getMetadata();   
+  }
+  
+  
+  interface FormInstance {
+    Questionnaire getQuestionnaire();
+  }
+  
+  interface MergeFormInstance {
+    MergeFormInstance formInstanceId(String questionnaireId);
+    MergeFormInstance props(Actions actions);
+    Uni<FormInstance> build();
+  }
+  
+  interface FormInstanceQuery {
+    Uni<FormInstance> getOne(String questionnaireId);
+  }
+  
+  interface CreateFormInstance {
+    CreateFormInstance formId(String formId);
+    CreateFormInstance language(String language);
+    CreateFormInstance addContext(String id, Serializable value);
+    CreateFormInstance addAnswer(String id, Serializable value);
+    Uni<IdAndRevision> build();
   }
 }

@@ -2,6 +2,7 @@ package io.resys.limaone.program;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -27,12 +28,12 @@ public interface WorkflowProgram extends Program {
   }
   
   interface WorkflowResult extends ProgramResult {
-    UserDecision getUserDecision();
+    UserAccessDecision getUserDecision();
     Optional<TaskDecision> getTaskDecision();
   }
   
-  @Value.Immutable @JsonSerialize(as = ImmutableUserDecision.class) @JsonDeserialize(as = ImmutableUserDecision.class)
-  interface UserDecision extends Serializable {
+  @Value.Immutable @JsonSerialize(as = ImmutableUserAccessDecision.class) @JsonDeserialize(as = ImmutableUserAccessDecision.class)
+  interface UserAccessDecision extends Serializable {
     Boolean getTaskAllowed();
   }
   
@@ -88,7 +89,7 @@ public interface WorkflowProgram extends Program {
   interface WorkflowIdentityProps {
     // even anon user needs to have some anon identity and some primitive roles
     String getIdentity();
-    String getIdentityRoles();
+    List<String> getIdentityRoles();
     
     // Anything relevant to pass downstream
     @Nullable JsonObject getAdditionalProps();

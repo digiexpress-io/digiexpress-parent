@@ -27,9 +27,11 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ArticleWorkflowParserImpl implements ArticleWorkflowParser {
+  private final String DT_AUTH_NAME = "ProcessAuthorizationDT";
   private final AST_ParserProps props;
   private Consumer<Dependency_AST> onDependency;
   private Model<ArticleWorkflow> model;
+  
   
   @Override
   public ArticleWorkflowParser onDependency(Consumer<Dependency_AST> onDependency) {
@@ -61,32 +63,27 @@ public class ArticleWorkflowParserImpl implements ArticleWorkflowParser {
 
   
   private ArticleWorkflow_AST createAst(Model<ArticleWorkflow> model) {
-    final List<ModelError> errors = new ArrayList<>();
-    
     final var workflow = model.getBody();
+    final List<ModelError> errors = new ArrayList<>();
     final var dependencies = new ArrayList<Dependency_AST>();
-
+    
+    // DT authorization 
+    dependencies.add(ImmutableDependency_AST.builder().dependencyId(DT_AUTH_NAME).type(BodyType.DECISION_TABLE).build());
+    
     // Flow dependency
     if(StringUtils.isBlank(workflow.getFlowName())) {
       errors.add(ImmutableModelError.builder().msg("Flow name must be defined!").build());
     } else {
-      dependencies.add(ImmutableDependency_AST.builder()
-          .dependencyId(workflow.getFlowName())
-          .type(BodyType.FLOW)
-          .build());
+      dependencies.add(ImmutableDependency_AST.builder().dependencyId(workflow.getFlowName()).type(BodyType.FLOW).build());
     }
 
-    // form dependency
+    // Form dependency
     if(StringUtils.isBlank(workflow.getFormName()) || StringUtils.isBlank(workflow.getFormTag())) {
       errors.add(ImmutableModelError.builder().msg("Form name and tag must be defined!").build());
     } else {
       final var dependencyId = DialobFormParserImpl.getFormDep(workflow.getFormName(), workflow.getFormTag());
-      dependencies.add(ImmutableDependency_AST.builder()
-          .dependencyId(dependencyId)
-          .type(BodyType.DIALOB_FORM)
-          .build());
+      dependencies.add(ImmutableDependency_AST.builder().dependencyId(dependencyId).type(BodyType.DIALOB_FORM).build());
     }
-    
     
     return ImmutableArticleWorkflow_AST.builder()
         .addAllErrors(errors)
@@ -97,6 +94,4 @@ public class ArticleWorkflowParserImpl implements ArticleWorkflowParser {
         .dependencies(dependencies)
         .build();
   }
-
-
 }

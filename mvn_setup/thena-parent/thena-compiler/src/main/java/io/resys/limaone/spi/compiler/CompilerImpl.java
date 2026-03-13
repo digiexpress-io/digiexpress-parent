@@ -11,6 +11,8 @@ import io.resys.limaone.program.Compiler;
 import io.resys.limaone.spi.ast.AST_ParserImpl;
 import io.resys.limaone.spi.bundler.BundlerImpl;
 import io.resys.limaone.spi.compiler.CompilableUnit.Bundler;
+import io.resys.limaone.spi.dialob.FormDb;
+import io.resys.limaone.spi.dialob.FormDb_Empty;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CompilerImpl implements Compiler {
 
+  private final FormDb formDb;
   private final ScheduledExecutorService workerPool;
   private final Duration maxTimeout;
   private final AST_Parser astParser;
@@ -35,10 +38,10 @@ public class CompilerImpl implements Compiler {
     final Bundler bundler = new BundlerImpl();
 
     // forms
-    final Stream<CompilableUnit> forms = world.getForms().values().stream().map(wk -> new Compiler_Dialob(astParser, world, wk));
+    final Stream<CompilableUnit> forms = world.getForms().values().stream().map(wk -> new Compiler_Dialob(formDb, astParser, world, wk));
     
     // workflows
-    final Stream<CompilableUnit> workflows = world.getArticleWorkflows().values().stream().map(wk -> new Compiler_Workflow(astParser, world, wk));
+    final Stream<CompilableUnit> workflows = world.getArticleWorkflows().values().stream().map(wk -> new Compiler_Workflow(formDb, astParser, world, wk));
 
     // main stencil article
     final Stream<CompilableUnit> article = world.getArticles().isEmpty() && world.getArticleWorkflows().isEmpty() ?
@@ -68,6 +71,7 @@ public class CompilerImpl implements Compiler {
   public static class CompilerBuilder {
     private ScheduledExecutorService workerPool;
     private AST_Parser astParser;
+    private FormDb formDb;
     public CompilerBuilder workerPool(ScheduledExecutorService workerPool) {
       this.workerPool = workerPool;
       return this;
@@ -76,10 +80,15 @@ public class CompilerImpl implements Compiler {
       this.astParser = astParser;
       return this;
     }
+    public CompilerBuilder formDb(FormDb formDb) {
+      this.formDb = formDb;
+      return this;
+    }
     public CompilerImpl build() {
       final var workerPool = this.workerPool == null ? Infrastructure.getDefaultWorkerPool() : this.workerPool;
       final var astParser = this.astParser == null ? AST_ParserImpl.builder().dev(false).build() : this.astParser;
-      return new CompilerImpl(workerPool, Duration.ofMinutes(15), astParser);
+      final var formDb = this.formDb == null ? new FormDb_Empty() : this.formDb;
+      return new CompilerImpl(formDb, workerPool, Duration.ofMinutes(15), astParser);
     }
   }
   

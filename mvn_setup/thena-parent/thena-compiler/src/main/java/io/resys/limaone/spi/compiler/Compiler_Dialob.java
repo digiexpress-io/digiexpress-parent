@@ -7,12 +7,14 @@ import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.program.Program.ProgramStatus;
+import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.limaone.spi.program.DialobProgramImpl;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class Compiler_Dialob implements CompilableUnit {
+  private final FormDb formDb;
   private final AST_Parser parser;
   private final ModelWorld world;
   private final Model<DialobForm> target;
@@ -31,6 +33,7 @@ public class Compiler_Dialob implements CompilableUnit {
       @Override
       public Program close(Artifact artifact) {
         return new DialobProgramImpl(
+            formDb,
             target,
             ast, 
             artifact.getErrors().isEmpty() ? artifact.getProgramStatus() : ProgramStatus.ERROR,

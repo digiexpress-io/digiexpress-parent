@@ -28,7 +28,7 @@ public class ImmutableBundle implements Bundle {
   private final BundleGroup<FlowProgram> flows;
   private final BundleGroup<FlowTaskProgram> flowTasks;
   private final BundleGroup<DecisionProgram> decisions;
-  private final BundleGroup<WorkflowProgram> dialobs;
+  private final BundleGroup<WorkflowProgram> workflows;
   
   
   public ImmutableBundle(
@@ -51,26 +51,26 @@ public class ImmutableBundle implements Bundle {
     final var flows = new BundleGroup<FlowProgram>(BodyType.FLOW);
     final var flowTasks = new BundleGroup<FlowTaskProgram>(BodyType.FLOW_TASK);
     final var decisions = new BundleGroup<DecisionProgram>(BodyType.DECISION_TABLE);
-    final var dialobs = new BundleGroup<WorkflowProgram>(BodyType.DIALOB_FORM);
+    final var workflows = new BundleGroup<WorkflowProgram>(BodyType.ARTICLE_WORKFLOW);
     
     programs.stream().forEach(program -> {
       articles.accept(program);
       flows.accept(program);
       flowTasks.accept(program);
       decisions.accept(program);
-      dialobs.accept(program);
+      workflows.accept(program);
     });
     
     this.articles = articles.close();
     this.flows = flows.close();
     this.flowTasks = flowTasks.close();
     this.decisions = decisions.close();
-    this.dialobs = dialobs.close();
+    this.workflows = workflows.close();
   }
 
   @Override
-  public BundleQuery<WorkflowProgram> queryDialob() {
-    return new BundleQueryImpl<>(dialobs);
+  public BundleQuery<WorkflowProgram> queryWorkflows() {
+    return new BundleQueryImpl<>(workflows);
   }
   @Override
   public BundleQuery<ArticleProgram> queryArticles() {

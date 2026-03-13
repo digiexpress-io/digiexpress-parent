@@ -28,6 +28,7 @@ public class FlowStatementFactory {
 
   @Getter
   public static class ImmutableEndStatement implements EndStatement {
+    private static final long serialVersionUID = -8010199437759830713L;
     private static final ImmutableEndStatement INSTANCE = new ImmutableEndStatement();
     
     private ImmutableEndStatement() {
@@ -41,6 +42,7 @@ public class FlowStatementFactory {
 
   @Getter
   public static class ImmutableStartStatement implements StartStatement {
+    private static final long serialVersionUID = 1108990577752137814L;
     private final OneTaskStatement firstTask;
     
     public ImmutableStartStatement(OneTaskStatement firstTask) {
@@ -51,6 +53,7 @@ public class FlowStatementFactory {
 
   @Getter
   public static class ImmutableOneTaskStatement implements OneTaskStatement {
+    private static final long serialVersionUID = -4820409328592900687L;
     private final String id;
     private final BodyStatement body;
     private final NextStatement then;
@@ -65,6 +68,7 @@ public class FlowStatementFactory {
 
   @Getter
   public static class ImmutableDecisionTableStatement implements DecisionTableStatement {
+    private static final long serialVersionUID = -8026683217423486066L;
     private final boolean collection;
     private final MappingStatement mapping;
     private final String decisionTableName;
@@ -81,6 +85,7 @@ public class FlowStatementFactory {
 
   @Getter
   public static class ImmutableManyTasksStatement implements ManyTasksStatement {
+    private static final long serialVersionUID = -1896036205391174027L;
     private final NextStatement next;
     private final Map<String, OneTaskStatement> tasks;
     
@@ -93,6 +98,7 @@ public class FlowStatementFactory {
 
   @Getter
   public static class ImmutableFlowTaskStatement implements FlowTaskStatement {
+    private static final long serialVersionUID = -7715022665761301866L;
     private final boolean collection;
     private final MappingStatement mapping;
     private final String flowTaskName;
@@ -109,6 +115,7 @@ public class FlowStatementFactory {
 
   @Getter
   public static class ImmutableCaseStatement implements CaseStatement {
+    private static final long serialVersionUID = -6614886981666233092L;
     @Nullable
     private final ExpressionProgram when;
     private final NextStatement then;
@@ -122,6 +129,7 @@ public class FlowStatementFactory {
 
   @Getter
   public static class ImmutableReturnsStatement implements ReturnsStatement {
+    private static final long serialVersionUID = 9674604747977970L;
     private final boolean collection;
     private final MappingStatement mapping;
     private final String taskId;
@@ -136,6 +144,7 @@ public class FlowStatementFactory {
 
   @Getter
   public static class ImmutableInputsStatement implements InputsStatement {
+    private static final long serialVersionUID = 1166458809369928434L;
     private final List<Parameter> parameters;
     private final ManyTasksStatement next;
     
@@ -148,6 +157,7 @@ public class FlowStatementFactory {
 
   @Getter
   public static class ImmutableEmptyBodyStatement implements EmptyBodyStatement {
+    private static final long serialVersionUID = -6532077245354447132L;
     private final String taskId;
     
     public ImmutableEmptyBodyStatement(String taskId) {
@@ -158,6 +168,7 @@ public class FlowStatementFactory {
 
   @Getter
   public static class ImmutableSwitchStatement implements SwitchStatement {
+    private static final long serialVersionUID = 1630622880720461598L;
     private final List<CaseStatement> cases;
     private final MappingStatement mapping;
     
@@ -175,6 +186,7 @@ public class FlowStatementFactory {
 
   @Getter
   public static class ImmutableMappingStatement implements MappingStatement {
+    private static final long serialVersionUID = 5563386829409749385L;
     private final Map<String, String> assignments;
     private final List<String> deconstructors; 
     private final boolean deconstructing;
@@ -191,6 +203,7 @@ public class FlowStatementFactory {
 
   @Getter
   public static class ImmutablePointerStatement implements PointerStatement {
+    private static final long serialVersionUID = 1402373499412189858L;
     private final OneTaskStatement task;
     
     public ImmutablePointerStatement(OneTaskStatement task) {

@@ -15,11 +15,13 @@ import io.resys.limaone.program.DialobProgram;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
 import io.resys.limaone.program.WorkflowProgram;
+import io.resys.limaone.spi.dialob.FormDb;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class DialobProgramImpl implements DialobProgram {
+  private final FormDb formDb;
   private final Model<DialobForm> target;
   private final DialobForm_AST ast;
   private final ProgramStatus status;
