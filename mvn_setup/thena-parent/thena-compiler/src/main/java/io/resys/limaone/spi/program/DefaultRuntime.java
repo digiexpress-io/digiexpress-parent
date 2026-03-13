@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 public class DefaultRuntime implements io.resys.limaone.program.Runtime {
   private static final long serialVersionUID = 119708670216052569L;
   private final Optional<Bundle_CacheKey> cacheKey;
+  private final Optional<Bundle> bundle;
   
 
   @Override
@@ -30,18 +31,12 @@ public class DefaultRuntime implements io.resys.limaone.program.Runtime {
     // TODO Auto-generated method stub
     return null;
   }
-
-  
-  public static DefaultRuntime empty() {
-    return new DefaultRuntime(Optional.empty());
-  }
-
-  public static DefaultRuntime withCache(String cacheKey) {
-    return new DefaultRuntime(Optional.of(new Bundle_CacheKey(cacheKey)));
-  }
   
   @Override
   public Bundle getBundle() {
+    if(bundle.isPresent()) {
+      return bundle.get();
+    }
 
     if(cacheKey.isEmpty()) {
       throw new RuntimeException("Can't load bundle");
@@ -51,4 +46,14 @@ public class DefaultRuntime implements io.resys.limaone.program.Runtime {
       throw new RuntimeException("Can't load bundle");
     });
   }
+
+  public static DefaultRuntime empty() {
+    return new DefaultRuntime(Optional.empty(), Optional.empty());
+  }
+  public static DefaultRuntime withCache(String cacheKey) {
+    return new DefaultRuntime(Optional.of(new Bundle_CacheKey(cacheKey)), Optional.empty());
+  }
+  public static DefaultRuntime withBundle(Bundle bundle) {
+    return new DefaultRuntime(Optional.empty(), Optional.of(bundle));
+  }  
 }

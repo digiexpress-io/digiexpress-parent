@@ -64,7 +64,6 @@ public class WorkflowProgramImpl implements WorkflowProgram {
     return new WorkflowExecutor() {
       @Override
       public WorkflowResult andGetBody() {
-
         if(target.getBody().getStartDate() == null) {
           
         }

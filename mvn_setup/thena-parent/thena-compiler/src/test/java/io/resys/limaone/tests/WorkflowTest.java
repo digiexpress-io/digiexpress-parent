@@ -48,8 +48,7 @@ public class WorkflowTest extends DbSupport {
     final var user = ImmutableWorkflowIdentityProps.builder().identity("user-1").build();
     
     // Assert questionnaire
-    final var workflowResult = workflow.run(DefaultRuntime.empty(), user, workflowProps).andGetBody();
-    
+    final var workflowResult = workflow.run(DefaultRuntime.withBundle(bundle), user, workflowProps).andGetBody();
     
     Assertions.assertEquals(workflowResult.getUserDecision().getTaskAllowed(), true);
     Assertions.assertEquals(workflowResult.getTaskDecision().isPresent(), true);
