@@ -44,8 +44,10 @@ public class DialobTestContext {
   private Network network;
   private PostgreSQLContainer<?> postgres;
   private GenericContainer<?> redis;
-  private GenericContainer<?> dialob;
+  private GenericContainer<?> dialobForm;
+  private GenericContainer<?> dialobSession;
   private String dialobBaseUrl;
+  private String dialobSessionUrl;
   
   private Vertx vertx;
   private Pool pool;
@@ -78,7 +80,7 @@ public class DialobTestContext {
         .withExposedPorts(6379)
         .waitingFor(Wait.forListeningPort());
 
-    dialob = new GenericContainer<>("resys/dialob-boot:2.4.0")
+    dialobForm = new GenericContainer<>("resys/dialob-boot:2.4.0")
         .withNetwork(network)
         .withExposedPorts(8081)
         .withEnv("SPRING_REDIS_HOST", "redis")
@@ -99,11 +101,26 @@ public class DialobTestContext {
         .withEnv("DIALOB_TENANT_FIXED_ID", "00000000-0000-0000-0000-000000000000")
         .waitingFor(Wait.forHttp("/dialob/actuator/health").forPort(8081).forStatusCode(200));
 
+    dialobSession = new GenericContainer<>("resys/dialob-session-boot:2.4.0")
+        .withNetwork(network)
+        .withExposedPorts(8082)
+        .withEnv("SERVER_PORT", "8082")
+        .withEnv("SPRING_REDIS_HOST", "redis")
+        .withEnv("SPRING_PROFILES_ACTIVE", "jdbc,cors")
+        .withEnv("SPRING_DATASOURCE_URL", "jdbc:postgresql://postgresql0dialob/dialob")
+        .withEnv("SPRING_DATASOURCE_USERNAME", "dialob")
+        .withEnv("SPRING_DATASOURCE_PASSWORD", "dialob123")
+        .withEnv("DIALOB_SESSION_POSTSUBMITHANDLER_ENABLED", "true")
+        .withEnv("SPRING_CLOUD_GCP_CORE_ENABLED", "false")
+        .waitingFor(Wait.forListeningPort());
+    
     // explicit ordered startup
     postgres.start();
     redis.start();
-    dialob.start();
-    dialobBaseUrl = "http://" + dialob.getHost() + ":" + dialob.getMappedPort(8081) + "/dialob";    
+    dialobForm.start();
+    dialobSession.start();
+    dialobBaseUrl = "http://" + dialobForm.getHost() + ":" + dialobForm.getMappedPort(8081);
+    dialobSessionUrl = "http://" + dialobSession.getHost() + ":" + dialobSession.getMappedPort(8082);    
     
     this.vertx = Vertx.vertx(new VertxOptions());
     this.pool = PgBuilder.pool()
@@ -121,6 +138,7 @@ public class DialobTestContext {
     waitUntilPostgresqlAcceptsConnections(pool);
     
     log.info("Dialob Forms are running at: " + dialobBaseUrl);
+    log.info("Dialob Session is running at: " + dialobSessionUrl);
   }
 
   public void cleanup() {
@@ -130,7 +148,8 @@ public class DialobTestContext {
     .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
     .await().atMost(Duration.ofSeconds(60));
     
-    dialob.stop();
+    dialobSession.stop();
+    dialobForm.stop();
     redis.stop();
     postgres.stop();
     network.close();
@@ -147,9 +166,8 @@ public class DialobTestContext {
   }
   
   public FormUrl getFormUrl() {
-    return new FormUrl(dialobBaseUrl);
+    return new FormUrl(dialobBaseUrl, dialobSessionUrl);
   }
-  
   
   public void clearTestData() {
     pool.withTransaction(tx -> {

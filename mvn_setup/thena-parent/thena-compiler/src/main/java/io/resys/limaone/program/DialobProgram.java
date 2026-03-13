@@ -7,12 +7,6 @@ public interface DialobProgram extends Program {
   
   FormInstanceResult run(CreateFormInstanceInput props);
 
-  
   record CreateFormInstanceInput(String locale, Map<String, Serializable> context) {}
-  
-  interface FormInstanceResult {
-    String getFormName();
-    String getFormVersion();
-    String getFormSessionId();
-  }
+  record FormInstanceResult(String formName, String formVersion, String formSessionId) implements ProgramResult {};
 }

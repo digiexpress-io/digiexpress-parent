@@ -1,7 +1,9 @@
 package io.resys.limaone.spi.program;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 import io.resys.limaone.ast.DialobForm_AST;
 import io.resys.limaone.model.DialobForm;
@@ -16,7 +18,10 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DialobProgramImpl implements DialobProgram {
+  private static final long serialVersionUID = -4564270222840631238L;
   private final FormDb formDb;
+  private final ScheduledExecutorService workerPool;
+  private final Duration maxTimeout;
   private final Model<DialobForm> target;
   private final DialobForm_AST ast;
   private final ProgramStatus status;
@@ -60,10 +65,19 @@ public class DialobProgramImpl implements DialobProgram {
 
   @Override
   public FormInstanceResult run(CreateFormInstanceInput props) {
-
-    formDb.withTenant().
+    final var instance = formDb.withTenant()
+      .createFormInstance()
+      .formId(ast.getForm().getId())
+      .language(props.locale())
+      .context(props.context())
+      .build()
+      .runSubscriptionOn(this.workerPool)
+      .await().atMost(maxTimeout);
     
-    return null;
+    return new FormInstanceResult(
+        target.getBody().getFormName(), 
+        target.getBody().getFormTagName(), 
+        instance.getId());
   }
 
 

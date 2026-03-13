@@ -1,5 +1,8 @@
 package io.resys.limaone.spi.compiler;
 
+import java.time.Duration;
+import java.util.concurrent.ScheduledExecutorService;
+
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.DialobForm;
@@ -15,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Compiler_Dialob implements CompilableUnit {
   private final FormDb formDb;
+  private final ScheduledExecutorService workerPool;
+  private final Duration maxTimeout;
   private final AST_Parser parser;
   private final ModelWorld world;
   private final Model<DialobForm> target;
@@ -33,7 +38,7 @@ public class Compiler_Dialob implements CompilableUnit {
       @Override
       public Program close(Artifact artifact) {
         return new DialobProgramImpl(
-            formDb,
+            formDb, workerPool, maxTimeout,
             target,
             ast, 
             artifact.getErrors().isEmpty() ? artifact.getProgramStatus() : ProgramStatus.ERROR,

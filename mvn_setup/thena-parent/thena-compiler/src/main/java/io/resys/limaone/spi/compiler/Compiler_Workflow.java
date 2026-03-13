@@ -1,5 +1,7 @@
 package io.resys.limaone.spi.compiler;
 
+import java.time.Duration;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Stream;
 
 import io.resys.limaone.ast.AST_Parser;
@@ -18,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Compiler_Workflow implements CompilableUnit {
   private final FormDb formDb;
+  private final ScheduledExecutorService workerPool;
+  private final Duration maxTimeout;
   private final AST_Parser parser;
   private final ModelWorld world;
   private final Model<ArticleWorkflow> target;

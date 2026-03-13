@@ -224,7 +224,7 @@ public class WorkflowInstanceExecutor {
       .tagName(runtime.getBundle().getName())
       .formName(statement.getFormName())
       .formVersion(statement.getFormTagName())
-      .formSessionId(dialob.getFormSessionId())
+      .formSessionId(dialob.formSessionId())
       .assignment(programInput instanceof WorkflowAssignmentProps);
     formOk.setTrue();
     return this.visit(statement.getNext(), props);

@@ -39,7 +39,8 @@ public @interface DialobTest {
 
   @Value
   public static class FormUrl {
-    String url;
+    String formUrl;
+    String sessionUrl;
   }
   
   

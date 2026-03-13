@@ -36,9 +36,9 @@ public class FormDbImpl implements FormDb {
       @Override public FormMetaQuery formMetaQuery() { return new FormMetaQueryImpl(formDbProps); }
       @Override public CreateFormTag createFormTag() { return new CreateFormTagImpl(formDbProps); }
       @Override public MergeForm mergeForm() { return new MergeFormImpl(formDbProps); }
-      @Override public MergeFormInstance mergeFormInstance() { return null; }
-      @Override public FormInstanceQuery formInstanceQuery() { return null; }
-      @Override public CreateFormInstance createFormInstance() { return null; }
+      @Override public MergeFormInstance mergeFormInstance() { return new MergeFormInstanceImpl(formDbProps); }
+      @Override public FormInstanceQuery formInstanceQuery() { return new FormInstanceQueryImpl(formDbProps); }
+      @Override public CreateFormInstance createFormInstance() { return new CreateFormInstanceImpl(formDbProps); }
     };
   }
 

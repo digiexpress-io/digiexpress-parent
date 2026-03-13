@@ -38,26 +38,32 @@ public class CompilerImpl implements Compiler {
     final Bundler bundler = new BundlerImpl();
 
     // forms
-    final Stream<CompilableUnit> forms = world.getForms().values().stream().map(wk -> new Compiler_Dialob(formDb, astParser, world, wk));
+    final Stream<CompilableUnit> forms = world.getForms().values().stream()
+        .map(wk -> new Compiler_Dialob(formDb, workerPool, maxTimeout, astParser, world, wk));
     
     // workflows
-    final Stream<CompilableUnit> workflows = world.getArticleWorkflows().values().stream().map(wk -> new Compiler_Workflow(formDb, astParser, world, wk));
+    final Stream<CompilableUnit> workflows = world.getArticleWorkflows().values().stream()
+        .map(wk -> new Compiler_Workflow(formDb, workerPool, maxTimeout, astParser, world, wk));
 
     // main stencil article
     final Stream<CompilableUnit> article = world.getArticles().isEmpty() && world.getArticleWorkflows().isEmpty() ?
         Stream.empty() : Stream.of(new Compiler_Article(astParser, world));
     
     // wrench flows
-    final Stream<CompilableUnit> flows = world.getFlows().values().stream().map(f -> new Compiler_Flow(astParser, world, f));
+    final Stream<CompilableUnit> flows = world.getFlows().values().stream()
+        .map(f -> new Compiler_Flow(astParser, world, f));
     
     // wrench flow tasks
-    final Stream<CompilableUnit> flowTasks = world.getFlowTasks().values().stream().map(f -> new Compiler_FlowTask(astParser, world, f));
+    final Stream<CompilableUnit> flowTasks = world.getFlowTasks().values().stream()
+        .map(f -> new Compiler_FlowTask(astParser, world, f));
     
     // wrench dt
-    final Stream<CompilableUnit> decisions = world.getDecisionTables().values().stream().map(f -> new Compiler_DecisionTable(astParser, world, f));
+    final Stream<CompilableUnit> decisions = world.getDecisionTables().values().stream()
+        .map(f -> new Compiler_DecisionTable(astParser, world, f));
     
     // combine all to single stream
-    final Stream<CompilableUnit> itemsToCompile =  Stream.of(forms, workflows, article, flows, flowTasks, decisions).flatMap(Function.identity());
+    final Stream<CompilableUnit> itemsToCompile =  Stream.of(forms, workflows, article, flows, flowTasks, decisions)
+        .flatMap(Function.identity());
     
     // bundle all 
     return Multi.createFrom().items(itemsToCompile)

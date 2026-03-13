@@ -245,11 +245,15 @@ public class TestTemplate {
   
   
   public static FormDbImpl getFormDb(FormUrl formUrl) {
-    final var restTemplate = new RestTemplate();
-    restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(formUrl.getUrl() + "/api"));
+    final var formRestTemplate = new RestTemplate();
+    formRestTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(formUrl.getFormUrl() + "/dialob/api"));
+    
+    final var questionnaireHttp = new RestTemplate();
+    questionnaireHttp.setUriTemplateHandler(new DefaultUriBuilderFactory(formUrl.getFormUrl() + "/session/dialob"));
     
     return FormDbImpl.builder()
-        .restTemplate(restTemplate)
+        .questionnaireHttp(questionnaireHttp)
+        .formHttp(formRestTemplate)
         .objectMapper(io.resys.thena.jackson.QuarkusJacksonJsonCodec.mapper())
         .build();
   }
