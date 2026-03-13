@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, DialogActions, DialogContent, DialogTitle, Typography, Zoom } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Zoom } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
@@ -11,10 +11,14 @@ const fileListToArray = (files: FileList): File[] => {
   const out: File[] = [];
   for (let i = 0; i < files.length; i++) {
     const f = files.item(i);
-    if (f) out.push(f);
+    if (f) {
+      out.push(f);
+    }
   }
   return out;
 };
+
+const normalizeFileName = (name: string) => name.trim().toLowerCase();  
 
 export interface FilesEditProps {
   task: TaskApi.Task;
@@ -32,51 +36,28 @@ export const FilesEditDialog: React.FC<FilesEditProps> = ({ task, open, onClose 
   const [uploadError, setUploadError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    if (open) {
-      setUploadError(null);
-    }
-  }, [open]);
-  
-  React.useEffect(() => {
-    let cancelled = false;
-
-    backend.persistence.findAllAttachments(task.id).then((server) => {
-      if (cancelled) return;
-
-      const next = [...(server ?? [])];
-      setAttachments(next);
-    });
-
-    return () => { cancelled = true; };
-  }, [task.id, backend.persistence]);
+    backend.persistence.findAllAttachments(task.id).then(setAttachments);
+  }, [task.id]);
 
   const [confirmOpen, setConfirmOpen] = React.useState(false);
-  const [attachmentFileName, setAttachmentFileName] =
-    React.useState<TaskApi.Attachment | null>(null);
+  const [attachmentFileName, setAttachmentFileName] = React.useState<TaskApi.Attachment | null>(null);
 
   function handleFileDialog() {
-    if (!inputRef.current) return;
+    if (!inputRef.current) {
+      return;
+    }
     inputRef.current.value = '';
     inputRef.current.click();
   }
 
-  const handleUploadClick = (files: FileList | null) => {
+  const handleUploadClick = async (files: FileList | null) => {
     if (!files || files.length === 0) {
       return;
     }
-
     const selected = fileListToArray(files);
-    if (inputRef.current) {
-      inputRef.current.value = '';
-    }
-  
-    const normalize = (name: string) => name.trim().toLowerCase();
-  
-    const existingNames = new Set(attachments.map((a) => normalize(a.name)));
-  
-    const duplicates = selected
-      .map((f) => f.name)
-      .filter((name) => existingNames.has(normalize(name)));
+    setUploadError(null);
+    const existingNames = new Set(attachments.map((a) => normalizeFileName(a.name)));
+    const duplicates = selected.filter((f) => existingNames.has(normalizeFileName(f.name)));
 
     if (duplicates.length > 0) {
       const unique = Array.from(new Set(duplicates));
@@ -84,7 +65,7 @@ export const FilesEditDialog: React.FC<FilesEditProps> = ({ task, open, onClose 
         unique.length === 1
           ? intl.formatMessage(
             { id: 'task.files.error.duplicateSingle' },
-            { fileName: unique[0] }
+            { fileName: unique[0].name }
           )
           : intl.formatMessage(
             { id: 'task.files.error.duplicateMultiple' },
@@ -92,16 +73,17 @@ export const FilesEditDialog: React.FC<FilesEditProps> = ({ task, open, onClose 
           )
       );
       return;
-    }      
+    }
+    await backend.persistence
+      .createManyAttachments(task.id, files)
+      .then(() => backend.persistence.findAllAttachments(task.id))
+      .then(setAttachments);
 
-    setUploadError(null);
-  
-    backend.persistence
-    .createManyAttachments(task.id, files)
-    .then(() => backend.persistence.findAllAttachments(task.id))
-    .then(setAttachments);
-  
-  };
+
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+  }
 
   const handleDownloadClick = async (data: TaskApi.Attachment | TaskApi.Attachment[]) => {
     const att = Array.isArray(data) ? data[0] : data;
@@ -126,60 +108,79 @@ export const FilesEditDialog: React.FC<FilesEditProps> = ({ task, open, onClose 
   };
 
   return (
-    <FilesEditDialogRoot
-      fullWidth
-      maxWidth="lg"
-      className={classes.root}
-      open={open}
-      onClose={onClose}
-      slots={{ transition: Zoom }}
-    >
-      <DialogTitle className={classes.titleRow}>
-        {intl.formatMessage({ id: 'task.attachments' })}{": "}{task.taskRef ?? intl.formatMessage({ id: 'task.noTaskReferenceId' })}
-
-        <Box className={classes.grow} />
-
-        <div className={classes.actionsRow}>
-          <input
-            ref={inputRef}
-            type="file"
-            className={classes.hiddenInput}
-            onChange={(event) => handleUploadClick(event.currentTarget.files)}
-          />
-
-          <Button
-            className={classes.uploadBtn}
-            variant="contained"
-            onClick={handleFileDialog}
-            startIcon={<AddIcon />}
-          >
-            {intl.formatMessage({ id: 'task.button.uploadFile' })}
-          </Button>
-        </div>
-      </DialogTitle>
-
-      {uploadError ? (
-        <Box className={classes.uploadErrorRow}>
-          <Typography color="error" variant="body2">
-            {uploadError}
+    <>
+      {/* confirm delete file dialog */}
+      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)} maxWidth="xs">
+        <DialogTitle>
+          {intl.formatMessage({ id: 'attachment.delete.confirmTitle' })}
+        </DialogTitle>
+        <DialogContent>
+          <Typography color='error'>
+            {intl.formatMessage({ id: 'attachment.delete.confirmText' }, { fileName: attachmentFileName?.name })}
           </Typography>
-        </Box>
-      ) : null}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmOpen(false)} variant='outlined'>{intl.formatMessage({ id: 'button.cancel' })}</Button>
+          <Button onClick={deleteAttachmentFile} color='error'> {intl.formatMessage({ id: 'button.confirmDelete' })}</Button>
+        </DialogActions>
+      </Dialog>
 
-      <DialogContent className={classes.content}>
-        <FilesEditor
-          task={task}
-          attachments={attachments}
-          onDownload={handleDownloadClick}
-          onDelete={handleAttachmentDeleteClick}
-        />
-      </DialogContent>
 
-      <DialogActions className={classes.dialogActions}>
-        <Button variant="outlined" onClick={onClose}>
-          {intl.formatMessage({ id: 'button.cancel' })}
-        </Button>
-      </DialogActions>
-    </FilesEditDialogRoot>
+      <FilesEditDialogRoot
+        fullWidth
+        maxWidth="lg"
+        className={classes.root}
+        open={open}
+        onClose={onClose}
+        slots={{ transition: Zoom }}
+      >
+        <DialogTitle className={classes.titleRow}>
+          {intl.formatMessage({ id: 'task.attachments' })}{": "}{task.taskRef ?? intl.formatMessage({ id: 'task.noTaskReferenceId' })}
+
+          <Box className={classes.grow} />
+
+          <div className={classes.actionsRow}>
+            <input
+              ref={inputRef}
+              type="file"
+              className={classes.hiddenInput}
+              onChange={(event) => handleUploadClick(event.currentTarget.files)}
+            />
+
+            <Button
+              className={classes.uploadBtn}
+              variant="contained"
+              onClick={handleFileDialog}
+              startIcon={<AddIcon />}
+            >
+              {intl.formatMessage({ id: 'task.button.uploadFile' })}
+            </Button>
+          </div>
+        </DialogTitle>
+
+        {uploadError ? (
+          <Box className={classes.uploadErrorRow}>
+            <Typography color="error" variant="body2">
+              {uploadError}
+            </Typography>
+          </Box>
+        ) : null}
+
+        <DialogContent className={classes.content}>
+          <FilesEditor
+            task={task}
+            attachments={attachments}
+            onDownload={handleDownloadClick}
+            onDelete={handleAttachmentDeleteClick}
+          />
+        </DialogContent>
+
+        <DialogActions className={classes.dialogActions}>
+          <Button variant="outlined" onClick={onClose}>
+            {intl.formatMessage({ id: 'button.cancel' })}
+          </Button>
+        </DialogActions>
+      </FilesEditDialogRoot>
+    </>
   );
 };
