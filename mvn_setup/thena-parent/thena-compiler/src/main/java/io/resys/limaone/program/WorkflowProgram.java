@@ -10,6 +10,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.model.ModelError;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
@@ -24,21 +25,31 @@ public interface WorkflowProgram extends Program {
   );
   
   interface WorkflowExecutor {
-    WorkflowResult andGetBody();
+    WorkflowInstanceResult andGetForm();
+    WorkflowResult andGetFlow();
   }
   
   interface WorkflowResult extends ProgramResult {
-    UserAccessDecision getUserDecision();
-    Optional<TaskDecision> getTaskDecision();
+    
   }
   
-  @Value.Immutable @JsonSerialize(as = ImmutableUserAccessDecision.class) @JsonDeserialize(as = ImmutableUserAccessDecision.class)
-  interface UserAccessDecision extends Serializable {
-    Boolean getTaskAllowed();
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableWorkflowInstanceResult.class) @JsonDeserialize(as = ImmutableWorkflowInstanceResult.class)
+  interface WorkflowInstanceResult extends ProgramResult {
+    Boolean getAccessAllowed();
+    Optional<WorkflowForm> getForm();
+    
+    List<ModelError> getErrors();
+    WorkflowExecutionStatus getStatus();
   }
   
-  @Value.Immutable @JsonSerialize(as = ImmutableTaskDecision.class) @JsonDeserialize(as = ImmutableTaskDecision.class)
-  interface TaskDecision extends Serializable {
+  enum WorkflowExecutionStatus {
+    COMPLETED, ERROR
+  }
+  
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableWorkflowForm.class) @JsonDeserialize(as = ImmutableWorkflowForm.class)
+  interface WorkflowForm extends Serializable {
     String getUserIdentity();
     String getUserLocale();
     

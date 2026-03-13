@@ -63,15 +63,14 @@ public class WorkflowProgramImpl implements WorkflowProgram {
   public WorkflowExecutor run(Runtime runtime, WorkflowIdentityProps identity, WorkflowInputProps programInput) {
     return new WorkflowExecutor() {
       @Override
-      public WorkflowResult andGetBody() {
-        if(target.getBody().getStartDate() == null) {
-          
-        }
-        
+      public WorkflowInstanceResult andGetForm() {
+        return new WorkflowInstanceExecutor(runtime, identity, programInput).walk(ast);
+      }
+      @Override
+      public WorkflowResult andGetFlow() {
+        // TODO Auto-generated method stub
         return null;
       }
     };
   }
-  
-
 }
