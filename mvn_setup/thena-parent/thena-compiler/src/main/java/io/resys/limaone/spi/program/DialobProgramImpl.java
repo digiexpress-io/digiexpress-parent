@@ -64,15 +64,10 @@ public class DialobProgramImpl implements DialobProgram {
   }
 
   @Override
-  public DialobExecutor run(ProgramInput input, Runtime runtime) {
+  public FormInstanceResult run(CreateFormInstanceInput props) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public DialobExecutor run(Map<String, Serializable> input) {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
 }

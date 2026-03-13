@@ -81,10 +81,7 @@ public class ArticleWorkflowVisitor {
   
   
   private AnyStatement visitAnon(ArticleWorkflow workflow) {
-    if(Boolean.TRUE.equals(workflow.getAnon())) {
-      return new WkStatementFactory.ImmutableAnonStatement(visitInputs(workflow));
-    }
-    return visitInputs(workflow);
+    return new WkStatementFactory.ImmutableAnonStatement(visitInputs(workflow), Boolean.TRUE.equals(workflow.getAnon()));
   }
   
   private AnyStatement visitInputs(ArticleWorkflow workflow) {
@@ -93,7 +90,7 @@ public class ArticleWorkflowVisitor {
 
   private AnyStatement visitUserRoles(ArticleWorkflow workflow) {
     dependencies.add(ImmutableDependency_AST.builder().dependencyId(DT_AUTH_NAME).type(BodyType.DECISION_TABLE).build());
-    return new WkStatementFactory.ImmutableUserRolesStatement(DT_AUTH_NAME, visitForm(workflow));
+    return new WkStatementFactory.ImmutableUserRolesStatement(DT_AUTH_NAME, workflow.getValue(), visitForm(workflow));
   }
   
   private AnyStatement visitForm(ArticleWorkflow workflow) {

@@ -8,10 +8,11 @@ import io.resys.limaone.program.ArticleProgram;
 import io.resys.limaone.program.Compiler.Bundle;
 import io.resys.limaone.program.Compiler.BundleQuery;
 import io.resys.limaone.program.DecisionProgram;
-import io.resys.limaone.program.WorkflowProgram;
+import io.resys.limaone.program.DialobProgram;
 import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.FlowTaskProgram;
 import io.resys.limaone.program.Program;
+import io.resys.limaone.program.WorkflowProgram;
 import lombok.Getter;
 
 
@@ -29,6 +30,7 @@ public class ImmutableBundle implements Bundle {
   private final BundleGroup<FlowTaskProgram> flowTasks;
   private final BundleGroup<DecisionProgram> decisions;
   private final BundleGroup<WorkflowProgram> workflows;
+  private final BundleGroup<DialobProgram> dialobs;
   
   
   public ImmutableBundle(
@@ -52,6 +54,7 @@ public class ImmutableBundle implements Bundle {
     final var flowTasks = new BundleGroup<FlowTaskProgram>(BodyType.FLOW_TASK);
     final var decisions = new BundleGroup<DecisionProgram>(BodyType.DECISION_TABLE);
     final var workflows = new BundleGroup<WorkflowProgram>(BodyType.ARTICLE_WORKFLOW);
+    final var dialobs = new BundleGroup<DialobProgram>(BodyType.DIALOB_FORM);
     
     programs.stream().forEach(program -> {
       articles.accept(program);
@@ -59,6 +62,7 @@ public class ImmutableBundle implements Bundle {
       flowTasks.accept(program);
       decisions.accept(program);
       workflows.accept(program);
+      dialobs.accept(program);
     });
     
     this.articles = articles.close();
@@ -66,6 +70,7 @@ public class ImmutableBundle implements Bundle {
     this.flowTasks = flowTasks.close();
     this.decisions = decisions.close();
     this.workflows = workflows.close();
+    this.dialobs = dialobs.close();
   }
 
   @Override
@@ -87,5 +92,9 @@ public class ImmutableBundle implements Bundle {
   @Override
   public BundleQuery<DecisionProgram> queryDecisions() {
     return new BundleQueryImpl<>(decisions);
+  }
+  @Override
+  public BundleQuery<DialobProgram> queryDialobs() {
+    return new BundleQueryImpl<>(dialobs);
   }
 }

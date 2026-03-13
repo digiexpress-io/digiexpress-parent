@@ -26,6 +26,7 @@ public interface ArticleWorkflow_AST extends Simple_AST {
   
   interface AnonStatement extends AnyStatement {
     default WkStatementType getType() { return WkStatementType.ANON; }
+    Boolean getAnonAllowed();
     AnyStatement getNext();
   }
   
@@ -52,6 +53,7 @@ public interface ArticleWorkflow_AST extends Simple_AST {
   interface UserRolesStatement extends AnyStatement {
     default WkStatementType getType() { return WkStatementType.USER_ROLES; }    
     String getDecisionTableName();
+    String getRole();
     AnyStatement getNext();
   }
   

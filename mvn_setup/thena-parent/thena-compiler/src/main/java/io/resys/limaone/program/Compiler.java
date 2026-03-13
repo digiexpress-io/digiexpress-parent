@@ -37,6 +37,7 @@ public interface Compiler {
     OffsetDateTime getStartDate();
     OffsetDateTime getEndDate();
 
+    BundleQuery<DialobProgram> queryDialobs();
     BundleQuery<WorkflowProgram> queryWorkflows();
     BundleQuery<ArticleProgram> queryArticles();
     BundleQuery<FlowTaskProgram> queryFlowTasks();

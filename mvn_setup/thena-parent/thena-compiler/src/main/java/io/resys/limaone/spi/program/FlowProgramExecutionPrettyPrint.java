@@ -280,12 +280,6 @@ public class FlowProgramExecutionPrettyPrint {
     return value.toString().replace("\n", " ").replace("\r", " ");
   }
 
-  private static String truncate(final String str, final int maxLength) {
-    if (str.length() <= maxLength) {
-      return str;
-    }
-    return str.substring(0, maxLength - 3) + "...";
-  }
 
   private static String padRight(final String str, final int width) {
     if (str.length() >= width) {

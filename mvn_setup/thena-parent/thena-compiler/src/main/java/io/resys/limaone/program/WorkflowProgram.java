@@ -74,7 +74,9 @@ public interface WorkflowProgram extends Program {
   
   
   // inputs
-  interface WorkflowInputProps {}
+  interface WorkflowInputProps {
+    @Nullable String getLocale();
+  }
   
   @Value.Immutable @JsonSerialize(as = ImmutableWorkflowDefaultProps.class) @JsonDeserialize(as = ImmutableWorkflowDefaultProps.class)
   interface WorkflowDefaultProps extends WorkflowInputProps {
@@ -88,19 +90,15 @@ public interface WorkflowProgram extends Program {
     String getTaskId(); // source of assignment
     @Nullable String getLocale();
   }
-  
-  @Value.Immutable @JsonSerialize(as = ImmutableWorkflowAnonProps.class) @JsonDeserialize(as = ImmutableWorkflowAnonProps.class)
-  interface WorkflowAnonProps extends WorkflowInputProps {
-    @Nullable String getLocale();
-    @Nullable String getArticleName();
-    @Nullable String getParentArticleName();
-  }
+
   
   @Value.Immutable @JsonSerialize(as = ImmutableWorkflowIdentityProps.class) @JsonDeserialize(as = ImmutableWorkflowIdentityProps.class)
   interface WorkflowIdentityProps {
     // even anon user needs to have some anon identity and some primitive roles
     String getIdentity();
     List<String> getIdentityRoles();
+    Boolean getAnon(); 
+    
     
     // Anything relevant to pass downstream
     @Nullable JsonObject getAdditionalProps();

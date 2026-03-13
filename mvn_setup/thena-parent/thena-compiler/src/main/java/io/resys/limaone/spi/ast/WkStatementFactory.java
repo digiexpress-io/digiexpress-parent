@@ -21,10 +21,12 @@ public class WkStatementFactory {
   public static class ImmutableAnonStatement implements AnonStatement {
     private static final long serialVersionUID = -1L;
     private final AnyStatement next;
+    private final Boolean anonAllowed;
     
-    public ImmutableAnonStatement(AnyStatement next) {
+    public ImmutableAnonStatement(AnyStatement next, Boolean anonAllowed) {
       super();
       this.next = next;
+      this.anonAllowed = anonAllowed;
     }
   }
 
@@ -85,10 +87,12 @@ public class WkStatementFactory {
     private static final long serialVersionUID = -6L;
     private final AnyStatement next;
     private final String decisionTableName;
-    public ImmutableUserRolesStatement(String decisionTableName, AnyStatement next) {
+    private final String role;
+    public ImmutableUserRolesStatement(String decisionTableName, String role, AnyStatement next) {
       super();
       this.next = next;
       this.decisionTableName = decisionTableName;
+      this.role = role;
     }
   }
 
