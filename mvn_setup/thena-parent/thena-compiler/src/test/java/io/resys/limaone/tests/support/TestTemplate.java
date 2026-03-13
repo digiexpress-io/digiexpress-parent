@@ -249,7 +249,7 @@ public class TestTemplate {
     formRestTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(formUrl.getFormUrl() + "/dialob/api"));
     
     final var questionnaireHttp = new RestTemplate();
-    questionnaireHttp.setUriTemplateHandler(new DefaultUriBuilderFactory(formUrl.getFormUrl() + "/session/dialob"));
+    questionnaireHttp.setUriTemplateHandler(new DefaultUriBuilderFactory(formUrl.getSessionUrl() + "/session/dialob"));
     
     return FormDbImpl.builder()
         .questionnaireHttp(questionnaireHttp)

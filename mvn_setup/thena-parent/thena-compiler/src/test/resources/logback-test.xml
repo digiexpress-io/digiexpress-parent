@@ -4,6 +4,7 @@
     <logger name="io.vertx" level="OFF"/>
     
     <!-- Debug for your package -->
+    <logger name="io.resys.thena.test" level="DEBUG"/>
     <logger name="io.resys.limaone" level="DEBUG"/>
     <logger name="tc" level="OFF"/>
     <logger name="io.netty" level="OFF"/>

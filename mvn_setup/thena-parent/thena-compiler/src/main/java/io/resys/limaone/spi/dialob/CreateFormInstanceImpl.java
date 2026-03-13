@@ -51,7 +51,7 @@ public class CreateFormInstanceImpl implements CreateFormInstance {
     
     final var requestBody = JsonObject.mapFrom(createQuestionnaireBody());
     
-    return db.getQuestionnaireHttp()
+    return db.getFormHttp()
       .httpQuery()
       .uri(uri -> uri.append("questionnaires").build())
       .method(JsonObject.class)

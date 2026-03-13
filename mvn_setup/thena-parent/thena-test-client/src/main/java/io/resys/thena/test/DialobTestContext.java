@@ -29,6 +29,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 
 import io.resys.thena.test.DialobTest.FormUrl;
 import io.vertx.core.VertxOptions;
+import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.pgclient.PgBuilder;
 import io.vertx.mutiny.sqlclient.Pool;
@@ -112,7 +113,7 @@ public class DialobTestContext {
         .withEnv("SPRING_DATASOURCE_PASSWORD", "dialob123")
         .withEnv("DIALOB_SESSION_POSTSUBMITHANDLER_ENABLED", "true")
         .withEnv("SPRING_CLOUD_GCP_CORE_ENABLED", "false")
-        .waitingFor(Wait.forListeningPort());
+        .waitingFor(Wait.forHttp("/session/actuator/health").forPort(8082).forStatusCode(200));
     
     // explicit ordered startup
     postgres.start();
@@ -139,6 +140,13 @@ public class DialobTestContext {
     
     log.info("Dialob Forms are running at: " + dialobBaseUrl);
     log.info("Dialob Session is running at: " + dialobSessionUrl);
+    
+    // Print container logs for debugging
+    log.info("=== DIALOB FORM LOGS ===");
+    log.info(dialobForm.getLogs());
+    log.info("=== DIALOB SESSION LOGS ===");  
+    log.info(dialobSession.getLogs());
+    printEndpoints();
   }
 
   public void cleanup() {
@@ -167,6 +175,16 @@ public class DialobTestContext {
   
   public FormUrl getFormUrl() {
     return new FormUrl(dialobBaseUrl, dialobSessionUrl);
+  }
+  
+  public void printEndpoints() {
+    try {
+      String mappings = dialobSession.execInContainer("curl", "-s", "http://localhost:8082/session/actuator/mappings")
+          .getStdout();
+      log.info("Session endpoints: {}", new JsonObject(mappings).encodePrettily());
+    } catch (Exception e) {
+      log.warn("Failed to get endpoints", e);
+    }
   }
   
   public void clearTestData() {
