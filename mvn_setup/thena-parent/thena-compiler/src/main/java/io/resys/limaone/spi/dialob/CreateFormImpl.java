@@ -24,7 +24,7 @@ public class CreateFormImpl implements CreateForm {
   @Override
   public Uni<Form> build() {
     Objects.requireNonNull(form, () -> "form must be defined");
-    return db.getClient()
+    return db.getFormHttp()
         .httpQuery()
         .uri(uri -> uri.append("forms").build()).method(Form.class)
         .postOneObject(form);

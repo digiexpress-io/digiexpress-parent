@@ -12,7 +12,7 @@ public class FormMetaQueryImpl implements FormMetaQuery {
   
   @Override
   public Multi<FormMetadata> findAll() {
-    return db.getClient()
+    return db.getFormHttp()
       .httpQuery()
       .uri(uri -> uri.append("forms").build())
       .method(FormMetadata.class)

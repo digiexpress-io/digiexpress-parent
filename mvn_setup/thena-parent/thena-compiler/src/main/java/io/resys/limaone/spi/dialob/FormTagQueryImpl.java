@@ -13,7 +13,7 @@ public class FormTagQueryImpl implements FormTagQuery {
   
   @Override
   public Multi<FormTag> findAll() {
-    return db.getClient()
+    return db.getFormHttp()
       .httpQuery()
       .uri(uri -> uri.append("tags").build())
       .method(FormTag.class)
@@ -26,7 +26,7 @@ public class FormTagQueryImpl implements FormTagQuery {
     if (cached.isPresent()) {
       return Uni.createFrom().item(cached.get());
     }
-    return db.getClient()
+    return db.getFormHttp()
         .httpQuery()
         .uri(uri -> uri.append("forms").append(formName).append("tags").append(tagName).build())
         .method(FormTag.class)
@@ -36,7 +36,7 @@ public class FormTagQueryImpl implements FormTagQuery {
 
   @Override
   public Multi<FormTag> findAll(String formName) {
-    return db.getClient()
+    return db.getFormHttp()
         .httpQuery()
         .uri(uri -> uri.append("forms").append(formName).append("tags").build())
         .method(FormTag.class)

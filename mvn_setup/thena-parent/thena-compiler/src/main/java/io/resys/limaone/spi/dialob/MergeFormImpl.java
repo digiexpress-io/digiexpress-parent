@@ -26,7 +26,7 @@ public class MergeFormImpl implements MergeForm {
   @Override
   public Uni<Form> build() {
     Objects.requireNonNull(form, () -> "form must be defined");
-    return db.getClient()
+    return db.getFormHttp()
         .httpQuery()
         .uri(uri -> uri.append("forms").append(form.getId()).build())
         .method(Form.class)

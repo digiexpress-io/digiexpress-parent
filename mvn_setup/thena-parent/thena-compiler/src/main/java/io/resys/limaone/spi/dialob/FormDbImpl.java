@@ -36,20 +36,28 @@ public class FormDbImpl implements FormDb {
       @Override public FormMetaQuery formMetaQuery() { return new FormMetaQueryImpl(formDbProps); }
       @Override public CreateFormTag createFormTag() { return new CreateFormTagImpl(formDbProps); }
       @Override public MergeForm mergeForm() { return new MergeFormImpl(formDbProps); }
+      @Override public MergeFormInstance mergeFormInstance() { return null; }
+      @Override public FormInstanceQuery formInstanceQuery() { return null; }
+      @Override public CreateFormInstance createFormInstance() { return null; }
     };
   }
 
   public static class FormDbBuilder {
     private ObjectMapper objectMapper;
-    private RestTemplate restTemplate;
+    private RestTemplate questionnaireHttp;
+    private RestTemplate formHttp;
     private FormDbCache cache;
     
     public FormDbBuilder objectMapper(ObjectMapper objectMapper) {
       this.objectMapper = objectMapper;
       return this;
     }
-    public FormDbBuilder restTemplate(RestTemplate restTemplate) {
-      this.restTemplate = restTemplate;
+    public FormDbBuilder formHttp(RestTemplate formHttp) {
+      this.formHttp = formHttp;
+      return this;
+    }
+    public FormDbBuilder questionnaireHttp(RestTemplate questionnaireHttp) {
+      this.questionnaireHttp = questionnaireHttp;
       return this;
     }
     public FormDbBuilder cache(FormDbCache cache) {
@@ -59,10 +67,21 @@ public class FormDbImpl implements FormDb {
     
     public FormDbImpl build() {
       Objects.requireNonNull(objectMapper, () -> "objectMapper must be defined");
-      Objects.requireNonNull(restTemplate, () -> "restTemplate must be defined");
-      final var http = new HttpClientImpl(restTemplate, objectMapper);
+      Objects.requireNonNull(formHttp, () -> "formHttp must be defined");
+      Objects.requireNonNull(questionnaireHttp, () -> "questionnaireHttp must be defined");
+      
+      final var formHttp = new HttpClientImpl(this.formHttp, objectMapper);
+      final var questionnaireHttp = new HttpClientImpl(this.questionnaireHttp, objectMapper);
       final var formDbCache = cache != null ? cache : new FormDbCacheImpl();
-      return new FormDbImpl(ImmutableFormDbProps.builder().client(http).cache(formDbCache).build(), "default");
+      
+      return new FormDbImpl(
+        ImmutableFormDbProps.builder()
+          .formHttp(formHttp)
+          .questionnaireHttp(questionnaireHttp)
+          .cache(formDbCache)
+          .build(), 
+        "default"
+      );
     }
   }
   
@@ -72,7 +91,8 @@ public class FormDbImpl implements FormDb {
   
   @Value.Immutable
   public interface FormDbProps {
-    HttpClient getClient();
+    HttpClient getFormHttp();
+    HttpClient getQuestionnaireHttp();
     FormDbCache getCache();
   }
 

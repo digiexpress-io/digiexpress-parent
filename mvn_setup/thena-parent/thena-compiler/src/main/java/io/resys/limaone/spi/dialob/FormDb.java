@@ -1,6 +1,7 @@
 package io.resys.limaone.spi.dialob;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -9,8 +10,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.form.Form;
+import io.dialob.api.form.FormItem;
 import io.dialob.api.form.FormTag;
 import io.dialob.api.proto.Actions;
+import io.dialob.api.questionnaire.Answer;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.rest.IdAndRevision;
 import io.smallrye.mutiny.Multi;
@@ -138,6 +141,31 @@ public interface FormDb {
      * @return a new {@link MergeForm} builder
      */
     MergeForm mergeForm();
+    
+    /**
+     * Creates a builder for merging/updating existing form instances.
+     * Used to apply form filling events (user actions) to questionnaire instances,
+     * such as field updates, form completion, and navigation actions.
+     * 
+     * @return a new {@link MergeFormInstance} builder
+     */
+    MergeFormInstance mergeFormInstance();
+    
+    /**
+     * Creates a query builder for retrieving form instances from the database.
+     * Supports optional form data enrichment with valueset and FormItem metadata.
+     * 
+     * @return a new {@link FormInstanceQuery} builder
+     */
+    FormInstanceQuery formInstanceQuery();
+    
+    /**
+     * Creates a builder for instantiating new questionnaires from form templates.
+     * Supports pre-population with context variables and initial answers.
+     * 
+     * @return a new {@link CreateFormInstance} builder
+     */
+    CreateFormInstance createFormInstance();
   }
   
   /**
@@ -321,25 +349,170 @@ public interface FormDb {
   }
   
   
+  /**
+   * Wrapper around Dialob's Questionnaire providing additional metadata and state.
+   * Will later be extended to provide more contextual data around the questionnaire instance.
+   */
   interface FormInstance {
+    
+    /**
+     * Gets the underlying Dialob questionnaire containing form state and responses.
+     * When form data is loaded, the questionnaire contains enriched data merged from 
+     * the form definition including valuesets and FormItems metadata.
+     * 
+     * @return the questionnaire instance with current form state
+     */
     Questionnaire getQuestionnaire();
+    
+    /**
+     * Gets the prefix used for valueset lookup entries.
+     * Used to identify dynamically generated lookup valuesets for answer metadata.
+     * 
+     * @return the lookup prefix, or empty if form data was not loaded
+     */
+    Optional<String> getLookupPrefix();
+    
+    /**
+     * Indicates whether form data has been loaded and merged into the questionnaire.
+     * When true, the questionnaire contains enriched data from the form definition
+     * including valuesets and FormItems metadata merged with answer data.
+     * 
+     * @return true if form data is loaded and merged, false otherwise
+     */
+    boolean isFormLoaded();
+    
+    /**
+     * Retrieves the FormItem metadata for a given answer.
+     * Provides access to form field definitions and metadata associated with the answer.
+     * Handles both regular fields and rowgroup elements with dot notation IDs.
+     * 
+     * @param answer the answer to get FormItem metadata for
+     * @return the FormItem metadata, or null if not found or form data not loaded
+     */
+    FormItem getFormItem(Answer answer);
   }
   
+  /**
+   * Builder for applying form filling events to existing form instances.
+   * Merges actions (user input events) on top of the form instance state,
+   * such as field updates, completions, and other form interactions.
+   */
   interface MergeFormInstance {
+    
+    /**
+     * Specifies the target form instance to merge actions into.
+     * 
+     * @param questionnaireId the unique identifier of the questionnaire instance
+     * @return this builder for method chaining
+     */
     MergeFormInstance formInstanceId(String questionnaireId);
+    
+    /**
+     * Sets the form filling events to apply to the instance.
+     * Actions represent user input events like field updates (firstName = "Sam", lastName = "Vimes"),
+     * form completion, navigation, and other form interactions.
+     * 
+     * @param actions the command-style form filling events to merge
+     * @return this builder for method chaining
+     */
     MergeFormInstance props(Actions actions);
+    
+    /**
+     * Forces the form instance to completion state regardless of validation errors or incomplete fields.
+     * When enabled, bypasses normal form validation and completion rules.
+     * Use with caution as this may result in incomplete or invalid form submissions.
+     * 
+     * @param forceCompletion true to force completion, false for normal validation (default)
+     * @return this builder for method chaining
+     */
+    MergeFormInstance forceCompletion(boolean forceCompletion);
+    
+    /**
+     * Executes the merge operation, applying the actions to the form instance.
+     * 
+     * @return a {@link Uni} containing the updated form instance with new state
+     */
     Uni<FormInstance> build();
   }
   
+  /**
+   * Query builder for retrieving existing form instances from the database.
+   * Form instances exist in persistent state regardless of active/inactive status.
+   */
   interface FormInstanceQuery {
+    
+    /**
+     * Enables merging of form definition data (valuesets and FormItems) into the questionnaire.
+     * When enabled, enriches the questionnaire with valueset data from the form definition,
+     * maps answers with their corresponding FormItem metadata, and creates lookup valuesets
+     * for answer metadata. This provides access to form field definitions and enhanced
+     * valueset entries but increases response size and processing time.
+     * 
+     * @param includeForm true to merge form data, false for questionnaire only (default)
+     * @return this query builder for method chaining
+     */
+    FormInstanceQuery includeForm(boolean includeForm);
+    
+    /**
+     * Retrieves a specific form instance by its questionnaire ID.
+     * Returns the current state of the form instance as stored in the database.
+     * When form data is included, the response contains enriched valueset and metadata.
+     * 
+     * @param questionnaireId the unique identifier of the questionnaire instance
+     * @return a {@link Uni} containing the form instance if found
+     */
     Uni<FormInstance> getOne(String questionnaireId);
   }
   
+  /**
+   * Builder for creating new form instances (questionnaires) from form templates.
+   * Supports pre-population with context variables and initial answers for form initialization.
+   */
   interface CreateFormInstance {
+    
+    /**
+     * Specifies the form template to instantiate.
+     * 
+     * @param formId the technical identifier of the form template to use
+     * @return this builder for method chaining
+     */
     CreateFormInstance formId(String formId);
+    
+    /**
+     * Sets the language/locale for form localization.
+     * 
+     * @param language the language code for form localization (e.g., "en", "fi")
+     * @return this builder for method chaining
+     */
     CreateFormInstance language(String language);
-    CreateFormInstance addContext(String id, Serializable value);
-    CreateFormInstance addAnswer(String id, Serializable value);
+    
+    /**
+     * Sets invisible/hidden context variables for the form instance.
+     * Context variables are predefined fields that users cannot change directly,
+     * such as SSN, name data from login credentials, or system-calculated values.
+     * These may be displayed on the form but are not user-editable and can be used
+     * for field pre-calculation and default value assignment.
+     * 
+     * @param ctx map of context variable names to their values
+     * @return this builder for method chaining
+     */
+    CreateFormInstance context(Map<String, Serializable> ctx);
+    
+    /**
+     * Sets initial user answers to pre-populate form fields.
+     * These represent actual user responses that can be modified during form completion.
+     * 
+     * @param answers map of field names to their initial answer values
+     * @return this builder for method chaining
+     */
+    CreateFormInstance answers(Map<String, Serializable> answers);
+    
+    /**
+     * Creates the form instance with the specified configuration.
+     * 
+     * @return a {@link Uni} containing the questionnaire's unique ID and initial version.
+     *         The version changes after each modification to track form state evolution.
+     */
     Uni<IdAndRevision> build();
   }
 }

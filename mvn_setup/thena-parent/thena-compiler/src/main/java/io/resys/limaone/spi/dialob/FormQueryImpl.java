@@ -38,7 +38,7 @@ public class FormQueryImpl implements FormQuery {
       if (cached.isPresent()) {
         return Uni.createFrom().item(cached);
       }
-      return db.getClient()
+      return db.getFormHttp()
         .httpQuery()
         .uri(uri -> uri.append("forms").append(formId).build())
         .method(Form.class)
@@ -62,7 +62,7 @@ public class FormQueryImpl implements FormQuery {
       }
     }
     
-    return db.getClient()
+    return db.getFormHttp()
       .httpQuery()
       .uri(uri -> uri.append("forms").append(formName).append("tags").append(formVersion).build())
       .method(FormTag.class)
@@ -80,7 +80,7 @@ public class FormQueryImpl implements FormQuery {
           return Uni.createFrom().item(cachedForm);
         }
         
-        return db.getClient()
+        return db.getFormHttp()
           .httpQuery()
           .uri(uri -> uri.append("forms").append(resolvedFormId).build())
           .method(Form.class)

@@ -41,7 +41,7 @@ public class CreateFormTagImpl implements CreateFormTag {
       .type(FormTag.Type.NORMAL)
       .build();
     
-    return db.getClient()
+    return db.getFormHttp()
         .httpQuery()
         .uri(uri -> uri.append("forms").append(formName).append("tags").build())
         .method(FormTag.class)
