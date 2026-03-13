@@ -1,6 +1,7 @@
 package io.resys.limaone.ast;
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.immutables.value.Value;
@@ -43,26 +44,34 @@ public interface ArticleWorkflow_AST extends Simple_AST {
   
   interface LimitedTimeStatement extends AnyStatement {
     default WkStatementType getType() { return WkStatementType.LIMITED_TIME; }
+    OffsetDateTime getStartDate();
+    OffsetDateTime getEndDate();
     AnyStatement getNext();
   }
   
   interface UserRolesStatement extends AnyStatement {
     default WkStatementType getType() { return WkStatementType.USER_ROLES; }    
+    String getDecisionTableName();
     AnyStatement getNext();
   }
   
   interface CreateFormStatement extends AnyStatement {
-    default WkStatementType getType() { return WkStatementType.CREATE_FORM; }    
+    default WkStatementType getType() { return WkStatementType.CREATE_FORM; }   
+    String getDependencyId();
+    String getFormName();
+    String getFormTagName();
     AwaitFormStatement getNext();
   }
   
   interface CreateTaskStatement extends AnyStatement {
     default WkStatementType getType() { return WkStatementType.CREATE_TASK; }
+    String getFlowName();
     EndStatement getNext();
   }
   
   interface AwaitFormStatement extends AnyStatement {
     default WkStatementType getType() { return WkStatementType.AWAIT_FORM; }
+    AnyStatement getNext();
   }
 
   interface EndStatement extends AnyStatement {

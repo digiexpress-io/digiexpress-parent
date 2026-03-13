@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DialobFormParserImpl implements DialobFormParser {
+  @SuppressWarnings("unused")
   private final AST_ParserProps props;
   private Model<DialobForm> model;
   

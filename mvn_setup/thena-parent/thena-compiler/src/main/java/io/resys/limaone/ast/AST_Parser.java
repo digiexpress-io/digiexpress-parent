@@ -35,7 +35,6 @@ public interface AST_Parser {
   
   interface ArticleParser {
     ArticleParser world(ModelWorld world);
-    ArticleParser onDependency(Consumer<Dependency_AST> dependency);
     Article_AST parse();
   }
   
