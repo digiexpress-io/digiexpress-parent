@@ -75,20 +75,17 @@ public interface WorkflowProgram extends Program {
   
   // inputs
   interface WorkflowInputProps {
-    @Nullable String getLocale();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableWorkflowDefaultProps.class) @JsonDeserialize(as = ImmutableWorkflowDefaultProps.class)
   interface WorkflowDefaultProps extends WorkflowInputProps {
     @Nullable String getArticleName();
     @Nullable String getParentArticleName();
-    @Nullable String getLocale();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableWorkflowAssignmentProps.class) @JsonDeserialize(as = ImmutableWorkflowAssignmentProps.class)
   interface WorkflowAssignmentProps extends WorkflowInputProps {
     String getTaskId(); // source of assignment
-    @Nullable String getLocale();
   }
 
   

@@ -1,9 +1,12 @@
 package io.resys.limaone.spi.program;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,7 +28,7 @@ import io.resys.limaone.ast.ArticleWorkflow_AST.LimitedTimeStatement;
 import io.resys.limaone.ast.ArticleWorkflow_AST.UserRolesStatement;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
-import io.resys.limaone.program.ImmutableCreateFormInstanceInput;
+import io.resys.limaone.program.DialobProgram.CreateFormInstanceInput;
 import io.resys.limaone.program.ImmutableWorkflowForm;
 import io.resys.limaone.program.ImmutableWorkflowInstanceResult;
 import io.resys.limaone.program.WorkflowProgram.WorkflowAssignmentProps;
@@ -78,6 +81,7 @@ public class WorkflowInstanceExecutor {
               JsonObject.mapFrom(ast).encodePrettily()
           ).build()
       );
+      log.error(exception.getMessage(), exception);
     }
     return ImmutableWorkflowInstanceResult.builder()
         .accessAllowed(allowAccess.get())
@@ -89,12 +93,15 @@ public class WorkflowInstanceExecutor {
   
   public ExecutorResult visitAnonStatement(AnonStatement statement, ExecutorProps props) {
     // Anonymous statement - continue to next
-    if(Boolean.TRUE.equals(identity.getAnon()) && statement.getAnonAllowed()) {
+    if(statement.getAnonAllowed()) {
       return visit(statement.getNext(), NO_PROPS);  
     }
-    errors.add(ImmutableModelError.builder().msg("Workflow execution is disabled for anon user").build());
-    allowAccess.setFalse();
-    return REACHED_END;
+    if(Boolean.TRUE.equals(identity.getAnon())) {
+      errors.add(ImmutableModelError.builder().msg("Workflow execution is disabled for anon user").build());
+      allowAccess.setFalse();
+      return REACHED_END;      
+    }
+    return visit(statement.getNext(), NO_PROPS);  
   }
   
   public ExecutorResult visitDisabledStatement(DisabledStatement statement, ExecutorProps props) {
@@ -172,50 +179,46 @@ public class WorkflowInstanceExecutor {
   
   public ExecutorResult visitCreateFormStatement(CreateFormStatement statement, ExecutorProps props) {
     
-    final var builder = ImmutableCreateFormInstanceInput.builder().locale(programInput.getLocale());
-    
-    builder
-      .putContext("FirstNames", identity.getFirstName())
-      .putContext("LastName", identity.getLastName())
-      .putContext("SocialSecurityNumber", identity.getIdentity()) // same field is used for company id and ssn
-      .putContext("Email", identity.getEmail())
-      .putContext("Address", identity.getAddress())
-      .putContext("ProtectionOrder", identity.getProtectionOrder());    
+    final var ctx = new HashMap<String, Serializable>();
+    ctx.put("FirstNames", identity.getFirstName());
+    ctx.put("LastName", identity.getLastName());
+    ctx.put("SocialSecurityNumber", identity.getIdentity()); // same field is used for company id and ssn
+    ctx.put("Email", identity.getEmail());
+    ctx.put("Address", identity.getAddress());
+    ctx.put("ProtectionOrder", identity.getProtectionOrder());    
     
     if(identity.getCompanyName() != null) {
-      builder
-        .putContext("CompanyName", identity.getCompanyName())
-        .putContext("CompanyId", identity.getIdentity());  // same field is used for company id and ssn
+      ctx.put("CompanyName", identity.getCompanyName());
+      ctx.put("CompanyId", identity.getIdentity());  // same field is used for company id and ssn
     }
     
     if(identity.getRepresentativeIdentity() != null) {
-      builder
-      .putContext("RepresentativeEnabled", true)
-      .putContext("RepresentativeFirstName", identity.getRepresentativeFirstName())
-      .putContext("RepresentativeLastName", identity.getRepresentativeLastName())
-      .putContext("RepresentativeIdentity", identity.getRepresentativeIdentity());
+      ctx.put("RepresentativeEnabled", true);
+      ctx.put("RepresentativeFirstName", identity.getRepresentativeFirstName());
+      ctx.put("RepresentativeLastName", identity.getRepresentativeLastName());
+      ctx.put("RepresentativeIdentity", identity.getRepresentativeIdentity());
     } else {
-      builder.putContext("RepresentativeEnabled", false);
+      ctx.put("RepresentativeEnabled", false);
     }
     
     if(programInput instanceof WorkflowDefaultProps) {
       final var defaultProps = (WorkflowDefaultProps) programInput;
       if (defaultProps.getArticleName() != null) {
-        builder.putContext("inputContextId", defaultProps.getArticleName());
+        ctx.put("inputContextId", defaultProps.getArticleName());
         result.articleName(defaultProps.getArticleName());
       }
       if (defaultProps.getParentArticleName() != null) {
-        builder.putContext("inputParentContextId", defaultProps.getParentArticleName());
+        ctx.put("inputParentContextId", defaultProps.getParentArticleName());
         result.parentArticleName(defaultProps.getParentArticleName());        
       }      
     }
 
     final var dialob = runtime.getBundle().queryDialobs()
         .name(statement.getDependencyId())
-        .getOne().run(builder.build());
+        .getOne().run(new CreateFormInstanceInput(identity.getLanguage(), Collections.unmodifiableMap(ctx)));
     
     result
-      .userLocale(programInput.getLocale())
+      .userLocale(identity.getLanguage())
       .userIdentity(identity.getIdentity())
       .anon(identity.getAnon())
       .tagName(runtime.getBundle().getName())

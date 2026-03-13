@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import io.dialob.api.form.Form;
 import io.resys.limaone.model.ImmutableLocaleLabel;
 import io.resys.limaone.persistence.AuthoringImpl;
-import io.resys.limaone.program.ImmutableWorkflowAnonProps;
+import io.resys.limaone.program.ImmutableWorkflowDefaultProps;
 import io.resys.limaone.program.ImmutableWorkflowIdentityProps;
 import io.resys.limaone.spi.compiler.CompilerImpl;
 import io.resys.limaone.spi.dialob.FormDb;
@@ -44,17 +44,17 @@ public class WorkflowTest extends DbSupport {
     final var bundle = compiler.compile(world).id(world.getName()).build();
     
     final var workflow = bundle.queryWorkflows().name("form-1").getOne();
-    final var workflowProps = ImmutableWorkflowAnonProps.builder().build();
-    final var user = ImmutableWorkflowIdentityProps.builder().identity("user-1").build();
+    final var workflowProps = ImmutableWorkflowDefaultProps.builder().build();
+    final var user = ImmutableWorkflowIdentityProps.builder().identity("user-1").language("fi").anon(false).build();
     
     // Assert questionnaire
-    final var workflowResult = workflow.run(DefaultRuntime.withBundle(bundle), user, workflowProps).andGetBody();
+    final var workflowResult = workflow.run(DefaultRuntime.withBundle(bundle), user, workflowProps).andGetForm();
     
-    Assertions.assertEquals(workflowResult.getUserDecision().getTaskAllowed(), true);
-    Assertions.assertEquals(workflowResult.getTaskDecision().isPresent(), true);
+    Assertions.assertEquals(workflowResult.getAccessAllowed(), true);
+    Assertions.assertEquals(workflowResult.getForm().isPresent(), true);
     
     Assertions.assertEquals(
-        workflowResult.getTaskDecision().get(), 
+        workflowResult.getForm().get(), 
         true);
 
   }

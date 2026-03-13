@@ -3,18 +3,12 @@ package io.resys.limaone.program;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.immutables.value.Value;
-
 public interface DialobProgram extends Program {
   
   FormInstanceResult run(CreateFormInstanceInput props);
 
   
-  @Value.Immutable
-  interface CreateFormInstanceInput extends ProgramInput {
-    String getLocale();
-    Map<String, Serializable> getContext(); 
-  }
+  record CreateFormInstanceInput(String locale, Map<String, Serializable> context) {}
   
   interface FormInstanceResult {
     String getFormName();
