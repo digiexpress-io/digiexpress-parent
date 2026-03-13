@@ -47,7 +47,6 @@ import io.dialob.api.form.FormTag;
 import io.dialob.api.form.FormTag.Type;
 import io.dialob.api.form.FormValueSet;
 import io.dialob.api.form.FormValueSetEntry;
-
 import io.dialob.api.proto.ValueSet;
 import io.dialob.api.proto.ValueSetEntry;
 import io.dialob.api.questionnaire.Answer;
@@ -391,9 +390,10 @@ public class DialobClientImpl implements DialobClient {
     if(valuesetCorrections == null) {
       return valueset;
     }
+    final var entries = Optional.ofNullable(valueset.getEntries()).orElse(Collections.emptyList());
+    final var correction = new ValueSet.Builder().id(valueset.getId()).entries(entries);
     
-    final var correction = new ValueSet.Builder().from(valueset);
-    final var existing = valueset.getEntries().stream().map(e -> e.getKey()).toList();
+    final var existing = entries.stream().map(e -> e.getKey()).toList();
     for(final var corrections : valuesetCorrections) {
       final var key = corrections.getAnswer().getValue().toString();
       if(existing.contains(key)) {
