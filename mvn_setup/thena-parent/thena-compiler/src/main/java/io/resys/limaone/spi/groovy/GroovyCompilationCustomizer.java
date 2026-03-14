@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.compiler.groovy;
+package io.resys.limaone.spi.groovy;
 
 import java.lang.reflect.Modifier;
 

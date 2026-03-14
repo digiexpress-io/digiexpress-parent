@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import groovy.lang.GroovyClassLoader;
 import io.resys.limaone.ast.AST_Parser;
-import io.resys.limaone.spi.compiler.groovy.GroovyCompilationCustomizer;
+import io.resys.limaone.spi.groovy.GroovyCompilationCustomizer;
 import io.resys.limaone.yaml.YamlMapper;
 import lombok.RequiredArgsConstructor;
 

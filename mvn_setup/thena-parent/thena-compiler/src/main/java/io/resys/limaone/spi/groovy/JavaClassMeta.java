@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.compiler.groovy;
+package io.resys.limaone.spi.groovy;
 
 import java.util.ArrayList;
 import java.util.List;
