@@ -390,6 +390,9 @@ public interface FormDb {
      * @return the FormItem metadata, or null if not found or form data not loaded
      */
     FormItem getFormItem(Answer answer);
+    
+    
+    Optional<String> encodeFormPrettily();
   }
   
   /**

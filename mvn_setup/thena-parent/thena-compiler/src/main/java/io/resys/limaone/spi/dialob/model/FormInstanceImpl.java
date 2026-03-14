@@ -66,4 +66,15 @@ public class FormInstanceImpl implements FormInstance {
       FormItem item,
       Optional<FormValueSet> valueSet,
       Optional<FormValueSetEntry> valueSetEntry) {}
+
+  @Override
+  public Optional<String> encodeFormPrettily() {
+    if(!this.formLoaded) {
+      return Optional.empty();
+    }
+    
+    final var encodeFormPrettily = new DialobFormPrettyPrinter().printForm(JsonObject.mapFrom(this.form.get()));
+    
+    return Optional.of(encodeFormPrettily);
+  }
 }

@@ -19,9 +19,10 @@ import io.resys.thena.test.DialobTest;
 import io.resys.thena.test.DialobTest.DialobResetDB;
 import io.resys.thena.test.DialobTest.FormUrl;
 import io.vertx.core.json.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 
 
-
+@Slf4j
 @DialobTest( enabled = true )
 public class WorkflowTest extends DbSupport {
 
@@ -65,13 +66,13 @@ public class WorkflowTest extends DbSupport {
     Assertions.assertEquals("main", form.getTagName());
     
     
-    
     final var session = formDb.withTenant()
         .formInstanceQuery()
         .includeForm(true)
-        .getOne(form.getFormSessionId());
+        .getOne(form.getFormSessionId())
+        .await().atMost(Duration.ofMinutes(1));
     
-
+    log.debug(session.encodeFormPrettily().get());
   }
   
   @SuppressWarnings("unused")

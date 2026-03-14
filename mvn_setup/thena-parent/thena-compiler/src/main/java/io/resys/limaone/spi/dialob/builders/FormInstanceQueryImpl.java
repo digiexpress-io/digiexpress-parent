@@ -41,7 +41,7 @@ public class FormInstanceQueryImpl implements FormInstanceQuery {
   public Uni<FormInstance> getOne(String questionnaireId) {
     Objects.requireNonNull(questionnaireId, () -> "questionnaireId must be defined");
     
-    final var questionnaireUni = db.getQuestionnaireHttp()
+    final var questionnaireUni = db.getFormHttp()
       .httpQuery()
       .uri(uri -> uri.append("questionnaires").append(questionnaireId).build())
       .method(Questionnaire.class)
