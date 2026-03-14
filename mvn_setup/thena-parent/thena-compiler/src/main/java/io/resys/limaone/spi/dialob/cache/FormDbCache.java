@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.dialob;
+package io.resys.limaone.spi.dialob.cache;
 
 import java.util.Optional;
 

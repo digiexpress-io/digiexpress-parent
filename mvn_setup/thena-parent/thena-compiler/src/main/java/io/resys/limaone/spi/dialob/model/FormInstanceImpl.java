@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.dialob;
+package io.resys.limaone.spi.dialob.model;
 
 import java.util.Optional;
 
@@ -9,6 +9,7 @@ import io.dialob.api.form.FormValueSetEntry;
 import io.dialob.api.questionnaire.Answer;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.resys.limaone.spi.dialob.FormDb.FormInstance;
+import io.resys.limaone.spi.dialob.builders.FormInstanceQueryImpl;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.dialob;
+package io.resys.limaone.spi.dialob.builders;
 
 import java.util.Objects;
 import java.util.Optional;

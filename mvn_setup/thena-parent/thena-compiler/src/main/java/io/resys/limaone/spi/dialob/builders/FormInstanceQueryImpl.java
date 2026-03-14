@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.dialob;
+package io.resys.limaone.spi.dialob.builders;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +16,8 @@ import io.dialob.api.questionnaire.Questionnaire;
 import io.resys.limaone.spi.dialob.FormDb.FormInstance;
 import io.resys.limaone.spi.dialob.FormDb.FormInstanceQuery;
 import io.resys.limaone.spi.dialob.FormDbImpl.FormDbProps;
-import io.resys.limaone.spi.dialob.FormInstanceImpl.AnswerAndValueSet;
+import io.resys.limaone.spi.dialob.model.FormInstanceImpl;
+import io.resys.limaone.spi.dialob.model.FormInstanceImpl.AnswerAndValueSet;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;

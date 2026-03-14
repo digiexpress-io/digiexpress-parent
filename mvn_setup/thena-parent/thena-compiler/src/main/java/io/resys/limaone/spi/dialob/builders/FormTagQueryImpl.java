@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.dialob;
+package io.resys.limaone.spi.dialob.builders;
 
 import io.dialob.api.form.FormTag;
 import io.resys.limaone.spi.dialob.FormDb.FormTagQuery;

@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.dialob;
+package io.resys.limaone.spi.dialob.builders;
 
 import java.util.Objects;
 
@@ -6,6 +6,7 @@ import io.dialob.api.proto.Actions;
 import io.resys.limaone.spi.dialob.FormDb.FormInstance;
 import io.resys.limaone.spi.dialob.FormDb.MergeFormInstance;
 import io.resys.limaone.spi.dialob.FormDbImpl.FormDbProps;
+import io.resys.limaone.spi.dialob.model.FormInstanceImpl;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
