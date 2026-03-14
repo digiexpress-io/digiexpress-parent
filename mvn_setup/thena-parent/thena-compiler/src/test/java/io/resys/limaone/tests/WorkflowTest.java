@@ -27,7 +27,7 @@ public class WorkflowTest extends DbSupport {
 
   
   @Test @DialobResetDB
-  public void testAll(FormUrl formUrl) {
+  public void testWorkflow(FormUrl formUrl) {
     
     final var formDb = TestTemplate.getFormDb(formUrl);
     setUpData(formDb);
@@ -53,9 +53,24 @@ public class WorkflowTest extends DbSupport {
     Assertions.assertEquals(workflowResult.getAccessAllowed(), true);
     Assertions.assertEquals(workflowResult.getForm().isPresent(), true);
     
-    Assertions.assertEquals(
-        workflowResult.getForm().get(), 
-        true);
+    
+    final var form = workflowResult.getForm().get();
+    
+    Assertions.assertEquals(false, form.getAssignment());
+    Assertions.assertEquals("flow1", form.getFlowName());
+    Assertions.assertEquals("testi1", form.getFormName());
+    Assertions.assertEquals("my-first-tag", form.getFormVersion());
+    Assertions.assertNotNull(form.getFormSessionId());
+    Assertions.assertEquals("form-1", form.getWorkflowName());
+    Assertions.assertEquals("main", form.getTagName());
+    
+    
+    
+    final var session = formDb.withTenant()
+        .formInstanceQuery()
+        .includeForm(true)
+        .getOne(form.getFormSessionId());
+    
 
   }
   

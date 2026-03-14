@@ -205,11 +205,9 @@ public class WorkflowInstanceExecutor {
       final var defaultProps = (WorkflowDefaultProps) programInput;
       if (defaultProps.getArticleName() != null) {
         ctx.put("inputContextId", defaultProps.getArticleName());
-        result.articleName(defaultProps.getArticleName());
       }
       if (defaultProps.getParentArticleName() != null) {
         ctx.put("inputParentContextId", defaultProps.getParentArticleName());
-        result.parentArticleName(defaultProps.getParentArticleName());        
       }      
     }
 
@@ -218,9 +216,6 @@ public class WorkflowInstanceExecutor {
         .getOne().run(new CreateFormInstanceInput(identity.getLanguage(), Collections.unmodifiableMap(ctx)));
     
     result
-      .userLocale(identity.getLanguage())
-      .userIdentity(identity.getIdentity())
-      .anon(identity.getAnon())
       .tagName(runtime.getBundle().getName())
       .formName(statement.getFormName())
       .formVersion(statement.getFormTagName())

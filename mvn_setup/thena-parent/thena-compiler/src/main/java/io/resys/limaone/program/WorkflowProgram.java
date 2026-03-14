@@ -50,13 +50,8 @@ public interface WorkflowProgram extends Program {
   
   @Value.Immutable @JsonSerialize(as = ImmutableWorkflowForm.class) @JsonDeserialize(as = ImmutableWorkflowForm.class)
   interface WorkflowForm extends Serializable {
-    String getUserIdentity();
-    String getUserLocale();
-    
     Long getExpiresInSeconds();
     OffsetDateTime getExpiresAt();
-    
-    Boolean getAnon();
     Boolean getAssignment();
     
     String getTagName();
@@ -65,10 +60,7 @@ public interface WorkflowProgram extends Program {
     
     String getFormName();
     String getFormVersion();
-    String getFormSessionId();
-    
-    @Nullable String getArticleName();
-    @Nullable String getParentArticleName();    
+    String getFormSessionId();   
   }
   
   
