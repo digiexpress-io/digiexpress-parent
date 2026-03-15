@@ -20,20 +20,23 @@ import io.resys.limaone.ast.ArticleWorkflow_AST.UserRolesStatement;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.program.ImmutableWorkflowFormResult;
+import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.WorkflowProgram.WorkflowExecutionStatus;
-import io.resys.limaone.program.WorkflowProgram.WorkflowIdentityProps;
-import io.resys.limaone.program.WorkflowProgram.WorkflowInputProps;
-import io.resys.limaone.program.WorkflowProgram.WorkflowFormResult;
+import io.resys.limaone.program.WorkflowProgram.WorkflowFlowResult;
+import io.resys.limaone.program.WorkflowProgram.WorkflowForm;
+import io.resys.limaone.spi.dialob.FormDb;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 
 @Slf4j
 @RequiredArgsConstructor
-public class WorkflowInstanceExecutor2 {
+public class WorkflowFlowExecutor {
   private final io.resys.limaone.program.Runtime runtime;
-  private final WorkflowIdentityProps identity;
-  private final WorkflowInputProps programInput;
+  private final FormDb formDb;
+  private final ProgramInput programInput;
+  private final WorkflowForm form;
+  
   private final List<ModelError> errors = new ArrayList<>();
   
   private final ExecutorResult REACHED_END = new ExecutorResult() {};
@@ -43,7 +46,7 @@ public class WorkflowInstanceExecutor2 {
   interface ExecutorProps {}
   
   
-  public WorkflowFormResult walk(ArticleWorkflow_AST ast) {
+  public WorkflowFlowResult walk(ArticleWorkflow_AST ast) {
     try {
       visit(ast.getStatement(), NO_PROPS);
     } catch(Exception exception) {
@@ -91,21 +94,11 @@ public class WorkflowInstanceExecutor2 {
   }
   
   public ExecutorResult visitUserRolesStatement(UserRolesStatement statement, ExecutorProps props) {
-    // Process user roles via decision table
-    final var dt = runtime.getBundle().queryDecisions()
-        .name(statement.getDecisionTableName())
-        .getOne();
-    
-    // Execute decision table for user roles validation
-    // Implementation depends on your security framework integration
-    
     return visit(statement.getNext(), NO_PROPS);
   }
   
   public ExecutorResult visitCreateFormStatement(CreateFormStatement statement, ExecutorProps props) {
-    // Create form using dependency and form details
-    // This would typically create a form instance in your form system
-    
+    // TODO:: validate against form version
     return visit(statement.getNext(), NO_PROPS);
   }
   
@@ -122,10 +115,7 @@ public class WorkflowInstanceExecutor2 {
   }
   
   public ExecutorResult visitAwaitFormStatement(AwaitFormStatement statement, ExecutorProps props) {
-    // Wait for form completion
-    // This would typically pause execution until form is submitted
-    
-    return REACHED_END;//visit(statement.getNext(), NO_PROPS);
+    return visit(statement.getNext(), NO_PROPS);
   }
   
   public ExecutorResult visitEndStatement(EndStatement statement, ExecutorProps props) {

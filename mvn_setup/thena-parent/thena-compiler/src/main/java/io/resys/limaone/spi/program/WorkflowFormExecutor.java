@@ -34,8 +34,8 @@ import io.resys.limaone.program.ImmutableWorkflowFormResult;
 import io.resys.limaone.program.WorkflowProgram.WorkflowAssignmentProps;
 import io.resys.limaone.program.WorkflowProgram.WorkflowDefaultProps;
 import io.resys.limaone.program.WorkflowProgram.WorkflowExecutionStatus;
-import io.resys.limaone.program.WorkflowProgram.WorkflowIdentityProps;
-import io.resys.limaone.program.WorkflowProgram.WorkflowInputProps;
+import io.resys.limaone.program.WorkflowProgram.WorkflowUser;
+import io.resys.limaone.program.WorkflowProgram.WorkflowProps;
 import io.resys.limaone.program.WorkflowProgram.WorkflowFormResult;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -44,15 +44,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class WorkflowInstanceExecutor {
+public class WorkflowFormExecutor {
   private final static String DT_ROLE_INPUT_NAME = "role";
   private final static String DT_ROLE_OUTPUT_NAME = "processName";  
   private final static String ROLE_SPLIT = ";";  
   
   private final io.resys.limaone.program.Runtime runtime;
   private final OffsetDateTime NOW = OffsetDateTime.now();
-  private final WorkflowIdentityProps identity;
-  private final WorkflowInputProps programInput;
+  private final WorkflowUser identity;
+  private final WorkflowProps programInput;
   private final List<ModelError> errors = new ArrayList<>();
   private final MutableBoolean allowAccess = new MutableBoolean(true);
   private final MutableBoolean formOk = new MutableBoolean(false);

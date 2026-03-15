@@ -9,12 +9,14 @@ import io.resys.limaone.model.ArticleWorkflow;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.program.Program.ProgramStatus;
+import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.limaone.spi.program.WorkflowProgramImpl;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class Compiler_Workflow implements CompilableUnit {
+  private final FormDb formDb;
   private final AST_Parser parser;
   private final Model<ArticleWorkflow> target;
   
@@ -38,6 +40,7 @@ public class Compiler_Workflow implements CompilableUnit {
         final var extraErrors = new Compiler_WorkflowDepsValidator(artifact, ast).walk();
         
         return new WorkflowProgramImpl(
+            formDb,
             target,
             ast, 
             artifact.getErrors().isEmpty() ? artifact.getProgramStatus() : ProgramStatus.ERROR,

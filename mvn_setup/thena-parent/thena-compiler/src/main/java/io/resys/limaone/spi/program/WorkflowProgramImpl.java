@@ -12,12 +12,14 @@ import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
 import io.resys.limaone.program.WorkflowProgram;
+import io.resys.limaone.spi.dialob.FormDb;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class WorkflowProgramImpl implements WorkflowProgram {
   private static final long serialVersionUID = -7526807947234023047L;
+  private final FormDb formDb;
   private final Model<ArticleWorkflow> target;
   private final ArticleWorkflow_AST ast;
   private final ProgramStatus status;
@@ -60,13 +62,12 @@ public class WorkflowProgramImpl implements WorkflowProgram {
   }
 
   @Override
-  public WorkflowFormResult runForm(Runtime runtime, WorkflowIdentityProps identity, WorkflowInputProps programInput) {
-    return new WorkflowInstanceExecutor(runtime, identity, programInput).walk(ast);
+  public WorkflowFormResult runForm(Runtime runtime, WorkflowUser identity, WorkflowProps programInput) {
+    return new WorkflowFormExecutor(runtime, identity, programInput).walk(ast);
   }
 
   @Override
-  public WorkflowFlowResult runFlow(Runtime runtime, ProgramInput input) {
-    // TODO Auto-generated method stub
-    return null;
+  public WorkflowFlowResult runFlow(Runtime runtime, WorkflowForm form, ProgramInput programInput) {
+    return new WorkflowFlowExecutor(runtime, formDb, programInput, form).walk(ast);
   }
 }

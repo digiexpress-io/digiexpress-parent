@@ -18,14 +18,13 @@ import jakarta.annotation.Nullable;
 
 public interface WorkflowProgram extends Program {
 
-  WorkflowFormResult runForm(Runtime runtime, WorkflowIdentityProps identity, WorkflowInputProps programInput);  
-  WorkflowFlowResult runFlow(Runtime runtime, ProgramInput input);
+  WorkflowFormResult runForm(Runtime runtime, WorkflowUser identity, WorkflowProps programInput);  
+  WorkflowFlowResult runFlow(Runtime runtime, WorkflowForm form, ProgramInput programInput);
 
   
   interface WorkflowFlowResult extends ProgramResult {
     
   }
-  
   
   @Value.Immutable @JsonSerialize(as = ImmutableWorkflowFormResult.class) @JsonDeserialize(as = ImmutableWorkflowFormResult.class)
   interface WorkflowFormResult extends ProgramResult {
@@ -59,23 +58,23 @@ public interface WorkflowProgram extends Program {
   
   
   // inputs
-  interface WorkflowInputProps {
+  interface WorkflowProps {
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableWorkflowDefaultProps.class) @JsonDeserialize(as = ImmutableWorkflowDefaultProps.class)
-  interface WorkflowDefaultProps extends WorkflowInputProps {
+  interface WorkflowDefaultProps extends WorkflowProps {
     @Nullable String getArticleName();
     @Nullable String getParentArticleName();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableWorkflowAssignmentProps.class) @JsonDeserialize(as = ImmutableWorkflowAssignmentProps.class)
-  interface WorkflowAssignmentProps extends WorkflowInputProps {
+  interface WorkflowAssignmentProps extends WorkflowProps {
     String getTaskId(); // source of assignment
   }
 
   
-  @Value.Immutable @JsonSerialize(as = ImmutableWorkflowIdentityProps.class) @JsonDeserialize(as = ImmutableWorkflowIdentityProps.class)
-  interface WorkflowIdentityProps {
+  @Value.Immutable @JsonSerialize(as = ImmutableWorkflowUser.class) @JsonDeserialize(as = ImmutableWorkflowUser.class)
+  interface WorkflowUser {
     // even anon user needs to have some anon identity and some primitive roles
     String getIdentity();
     List<String> getIdentityRoles();

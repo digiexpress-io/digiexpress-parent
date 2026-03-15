@@ -43,7 +43,7 @@ public class CompilerImpl implements Compiler {
     
     // workflows
     final Stream<CompilableUnit> workflows = world.getArticleWorkflows().values().stream()
-        .map(wk -> new Compiler_Workflow(astParser, wk));
+        .map(wk -> new Compiler_Workflow(formDb, astParser, wk));
 
     // main stencil article
     final Stream<CompilableUnit> article = world.getArticles().isEmpty() && world.getArticleWorkflows().isEmpty() ?

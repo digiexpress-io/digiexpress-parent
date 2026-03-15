@@ -10,7 +10,7 @@ import io.dialob.api.questionnaire.Questionnaire;
 import io.resys.limaone.model.ImmutableLocaleLabel;
 import io.resys.limaone.persistence.AuthoringImpl;
 import io.resys.limaone.program.ImmutableWorkflowDefaultProps;
-import io.resys.limaone.program.ImmutableWorkflowIdentityProps;
+import io.resys.limaone.program.ImmutableWorkflowUser;
 import io.resys.limaone.spi.compiler.CompilerImpl;
 import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.limaone.spi.dialob.FormDb.FormInstance;
@@ -52,7 +52,7 @@ public class WorkflowTest extends DbSupport {
     // get and run the workflow
     final var workflow = bundle.queryWorkflows().name("form-1").getOne();
     final var workflowProps = ImmutableWorkflowDefaultProps.builder().build();
-    final var user = ImmutableWorkflowIdentityProps.builder().identity("user-1").language("fi").anon(false).build();
+    final var user = ImmutableWorkflowUser.builder().identity("user-1").language("fi").anon(false).build();
 
 
     // Assert questionnaire
