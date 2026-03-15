@@ -30,13 +30,13 @@ import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.program.DialobProgram.CreateFormInstanceInput;
 import io.resys.limaone.program.ImmutableWorkflowForm;
-import io.resys.limaone.program.ImmutableWorkflowInstanceResult;
+import io.resys.limaone.program.ImmutableWorkflowFormResult;
 import io.resys.limaone.program.WorkflowProgram.WorkflowAssignmentProps;
 import io.resys.limaone.program.WorkflowProgram.WorkflowDefaultProps;
 import io.resys.limaone.program.WorkflowProgram.WorkflowExecutionStatus;
 import io.resys.limaone.program.WorkflowProgram.WorkflowIdentityProps;
 import io.resys.limaone.program.WorkflowProgram.WorkflowInputProps;
-import io.resys.limaone.program.WorkflowProgram.WorkflowInstanceResult;
+import io.resys.limaone.program.WorkflowProgram.WorkflowFormResult;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +66,7 @@ public class WorkflowInstanceExecutor {
   interface ExecutorProps {}
   
   
-  public WorkflowInstanceResult walk(ArticleWorkflow_AST ast) {
+  public WorkflowFormResult walk(ArticleWorkflow_AST ast) {
     final var failSafeEnd = NOW.plusMonths(6);
     result.workflowName(ast.getName())
       .expiresInSeconds(ChronoUnit.SECONDS.between(NOW, failSafeEnd))
@@ -83,7 +83,7 @@ public class WorkflowInstanceExecutor {
       );
       log.error(exception.getMessage(), exception);
     }
-    return ImmutableWorkflowInstanceResult.builder()
+    return ImmutableWorkflowFormResult.builder()
         .accessAllowed(allowAccess.get())
         .form(this.formOk.isTrue() ? Optional.of(this.result.build()) : Optional.empty())
         .errors(errors)

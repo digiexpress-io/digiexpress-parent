@@ -7,7 +7,6 @@ import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.DialobForm;
 import io.resys.limaone.model.Model;
-import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.program.Program.ProgramStatus;
 import io.resys.limaone.spi.dialob.FormDb;
@@ -21,7 +20,6 @@ public class Compiler_Dialob implements CompilableUnit {
   private final ScheduledExecutorService workerPool;
   private final Duration maxTimeout;
   private final AST_Parser parser;
-  private final ModelWorld world;
   private final Model<DialobForm> target;
   
   @Override

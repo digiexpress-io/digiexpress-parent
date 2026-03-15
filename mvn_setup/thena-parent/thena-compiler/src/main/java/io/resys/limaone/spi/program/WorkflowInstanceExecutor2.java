@@ -19,11 +19,11 @@ import io.resys.limaone.ast.ArticleWorkflow_AST.LimitedTimeStatement;
 import io.resys.limaone.ast.ArticleWorkflow_AST.UserRolesStatement;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
-import io.resys.limaone.program.ImmutableWorkflowInstanceResult;
+import io.resys.limaone.program.ImmutableWorkflowFormResult;
 import io.resys.limaone.program.WorkflowProgram.WorkflowExecutionStatus;
 import io.resys.limaone.program.WorkflowProgram.WorkflowIdentityProps;
 import io.resys.limaone.program.WorkflowProgram.WorkflowInputProps;
-import io.resys.limaone.program.WorkflowProgram.WorkflowInstanceResult;
+import io.resys.limaone.program.WorkflowProgram.WorkflowFormResult;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -43,7 +43,7 @@ public class WorkflowInstanceExecutor2 {
   interface ExecutorProps {}
   
   
-  public WorkflowInstanceResult walk(ArticleWorkflow_AST ast) {
+  public WorkflowFormResult walk(ArticleWorkflow_AST ast) {
     try {
       visit(ast.getStatement(), NO_PROPS);
     } catch(Exception exception) {
@@ -54,7 +54,7 @@ public class WorkflowInstanceExecutor2 {
           ).build()
       );
     }
-    return ImmutableWorkflowInstanceResult.builder()
+    return ImmutableWorkflowFormResult.builder()
         .errors(errors)
         .status(errors.isEmpty() ? WorkflowExecutionStatus.COMPLETED : WorkflowExecutionStatus.ERROR)
         .build();

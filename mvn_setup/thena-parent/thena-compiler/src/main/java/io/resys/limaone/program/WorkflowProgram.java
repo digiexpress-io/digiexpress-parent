@@ -18,24 +18,17 @@ import jakarta.annotation.Nullable;
 
 public interface WorkflowProgram extends Program {
 
-  WorkflowExecutor run( 
-      Runtime runtime,
-      WorkflowIdentityProps identity,
-      WorkflowInputProps programInput
-  );
+  WorkflowFormResult runForm(Runtime runtime, WorkflowIdentityProps identity, WorkflowInputProps programInput);  
+  WorkflowFlowResult runFlow(Runtime runtime, ProgramInput input);
+
   
-  interface WorkflowExecutor {
-    WorkflowInstanceResult andGetForm();
-    WorkflowResult andGetFlow();
-  }
-  
-  interface WorkflowResult extends ProgramResult {
+  interface WorkflowFlowResult extends ProgramResult {
     
   }
   
   
-  @Value.Immutable @JsonSerialize(as = ImmutableWorkflowInstanceResult.class) @JsonDeserialize(as = ImmutableWorkflowInstanceResult.class)
-  interface WorkflowInstanceResult extends ProgramResult {
+  @Value.Immutable @JsonSerialize(as = ImmutableWorkflowFormResult.class) @JsonDeserialize(as = ImmutableWorkflowFormResult.class)
+  interface WorkflowFormResult extends ProgramResult {
     Boolean getAccessAllowed();
     Optional<WorkflowForm> getForm();
     

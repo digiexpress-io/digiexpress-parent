@@ -39,11 +39,11 @@ public class CompilerImpl implements Compiler {
 
     // forms
     final Stream<CompilableUnit> forms = world.getForms().values().stream()
-        .map(wk -> new Compiler_Dialob(formDb, workerPool, maxTimeout, astParser, world, wk));
+        .map(form -> new Compiler_Dialob(formDb, workerPool, maxTimeout, astParser, form));
     
     // workflows
     final Stream<CompilableUnit> workflows = world.getArticleWorkflows().values().stream()
-        .map(wk -> new Compiler_Workflow(formDb, workerPool, maxTimeout, astParser, world, wk));
+        .map(wk -> new Compiler_Workflow(astParser, wk));
 
     // main stencil article
     final Stream<CompilableUnit> article = world.getArticles().isEmpty() && world.getArticleWorkflows().isEmpty() ?

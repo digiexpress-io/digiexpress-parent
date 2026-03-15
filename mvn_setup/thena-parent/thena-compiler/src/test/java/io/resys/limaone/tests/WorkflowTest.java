@@ -6,18 +6,21 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.dialob.api.form.Form;
+import io.dialob.api.questionnaire.Questionnaire;
 import io.resys.limaone.model.ImmutableLocaleLabel;
 import io.resys.limaone.persistence.AuthoringImpl;
 import io.resys.limaone.program.ImmutableWorkflowDefaultProps;
 import io.resys.limaone.program.ImmutableWorkflowIdentityProps;
 import io.resys.limaone.spi.compiler.CompilerImpl;
 import io.resys.limaone.spi.dialob.FormDb;
+import io.resys.limaone.spi.dialob.FormDb.FormInstance;
 import io.resys.limaone.spi.program.DefaultRuntime;
 import io.resys.limaone.tests.support.DbSupport;
 import io.resys.limaone.tests.support.TestTemplate;
 import io.resys.thena.test.DialobTest;
 import io.resys.thena.test.DialobTest.DialobResetDB;
 import io.resys.thena.test.DialobTest.FormUrl;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,34 +32,37 @@ public class WorkflowTest extends DbSupport {
   
   @Test @DialobResetDB
   public void testWorkflow(FormUrl formUrl) {
-    
-    final var formDb = TestTemplate.getFormDb(formUrl);
-    setUpData(formDb);
-    
-    
+    // set up implementations
+    final var formDb = withData(TestTemplate.getFormDb(formUrl));
     final var authoring = new AuthoringImpl(createConfig(formDb));
+
+
+    // compile all resources
     final var compiler = CompilerImpl.builder()
       .formDb(formDb)
       .astParser(authoring.getConfig().getAstParser())
       .build();
-    
-    // magic asset resource... has all we need to run dialob/wrench/stencil
+
+
+    // magic asset bundle ... contains all we need to run dialob/wrench/stencil
     final var world = authoring.worldQuery().findAllSync();
     final var bundle = compiler.compile(world).id(world.getName()).build();
-    
+
+
+    // get and run the workflow
     final var workflow = bundle.queryWorkflows().name("form-1").getOne();
     final var workflowProps = ImmutableWorkflowDefaultProps.builder().build();
     final var user = ImmutableWorkflowIdentityProps.builder().identity("user-1").language("fi").anon(false).build();
-    
+
+
     // Assert questionnaire
-    final var workflowResult = workflow.run(DefaultRuntime.withBundle(bundle), user, workflowProps).andGetForm();
-    
+    final var workflowResult = workflow.runForm(DefaultRuntime.withBundle(bundle), user, workflowProps);
     Assertions.assertEquals(workflowResult.getAccessAllowed(), true);
     Assertions.assertEquals(workflowResult.getForm().isPresent(), true);
     
     
+    //  Assert the created data
     final var form = workflowResult.getForm().get();
-    
     Assertions.assertEquals(false, form.getAssignment());
     Assertions.assertEquals("flow1", form.getFlowName());
     Assertions.assertEquals("testi1", form.getFormName());
@@ -64,20 +70,59 @@ public class WorkflowTest extends DbSupport {
     Assertions.assertNotNull(form.getFormSessionId());
     Assertions.assertEquals("form-1", form.getWorkflowName());
     Assertions.assertEquals("main", form.getTagName());
-    
-    
+
+
+    // retrieve created session
+    // complete the session
     final var session = formDb.withTenant()
         .formInstanceQuery()
         .includeForm(true)
         .getOne(form.getFormSessionId())
         .await().atMost(Duration.ofMinutes(1));
+    completeForm(formDb, session);
+
+
+    // run the flow
+    workflow.r
+  }
+  
+  
+  @SuppressWarnings("unused")
+  public void completeForm(FormDb formDb, FormInstance instance) {
+    final var formFilled = formDb.withTenant().createFormFill()
+        .formInstanceId(instance.getQuestionnaire().getId())
+        .actions(JsonObject.of(
+            "rev", instance.getQuestionnaire().getRev(), 
+            "actions", new JsonArray(
+"""
+[
+  {'type':'ANSWER','answer':'no','id':'authentication'},
+  {'type':'ANSWER','answer':'cityService','id':'mainList'},
+  {'type':'ANSWER','answer':'info','id':'cityServiceMainList'},
+  {'type':'ANSWER','answer':'thanks','id':'typeOfFeedback'},
+  {'type':'ANSWER','answer':'thank you','id':'feedBackTitle'},
+  {'type':'ANSWER','answer':'very big text','id':'feedBackTxt'},
+  {'type':'ANSWER','answer':false,'id':'boolean11'},
+  {'type':'COMPLETE'}
+]""".replace("'", "\""))).encode())
+        .build()
+        .await().atMost(Duration.ofMinutes(1));
     
-    log.debug(session.encodeFormPrettily().get());
+    final var completedSession = formDb.withTenant()
+        .formInstanceQuery()
+        .getOne(instance.getQuestionnaire().getId())
+        .await().atMost(Duration.ofMinutes(1));
+    
+    Assertions.assertEquals(
+        Questionnaire.Metadata.Status.COMPLETED,
+        completedSession.getQuestionnaire().getMetadata().getStatus(), 
+        "Expected completed filled session");
   }
   
   @SuppressWarnings("unused")
-  public void setUpData(FormDb formDb) {
-    
+  public FormDb withData(FormDb formDb) {
+    // prints form in a readable manner
+    // log.debug(session.encodeFormPrettily().get());
     
     final var form = new JsonObject(TestTemplate.toString("forms/palaute.json")).mapTo(Form.class);
     final var created = formDb.withTenant().createForm()
@@ -115,5 +160,7 @@ public class WorkflowTest extends DbSupport {
           .addLabels(ImmutableLocaleLabel.builder().locale(locale.getId()).labelValue("firstForm").build())
           .build())
         .buildSync();
+    
+    return formDb;
   }
 }
