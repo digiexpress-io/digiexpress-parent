@@ -10,6 +10,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -244,11 +245,11 @@ public class HttpClientImpl implements HttpClient {
           log.debug("GET request for multiple objects successful, status: {}", response.getStatusCode());
           log.trace("GET response body: {}", response.getBody());
           
-          final var array = objectMapper.readValue(
+          final var array = (T[]) objectMapper.readValue(
               response.getBody(), 
               objectMapper.getTypeFactory().constructArrayType(responseType));
           
-          final List<T> list = (List<T>) Arrays.asList(array);
+          final List<T> list = Arrays.asList(array);
           
           log.debug("Parsed {} objects from response", list.size());
           return list;
@@ -328,6 +329,58 @@ public class HttpClientImpl implements HttpClient {
       log.trace("Created JSON headers: Content-Type=application/json, Accept=application/json");
       return headers;
     }
+
+    @Override
+    public Uni<RawResponse> postOneAsRaw(String body) {
+      log.debug("Executing POST request to: {} with object type: {}", uriPath, responseType.getSimpleName());
+      return Uni.createFrom().item(() -> {
+        try {
+          final var headers = createJsonHeaders();
+          log.trace("POST request body: {}", body);
+          
+          final var entity = new HttpEntity<>(body, headers);
+          final var response = restTemplate.exchange(uriPath, HttpMethod.POST, entity, String.class);
+          
+          if(response.getStatusCode().is2xxSuccessful()) {
+            log.debug("POST request successful, status: {}", response.getStatusCode());
+            log.trace("POST response body: {}", response.getBody());
+            return new RawResponseImpl(response);
+          } 
+          log.error("POST request unsuccessful, status: {}", response.getStatusCode());
+          log.error("POST response body: {}", response.getBody());
+          return new RawResponseImpl(response);
+        } catch (HttpServerErrorException e) {
+          log.error("Server error during POST request to: {}, status: {}", uriPath, e.getStatusCode(), e);
+          throw new RuntimeException("Server error: " + e.getMessage(), e);
+        } catch (HttpClientErrorException e) {
+          log.error("Client error during POST request to: {}, status: {}", uriPath, e.getStatusCode(), e);
+          throw new RuntimeException("Client error: " + e.getMessage(), e);
+        }
+      });
+    }
+
+    @Override
+    public Uni<RawResponse> getOneAsRaw() {
+      log.debug("Executing GET request for required object to: {}, expecting: {}", uriPath, responseType.getSimpleName());
+      return Uni.createFrom().item(() -> {
+        try {
+          final var headers = createJsonHeaders();
+          final var entity = new HttpEntity<>(headers);
+          final var response = restTemplate.exchange(uriPath, HttpMethod.GET, entity, String.class);
+          
+          log.debug("GET request for required object successful, status: {}", response.getStatusCode());
+          log.trace("GET response body: {}", response.getBody());
+          
+          return new RawResponseImpl(response);
+        } catch (HttpServerErrorException e) {
+          log.error("Server error during GET request to: {}, status: {}", uriPath, e.getStatusCode(), e);
+          throw new RuntimeException("Server error: " + e.getMessage(), e);
+        } catch (HttpClientErrorException e) {
+          log.error("Client error during GET request to: {}, status: {} - expected 1 but got 0", uriPath, e.getStatusCode(), e);
+          throw new RuntimeException("Expected 1 object but got 0 - " + e.getMessage(), e);
+        }
+      });
+    }
   }
   
   public class HttpCodeException extends RuntimeException {
@@ -341,4 +394,19 @@ public class HttpClientImpl implements HttpClient {
     }
   }
 
+  
+  public record RawResponseImpl(ResponseEntity<String> response) implements RawResponse {
+    @Override
+    public boolean isOk() {
+      return response.getStatusCode().is2xxSuccessful();
+    }
+    @Override
+    public String getBody() {
+      return response.getBody();
+    }
+
+    @Override
+    public Object unwrap() {
+      return response;
+    }}
 }

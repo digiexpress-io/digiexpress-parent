@@ -7,6 +7,7 @@ import java.util.function.Function;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 
 /**
  * Reactive HTTP client interface for querying internal LimaOne dependencies and services.
@@ -85,6 +86,24 @@ public interface HttpClient {
     Uni<T> postOneObject(T object);
     
     /**
+     * Sends a POST request with the specified STRING containing JSON payload.
+     * 
+     * @param body the string to send as JSON in the request body
+     * @return a {@link Uni} containing the "raw" HTTP response, with status code and body
+     * @throws RuntimeException if the request fails (5xx status codes)
+     */
+    Uni<RawResponse> postOneAsRaw(@Nullable String body);
+    
+    /**
+     * Performs a GET request expecting exactly one object in the response.
+     * Throws an exception if no object is found (expected 1 but got 0).
+     * 
+     * @return a {@link Uni} containing the "raw" HTTP response, with status code and body
+     * @throws RuntimeException if no object is found or if the request fails (4xx/5xx status codes)
+     */
+    Uni<RawResponse> getOneAsRaw();
+    
+    /**
      * Sends a POST request with the specified object as JSON payload.
      * 
      * @param object the object to send as JSON in the request body
@@ -158,5 +177,25 @@ public interface HttpClient {
      * This method completes the URI building process.
      */
     void build();
+  }
+  
+  /** 
+   * Wrapper for HTTP clients response.
+   */
+  interface RawResponse {
+    /**
+     * @return true if 2xx code
+     */
+    boolean isOk();
+    
+    /**
+     * @return whatever the body is as a string
+     */
+    @Nullable String getBody();
+    
+    /**
+     * @return actual HTTP response from whatever the implementation provides
+     */
+    Object unwrap();
   }
 }

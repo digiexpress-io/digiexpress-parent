@@ -3,6 +3,7 @@ package io.resys.limaone.spi.dialob;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.immutables.value.Value;
 
@@ -16,8 +17,10 @@ import io.dialob.api.proto.Actions;
 import io.dialob.api.questionnaire.Answer;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.rest.IdAndRevision;
+import io.resys.limaone.spi.http.HttpClient.RawResponse;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 
 /**
  * Budget multi-tenant form database interface for Dialob integration.
@@ -166,6 +169,10 @@ public interface FormDb {
      * @return a new {@link CreateFormInstance} builder
      */
     CreateFormInstance createFormInstance();
+    
+    
+    FormFillBuilder createFormFill();
+    FormFillQuery formFillQuery();
   }
   
   /**
@@ -518,4 +525,18 @@ public interface FormDb {
      */
     Uni<IdAndRevision> build();
   }
+  
+  
+  
+  interface FormFillQuery {
+    Uni<RawResponse> getOne(String formInstanceId);
+  }
+  
+  interface FormFillBuilder {
+    FormFillBuilder formInstanceId(String formInstanceId);
+    FormFillBuilder actions(@Nullable String body);
+    FormFillBuilder onCompletion(Consumer<Uni<?>> callback);
+    Uni<RawResponse> build();
+  }
+
 }

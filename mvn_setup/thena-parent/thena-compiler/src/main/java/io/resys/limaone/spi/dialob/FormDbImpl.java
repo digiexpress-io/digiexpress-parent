@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.resys.limaone.spi.dialob.builders.CreateFormImpl;
 import io.resys.limaone.spi.dialob.builders.CreateFormInstanceImpl;
 import io.resys.limaone.spi.dialob.builders.CreateFormTagImpl;
+import io.resys.limaone.spi.dialob.builders.FormFillBuilderImpl;
+import io.resys.limaone.spi.dialob.builders.FormFillQueryImpl;
 import io.resys.limaone.spi.dialob.builders.FormInstanceQueryImpl;
 import io.resys.limaone.spi.dialob.builders.FormMetaQueryImpl;
 import io.resys.limaone.spi.dialob.builders.FormQueryImpl;
@@ -50,6 +52,8 @@ public class FormDbImpl implements FormDb {
       @Override public MergeFormInstance mergeFormInstance() { return new MergeFormInstanceImpl(formDbProps); }
       @Override public FormInstanceQuery formInstanceQuery() { return new FormInstanceQueryImpl(formDbProps); }
       @Override public CreateFormInstance createFormInstance() { return new CreateFormInstanceImpl(formDbProps); }
+      @Override public FormFillBuilder createFormFill() { return new FormFillBuilderImpl(formDbProps); }
+      @Override public FormFillQuery formFillQuery() { return new FormFillQueryImpl(formDbProps); }
     };
   }
 
