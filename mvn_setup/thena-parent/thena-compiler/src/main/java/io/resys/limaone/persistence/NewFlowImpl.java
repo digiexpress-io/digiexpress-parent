@@ -52,7 +52,9 @@ public class NewFlowImpl extends AuthoringTemplate<NewFlowImpl, Model<Flow>> imp
   private Flow internalBuild(ModelWorld world) {
     Objects.requireNonNull(props, () -> "props must be defined");
 
-    final var syntax = """
+    final String syntax;
+    if(props.getBody() == null) {
+      syntax = """
 id: {id}
 description: {desc}
 
@@ -68,7 +70,9 @@ tasks:
 """
     .replace("{id}", Optional.ofNullable(props.getName()).orElse("first_flow"))
     .replace("{desc}", Optional.ofNullable(props.getDesc()).orElse("my first flow"));
-    
+    } else {
+      syntax = props.getBody();
+    }
     
     // Check for duplicate name only if the name is actually being changed
     final var flow = config.getAstParser().parseFlow().syntax(syntax).parse();    

@@ -1,5 +1,6 @@
 package io.resys.limaone.spi.dialob.builders;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +20,7 @@ import io.resys.limaone.spi.dialob.FormDbImpl.FormDbProps;
 import io.resys.limaone.spi.dialob.model.FormInstanceImpl;
 import io.resys.limaone.spi.dialob.model.FormInstanceImpl.AnswerAndValueSet;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -145,4 +147,12 @@ public class FormInstanceQueryImpl implements FormInstanceQuery {
     return correction.build();
   }
 
+  @Override
+  public FormInstance getOneSync(String questionnaireId) {
+    final var workerTimeout = Duration.ofMinutes(1);
+    final var workerPool = Infrastructure.getDefaultWorkerPool();
+    return this.getOne(questionnaireId)
+      .runSubscriptionOn(workerPool)
+      .await().atMost(workerTimeout);
+  }
 }

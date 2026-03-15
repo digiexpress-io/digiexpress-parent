@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.ModelError;
+import io.resys.limaone.program.FlowProgram.FlowResult;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
@@ -22,8 +23,11 @@ public interface WorkflowProgram extends Program {
   WorkflowFlowResult runFlow(Runtime runtime, WorkflowForm form, ProgramInput programInput);
 
   
+  @Value.Immutable @JsonSerialize(as = ImmutableWorkflowFlowResult.class) @JsonDeserialize(as = ImmutableWorkflowFlowResult.class)
   interface WorkflowFlowResult extends ProgramResult {
-    
+    Optional<FlowResult> getFlow();
+    List<ModelError> getErrors();
+    WorkflowExecutionStatus getStatus();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableWorkflowFormResult.class) @JsonDeserialize(as = ImmutableWorkflowFormResult.class)

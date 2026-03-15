@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
+
+import org.apache.commons.lang3.mutable.MutableObject;
 
 import groovy.util.logging.Slf4j;
 import io.resys.limaone.ast.ArticleWorkflow_AST;
@@ -24,7 +26,8 @@ import io.resys.limaone.ast.ArticleWorkflow_AST.LimitedTimeStatement;
 import io.resys.limaone.ast.ArticleWorkflow_AST.UserRolesStatement;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
-import io.resys.limaone.program.ImmutableWorkflowFormResult;
+import io.resys.limaone.program.FlowProgram.FlowResult;
+import io.resys.limaone.program.ImmutableWorkflowFlowResult;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.WorkflowProgram.WorkflowExecutionStatus;
 import io.resys.limaone.program.WorkflowProgram.WorkflowFlowResult;
@@ -44,6 +47,7 @@ public class WorkflowFlowExecutor {
   private final ProgramInput programInput;
   private final WorkflowForm form;
   
+  private final MutableObject<FlowResult> flowResult = new MutableObject<>();
   private final List<ModelError> errors = new ArrayList<>();
   
   private final ExecutorResult REACHED_END = new ExecutorResult() {};
@@ -60,9 +64,10 @@ public class WorkflowFlowExecutor {
       final var msg = "Msg: " + exception.getMessage() + System.lineSeparator() + JsonObject.mapFrom(ast).encodePrettily();
       this.errors.add(ImmutableModelError.builder().exception(exception).msg(msg).build());
     }
-    return ImmutableWorkflowFormResult.builder()
+    return ImmutableWorkflowFlowResult.builder()
         .errors(errors)
         .status(errors.isEmpty() ? WorkflowExecutionStatus.COMPLETED : WorkflowExecutionStatus.ERROR)
+        .flow(Optional.ofNullable(flowResult.get()))
         .build();
   }
   
@@ -101,7 +106,6 @@ public class WorkflowFlowExecutor {
   }
   
   public ExecutorResult visitCreateFormStatement(CreateFormStatement statement, ExecutorProps props) {
-    // TODO:: validate against form version
     return visit(statement.getNext(), NO_PROPS);
   }
   
@@ -112,14 +116,13 @@ public class WorkflowFlowExecutor {
         .getOne();
     
     // load the questionnaire right up
-    ds
-    final var result = flow.run(programInput.withInputs(Map.of(
-      "questionnaireId", form.getFormSessionId(),
-      "workflowName", form.getWorkflowName())
-    ), runtime);
-    
-    // Execute the flow as a task
-    // Implementation depends on your task management system
+
+    // add more data from current session
+    final Map<String, Serializable> additionalInputs = Map.of(
+        "questionnaireId", form.getFormSessionId(),
+        "workflowName", form.getWorkflowName());    
+    final var result = flow.run(programInput.withInputs(additionalInputs), runtime).andGetBody();
+    flowResult.setValue(result);
     
     return visit(statement.getNext(), NO_PROPS);
   }

@@ -1,6 +1,7 @@
 package io.resys.limaone.tests;
 
 import java.time.Duration;
+import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,10 +12,12 @@ import io.resys.limaone.model.ImmutableLocaleLabel;
 import io.resys.limaone.persistence.AuthoringImpl;
 import io.resys.limaone.program.ImmutableWorkflowDefaultProps;
 import io.resys.limaone.program.ImmutableWorkflowUser;
+import io.resys.limaone.program.WorkflowProgram.WorkflowExecutionStatus;
 import io.resys.limaone.spi.compiler.CompilerImpl;
 import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.limaone.spi.dialob.FormDb.FormInstance;
 import io.resys.limaone.spi.program.DefaultRuntime;
+import io.resys.limaone.spi.program.input.DefaultProgramInput;
 import io.resys.limaone.tests.support.DbSupport;
 import io.resys.limaone.tests.support.TestTemplate;
 import io.resys.thena.test.DialobTest;
@@ -47,7 +50,7 @@ public class WorkflowTest extends DbSupport {
     // magic asset bundle ... contains all we need to run dialob/wrench/stencil
     final var world = authoring.worldQuery().findAllSync();
     final var bundle = compiler.compile(world).id(world.getName()).build();
-
+    final var runtime = DefaultRuntime.withBundle(bundle).withFormDb(formDb);
 
     // get and run the workflow
     final var workflow = bundle.queryWorkflows().name("form-1").getOne();
@@ -56,7 +59,7 @@ public class WorkflowTest extends DbSupport {
 
 
     // Assert questionnaire
-    final var workflowResult = workflow.runForm(DefaultRuntime.withBundle(bundle), user, workflowProps);
+    final var workflowResult = workflow.runForm(runtime, user, workflowProps);
     Assertions.assertEquals(workflowResult.getAccessAllowed(), true);
     Assertions.assertEquals(workflowResult.getForm().isPresent(), true);
     
@@ -83,7 +86,8 @@ public class WorkflowTest extends DbSupport {
 
 
     // run the flow
-    workflow.r
+    final var flow = workflow.runFlow(runtime, form, DefaultProgramInput.of(Map.of(), runtime));
+    Assertions.assertEquals(WorkflowExecutionStatus.COMPLETED, flow.getStatus());
   }
   
   
@@ -145,7 +149,6 @@ public class WorkflowTest extends DbSupport {
         .newLocale()
         .props(props -> props.locale("en"))
         .buildSync();
-    
 
     final var page = authoring.newModel()
         .newArticlePage()
@@ -160,6 +163,66 @@ public class WorkflowTest extends DbSupport {
           .addLabels(ImmutableLocaleLabel.builder().locale(locale.getId()).labelValue("firstForm").build())
           .build())
         .buildSync();
+
+    
+    authoring.newModel().newFlowTask()
+    .props(props -> props
+        .name("ExtractDialobData")
+        .body("""
+public class ExtractDialobData {
+
+  public Output execute(Input input, Runtime runtime) {
+    Output output = new Output();
+    
+    final var questionnaire = runtime.getFormDb().formInstanceQuery()
+        .getOneSync(input.questionnaireId);
+
+    return output;
+  }
+  
+  @ServiceData
+  public static class Input implements Serializable {
+    String workflowName;
+    String questionnaireId;
+  }
+  
+  @ServiceData
+  public static class Output implements Serializable {
+    Integer sum;
+  }
+            """)
+        .build());
+    
+    authoring.newModel().newFlow()
+      .props(props -> props
+          .name("flow1")
+          .body("""
+id: flow1
+description: 
+
+inputs:
+  workflowName:
+    required: true
+    type: STRING
+    debugValue: "1"
+  questionnaireId:
+    required: true
+    type: STRING
+    debugValue: "1"
+tasks:
+  - Extract dialob data:
+    id: "extract_dialob_data"
+    then: end
+    service:
+      ref: ExtractDialobData
+      collection: false
+      inputs:
+        workflowName: workflowName
+        questionnaireId: questionnaireId    
+""")
+          .build())
+      .buildSync();
+    
     
     return formDb;
   }

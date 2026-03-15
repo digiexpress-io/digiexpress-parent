@@ -551,6 +551,14 @@ public interface FormDb {
      * @return a {@link Uni} containing the form instance if found
      */
     Uni<FormInstance> getOne(String questionnaireId);
+    
+    /**
+     * Sync version of the same named method.
+     * 
+     * @param questionnaireId the unique identifier of the questionnaire instance
+     * @return a {@link Uni} containing the form instance if found
+     */
+    FormInstance getOneSync(String questionnaireId);
   }
   
   /**

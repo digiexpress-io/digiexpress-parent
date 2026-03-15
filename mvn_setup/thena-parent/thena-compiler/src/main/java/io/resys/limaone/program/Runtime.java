@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 import io.resys.limaone.program.Compiler.Bundle;
+import io.resys.limaone.spi.dialob.FormDb;
 
 public interface Runtime extends Serializable {
   Heap getHeap();
   EnvironmentProperties getProperties();
   Bundle getBundle();
   
+  FormDb getFormDb();
   <T> T getBean(Class<T> type); 
   
 

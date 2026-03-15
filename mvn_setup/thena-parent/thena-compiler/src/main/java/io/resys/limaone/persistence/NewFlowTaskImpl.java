@@ -52,7 +52,9 @@ public class NewFlowTaskImpl extends AuthoringTemplate<NewFlowTaskImpl, Model<Fl
   private FlowTask internalBuild(ModelWorld world) {
     Objects.requireNonNull(props, () -> "props must be defined");
 
-    final var syntax = """
+    final String syntax; 
+    if(props.getBody() == null) {
+      syntax = """
 // custom ref example - @ServiceRef(value="newService", type=BodyType.DT)
 public class {name} {
 
@@ -74,8 +76,10 @@ public class {name} {
     Integer sum;
   }
 }
-"""
-    .replace("{name}", Optional.ofNullable(props.getName()).orElse("MyFirstTask"));
+""".replace("{name}", Optional.ofNullable(props.getName()).orElse("MyFirstTask"));
+    } else {
+      syntax = props.getBody();
+    }
     
     final var flow = config.getAstParser().parseFlowTask().syntax(syntax).parse();
     return ImmutableFlowTask.builder()

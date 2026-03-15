@@ -170,6 +170,13 @@ public class Compiler_FlowDepsValidator {
     
     if(props.getDependencyId().isPresent()) {
       final var childDep = this.childrenByName.get(props.getDependencyId().get());
+      if(childDep == null) {
+        errors.add(ImmutableModelError.builder()
+            .msg("Task: '" + statement.getTaskId() + "' has ref: " + props.getDependencyId().get() + " to unknown asset!")
+            .build());
+        return REACHED_END;
+      }
+      
       if(childDep.getArtifactAst().isEmpty()) {
         errors.add(ImmutableModelError.builder()
             .msg("Task: '" + statement.getTaskId() + "' has ref: " + childDep.getDependencyId() + " to unknown asset!")

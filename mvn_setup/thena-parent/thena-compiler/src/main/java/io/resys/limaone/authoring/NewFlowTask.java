@@ -24,6 +24,7 @@ public interface NewFlowTask {
   @Value.Immutable @JsonSerialize(as = ImmutableNewFlowTaskProps.class) @JsonDeserialize(as = ImmutableNewFlowTaskProps.class)
   interface NewFlowTaskProps extends AuthoringModelProps {
     @Nullable String getName();
+    @Nullable String getBody();
     @Nullable String getDesc();
   }
 }

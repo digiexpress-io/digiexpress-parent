@@ -25,5 +25,6 @@ public interface NewFlow {
   interface NewFlowProps extends AuthoringModelProps {
     @Nullable String getName();
     @Nullable String getDesc();
+    @Nullable String getBody();
   }
 }
