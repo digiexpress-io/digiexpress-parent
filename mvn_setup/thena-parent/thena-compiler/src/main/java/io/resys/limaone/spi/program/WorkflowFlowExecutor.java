@@ -1,8 +1,13 @@
 package io.resys.limaone.spi.program;
 
+import java.io.Serializable;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
 
 import groovy.util.logging.Slf4j;
 import io.resys.limaone.ast.ArticleWorkflow_AST;
@@ -34,6 +39,8 @@ import lombok.RequiredArgsConstructor;
 public class WorkflowFlowExecutor {
   private final io.resys.limaone.program.Runtime runtime;
   private final FormDb formDb;
+  private final ScheduledExecutorService workerPool;
+  private final Duration maxTimeout;
   private final ProgramInput programInput;
   private final WorkflowForm form;
   
@@ -50,12 +57,8 @@ public class WorkflowFlowExecutor {
     try {
       visit(ast.getStatement(), NO_PROPS);
     } catch(Exception exception) {
-      this.errors.add(ImmutableModelError.builder()
-          .exception(exception)
-          .msg("Msg: " + exception.getMessage() + System.lineSeparator() + 
-              JsonObject.mapFrom(ast).encodePrettily()
-          ).build()
-      );
+      final var msg = "Msg: " + exception.getMessage() + System.lineSeparator() + JsonObject.mapFrom(ast).encodePrettily();
+      this.errors.add(ImmutableModelError.builder().exception(exception).msg(msg).build());
     }
     return ImmutableWorkflowFormResult.builder()
         .errors(errors)
@@ -107,6 +110,13 @@ public class WorkflowFlowExecutor {
     final var flow = runtime.getBundle().queryFlows()
         .name(statement.getFlowName())
         .getOne();
+    
+    // load the questionnaire right up
+    ds
+    final var result = flow.run(programInput.withInputs(Map.of(
+      "questionnaireId", form.getFormSessionId(),
+      "workflowName", form.getWorkflowName())
+    ), runtime);
     
     // Execute the flow as a task
     // Implementation depends on your task management system

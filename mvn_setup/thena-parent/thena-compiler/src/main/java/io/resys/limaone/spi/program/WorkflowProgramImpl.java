@@ -1,7 +1,9 @@
 package io.resys.limaone.spi.program;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 import io.resys.limaone.ast.ArticleWorkflow_AST;
 import io.resys.limaone.model.ArticleWorkflow;
@@ -20,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class WorkflowProgramImpl implements WorkflowProgram {
   private static final long serialVersionUID = -7526807947234023047L;
   private final FormDb formDb;
+  private final ScheduledExecutorService workerPool;
+  private final Duration maxTimeout;
   private final Model<ArticleWorkflow> target;
   private final ArticleWorkflow_AST ast;
   private final ProgramStatus status;
@@ -68,6 +72,6 @@ public class WorkflowProgramImpl implements WorkflowProgram {
 
   @Override
   public WorkflowFlowResult runFlow(Runtime runtime, WorkflowForm form, ProgramInput programInput) {
-    return new WorkflowFlowExecutor(runtime, formDb, programInput, form).walk(ast);
+    return new WorkflowFlowExecutor(runtime, formDb, workerPool, maxTimeout, programInput, form).walk(ast);
   }
 }

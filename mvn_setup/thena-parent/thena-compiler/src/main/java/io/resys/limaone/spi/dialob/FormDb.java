@@ -1,6 +1,7 @@
 package io.resys.limaone.spi.dialob;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -170,8 +171,22 @@ public interface FormDb {
      */
     CreateFormInstance createFormInstance();
     
-    
+    /**
+     * Creates a low-level HTTP proxy builder for form filling operations.
+     * Use this for performance-critical scenarios requiring direct HTTP passthrough
+     * with raw payloads and fire-and-forget post-processing capabilities.
+     * 
+     * @return a new {@link FormFillBuilder} for low-level form operations
+     */
     FormFillBuilder createFormFill();
+    
+    /**
+     * Creates a low-level HTTP proxy query for retrieving form instances.
+     * Use this for direct access to raw HTTP responses without domain object
+     * marshalling overhead in performance-critical scenarios.
+     * 
+     * @return a new {@link FormFillQuery} for low-level form queries
+     */
     FormFillQuery formFillQuery();
   }
   
@@ -370,6 +385,68 @@ public interface FormDb {
      * @return the questionnaire instance with current form state
      */
     Questionnaire getQuestionnaire();
+
+    /**
+     * Retrieves the raw Answer object for a given field name.
+     * Searches through questionnaire answers by ID match.
+     * 
+     * @param name the field name/ID to retrieve the answer for
+     * @return the Answer object, or null if field not found
+     */
+    Answer answer(String name);
+    
+    /**
+     * Retrieves the string value of a form field answer.
+     * Safely handles null answers and null values by returning empty string.
+     * 
+     * @param name the field name to retrieve the text value for
+     * @return the string value converted via toString(), or empty string ("") if answer/value is null or field not found
+     */
+    String text(String name);
+    
+    /**
+     * Retrieves the numeric value of a decimal/integer field answer.
+     * Expects answer type to be "INTEGER" or "DECIMAL" (assertion will fail otherwise).
+     * Safely handles null answers and null values by returning zero.
+     * 
+     * @param name the field name to retrieve the decimal value for
+     * @return the BigDecimal value parsed from answer.getValue().toString(), or BigDecimal.ZERO if answer/value is null or field not found
+     * @throws AssertionError if answer exists but type is not "INTEGER" or "DECIMAL"
+     */
+    BigDecimal decimal(String name);
+    
+    /**
+     * Retrieves the boolean value of a boolean field answer.
+     * Expects answer type to be "BOOLEAN" (assertion will fail otherwise).
+     * Safely handles null answers and null values by returning false.
+     * 
+     * @param name the field name to retrieve the boolean value for
+     * @return true if answer value equals Boolean.TRUE, false if answer/value is null, field not found, or value is not Boolean.TRUE
+     * @throws AssertionError if answer exists but type is not "BOOLEAN"
+     */
+    boolean bool(String name);
+    
+    /**
+     * Retrieves a form variable value by name.
+     * Variables are calculated fields or internal form state values.
+     * Searches through questionnaire variable values by ID match.
+     * 
+     * @param name the variable name/ID to retrieve
+     * @return the variable value from VariableValue.getValue(), or null if variable not found
+     * @throws NullPointerException if matching variable is found but has null value
+     */
+    Object variable(String name);
+    
+    /**
+     * Retrieves a context variable value by name.
+     * Context variables are predefined values set during form instantiation.
+     * Searches through questionnaire context values by ID match.
+     * 
+     * @param name the context variable name/ID to retrieve
+     * @return the context value from ContextValue.getValue(), or null if context variable not found
+     */
+    Object context(String name);
+
     
     /**
      * Gets the prefix used for valueset lookup entries.
@@ -378,7 +455,7 @@ public interface FormDb {
      * @return the lookup prefix, or empty if form data was not loaded
      */
     Optional<String> getLookupPrefix();
-    
+
     /**
      * Indicates whether form data has been loaded and merged into the questionnaire.
      * When true, the questionnaire contains enriched data from the form definition
@@ -398,7 +475,9 @@ public interface FormDb {
      */
     FormItem getFormItem(Answer answer);
     
-    
+    /**
+     * @return pretty print format the form when its loaded
+     */
     Optional<String> encodeFormPrettily();
   }
   
@@ -526,16 +605,70 @@ public interface FormDb {
     Uni<IdAndRevision> build();
   }
   
-  
-  
+  /**
+   * Low-level HTTP proxy query interface for retrieving form instances.
+   * Provides direct access to raw HTTP responses for performance-critical scenarios.
+   * Use this instead of FormInstanceQuery when you need direct HTTP passthrough
+   * without domain object marshalling overhead.
+   */
   interface FormFillQuery {
+    
+    /**
+     * Retrieves a form instance as raw HTTP response.
+     * Returns the underlying ResponseEntity without domain object conversion
+     * for direct proxy scenarios and performance optimization.
+     * 
+     * @param formInstanceId the unique identifier of the questionnaire instance
+     * @return a {@link Uni} containing the raw HTTP response wrapper
+     */
     Uni<RawResponse> getOne(String formInstanceId);
   }
   
+  /**
+   * Low-level HTTP proxy builder for form filling operations.
+   * Provides direct HTTP passthrough with raw string payloads for performance-critical scenarios.
+   * Supports fire-and-forget post-processing callbacks that execute independently
+   * after the main HTTP response is sent to the client.
+   */
   interface FormFillBuilder {
+    
+    /**
+     * Specifies the target form instance for form filling operations.
+     * 
+     * @param formInstanceId the unique identifier of the questionnaire instance
+     * @return this builder for method chaining
+     */
     FormFillBuilder formInstanceId(String formInstanceId);
+    
+    /**
+     * Sets the raw form action payload as string body.
+     * Unlike MergeFormInstance.props(), this accepts raw JSON/HTTP payloads
+     * without object marshalling for performance optimization.
+     * 
+     * @param body the raw string payload containing form actions (nullable)
+     * @return this builder for method chaining
+     */
     FormFillBuilder actions(@Nullable String body);
+    
+    /**
+     * Sets a fire-and-forget callback for post-processing after HTTP response completion.
+     * The callback executes on a separate thread after the main request/response cycle
+     * has completed and the HTTP connection to the client has been closed.
+     * This enables independent post-processing without blocking the UI response.
+     * 
+     * @param callback consumer that receives a Uni for async post-processing operations
+     * @return this builder for method chaining
+     */
     FormFillBuilder onCompletion(Consumer<Uni<?>> callback);
+    
+    /**
+     * Executes the form filling operation and returns raw HTTP response.
+     * Returns the underlying ResponseEntity for direct HTTP proxy scenarios.
+     * If an onCompletion callback is configured, it will execute independently
+     * after this response is sent to the client.
+     * 
+     * @return a {@link Uni} containing the raw HTTP response wrapper
+     */
     Uni<RawResponse> build();
   }
 

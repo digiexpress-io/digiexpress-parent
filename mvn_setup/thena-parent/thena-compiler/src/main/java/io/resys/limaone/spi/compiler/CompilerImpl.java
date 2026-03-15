@@ -43,7 +43,7 @@ public class CompilerImpl implements Compiler {
     
     // workflows
     final Stream<CompilableUnit> workflows = world.getArticleWorkflows().values().stream()
-        .map(wk -> new Compiler_Workflow(formDb, astParser, wk));
+        .map(wk -> new Compiler_Workflow(formDb, workerPool, maxTimeout, astParser, wk));
 
     // main stencil article
     final Stream<CompilableUnit> article = world.getArticles().isEmpty() && world.getArticleWorkflows().isEmpty() ?
@@ -51,7 +51,7 @@ public class CompilerImpl implements Compiler {
     
     // wrench flows
     final Stream<CompilableUnit> flows = world.getFlows().values().stream()
-        .map(f -> new Compiler_Flow(astParser, world, f));
+        .map(f -> new Compiler_Flow(astParser, workerPool, maxTimeout, world, f));
     
     // wrench flow tasks
     final Stream<CompilableUnit> flowTasks = world.getFlowTasks().values().stream()

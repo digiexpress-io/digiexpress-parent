@@ -1,5 +1,7 @@
 package io.resys.limaone.spi.compiler;
 
+import java.time.Duration;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Stream;
 
 import io.resys.limaone.ast.AST_Parser;
@@ -17,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Compiler_Flow implements CompilableUnit {
   private final AST_Parser parser;
+  private final ScheduledExecutorService workerPool;
+  private final Duration maxTimeout;
   @SuppressWarnings("unused")
   private final ModelWorld world;
   private final Model<Flow> flow;
@@ -39,7 +43,7 @@ public class Compiler_Flow implements CompilableUnit {
       public Program close(Artifact artifact) {
         final var extraErrors = new Compiler_FlowDepsValidator(artifact, ast).walk();
         return new FlowProgramImpl(
-            flow.getId(), ast, 
+            flow.getId(), workerPool, maxTimeout, ast, 
             artifact.getErrors().isEmpty() ? artifact.getProgramStatus() : ProgramStatus.ERROR, 
             Stream.concat(artifact.getErrors().stream(), extraErrors.stream()).toList(), 
             artifact.getAssociations());

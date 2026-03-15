@@ -1,11 +1,13 @@
 package io.resys.limaone.spi.program;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ScheduledExecutorService;
 
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.ast.Flow_CST.YamlInput;
@@ -24,6 +26,8 @@ import io.resys.limaone.yaml.YamlMapper;
 public class FlowProgramImpl implements FlowProgram {
 
   private static final long serialVersionUID = -4209510801206880302L;
+  private final ScheduledExecutorService workerPool;
+  private final Duration maxTimeout;
   private final String id;
   private final Flow_AST ast;
   private final Optional<Runtime> runtime;
@@ -35,15 +39,19 @@ public class FlowProgramImpl implements FlowProgram {
   
   public FlowProgramImpl(
       String id,
+      ScheduledExecutorService workerPool,
+      Duration maxTimeout,
       Flow_AST ast, 
       ProgramStatus status,
       List<ModelError> errors,
       List<ProgramAssociation> associations) {
-    this(id, ast, status, errors, associations, Optional.empty());
+    this(id, workerPool, maxTimeout, ast, status, errors, associations, Optional.empty());
   }
   
   public FlowProgramImpl(
       String id,
+      ScheduledExecutorService workerPool,
+      Duration maxTimeout,
       Flow_AST ast, 
       ProgramStatus status,
       List<ModelError> errors,
@@ -51,6 +59,8 @@ public class FlowProgramImpl implements FlowProgram {
       Optional<Runtime> runtime) {
     
     this.id = id;
+    this.workerPool = workerPool;
+    this.maxTimeout = maxTimeout;
     this.ast = ast;
     this.status = status;
     this.errors = Collections.unmodifiableList(errors);
@@ -182,6 +192,6 @@ public class FlowProgramImpl implements FlowProgram {
 
   @Override
   public FlowProgram withRuntime(Runtime runtime) {
-    return new FlowProgramImpl(id, ast, status, errors, associations, Optional.ofNullable(runtime));
+    return new FlowProgramImpl(id, workerPool, maxTimeout, ast, status, errors, associations, Optional.ofNullable(runtime));
   }
 }
