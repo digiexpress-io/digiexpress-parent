@@ -26,7 +26,10 @@ import io.resys.limaone.ast.Flow_AST.SwitchStatement;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
+import io.resys.limaone.model.Parameter.Direction;
+import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.spi.compiler.CompilableUnit.Artifact;
+import io.resys.limaone.spi.parameter.Parameter_Factory;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
@@ -197,7 +200,23 @@ public class Compiler_FlowDepsValidator {
       final var headers = childDep.getArtifactAst().get().getHeaders();
       headers.getAcceptDefs().forEach(e -> acceptDefs.get(taskId).put(e.getName(), e));
       headers.getReturnDefs().forEach(e -> returnDefs.get(taskId).put(e.getName(), e));
+    } else {
+      int order = 0;
+      for(final var acceptName : statement.getAssignments().keySet()) {
+        acceptDefs.get(taskId).put(acceptName, 
+            Parameter_Factory.newParam()
+            .name(acceptName)
+            .id(acceptName)
+            .valueType(ValueType.UNKNOWN)
+            .order(order++)
+            .direction(Direction.IN)
+            .build()
+        );
+      }
     }
+    
+
+    
     this.toValidate.add(new DepToValidate(statement, props.getParent()));
     return REACHED_END;
   }
@@ -232,8 +251,9 @@ public class Compiler_FlowDepsValidator {
       MappingStatement statement, DepToValidate props, 
       String toName, String fromName) {
     
+    
     if(from.isPresent() && to.isPresent() && 
-      !to.get().getValueType().equals(from.get().getValueType())) {
+      !to.get().getValueType().equals(from.get().getValueType()) && to.get().getValueType() != ValueType.UNKNOWN) {
       
       errors.add(ImmutableModelError.builder()
           .msg("Task: '" + statement.getTaskId() + "' has type mismatch " + 

@@ -34,6 +34,7 @@ public class Parameter_Factory {
     deserializers.put(ValueType.PERIOD, null);
     deserializers.put(ValueType.TIME, new TimeDataTypeDeserializer());
 
+    deserializers.put(ValueType.UNKNOWN, new GenericDataTypeDeserializer(String.class));
     deserializers.put(ValueType.OBJECT, new JsonObjectDataTypeDeserializer());
     deserializers.put(ValueType.INTL, new IntlJsonObjectDataTypeDeserializer());
     deserializers.put(ValueType.STRING, new GenericDataTypeDeserializer(String.class));
@@ -55,6 +56,7 @@ public class Parameter_Factory {
     serializers.put(ValueType.PERIOD, dataTypeSerializer);
     serializers.put(ValueType.TIME, dataTypeSerializer);
     serializers.put(ValueType.STRING, dataTypeSerializer);
+    serializers.put(ValueType.UNKNOWN, dataTypeSerializer);
     serializers.put(ValueType.BOOLEAN, dataTypeSerializer);
     serializers.put(ValueType.DECIMAL, dataTypeSerializer);
     serializers.put(ValueType.INTEGER, dataTypeSerializer);
@@ -218,8 +220,8 @@ public class Parameter_Factory {
         valueType = valueTypeResolver.get(beanType);
       }
   
-      Deserializer deserializer = deserializers.get(valueType);
-      Serializer serializer = serializers.get(valueType);
+      final Deserializer deserializer = deserializers.get(valueType);
+      final Serializer serializer = serializers.get(valueType);
   
       RepoAssert.notNull(valueType, () -> "valueType can't be null!");
       return ImmutableParameter.builder()
