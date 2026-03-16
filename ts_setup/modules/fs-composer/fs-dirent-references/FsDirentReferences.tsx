@@ -1,11 +1,13 @@
 import React from 'react';
 import { Typography } from '@mui/material';
+import { useIntl } from 'react-intl';
 import { FsDirentReferencesProps } from './FsDirentReferencesProps';
 import { useUtilityClasses, FsDirentReferencesRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
 
 
 export const FsDirentReferences: React.FC<FsDirentReferencesProps> = (props) => {
+  const intl = useIntl();
   const ownerState = useOwnerState(props);
   const { node } = props;
   const classes = useUtilityClasses();
@@ -20,13 +22,15 @@ export const FsDirentReferences: React.FC<FsDirentReferencesProps> = (props) => 
   return (
     <FsDirentReferencesRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>
-        {references.length > 0 ? `This asset is referenced in ${references.length} location(s)` : 'This asset is not referenced anywhere'}
+        {references.length > 0
+          ? intl.formatMessage({ id: 'fs.direntReferences.title.referenced' }, { count: references.length })
+          : intl.formatMessage({ id: 'fs.direntReferences.title.notReferenced' })}
       </Typography>
       {references.length > 0 && (
         <div className={classes.tableContainer}>
           <div className={classes.tableRow}>
-            <div className={classes.tableHeader}>Asset</div>
-            <div className={classes.tableHeader}>Location</div>
+            <div className={classes.tableHeader}>{intl.formatMessage({ id: 'fs.direntReferences.tableHeader.asset' })}</div>
+            <div className={classes.tableHeader}>{intl.formatMessage({ id: 'fs.direntReferences.tableHeader.location' })}</div>
           </div>
           <div className={classes.divider} />
           {references.map((reference, index) => (

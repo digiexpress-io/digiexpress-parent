@@ -48,11 +48,11 @@ export const FsDirentPermissionsRoot = styled('div', {
   [`& .${MUI_NAME}-tableContainer`]: {
     display: 'flex',
     flexDirection: 'column',
-    border: `1px solid ${ownerState.isDarkMode ? '#555555' : '#cccccc'}`,
+    border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
 
     '& > div:nth-of-type(odd)': {
       '& > div': {
-        backgroundColor: ownerState.isDarkMode ? '#292828' : '#f5f5f5',
+        backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
       },
     },
   },
@@ -63,8 +63,8 @@ export const FsDirentPermissionsRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-tableHeader`]: {
-    backgroundColor: ownerState.isDarkMode ? '#2d2d30' : '#e0e0e0',
-    color: ownerState.isDarkMode ? '#cccccc' : '#333333',
+    backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.border,
+    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     fontSize: '10px',
     fontWeight: 500,
     padding: '4px 6px',
@@ -72,14 +72,14 @@ export const FsDirentPermissionsRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-tableCell`]: {
-    backgroundColor: ownerState.isDarkMode ? '#3c3c3c' : '#ffffff',
-    color: ownerState.isDarkMode ? '#cccccc' : '#333333',
+    backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.background,
+    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     fontSize: '10px',
     padding: '2px 6px',
     flex: 1,
   },
 
   [`& .${MUI_NAME}-divider`]: {
-    borderColor: ownerState.isDarkMode ? '#555555' : '#cccccc',
+    borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
   },
 }));

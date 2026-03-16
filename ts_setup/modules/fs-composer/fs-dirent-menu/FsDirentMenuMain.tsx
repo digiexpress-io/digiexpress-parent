@@ -1,5 +1,6 @@
 import React from 'react';
 import { MenuItem, Divider, Typography, Box, Chip } from '@mui/material';
+import { useIntl } from 'react-intl';
 import { FsNode, useFs } from '@dxs-ts/fs-api';
 import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
 import { FsIcon, FsIcons } from '../fs-theme';
@@ -14,6 +15,7 @@ export interface FsDirentMenuMainProps {
 }
 
 export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
+  const intl = useIntl();
   const classes = useUtilityClasses();
   const { openAsset } = useFs();
 
@@ -71,14 +73,14 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         onClick={() => handleSubmenuToggle('new')}
       >
         <FsIcon icon={FsIcons.New} small />
-        New
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.new' })}
         <Box flex={1} />
         <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
 
       <MenuItem className={classes.menuItem} onClick={handleEdit}>
         <FsIcon icon={FsIcons.Edit} small />
-        Edit
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.edit' })}
       </MenuItem>
 
       <MenuItem
@@ -86,22 +88,22 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         onClick={handleLock}
       >
         {props.node?.locked ? (<FsIcon icon={FsIcons.Locked} small />) : (<FsIcon icon={FsIcons.Unlocked} small />)}
-        {props.node?.locked ? 'Unlock' : 'Lock'}
+        {props.node?.locked ? intl.formatMessage({ id: 'fs.direntMenu.menuItem.unlock' }) : intl.formatMessage({ id: 'fs.direntMenu.menuItem.lock' })}
       </MenuItem>
 
       <MenuItem className={classes.menuItem} onClick={handleCopy}>
         <FsIcon icon={FsIcons.Copy} small />
-        Copy
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.copy' })}
       </MenuItem>
 
       <MenuItem className={classes.menuItem} onClick={handleDuplicate}>
         <FsIcon icon={FsIcons.Rename} small />
-        Rename
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.rename' })}
       </MenuItem>
 
       <MenuItem className={classes.menuItemDelete} onClick={handleDelete}>
         <FsIcon icon={FsIcons.Delete} small />
-        Delete
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.delete' })}
       </MenuItem>
 
       <Divider className={classes.divider} />
@@ -109,7 +111,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
       {props.node?.configOptions && props.node.configOptions.length > 0 && (
         <MenuItem className={classes.menuItem}>
           <div>
-            <div>Configuration Options</div>
+            <div>{intl.formatMessage({ id: 'fs.direntMenu.menuItem.configOptions' })}</div>
             <div>
               <Box sx={{
                 mt: 0.5,
@@ -121,10 +123,10 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
               }}>
                 {props.node.configOptions.map((config, index) => (
                   <React.Fragment key={index}>
-                    {config.devMode && (<Chip icon={<FsIcon icon={FsIcons.DevMode} />} label="Development" size='small' className={classes.label} />)}
-                    {config.assignableMode && (<Chip icon={<FsIcon icon={FsIcons.Assignment} />} label="Assignable" size='small' className={classes.label} />)}
-                    {config.disabledMode && (<Chip icon={<FsIcon icon={FsIcons.Disabled} />} label="Disabled" size='small' className={classes.label} />)}
-                    {config.anonymousMode && (<Chip icon={<FsIcon icon={FsIcons.Anonymous} />} label="Anonymous" size='small' className={classes.label} />)}
+                    {config.devMode && (<Chip icon={<FsIcon icon={FsIcons.DevMode} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.devMode' })} size='small' className={classes.label} />)}
+                    {config.assignableMode && (<Chip icon={<FsIcon icon={FsIcons.Assignment} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.assignable' })} size='small' className={classes.label} />)}
+                    {config.disabledMode && (<Chip icon={<FsIcon icon={FsIcons.Disabled} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.disabled' })} size='small' className={classes.label} />)}
+                    {config.anonymousMode && (<Chip icon={<FsIcon icon={FsIcons.Anonymous} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.anonymous' })} size='small' className={classes.label} />)}
                   </React.Fragment>
                 ))}
               </Box>
@@ -137,7 +139,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
 
       <MenuItem className={props.openSubmenu === 'labels' ? classes.menuItemActive : classes.menuItem} onClick={() => handleSubmenuToggle('labels')}>
         <div>
-          <div>Labels</div>
+          <div>{intl.formatMessage({ id: 'fs.direntMenu.menuItem.labels' })}</div>
           {props.node?.labels && props.node.labels.length > 0 && (
             <Box sx={{
               mt: 0.5,
@@ -162,7 +164,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         className={props.openSubmenu === 'comments' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('comments')}
       >
-        Comments ({props.node?.comments?.length || 0})
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.comments' }, { count: props.node?.comments?.length || 0 })}
         <Box flex={1} />
         <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
@@ -173,7 +175,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         className={props.openSubmenu === 'sharing' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('sharing')}
       >
-        Sharing and Permissions
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.sharing' })}
         <Box flex={1} />
         <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
@@ -184,7 +186,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         className={props.openSubmenu === 'history' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('history')}
       >
-        History
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.history' })}
         <Box flex={1} />
         <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
@@ -195,7 +197,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         className={props.openSubmenu === 'references' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('references')}
       >
-        References ({referencesCount})
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.references' }, { count: referencesCount })}
         <Box flex={1} />
         <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>

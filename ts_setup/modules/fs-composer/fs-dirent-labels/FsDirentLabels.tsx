@@ -1,10 +1,12 @@
 import React from 'react';
 import { TextField } from '@mui/material';
+import { useIntl } from 'react-intl';
 import { FsDirentLabelsProps } from './FsDirentLabelsProps';
 import { useOwnerState } from './useOwnerState';
 import { useUtilityClasses, FsDirentLabelsRoot } from './useUtilityClasses';
 
 export const FsDirentLabels: React.FC<FsDirentLabelsProps> = (props) => {
+  const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
   const [labels, setLabels] = React.useState('');
@@ -17,7 +19,7 @@ export const FsDirentLabels: React.FC<FsDirentLabelsProps> = (props) => {
         maxRows={5}
         value={labels}
         onChange={(e) => setLabels(e.target.value)}
-        placeholder='Add labels...'
+        placeholder={intl.formatMessage({ id: 'fs.direntLabels.labelsField.placeholder' })}
         size='small'
       />
     </FsDirentLabelsRoot>
