@@ -3,8 +3,10 @@ import { TextField, Typography, Divider } from '@mui/material';
 import { FsDirentCommentsProps } from './FsDirentCommentsProps';
 import { useUtilityClasses, FsDirentCommentsRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
+import { useIntl } from 'react-intl';
 
 export const FsDirentComments: React.FC<FsDirentCommentsProps> = (props) => {
+  const intl = useIntl();
   const ownerState = useOwnerState(props);
   const { node } = props;
   const classes = useUtilityClasses();
@@ -17,7 +19,7 @@ export const FsDirentComments: React.FC<FsDirentCommentsProps> = (props) => {
       <Typography className={classes.title}>Comments ({comments.length})</Typography>
 
       <TextField fullWidth multiline className={classes.textField}
-        placeholder='Add a comment...'
+        placeholder={intl.formatMessage({ id: 'fs.direntComments.commentField.placeholder' })}
         value={newComment}
         onChange={(e) => setNewComment(e.target.value)}
         minRows={2}

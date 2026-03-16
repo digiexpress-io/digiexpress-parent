@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled } from '@mui/material';
+import { generateUtilityClass, styled, alpha } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
@@ -177,7 +177,7 @@ export const FsDirentCreateRoot = styled('div', {
     '&.Mui-selected': {
       backgroundColor: ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary,
       '&:hover': {
-        backgroundColor: ownerState.isDarkMode ? '#666666' : '#cccccc',
+        backgroundColor: ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.text,
       },
     },
   },
@@ -220,23 +220,23 @@ export const FsDirentCreateRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-cancelButton`]: {
-    backgroundColor: 'rgba(255, 0, 0, 0.1)',
-    color: '#ff4444',
-    border: '1px solid rgba(255, 0, 0, 0.3)',
+    backgroundColor: alpha(ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.1),
+    color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
+    border: `1px solid ${alpha(ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.3)}`,
     borderRadius: '4px',
     padding: '6px 16px',
     textTransform: 'none',
     fontSize: '12px',
     cursor: 'pointer',
     '&:hover': {
-      backgroundColor: 'rgba(255, 0, 0, 0.2)',
+      backgroundColor: alpha(ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.2),
     },
   },
 
   [`& .${MUI_NAME}-saveButton`]: {
-    backgroundColor: ownerState.isDarkMode ? '#404040' : '#e0e0e0',
-    color: ownerState.isDarkMode ? '#ffffff' : '#000000',
-    border: `1px solid ${ownerState.isDarkMode ? '#777777' : '#999999'}`,
+    backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
+    color: ownerState.isDarkMode ? FsColors.light.background : FsColors.light.text,
+    border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.dark.textSecondary}`,
     borderRadius: '4px',
     padding: '6px 16px',
     textTransform: 'none',
@@ -244,8 +244,8 @@ export const FsDirentCreateRoot = styled('div', {
     fontWeight: 500,
     cursor: 'pointer',
     '&:hover': {
-      backgroundColor: ownerState.isDarkMode ? '#505050' : '#cccccc',
-      borderColor: ownerState.isDarkMode ? '#999999' : '#777777',
+      backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.dark.text,
+      borderColor: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.dark.textSecondary,
     },
   },
 }));
