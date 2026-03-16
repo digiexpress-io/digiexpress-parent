@@ -26,6 +26,7 @@ import io.resys.limaone.spi.program.assignment.Assignment;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
@@ -201,13 +202,17 @@ public class FlowStack {
     String stepId;
     LocalDateTime start;
     LocalDateTime end;
-    List<FlowResultErrorLog> errors;
+    
+    @Default
+    List<FlowResultErrorLog> errors = Collections.emptyList();
     FlowExecutionStatus status;
     boolean isReturnsCollection;
     
+    @Default
+    Map<String, Serializable> accepts = Collections.emptyMap();
     
-    Map<String, Serializable> accepts;
-    Map<String, Serializable> returns;
+    @Default
+    Map<String, Serializable> returns = Collections.emptyMap();
     
     @Nullable Serializable returnsValue;
     @Nullable Long cost; // cost in millis

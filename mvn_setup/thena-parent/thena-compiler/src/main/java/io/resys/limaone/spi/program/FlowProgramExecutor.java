@@ -33,6 +33,7 @@ import io.resys.limaone.spi.program.assignment.AssignmentContext;
 import io.resys.limaone.spi.program.expression.OperationContext.ExternalContext;
 import io.resys.limaone.spi.program.stack.FlowStack;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -340,12 +341,20 @@ public class FlowProgramExecutor {
     
     String stepId;
     String shortHistory;
-    List<FlowResultLog> logs;
-    List<FlowResultLog> lastLogs;
+    
     FlowExecutionStatus status;
     boolean isReturnsCollection;
-    Map<String, Serializable> accepts;
-    Map<String, Serializable> returns;
+    
+  
+    @Default
+    List<FlowResultLog> logs = Collections.emptyList();
+    @Default
+    List<FlowResultLog> lastLogs = Collections.emptyList();
+    
+    @Default
+    Map<String, Serializable> accepts = Collections.emptyMap();
+    @Default
+    Map<String, Serializable> returns = Collections.emptyMap();
   
   }
 }
