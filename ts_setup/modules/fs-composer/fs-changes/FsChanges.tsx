@@ -1,12 +1,13 @@
 import React from 'react';
-import { Typography, IconButton, Tooltip, Dialog, DialogActions, Button, DialogTitle, DialogContent } from '@mui/material';
+import { Typography, IconButton, Tooltip, Button } from '@mui/material';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { useIntl } from 'react-intl';
 
 import { FsPanel } from '../fs-panel';
-import { FsChangesProps, assetsWithChanges } from './FsChangesProps';
+import { FsChangesProps } from './FsChangesProps';
 import { useOwnerState } from './useOwnerState';
 import { FsChangesRoot, useUtilityClasses } from './useUtilityClasses';
+import { UndoConfirmDialog } from './FsChangesConfirmDialog';
 
 
 export const FsChanges: React.FC<FsChangesProps> = (props) => {
@@ -46,19 +47,14 @@ export const FsChanges: React.FC<FsChangesProps> = (props) => {
 };
 
 
-const UndoConfirmDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ onClose }) => {
-  const intl = useIntl();
-
-  return (
-    <Dialog open={true} onClose={onClose}>
-      <DialogTitle>{intl.formatMessage({ id: 'fs.changesView.undoConfirmDialog.title' })}</DialogTitle>
-      <DialogContent>{intl.formatMessage({ id: 'fs.changesView.undoConfirmDialog.content' })}</DialogContent>
-      <DialogActions>
-        <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-        <Button onClick={onClose}>{intl.formatMessage({ id: 'button.accept' })}</Button>
-      </DialogActions>
-    </Dialog>
-  )
-}
 
 
+const assetsWithChanges = [
+  { id: 'main.article', name: 'main.article', status: 'modified' },
+  { id: 'info-gdpr.article', name: 'info-gdpr.article', status: 'modified' },
+  { id: 'general-message.service', name: 'general-message.service', status: 'modified' },
+  { id: 'taskMsgFlow.flow', name: 'taskMsgFlow.flow', status: 'new' },
+  { id: 'public-inforeq.service', name: 'public-inforeq.service', status: 'deleted' },
+  { id: 'trustee-info-form.service', name: 'trustee-info-form.service', status: 'modified' },
+  { id: 'sipoo-main-site.link', name: 'sipoo-main-site.link', status: 'new' }
+];

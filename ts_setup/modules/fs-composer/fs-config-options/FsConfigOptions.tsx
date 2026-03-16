@@ -1,27 +1,35 @@
 import React from 'react';
 import { Typography, Switch, Divider } from '@mui/material';
+import { useIntl } from 'react-intl';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
-import { FsConfigOptionsProps, allConfigOptions } from './FsConfigOptionsProps';
+import { FsConfigOptionsProps } from './FsConfigOptionsProps';
 import { useOwnerState } from './useOwnerState';
 import { FsConfigOptionsRoot, useUtilityClasses } from './useUtilityClasses';
+import { ConfigOption } from '@dxs-ts/fs-api';
 
+const allConfigOptions: (keyof ConfigOption)[] = ['devMode', 'disabledMode', 'anonymousMode', 'assignableMode'];
 
 export const FsConfigOptions: React.FC<FsConfigOptionsProps> = (props) => {
+  const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
 
+  const direntName = props.node ? props.node.name : 'eeee';
 
   if (!props.node) {
     return (
-      <FsPanel title="Config Options" icon={<FsIcon icon={FsIcons.Settings} large />} activeNode={false} noNodeMessage="Select a node from the tree to view config options.">
-        <></>
+      <FsPanel
+        title={intl.formatMessage({ id: 'fs.configOptions.title' })}
+        icon={<FsIcon icon={FsIcons.Settings} large />} activeNode={false}
+        noNodeMessage={intl.formatMessage({ id: 'fs.configOptions.message.selectDirent' })}>
       </FsPanel>
     );
   }
 
   return (
-    <FsPanel title={`Config Options: ${props.node.name}`} icon={<FsIcon icon={FsIcons.Settings} large />} activeNode={true}>
+    <FsPanel title={intl.formatMessage({ id: 'fs.configOptions.title.direntName' }, { direntName })}
+      icon={<FsIcon icon={FsIcons.Settings} large />} activeNode={true}>
       <FsConfigOptionsRoot className={classes.root} ownerState={ownerState}>
         {allConfigOptions.map((optionKey) => (
           <div key={optionKey} className={classes.optionItem}>
@@ -30,7 +38,7 @@ export const FsConfigOptions: React.FC<FsConfigOptionsProps> = (props) => {
               <Switch checked={ownerState.isConfigOptionEnabled(optionKey)} />
             </div>
             <Typography className={classes.optionDescription}>
-              {ownerState.getConfigDescription(optionKey)}
+              {ownerState.configDescription(optionKey)}
             </Typography>
             <Divider className={classes.divider} />
           </div>

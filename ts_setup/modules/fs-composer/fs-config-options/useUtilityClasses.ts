@@ -33,7 +33,7 @@ export const useUtilityClasses = () => {
 export const FsConfigOptionsRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
-  shouldForwardProp: (prop) => prop !== 'isDarkMode',
+  shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
