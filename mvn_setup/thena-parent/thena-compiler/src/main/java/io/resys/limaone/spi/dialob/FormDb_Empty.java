@@ -115,6 +115,10 @@ public class FormDb_Empty implements FormDb {
         throw new RuntimeException("forms are disabled!");
       }
 
+      @Override
+      public FormFillReview formFillReview() {
+        throw new RuntimeException("forms are disabled!");
+      }
     };
   }
 

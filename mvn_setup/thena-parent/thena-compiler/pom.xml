@@ -105,7 +105,17 @@
       <artifactId>jakarta.annotation-api</artifactId>
     </dependency>
     
-    <!-- hibernate bullshit factory, required by dialob-->
+    
+    <!-- Dialob -->
+    <dependency>
+      <groupId>io.dialob</groupId>
+      <artifactId>dialob-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.dialob</groupId>
+      <artifactId>dialob-session-engine</artifactId>
+    </dependency>
+    <!-- hibernate bullshit factory, required by dialob -->
     <dependency>
       <groupId>jakarta.validation</groupId>
       <artifactId>jakarta.validation-api</artifactId>
@@ -119,11 +129,6 @@
       <artifactId>expressly</artifactId>
     </dependency>
     
-  
-    <dependency>
-      <groupId>io.dialob</groupId>
-      <artifactId>dialob-api</artifactId>
-    </dependency>
     
     <dependency>
       <groupId>io.digiexpress</groupId>

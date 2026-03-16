@@ -188,6 +188,10 @@ public interface FormDb {
      * @return a new {@link FormFillQuery} for low-level form queries
      */
     FormFillQuery formFillQuery();
+    
+    
+    
+    FormFillReview formFillReview();
   }
   
   /**
@@ -687,4 +691,10 @@ public interface FormDb {
     Uni<RawResponse> build();
   }
 
+  
+  interface FormFillReview {
+    FormFillReview formInstanceId(String formInstanceId);
+    FormFillReview navigateTo(Actions action);
+    Uni<Actions> build();
+  }
 }

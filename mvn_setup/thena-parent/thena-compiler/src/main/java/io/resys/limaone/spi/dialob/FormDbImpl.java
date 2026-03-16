@@ -20,6 +20,7 @@ import io.resys.limaone.spi.dialob.builders.MergeFormImpl;
 import io.resys.limaone.spi.dialob.builders.MergeFormInstanceImpl;
 import io.resys.limaone.spi.dialob.cache.FormDbCache;
 import io.resys.limaone.spi.dialob.cache.FormDbCacheImpl;
+import io.resys.limaone.spi.dialob.review.FormFillReviewImpl;
 import io.resys.limaone.spi.http.HttpClient;
 import io.resys.limaone.spi.http.HttpClientImpl;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,7 @@ public class FormDbImpl implements FormDb {
       @Override public CreateFormInstance createFormInstance() { return new CreateFormInstanceImpl(formDbProps); }
       @Override public FormFillBuilder createFormFill() { return new FormFillBuilderImpl(formDbProps); }
       @Override public FormFillQuery formFillQuery() { return new FormFillQueryImpl(formDbProps); }
+      @Override public FormFillReview formFillReview() { return new FormFillReviewImpl(formDbProps); }
     };
   }
 
