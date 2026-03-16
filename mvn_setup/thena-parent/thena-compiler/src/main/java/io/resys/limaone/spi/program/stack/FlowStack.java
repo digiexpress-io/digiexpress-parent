@@ -17,14 +17,15 @@ import io.resys.limaone.ast.Flow_AST.BodyStatement;
 import io.resys.limaone.ast.Flow_AST.StatementType;
 import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
+import io.resys.limaone.program.FlowProgram.FlowResultErrorLog;
 import io.resys.limaone.program.FlowProgram.FlowResultLog;
 import io.resys.limaone.program.ImmutableFlowResultErrorLog;
-import io.resys.limaone.program.ImmutableFlowResultLog;
 import io.resys.limaone.program.Program.ProgramResult;
 import io.resys.limaone.spi.program.FlowProgramExecutor.StatementException;
 import io.resys.limaone.spi.program.assignment.Assignment;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
+import lombok.Builder;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
@@ -96,6 +97,9 @@ public class FlowStack {
       }
     }
 
+    final var errors = new ArrayList<FlowResultErrorLog>();
+    errors.add(ImmutableFlowResultErrorLog.builder().id("error").msg(errorMsg.toString()).build());
+    errors.add(ImmutableFlowResultErrorLog.builder().id("trace").msg(traceBuilder.toString()).build());
     
     final var errorFrame = ImmutableFlowResultLog.builder()
       .id(sequence.incrementAndGet())
@@ -103,8 +107,7 @@ public class FlowStack {
       .stepId(stepId == null ? "unknown" : stepId)
       .isReturnsCollection(false)
       .end(LocalDateTime.now())
-      .addErrors(ImmutableFlowResultErrorLog.builder().id("error").msg(errorMsg.toString()).build())
-      .addErrors(ImmutableFlowResultErrorLog.builder().id("trace").msg(traceBuilder.toString()).build())
+      .errors(Collections.unmodifiableList(errors))
       .status(FlowExecutionStatus.ERROR)
       .build();
     
@@ -139,7 +142,7 @@ public class FlowStack {
         .isReturnsCollection(envlope.getStatement().isCollection())
         
         .accepts(match.getInputs())
-        .returns(match.getOutputs())
+        .returns(Collections.unmodifiableMap(match.getOutputs()))
 
         .returnsValue(match.getRaw().orElse(null))
         .cost(match.getCost())
@@ -147,8 +150,6 @@ public class FlowStack {
       
       return log;
     }).toList(); 
-        
-
   }
   
   private String getLogIndent() {
@@ -191,4 +192,24 @@ public class FlowStack {
     boolean isReturnsCollection;
     Map<String, Serializable> returns;
   }
+  
+  @Value @Builder
+  public static class ImmutableFlowResultLog implements FlowResultLog {
+    private static final long serialVersionUID = -4056844608187732484L;
+    
+    Integer id;
+    String stepId;
+    LocalDateTime start;
+    LocalDateTime end;
+    List<FlowResultErrorLog> errors;
+    FlowExecutionStatus status;
+    boolean isReturnsCollection;
+    
+    
+    Map<String, Serializable> accepts;
+    Map<String, Serializable> returns;
+    
+    @Nullable Serializable returnsValue;
+    @Nullable Long cost; // cost in millis
+  } 
 }

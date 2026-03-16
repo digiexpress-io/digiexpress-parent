@@ -10,7 +10,7 @@
     <logger name="io.netty" level="OFF"/>
     <logger name="org.testcontainers" level="INFO"/>
     
-    <logger name="io.resys.thena.show_sql" level="DEBUG"/>
+    <logger name="io.resys.thena.show_sql" level="OFF"/>
     <logger name="io.resys.limaone.spi.http" level="INFO"/>
     
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">

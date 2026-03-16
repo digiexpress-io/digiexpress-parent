@@ -177,6 +177,16 @@ public class Compiler_FlowDepsValidator {
         return REACHED_END;
       }
       
+      if(!childDep.getArtifactAst().get().getErrors().isEmpty()) {
+        
+        for(final var childError : childDep.getArtifactAst().get().getErrors()) {
+          errors.add(ImmutableModelError.builder()
+              .msg("Task: '" + statement.getTaskId() + "' has ref: " + childDep.getDependencyId() + " error: " + childError.getMsg() + "!")
+              .build());
+        }
+        return REACHED_END;
+      }
+      
       if(childDep.getArtifactAst().isEmpty()) {
         errors.add(ImmutableModelError.builder()
             .msg("Task: '" + statement.getTaskId() + "' has ref: " + childDep.getDependencyId() + " to unknown asset!")

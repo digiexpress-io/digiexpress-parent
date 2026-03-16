@@ -32,7 +32,6 @@ public interface FlowProgram extends Program {
     String andEncodePrettily();
   }
   
-  @Value.Immutable
   interface FlowResult extends ProgramResult {
     String getStepId();
     String getShortHistory();
@@ -44,7 +43,7 @@ public interface FlowProgram extends Program {
     Map<String, Serializable> getReturns();
   }
 
-  @Value.Immutable
+
   interface FlowResultLog extends Serializable {
     Integer getId();
     String getStepId();

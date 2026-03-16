@@ -479,6 +479,13 @@ public interface FormDb {
      * @return pretty print format the form when its loaded
      */
     Optional<String> encodeFormPrettily();
+    
+    /**
+     * @return shortcut method to questionnaire attribute
+     */
+    default Questionnaire.Metadata metadata() {
+      return this.getQuestionnaire().metadata();
+    }
   }
   
   /**

@@ -55,7 +55,14 @@ public class WorkflowTest extends DbSupport {
     // get and run the workflow
     final var workflow = bundle.queryWorkflows().name("form-1").getOne();
     final var workflowProps = ImmutableWorkflowDefaultProps.builder().build();
-    final var user = ImmutableWorkflowUser.builder().identity("user-1").language("fi").anon(false).build();
+    final var user = ImmutableWorkflowUser.builder()
+        .identity("123456-789A")
+        .firstName("Sam")
+        .lastName("Vimes")
+        .language("fi")
+        .email("sam.vimes@resys.io")
+        .anon(false)
+        .build();
 
 
     // Assert questionnaire
@@ -84,10 +91,30 @@ public class WorkflowTest extends DbSupport {
         .await().atMost(Duration.ofMinutes(1));
     completeForm(formDb, session);
 
+    // prints form in a readable manner
+    // log.debug("Form data:\n{}", session.encodeFormPrettily().get());
 
     // run the flow
     final var flow = workflow.runFlow(runtime, form, DefaultProgramInput.of(Map.of(), runtime));
     Assertions.assertEquals(WorkflowExecutionStatus.COMPLETED, flow.getStatus());
+    final var resultProps = flow.getFlow().get().getReturns();
+    
+    log.debug("Flow results {}", JsonObject.mapFrom(resultProps).encodePrettily());
+    
+    Assertions.assertEquals(null, resultProps.get("sum"));
+    Assertions.assertEquals("Sam", resultProps.get("firstName"));
+    Assertions.assertEquals("Vimes", resultProps.get("lastName"));
+    Assertions.assertEquals("123456-789A", resultProps.get("ssn"));
+    Assertions.assertEquals("sam.vimes@resys.io", resultProps.get("email"));
+    Assertions.assertEquals(null, resultProps.get("address"));
+    Assertions.assertEquals("", resultProps.get("title"));
+    Assertions.assertEquals(null, resultProps.get("taskFeature"));
+    Assertions.assertEquals("", resultProps.get("feedBackType"));
+    Assertions.assertEquals("", resultProps.get("feedBackTxt"));
+    Assertions.assertEquals("fi", resultProps.get("localization"));
+    Assertions.assertEquals(null, resultProps.get("language"));
+    Assertions.assertEquals("palaute", resultProps.get("label"));
+    Assertions.assertEquals(session.getQuestionnaire().getId(), resultProps.get("questionnaireId"));
   }
   
   
@@ -123,10 +150,10 @@ public class WorkflowTest extends DbSupport {
         "Expected completed filled session");
   }
   
+  
+  
   @SuppressWarnings("unused")
   public FormDb withData(FormDb formDb) {
-    // prints form in a readable manner
-    // log.debug(session.encodeFormPrettily().get());
     
     final var form = new JsonObject(TestTemplate.toString("forms/palaute.json")).mapTo(Form.class);
     final var created = formDb.withTenant().createForm()
@@ -174,8 +201,33 @@ public class ExtractDialobData {
   public Output execute(Input input, Runtime runtime) {
     Output output = new Output();
     
-    final var questionnaire = runtime.getFormDb().formInstanceQuery()
+    final var dialob = runtime.getFormDb().withTenant().formInstanceQuery()
         .getOneSync(input.questionnaireId);
+
+    output.firstName = dialob.context "FirstNames"
+    output.lastName = dialob.context "LastName"
+    output.ssn = dialob.context "SocialSecurityNumber"
+    output.address = dialob.context "Address"
+    output.email = dialob.context "Email"
+    output.language = dialob.context "language"
+    
+    output.feedBackType = dialob.text "feedBackType"
+    output.feedBackTxt = dialob.text "feedBackText"
+    output.title = dialob.text "feedBackTitle"
+    output.localization = dialob.variable "localization"
+
+
+    if(dialob.bool "publicAnswerAllowed"){
+      output.taskFeature = "feedback,feedback-ai"
+    }
+
+    if(dialob.bool "publishFeedBack"){
+      output.taskFeature = "feedback,feedback-ai"
+    }
+    
+    output.formId = dialob.metadata().getFormId()
+    output.label = dialob.metadata().getLabel()
+    output.questionnaireId = input.questionnaireId
 
     return output;
   }
@@ -188,10 +240,30 @@ public class ExtractDialobData {
   
   @ServiceData
   public static class Output implements Serializable {
+    // null test
     Integer sum;
+    
+    String firstName;
+    String lastName;
+    String ssn;
+    String email;
+    String address;
+    // feedback data
+    String title;
+    String taskFeature;
+    String feedBackType;
+    String feedBackTxt;
+    String localization;
+    String language;
+    // dialob base date
+    String label;
+    String questionnaireId;
+    String formId;
   }
+}
             """)
-        .build());
+        .build())
+    .buildSync();
     
     authoring.newModel().newFlow()
       .props(props -> props

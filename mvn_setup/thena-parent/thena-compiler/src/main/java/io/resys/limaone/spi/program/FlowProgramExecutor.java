@@ -26,12 +26,13 @@ import io.resys.limaone.ast.Flow_AST.StatementType;
 import io.resys.limaone.ast.Flow_AST.SwitchStatement;
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
 import io.resys.limaone.program.FlowProgram.FlowResult;
-import io.resys.limaone.program.ImmutableFlowResult;
+import io.resys.limaone.program.FlowProgram.FlowResultLog;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
 import io.resys.limaone.spi.program.assignment.AssignmentContext;
 import io.resys.limaone.spi.program.expression.OperationContext.ExternalContext;
 import io.resys.limaone.spi.program.stack.FlowStack;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -90,13 +91,17 @@ public class FlowProgramExecutor {
     final var stack = this.stack.close();
     
     return ImmutableFlowResult.builder()
-      .logs(stack.getLogs())
-      .lastLogs(stack.getLastLogs())
+      .logs(Collections.unmodifiableList(stack.getLogs()))
+      .lastLogs(Collections.unmodifiableList(stack.getLastLogs()))
       .stepId(stack.getLastStepId())
       .status(status)
-      .accepts(assignment.getInitalizers().entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getRaw())))
+      .accepts(assignment.getInitalizers().entrySet().stream()
+            .collect(Collectors.toMap(
+                e -> e.getKey(), 
+                e -> e.getValue().getRaw()))
+      )
       .isReturnsCollection(stack.isReturnsCollection())
-      .returns(stack.getReturns())
+      .returns(Collections.unmodifiableMap(stack.getReturns()))
       .shortHistory(stack.getShortHistory())
       .build();
   }
@@ -327,5 +332,20 @@ public class FlowProgramExecutor {
       this.statement = statement;
       this.props = props;
     }
+  }
+  
+  @Value @Builder
+  public static class ImmutableFlowResult implements FlowResult {
+    private static final long serialVersionUID = 6611596956210127849L;
+    
+    String stepId;
+    String shortHistory;
+    List<FlowResultLog> logs;
+    List<FlowResultLog> lastLogs;
+    FlowExecutionStatus status;
+    boolean isReturnsCollection;
+    Map<String, Serializable> accepts;
+    Map<String, Serializable> returns;
+  
   }
 }

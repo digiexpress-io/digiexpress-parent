@@ -11,7 +11,6 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import groovy.util.logging.Slf4j;
 import io.resys.limaone.ast.ArticleWorkflow_AST;
 import io.resys.limaone.ast.ArticleWorkflow_AST.AnonStatement;
 import io.resys.limaone.ast.ArticleWorkflow_AST.AnyStatement;
@@ -35,6 +34,7 @@ import io.resys.limaone.program.WorkflowProgram.WorkflowForm;
 import io.resys.limaone.spi.dialob.FormDb;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
@@ -64,6 +64,11 @@ public class WorkflowFlowExecutor {
       final var msg = "Msg: " + exception.getMessage() + System.lineSeparator() + JsonObject.mapFrom(ast).encodePrettily();
       this.errors.add(ImmutableModelError.builder().exception(exception).msg(msg).build());
     }
+    
+    for(final var error : errors) {
+      log.error(error.getMsg(), error.getException());
+    }
+    
     return ImmutableWorkflowFlowResult.builder()
         .errors(errors)
         .status(errors.isEmpty() ? WorkflowExecutionStatus.COMPLETED : WorkflowExecutionStatus.ERROR)
@@ -114,6 +119,12 @@ public class WorkflowFlowExecutor {
     final var flow = runtime.getBundle().queryFlows()
         .name(statement.getFlowName())
         .getOne();
+    
+    
+    if(!flow.getErrors().isEmpty()) {
+      this.errors.addAll(flow.getErrors());
+      return REACHED_END;
+    }
     
     // load the questionnaire right up
 
