@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Switch, Divider } from '@mui/material';
 import { FsIcon, FsIcons } from '../fs-theme';
-import { FsPanel } from '../fs-primitives';
+import { FsPanel } from '../fs-panel';
 import { FsConfigOptionsProps, allConfigOptions } from './FsConfigOptionsProps';
 import { useOwnerState } from './useOwnerState';
 import { FsConfigOptionsRoot, useUtilityClasses } from './useUtilityClasses';

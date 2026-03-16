@@ -4,7 +4,7 @@ import { OpenInNew as OpenInNewIcon } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
 
 import { FsIcon, FsIcons } from '../fs-theme';
-import { FsPanel } from '../fs-primitives';
+import { FsPanel } from '../fs-panel';
 import { FsHelpProps, helpMarkdownMock } from './FsHelpProps';
 import { useOwnerState } from './useOwnerState';
 import { useUtilityClasses, FsHelpRoot } from './useUtilityClasses';

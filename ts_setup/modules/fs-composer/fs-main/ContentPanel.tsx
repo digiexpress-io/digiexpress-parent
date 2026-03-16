@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { FsPanel } from '../fs-primitives';
+import { FsPanel } from '../fs-panel';
 
 import { FsChanges } from '../fs-changes';
 import { FsConfigOptions } from '../fs-config-options';

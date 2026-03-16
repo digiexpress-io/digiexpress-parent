@@ -1365,5 +1365,12 @@ export const en = {
   'task.audit.ai.similar.unavailable': 'No similar feedback available',
   'taskcard.body.customerName.none': 'Not specified',
   'taskcard.body.form.canPublishFeedback.yes': 'Yes',
-  'taskcard.body.form.representative.placeholder': 'Representative name'
+  'taskcard.body.form.representative.placeholder': 'Representative name',
+  'fs.breadcrumb.tooltip.error': 'An issue with this asset needs attention.',
+  'fs.changesView.title': 'Unsaved changes',
+  'fs.changesView.undo': 'Undo changes',
+  'fs.changesView.discardAll': 'Discard all changes',
+  'fs.changesView.saveAll': 'Save all changes',
+  'fs.changesView.undoConfirmDialog.title': 'Undo changes to asset',
+  'fs.changesView.undoConfirmDialog.content': 'You are about to discard all changes to this file. This action cannot be undone.'
 }

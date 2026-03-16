@@ -1462,22 +1462,26 @@
       "actualDependencies": [
         "react",
         "@mui/material",
+        "react-intl",
         "@dxs-ts/fs-api",
+        "@mui/utils",
         "@mui/icons-material",
-        "react-markdown",
-        "@mui/utils"
+        "react-markdown"
       ],
       "actualExternalDependencies": [
         "react",
         "@mui/material",
+        "react-intl",
+        "@mui/utils",
         "@mui/icons-material",
-        "react-markdown",
-        "@mui/utils"
+        "react-markdown"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/fs-api"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "react-intl"
+      ],
       "unusedDependencies": [
         "@dxs-ts/eveli-primitives"
       ]
@@ -4618,6 +4622,6 @@
       ]
     }
   },
-  "checksum": "a7c76b75dda52d40293fe6aae7938baf895fc9e0e08ee415e45096ce04f1d0e2",
-  "generatedAt": "2026-02-20T10:49:35.157Z"
+  "checksum": "bbc99631f26c25b0a93344bb41c7e2dfa3c07d7f115aeea939f6da7233e35d18",
+  "generatedAt": "2026-03-16T08:57:18.644Z"
 }

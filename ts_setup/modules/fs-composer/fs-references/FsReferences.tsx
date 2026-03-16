@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { useFs } from '@dxs-ts/fs-api';
-import { FsPanel } from '../fs-primitives';
+import { FsPanel } from '../fs-panel';
 import { FsReferencesProps } from './FsReferencesProps';
 import { useOwnerState } from './useOwnerState';
 import { FsReferencesRoot, useUtilityClasses } from './useUtilityClasses';

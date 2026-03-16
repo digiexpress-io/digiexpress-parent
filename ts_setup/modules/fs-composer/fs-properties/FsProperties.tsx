@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { FsIcon, FsIcons } from '../fs-theme';
-import { FsPanel } from '../fs-primitives';
+import { FsPanel } from '../fs-panel';
 import { FsPropertiesProps, propertiesMock} from './FsPropertiesProps';
 import { useOwnerState } from './useOwnerState';
 import { FsPropertiesRoot, useUtilityClasses } from './useUtilityClasses';

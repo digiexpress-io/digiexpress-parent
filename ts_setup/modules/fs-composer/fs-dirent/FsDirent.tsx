@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Box, Collapse, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
+import { Box, Collapse, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
 
 import { useUtilityClasses, FsDirentRoot } from './useUtilityClasses';
 import { FsIcons, FsIcon } from '../fs-theme';
