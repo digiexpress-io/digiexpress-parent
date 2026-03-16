@@ -26,8 +26,6 @@ export interface OwnerState {
   configOptions: boolean;
   childWithError: boolean;
   showError: boolean;
-
-
 }
 
 

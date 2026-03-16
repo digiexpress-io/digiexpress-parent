@@ -31,7 +31,7 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
           ) : (<Box sx={{ width: 21, mr: 0.5 }} />)
           }
           
-          <ListItemIcon className={ownerState.nodeIconClassName}>
+          <ListItemIcon className={classes[ownerState.nodeIconClassName]}>
             <NodeDecorator node={ownerState.node}>
               <NodeIcon node={ownerState.node}/>
             </NodeDecorator>
