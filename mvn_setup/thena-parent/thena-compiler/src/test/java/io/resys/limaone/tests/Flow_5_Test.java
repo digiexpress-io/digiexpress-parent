@@ -165,6 +165,10 @@ HISTORY: addPartyToInvestigationList -> resolveAmlViolation -> addToWhitelist ->
     final var envir = TestTemplate.compileOneFlow(
 """
 id: self ref
+inputs:
+  restart:
+    required: true
+    type: BOOLEAN
 tasks:
   - Add party to investigation list:
       id: "addToInvList"
