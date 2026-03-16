@@ -8,12 +8,3 @@ export interface FsDirentProps {
   onContextMenu: (event: React.MouseEvent, node: FsNode) => void;
   searchTerm: string;
 }
-
-export interface FsDirentNameProps {
-  node: FsNode;
-  isDarkTheme: boolean;
-  error: boolean;
-  searchTerm: string;
-}
-
-

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Box, Collapse, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
+import { Badge, Box, Collapse, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
 
-import { useUtilityClasses, FsDirentRoot, getIcon, getIconClassName, getConfigIcons, FsDirentName } from './useUtilityClasses';
+import { useUtilityClasses, FsDirentRoot } from './useUtilityClasses';
 import { FsIcons, FsIcon } from '../fs-theme';
 import { FsDirentProps } from './FsDirentProps';
 import { useOwnerState } from './useOwnerState';
-import { FsNode } from '@dxs-ts/fs-api';
+
+import { ConfigOptionIcons, FsDirentName, NodeDecorator, NodeIcon } from './Supports';
 
 
 export const FsDirent: React.FC<FsDirentProps> = (props) => {
@@ -16,33 +17,38 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
     <FsDirentRoot className={classes.root} ownerState={ownerState}>
       <ListItem
         className={`${classes.explorerNode} ${ownerState.showError ? 'error' : ''}`}
-        onClick={() => ownerState.children && ownerState.onToggle(ownerState.node.id)}
+        onClick={() => ownerState.isChildren && ownerState.onToggle(ownerState.node.id)}
         onDoubleClick={() => ownerState.openAsset(ownerState.node, ownerState.fullPath)}
         onContextMenu={(event) => ownerState.onContextMenu(event, ownerState.node)}
       >
         <Box className={classes.explorerNodeContent}>
-          {ownerState.children ? (
+          {ownerState.isChildren ? (
             <IconButton size='small'>
-              {ownerState.node.expanded ? <FsIcon small icon={FsIcons.ExpandMore} className={classes.iconExpand} /> : <FsIcon small icon={FsIcons.ChevronRight} className={classes.iconExpand} />}
+              {ownerState.node.expanded ? 
+                <FsIcon small icon={FsIcons.ExpandMore} className={classes.iconExpand} /> : 
+                <FsIcon small icon={FsIcons.ChevronRight} className={classes.iconExpand} />}
             </IconButton>
-          ) : (
-              <Box sx={{ width: 21, mr: 0.5 }} />
-          )}
-          <ListItemIcon className={getIconClassName(ownerState.node, classes)}>
-            {getIcon(ownerState.node)}
+          ) : (<Box sx={{ width: 21, mr: 0.5 }} />)
+          }
+          
+          <ListItemIcon className={ownerState.nodeIconClassName}>
+            <NodeDecorator node={ownerState.node}>
+              <NodeIcon node={ownerState.node}/>
+            </NodeDecorator>
           </ListItemIcon>
+
           <FsDirentName node={ownerState.node}
             isDarkTheme={ownerState.isDarkMode}
             error={ownerState.showError ? true : false}
             searchTerm={ownerState.searchTerm}
           />
-          {ownerState.configOptions && (<ConfigOptionIcons iconConfig={classes.iconConfig} node={props.node} />)}
+          <ConfigOptionIcons ownerState={ownerState} />
         </Box>
       </ListItem>
-      {ownerState.children && (
+      {ownerState.isChildren && (
         <Collapse in={ownerState.node.expanded} timeout={0}>
           <List component='div' disablePadding>
-            {ownerState.sortChildren(ownerState.node.children || []).map((child) => (
+            {ownerState.children.map((child) => (
               <FsDirent
                 key={child.id}
                 node={child}
@@ -59,21 +65,3 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
     </FsDirentRoot>
   );
 };
-
-interface ConfigOptionIconsProps {
-  node: FsNode;
-  iconConfig: string;
-}
-
-const ConfigOptionIcons: React.FC<ConfigOptionIconsProps> = ({ node, iconConfig }) => {
-
-  return (
-    <Box sx={{ marginLeft: 'auto', paddingRight: 1, display: 'flex', gap: 0.5 }}>
-      {getConfigIcons(node.configOptions!, iconConfig).map((tooltipIcon) => (
-        <Box key={tooltipIcon.key} display='flex' alignItems='center'>
-          {tooltipIcon}
-        </Box>
-      ))}
-    </Box>
-  )
-}
