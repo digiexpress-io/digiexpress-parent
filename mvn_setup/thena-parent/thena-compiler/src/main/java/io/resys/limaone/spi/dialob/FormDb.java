@@ -189,8 +189,13 @@ public interface FormDb {
      */
     FormFillQuery formFillQuery();
     
-    
-    
+    /**
+     * Creates a read-only form state reconstruction engine for displaying completed forms.
+     * Provides in-memory simulation of completed questionnaires with navigation support
+     * to show form state at any page or step without affecting the original data.
+     * 
+     * @return a new {@link FormFillReview} for read-only form state reconstruction
+     */
     FormFillReview formFillReview();
   }
   
@@ -380,6 +385,12 @@ public interface FormDb {
    * Will later be extended to provide more contextual data around the questionnaire instance.
    */
   interface FormInstance {
+    /**
+     * Gets the underlying Dialob form.
+     * 
+     * @return the form for the questionnaire.
+     */
+    Optional<Form> getForm();
     
     /**
      * Gets the underlying Dialob questionnaire containing form state and responses.
@@ -691,10 +702,44 @@ public interface FormDb {
     Uni<RawResponse> build();
   }
 
-  
+  /**
+   * Read-only form state reconstruction engine for displaying completed forms.
+   * Creates an in-memory copy of a completed questionnaire and runs it through
+   * a Dialob session engine to reconstruct form state for display purposes.
+   * Supports navigation to different pages/steps without affecting original data.
+   * 
+   * <p>Required because Dialob's API requires session reconstruction to properly
+   * display completed forms with correct page states and navigation context.
+   */
   interface FormFillReview {
+    
+    /**
+     * Specifies the completed form instance to reconstruct for review.
+     * The questionnaire will be queried and copied for in-memory simulation.
+     * 
+     * @param formInstanceId the unique identifier of the completed questionnaire instance
+     * @return this builder for method chaining
+     */
     FormFillReview formInstanceId(String formInstanceId);
+    
+    /**
+     * Applies navigation actions to the in-memory form copy.
+     * Typically used to navigate to specific pages or steps in multi-page forms.
+     * All actions are processed without side effects on the original questionnaire.
+     * Only meaningful for forms with multiple pages - single-page forms don't need navigation.
+     * 
+     * @param action the navigation actions to apply (page changes, step navigation, etc.)
+     * @return this builder for method chaining
+     */
     FormFillReview navigateTo(Actions action);
+    
+    /**
+     * Executes the form state reconstruction and returns the complete rebuilt state.
+     * Creates in-memory Dialob session, applies navigation actions, and rebuilds
+     * the complete form state as it would appear at the specified navigation point.
+     * 
+     * @return a {@link Uni} containing Actions representing the complete rebuilt form state
+     */
     Uni<Actions> build();
   }
 }

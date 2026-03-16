@@ -138,4 +138,8 @@ public class FormInstanceImpl implements FormInstance {
   private ContextValue findContext(List<ContextValue> contextValues, String key) {
     return contextValues.stream().filter(it -> it.getId().equals(key)).findFirst().orElse(null);
   }
+
+  public Optional<Form> getForm() {
+    return form;
+  }
 }
