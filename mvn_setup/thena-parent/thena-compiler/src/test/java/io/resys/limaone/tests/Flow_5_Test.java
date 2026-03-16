@@ -49,6 +49,12 @@ inputs:
   whitelist:
     required: true
     type: BOOLEAN
+  investigationList:
+    required: false
+    type: BOOLEAN
+  waitFiuDecision:
+    required: false
+    type: BOOLEAN
   param2:
     required: false
     type: STRING

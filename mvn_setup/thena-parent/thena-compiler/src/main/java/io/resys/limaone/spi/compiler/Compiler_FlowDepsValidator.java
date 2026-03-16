@@ -228,6 +228,7 @@ public class Compiler_FlowDepsValidator {
       final var to = mapping.getKey();
       final var fromTask = fromPath[0];
       final var from = fromPath.length > 1 ? fromPath[1] : fromPath[0];
+      
       final var toTask = depToValidate.getStatement().getTaskId();
       final var toParam = acceptDefs.get(toTask).get(to);
       
@@ -235,7 +236,17 @@ public class Compiler_FlowDepsValidator {
       if(flowInputs.containsKey(from)) {
         fromParam = flowInputs.get(from);
       } else if(tasks.containsKey(fromTask)) {
-        fromParam = Optional.ofNullable(returnDefs.get(fromTask)).map(e -> e.get(from)).orElse(null);
+        
+        // this is the task input
+        final var from_reserverd = from.length() > 1 ? from.substring(1) : from;
+        final var reserved_keyword_input_from_other_task = Optional.ofNullable(acceptDefs.get(fromTask))
+            .map(e -> e.get(from_reserverd)).orElse(null);
+        
+        if(from.startsWith("_") && reserved_keyword_input_from_other_task != null) {
+          fromParam = reserved_keyword_input_from_other_task;
+        } else {
+          fromParam = Optional.ofNullable(returnDefs.get(fromTask)).map(e -> e.get(from)).orElse(null);  
+        }
       } else {
         fromParam = null;
       }
