@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import { FsMainProps } from './FsMainProps';
 import { useOwnerState } from './useOwnerState';
 import { FsMainRoot, useUtilityClasses } from './useUtilityClasses';
@@ -27,7 +28,8 @@ export const FsMain: React.FC<FsMainProps> = (props) => {
 
 
 const MainContent: React.FC = () => {
+  const intl = useIntl();
 
-  return (<>Main content</>)
+  return (<>{intl.formatMessage({ id: 'fs.main.message.mainContent' })}</>)
 }
 

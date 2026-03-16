@@ -1,5 +1,6 @@
 import React from 'react';
 import { Divider, TextField, Select, MenuItem, OutlinedInput } from '@mui/material';
+import { useIntl } from 'react-intl';
 import { FsColors } from '../fs-theme';
 import { FsSearchProps } from './FsSearchProps';
 import { useOwnerState } from './useOwnerState';
@@ -7,6 +8,7 @@ import { FsSearchRoot, useUtilityClasses } from './useUtilityClasses';
 import { FsFilterChip } from './FsFilterChip';
 
 export const FsSearch: React.FC<FsSearchProps> = (props) => {
+  const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(props);
 
@@ -18,17 +20,15 @@ export const FsSearch: React.FC<FsSearchProps> = (props) => {
     <>
       <FsSearchRoot ownerState={ownerState} className={classes.root}>
         <div className={classes.container}>
-          <TextField
-            className={classes.searchField}
-            placeholder="search"
+          <TextField className={classes.searchField}
+            placeholder={intl.formatMessage({ id: 'fs.search.searchField.placeholder' })}
             fullWidth
             value={ownerState.searchTerm}
             onChange={ownerState.handleSearchChange}
             type="search"
           />
 
-          <Select
-            className={classes.multiSelect}
+          <Select className={classes.multiSelect}
             multiple
             value={ownerState.visibleFilters.map(f => f.label)}
             onChange={(e) => ownerState.handleFilterSelectChange(e.target.value as string[])}
@@ -62,7 +62,7 @@ export const FsSearch: React.FC<FsSearchProps> = (props) => {
             })}
             renderValue={(selected) => {
               if ((selected as string[]).length === 0) {
-                return <span className={classes.placeholderText}>Filter by type</span>;
+                return <span className={classes.placeholderText}>{intl.formatMessage({ id: 'fs.search.filterSelect.placeholder' })}</span>;
               }
               return (
                 <div className={classes.chipContainer}>

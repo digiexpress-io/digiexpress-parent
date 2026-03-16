@@ -2,7 +2,6 @@ import React from 'react';
 import { Chip, styled, generateUtilityClass } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsNodeType, getNodeColor } from '../fs-theme';
-import { FsFilterChipProps } from './FsSearchProps';
 
 const MUI_NAME = 'FsFilterChip';
 
@@ -10,6 +9,13 @@ const MUI_NAME = 'FsFilterChip';
 export interface FsFilterChipClasses {
   root: string;
 }
+
+interface FsFilterChipProps {
+  label: string;
+  chipType: FsNodeType;
+  isDarkMode: boolean;
+}
+
 
 const useUtilityClasses = (_props: FsFilterChipProps) => {
   const slots = {

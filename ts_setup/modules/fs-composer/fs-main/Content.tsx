@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
+import { useIntl } from 'react-intl';
 import { OwnerState } from './useOwnerState';
 
 export interface ContentProps {
@@ -9,6 +10,7 @@ export interface ContentProps {
 }
 
 export const Content: React.FC<ContentProps> = ({ className, ownerState, children }) => {
+  const intl = useIntl();
   const activeTab = ownerState.openTabs[ownerState.activeTabIndex];
 
   return (
@@ -19,7 +21,7 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState, childre
           {children}
         </Typography>
       ) : (
-        'No asset selected'
+        intl.formatMessage({ id: 'fs.main.message.noAssetSelected' })
       )}
 
     </div>

@@ -2,10 +2,16 @@ import React from 'react';
 import { styled, generateUtilityClass } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
-import { HighlightProps } from './FsSearchProps';
 
 const MUI_NAME = 'SearchResultHighlight';
 
+
+
+interface HighlightProps {
+  text: string;
+  searchTerm: string;
+  isDarkMode: boolean
+}
 
 export interface SearchResultHighlightClasses {
   root: string;

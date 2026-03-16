@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
+import { useIntl } from 'react-intl';
 import { FsPanel } from '../fs-panel';
 
 import { FsChanges } from '../fs-changes';
@@ -18,13 +19,14 @@ export interface ContentPanelProps {
 }
 
 export const ContentPanel: React.FC<ContentPanelProps> = ({ ownerState, className }) => {
+  const intl = useIntl();
   const { activeNode, selectedView } = ownerState;
 
   return (
     <div className={className}>
       {!selectedView ? (
-        <FsPanel title='Choose a View'>
-          <Typography>Select an option from the toolbar to view details.</Typography>
+        <FsPanel title={intl.formatMessage({ id: 'fs.main.chooseView.title' })}>
+          <Typography>{intl.formatMessage({ id: 'fs.main.chooseView.message' })}</Typography>
         </FsPanel>
       ) : selectedView === 'changes' ? (
           <FsChanges node={activeNode} />
