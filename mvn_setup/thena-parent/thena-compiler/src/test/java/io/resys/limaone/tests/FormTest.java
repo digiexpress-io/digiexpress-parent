@@ -1,6 +1,7 @@
 package io.resys.limaone.tests;
 
 import java.time.Duration;
+import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -133,8 +134,80 @@ public class FormTest {
           Questionnaire.Metadata.Status.COMPLETED,
           completedSession.getQuestionnaire().getMetadata().getStatus(), 
           "Expected Ok for filled session");
-    }
-    
+    } 
   }
 
+  
+  
+
+
+  @SuppressWarnings("unused")
+  @Test @DialobResetDB
+  public void reviewTest(FormUrl formUrl) {
+    final var formDb = TestTemplate.getFormDb(formUrl);  
+    final var form_2 = new JsonObject(TestTemplate.toString("forms/osbu_proposals.json")).mapTo(Form.class);
+    final var created_2 = formDb.withTenant().createForm()
+      .props(form_2).build()
+      .await().atMost(Duration.ofMinutes(1));
+    
+
+    final var sessionId = formDb.withTenant().createFormInstance()
+      .formId(created_2.getId())
+      .context(Map.of("SocialSecurityNumber", "123456-789A"))
+      .build()
+      .await().atMost(Duration.ofMinutes(1));
+    
+
+      
+      final var initSession = formDb.withTenant().formFillQuery().getOne(sessionId.getId())
+        .await().atMost(Duration.ofMinutes(1));
+      Assertions.assertTrue(initSession.isOk(), "Expected Ok for created session");
+      Assertions.assertNotNull(initSession.getBody(), "Expected Ok for created session");
+      
+    
+    
+    
+    final var formFilled = formDb.withTenant().createFormFill()
+        .formInstanceId(sessionId.getId())
+        .actions(JsonObject.of(
+            "rev", sessionId.getRev(), 
+            "actions", new JsonArray(
+"""
+[
+  {'type':'ANSWER','answer':'choice1','id':'list1'},
+  {'type':'ANSWER','answer':'Mekaanikonkatu, 00880, Helsinki','id':'address1'}
+]""".replace("'", "\""))).encode())
+        .build()
+        .await().atMost(Duration.ofMinutes(1));
+    
+    final var nextRev = formDb.withTenant().createFormFill()
+    .formInstanceId(sessionId.getId())
+    .actions(JsonObject.of(
+        "rev", new JsonObject(formFilled.getBody()).getString("rev"), 
+        "actions", new JsonArray("[{'type':'COMPLETE'}]".replace("'", "\""))).encode())
+    .build()
+    .await().atMost(Duration.ofMinutes(1));
+    
+    final var completedSession = formDb.withTenant().formInstanceQuery().getOne(sessionId.getId())
+        .await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(
+        Questionnaire.Metadata.Status.COMPLETED,
+        completedSession.getQuestionnaire().getMetadata().getStatus(), 
+        "Expected Ok for filled session:\n" + JsonObject.mapFrom(completedSession.getQuestionnaire()).encodePrettily());
+
+    
+    final var actions = formDb.withTenant()
+        .formFillReview()
+        .formInstanceId(completedSession.getQuestionnaire().getId())
+        .build()
+        .await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(12, actions.getActions().size());
+    Assertions.assertEquals(1, 
+        actions.getActions().stream()
+          .filter(e -> e.getItem() != null)
+          .filter(e -> e.getItem().getId() != null)
+          .filter(e -> e.getItem().getId().equals("questionnaire"))
+          .count());
+          
+  }
 }
