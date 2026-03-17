@@ -131,7 +131,9 @@ export const mockFsData: FsNode[] = [
                         value: 'reference-content',
                         nodeId: 'fi-ref'
                       }
-                    ]
+                    ],
+                    updated: '03.02.2025',
+                    updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
                   },
                   {
                     id: 'en-ref',
@@ -154,9 +156,13 @@ export const mockFsData: FsNode[] = [
                         value: 'reference-content',
                         nodeId: 'en-ref'
                       }
-                    ]
+                    ],
+                    updated: '10.02.2025',
+                    updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
                   }
-                ]
+                ],
+                updated: '28.01.2025',
+                updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
               },
               {
                 id: 'fi-main',
@@ -179,7 +185,9 @@ export const mockFsData: FsNode[] = [
                     value: 'primary-language',
                     nodeId: 'fi-main'
                   }
-                ]
+                ],
+                updated: '17.02.2025',
+                updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
               },
               {
                 id: 'sv-main',
@@ -201,7 +209,9 @@ export const mockFsData: FsNode[] = [
                     value: 'secondary-language',
                     nodeId: 'sv-main'
                   }
-                ]
+                ],
+                updated: '24.02.2025',
+                updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
               },
               {
                 id: 'en-main',
@@ -223,9 +233,13 @@ export const mockFsData: FsNode[] = [
                     value: 'international',
                     nodeId: 'en-main'
                   }
-                ]
+                ],
+                updated: '03.03.2025',
+                updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
               }
-            ]
+            ],
+            updated: '21.01.2025',
+            updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
           },
           {
             id: 'info-gdpr.article',
@@ -261,7 +275,9 @@ export const mockFsData: FsNode[] = [
                 value: 'data-protection',
                 nodeId: 'info-gdpr.article'
               }
-            ]
+            ],
+            updated: '10.03.2025',
+            updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
           },
           {
             id: 'general-message.service',
@@ -327,7 +343,9 @@ export const mockFsData: FsNode[] = [
                     value: 'send-message',
                     nodeId: 'fi-general'
                   }
-                ]
+                ],
+                updated: '24.03.2025',
+                updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
               },
               {
                 id: 'sv-general',
@@ -344,9 +362,13 @@ export const mockFsData: FsNode[] = [
                     value: 'swedish',
                     nodeId: 'sv-general'
                   }
-                ]
+                ],
+                updated: '31.03.2025',
+                updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
               }
-            ]
+            ],
+            updated: '17.03.2025',
+            updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
           },
           {
             id: 'general-message.dialob',
@@ -373,7 +395,9 @@ export const mockFsData: FsNode[] = [
                 value: 'messaging',
                 nodeId: 'general-message.dialob'
               }
-            ]
+            ],
+            updated: '07.04.2025',
+            updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
           },
           {
             id: 'taskMsgFlow.flow',
@@ -404,9 +428,13 @@ export const mockFsData: FsNode[] = [
                 value: 'message-routing',
                 nodeId: 'taskMsgFlow.flow'
               }
-            ]
+            ],
+            updated: '14.04.2025',
+            updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
           }
-        ]
+        ],
+        updated: '14.01.2025',
+        updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
       },
       {
         id: '100_residence',
@@ -438,7 +466,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '28.04.2025',
+            updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
           },
           {
             id: 'general-message-ref1',
@@ -448,7 +478,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '05.05.2025',
+            updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
           },
           {
             id: 'public-inforeq.service',
@@ -462,7 +494,9 @@ export const mockFsData: FsNode[] = [
             configOptions: [{
               devMode: true,
               assignableMode: true,
-            }]
+            }],
+            updated: '12.05.2025',
+            updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
           },
           {
             id: 'public-inforeq.dialob',
@@ -472,7 +506,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '19.05.2025',
+            updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
           },
           {
             id: 'taskGenericFlow-ref1',
@@ -482,9 +518,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '26.05.2025',
+            updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
           }
-        ]
+        ],
+        updated: '21.04.2025',
+        updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
       },
       {
         id: '200_democracy',
@@ -531,7 +571,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '09.06.2025',
+            updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
           },
           {
             id: 'trustee-info-form.service',
@@ -552,9 +594,13 @@ export const mockFsData: FsNode[] = [
                 reference: false,
                 locked: false,
                 error: false,
-                description: 'Luottamushenkilön tietolomake'
+                description: 'Luottamushenkilön tietolomake',
+                updated: '23.06.2025',
+                updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
               }
-            ]
+            ],
+            updated: '16.06.2025',
+            updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
           },
           {
             id: 'trustee-info.dialob',
@@ -564,7 +610,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '30.06.2025',
+            updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
           },
           {
             id: 'taskGenericFlow-ref2',
@@ -574,7 +622,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '07.07.2025',
+            updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
           },
           {
             id: 'trustee-travel-pay.service',
@@ -584,7 +634,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '14.07.2025',
+            updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
           },
           {
             id: 'trustee-travel-pay.dialob',
@@ -594,7 +646,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '21.07.2025',
+            updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
           },
           {
             id: 'general-message-ref2',
@@ -604,9 +658,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '28.07.2025',
+            updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
           }
-        ]
+        ],
+        updated: '02.06.2025',
+        updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
       },
       {
         id: '350_education',
@@ -626,7 +684,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '11.08.2025',
+            updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
           },
           {
             id: 'wilma-preschool.service',
@@ -647,9 +707,13 @@ export const mockFsData: FsNode[] = [
                 reference: false,
                 locked: false,
                 error: false,
-                description: 'Wilmatunnukset esiopetuslapsen huoltajalle'
+                description: 'Wilmatunnukset esiopetuslapsen huoltajalle',
+                updated: '25.08.2025',
+                updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
               }
-            ]
+            ],
+            updated: '18.08.2025',
+            updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
           },
           {
             id: 'wilma-preschool.dialob',
@@ -659,7 +723,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '01.09.2025',
+            updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
           },
           {
             id: 'taskGenericFlow-ref3',
@@ -669,7 +735,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '08.09.2025',
+            updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
           },
           {
             id: 'protection-order-school.service',
@@ -679,7 +747,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '15.09.2025',
+            updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
           },
           {
             id: 'protection-order-school.dialob',
@@ -690,6 +760,8 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
+            updated: '22.09.2025',
+            updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
           },
           {
             id: 'general-message-ref3',
@@ -699,9 +771,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '29.09.2025',
+            updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
           }
-        ]
+        ],
+        updated: '04.08.2025',
+        updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
       },
       {
         id: '400_traffic-and-roads',
@@ -721,7 +797,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '13.10.2025',
+            updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
           },
           {
             id: 'dig-permit.service',
@@ -731,7 +809,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '20.10.2025',
+            updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
           },
           {
             id: 'dig-permit.dialob',
@@ -741,7 +821,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '27.10.2025',
+            updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
           },
           {
             id: 'taskSplitFlow.flow',
@@ -756,7 +838,9 @@ export const mockFsData: FsNode[] = [
               devMode: true,
               disabledMode: true,
               anonymousMode: true,
-            }]
+            }],
+            updated: '03.11.2025',
+            updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
           },
           {
             id: 'rent-street-area.service',
@@ -766,7 +850,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '10.11.2025',
+            updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
           },
           {
             id: 'rent-street-area.dialob',
@@ -776,7 +862,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '17.11.2025',
+            updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
           },
           {
             id: 'private-road-sign.service',
@@ -786,7 +874,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '24.11.2025',
+            updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
           },
           {
             id: 'private-road-sign.dialob',
@@ -796,7 +886,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '01.12.2025',
+            updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
           },
           {
             id: 'general-message-ref4',
@@ -806,9 +898,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '08.12.2025',
+            updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
           }
-        ]
+        ],
+        updated: '06.10.2025',
+        updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
       },
       {
         id: '425_invoicing',
@@ -829,7 +925,9 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Laskutus'
+            description: 'Laskutus',
+            updated: '22.12.2025',
+            updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
           },
           {
             id: 'invoicing-erapaiva.service',
@@ -839,7 +937,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '29.12.2025',
+            updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
           },
           {
             id: 'invoicing-erapaiva.dialob',
@@ -849,7 +949,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '05.01.2026',
+            updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
           },
           {
             id: 'taskGenericFlow-ref4',
@@ -859,7 +961,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '12.01.2026',
+            updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
           },
           {
             id: 'invoice-copy-request.service',
@@ -869,7 +973,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '19.01.2026',
+            updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
           },
           {
             id: 'invoice-copy-request.dialob',
@@ -879,7 +985,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '26.01.2026',
+            updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
           },
           {
             id: 'bank-account-info.service',
@@ -889,7 +997,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '02.02.2026',
+            updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
           },
           {
             id: 'bank-account-info.dialob',
@@ -899,9 +1009,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '09.02.2026',
+            updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
           }
-        ]
+        ],
+        updated: '15.12.2025',
+        updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
       },
       {
         id: '517_sipoo-institute',
@@ -922,7 +1036,9 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Sipoon opisto'
+            description: 'Sipoon opisto',
+            updated: '23.02.2026',
+            updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
           },
           {
             id: 'teacher-info.service',
@@ -932,7 +1048,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '02.03.2026',
+            updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
           },
           {
             id: 'teacher-info.dialob',
@@ -942,7 +1060,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '09.03.2026',
+            updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
           },
           {
             id: 'taskGenericFlow-ref5',
@@ -952,7 +1072,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '16.03.2026',
+            updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
           },
           {
             id: 'teacher-travel-pay.service',
@@ -962,7 +1084,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '08.01.2025',
+            updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
           },
           {
             id: 'teacher-travel-pay.dialob',
@@ -972,7 +1096,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '15.01.2025',
+            updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
           },
           {
             id: 'study-voucher.service',
@@ -982,7 +1108,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '22.01.2025',
+            updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
           },
           {
             id: 'study-voucher.dialob',
@@ -992,7 +1120,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '29.01.2025',
+            updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
           },
           {
             id: 'general-message-ref5',
@@ -1002,9 +1132,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '05.02.2025',
+            updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
           }
-        ]
+        ],
+        updated: '16.02.2026',
+        updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
       },
       {
         id: '520_sipoo-water',
@@ -1028,7 +1162,9 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Sipoon Vesi'
+            description: 'Sipoon Vesi',
+            updated: '19.02.2025',
+            updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
           },
           {
             id: 'water-supply-maintenance.service',
@@ -1038,7 +1174,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '26.02.2025',
+            updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
           },
           {
             id: 'water-supply-maintenance.dialob',
@@ -1048,7 +1186,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '05.03.2025',
+            updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
           },
           {
             id: 'taskGenericFlow-ref6',
@@ -1058,7 +1198,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '12.03.2025',
+            updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
           },
           {
             id: 'water-invoice-erapaiva.service',
@@ -1068,7 +1210,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '19.03.2025',
+            updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
           },
           {
             id: 'water-invoice-erapaiva.dialob',
@@ -1078,7 +1222,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '26.03.2025',
+            updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
           },
           {
             id: 'water-connection-statement.service',
@@ -1088,7 +1234,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '02.04.2025',
+            updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
           },
           {
             id: 'water-connection-statement.dialob',
@@ -1098,7 +1246,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '09.04.2025',
+            updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
           },
           {
             id: 'general-message-ref6',
@@ -1108,9 +1258,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '16.04.2025',
+            updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
           }
-        ]
+        ],
+        updated: '12.02.2025',
+        updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
       },
       {
         id: '650_leisure-time-and-youth',
@@ -1131,7 +1285,9 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Vapaa-aika ja nuoret'
+            description: 'Vapaa-aika ja nuoret',
+            updated: '30.04.2025',
+            updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
           },
           {
             id: 'sports-grant-settlement.service',
@@ -1141,7 +1297,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '07.05.2025',
+            updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
           },
           {
             id: 'sports-grant-settlement.dialob',
@@ -1151,7 +1309,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '14.05.2025',
+            updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
           },
           {
             id: 'taskGenericFlow-ref7',
@@ -1161,7 +1321,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false
+            error: false,
+            updated: '21.05.2025',
+            updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
           },
           {
             id: 'sports-fee-return.service',
@@ -1171,7 +1333,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '28.05.2025',
+            updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
           },
           {
             id: 'sports-fee-return.dialob',
@@ -1181,7 +1345,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '04.06.2025',
+            updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
           },
           {
             id: 'children-sport-grant.service',
@@ -1191,7 +1357,9 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '11.06.2025',
+            updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
           },
           {
             id: 'children-sport-grant.dialob',
@@ -1201,11 +1369,17 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false
+            error: false,
+            updated: '18.06.2025',
+            updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
           }
-        ]
+        ],
+        updated: '23.04.2025',
+        updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
       }
-    ]
+    ],
+    updated: '07.01.2025',
+    updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
   },
   {
     id: 'shared',
@@ -1225,7 +1399,9 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false
+        error: false,
+        updated: '02.07.2025',
+        updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
       },
       {
         id: 'shared-taskMsgFlow.flow',
@@ -1235,7 +1411,9 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false
+        error: false,
+        updated: '09.07.2025',
+        updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
       },
       {
         id: 'shared-taskSplitFlow.flow',
@@ -1245,9 +1423,13 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false
+        error: false,
+        updated: '16.07.2025',
+        updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
       }
-    ]
+    ],
+    updated: '25.06.2025',
+    updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
   },
   {
     id: 'links',
@@ -1271,7 +1453,9 @@ export const mockFsData: FsNode[] = [
         description: 'https://www.sipoo.fi',
         configOptions: [{
           devMode: true,
-        }]
+        }],
+        updated: '30.07.2025',
+        updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
       },
       {
         id: 'wilma-info.link',
@@ -1281,7 +1465,9 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false
+        error: false,
+        updated: '06.08.2025',
+        updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
       },
       {
         id: 'lupapiste.link',
@@ -1294,9 +1480,13 @@ export const mockFsData: FsNode[] = [
         error: false,
         configOptions: [{
           disabledMode: true,
-        }]
+        }],
+        updated: '13.08.2025',
+        updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
       }
-    ]
+    ],
+    updated: '23.07.2025',
+    updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
   },
   {
     id: 'printouts',
@@ -1317,7 +1507,9 @@ export const mockFsData: FsNode[] = [
         reference: false,
         locked: false,
         error: false,
-        description: 'logo: black and white'
+        description: 'logo: black and white',
+        updated: '27.08.2025',
+        updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
       },
       {
         id: 'sipoo-color-logo.png',
@@ -1328,7 +1520,9 @@ export const mockFsData: FsNode[] = [
         reference: false,
         locked: false,
         error: false,
-        description: 'logo: full color version'
+        description: 'logo: full color version',
+        updated: '03.09.2025',
+        updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
       },
       {
         id: 'municipal-seal.svg',
@@ -1339,7 +1533,9 @@ export const mockFsData: FsNode[] = [
         reference: false,
         locked: false,
         error: false,
-        description: 'official municipal seal'
+        description: 'official municipal seal',
+        updated: '10.09.2025',
+        updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
       },
       {
         id: 'new-construction-permit.printout',
@@ -1360,7 +1556,9 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Finnish construction permit template'
+            description: 'Finnish construction permit template',
+            updated: '24.09.2025',
+            updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
           },
           {
             id: 'sv-construction-permit',
@@ -1371,9 +1569,13 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Swedish construction permit template'
+            description: 'Swedish construction permit template',
+            updated: '01.10.2025',
+            updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
           }
-        ]
+        ],
+        updated: '17.09.2025',
+        updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
       },
       {
         id: 'municipal-services-guide.printout',
@@ -1394,7 +1596,9 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Kunnan palveluopas'
+            description: 'Kunnan palveluopas',
+            updated: '15.10.2025',
+            updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
           },
           {
             id: 'sv-services-guide',
@@ -1405,7 +1609,9 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Kommunal servicehandbok'
+            description: 'Kommunal servicehandbok',
+            updated: '22.10.2025',
+            updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
           },
           {
             id: 'en-services-guide',
@@ -1416,9 +1622,13 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Municipal services guide'
+            description: 'Municipal services guide',
+            updated: '29.10.2025',
+            updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
           }
-        ]
+        ],
+        updated: '08.10.2025',
+        updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
       },
       {
         id: 'waste-management-info.printout',
@@ -1439,9 +1649,13 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Jätehuolto-ohje'
+            description: 'Jätehuolto-ohje',
+            updated: '12.11.2025',
+            updatedByUser: { userName: 'Michael Chen', email: 'michael.chen@example.com' },
           }
-        ]
+        ],
+        updated: '05.11.2025',
+        updatedByUser: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' },
       },
       {
         id: 'tax-information-leaflet.printout',
@@ -1462,7 +1676,9 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Verotietoesite'
+            description: 'Verotietoesite',
+            updated: '26.11.2025',
+            updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
           },
           {
             id: 'sv-tax-info',
@@ -1473,7 +1689,9 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Skatteinformationsbroschyr'
+            description: 'Skatteinformationsbroschyr',
+            updated: '03.12.2025',
+            updatedByUser: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' },
           },
           {
             id: 'en-tax-info',
@@ -1484,7 +1702,9 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Tax information leaflet'
+            description: 'Tax information leaflet',
+            updated: '10.12.2025',
+            updatedByUser: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' },
           },
           {
             id: 'ee-tax-info',
@@ -1495,10 +1715,16 @@ export const mockFsData: FsNode[] = [
             reference: false,
             locked: false,
             error: false,
-            description: 'Maksuteabe leht'
+            description: 'Maksuteabe leht',
+            updated: '17.12.2025',
+            updatedByUser: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
           }
-        ]
+        ],
+        updated: '19.11.2025',
+        updatedByUser: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' },
       }
-    ]
+    ],
+    updated: '20.08.2025',
+    updatedByUser: { userName: 'John Smith', email: 'john.smith@example.com' },
   },
 ];

@@ -1,3 +1,8 @@
+export interface User {
+  userName: string;
+  email: string;
+}
+
 // Mock data structure for Fs component
 export interface FsNode {
   id: string;
@@ -12,6 +17,8 @@ export interface FsNode {
   error: boolean;
   type: FsNodeType;
   configOptions?: ConfigOption[] | undefined;
+  updated: string;
+  updatedByUser: User;
 }
 
 export interface ConfigOption {

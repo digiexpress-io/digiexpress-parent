@@ -62,7 +62,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
       <Box className={classes.headerMain}>
         <Typography variant='h3' paddingBottom={0} paddingTop={0}>{props.node?.name}</Typography>
         <Typography variant='caption'>
-          Last edited: 12.05.2025 by John Smith
+          {intl.formatMessage({ id: 'fs.direntMenu.header.lastEdited' }, { updated: props.node?.updated, user: props.node?.updatedByUser?.userName })}
         </Typography>
       </Box>
 

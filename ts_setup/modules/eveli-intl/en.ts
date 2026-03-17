@@ -1400,6 +1400,7 @@ export const en = {
   'fs.direntHistory.tableHeader.change': 'Change',
   'fs.direntHistory.tableHeader.date': 'Date',
   'fs.direntLabels.labelsField.placeholder': 'Add labels...',
+  'fs.direntMenu.header.lastEdited': 'Last edited: {updated} by {user}',
   'fs.direntMenu.menuItem.new': 'New',
   'fs.direntMenu.menuItem.edit': 'Edit',
   'fs.direntMenu.menuItem.lock': 'Lock',
@@ -1470,5 +1471,7 @@ export const en = {
   'fs.references.sectionTitle.childReferences': 'Child References',
   'fs.references.label.type': 'Type: {childType}',
   'fs.references.label.refMarker': '(REF)',
-  'fs.references.message.noReferences': 'This node does not contain any references.'
+  'fs.references.message.noReferences': 'This node does not contain any references.',
+  'fs.search.searchField.placeholder': 'Search',
+  'fs.search.filterSelect.placeholder': 'Filter by type'
 }
