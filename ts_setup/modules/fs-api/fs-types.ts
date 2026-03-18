@@ -3,13 +3,13 @@ export interface FsNode {
   id: string;
   name: string;
   description?: string;
-  children?: FsNode[];
-  comments: FsNodeComment[] | undefined;
   expanded: boolean;
   reference: boolean;
   locked: boolean;
   type: FsNodeType;
-  configOptions?: ConfigOption[] | undefined;
+  children: FsNode[];
+  configOptions: ConfigOption[];
+  comments: FsNodeComment[];
   changes: FsNodeChange[];
   permissions: Permission[];
   labels: FsNodeLabel[];

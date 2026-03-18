@@ -5,7 +5,6 @@ export const mockFsData: FsNode[] = [
     id: 'content',
     name: 'content',
     type: 'folder',
-    comments: undefined,
     expanded: true,
     reference: false,
     locked: false,
@@ -14,47 +13,22 @@ export const mockFsData: FsNode[] = [
         id: '000_index',
         name: '000_index',
         type: 'folder',
-        comments: undefined,
         expanded: true,
         reference: false,
         locked: true,
-        configOptions: [{
-          devMode: true,
-        }],
         children: [
           {
             id: 'main.article',
             name: 'main.article',
             type: 'article',
-            comments: [
-              {
-                comment: 'Found a typo in the content - should be "municipality" not "municipalty"',
-                author: 'Sarah Johnson',
-                created: '1.2.2025 14:30'
-              },
-              {
-                comment: 'The Finnish translation needs review by a native speaker',
-                author: 'Michael Chen',
-                created: '28.1.2025 10:15'
-              },
-              {
-                comment: 'Consider adding a confirmation dialog before deletion',
-                author: 'Tom Walsh',
-                created: '18.1.2025 11:35'
-              }
-            ],
             expanded: true,
             reference: false,
             locked: false,
-            configOptions: [{
-              disabledMode: true,
-            }],
             children: [
               {
                 id: 'ref.article',
                 name: 'ref.article',
                 type: 'article',
-                comments: undefined,
                 expanded: false,
                 reference: true,
                 locked: false,
@@ -64,11 +38,15 @@ export const mockFsData: FsNode[] = [
                     id: 'fi-ref',
                     name: 'fi.language',
                     type: 'language',
-                    comments: undefined,
                     expanded: false,
                     reference: false,
                     locked: false,
                     description: 'Yleinen viitesisältö',
+                            children: [],
+                            configOptions: [{
+          devMode: true,
+        }],
+                    comments: [],
                     changes: [
                       { changeType: 'create', changeDate: '03.01.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
                       { changeType: 'update', changeDate: '19.07.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -89,11 +67,15 @@ export const mockFsData: FsNode[] = [
                     id: 'en-ref',
                     name: 'en.language',
                     type: 'language',
-                    comments: undefined,
                     expanded: false,
                     reference: false,
                     locked: false,
                     description: 'Common reference content',
+                                children: [],
+                                configOptions: [{
+              disabledMode: true,
+            }],
+                    comments: [],
                     changes: [
                       { changeType: 'create', changeDate: '10.10.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
                       { changeType: 'update', changeDate: '10.06.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -106,6 +88,13 @@ export const mockFsData: FsNode[] = [
                     ],
                   }
                 ],
+                configOptions: [
+                  {
+                    anonymousMode: true,
+                    disabledMode: true,
+                  },
+                  ],
+                comments: [],
                 changes: [
                   { changeType: 'create', changeDate: '28.11.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
                   { changeType: 'update', changeDate: '28.06.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -119,11 +108,13 @@ export const mockFsData: FsNode[] = [
                 id: 'fi-main',
                 name: 'fi.language',
                 type: 'language',
-                comments: undefined,
                 expanded: false,
                 reference: false,
                 locked: false,
                 description: 'Tervetuloa Sipoon Oma asiointiin!',
+                children: [],
+                configOptions: [],
+                comments: [],
                 changes: [
                   { changeType: 'create', changeDate: '17.06.2023', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
                   { changeType: 'update', changeDate: '17.04.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -150,10 +141,12 @@ export const mockFsData: FsNode[] = [
                 id: 'sv-main',
                 name: 'sv.language',
                 type: 'language',
-                comments: undefined,
                 expanded: false,
                 reference: false,
                 locked: false,
+                children: [],
+                configOptions: [],
+                comments: [],
                 changes: [
                   { changeType: 'create', changeDate: '24.08.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
                   { changeType: 'update', changeDate: '25.05.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -180,10 +173,18 @@ export const mockFsData: FsNode[] = [
                 id: 'en-main',
                 name: 'en.language',
                 type: 'language',
-                comments: undefined,
                 expanded: false,
                 reference: false,
                 locked: false,
+                children: [],
+                configOptions: [
+                  {
+                    anonymousMode: true,
+                    assignableMode: true,
+                    devMode: true,
+                  },
+                  ],
+                comments: [],
                 changes: [
                   { changeType: 'create', changeDate: '03.02.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
                   { changeType: 'update', changeDate: '18.08.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -197,6 +198,8 @@ export const mockFsData: FsNode[] = [
                 errors: [],
               }
             ],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '21.05.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '21.03.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -215,14 +218,15 @@ export const mockFsData: FsNode[] = [
             id: 'info-gdpr.article',
             name: 'info-gdpr.article',
             type: 'article',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
-            configOptions: [{
+                        children: [],
+                        configOptions: [{
               devMode: true,
               disabledMode: true,
             }],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '10.07.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '09.05.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -242,26 +246,26 @@ export const mockFsData: FsNode[] = [
             id: 'general-message.service',
             name: 'general-message.service',
             type: 'service',
-            comments: undefined,
             expanded: true,
             reference: false,
             locked: true,
-            configOptions: [{
-              devMode: true,
-              assignableMode: true,
-              disabledMode: true,
-              anonymousMode: true,
-            }],
             children: [
               {
                 id: 'fi-general',
                 name: 'fi.language',
                 type: 'language',
-                comments: undefined,
                 expanded: false,
                 reference: false,
                 locked: false,
                 description: 'Lähetä viesti',
+                            children: [],
+                            configOptions: [{
+              devMode: true,
+              assignableMode: true,
+              disabledMode: true,
+              anonymousMode: true,
+            }],
+                comments: [],
                 changes: [
                   { changeType: 'create', changeDate: '24.07.2023', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
                   { changeType: 'update', changeDate: '23.05.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -282,10 +286,12 @@ export const mockFsData: FsNode[] = [
                 id: 'sv-general',
                 name: 'sv.language',
                 type: 'language',
-                comments: undefined,
                 expanded: false,
                 reference: false,
                 locked: false,
+                children: [],
+                configOptions: [],
+                comments: [],
                 changes: [
                   { changeType: 'create', changeDate: '31.08.2023', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
                   { changeType: 'update', changeDate: '15.06.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -299,6 +305,8 @@ export const mockFsData: FsNode[] = [
                 errors: [],
               }
             ],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '17.03.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '15.09.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -312,10 +320,17 @@ export const mockFsData: FsNode[] = [
             id: 'general-message.dialob',
             name: 'general-message.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [
+              { comment: 'Needs to be reviewed before the next release.', author: 'juhani.virtanen', created: '2024-09-13' },
+              { comment: 'Updated by the content team, pending sign-off.', author: 'pekka.leinonen', created: '2024-10-08' },
+              { comment: 'Translation keys added, waiting on localization.', author: 'anna.makinen', created: '2024-08-20' },
+              { comment: 'Do not modify — locked for compliance review.', author: 'maria.korhonen', created: '2024-04-24' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '07.10.2023', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '07.07.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -335,14 +350,15 @@ export const mockFsData: FsNode[] = [
             id: 'taskMsgFlow.flow',
             name: 'taskMsgFlow.flow',
             type: 'flow',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
-            configOptions: [{
+                        children: [],
+                        configOptions: [{
               assignableMode: true,
               anonymousMode: true,
             }],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '14.02.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '13.09.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -356,6 +372,8 @@ export const mockFsData: FsNode[] = [
             ],
           }
         ],
+        configOptions: [],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '14.08.2023', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
           { changeType: 'update', changeDate: '29.04.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -374,23 +392,23 @@ export const mockFsData: FsNode[] = [
         id: '100_residence',
         name: '100_residence',
         type: 'folder',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
-        configOptions: [{
-          devMode: true,
-          disabledMode: true,
-        }],
         children: [
           {
             id: 'ref-article-ref1',
             name: 'ref.article',
             type: 'article',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+                    children: [],
+                    configOptions: [{
+          devMode: true,
+          disabledMode: true,
+        }],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '28.10.2023', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '28.07.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -412,10 +430,12 @@ export const mockFsData: FsNode[] = [
             id: 'general-message-ref1',
             name: 'general-message.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '05.12.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '19.08.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -434,14 +454,15 @@ export const mockFsData: FsNode[] = [
             id: 'public-inforeq.service',
             name: 'public-inforeq.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
-            configOptions: [{
+                        children: [],
+                        configOptions: [{
               devMode: true,
               assignableMode: true,
             }],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '12.05.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '10.11.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -462,13 +483,19 @@ export const mockFsData: FsNode[] = [
             id: 'public-inforeq.dialob',
             name: 'public-inforeq.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
-            configOptions: [{
+                        children: [],
+                        configOptions: [{
               devMode: true,
             }],
+            comments: [
+              { comment: 'Marked for removal after Q2 migration.', author: 'maria.korhonen', created: '2024-11-09' },
+              { comment: 'Reviewed and approved on 2025-11-15.', author: 'juhani.virtanen', created: '2024-07-01' },
+              { comment: 'Needs to be reviewed before the next release.', author: 'satu.nieminen', created: '2024-03-06' },
+              { comment: 'Needs to be reviewed before the next release.', author: 'anna.makinen', created: '2025-03-19' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '19.09.2023', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '19.07.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -488,10 +515,12 @@ export const mockFsData: FsNode[] = [
             id: 'taskGenericFlow-ref1',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '26.04.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '09.11.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -504,6 +533,8 @@ export const mockFsData: FsNode[] = [
             ],
           }
         ],
+        configOptions: [],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '21.11.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
           { changeType: 'update', changeDate: '05.08.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -517,22 +548,22 @@ export const mockFsData: FsNode[] = [
         id: '200_democracy',
         name: '200_democracy',
         type: 'folder',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
-        configOptions: [{
-          devMode: true,
-        }],
         children: [
           {
             id: 'ref-article-ref2',
             name: 'ref.article',
             type: 'article',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+                    children: [],
+                    configOptions: [{
+          devMode: true,
+        }],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '09.05.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '23.11.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -551,24 +582,24 @@ export const mockFsData: FsNode[] = [
             id: 'trustee-info-form.service',
             name: 'trustee-info-form.service',
             type: 'service',
-            comments: undefined,
             expanded: true,
             reference: false,
             locked: false,
-            configOptions: [{
-              assignableMode: true,
-              anonymousMode: true,
-            }],
             children: [
               {
                 id: 'fi-trustee',
                 name: 'fi.language',
                 type: 'language',
-                comments: undefined,
                 expanded: false,
                 reference: false,
                 locked: false,
                 description: 'Luottamushenkilön tietolomake',
+                            children: [],
+                            configOptions: [{
+              assignableMode: true,
+              anonymousMode: true,
+            }],
+                comments: [],
                 changes: [
                   { changeType: 'create', changeDate: '23.03.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
                   { changeType: 'update', changeDate: '06.11.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -582,6 +613,11 @@ export const mockFsData: FsNode[] = [
                 labels: [],
                 errors: [],
               }
+            ],
+            configOptions: [],
+            comments: [
+              { comment: 'Flagged for translation — Finnish version missing.', author: 'satu.nieminen', created: '2024-05-24' },
+              { comment: 'Translation keys added, waiting on localization.', author: 'pekka.leinonen', created: '2024-03-17' },
             ],
             changes: [
               { changeType: 'create', changeDate: '16.03.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -600,10 +636,12 @@ export const mockFsData: FsNode[] = [
             id: 'trustee-info.dialob',
             name: 'trustee-info.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '29.02.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '29.10.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -619,10 +657,18 @@ export const mockFsData: FsNode[] = [
             id: 'taskGenericFlow-ref2',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [
+              {
+                anonymousMode: true,
+                assignableMode: true,
+                devMode: true,
+              },
+              ],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '07.02.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '22.10.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -636,16 +682,20 @@ export const mockFsData: FsNode[] = [
             id: 'trustee-travel-pay.service',
             name: 'trustee-travel-pay.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
-            configOptions: [{
+                        children: [],
+                        configOptions: [{
               devMode: true,
               assignableMode: true,
               disabledMode: true,
               anonymousMode: true,
             }],
+            comments: [
+              { comment: 'Original version archived, this is the updated copy.', author: 'satu.nieminen', created: '2025-06-22' },
+              { comment: 'Needs to be reviewed before the next release.', author: 'anna.makinen', created: '2025-05-20' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '14.02.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '29.10.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -667,10 +717,12 @@ export const mockFsData: FsNode[] = [
             id: 'trustee-travel-pay.dialob',
             name: 'trustee-travel-pay.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '21.03.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '19.11.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -689,10 +741,18 @@ export const mockFsData: FsNode[] = [
             id: 'general-message-ref2',
             name: 'general-message.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [
+              { comment: 'Flagged for translation — Finnish version missing.', author: 'maria.korhonen', created: '2024-08-12' },
+              { comment: 'Do not modify — locked for compliance review.', author: 'anna.makinen', created: '2024-10-13' },
+              { comment: 'Approved by team lead, ready to publish.', author: 'maria.korhonen', created: '2024-03-01' },
+              { comment: 'Temporary placeholder, replace before go-live.', author: 'anna.makinen', created: '2025-05-04' },
+              { comment: 'Translation keys added, waiting on localization.', author: 'pekka.leinonen', created: '2024-01-12' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '28.06.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '11.01.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -708,6 +768,8 @@ export const mockFsData: FsNode[] = [
             errors: [],
           }
         ],
+        configOptions: [],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '02.04.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
           { changeType: 'update', changeDate: '01.11.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -728,7 +790,6 @@ export const mockFsData: FsNode[] = [
         id: '350_education',
         name: '350_education',
         type: 'folder',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
@@ -737,10 +798,20 @@ export const mockFsData: FsNode[] = [
             id: 'ref-article-ref3',
             name: 'ref.article',
             type: 'article',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [
+              {
+                anonymousMode: true,
+                assignableMode: true,
+                devMode: true,
+              },
+              ],
+            comments: [
+              { comment: 'Reviewed and approved on 2025-11-15.', author: 'juhani.virtanen', created: '2025-12-26' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '11.05.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '25.12.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -762,23 +833,23 @@ export const mockFsData: FsNode[] = [
             id: 'wilma-preschool.service',
             name: 'wilma-preschool.service',
             type: 'service',
-            comments: undefined,
             expanded: true,
             reference: false,
             locked: false,
-            configOptions: [{
-              assignableMode: true,
-            }],
             children: [
               {
                 id: 'fi-wilma',
                 name: 'fi.language',
                 type: 'language',
-                comments: undefined,
                 expanded: false,
                 reference: false,
                 locked: false,
                 description: 'Wilmatunnukset esiopetuslapsen huoltajalle',
+                            children: [],
+                            configOptions: [{
+              assignableMode: true,
+            }],
+                comments: [],
                 changes: [
                   { changeType: 'create', changeDate: '25.02.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
                   { changeType: 'update', changeDate: '24.11.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -788,6 +859,11 @@ export const mockFsData: FsNode[] = [
                 labels: [],
                 errors: [],
               }
+            ],
+            configOptions: [],
+            comments: [
+              { comment: 'Flagged for translation — Finnish version missing.', author: 'maria.korhonen', created: '2025-11-17' },
+              { comment: 'Marked for removal after Q2 migration.', author: 'maria.korhonen', created: '2025-11-26' },
             ],
             changes: [
               { changeType: 'create', changeDate: '18.12.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -804,10 +880,15 @@ export const mockFsData: FsNode[] = [
             id: 'wilma-preschool.dialob',
             name: 'wilma-preschool.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [
+              { comment: 'Reviewed and approved on 2025-11-15.', author: 'satu.nieminen', created: '2024-06-25' },
+              { comment: 'Do not modify — locked for compliance review.', author: 'maria.korhonen', created: '2025-04-10' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '01.04.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '16.12.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -824,10 +905,12 @@ export const mockFsData: FsNode[] = [
             id: 'taskGenericFlow-ref3',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '08.09.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '09.03.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -844,14 +927,15 @@ export const mockFsData: FsNode[] = [
             id: 'protection-order-school.service',
             name: 'protection-order-school.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
-            configOptions: [{
+                        children: [],
+                        configOptions: [{
               devMode: true,
               anonymousMode: true,
             }],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '15.05.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '14.01.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -869,10 +953,17 @@ export const mockFsData: FsNode[] = [
             id: 'protection-order-school.dialob',
             name: 'protection-order-school.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [
+              {
+                assignableMode: true,
+                devMode: true,
+              },
+              ],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '22.04.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '06.01.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -895,10 +986,12 @@ export const mockFsData: FsNode[] = [
             id: 'general-message-ref3',
             name: 'general-message.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '29.02.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '14.12.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -912,6 +1005,14 @@ export const mockFsData: FsNode[] = [
             errors: [],
           }
         ],
+        configOptions: [
+          {
+            assignableMode: true,
+            devMode: true,
+            disabledMode: true,
+          },
+          ],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '04.01.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
           { changeType: 'update', changeDate: '19.10.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -925,7 +1026,6 @@ export const mockFsData: FsNode[] = [
         id: '400_traffic-and-roads',
         name: '400_traffic-and-roads',
         type: 'folder',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
@@ -934,10 +1034,16 @@ export const mockFsData: FsNode[] = [
             id: 'ref-article-ref4',
             name: 'ref.article',
             type: 'article',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [
+              {
+                anonymousMode: true,
+              },
+              ],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '13.08.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '14.03.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -951,10 +1057,12 @@ export const mockFsData: FsNode[] = [
             id: 'dig-permit.service',
             name: 'dig-permit.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '20.02.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '20.12.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -968,10 +1076,12 @@ export const mockFsData: FsNode[] = [
             id: 'dig-permit.dialob',
             name: 'dig-permit.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '27.04.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '26.01.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -985,15 +1095,16 @@ export const mockFsData: FsNode[] = [
             id: 'taskSplitFlow.flow',
             name: 'taskSplitFlow.flow',
             type: 'flow',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
-            configOptions: [{
+                        children: [],
+                        configOptions: [{
               devMode: true,
               disabledMode: true,
               anonymousMode: true,
             }],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '03.06.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '17.02.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -1007,10 +1118,12 @@ export const mockFsData: FsNode[] = [
             id: 'rent-street-area.service',
             name: 'rent-street-area.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '10.03.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '09.01.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -1024,10 +1137,12 @@ export const mockFsData: FsNode[] = [
             id: 'rent-street-area.dialob',
             name: 'rent-street-area.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '17.11.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '18.05.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -1045,10 +1160,17 @@ export const mockFsData: FsNode[] = [
             id: 'private-road-sign.service',
             name: 'private-road-sign.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [
+              {
+                anonymousMode: true,
+                devMode: true,
+              },
+              ],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '24.09.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '25.04.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -1067,10 +1189,12 @@ export const mockFsData: FsNode[] = [
             id: 'private-road-sign.dialob',
             name: 'private-road-sign.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '01.11.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '17.05.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -1087,10 +1211,18 @@ export const mockFsData: FsNode[] = [
             id: 'general-message-ref4',
             name: 'general-message.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [
+              {
+                anonymousMode: true,
+                assignableMode: true,
+                devMode: true,
+              },
+              ],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '08.05.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '21.02.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -1103,6 +1235,12 @@ export const mockFsData: FsNode[] = [
             labels: [],
             errors: [],
           }
+        ],
+        configOptions: [],
+        comments: [
+          { comment: 'Updated by the content team, pending sign-off.', author: 'satu.nieminen', created: '2024-12-05' },
+          { comment: 'Flagged for translation — Finnish version missing.', author: 'juhani.virtanen', created: '2024-01-25' },
+          { comment: 'Original version archived, this is the updated copy.', author: 'satu.nieminen', created: '2025-03-12' },
         ],
         changes: [
           { changeType: 'create', changeDate: '06.02.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -1120,7 +1258,6 @@ export const mockFsData: FsNode[] = [
         id: '425_invoicing',
         name: '425_invoicing',
         type: 'folder',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
@@ -1129,17 +1266,21 @@ export const mockFsData: FsNode[] = [
             id: 'main-invoicing.article',
             name: 'main.article',
             type: 'article',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Laskutus',
-            configOptions: [{
+                        children: [],
+                        configOptions: [{
               devMode: true,
               assignableMode: true,
               disabledMode: true,
               anonymousMode: true,
             }],
+            comments: [
+              { comment: 'Referenced by the main service flow, handle with care.', author: 'maria.korhonen', created: '2024-05-09' },
+              { comment: 'Updated by the content team, pending sign-off.', author: 'anna.makinen', created: '2024-09-06' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '22.11.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '07.06.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -1153,13 +1294,20 @@ export const mockFsData: FsNode[] = [
             id: 'invoicing-erapaiva.service',
             name: 'invoicing-erapaiva.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
-            configOptions: [{
+                        children: [],
+                        configOptions: [{
               disabledMode: true,
             }],
+            comments: [
+              { comment: 'Original version archived, this is the updated copy.', author: 'anna.makinen', created: '2024-10-11' },
+              { comment: 'Approved by team lead, ready to publish.', author: 'pekka.leinonen', created: '2024-03-19' },
+              { comment: 'Translation keys added, waiting on localization.', author: 'maria.korhonen', created: '2024-01-11' },
+              { comment: 'Marked for removal after Q2 migration.', author: 'satu.nieminen', created: '2025-03-27' },
+              { comment: 'Needs to be reviewed before the next release.', author: 'pekka.leinonen', created: '2025-04-26' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '29.08.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '29.04.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -1177,10 +1325,12 @@ export const mockFsData: FsNode[] = [
             id: 'invoicing-erapaiva.dialob',
             name: 'invoicing-erapaiva.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '05.12.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '21.06.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -1197,10 +1347,22 @@ export const mockFsData: FsNode[] = [
             id: 'taskGenericFlow-ref4',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [
+              {
+                assignableMode: true,
+                devMode: true,
+              },
+              ],
+            comments: [
+              { comment: 'Referenced by the main service flow, handle with care.', author: 'juhani.virtanen', created: '2025-11-06' },
+              { comment: 'Temporary placeholder, replace before go-live.', author: 'maria.korhonen', created: '2024-08-17' },
+              { comment: 'Updated by the content team, pending sign-off.', author: 'maria.korhonen', created: '2025-08-03' },
+              { comment: 'Original version archived, this is the updated copy.', author: 'anna.makinen', created: '2024-10-22' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '12.11.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '13.06.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -1219,10 +1381,12 @@ export const mockFsData: FsNode[] = [
             id: 'invoice-copy-request.service',
             name: 'invoice-copy-request.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '19.09.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '20.05.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -1239,10 +1403,22 @@ export const mockFsData: FsNode[] = [
             id: 'invoice-copy-request.dialob',
             name: 'invoice-copy-request.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [
+              {
+                anonymousMode: true,
+                assignableMode: true,
+                devMode: true,
+              },
+              ],
+            comments: [
+              { comment: 'Flagged for translation — Finnish version missing.', author: 'juhani.virtanen', created: '2025-12-23' },
+              { comment: 'Translation keys added, waiting on localization.', author: 'pekka.leinonen', created: '2024-06-09' },
+              { comment: 'Approved by team lead, ready to publish.', author: 'juhani.virtanen', created: '2025-10-28' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '26.11.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '27.06.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -1259,10 +1435,12 @@ export const mockFsData: FsNode[] = [
             id: 'bank-account-info.service',
             name: 'bank-account-info.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '02.10.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '03.06.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -1282,10 +1460,12 @@ export const mockFsData: FsNode[] = [
             id: 'bank-account-info.dialob',
             name: 'bank-account-info.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '09.11.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '25.06.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -1296,6 +1476,8 @@ export const mockFsData: FsNode[] = [
             errors: [],
           }
         ],
+        configOptions: [],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '15.10.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
           { changeType: 'update', changeDate: '16.05.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -1309,7 +1491,6 @@ export const mockFsData: FsNode[] = [
         id: '517_sipoo-institute',
         name: '517_sipoo-institute',
         type: 'folder',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
@@ -1318,11 +1499,18 @@ export const mockFsData: FsNode[] = [
             id: 'main-institute.article',
             name: 'main.article',
             type: 'article',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Sipoon opisto',
+            children: [],
+            configOptions: [
+              {
+                anonymousMode: true,
+                disabledMode: true,
+              },
+              ],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '23.06.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '24.04.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -1336,10 +1524,12 @@ export const mockFsData: FsNode[] = [
             id: 'teacher-info.service',
             name: 'teacher-info.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '02.10.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '17.06.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -1353,10 +1543,12 @@ export const mockFsData: FsNode[] = [
             id: 'teacher-info.dialob',
             name: 'teacher-info.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '09.02.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '24.08.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -1373,10 +1565,12 @@ export const mockFsData: FsNode[] = [
             id: 'taskGenericFlow-ref5',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '16.11.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '16.07.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -1390,10 +1584,12 @@ export const mockFsData: FsNode[] = [
             id: 'teacher-travel-pay.service',
             name: 'teacher-travel-pay.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '08.10.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '24.05.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -1411,10 +1607,14 @@ export const mockFsData: FsNode[] = [
             id: 'teacher-travel-pay.dialob',
             name: 'teacher-travel-pay.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [
+              { comment: 'Translation keys added, waiting on localization.', author: 'pekka.leinonen', created: '2024-05-15' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '15.12.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '30.06.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -1428,10 +1628,12 @@ export const mockFsData: FsNode[] = [
             id: 'study-voucher.service',
             name: 'study-voucher.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '22.12.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '07.07.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -1445,10 +1647,12 @@ export const mockFsData: FsNode[] = [
             id: 'study-voucher.dialob',
             name: 'study-voucher.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '29.11.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '29.06.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -1469,10 +1673,18 @@ export const mockFsData: FsNode[] = [
             id: 'general-message-ref5',
             name: 'general-message.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [
+              {
+                anonymousMode: true,
+                devMode: true,
+                disabledMode: true,
+              },
+              ],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '05.07.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '20.04.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -1486,6 +1698,8 @@ export const mockFsData: FsNode[] = [
             errors: [],
           }
         ],
+        configOptions: [],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '16.10.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
           { changeType: 'update', changeDate: '17.06.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -1499,23 +1713,28 @@ export const mockFsData: FsNode[] = [
         id: '520_sipoo-water',
         name: '520_sipoo-water',
         type: 'folder',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
-        configOptions: [{
-          disabledMode: true,
-        }],
         children: [
           {
             id: 'main-water.article',
             name: 'main.article',
             type: 'article',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Sipoon Vesi',
+                    children: [],
+                    configOptions: [{
+          disabledMode: true,
+        }],
+            comments: [
+              { comment: 'Temporary placeholder, replace before go-live.', author: 'pekka.leinonen', created: '2025-04-24' },
+              { comment: 'Updated by the content team, pending sign-off.', author: 'maria.korhonen', created: '2025-02-19' },
+              { comment: 'Needs to be reviewed before the next release.', author: 'maria.korhonen', created: '2025-05-12' },
+              { comment: 'Original version archived, this is the updated copy.', author: 'satu.nieminen', created: '2025-04-25' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '19.08.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '20.05.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -1534,10 +1753,16 @@ export const mockFsData: FsNode[] = [
             id: 'water-supply-maintenance.service',
             name: 'water-supply-maintenance.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [
+              { comment: 'Needs to be reviewed before the next release.', author: 'pekka.leinonen', created: '2024-09-18' },
+              { comment: 'Needs to be reviewed before the next release.', author: 'juhani.virtanen', created: '2025-11-24' },
+              { comment: 'Temporary placeholder, replace before go-live.', author: 'juhani.virtanen', created: '2025-04-09' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '26.11.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '12.07.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -1551,10 +1776,12 @@ export const mockFsData: FsNode[] = [
             id: 'water-supply-maintenance.dialob',
             name: 'water-supply-maintenance.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '05.09.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '04.06.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -1571,10 +1798,12 @@ export const mockFsData: FsNode[] = [
             id: 'taskGenericFlow-ref6',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '12.10.2023', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '26.06.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -1592,10 +1821,12 @@ export const mockFsData: FsNode[] = [
             id: 'water-invoice-erapaiva.service',
             name: 'water-invoice-erapaiva.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '19.08.2023', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '03.06.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -1617,10 +1848,12 @@ export const mockFsData: FsNode[] = [
             id: 'water-invoice-erapaiva.dialob',
             name: 'water-invoice-erapaiva.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '26.12.2023', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '10.08.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -1634,10 +1867,12 @@ export const mockFsData: FsNode[] = [
             id: 'water-connection-statement.service',
             name: 'water-connection-statement.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '02.04.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '01.10.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -1651,10 +1886,12 @@ export const mockFsData: FsNode[] = [
             id: 'water-connection-statement.dialob',
             name: 'water-connection-statement.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '09.01.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '24.08.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -1672,10 +1909,16 @@ export const mockFsData: FsNode[] = [
             id: 'general-message-ref6',
             name: 'general-message.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [
+              { comment: 'Do not modify — locked for compliance review.', author: 'juhani.virtanen', created: '2024-11-12' },
+              { comment: 'Marked for removal after Q2 migration.', author: 'anna.makinen', created: '2024-11-09' },
+              { comment: 'Check with the product owner before making changes.', author: 'pekka.leinonen', created: '2024-07-28' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '16.04.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '15.10.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -1689,6 +1932,12 @@ export const mockFsData: FsNode[] = [
             ],
             errors: [],
           }
+        ],
+        configOptions: [],
+        comments: [
+          { comment: 'Temporary placeholder, replace before go-live.', author: 'pekka.leinonen', created: '2024-05-14' },
+          { comment: 'Translation keys added, waiting on localization.', author: 'anna.makinen', created: '2024-05-13' },
+          { comment: 'Reviewed and approved on 2025-11-15.', author: 'satu.nieminen', created: '2025-04-13' },
         ],
         changes: [
           { changeType: 'create', changeDate: '12.02.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -1706,7 +1955,6 @@ export const mockFsData: FsNode[] = [
         id: '650_leisure-time-and-youth',
         name: '650_leisure-time-and-youth',
         type: 'folder',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
@@ -1715,11 +1963,19 @@ export const mockFsData: FsNode[] = [
             id: 'main-leisure.article',
             name: 'main.article',
             type: 'article',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Vapaa-aika ja nuoret',
+            children: [],
+            configOptions: [
+              {
+                anonymousMode: true,
+                devMode: true,
+                disabledMode: true,
+              },
+              ],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '30.04.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '29.10.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -1740,10 +1996,15 @@ export const mockFsData: FsNode[] = [
             id: 'sports-grant-settlement.service',
             name: 'sports-grant-settlement.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [
+              { comment: 'Approved by team lead, ready to publish.', author: 'pekka.leinonen', created: '2025-02-15' },
+              { comment: 'Approved by team lead, ready to publish.', author: 'pekka.leinonen', created: '2024-09-10' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '07.09.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '07.07.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -1760,10 +2021,17 @@ export const mockFsData: FsNode[] = [
             id: 'sports-grant-settlement.dialob',
             name: 'sports-grant-settlement.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [
+              { comment: 'Temporary placeholder, replace before go-live.', author: 'anna.makinen', created: '2024-03-02' },
+              { comment: 'Check with the product owner before making changes.', author: 'anna.makinen', created: '2025-08-08' },
+              { comment: 'Original version archived, this is the updated copy.', author: 'anna.makinen', created: '2024-11-24' },
+              { comment: 'Updated by the content team, pending sign-off.', author: 'anna.makinen', created: '2025-04-25' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '14.10.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '29.07.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -1780,10 +2048,16 @@ export const mockFsData: FsNode[] = [
             id: 'taskGenericFlow-ref7',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            comments: undefined,
             expanded: false,
             reference: true,
             locked: false,
+            children: [],
+            configOptions: [
+              {
+                assignableMode: true,
+              },
+              ],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '21.03.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '20.10.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -1797,10 +2071,18 @@ export const mockFsData: FsNode[] = [
             id: 'sports-fee-return.service',
             name: 'sports-fee-return.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [
+              {
+                anonymousMode: true,
+                devMode: true,
+                disabledMode: true,
+              },
+              ],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '28.10.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '12.08.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -1820,10 +2102,12 @@ export const mockFsData: FsNode[] = [
             id: 'sports-fee-return.dialob',
             name: 'sports-fee-return.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '04.11.2023', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '19.08.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -1837,10 +2121,12 @@ export const mockFsData: FsNode[] = [
             id: 'children-sport-grant.service',
             name: 'children-sport-grant.service',
             type: 'service',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '11.05.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '25.11.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -1856,10 +2142,12 @@ export const mockFsData: FsNode[] = [
             id: 'children-sport-grant.dialob',
             name: 'children-sport-grant.dialob',
             type: 'dialob',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '18.12.2023', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '17.09.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -1875,6 +2163,8 @@ export const mockFsData: FsNode[] = [
             errors: [],
           }
         ],
+        configOptions: [],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '23.10.2023', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
           { changeType: 'update', changeDate: '23.07.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -1885,6 +2175,8 @@ export const mockFsData: FsNode[] = [
         errors: [],
       }
     ],
+    configOptions: [],
+    comments: [],
     changes: [
       { changeType: 'create', changeDate: '07.01.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
       { changeType: 'update', changeDate: '08.07.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -1902,7 +2194,6 @@ export const mockFsData: FsNode[] = [
     id: 'shared',
     name: 'shared',
     type: 'folder',
-    comments: undefined,
     expanded: false,
     reference: false,
     locked: false,
@@ -1911,13 +2202,18 @@ export const mockFsData: FsNode[] = [
         id: 'shared-taskGenericFlow.flow',
         name: 'taskGenericFlow.flow',
         type: 'flow',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
-        configOptions: [{
+                children: [],
+                configOptions: [{
           assignableMode: true,
         }],
+        comments: [
+          { comment: 'Original version archived, this is the updated copy.', author: 'juhani.virtanen', created: '2024-09-10' },
+          { comment: 'Reviewed and approved on 2025-11-15.', author: 'maria.korhonen', created: '2024-06-07' },
+          { comment: 'Translation keys added, waiting on localization.', author: 'pekka.leinonen', created: '2025-07-13' },
+        ],
         changes: [
           { changeType: 'create', changeDate: '02.06.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
           { changeType: 'update', changeDate: '16.12.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -1936,14 +2232,18 @@ export const mockFsData: FsNode[] = [
         id: 'shared-taskMsgFlow.flow',
         name: 'taskMsgFlow.flow',
         type: 'flow',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
-        configOptions: [{
+                children: [],
+                configOptions: [{
           devMode: true,
           disabledMode: true,
         }],
+        comments: [
+          { comment: 'Flagged for translation — Finnish version missing.', author: 'pekka.leinonen', created: '2024-09-11' },
+          { comment: 'Marked for removal after Q2 migration.', author: 'pekka.leinonen', created: '2025-02-28' },
+        ],
         changes: [
           { changeType: 'create', changeDate: '09.02.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
           { changeType: 'update', changeDate: '24.10.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -1957,10 +2257,14 @@ export const mockFsData: FsNode[] = [
         id: 'shared-taskSplitFlow.flow',
         name: 'taskSplitFlow.flow',
         type: 'flow',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
+        children: [],
+        configOptions: [],
+        comments: [
+          { comment: 'Updated by the content team, pending sign-off.', author: 'maria.korhonen', created: '2024-05-06' },
+        ],
         changes: [
           { changeType: 'create', changeDate: '16.04.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
           { changeType: 'update', changeDate: '30.11.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -1974,6 +2278,12 @@ export const mockFsData: FsNode[] = [
         errors: [],
       }
     ],
+    configOptions: [
+      {
+        assignableMode: true,
+      },
+      ],
+    comments: [],
     changes: [
       { changeType: 'create', changeDate: '25.11.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
       { changeType: 'update', changeDate: '09.09.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -1987,7 +2297,6 @@ export const mockFsData: FsNode[] = [
     id: 'links',
     name: 'links',
     type: 'folder',
-    comments: undefined,
     expanded: false,
     reference: false,
     locked: false,
@@ -1996,14 +2305,15 @@ export const mockFsData: FsNode[] = [
         id: 'sipoo-main-site.link',
         name: 'sipoo-main-site.link',
         type: 'link',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
         description: 'https://www.sipoo.fi',
-        configOptions: [{
+                children: [],
+                configOptions: [{
           devMode: true,
         }],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '30.05.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
           { changeType: 'update', changeDate: '29.12.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -2017,13 +2327,14 @@ export const mockFsData: FsNode[] = [
         id: 'wilma-info.link',
         name: 'wilma-info.link',
         type: 'link',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
-        configOptions: [{
+                children: [],
+                configOptions: [{
           disabledMode: true,
         }],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '06.05.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
           { changeType: 'update', changeDate: '20.12.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -2042,13 +2353,17 @@ export const mockFsData: FsNode[] = [
         id: 'lupapiste.link',
         name: 'lupapiste.link',
         type: 'link',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
-        configOptions: [{
+                children: [],
+                configOptions: [{
           disabledMode: true,
         }],
+        comments: [
+          { comment: 'Check with the product owner before making changes.', author: 'anna.makinen', created: '2025-01-05' },
+          { comment: 'Check with the product owner before making changes.', author: 'satu.nieminen', created: '2024-10-14' },
+        ],
         changes: [
           { changeType: 'create', changeDate: '13.12.2023', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
           { changeType: 'update', changeDate: '12.10.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -2059,6 +2374,8 @@ export const mockFsData: FsNode[] = [
         errors: [],
       }
     ],
+    configOptions: [],
+    comments: [],
     changes: [
       { changeType: 'create', changeDate: '23.11.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
       { changeType: 'update', changeDate: '22.09.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -2081,7 +2398,6 @@ export const mockFsData: FsNode[] = [
     id: 'printouts',
     name: 'printouts',
     type: 'folder',
-    comments: undefined,
     expanded: false,
     reference: false,
     locked: false,
@@ -2090,14 +2406,15 @@ export const mockFsData: FsNode[] = [
         id: 'sipoo-main-logo.png',
         name: 'sipoo-main-logo.png',
         type: 'image',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
         description: 'logo: black and white',
-        configOptions: [{
+                children: [],
+                configOptions: [{
           devMode: true,
         }],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '27.05.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
           { changeType: 'update', changeDate: '10.01.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -2115,11 +2432,13 @@ export const mockFsData: FsNode[] = [
         id: 'sipoo-color-logo.png',
         name: 'sipoo-color-logo.png',
         type: 'image',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
         description: 'logo: full color version',
+        children: [],
+        configOptions: [],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '03.02.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
           { changeType: 'update', changeDate: '18.11.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -2138,11 +2457,20 @@ export const mockFsData: FsNode[] = [
         id: 'municipal-seal.svg',
         name: 'municipal-seal.svg',
         type: 'image',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
         description: 'official municipal seal',
+        children: [],
+        configOptions: [
+          {
+            devMode: true,
+          },
+          ],
+        comments: [
+          { comment: 'Translation keys added, waiting on localization.', author: 'satu.nieminen', created: '2024-01-21' },
+          { comment: 'Referenced by the main service flow, handle with care.', author: 'juhani.virtanen', created: '2025-09-13' },
+        ],
         changes: [
           { changeType: 'create', changeDate: '10.03.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
           { changeType: 'update', changeDate: '09.12.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -2159,24 +2487,24 @@ export const mockFsData: FsNode[] = [
         id: 'new-construction-permit.printout',
         name: 'new-construction-permit.printout',
         type: 'printout',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
-        configOptions: [{
-          devMode: true,
-          anonymousMode: true,
-        }],
         children: [
           {
             id: 'fi-construction-permit',
             name: 'fi',
             type: 'template',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Finnish construction permit template',
+                    children: [],
+                    configOptions: [{
+          devMode: true,
+          anonymousMode: true,
+        }],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '24.03.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '23.12.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -2190,11 +2518,13 @@ export const mockFsData: FsNode[] = [
             id: 'sv-construction-permit',
             name: 'sv',
             type: 'template',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Swedish construction permit template',
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '01.06.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '30.01.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -2210,6 +2540,13 @@ export const mockFsData: FsNode[] = [
             ],
             errors: [],
           }
+        ],
+        configOptions: [],
+        comments: [
+          { comment: 'Flagged for translation — Finnish version missing.', author: 'satu.nieminen', created: '2024-01-04' },
+          { comment: 'Flagged for translation — Finnish version missing.', author: 'maria.korhonen', created: '2025-11-27' },
+          { comment: 'Updated by the content team, pending sign-off.', author: 'pekka.leinonen', created: '2025-11-03' },
+          { comment: 'Approved by team lead, ready to publish.', author: 'juhani.virtanen', created: '2024-07-11' },
         ],
         changes: [
           { changeType: 'create', changeDate: '17.03.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -2231,24 +2568,24 @@ export const mockFsData: FsNode[] = [
         id: 'municipal-services-guide.printout',
         name: 'municipal-services-guide.printout',
         type: 'printout',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
-        configOptions: [{
-          assignableMode: true,
-          disabledMode: true,
-        }],
         children: [
           {
             id: 'fi-services-guide',
             name: 'fi',
             type: 'template',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Kunnan palveluopas',
+                    children: [],
+                    configOptions: [{
+          assignableMode: true,
+          disabledMode: true,
+        }],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '15.02.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '15.12.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -2265,11 +2602,13 @@ export const mockFsData: FsNode[] = [
             id: 'sv-services-guide',
             name: 'sv',
             type: 'template',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Kommunal servicehandbok',
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '22.03.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '05.01.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -2288,11 +2627,22 @@ export const mockFsData: FsNode[] = [
             id: 'en-services-guide',
             name: 'en',
             type: 'template',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Municipal services guide',
+            children: [],
+            configOptions: [
+              {
+                assignableMode: true,
+              },
+              ],
+            comments: [
+              { comment: 'Approved by team lead, ready to publish.', author: 'maria.korhonen', created: '2024-07-07' },
+              { comment: 'Temporary placeholder, replace before go-live.', author: 'anna.makinen', created: '2024-08-17' },
+              { comment: 'Reviewed and approved on 2025-11-15.', author: 'juhani.virtanen', created: '2025-01-12' },
+              { comment: 'Marked for removal after Q2 migration.', author: 'juhani.virtanen', created: '2024-12-26' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '29.06.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '27.02.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -2307,6 +2657,14 @@ export const mockFsData: FsNode[] = [
             errors: [],
           }
         ],
+        configOptions: [
+          {
+            anonymousMode: true,
+            assignableMode: true,
+            disabledMode: true,
+          },
+          ],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '08.02.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
           { changeType: 'update', changeDate: '08.12.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -2328,7 +2686,6 @@ export const mockFsData: FsNode[] = [
         id: 'waste-management-info.printout',
         name: 'waste-management-info.printout',
         type: 'printout',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
@@ -2337,11 +2694,13 @@ export const mockFsData: FsNode[] = [
             id: 'fi-waste-info',
             name: 'fi',
             type: 'template',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Jätehuolto-ohje',
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '12.06.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '26.02.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -2352,6 +2711,8 @@ export const mockFsData: FsNode[] = [
             errors: [],
           }
         ],
+        configOptions: [],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '05.04.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
           { changeType: 'update', changeDate: '19.01.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -2370,7 +2731,6 @@ export const mockFsData: FsNode[] = [
         id: 'tax-information-leaflet.printout',
         name: 'tax-information-leaflet.printout',
         type: 'printout',
-        comments: undefined,
         expanded: false,
         reference: false,
         locked: false,
@@ -2379,11 +2739,13 @@ export const mockFsData: FsNode[] = [
             id: 'fi-tax-info',
             name: 'fi',
             type: 'template',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Verotietoesite',
+            children: [],
+            configOptions: [],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '26.03.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '25.01.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -2397,11 +2759,18 @@ export const mockFsData: FsNode[] = [
             id: 'sv-tax-info',
             name: 'sv',
             type: 'template',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Skatteinformationsbroschyr',
+            children: [],
+            configOptions: [
+              {
+                anonymousMode: true,
+                devMode: true,
+              },
+              ],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '03.04.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '01.02.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -2415,11 +2784,17 @@ export const mockFsData: FsNode[] = [
             id: 'en-tax-info',
             name: 'en',
             type: 'template',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Tax information leaflet',
+            children: [],
+            configOptions: [
+              {
+                disabledMode: true,
+              },
+              ],
+            comments: [],
             changes: [
               { changeType: 'create', changeDate: '10.10.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '11.05.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -2435,11 +2810,16 @@ export const mockFsData: FsNode[] = [
             id: 'ee-tax-info',
             name: 'ee',
             type: 'template',
-            comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
             description: 'Maksuteabe leht',
+            children: [],
+            configOptions: [],
+            comments: [
+              { comment: 'Original version archived, this is the updated copy.', author: 'pekka.leinonen', created: '2024-10-11' },
+              { comment: 'Check with the product owner before making changes.', author: 'maria.korhonen', created: '2024-08-11' },
+            ],
             changes: [
               { changeType: 'create', changeDate: '17.11.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '02.06.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -2459,6 +2839,8 @@ export const mockFsData: FsNode[] = [
             errors: [],
           }
         ],
+        configOptions: [],
+        comments: [],
         changes: [
           { changeType: 'create', changeDate: '19.08.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
           { changeType: 'update', changeDate: '04.04.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -2469,6 +2851,8 @@ export const mockFsData: FsNode[] = [
         errors: [],
       }
     ],
+    configOptions: [],
+    comments: [],
     changes: [
       { changeType: 'create', changeDate: '20.05.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
       { changeType: 'update', changeDate: '03.01.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
