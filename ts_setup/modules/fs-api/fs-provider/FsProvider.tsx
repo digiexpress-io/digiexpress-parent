@@ -23,6 +23,8 @@ export interface FsContextType {
   findReferencesToNode: (node: FsNode) => ItemReferencesEntry[];
   openAsset: (asset: FsNode, pathToTopParent: string) => void;
   closeTab: (index: number) => void;
+  closeAllTabs: () => void;
+  closeTabsToTheRight: (index: number) => void;
   setActiveTab: (index: number) => void;
   setIsDarkMode: (isDarkMode: boolean) => void;
   setSearchExpanded: (expanded: boolean) => void;
@@ -81,6 +83,21 @@ export const FsProvider: React.FC<FsProviderProps> = (props) => {
       return newTabs;
     });
   }, [activeTabIndex]);
+
+  const closeTabsToTheRight = React.useCallback((index: number) => {
+    setOpenTabs(prevTabs => {
+      const newTabs = prevTabs.slice(0, index + 1);
+      if (activeTabIndex > index) {
+        setActiveTabIndex(index);
+      }
+      return newTabs;
+    });
+  }, [activeTabIndex]);
+
+  const closeAllTabs = React.useCallback(() => {
+    setOpenTabs([]);
+    setActiveTabIndex(0);
+  }, []);
 
   const setActiveTab = React.useCallback((index: number) => {
     setActiveTabIndex(index);
@@ -142,10 +159,12 @@ export const FsProvider: React.FC<FsProviderProps> = (props) => {
       activeNode,
       openAsset,
       closeTab,
+      closeAllTabs,
+      closeTabsToTheRight,
       setActiveTab,
 
     };
-  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, setActiveTab, activeNode, isChildError, findReferencesToNode, searchExpanded]);
+  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, closeAllTabs, closeTabsToTheRight, setActiveTab, activeNode, isChildError, findReferencesToNode, searchExpanded]);
 
   return (
     <FsContext.Provider value={contextValue}>

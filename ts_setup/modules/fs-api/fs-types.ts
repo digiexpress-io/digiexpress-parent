@@ -4,7 +4,6 @@ export interface FsNode {
   name: string;
   description?: string;
   children?: FsNode[];
-  labels?: FsNodeLabel[] | undefined;
   comments: FsNodeComment[] | undefined;
   expanded: boolean;
   reference: boolean;
@@ -13,7 +12,8 @@ export interface FsNode {
   configOptions?: ConfigOption[] | undefined;
   changes: FsNodeChange[];
   permissions: Permission[];
-  errors: FsNodeError[] | undefined;
+  labels: FsNodeLabel[];
+  errors: FsNodeError[];
 }
 
 export interface ConfigOption {
@@ -44,7 +44,6 @@ export interface FsNodeChange {
 export interface FsNodeLabel {
   id: FsNodeLabelId;
   value: string;
-  nodeId: string;
 }
 
 export interface Permission {

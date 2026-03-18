@@ -21,18 +21,6 @@ export const mockFsData: FsNode[] = [
         configOptions: [{
           devMode: true,
         }],
-        labels: [
-          {
-            id: 'index-label-1',
-            value: 'main-content',
-            nodeId: '000_index'
-          },
-          {
-            id: 'index-label-2',
-            value: 'featured',
-            nodeId: '000_index'
-          }
-        ],
         children: [
           {
             id: 'main.article',
@@ -61,23 +49,6 @@ export const mockFsData: FsNode[] = [
             configOptions: [{
               disabledMode: true,
             }],
-            labels: [
-              {
-                id: 'main-article-label-1',
-                value: 'homepage',
-                nodeId: 'main.article'
-              },
-              {
-                id: 'main-article-label-2',
-                value: 'welcome',
-                nodeId: 'main.article'
-              },
-              {
-                id: 'main-article-label-3',
-                value: 'multilingual',
-                nodeId: 'main.article'
-              }
-            ],
             children: [
               {
                 id: 'ref.article',
@@ -88,45 +59,16 @@ export const mockFsData: FsNode[] = [
                 reference: true,
                 locked: false,
                 description: 'Reference article for common content',
-                labels: [
-                  {
-                    id: 'ref-article-label-1',
-                    value: 'reference',
-                    nodeId: 'ref.article'
-                  },
-                  {
-                    id: 'ref-article-label-2',
-                    value: 'reusable',
-                    nodeId: 'ref.article'
-                  },
-                  {
-                    id: 'ref-article-label-3',
-                    value: 'common-content',
-                    nodeId: 'ref.article'
-                  }
-                ],
                 children: [
                   {
                     id: 'fi-ref',
-                    name: 'fi',
+                    name: 'fi.language',
                     type: 'language',
                     comments: undefined,
                     expanded: false,
                     reference: false,
                     locked: false,
                     description: 'Yleinen viitesisältö',
-                    labels: [
-                      {
-                        id: 'fi-ref-label-1',
-                        value: 'finnish',
-                        nodeId: 'fi-ref'
-                      },
-                      {
-                        id: 'fi-ref-label-2',
-                        value: 'reference-content',
-                        nodeId: 'fi-ref'
-                      }
-                    ],
                     changes: [
                       { changeType: 'create', changeDate: '03.01.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
                       { changeType: 'update', changeDate: '19.07.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -136,6 +78,7 @@ export const mockFsData: FsNode[] = [
                       { name: 'everyone', types: ['read'] },
                       { name: 'Sarah Johnson', types: ['read'] },
                     ],
+                    labels: [],
                     errors: [
                       { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
                       { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
@@ -144,31 +87,20 @@ export const mockFsData: FsNode[] = [
                   },
                   {
                     id: 'en-ref',
-                    name: 'en',
+                    name: 'en.language',
                     type: 'language',
                     comments: undefined,
                     expanded: false,
                     reference: false,
                     locked: false,
                     description: 'Common reference content',
-                    labels: [
-                      {
-                        id: 'en-ref-label-1',
-                        value: 'english',
-                        nodeId: 'en-ref'
-                      },
-                      {
-                        id: 'en-ref-label-2',
-                        value: 'reference-content',
-                        nodeId: 'en-ref'
-                      }
-                    ],
                     changes: [
                       { changeType: 'create', changeDate: '10.10.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
                       { changeType: 'update', changeDate: '10.06.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
                       { changeType: 'update', changeDate: '10.02.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
                     ],
                     permissions: [],
+                    labels: [],
                     errors: [
                       { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
                     ],
@@ -180,29 +112,18 @@ export const mockFsData: FsNode[] = [
                   { changeType: 'update', changeDate: '28.01.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
                 ],
                 permissions: [],
-                errors: undefined,
+                labels: [],
+                errors: [],
               },
               {
                 id: 'fi-main',
-                name: 'fi',
+                name: 'fi.language',
                 type: 'language',
                 comments: undefined,
                 expanded: false,
                 reference: false,
                 locked: false,
                 description: 'Tervetuloa Sipoon Oma asiointiin!',
-                labels: [
-                  {
-                    id: 'fi-main-label-1',
-                    value: 'finnish',
-                    nodeId: 'fi-main'
-                  },
-                  {
-                    id: 'fi-main-label-2',
-                    value: 'primary-language',
-                    nodeId: 'fi-main'
-                  }
-                ],
                 changes: [
                   { changeType: 'create', changeDate: '17.06.2023', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
                   { changeType: 'update', changeDate: '17.04.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -214,6 +135,12 @@ export const mockFsData: FsNode[] = [
                   { name: 'Michael Chen', types: ['write'] },
                   { name: 'part-time staff', types: ['read', 'write', 'view'] },
                 ],
+                labels: [
+                  { id: 'label-075', value: 'Needs approval' },
+                  { id: 'label-076', value: 'Assignable-only' },
+                  { id: 'label-077', value: 'Development' },
+                  { id: 'label-078', value: 'Needs improvement' },
+                ],
                 errors: [
                   { code: 'FS-2', severity: 'WARNING', message: 'No level 1 heading found' },
                               { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
@@ -221,24 +148,12 @@ export const mockFsData: FsNode[] = [
               },
               {
                 id: 'sv-main',
-                name: 'sv',
+                name: 'sv.language',
                 type: 'language',
                 comments: undefined,
                 expanded: false,
                 reference: false,
                 locked: false,
-                labels: [
-                  {
-                    id: 'sv-main-label-1',
-                    value: 'swedish',
-                    nodeId: 'sv-main'
-                  },
-                  {
-                    id: 'sv-main-label-2',
-                    value: 'secondary-language',
-                    nodeId: 'sv-main'
-                  }
-                ],
                 changes: [
                   { changeType: 'create', changeDate: '24.08.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
                   { changeType: 'update', changeDate: '25.05.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -250,6 +165,12 @@ export const mockFsData: FsNode[] = [
                   { name: 'Mikael Berg', types: ['view', 'read'] },
                   { name: 'Michael Chen', types: ['view', 'read'] },
                 ],
+                labels: [
+                  { id: 'label-071', value: 'Protection order' },
+                  { id: 'label-072', value: 'Temporary' },
+                  { id: 'label-073', value: 'Deprecated' },
+                  { id: 'label-074', value: 'Needs approval' },
+                ],
                 errors: [
                   { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
                   { code: 'FS-2', severity: 'WARNING', message: 'No level 1 heading found' },
@@ -257,24 +178,12 @@ export const mockFsData: FsNode[] = [
               },
               {
                 id: 'en-main',
-                name: 'en',
+                name: 'en.language',
                 type: 'language',
                 comments: undefined,
                 expanded: false,
                 reference: false,
                 locked: false,
-                labels: [
-                  {
-                    id: 'en-main-label-1',
-                    value: 'english',
-                    nodeId: 'en-main'
-                  },
-                  {
-                    id: 'en-main-label-2',
-                    value: 'international',
-                    nodeId: 'en-main'
-                  }
-                ],
                 changes: [
                   { changeType: 'create', changeDate: '03.02.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
                   { changeType: 'update', changeDate: '18.08.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -284,7 +193,8 @@ export const mockFsData: FsNode[] = [
                   { name: 'Mikael Berg', types: ['view'] },
                   { name: 'Sarah Johnson', types: ['view'] },
                 ],
-                errors: undefined,
+                labels: [],
+                errors: [],
               }
             ],
             changes: [
@@ -298,7 +208,8 @@ export const mockFsData: FsNode[] = [
               { name: 'everyone', types: ['write', 'read', 'view'] },
               { name: 'John Smith', types: ['read', 'view', 'write'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'info-gdpr.article',
@@ -312,28 +223,6 @@ export const mockFsData: FsNode[] = [
               devMode: true,
               disabledMode: true,
             }],
-            labels: [
-              {
-                id: 'gdpr-label-1',
-                value: 'privacy',
-                nodeId: 'info-gdpr.article'
-              },
-              {
-                id: 'gdpr-label-2',
-                value: 'legal',
-                nodeId: 'info-gdpr.article'
-              },
-              {
-                id: 'gdpr-label-3',
-                value: 'compliance',
-                nodeId: 'info-gdpr.article'
-              },
-              {
-                id: 'gdpr-label-4',
-                value: 'data-protection',
-                nodeId: 'info-gdpr.article'
-              }
-            ],
             changes: [
               { changeType: 'create', changeDate: '10.07.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '09.05.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -344,6 +233,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Sarah Johnson', types: ['read', 'write', 'view'] },
               { name: 'Tom Walsh', types: ['write', 'read', 'view'] },
             ],
+            labels: [],
             errors: [
               { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
             ],
@@ -362,55 +252,16 @@ export const mockFsData: FsNode[] = [
               disabledMode: true,
               anonymousMode: true,
             }],
-            labels: [
-              {
-                id: 'general-msg-label-1',
-                value: 'communication',
-                nodeId: 'general-message.service'
-              },
-              {
-                id: 'general-msg-label-2',
-                value: 'messaging',
-                nodeId: 'general-message.service'
-              },
-              {
-                id: 'general-msg-label-3',
-                value: 'contact-form',
-                nodeId: 'general-message.service'
-              },
-              {
-                id: 'general-msg-label-4',
-                value: 'public-service',
-                nodeId: 'general-message.service'
-              },
-              {
-                id: 'general-msg-label-5',
-                value: 'reusable',
-                nodeId: 'general-message.service'
-              }
-            ],
             children: [
               {
                 id: 'fi-general',
-                name: 'fi',
+                name: 'fi.language',
                 type: 'language',
                 comments: undefined,
                 expanded: false,
                 reference: false,
                 locked: false,
                 description: 'Lähetä viesti',
-                labels: [
-                  {
-                    id: 'fi-general-label-1',
-                    value: 'finnish',
-                    nodeId: 'fi-general'
-                  },
-                  {
-                    id: 'fi-general-label-2',
-                    value: 'send-message',
-                    nodeId: 'fi-general'
-                  }
-                ],
                 changes: [
                   { changeType: 'create', changeDate: '24.07.2023', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
                   { changeType: 'update', changeDate: '23.05.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -421,6 +272,7 @@ export const mockFsData: FsNode[] = [
                   { name: 'Sarah Johnson', types: ['read'] },
                   { name: 'part-time staff', types: ['read', 'view'] },
                 ],
+                labels: [],
                 errors: [
                   { code: 'FS-3', severity: 'CRITICAL', message: 'No Dialob form defined' },
                   { code: 'FS-4', severity: 'CRITICAL', message: 'Service has no flow defined and cannot process customer requests' },
@@ -428,19 +280,12 @@ export const mockFsData: FsNode[] = [
               },
               {
                 id: 'sv-general',
-                name: 'sv',
+                name: 'sv.language',
                 type: 'language',
                 comments: undefined,
                 expanded: false,
                 reference: false,
                 locked: false,
-                labels: [
-                  {
-                    id: 'sv-general-label-1',
-                    value: 'swedish',
-                    nodeId: 'sv-general'
-                  }
-                ],
                 changes: [
                   { changeType: 'create', changeDate: '31.08.2023', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
                   { changeType: 'update', changeDate: '15.06.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -450,7 +295,8 @@ export const mockFsData: FsNode[] = [
                   { name: 'part-time staff', types: ['read', 'write'] },
                   { name: 'Mikael Berg', types: ['write'] },
                 ],
-                errors: undefined,
+                labels: [],
+                errors: [],
               }
             ],
             changes: [
@@ -459,7 +305,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '17.03.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'general-message.dialob',
@@ -469,29 +316,16 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            labels: [
-              {
-                id: 'general-dialob-label-1',
-                value: 'form',
-                nodeId: 'general-message.dialob'
-              },
-              {
-                id: 'general-dialob-label-2',
-                value: 'user-input',
-                nodeId: 'general-message.dialob'
-              },
-              {
-                id: 'general-dialob-label-3',
-                value: 'messaging',
-                nodeId: 'general-message.dialob'
-              }
-            ],
             changes: [
               { changeType: 'create', changeDate: '07.10.2023', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '07.07.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '07.04.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
+            labels: [
+              { id: 'label-069', value: 'Finnish-only' },
+              { id: 'label-070', value: 'Deprecated' },
+            ],
             errors: [
               { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
                           { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
@@ -509,29 +343,13 @@ export const mockFsData: FsNode[] = [
               assignableMode: true,
               anonymousMode: true,
             }],
-            labels: [
-              {
-                id: 'msg-flow-label-1',
-                value: 'workflow',
-                nodeId: 'taskMsgFlow.flow'
-              },
-              {
-                id: 'msg-flow-label-2',
-                value: 'task-management',
-                nodeId: 'taskMsgFlow.flow'
-              },
-              {
-                id: 'msg-flow-label-3',
-                value: 'message-routing',
-                nodeId: 'taskMsgFlow.flow'
-              }
-            ],
             changes: [
               { changeType: 'create', changeDate: '14.02.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '13.09.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '14.04.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
             ],
             permissions: [],
+            labels: [],
             errors: [
               { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
                           { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
@@ -547,7 +365,10 @@ export const mockFsData: FsNode[] = [
           { name: 'Mikael Berg', types: ['write', 'view'] },
           { name: 'Michael Chen', types: ['write', 'view'] },
         ],
-        errors: undefined,
+        labels: [
+          { id: 'label-068', value: 'Protection order' },
+        ],
+        errors: [],
       },
       {
         id: '100_residence',
@@ -561,18 +382,6 @@ export const mockFsData: FsNode[] = [
           devMode: true,
           disabledMode: true,
         }],
-        labels: [
-          {
-            id: 'residence-label-1',
-            value: 'housing',
-            nodeId: '100_residence'
-          },
-          {
-            id: 'residence-label-2',
-            value: 'category-100',
-            nodeId: '100_residence'
-          }
-        ],
         children: [
           {
             id: 'ref-article-ref1',
@@ -593,7 +402,11 @@ export const mockFsData: FsNode[] = [
               { name: 'John Smith', types: ['view', 'write', 'read'] },
               { name: 'part-time staff', types: ['view', 'write', 'read'] },
             ],
-            errors: undefined,
+            labels: [
+              { id: 'label-066', value: 'Assignable-only' },
+              { id: 'label-067', value: 'Development' },
+            ],
+            errors: [],
           },
           {
             id: 'general-message-ref1',
@@ -614,7 +427,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Anna Virtanen', types: ['write', 'view', 'read'] },
               { name: 'everyone', types: ['read', 'write', 'view'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'public-inforeq.service',
@@ -638,6 +452,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Sarah Johnson', types: ['write'] },
               { name: 'Anna Virtanen', types: ['read', 'write'] },
             ],
+            labels: [],
             errors: [
               { code: 'FS-4', severity: 'CRITICAL', message: 'Service has no flow defined and cannot process customer requests' },
                           { code: 'FS-3', severity: 'CRITICAL', message: 'No Dialob form defined' },
@@ -660,7 +475,14 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '19.05.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [
+              { id: 'label-061', value: 'Deprecated' },
+              { id: 'label-062', value: 'Needs approval' },
+              { id: 'label-063', value: 'Temporary' },
+              { id: 'label-064', value: 'Finnish-only' },
+              { id: 'label-065', value: 'Protection order' },
+            ],
+            errors: [],
           },
           {
             id: 'taskGenericFlow-ref1',
@@ -676,6 +498,7 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '26.05.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
+            labels: [],
             errors: [
               { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
             ],
@@ -687,7 +510,8 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '21.04.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
         ],
         permissions: [],
-        errors: undefined,
+        labels: [],
+        errors: [],
       },
       {
         id: '200_democracy',
@@ -700,33 +524,6 @@ export const mockFsData: FsNode[] = [
         configOptions: [{
           devMode: true,
         }],
-        labels: [
-          {
-            id: 'democracy-label-1',
-            value: 'governance',
-            nodeId: '200_democracy'
-          },
-          {
-            id: 'democracy-label-2',
-            value: 'sensitive',
-            nodeId: '200_democracy'
-          },
-          {
-            id: 'democracy-label-3',
-            value: 'temporary',
-            nodeId: '200_democracy'
-          },
-          {
-            id: 'democracy-label-4',
-            value: 'voting-rights',
-            nodeId: '200_democracy'
-          },
-          {
-            id: 'democracy-label-5',
-            value: 'hasPrintout',
-            nodeId: '200_democracy'
-          }
-        ],
         children: [
           {
             id: 'ref-article-ref2',
@@ -747,7 +544,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Tom Walsh', types: ['view', 'read', 'write'] },
               { name: 'Mikael Berg', types: ['write', 'read', 'view'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'trustee-info-form.service',
@@ -764,7 +562,7 @@ export const mockFsData: FsNode[] = [
             children: [
               {
                 id: 'fi-trustee',
-                name: 'fi',
+                name: 'fi.language',
                 type: 'language',
                 comments: undefined,
                 expanded: false,
@@ -781,7 +579,8 @@ export const mockFsData: FsNode[] = [
                   { name: 'office-staff', types: ['read'] },
                   { name: 'Anna Virtanen', types: ['read', 'view'] },
                 ],
-                errors: undefined,
+                labels: [],
+                errors: [],
               }
             ],
             changes: [
@@ -794,7 +593,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Mikael Berg', types: ['write', 'read'] },
               { name: 'everyone', types: ['write', 'view'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'trustee-info.dialob',
@@ -810,6 +610,7 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '30.06.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
             ],
             permissions: [],
+            labels: [],
             errors: [
               { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
             ],
@@ -828,7 +629,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '07.07.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'trustee-travel-pay.service',
@@ -855,7 +657,11 @@ export const mockFsData: FsNode[] = [
               { name: 'Sarah Johnson', types: ['write'] },
               { name: 'office-staff', types: ['view', 'write', 'read'] },
             ],
-            errors: undefined,
+            labels: [
+              { id: 'label-059', value: 'Needs approval' },
+              { id: 'label-060', value: 'Needs improvement' },
+            ],
+            errors: [],
           },
           {
             id: 'trustee-travel-pay.dialob',
@@ -876,7 +682,8 @@ export const mockFsData: FsNode[] = [
               { name: 'John Smith', types: ['view', 'write', 'read'] },
               { name: 'part-time staff', types: ['write', 'view', 'read'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'general-message-ref2',
@@ -892,7 +699,13 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '28.07.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [
+              { id: 'label-055', value: 'Assignable-only' },
+              { id: 'label-056', value: 'Protection order' },
+              { id: 'label-057', value: 'Finnish-only' },
+              { id: 'label-058', value: 'Deprecated' },
+            ],
+            errors: [],
           }
         ],
         changes: [
@@ -904,7 +717,12 @@ export const mockFsData: FsNode[] = [
           { name: 'Tom Walsh', types: ['write'] },
           { name: 'John Smith', types: ['read', 'write', 'view'] },
         ],
-        errors: undefined,
+        labels: [
+          { id: 'label-052', value: 'Temporary' },
+          { id: 'label-053', value: 'Needs improvement' },
+          { id: 'label-054', value: 'Assignable-only' },
+        ],
+        errors: [],
       },
       {
         id: '350_education',
@@ -932,7 +750,13 @@ export const mockFsData: FsNode[] = [
               { name: 'Tom Walsh', types: ['read'] },
               { name: 'Michael Chen', types: ['read', 'write'] },
             ],
-            errors: undefined,
+            labels: [
+              { id: 'label-048', value: 'Needs approval' },
+              { id: 'label-049', value: 'Development' },
+              { id: 'label-050', value: 'Protection order' },
+              { id: 'label-051', value: 'Assignable-only' },
+            ],
+            errors: [],
           },
           {
             id: 'wilma-preschool.service',
@@ -948,7 +772,7 @@ export const mockFsData: FsNode[] = [
             children: [
               {
                 id: 'fi-wilma',
-                name: 'fi',
+                name: 'fi.language',
                 type: 'language',
                 comments: undefined,
                 expanded: false,
@@ -961,7 +785,8 @@ export const mockFsData: FsNode[] = [
                   { changeType: 'update', changeDate: '25.08.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
                 ],
                 permissions: [],
-                errors: undefined,
+                labels: [],
+                errors: [],
               }
             ],
             changes: [
@@ -970,7 +795,10 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '18.08.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [
+              { id: 'label-047', value: 'Needs improvement' },
+            ],
+            errors: [],
           },
           {
             id: 'wilma-preschool.dialob',
@@ -989,7 +817,8 @@ export const mockFsData: FsNode[] = [
               { name: 'part-time staff', types: ['write', 'read', 'view'] },
               { name: 'Sarah Johnson', types: ['read', 'view', 'write'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'taskGenericFlow-ref3',
@@ -1008,7 +837,8 @@ export const mockFsData: FsNode[] = [
               { name: 'part-time staff', types: ['write'] },
               { name: 'Tom Walsh', types: ['read', 'view', 'write'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'protection-order-school.service',
@@ -1032,7 +862,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Michael Chen', types: ['read'] },
               { name: 'Anna Virtanen', types: ['view', 'read'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'protection-order-school.dialob',
@@ -1048,6 +879,13 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '22.09.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
             ],
             permissions: [],
+            labels: [
+              { id: 'label-042', value: 'Temporary' },
+              { id: 'label-043', value: 'Needs improvement' },
+              { id: 'label-044', value: 'Finnish-only' },
+              { id: 'label-045', value: 'Development' },
+              { id: 'label-046', value: 'Protection order' },
+            ],
             errors: [
               { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
                           { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
@@ -1070,7 +908,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Michael Chen', types: ['view', 'read', 'write'] },
               { name: 'office-staff', types: ['write'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           }
         ],
         changes: [
@@ -1079,7 +918,8 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '04.08.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
         ],
         permissions: [],
-        errors: undefined,
+        labels: [],
+        errors: [],
       },
       {
         id: '400_traffic-and-roads',
@@ -1104,7 +944,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '13.10.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'dig-permit.service',
@@ -1120,7 +961,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '20.10.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'dig-permit.dialob',
@@ -1136,7 +978,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '27.10.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'taskSplitFlow.flow',
@@ -1157,7 +1000,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '03.11.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'rent-street-area.service',
@@ -1173,7 +1017,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '10.11.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'rent-street-area.dialob',
@@ -1193,7 +1038,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Anna Virtanen', types: ['read', 'view'] },
               { name: 'everyone', types: ['read', 'write'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'private-road-sign.service',
@@ -1214,7 +1060,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Tom Walsh', types: ['write', 'view', 'read'] },
               { name: 'office-staff', types: ['view'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'private-road-sign.dialob',
@@ -1233,7 +1080,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Michael Chen', types: ['write', 'read', 'view'] },
               { name: 'everyone', types: ['read', 'view'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'general-message-ref4',
@@ -1252,7 +1100,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Sarah Johnson', types: ['write'] },
               { name: 'Anna Virtanen', types: ['view'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           }
         ],
         changes: [
@@ -1264,7 +1113,8 @@ export const mockFsData: FsNode[] = [
           { name: 'John Smith', types: ['write', 'view', 'read'] },
           { name: 'everyone', types: ['view'] },
         ],
-        errors: undefined,
+        labels: [],
+        errors: [],
       },
       {
         id: '425_invoicing',
@@ -1296,7 +1146,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '22.12.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'invoicing-erapaiva.service',
@@ -1319,7 +1170,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Diana Hasselback', types: ['view'] },
               { name: 'Mikael Berg', types: ['write'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'invoicing-erapaiva.dialob',
@@ -1338,7 +1190,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Sarah Johnson', types: ['read', 'view', 'write'] },
               { name: 'office-staff', types: ['view'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'taskGenericFlow-ref4',
@@ -1359,7 +1212,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Michael Chen', types: ['write', 'view'] },
               { name: 'everyone', types: ['read', 'view'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'invoice-copy-request.service',
@@ -1378,7 +1232,8 @@ export const mockFsData: FsNode[] = [
               { name: 'John Smith', types: ['write'] },
               { name: 'Tom Walsh', types: ['read'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'invoice-copy-request.dialob',
@@ -1397,7 +1252,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Anna Virtanen', types: ['view'] },
               { name: 'everyone', types: ['write', 'read', 'view'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'bank-account-info.service',
@@ -1413,7 +1269,14 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '02.02.2026', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [
+              { id: 'label-037', value: 'Temporary' },
+              { id: 'label-038', value: 'Protection order' },
+              { id: 'label-039', value: 'Assignable-only' },
+              { id: 'label-040', value: 'Needs improvement' },
+              { id: 'label-041', value: 'Finnish-only' },
+            ],
+            errors: [],
           },
           {
             id: 'bank-account-info.dialob',
@@ -1429,7 +1292,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '09.02.2026', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           }
         ],
         changes: [
@@ -1438,7 +1302,8 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '15.12.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
         ],
         permissions: [],
-        errors: undefined,
+        labels: [],
+        errors: [],
       },
       {
         id: '517_sipoo-institute',
@@ -1464,7 +1329,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '23.02.2026', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'teacher-info.service',
@@ -1480,7 +1346,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '02.03.2026', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'teacher-info.dialob',
@@ -1499,7 +1366,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Mikael Berg', types: ['view'] },
               { name: 'Michael Chen', types: ['write'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'taskGenericFlow-ref5',
@@ -1515,7 +1383,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '16.03.2026', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'teacher-travel-pay.service',
@@ -1535,7 +1404,8 @@ export const mockFsData: FsNode[] = [
               { name: 'part-time staff', types: ['read'] },
               { name: 'Sarah Johnson', types: ['read'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'teacher-travel-pay.dialob',
@@ -1551,7 +1421,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '15.01.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'study-voucher.service',
@@ -1567,7 +1438,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '22.01.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'study-voucher.dialob',
@@ -1588,7 +1460,10 @@ export const mockFsData: FsNode[] = [
               { name: 'Diana Hasselback', types: ['view', 'write', 'read'] },
               { name: 'Mikael Berg', types: ['write', 'read', 'view'] },
             ],
-            errors: undefined,
+            labels: [
+              { id: 'label-036', value: 'Finnish-only' },
+            ],
+            errors: [],
           },
           {
             id: 'general-message-ref5',
@@ -1607,7 +1482,8 @@ export const mockFsData: FsNode[] = [
               { name: 'John Smith', types: ['write', 'read'] },
               { name: 'Michael Chen', types: ['write', 'read'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           }
         ],
         changes: [
@@ -1616,7 +1492,8 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '16.02.2026', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
         ],
         permissions: [],
-        errors: undefined,
+        labels: [],
+        errors: [],
       },
       {
         id: '520_sipoo-water',
@@ -1650,7 +1527,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Diana Hasselback', types: ['write', 'read'] },
               { name: 'Tom Walsh', types: ['view', 'read', 'write'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'water-supply-maintenance.service',
@@ -1666,7 +1544,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '26.02.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'water-supply-maintenance.dialob',
@@ -1682,7 +1561,11 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '05.03.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [
+              { id: 'label-034', value: 'Needs approval' },
+              { id: 'label-035', value: 'Needs improvement' },
+            ],
+            errors: [],
           },
           {
             id: 'taskGenericFlow-ref6',
@@ -1702,7 +1585,8 @@ export const mockFsData: FsNode[] = [
               { name: 'everyone', types: ['read', 'view', 'write'] },
               { name: 'Mikael Berg', types: ['write'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'water-invoice-erapaiva.service',
@@ -1723,7 +1607,11 @@ export const mockFsData: FsNode[] = [
               { name: 'part-time staff', types: ['write', 'read'] },
               { name: 'office-staff', types: ['view'] },
             ],
-            errors: undefined,
+            labels: [
+              { id: 'label-032', value: 'Needs improvement' },
+              { id: 'label-033', value: 'Finnish-only' },
+            ],
+            errors: [],
           },
           {
             id: 'water-invoice-erapaiva.dialob',
@@ -1739,7 +1627,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '26.03.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'water-connection-statement.service',
@@ -1755,7 +1644,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '02.04.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'water-connection-statement.dialob',
@@ -1775,7 +1665,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Tom Walsh', types: ['write', 'view', 'read'] },
               { name: 'part-time staff', types: ['view', 'read'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'general-message-ref6',
@@ -1791,7 +1682,12 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '16.04.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [
+              { id: 'label-029', value: 'Assignable-only' },
+              { id: 'label-030', value: 'Needs improvement' },
+              { id: 'label-031', value: 'Finnish-only' },
+            ],
+            errors: [],
           }
         ],
         changes: [
@@ -1803,7 +1699,8 @@ export const mockFsData: FsNode[] = [
           { name: 'Anna Virtanen', types: ['read', 'write'] },
           { name: 'office-staff', types: ['write', 'read', 'view'] },
         ],
-        errors: undefined,
+        labels: [],
+        errors: [],
       },
       {
         id: '650_leisure-time-and-youth',
@@ -1833,7 +1730,11 @@ export const mockFsData: FsNode[] = [
               { name: 'Anna Virtanen', types: ['write'] },
               { name: 'Sarah Johnson', types: ['read', 'view', 'write'] },
             ],
-            errors: undefined,
+            labels: [
+              { id: 'label-027', value: 'Protection order' },
+              { id: 'label-028', value: 'Temporary' },
+            ],
+            errors: [],
           },
           {
             id: 'sports-grant-settlement.service',
@@ -1852,7 +1753,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Michael Chen', types: ['read', 'view'] },
               { name: 'part-time staff', types: ['view', 'write'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'sports-grant-settlement.dialob',
@@ -1871,7 +1773,8 @@ export const mockFsData: FsNode[] = [
               { name: 'John Smith', types: ['write'] },
               { name: 'Tom Walsh', types: ['read', 'view'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'taskGenericFlow-ref7',
@@ -1887,7 +1790,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '21.05.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'sports-fee-return.service',
@@ -1906,7 +1810,11 @@ export const mockFsData: FsNode[] = [
               { name: 'Michael Chen', types: ['read'] },
               { name: 'Anna Virtanen', types: ['view'] },
             ],
-            errors: undefined,
+            labels: [
+              { id: 'label-025', value: 'Needs approval' },
+              { id: 'label-026', value: 'Development' },
+            ],
+            errors: [],
           },
           {
             id: 'sports-fee-return.dialob',
@@ -1922,7 +1830,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '04.06.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'children-sport-grant.service',
@@ -1938,7 +1847,10 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '11.06.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [
+              { id: 'label-024', value: 'Development' },
+            ],
+            errors: [],
           },
           {
             id: 'children-sport-grant.dialob',
@@ -1959,7 +1871,8 @@ export const mockFsData: FsNode[] = [
               { name: 'part-time staff', types: ['read', 'write', 'view'] },
               { name: 'Sarah Johnson', types: ['view', 'write'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           }
         ],
         changes: [
@@ -1968,7 +1881,8 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '23.04.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
         ],
         permissions: [],
-        errors: undefined,
+        labels: [],
+        errors: [],
       }
     ],
     changes: [
@@ -1977,7 +1891,12 @@ export const mockFsData: FsNode[] = [
       { changeType: 'update', changeDate: '07.01.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
     ],
     permissions: [],
-    errors: undefined,
+    labels: [
+      { id: 'label-021', value: 'Needs improvement' },
+      { id: 'label-022', value: 'Needs approval' },
+      { id: 'label-023', value: 'Protection order' },
+    ],
+    errors: [],
   },
   {
     id: 'shared',
@@ -2010,7 +1929,8 @@ export const mockFsData: FsNode[] = [
           { name: 'everyone', types: ['view', 'read'] },
           { name: 'Tom Walsh', types: ['view', 'write', 'read'] },
         ],
-        errors: undefined,
+        labels: [],
+        errors: [],
       },
       {
         id: 'shared-taskMsgFlow.flow',
@@ -2030,7 +1950,8 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '09.07.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
         ],
         permissions: [],
-        errors: undefined,
+        labels: [],
+        errors: [],
       },
       {
         id: 'shared-taskSplitFlow.flow',
@@ -2049,7 +1970,8 @@ export const mockFsData: FsNode[] = [
           { name: 'Sarah Johnson', types: ['read'] },
           { name: 'Tom Walsh', types: ['write', 'view', 'read'] },
         ],
-        errors: undefined,
+        labels: [],
+        errors: [],
       }
     ],
     changes: [
@@ -2058,7 +1980,8 @@ export const mockFsData: FsNode[] = [
       { changeType: 'update', changeDate: '25.06.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
     ],
     permissions: [],
-    errors: undefined,
+    labels: [],
+    errors: [],
   },
   {
     id: 'links',
@@ -2087,7 +2010,8 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '30.07.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
         ],
         permissions: [],
-        errors: undefined,
+        labels: [],
+        errors: [],
       },
       {
         id: 'wilma-info.link',
@@ -2111,7 +2035,8 @@ export const mockFsData: FsNode[] = [
           { name: 'Anna Virtanen', types: ['read', 'write', 'view'] },
           { name: 'John Smith', types: ['view', 'write'] },
         ],
-        errors: undefined,
+        labels: [],
+        errors: [],
       },
       {
         id: 'lupapiste.link',
@@ -2130,7 +2055,8 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '13.08.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
         ],
         permissions: [],
-        errors: undefined,
+        labels: [],
+        errors: [],
       }
     ],
     changes: [
@@ -2143,7 +2069,13 @@ export const mockFsData: FsNode[] = [
       { name: 'Diana Hasselback', types: ['view', 'read'] },
       { name: 'Michael Chen', types: ['write'] },
     ],
-    errors: undefined,
+    labels: [
+      { id: 'label-017', value: 'Protection order' },
+      { id: 'label-018', value: 'Temporary' },
+      { id: 'label-019', value: 'Development' },
+      { id: 'label-020', value: 'Needs approval' },
+    ],
+    errors: [],
   },
   {
     id: 'printouts',
@@ -2172,7 +2104,12 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '27.08.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
         ],
         permissions: [],
-        errors: undefined,
+        labels: [
+          { id: 'label-014', value: 'Needs approval' },
+          { id: 'label-015', value: 'Deprecated' },
+          { id: 'label-016', value: 'Development' },
+        ],
+        errors: [],
       },
       {
         id: 'sipoo-color-logo.png',
@@ -2194,7 +2131,8 @@ export const mockFsData: FsNode[] = [
           { name: 'part-time staff', types: ['view', 'write', 'read'] },
           { name: 'Michael Chen', types: ['write'] },
         ],
-        errors: undefined,
+        labels: [],
+        errors: [],
       },
       {
         id: 'municipal-seal.svg',
@@ -2214,7 +2152,8 @@ export const mockFsData: FsNode[] = [
           { name: 'Anna Virtanen', types: ['view', 'write'] },
           { name: 'everyone', types: ['write'] },
         ],
-        errors: undefined,
+        labels: [],
+        errors: [],
       },
       {
         id: 'new-construction-permit.printout',
@@ -2244,7 +2183,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '24.09.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'sv-construction-permit',
@@ -2265,7 +2205,10 @@ export const mockFsData: FsNode[] = [
               { name: 'office-staff', types: ['read'] },
               { name: 'Anna Virtanen', types: ['read', 'write'] },
             ],
-            errors: undefined,
+            labels: [
+              { id: 'label-013', value: 'Needs improvement' },
+            ],
+            errors: [],
           }
         ],
         changes: [
@@ -2277,7 +2220,12 @@ export const mockFsData: FsNode[] = [
           { name: 'Mikael Berg', types: ['read'] },
           { name: 'part-time staff', types: ['read'] },
         ],
-        errors: undefined,
+        labels: [
+          { id: 'label-010', value: 'Protection order' },
+          { id: 'label-011', value: 'Development' },
+          { id: 'label-012', value: 'Temporary' },
+        ],
+        errors: [],
       },
       {
         id: 'municipal-services-guide.printout',
@@ -2310,7 +2258,8 @@ export const mockFsData: FsNode[] = [
               { name: 'office-staff', types: ['view', 'write', 'read'] },
               { name: 'Michael Chen', types: ['view', 'read', 'write'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'sv-services-guide',
@@ -2332,7 +2281,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Tom Walsh', types: ['read', 'write', 'view'] },
               { name: 'Diana Hasselback', types: ['read', 'view', 'write'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'en-services-guide',
@@ -2353,7 +2303,8 @@ export const mockFsData: FsNode[] = [
               { name: 'Anna Virtanen', types: ['write', 'read', 'view'] },
               { name: 'Mikael Berg', types: ['write', 'read', 'view'] },
             ],
-            errors: undefined,
+            labels: [],
+            errors: [],
           }
         ],
         changes: [
@@ -2365,7 +2316,13 @@ export const mockFsData: FsNode[] = [
           { name: 'Tom Walsh', types: ['write', 'view', 'read'] },
           { name: 'everyone', types: ['view'] },
         ],
-        errors: undefined,
+        labels: [
+          { id: 'label-006', value: 'Needs improvement' },
+          { id: 'label-007', value: 'Finnish-only' },
+          { id: 'label-008', value: 'Protection order' },
+          { id: 'label-009', value: 'Assignable-only' },
+        ],
+        errors: [],
       },
       {
         id: 'waste-management-info.printout',
@@ -2391,7 +2348,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '12.11.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           }
         ],
         changes: [
@@ -2405,7 +2363,8 @@ export const mockFsData: FsNode[] = [
           { name: 'Sarah Johnson', types: ['write', 'view'] },
           { name: 'Mikael Berg', types: ['write'] },
         ],
-        errors: undefined,
+        labels: [],
+        errors: [],
       },
       {
         id: 'tax-information-leaflet.printout',
@@ -2431,7 +2390,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '26.11.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'sv-tax-info',
@@ -2448,7 +2408,8 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '03.12.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [],
+            errors: [],
           },
           {
             id: 'en-tax-info',
@@ -2465,7 +2426,10 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '10.12.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
             ],
             permissions: [],
-            errors: undefined,
+            labels: [
+              { id: 'label-005', value: 'Finnish-only' },
+            ],
+            errors: [],
           },
           {
             id: 'ee-tax-info',
@@ -2486,7 +2450,13 @@ export const mockFsData: FsNode[] = [
               { name: 'Mikael Berg', types: ['view', 'read', 'write'] },
               { name: 'Sarah Johnson', types: ['view', 'read', 'write'] },
             ],
-            errors: undefined,
+            labels: [
+              { id: 'label-001', value: 'Temporary' },
+              { id: 'label-002', value: 'Assignable-only' },
+              { id: 'label-003', value: 'Needs approval' },
+              { id: 'label-004', value: 'Finnish-only' },
+            ],
+            errors: [],
           }
         ],
         changes: [
@@ -2495,7 +2465,8 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '19.11.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
         ],
         permissions: [],
-        errors: undefined,
+        labels: [],
+        errors: [],
       }
     ],
     changes: [
@@ -2504,6 +2475,7 @@ export const mockFsData: FsNode[] = [
       { changeType: 'update', changeDate: '20.08.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
     ],
     permissions: [],
-    errors: undefined,
+    labels: [],
+    errors: [],
   },
 ];
