@@ -46,11 +46,11 @@ function ConfigIcon(props: { type?: keyof ConfigOption, className: string}) {
 
 
 
-export const NodeDecorator  = (props: {node: { error: boolean, reference: boolean}, children: React.ReactNode }) => {
+export const NodeDecorator  = (props: {node: FsNode, children: React.ReactNode }) => {
    const { isDarkMode } = useFs();
-   const { node, children } = props; 
+   const { node, children } = props;
 
-  if (node.error) {
+  if (node.errors && node.errors.length > 0) {
     return (
       <Box display='flex' alignItems='center' sx={{ color: isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight }}>
          {children}

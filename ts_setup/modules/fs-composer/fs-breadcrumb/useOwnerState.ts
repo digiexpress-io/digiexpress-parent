@@ -17,11 +17,13 @@ export function useOwnerState(_props: FsBreadcrumbProps): OwnerState {
   const assetName = pathParts[pathParts.length - 1];
   const assetPath = pathParts.slice(0, -1).join(' / ');
 
+  const isError = activeNode?.errors && activeNode.errors.length > 0 ? true : false;
+
   return {
     assetNode: activeNode,
     assetName,
     assetPath,
-    isError: activeNode?.error,
+    isError,
     isDarkMode
   }
 }

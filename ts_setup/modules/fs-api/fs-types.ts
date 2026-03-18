@@ -9,11 +9,11 @@ export interface FsNode {
   expanded: boolean;
   reference: boolean;
   locked: boolean;
-  error: boolean;
   type: FsNodeType;
   configOptions?: ConfigOption[] | undefined;
   changes: FsNodeChange[];
   permissions: Permission[];
+  errors: FsNodeError[] | undefined;
 }
 
 export interface ConfigOption {
@@ -27,6 +27,12 @@ export interface User {
   userName: string;
   email: string;
   permissions?: PermissionType[];
+}
+
+export interface FsNodeError {
+  code: string;
+  severity: ErrorSeverityType;
+  message: string;
 }
 
 export interface FsNodeChange {
@@ -56,6 +62,7 @@ export type FsNodeType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 
 export type FsNodeSecondaryView = 'references' | 'properties' | 'configuration' | 'debug' | 'preview' | 'history' | 'help' | 'errors' | 'changes';
 export type FsNodeChangeType = 'update' | 'create' | 'delete';
 export type PermissionType = 'read' | 'write' | 'view' | 'none';
+export type ErrorSeverityType = 'CRITICAL' | 'WARNING';
 
 export type FolderId = string;
 export type ArticleId = string;

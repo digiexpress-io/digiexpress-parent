@@ -93,7 +93,7 @@ export const FsProvider: React.FC<FsProviderProps> = (props) => {
   }, []);
 
   const isChildError = React.useCallback((node: FsNode): boolean => {
-    if (node.error) {
+    if (node.errors && node.errors.length > 0) {
       return true;
     }
     if (node.children) {

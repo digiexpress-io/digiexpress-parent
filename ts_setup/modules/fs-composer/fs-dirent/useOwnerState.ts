@@ -36,7 +36,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
   const isChildren = !!(node.children && node.children.length > 0);
   const configOptions = !!(node.configOptions && node.configOptions.length > 0);
   const childWithError = !!(isChildren && node.children!.some(child => isChildError(child)));
-  const showError = !!(node.error || childWithError);
+  const showError = !!((node.errors && node.errors.length > 0) || childWithError);
   const fullPath = parentPath ? `${parentPath} / ${node.name}` : node.name;
 
   return {

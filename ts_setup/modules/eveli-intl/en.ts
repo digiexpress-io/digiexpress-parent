@@ -1432,6 +1432,7 @@ export const en = {
   'fs.errors.title': 'Errors',
   'fs.errors.title.nodeName': 'Errors: {nodeName}',
   'fs.errors.message.selectNode': 'Select a node from the tree to view errors.',
+  'fs.errors.message.noErrors': 'No errors found for this node.',
   'fs.errors.sectionTitle.summary': 'Error Summary',
   'fs.errors.statLabel.errors': 'Errors',
   'fs.errors.statLabel.warnings': 'Warnings',

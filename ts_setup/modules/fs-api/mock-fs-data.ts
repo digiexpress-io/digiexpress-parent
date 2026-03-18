@@ -9,7 +9,6 @@ export const mockFsData: FsNode[] = [
     expanded: true,
     reference: false,
     locked: false,
-    error: false,
     children: [
       {
         id: '000_index',
@@ -19,7 +18,6 @@ export const mockFsData: FsNode[] = [
         expanded: true,
         reference: false,
         locked: true,
-        error: false,
         configOptions: [{
           devMode: true,
         }],
@@ -40,7 +38,6 @@ export const mockFsData: FsNode[] = [
             id: 'main.article',
             name: 'main.article',
             type: 'article',
-            error: true,
             comments: [
               {
                 comment: 'Found a typo in the content - should be "municipality" not "municipalty"',
@@ -90,7 +87,6 @@ export const mockFsData: FsNode[] = [
                 expanded: false,
                 reference: true,
                 locked: false,
-                error: false,
                 description: 'Reference article for common content',
                 labels: [
                   {
@@ -118,7 +114,6 @@ export const mockFsData: FsNode[] = [
                     expanded: false,
                     reference: false,
                     locked: false,
-                    error: false,
                     description: 'Yleinen viitesisältö',
                     labels: [
                       {
@@ -141,6 +136,11 @@ export const mockFsData: FsNode[] = [
                       { name: 'everyone', types: ['read'] },
                       { name: 'Sarah Johnson', types: ['read'] },
                     ],
+                    errors: [
+                      { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
+                      { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
+                                  { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
+                    ],
                   },
                   {
                     id: 'en-ref',
@@ -150,7 +150,6 @@ export const mockFsData: FsNode[] = [
                     expanded: false,
                     reference: false,
                     locked: false,
-                    error: false,
                     description: 'Common reference content',
                     labels: [
                       {
@@ -170,6 +169,9 @@ export const mockFsData: FsNode[] = [
                       { changeType: 'update', changeDate: '10.02.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
                     ],
                     permissions: [],
+                    errors: [
+                      { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
+                    ],
                   }
                 ],
                 changes: [
@@ -178,6 +180,7 @@ export const mockFsData: FsNode[] = [
                   { changeType: 'update', changeDate: '28.01.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
                 ],
                 permissions: [],
+                errors: undefined,
               },
               {
                 id: 'fi-main',
@@ -187,7 +190,6 @@ export const mockFsData: FsNode[] = [
                 expanded: false,
                 reference: false,
                 locked: false,
-                error: false,
                 description: 'Tervetuloa Sipoon Oma asiointiin!',
                 labels: [
                   {
@@ -212,6 +214,10 @@ export const mockFsData: FsNode[] = [
                   { name: 'Michael Chen', types: ['write'] },
                   { name: 'part-time staff', types: ['read', 'write', 'view'] },
                 ],
+                errors: [
+                  { code: 'FS-2', severity: 'WARNING', message: 'No level 1 heading found' },
+                              { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
+                ],
               },
               {
                 id: 'sv-main',
@@ -221,7 +227,6 @@ export const mockFsData: FsNode[] = [
                 expanded: false,
                 reference: false,
                 locked: false,
-                error: false,
                 labels: [
                   {
                     id: 'sv-main-label-1',
@@ -245,6 +250,10 @@ export const mockFsData: FsNode[] = [
                   { name: 'Mikael Berg', types: ['view', 'read'] },
                   { name: 'Michael Chen', types: ['view', 'read'] },
                 ],
+                errors: [
+                  { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
+                  { code: 'FS-2', severity: 'WARNING', message: 'No level 1 heading found' },
+                ],
               },
               {
                 id: 'en-main',
@@ -254,7 +263,6 @@ export const mockFsData: FsNode[] = [
                 expanded: false,
                 reference: false,
                 locked: false,
-                error: false,
                 labels: [
                   {
                     id: 'en-main-label-1',
@@ -276,6 +284,7 @@ export const mockFsData: FsNode[] = [
                   { name: 'Mikael Berg', types: ['view'] },
                   { name: 'Sarah Johnson', types: ['view'] },
                 ],
+                errors: undefined,
               }
             ],
             changes: [
@@ -289,6 +298,7 @@ export const mockFsData: FsNode[] = [
               { name: 'everyone', types: ['write', 'read', 'view'] },
               { name: 'John Smith', types: ['read', 'view', 'write'] },
             ],
+            errors: undefined,
           },
           {
             id: 'info-gdpr.article',
@@ -298,7 +308,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             configOptions: [{
               devMode: true,
               disabledMode: true,
@@ -335,6 +344,9 @@ export const mockFsData: FsNode[] = [
               { name: 'Sarah Johnson', types: ['read', 'write', 'view'] },
               { name: 'Tom Walsh', types: ['write', 'read', 'view'] },
             ],
+            errors: [
+              { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
+            ],
           },
           {
             id: 'general-message.service',
@@ -344,7 +356,6 @@ export const mockFsData: FsNode[] = [
             expanded: true,
             reference: false,
             locked: true,
-            error: false,
             configOptions: [{
               devMode: true,
               assignableMode: true,
@@ -387,7 +398,6 @@ export const mockFsData: FsNode[] = [
                 expanded: false,
                 reference: false,
                 locked: false,
-                error: false,
                 description: 'Lähetä viesti',
                 labels: [
                   {
@@ -411,6 +421,10 @@ export const mockFsData: FsNode[] = [
                   { name: 'Sarah Johnson', types: ['read'] },
                   { name: 'part-time staff', types: ['read', 'view'] },
                 ],
+                errors: [
+                  { code: 'FS-3', severity: 'CRITICAL', message: 'No Dialob form defined' },
+                  { code: 'FS-4', severity: 'CRITICAL', message: 'Service has no flow defined and cannot process customer requests' },
+                ],
               },
               {
                 id: 'sv-general',
@@ -420,7 +434,6 @@ export const mockFsData: FsNode[] = [
                 expanded: false,
                 reference: false,
                 locked: false,
-                error: false,
                 labels: [
                   {
                     id: 'sv-general-label-1',
@@ -437,6 +450,7 @@ export const mockFsData: FsNode[] = [
                   { name: 'part-time staff', types: ['read', 'write'] },
                   { name: 'Mikael Berg', types: ['write'] },
                 ],
+                errors: undefined,
               }
             ],
             changes: [
@@ -445,6 +459,7 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '17.03.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'general-message.dialob',
@@ -454,7 +469,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             labels: [
               {
                 id: 'general-dialob-label-1',
@@ -478,6 +492,10 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '07.04.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
+            errors: [
+              { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
+                          { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
+            ],
           },
           {
             id: 'taskMsgFlow.flow',
@@ -487,7 +505,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             configOptions: [{
               assignableMode: true,
               anonymousMode: true,
@@ -515,6 +532,10 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '14.04.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
             ],
             permissions: [],
+            errors: [
+              { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
+                          { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
+            ],
           }
         ],
         changes: [
@@ -526,6 +547,7 @@ export const mockFsData: FsNode[] = [
           { name: 'Mikael Berg', types: ['write', 'view'] },
           { name: 'Michael Chen', types: ['write', 'view'] },
         ],
+        errors: undefined,
       },
       {
         id: '100_residence',
@@ -535,7 +557,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         configOptions: [{
           devMode: true,
           disabledMode: true,
@@ -561,7 +582,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '28.10.2023', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '28.07.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -573,6 +593,7 @@ export const mockFsData: FsNode[] = [
               { name: 'John Smith', types: ['view', 'write', 'read'] },
               { name: 'part-time staff', types: ['view', 'write', 'read'] },
             ],
+            errors: undefined,
           },
           {
             id: 'general-message-ref1',
@@ -582,7 +603,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '05.12.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '19.08.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -594,6 +614,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Anna Virtanen', types: ['write', 'view', 'read'] },
               { name: 'everyone', types: ['read', 'write', 'view'] },
             ],
+            errors: undefined,
           },
           {
             id: 'public-inforeq.service',
@@ -603,7 +624,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             configOptions: [{
               devMode: true,
               assignableMode: true,
@@ -618,6 +638,10 @@ export const mockFsData: FsNode[] = [
               { name: 'Sarah Johnson', types: ['write'] },
               { name: 'Anna Virtanen', types: ['read', 'write'] },
             ],
+            errors: [
+              { code: 'FS-4', severity: 'CRITICAL', message: 'Service has no flow defined and cannot process customer requests' },
+                          { code: 'FS-3', severity: 'CRITICAL', message: 'No Dialob form defined' },
+            ],
           },
           {
             id: 'public-inforeq.dialob',
@@ -627,7 +651,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             configOptions: [{
               devMode: true,
             }],
@@ -637,6 +660,7 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '19.05.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'taskGenericFlow-ref1',
@@ -646,13 +670,15 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '26.04.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '09.11.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '26.05.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
+            errors: [
+              { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
+            ],
           }
         ],
         changes: [
@@ -661,6 +687,7 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '21.04.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
         ],
         permissions: [],
+        errors: undefined,
       },
       {
         id: '200_democracy',
@@ -670,7 +697,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         configOptions: [{
           devMode: true,
         }],
@@ -710,7 +736,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '09.05.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '23.11.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -722,6 +747,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Tom Walsh', types: ['view', 'read', 'write'] },
               { name: 'Mikael Berg', types: ['write', 'read', 'view'] },
             ],
+            errors: undefined,
           },
           {
             id: 'trustee-info-form.service',
@@ -731,7 +757,6 @@ export const mockFsData: FsNode[] = [
             expanded: true,
             reference: false,
             locked: false,
-            error: false,
             configOptions: [{
               assignableMode: true,
               anonymousMode: true,
@@ -745,7 +770,6 @@ export const mockFsData: FsNode[] = [
                 expanded: false,
                 reference: false,
                 locked: false,
-                error: false,
                 description: 'Luottamushenkilön tietolomake',
                 changes: [
                   { changeType: 'create', changeDate: '23.03.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -757,6 +781,7 @@ export const mockFsData: FsNode[] = [
                   { name: 'office-staff', types: ['read'] },
                   { name: 'Anna Virtanen', types: ['read', 'view'] },
                 ],
+                errors: undefined,
               }
             ],
             changes: [
@@ -769,6 +794,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Mikael Berg', types: ['write', 'read'] },
               { name: 'everyone', types: ['write', 'view'] },
             ],
+            errors: undefined,
           },
           {
             id: 'trustee-info.dialob',
@@ -778,13 +804,15 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '29.02.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '29.10.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '30.06.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
             ],
             permissions: [],
+            errors: [
+              { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
+            ],
           },
           {
             id: 'taskGenericFlow-ref2',
@@ -794,13 +822,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '07.02.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '22.10.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '07.07.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'trustee-travel-pay.service',
@@ -810,7 +838,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             configOptions: [{
               devMode: true,
               assignableMode: true,
@@ -828,6 +855,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Sarah Johnson', types: ['write'] },
               { name: 'office-staff', types: ['view', 'write', 'read'] },
             ],
+            errors: undefined,
           },
           {
             id: 'trustee-travel-pay.dialob',
@@ -837,7 +865,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '21.03.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '19.11.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -849,6 +876,7 @@ export const mockFsData: FsNode[] = [
               { name: 'John Smith', types: ['view', 'write', 'read'] },
               { name: 'part-time staff', types: ['write', 'view', 'read'] },
             ],
+            errors: undefined,
           },
           {
             id: 'general-message-ref2',
@@ -858,13 +886,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '28.06.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '11.01.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '28.07.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           }
         ],
         changes: [
@@ -876,6 +904,7 @@ export const mockFsData: FsNode[] = [
           { name: 'Tom Walsh', types: ['write'] },
           { name: 'John Smith', types: ['read', 'write', 'view'] },
         ],
+        errors: undefined,
       },
       {
         id: '350_education',
@@ -885,7 +914,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         children: [
           {
             id: 'ref-article-ref3',
@@ -895,7 +923,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '11.05.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '25.12.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -905,6 +932,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Tom Walsh', types: ['read'] },
               { name: 'Michael Chen', types: ['read', 'write'] },
             ],
+            errors: undefined,
           },
           {
             id: 'wilma-preschool.service',
@@ -914,7 +942,6 @@ export const mockFsData: FsNode[] = [
             expanded: true,
             reference: false,
             locked: false,
-            error: false,
             configOptions: [{
               assignableMode: true,
             }],
@@ -927,7 +954,6 @@ export const mockFsData: FsNode[] = [
                 expanded: false,
                 reference: false,
                 locked: false,
-                error: false,
                 description: 'Wilmatunnukset esiopetuslapsen huoltajalle',
                 changes: [
                   { changeType: 'create', changeDate: '25.02.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -935,6 +961,7 @@ export const mockFsData: FsNode[] = [
                   { changeType: 'update', changeDate: '25.08.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
                 ],
                 permissions: [],
+                errors: undefined,
               }
             ],
             changes: [
@@ -943,6 +970,7 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '18.08.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'wilma-preschool.dialob',
@@ -952,7 +980,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '01.04.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '16.12.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -962,6 +989,7 @@ export const mockFsData: FsNode[] = [
               { name: 'part-time staff', types: ['write', 'read', 'view'] },
               { name: 'Sarah Johnson', types: ['read', 'view', 'write'] },
             ],
+            errors: undefined,
           },
           {
             id: 'taskGenericFlow-ref3',
@@ -971,7 +999,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '08.09.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '09.03.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -981,6 +1008,7 @@ export const mockFsData: FsNode[] = [
               { name: 'part-time staff', types: ['write'] },
               { name: 'Tom Walsh', types: ['read', 'view', 'write'] },
             ],
+            errors: undefined,
           },
           {
             id: 'protection-order-school.service',
@@ -990,7 +1018,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             configOptions: [{
               devMode: true,
               anonymousMode: true,
@@ -1005,12 +1032,12 @@ export const mockFsData: FsNode[] = [
               { name: 'Michael Chen', types: ['read'] },
               { name: 'Anna Virtanen', types: ['view', 'read'] },
             ],
+            errors: undefined,
           },
           {
             id: 'protection-order-school.dialob',
             name: 'protection-order-school.dialob',
             type: 'dialob',
-            error: true,
             comments: undefined,
             expanded: false,
             reference: false,
@@ -1021,6 +1048,10 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '22.09.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
             ],
             permissions: [],
+            errors: [
+              { code: 'FS-1', severity: 'CRITICAL', message: 'Missing translation' },
+                          { code: 'FS-5', severity: 'WARNING', message: 'Asset in disabled mode and will not appear on the client-facing side' },
+            ],
           },
           {
             id: 'general-message-ref3',
@@ -1030,7 +1061,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '29.02.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '14.12.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -1040,6 +1070,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Michael Chen', types: ['view', 'read', 'write'] },
               { name: 'office-staff', types: ['write'] },
             ],
+            errors: undefined,
           }
         ],
         changes: [
@@ -1048,6 +1079,7 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '04.08.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
         ],
         permissions: [],
+        errors: undefined,
       },
       {
         id: '400_traffic-and-roads',
@@ -1057,7 +1089,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         children: [
           {
             id: 'ref-article-ref4',
@@ -1067,13 +1098,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '13.08.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '14.03.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '13.10.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'dig-permit.service',
@@ -1083,13 +1114,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '20.02.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '20.12.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '20.10.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'dig-permit.dialob',
@@ -1099,13 +1130,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '27.04.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '26.01.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '27.10.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'taskSplitFlow.flow',
@@ -1115,7 +1146,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             configOptions: [{
               devMode: true,
               disabledMode: true,
@@ -1127,6 +1157,7 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '03.11.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'rent-street-area.service',
@@ -1136,13 +1167,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '10.03.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '09.01.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '10.11.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'rent-street-area.dialob',
@@ -1152,7 +1183,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '17.11.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '18.05.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -1163,6 +1193,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Anna Virtanen', types: ['read', 'view'] },
               { name: 'everyone', types: ['read', 'write'] },
             ],
+            errors: undefined,
           },
           {
             id: 'private-road-sign.service',
@@ -1172,7 +1203,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '24.09.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '25.04.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -1184,6 +1214,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Tom Walsh', types: ['write', 'view', 'read'] },
               { name: 'office-staff', types: ['view'] },
             ],
+            errors: undefined,
           },
           {
             id: 'private-road-sign.dialob',
@@ -1193,7 +1224,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '01.11.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '17.05.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -1203,6 +1233,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Michael Chen', types: ['write', 'read', 'view'] },
               { name: 'everyone', types: ['read', 'view'] },
             ],
+            errors: undefined,
           },
           {
             id: 'general-message-ref4',
@@ -1212,7 +1243,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '08.05.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '21.02.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -1222,6 +1252,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Sarah Johnson', types: ['write'] },
               { name: 'Anna Virtanen', types: ['view'] },
             ],
+            errors: undefined,
           }
         ],
         changes: [
@@ -1233,6 +1264,7 @@ export const mockFsData: FsNode[] = [
           { name: 'John Smith', types: ['write', 'view', 'read'] },
           { name: 'everyone', types: ['view'] },
         ],
+        errors: undefined,
       },
       {
         id: '425_invoicing',
@@ -1242,7 +1274,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         children: [
           {
             id: 'main-invoicing.article',
@@ -1252,7 +1283,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Laskutus',
             configOptions: [{
               devMode: true,
@@ -1266,6 +1296,7 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '22.12.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'invoicing-erapaiva.service',
@@ -1275,7 +1306,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             configOptions: [{
               disabledMode: true,
             }],
@@ -1289,6 +1319,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Diana Hasselback', types: ['view'] },
               { name: 'Mikael Berg', types: ['write'] },
             ],
+            errors: undefined,
           },
           {
             id: 'invoicing-erapaiva.dialob',
@@ -1298,7 +1329,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '05.12.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '21.06.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -1308,6 +1338,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Sarah Johnson', types: ['read', 'view', 'write'] },
               { name: 'office-staff', types: ['view'] },
             ],
+            errors: undefined,
           },
           {
             id: 'taskGenericFlow-ref4',
@@ -1317,7 +1348,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '12.11.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '13.06.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -1329,6 +1359,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Michael Chen', types: ['write', 'view'] },
               { name: 'everyone', types: ['read', 'view'] },
             ],
+            errors: undefined,
           },
           {
             id: 'invoice-copy-request.service',
@@ -1338,7 +1369,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '19.09.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '20.05.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -1348,6 +1378,7 @@ export const mockFsData: FsNode[] = [
               { name: 'John Smith', types: ['write'] },
               { name: 'Tom Walsh', types: ['read'] },
             ],
+            errors: undefined,
           },
           {
             id: 'invoice-copy-request.dialob',
@@ -1357,7 +1388,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '26.11.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '27.06.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -1367,6 +1397,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Anna Virtanen', types: ['view'] },
               { name: 'everyone', types: ['write', 'read', 'view'] },
             ],
+            errors: undefined,
           },
           {
             id: 'bank-account-info.service',
@@ -1376,13 +1407,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '02.10.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '03.06.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '02.02.2026', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'bank-account-info.dialob',
@@ -1392,13 +1423,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '09.11.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '25.06.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '09.02.2026', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           }
         ],
         changes: [
@@ -1407,6 +1438,7 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '15.12.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
         ],
         permissions: [],
+        errors: undefined,
       },
       {
         id: '517_sipoo-institute',
@@ -1416,7 +1448,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         children: [
           {
             id: 'main-institute.article',
@@ -1426,7 +1457,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Sipoon opisto',
             changes: [
               { changeType: 'create', changeDate: '23.06.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -1434,6 +1464,7 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '23.02.2026', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'teacher-info.service',
@@ -1443,13 +1474,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '02.10.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '17.06.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '02.03.2026', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'teacher-info.dialob',
@@ -1459,7 +1490,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '09.02.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '24.08.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -1469,6 +1499,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Mikael Berg', types: ['view'] },
               { name: 'Michael Chen', types: ['write'] },
             ],
+            errors: undefined,
           },
           {
             id: 'taskGenericFlow-ref5',
@@ -1478,13 +1509,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '16.11.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '16.07.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '16.03.2026', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'teacher-travel-pay.service',
@@ -1494,7 +1525,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '08.10.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '24.05.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -1505,6 +1535,7 @@ export const mockFsData: FsNode[] = [
               { name: 'part-time staff', types: ['read'] },
               { name: 'Sarah Johnson', types: ['read'] },
             ],
+            errors: undefined,
           },
           {
             id: 'teacher-travel-pay.dialob',
@@ -1514,13 +1545,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '15.12.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '30.06.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '15.01.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'study-voucher.service',
@@ -1530,13 +1561,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '22.12.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '07.07.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '22.01.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'study-voucher.dialob',
@@ -1546,7 +1577,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '29.11.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '29.06.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -1558,6 +1588,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Diana Hasselback', types: ['view', 'write', 'read'] },
               { name: 'Mikael Berg', types: ['write', 'read', 'view'] },
             ],
+            errors: undefined,
           },
           {
             id: 'general-message-ref5',
@@ -1567,7 +1598,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '05.07.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '20.04.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -1577,6 +1607,7 @@ export const mockFsData: FsNode[] = [
               { name: 'John Smith', types: ['write', 'read'] },
               { name: 'Michael Chen', types: ['write', 'read'] },
             ],
+            errors: undefined,
           }
         ],
         changes: [
@@ -1585,6 +1616,7 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '16.02.2026', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
         ],
         permissions: [],
+        errors: undefined,
       },
       {
         id: '520_sipoo-water',
@@ -1594,7 +1626,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         configOptions: [{
           disabledMode: true,
         }],
@@ -1607,7 +1638,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Sipoon Vesi',
             changes: [
               { changeType: 'create', changeDate: '19.08.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -1620,6 +1650,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Diana Hasselback', types: ['write', 'read'] },
               { name: 'Tom Walsh', types: ['view', 'read', 'write'] },
             ],
+            errors: undefined,
           },
           {
             id: 'water-supply-maintenance.service',
@@ -1629,13 +1660,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '26.11.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '12.07.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '26.02.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'water-supply-maintenance.dialob',
@@ -1645,13 +1676,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '05.09.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
               { changeType: 'update', changeDate: '04.06.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '05.03.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'taskGenericFlow-ref6',
@@ -1661,7 +1692,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '12.10.2023', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '26.06.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -1672,6 +1702,7 @@ export const mockFsData: FsNode[] = [
               { name: 'everyone', types: ['read', 'view', 'write'] },
               { name: 'Mikael Berg', types: ['write'] },
             ],
+            errors: undefined,
           },
           {
             id: 'water-invoice-erapaiva.service',
@@ -1681,7 +1712,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '19.08.2023', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '03.06.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -1693,6 +1723,7 @@ export const mockFsData: FsNode[] = [
               { name: 'part-time staff', types: ['write', 'read'] },
               { name: 'office-staff', types: ['view'] },
             ],
+            errors: undefined,
           },
           {
             id: 'water-invoice-erapaiva.dialob',
@@ -1702,13 +1733,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '26.12.2023', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '10.08.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
               { changeType: 'update', changeDate: '26.03.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'water-connection-statement.service',
@@ -1718,13 +1749,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '02.04.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '01.10.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '02.04.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'water-connection-statement.dialob',
@@ -1734,7 +1765,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '09.01.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '24.08.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -1745,6 +1775,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Tom Walsh', types: ['write', 'view', 'read'] },
               { name: 'part-time staff', types: ['view', 'read'] },
             ],
+            errors: undefined,
           },
           {
             id: 'general-message-ref6',
@@ -1754,13 +1785,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '16.04.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '15.10.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '16.04.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           }
         ],
         changes: [
@@ -1772,6 +1803,7 @@ export const mockFsData: FsNode[] = [
           { name: 'Anna Virtanen', types: ['read', 'write'] },
           { name: 'office-staff', types: ['write', 'read', 'view'] },
         ],
+        errors: undefined,
       },
       {
         id: '650_leisure-time-and-youth',
@@ -1781,7 +1813,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         children: [
           {
             id: 'main-leisure.article',
@@ -1791,7 +1822,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Vapaa-aika ja nuoret',
             changes: [
               { changeType: 'create', changeDate: '30.04.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -1803,6 +1833,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Anna Virtanen', types: ['write'] },
               { name: 'Sarah Johnson', types: ['read', 'view', 'write'] },
             ],
+            errors: undefined,
           },
           {
             id: 'sports-grant-settlement.service',
@@ -1812,7 +1843,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '07.09.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '07.07.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -1822,6 +1852,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Michael Chen', types: ['read', 'view'] },
               { name: 'part-time staff', types: ['view', 'write'] },
             ],
+            errors: undefined,
           },
           {
             id: 'sports-grant-settlement.dialob',
@@ -1831,7 +1862,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '14.10.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '29.07.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -1841,6 +1871,7 @@ export const mockFsData: FsNode[] = [
               { name: 'John Smith', types: ['write'] },
               { name: 'Tom Walsh', types: ['read', 'view'] },
             ],
+            errors: undefined,
           },
           {
             id: 'taskGenericFlow-ref7',
@@ -1850,13 +1881,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: true,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '21.03.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '20.10.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '21.05.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'sports-fee-return.service',
@@ -1866,7 +1897,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '28.10.2023', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '12.08.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -1876,6 +1906,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Michael Chen', types: ['read'] },
               { name: 'Anna Virtanen', types: ['view'] },
             ],
+            errors: undefined,
           },
           {
             id: 'sports-fee-return.dialob',
@@ -1885,13 +1916,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '04.11.2023', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
               { changeType: 'update', changeDate: '19.08.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
               { changeType: 'update', changeDate: '04.06.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'children-sport-grant.service',
@@ -1901,13 +1932,13 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '11.05.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
               { changeType: 'update', changeDate: '25.11.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
               { changeType: 'update', changeDate: '11.06.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'children-sport-grant.dialob',
@@ -1917,7 +1948,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             changes: [
               { changeType: 'create', changeDate: '18.12.2023', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
               { changeType: 'update', changeDate: '17.09.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -1929,6 +1959,7 @@ export const mockFsData: FsNode[] = [
               { name: 'part-time staff', types: ['read', 'write', 'view'] },
               { name: 'Sarah Johnson', types: ['view', 'write'] },
             ],
+            errors: undefined,
           }
         ],
         changes: [
@@ -1937,6 +1968,7 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '23.04.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
         ],
         permissions: [],
+        errors: undefined,
       }
     ],
     changes: [
@@ -1945,6 +1977,7 @@ export const mockFsData: FsNode[] = [
       { changeType: 'update', changeDate: '07.01.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
     ],
     permissions: [],
+    errors: undefined,
   },
   {
     id: 'shared',
@@ -1954,7 +1987,6 @@ export const mockFsData: FsNode[] = [
     expanded: false,
     reference: false,
     locked: false,
-    error: false,
     children: [
       {
         id: 'shared-taskGenericFlow.flow',
@@ -1964,7 +1996,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         configOptions: [{
           assignableMode: true,
         }],
@@ -1979,6 +2010,7 @@ export const mockFsData: FsNode[] = [
           { name: 'everyone', types: ['view', 'read'] },
           { name: 'Tom Walsh', types: ['view', 'write', 'read'] },
         ],
+        errors: undefined,
       },
       {
         id: 'shared-taskMsgFlow.flow',
@@ -1988,7 +2020,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         configOptions: [{
           devMode: true,
           disabledMode: true,
@@ -1999,6 +2030,7 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '09.07.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
         ],
         permissions: [],
+        errors: undefined,
       },
       {
         id: 'shared-taskSplitFlow.flow',
@@ -2008,7 +2040,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         changes: [
           { changeType: 'create', changeDate: '16.04.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
           { changeType: 'update', changeDate: '30.11.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -2018,6 +2049,7 @@ export const mockFsData: FsNode[] = [
           { name: 'Sarah Johnson', types: ['read'] },
           { name: 'Tom Walsh', types: ['write', 'view', 'read'] },
         ],
+        errors: undefined,
       }
     ],
     changes: [
@@ -2026,6 +2058,7 @@ export const mockFsData: FsNode[] = [
       { changeType: 'update', changeDate: '25.06.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
     ],
     permissions: [],
+    errors: undefined,
   },
   {
     id: 'links',
@@ -2035,7 +2068,6 @@ export const mockFsData: FsNode[] = [
     expanded: false,
     reference: false,
     locked: false,
-    error: false,
     children: [
       {
         id: 'sipoo-main-site.link',
@@ -2045,7 +2077,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         description: 'https://www.sipoo.fi',
         configOptions: [{
           devMode: true,
@@ -2056,6 +2087,7 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '30.07.2025', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
         ],
         permissions: [],
+        errors: undefined,
       },
       {
         id: 'wilma-info.link',
@@ -2065,7 +2097,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         configOptions: [{
           disabledMode: true,
         }],
@@ -2080,6 +2111,7 @@ export const mockFsData: FsNode[] = [
           { name: 'Anna Virtanen', types: ['read', 'write', 'view'] },
           { name: 'John Smith', types: ['view', 'write'] },
         ],
+        errors: undefined,
       },
       {
         id: 'lupapiste.link',
@@ -2089,7 +2121,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         configOptions: [{
           disabledMode: true,
         }],
@@ -2099,6 +2130,7 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '13.08.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
         ],
         permissions: [],
+        errors: undefined,
       }
     ],
     changes: [
@@ -2111,6 +2143,7 @@ export const mockFsData: FsNode[] = [
       { name: 'Diana Hasselback', types: ['view', 'read'] },
       { name: 'Michael Chen', types: ['write'] },
     ],
+    errors: undefined,
   },
   {
     id: 'printouts',
@@ -2120,7 +2153,6 @@ export const mockFsData: FsNode[] = [
     expanded: false,
     reference: false,
     locked: false,
-    error: false,
     children: [
       {
         id: 'sipoo-main-logo.png',
@@ -2130,7 +2162,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         description: 'logo: black and white',
         configOptions: [{
           devMode: true,
@@ -2141,6 +2172,7 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '27.08.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
         ],
         permissions: [],
+        errors: undefined,
       },
       {
         id: 'sipoo-color-logo.png',
@@ -2150,7 +2182,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         description: 'logo: full color version',
         changes: [
           { changeType: 'create', changeDate: '03.02.2024', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
@@ -2163,6 +2194,7 @@ export const mockFsData: FsNode[] = [
           { name: 'part-time staff', types: ['view', 'write', 'read'] },
           { name: 'Michael Chen', types: ['write'] },
         ],
+        errors: undefined,
       },
       {
         id: 'municipal-seal.svg',
@@ -2172,7 +2204,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         description: 'official municipal seal',
         changes: [
           { changeType: 'create', changeDate: '10.03.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -2183,6 +2214,7 @@ export const mockFsData: FsNode[] = [
           { name: 'Anna Virtanen', types: ['view', 'write'] },
           { name: 'everyone', types: ['write'] },
         ],
+        errors: undefined,
       },
       {
         id: 'new-construction-permit.printout',
@@ -2192,7 +2224,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         configOptions: [{
           devMode: true,
           anonymousMode: true,
@@ -2206,7 +2237,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Finnish construction permit template',
             changes: [
               { changeType: 'create', changeDate: '24.03.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -2214,6 +2244,7 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '24.09.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'sv-construction-permit',
@@ -2223,7 +2254,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Swedish construction permit template',
             changes: [
               { changeType: 'create', changeDate: '01.06.2024', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
@@ -2235,6 +2265,7 @@ export const mockFsData: FsNode[] = [
               { name: 'office-staff', types: ['read'] },
               { name: 'Anna Virtanen', types: ['read', 'write'] },
             ],
+            errors: undefined,
           }
         ],
         changes: [
@@ -2246,6 +2277,7 @@ export const mockFsData: FsNode[] = [
           { name: 'Mikael Berg', types: ['read'] },
           { name: 'part-time staff', types: ['read'] },
         ],
+        errors: undefined,
       },
       {
         id: 'municipal-services-guide.printout',
@@ -2255,7 +2287,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         configOptions: [{
           assignableMode: true,
           disabledMode: true,
@@ -2269,7 +2300,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Kunnan palveluopas',
             changes: [
               { changeType: 'create', changeDate: '15.02.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
@@ -2280,6 +2310,7 @@ export const mockFsData: FsNode[] = [
               { name: 'office-staff', types: ['view', 'write', 'read'] },
               { name: 'Michael Chen', types: ['view', 'read', 'write'] },
             ],
+            errors: undefined,
           },
           {
             id: 'sv-services-guide',
@@ -2289,7 +2320,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Kommunal servicehandbok',
             changes: [
               { changeType: 'create', changeDate: '22.03.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -2302,6 +2332,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Tom Walsh', types: ['read', 'write', 'view'] },
               { name: 'Diana Hasselback', types: ['read', 'view', 'write'] },
             ],
+            errors: undefined,
           },
           {
             id: 'en-services-guide',
@@ -2311,7 +2342,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Municipal services guide',
             changes: [
               { changeType: 'create', changeDate: '29.06.2024', changedBy: { userName: 'Tom Walsh', email: 'tom.walsh@example.com' } },
@@ -2323,6 +2353,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Anna Virtanen', types: ['write', 'read', 'view'] },
               { name: 'Mikael Berg', types: ['write', 'read', 'view'] },
             ],
+            errors: undefined,
           }
         ],
         changes: [
@@ -2334,6 +2365,7 @@ export const mockFsData: FsNode[] = [
           { name: 'Tom Walsh', types: ['write', 'view', 'read'] },
           { name: 'everyone', types: ['view'] },
         ],
+        errors: undefined,
       },
       {
         id: 'waste-management-info.printout',
@@ -2343,7 +2375,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         children: [
           {
             id: 'fi-waste-info',
@@ -2353,7 +2384,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Jätehuolto-ohje',
             changes: [
               { changeType: 'create', changeDate: '12.06.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -2361,6 +2391,7 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '12.11.2025', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           }
         ],
         changes: [
@@ -2374,6 +2405,7 @@ export const mockFsData: FsNode[] = [
           { name: 'Sarah Johnson', types: ['write', 'view'] },
           { name: 'Mikael Berg', types: ['write'] },
         ],
+        errors: undefined,
       },
       {
         id: 'tax-information-leaflet.printout',
@@ -2383,7 +2415,6 @@ export const mockFsData: FsNode[] = [
         expanded: false,
         reference: false,
         locked: false,
-        error: false,
         children: [
           {
             id: 'fi-tax-info',
@@ -2393,7 +2424,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Verotietoesite',
             changes: [
               { changeType: 'create', changeDate: '26.03.2024', changedBy: { userName: 'Michael Chen', email: 'michael.chen@example.com' } },
@@ -2401,6 +2431,7 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '26.11.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'sv-tax-info',
@@ -2410,7 +2441,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Skatteinformationsbroschyr',
             changes: [
               { changeType: 'create', changeDate: '03.04.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -2418,6 +2448,7 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '03.12.2025', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'en-tax-info',
@@ -2427,7 +2458,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Tax information leaflet',
             changes: [
               { changeType: 'create', changeDate: '10.10.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
@@ -2435,6 +2465,7 @@ export const mockFsData: FsNode[] = [
               { changeType: 'update', changeDate: '10.12.2025', changedBy: { userName: 'Diana Hasselback', email: 'diana.hasselback@example.com' } },
             ],
             permissions: [],
+            errors: undefined,
           },
           {
             id: 'ee-tax-info',
@@ -2444,7 +2475,6 @@ export const mockFsData: FsNode[] = [
             expanded: false,
             reference: false,
             locked: false,
-            error: false,
             description: 'Maksuteabe leht',
             changes: [
               { changeType: 'create', changeDate: '17.11.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
@@ -2456,6 +2486,7 @@ export const mockFsData: FsNode[] = [
               { name: 'Mikael Berg', types: ['view', 'read', 'write'] },
               { name: 'Sarah Johnson', types: ['view', 'read', 'write'] },
             ],
+            errors: undefined,
           }
         ],
         changes: [
@@ -2464,6 +2495,7 @@ export const mockFsData: FsNode[] = [
           { changeType: 'update', changeDate: '19.11.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
         ],
         permissions: [],
+        errors: undefined,
       }
     ],
     changes: [
@@ -2472,5 +2504,6 @@ export const mockFsData: FsNode[] = [
       { changeType: 'update', changeDate: '20.08.2025', changedBy: { userName: 'John Smith', email: 'john.smith@example.com' } },
     ],
     permissions: [],
+    errors: undefined,
   },
 ];

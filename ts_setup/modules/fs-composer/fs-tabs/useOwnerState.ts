@@ -35,7 +35,7 @@ export function useOwnerState(_props: FsTabProps): OwnerState {
     isActive: activeTabIndex === index,
     isFirst: index === 0,
     isLast: index === openTabs.length - 1,
-    isError: tab.node.error === true
+    isError: tab.node.errors && tab.node.errors.length > 0 ? true : false
   }));
 
 
