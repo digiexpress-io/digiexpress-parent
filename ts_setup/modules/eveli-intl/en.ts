@@ -1420,7 +1420,7 @@ export const en = {
   'fs.direntMenu.menuItem.references': 'References ({count})',
   'fs.tabMenu.menuItem.close': 'Close',
   'fs.tabMenu.menuItem.closeToTheRight': 'Close all to the right',
-  'fs.tabMenu.menuItem.closeAll': 'Close all tabs',
+  'fs.tabMenu.menuItem.closeAll': 'Close all',
   'fs.direntPermissions.message.readWrite': 'You can read and write',
   'fs.direntPermissionType.read': 'Read',
   'fs.direntPermissionType.write': 'Write',

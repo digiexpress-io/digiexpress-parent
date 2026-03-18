@@ -5,7 +5,7 @@ function collapseAllNodesInternal(nodes: FsNode[]): FsNode[] {
   return nodes.map((node) => ({
     ...node,
     expanded: false,
-    children: node.children ? collapseAllNodesInternal(node.children) : undefined,
+    children: node.children ? collapseAllNodesInternal(node.children) : [],
   }));
 }
 
