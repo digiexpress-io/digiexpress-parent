@@ -20,6 +20,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
   const { openAsset } = useFs();
 
   const referencesCount = props.node ? getReferencesCount(props.node.id, props.node.name) : 0;
+  const lastChange = props.node?.changes[props.node.changes.length - 1];
 
   function handleEdit() {
     if (props.node) {
@@ -62,7 +63,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
       <Box className={classes.headerMain}>
         <Typography variant='h3' paddingBottom={0} paddingTop={0}>{props.node?.name}</Typography>
         <Typography variant='caption'>
-          {intl.formatMessage({ id: 'fs.direntMenu.header.lastEdited' }, { updated: props.node?.updated, user: props.node?.updatedByUser?.userName })}
+          {intl.formatMessage({ id: 'fs.direntMenu.header.lastEdited' }, { updated: lastChange?.changeDate, user: lastChange?.changedBy.userName })}
         </Typography>
       </Box>
 

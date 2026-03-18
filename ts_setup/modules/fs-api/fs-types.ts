@@ -1,8 +1,3 @@
-export interface User {
-  userName: string;
-  email: string;
-}
-
 // Mock data structure for Fs component
 export interface FsNode {
   id: string;
@@ -17,8 +12,8 @@ export interface FsNode {
   error: boolean;
   type: FsNodeType;
   configOptions?: ConfigOption[] | undefined;
-  updated: string;
-  updatedByUser: User;
+  changes: FsNodeChange[];
+  permissions: Permission[];
 }
 
 export interface ConfigOption {
@@ -28,10 +23,27 @@ export interface ConfigOption {
   anonymousMode?: boolean | undefined;
 }
 
+export interface User {
+  userName: string;
+  email: string;
+  permissions?: PermissionType[];
+}
+
+export interface FsNodeChange {
+  changeType: FsNodeChangeType;
+  changeDate: string;
+  changedBy: User;
+}
+
 export interface FsNodeLabel {
   id: FsNodeLabelId;
   value: string;
   nodeId: string;
+}
+
+export interface Permission {
+  name: string;
+  types: PermissionType[];
 }
 
 export interface FsNodeComment {
@@ -42,6 +54,8 @@ export interface FsNodeComment {
 
 export type FsNodeType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';
 export type FsNodeSecondaryView = 'references' | 'properties' | 'configuration' | 'debug' | 'preview' | 'history' | 'help' | 'errors' | 'changes';
+export type FsNodeChangeType = 'update' | 'create' | 'delete';
+export type PermissionType = 'read' | 'write' | 'view' | 'none';
 
 export type FolderId = string;
 export type ArticleId = string;

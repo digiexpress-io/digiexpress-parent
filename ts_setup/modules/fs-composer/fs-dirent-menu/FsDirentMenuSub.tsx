@@ -23,8 +23,8 @@ export const FsDirentMenuSub: React.FC<FsDirentMenuSubProps> = (props) => {
       <Box className={classes.sectionSub}>
         {props.openSubmenu === 'labels' && <FsDirentLabels node={props.node} />}
         {props.openSubmenu === 'comments' && <FsDirentComments node={props.node} />}
-        {props.openSubmenu === 'sharing' && <FsDirentPermissions />}
-        {props.openSubmenu === 'history' && <FsDirentHistory />}
+        {props.openSubmenu === 'sharing' && <FsDirentPermissions node={props.node} />}
+        {props.openSubmenu === 'history' && <FsDirentHistory node={props.node} />}
         {props.openSubmenu === 'references' && <FsDirentReferences node={props.node} />}
         {props.openSubmenu === 'new' && <FsDirentCreate />}
       </Box>

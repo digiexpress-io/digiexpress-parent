@@ -31,13 +31,13 @@ export const FsHistory: React.FC<FsHistoryProps> = (props) => {
           <Typography variant="caption" className={classes.caption}>
             {intl.formatMessage({ id: 'fs.history.sectionTitle.recentChanges' })}
           </Typography>
-          {historyData.length > 0 ? (
+          {props.node.changes.length > 0 ? (
             <div className={classes.container}>
-              {historyData.map((entry, index) => (
+              {props.node.changes.slice().reverse().map((entry, index) => (
                 <div key={index} className={classes.row}>
-                  <Typography className={classes.user}>{entry.user}</Typography>
-                  <Typography className={classes.change}>{entry.change}</Typography>
-                  <Typography className={classes.date}>{entry.date}</Typography>
+                  <Typography className={classes.user}>{entry.changedBy.userName}</Typography>
+                  <Typography className={classes.change}>{intl.formatMessage({ id: `fs.changeType.${entry.changeType}` })}</Typography>
+                  <Typography className={classes.date}>{entry.changeDate}</Typography>
                 </div>
               ))}
             </div>
@@ -51,22 +51,3 @@ export const FsHistory: React.FC<FsHistoryProps> = (props) => {
     </FsPanel>
   );
 };
-
-interface ItemHistoryEntry {
-  user: string;
-  change: string;
-  date: string;
-}
-
-const historyData: ItemHistoryEntry[] = [
-  { user: 'Diana Hasselback', change: 'Updated content', date: '15.01.2025' },
-  { user: 'office-staff', change: 'Modified labels', date: '14.01.2025' },
-  { user: 'John Smith', change: 'Updated description', date: '13.01.2025' },
-  { user: 'Diana Hasselback', change: 'Configuration changed', date: '12.01.2025' },
-  { user: 'part-time staff', change: 'Content review', date: '10.01.2025' },
-  { user: 'John Smith', change: 'Updated permissions', date: '08.01.2025' },
-  { user: 'office-staff', change: 'Added labels', date: '05.01.2025' },
-  { user: 'Diana Hasselback', change: 'Content updated', date: '03.01.2025' },
-  { user: 'John Smith', change: 'Structure modified', date: '28.12.2024' },
-  { user: 'System', change: 'File created', date: '20.12.2024' }
-];

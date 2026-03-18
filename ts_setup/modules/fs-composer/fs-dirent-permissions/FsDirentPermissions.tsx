@@ -19,27 +19,15 @@ export const FsDirentPermissions: React.FC<FsDirentPermissionsProps> = (props) =
           <div className={classes.tableHeader}>{intl.formatMessage({ id: 'fs.direntPermissions.tableHeader.privilege' })}</div>
         </div>
         <Divider className={classes.divider} />
-        {permissions.map((permission, index) => (
+        {(props.node?.permissions ?? []).map((permission, index) => (
           <div key={index} className={classes.tableRow}>
             <div className={classes.tableCell}>{permission.name}</div>
-            <div className={classes.tableCell}>{permission.privilege}</div>
+            <div className={classes.tableCell}>
+              {permission.types.map(p => intl.formatMessage({ id: `fs.direntPermissionType.${p}` })).join(', ')}
+            </div>
           </div>
         ))}
       </div>
     </FsDirentPermissionsRoot>
   );
 };
-
-interface DirentPermissions {
-  name: string;
-  privilege: string;
-}
-const permissions: DirentPermissions[] = [
-  { name: 'John Smith (Me)', privilege: 'Read & write' },
-  { name: 'Diana Hasselback', privilege: 'Read & write' },
-  { name: 'office-staff', privilege: 'read' },
-  { name: 'part-time staff', privilege: 'read' },
-  { name: 'everyone', privilege: 'read' }
-];
-
-
