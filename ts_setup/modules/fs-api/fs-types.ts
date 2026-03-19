@@ -1,13 +1,18 @@
-// Mock data structure for Fs component
+// Lightweight tree node — identity and structure only
 export interface FsDirent {
   id: string;
   name: string;
-  description?: string;
+  type: FsDirentType;
+  children: FsDirent[];
+}
+
+// Full asset payload — loaded in background, keyed by FsDirent.id
+export interface FsDirentProps {
+  id: string;
   expanded: boolean;
   reference: boolean;
   locked: boolean;
-  type: FsDirentType;
-  children: FsDirent[];
+  description?: string;
   configOptions: FsDirentConfigOption[];
   comments: FsDirentComment[];
   changes: FsDirentChange[];

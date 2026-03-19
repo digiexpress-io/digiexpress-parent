@@ -1,4 +1,3 @@
-import { FsDirent, mockFsData } from '@dxs-ts/fs-api';
 import React from 'react';
 
 export interface PositioningStrategy {
@@ -39,26 +38,4 @@ export function usePositioningStrategy(
 
     return { vertical, shouldExpandUpward };
   }, [anchorPosition, menuHeight]);
-}
-
-export interface ItemReferencesEntry {
-  assetName: string;
-  location: string;
-}
-
-export function getReferencesCount(direntId: string, direntName: string): number {
-  let count = 0;
-  function searchInDirent(dirent: FsDirent): void {
-    if (dirent.reference && dirent.name === direntName && dirent.id !== direntId) {
-      count++;
-    }
-
-    if (dirent.children) {
-      dirent.children.forEach(child => searchInDirent(child));
-    }
-  }
-
-  mockFsData.forEach(rootDirent => searchInDirent(rootDirent));
-
-  return count;
 }

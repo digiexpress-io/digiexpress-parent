@@ -1,15 +1,9 @@
 import React from 'react';
 import { FsDirent } from '../fs-types';
-import { mockFsData } from '../mock-fs-data';
 
 export interface FsOpenTab {
   dirent: FsDirent;
   pathToTopParent: string;
-}
-
-export interface ItemReferencesEntry {
-  assetName: string;
-  location: string;
 }
 
 export interface FsNavContextType {
@@ -19,8 +13,6 @@ export interface FsNavContextType {
   activeTabIndex: number;
   activeTabPath: string;
   activeDirent: FsDirent | undefined;
-  isChildError: (dirent: FsDirent) => boolean;
-  findReferencesToDirent: (dirent: FsDirent) => ItemReferencesEntry[];
   openAsset: (asset: FsDirent, pathToTopParent: string) => void;
   closeTab: (index: number) => void;
   closeAllTabs: () => void;
@@ -109,50 +101,12 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
     });
   }, []);
 
-  const isChildError = React.useCallback((dirent: FsDirent): boolean => {
-    if (dirent.errors && dirent.errors.length > 0) {
-      return true;
-    }
-    if (dirent.children) {
-      return dirent.children.some(child => isChildError(child));
-    }
-    return false;
-  }, []);
-
-  const findReferencesToDirent = React.useCallback((targetDirent: FsDirent): ItemReferencesEntry[] => {
-    const references: ItemReferencesEntry[] = [];
-
-    function searchInDirent(dirent: FsDirent, path: string[] = []): void {
-      const currentPath = [...path, dirent.name];
-
-      // Check if this dirent is a reference to our target dirent
-      if (dirent.reference && dirent.name === targetDirent.name && dirent.id !== targetDirent.id) {
-        references.push({
-          assetName: dirent.name,
-          location: currentPath.slice(0, -1).join(' / ')
-        });
-      }
-
-      // Recursively search children
-      if (dirent.children) {
-        dirent.children.forEach(child => searchInDirent(child, currentPath));
-      }
-    }
-
-    // Search through all mock data
-    mockFsData.forEach(rootDirent => searchInDirent(rootDirent));
-
-    return references;
-  }, []);
-
   const contextValue: FsNavContextType = React.useMemo(() => {
     return {
       isDarkMode,
       setIsDarkMode,
       searchExpanded,
       setSearchExpanded,
-      isChildError,
-      findReferencesToDirent,
       openTabs,
       activeTabIndex,
       activeTabPath,
@@ -162,9 +116,8 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
       closeAllTabs,
       closeTabsToTheRight,
       setActiveTab,
-
     };
-  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, closeAllTabs, closeTabsToTheRight, setActiveTab, activeDirent, isChildError, findReferencesToDirent, searchExpanded]);
+  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, closeAllTabs, closeTabsToTheRight, setActiveTab, activeDirent, searchExpanded]);
 
   return (
     <FsNavContext.Provider value={contextValue}>

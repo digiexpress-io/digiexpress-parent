@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import { FsDirentConfigOption, useFsNav } from '@dxs-ts/fs-api';
+import { FsDirentConfigOption, useFsNav, useFsDirentProps } from '@dxs-ts/fs-api';
 import { FsConfigOptionsProps } from './FsConfigOptionsProps';
 
 
@@ -12,9 +12,11 @@ export interface OwnerState {
 export function useOwnerState(props: FsConfigOptionsProps): OwnerState {
   const intl = useIntl();
   const { isDarkMode } = useFsNav();
+  const { getDirentProps } = useFsDirentProps();
+  const direntProps = props.dirent ? getDirentProps(props.dirent.id) : undefined;
 
   function isConfigOptionEnabled(optionKey: keyof FsDirentConfigOption): boolean {
-    return props.dirent?.configOptions?.some(configOption => configOption[optionKey] === true) ?? false;
+    return direntProps?.configOptions?.some(configOption => configOption[optionKey] === true) ?? false;
   }
 
   function configDescription(optionKey: keyof FsDirentConfigOption): string {

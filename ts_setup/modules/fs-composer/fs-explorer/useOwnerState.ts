@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { FsExplorerProps } from "./FsExplorerProps";
 import { FilterData, filterTreeDirents } from '../fs-search';
-import { FsDirentContextMenuData, FsDirent, mockFsData, useFsNav, handleContextMenu, collapseAll, toggleDirent } from '@dxs-ts/fs-api';
+import { FsDirentContextMenuData, FsDirent, mockFsData, useFsNav, useFsDirentProps, handleContextMenu } from '@dxs-ts/fs-api';
 
 
 export interface OwnerState {
@@ -29,12 +29,13 @@ export interface OwnerState {
   setFsData: Dispatch<SetStateAction<FsDirent[]>>;
   setFilters: Dispatch<SetStateAction<FilterData[]>>;
   onDoubleClick: (dirent: FsDirent, pathToTopParent: string) => void;
-  collapseAll: (fsData: FsDirent[], setFsData: Dispatch<SetStateAction<FsDirent[]>>) => void;
-  toggleDirent: (direntId: string, fsData: FsDirent[], setFsData: Dispatch<SetStateAction<FsDirent[]>>) => void;
+  collapseAll: () => void;
+  toggleDirent: (direntId: string) => void;
 }
 
 export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   const { isDarkMode, setIsDarkMode, openAsset, searchExpanded, setSearchExpanded } = useFsNav();
+  const { getDirentProps, collapseAll, setExpanded } = useFsDirentProps();
   const [fsData, setFsData] = React.useState<FsDirent[]>(mockFsData);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<FsDirentContextMenuData | undefined>();
@@ -42,8 +43,8 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   const [filters, setFilters] = React.useState<FilterData[]>([]);
 
   const filteredTreeData = React.useMemo(() => {
-    return filterTreeDirents(fsData, searchTerm, filters)
-  }, [fsData, searchTerm, filters])
+    return filterTreeDirents(fsData, searchTerm, filters, getDirentProps)
+  }, [fsData, searchTerm, filters, getDirentProps])
 
   function onContextMenuClose() {
     setContextMenuOpen(false);
@@ -53,7 +54,10 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     openAsset(dirent, pathToTopParent);
   }
 
-  const isAnyDirentExpanded = fsData.some(dirent => dirent.expanded || (dirent.children && dirent.children.some(child => child.expanded)));
+  const isAnyDirentExpanded = fsData.some(dirent =>
+    (getDirentProps(dirent.id)?.expanded ?? false) ||
+    (dirent.children && dirent.children.some(child => getDirentProps(child.id)?.expanded ?? false))
+  );
 
   return {
     isAnyDirentExpanded,
@@ -80,7 +84,10 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     setFilters,
 
     collapseAll,
-    toggleDirent,
+    toggleDirent: (direntId: string) => {
+      const current = getDirentProps(direntId)?.expanded ?? false;
+      setExpanded(direntId, !current);
+    },
   }
 
 }

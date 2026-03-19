@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Collapse, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
 
+import { useFsDirentProps } from '@dxs-ts/fs-api';
 import { useUtilityClasses, FsDirentRoot } from './useUtilityClasses';
 import { FsIcons, FsIcon } from '../fs-theme';
 import { FsDirentProps } from './FsDirentProps';
@@ -12,6 +13,9 @@ import { ConfigOptionIcons, FsDirentName, DirentDecorator, DirentIcon } from './
 export const FsDirent: React.FC<FsDirentProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(ownerState.isDarkMode);
+  const { getDirentProps } = useFsDirentProps();
+  const direntProps = getDirentProps(props.dirent.id);
+  const expanded = direntProps?.expanded ?? false;
 
   return (
     <FsDirentRoot className={classes.root} ownerState={ownerState}>
@@ -24,8 +28,8 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
         <Box className={classes.explorerDirentContent}>
           {ownerState.isChildren ? (
             <IconButton size='small'>
-              {ownerState.dirent.expanded ? 
-                <FsIcon small icon={FsIcons.ExpandMore} className={classes.iconExpand} /> : 
+              {expanded ?
+                <FsIcon small icon={FsIcons.ExpandMore} className={classes.iconExpand} /> :
                 <FsIcon small icon={FsIcons.ChevronRight} className={classes.iconExpand} />}
             </IconButton>
           ) : (<Box sx={{ width: 21, mr: 0.5 }} />)
@@ -46,7 +50,7 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
         </Box>
       </ListItem>
       {ownerState.isChildren && (
-        <Collapse in={ownerState.dirent.expanded} timeout={0}>
+        <Collapse in={expanded} timeout={0}>
           <List component='div' disablePadding>
             {ownerState.children.map((child) => (
               <FsDirent

@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcon, FsIcons } from '../fs-theme';
-import { useFsNav } from '@dxs-ts/fs-api';
+import { useFsNav, useFsDirentProps } from '@dxs-ts/fs-api';
 import { FsPanel } from '../fs-panel';
 import { FsReferencesProps } from './FsReferencesProps';
 import { useOwnerState } from './useOwnerState';
@@ -13,7 +13,7 @@ export const FsReferences: React.FC<FsReferencesProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const { dirent } = props;
-  const { findReferencesToDirent } = useFsNav();
+  const { findReferencesToDirent, getDirentProps } = useFsDirentProps();
   const classes = useUtilityClasses();
 
   if (!dirent) {
@@ -29,14 +29,17 @@ export const FsReferences: React.FC<FsReferencesProps> = (props) => {
   const secondaryContent = dirent.children && dirent.children.length > 0 ? (
     <div className={classes.childrenSection}>
       <Typography variant="subtitle2">{intl.formatMessage({ id: 'fs.references.sectionTitle.childReferences' })}</Typography>
-      {dirent.children.map((child) => (
-        <Box key={child.id}>
-          <Typography variant="body2">{child.name}</Typography>
-          <Typography variant="caption">
-            {intl.formatMessage({ id: 'fs.references.label.type' }, { childType: child.type })}{child.reference && ` ${intl.formatMessage({ id: 'fs.references.label.refMarker' })}`}
-          </Typography>
-        </Box>
-      ))}
+      {dirent.children.map((child) => {
+        const childProps = getDirentProps(child.id);
+        return (
+          <Box key={child.id}>
+            <Typography variant="body2">{child.name}</Typography>
+            <Typography variant="caption">
+              {intl.formatMessage({ id: 'fs.references.label.type' }, { childType: child.type })}{childProps?.reference && ` ${intl.formatMessage({ id: 'fs.references.label.refMarker' })}`}
+            </Typography>
+          </Box>
+        );
+      })}
     </div>
   ) : undefined;
 

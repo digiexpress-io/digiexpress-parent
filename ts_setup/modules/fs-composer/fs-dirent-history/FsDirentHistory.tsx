@@ -1,12 +1,16 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
+
 import { FsDirentHistoryProps } from './FsDirentHistoryProps';
 import { useUtilityClasses, FsDirentHistoryRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
+import { useFsDirentProps } from '@dxs-ts/fs-api';
 
 export const FsDirentHistory: React.FC<FsDirentHistoryProps> = (props) => {
   const intl = useIntl();
+  const { getDirentProps } = useFsDirentProps();
+  const direntProps = props.dirent ? getDirentProps(props.dirent.id) : undefined;
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
 
@@ -20,7 +24,7 @@ export const FsDirentHistory: React.FC<FsDirentHistoryProps> = (props) => {
           <div className={classes.tableHeader}>{intl.formatMessage({ id: 'fs.direntHistory.tableHeader.date' })}</div>
         </div>
         <div className={classes.divider} />
-        {(props.dirent?.changes ?? []).slice().reverse().map((entry, index) => (
+        {(direntProps?.changes ?? []).slice().reverse().map((entry, index) => (
           <div className={classes.tableRow} key={index}>
             <div className={classes.tableCell}>{entry.changedBy.userName}</div>
             <div className={classes.tableCell}>{intl.formatMessage({ id: `fs.changeType.${entry.changeType}` })}</div>

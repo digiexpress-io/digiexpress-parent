@@ -1,4 +1,4 @@
-import { useFsNav } from "@dxs-ts/fs-api";
+import { useFsNav, useFsDirentProps } from "@dxs-ts/fs-api";
 import { FsTabProps } from "./FsTabProps";
 
 
@@ -19,6 +19,7 @@ export interface OwnerState {
 
 export function useOwnerState(_props: FsTabProps): OwnerState {
   const { isDarkMode, openTabs, activeTabIndex, setActiveTab, closeTab } = useFsNav();
+  const { getDirentProps } = useFsDirentProps();
 
   const onTabClick = (index: number) => {
     setActiveTab(index);
@@ -35,7 +36,7 @@ export function useOwnerState(_props: FsTabProps): OwnerState {
     isActive: activeTabIndex === index,
     isFirst: index === 0,
     isLast: index === openTabs.length - 1,
-    isError: tab.dirent.errors && tab.dirent.errors.length > 0 ? true : false
+    isError: (getDirentProps(tab.dirent.id)?.errors?.length ?? 0) > 0
   }));
 
 

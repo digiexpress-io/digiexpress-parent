@@ -69,14 +69,14 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
 
         {ownerState.isDarkMode ? (
           <IconButton className={classes.iconDark}
-            onClick={() => ownerState.collapseAll(ownerState.fsData, ownerState.setFsData)}
+            onClick={() => ownerState.collapseAll()}
             disabled={!ownerState.isAnyDirentExpanded}
           >
             <FsIcon icon={FsIcons.CollapseAll} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.collapseAll' })} />
           </IconButton>
         ) : (
             <IconButton className={classes.iconLight}
-              onClick={() => ownerState.collapseAll(ownerState.fsData, ownerState.setFsData)}
+              onClick={() => ownerState.collapseAll()}
               disabled={!ownerState.isAnyDirentExpanded}
             >
             <FsIcon icon={FsIcons.CollapseAll} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.collapseAll' })} />
@@ -108,7 +108,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
               key={dirent.id}
               dirent={dirent}
               level={0}
-              onToggle={(direntId) => ownerState.toggleDirent(direntId, ownerState.fsData, ownerState.setFsData)}
+              onToggle={(direntId) => ownerState.toggleDirent(direntId)}
               onContextMenu={(event, dirent) => ownerState.onContextMenu(event, dirent, ownerState.setContextMenuData, ownerState.setContextMenuOpen)}
               searchTerm={ownerState.searchTerm}
             />

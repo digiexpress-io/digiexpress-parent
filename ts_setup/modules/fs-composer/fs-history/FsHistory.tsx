@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { useFsDirentProps } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
 import { FsHistoryProps } from './FsHistoryProps';
@@ -12,6 +13,9 @@ export const FsHistory: React.FC<FsHistoryProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
+  const { getDirentProps } = useFsDirentProps();
+  const direntProps = props.dirent ? getDirentProps(props.dirent.id) : undefined;
+  const changes = direntProps?.changes ?? [];
 
   if (!props.dirent) {
     return (
@@ -31,9 +35,9 @@ export const FsHistory: React.FC<FsHistoryProps> = (props) => {
           <Typography variant="caption" className={classes.caption}>
             {intl.formatMessage({ id: 'fs.history.sectionTitle.recentChanges' })}
           </Typography>
-          {props.dirent.changes.length > 0 ? (
+          {changes.length > 0 ? (
             <div className={classes.container}>
-              {props.dirent.changes.slice().reverse().map((entry, index) => (
+              {changes.slice().reverse().map((entry, index) => (
                 <div key={index} className={classes.row}>
                   <Typography className={classes.user}>{entry.changedBy.userName}</Typography>
                   <Typography className={classes.change}>{intl.formatMessage({ id: `fs.changeType.${entry.changeType}` })}</Typography>

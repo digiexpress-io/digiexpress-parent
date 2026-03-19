@@ -1,5 +1,5 @@
 import React from 'react';
-import { FsDirentConfigOption, FsDirent, useFsNav } from '@dxs-ts/fs-api';
+import { FsDirentConfigOption, FsDirent, useFsNav, useFsDirentProps } from '@dxs-ts/fs-api';
 import { FsDirentProps } from './FsDirentProps';
 import { FsDirentClasses } from './useUtilityClasses';
 
@@ -31,12 +31,14 @@ export interface OwnerState {
 
 export const useOwnerState = (props: FsDirentProps): OwnerState => {
   const { dirent, level, parentPath, onToggle, onContextMenu, searchTerm } = props;
-  const { isDarkMode, isChildError, openAsset } = useFsNav();
+  const { isDarkMode, openAsset } = useFsNav();
+  const { isChildError, getDirentProps } = useFsDirentProps();
+  const direntProps = getDirentProps(dirent.id);
 
   const isChildren = !!(dirent.children && dirent.children.length > 0);
-  const configOptions = !!(dirent.configOptions && dirent.configOptions.length > 0);
+  const configOptions = !!(direntProps?.configOptions && direntProps.configOptions.length > 0);
   const childWithError = !!(isChildren && dirent.children!.some(child => isChildError(child)));
-  const showError = !!((dirent.errors && dirent.errors.length > 0) || childWithError);
+  const showError = !!((direntProps?.errors && direntProps.errors.length > 0) || childWithError);
   const fullPath = parentPath ? `${parentPath} / ${dirent.name}` : dirent.name;
 
   return {
@@ -54,7 +56,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
 
     isChildren,
     children: _sortChildren(dirent.children ?? []),
-    options: _getConfigOptions(dirent.configOptions ?? []),
+    options: _getConfigOptions(direntProps?.configOptions ?? []),
 
     
     onToggle,

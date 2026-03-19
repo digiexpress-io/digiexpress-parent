@@ -1,18 +1,22 @@
 import React from 'react';
 import { TextField, Typography, Divider } from '@mui/material';
+import { useIntl } from 'react-intl';
+
+import { useFsDirentProps } from '@dxs-ts/fs-api';
 import { FsDirentCommentsProps } from './FsDirentCommentsProps';
 import { useUtilityClasses, FsDirentCommentsRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
-import { useIntl } from 'react-intl';
+
 
 export const FsDirentComments: React.FC<FsDirentCommentsProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
-  const { dirent } = props;
+  const { getDirentProps } = useFsDirentProps();
+  const direntProps = props.dirent ? getDirentProps(props.dirent.id) : undefined;
   const classes = useUtilityClasses();
   const [newComment, setNewComment] = React.useState('');
 
-  const comments = dirent?.comments || [];
+  const comments = direntProps?.comments || [];
 
   return (
     <FsDirentCommentsRoot className={classes.root} ownerState={ownerState}>
