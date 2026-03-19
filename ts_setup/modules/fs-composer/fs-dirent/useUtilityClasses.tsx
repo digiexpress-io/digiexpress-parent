@@ -8,8 +8,8 @@ export const MUI_NAME = 'FsDirent';
 
 export interface FsDirentClasses {
   root: string;
-  explorerNode: string;
-  explorerNodeContent: string;
+  explorerDirent: string;
+  explorerDirentContent: string;
   icon: string;
 
   iconFolder: string;
@@ -31,8 +31,8 @@ export type FsDirentClassKey = keyof FsDirentClasses;
 export const useUtilityClasses = (_isDarkTheme: boolean) => {
   const slots = {
     root: ['root'],
-    explorerNode: ['explorerNode'],
-    explorerNodeContent: ['explorerNodeContent'],
+    explorerDirent: ['explorerDirent'],
+    explorerDirentContent: ['explorerDirentContent'],
     icon: ['icon'],
     iconFolder: ['iconFolder'],
     iconArticle: ['iconArticle'],
@@ -164,7 +164,7 @@ export const FsDirentRoot = styled('div', {
       color: isDarkTheme ? FsColors.dark.text : FsColors.light.text,
     },
 
-    [`& .${MUI_NAME}-explorerNode`]: {
+    [`& .${MUI_NAME}-explorerDirent`]: {
       paddingLeft: theme.spacing(ownerState.level * 1.2),
       cursor: 'pointer',
       '&:hover': {
@@ -178,7 +178,7 @@ export const FsDirentRoot = styled('div', {
       },
     },
 
-    [`& .${MUI_NAME}-explorerNodeContent`]: {
+    [`& .${MUI_NAME}-explorerDirentContent`]: {
       display: 'flex',
       alignItems: 'center',
       width: '100%',

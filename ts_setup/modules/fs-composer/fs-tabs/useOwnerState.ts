@@ -30,12 +30,12 @@ export function useOwnerState(_props: FsTabProps): OwnerState {
   };
 
   const tabs: OwnerState['tabs'] = openTabs.map((tab, index) => ({
-    id: tab.node.id,
-    name: tab.node.name,
+    id: tab.dirent.id,
+    name: tab.dirent.name,
     isActive: activeTabIndex === index,
     isFirst: index === 0,
     isLast: index === openTabs.length - 1,
-    isError: tab.node.errors && tab.node.errors.length > 0 ? true : false
+    isError: tab.dirent.errors && tab.dirent.errors.length > 0 ? true : false
   }));
 
 

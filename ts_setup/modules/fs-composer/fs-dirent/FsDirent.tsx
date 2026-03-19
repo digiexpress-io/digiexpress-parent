@@ -6,7 +6,7 @@ import { FsIcons, FsIcon } from '../fs-theme';
 import { FsDirentProps } from './FsDirentProps';
 import { useOwnerState } from './useOwnerState';
 
-import { ConfigOptionIcons, FsDirentName, NodeDecorator, NodeIcon } from './Supports';
+import { ConfigOptionIcons, FsDirentName, DirentDecorator, DirentIcon } from './Supports';
 
 
 export const FsDirent: React.FC<FsDirentProps> = (props) => {
@@ -16,28 +16,28 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
   return (
     <FsDirentRoot className={classes.root} ownerState={ownerState}>
       <ListItem
-        className={`${classes.explorerNode} ${ownerState.showError ? 'error' : ''}`}
-        onClick={() => ownerState.isChildren && ownerState.onToggle(ownerState.node.id)}
-        onDoubleClick={() => ownerState.openAsset(ownerState.node, ownerState.fullPath)}
-        onContextMenu={(event) => ownerState.onContextMenu(event, ownerState.node)}
+        className={`${classes.explorerDirent} ${ownerState.showError ? 'error' : ''}`}
+        onClick={() => ownerState.isChildren && ownerState.onToggle(ownerState.dirent.id)}
+        onDoubleClick={() => ownerState.openAsset(ownerState.dirent, ownerState.fullPath)}
+        onContextMenu={(event) => ownerState.onContextMenu(event, ownerState.dirent)}
       >
-        <Box className={classes.explorerNodeContent}>
+        <Box className={classes.explorerDirentContent}>
           {ownerState.isChildren ? (
             <IconButton size='small'>
-              {ownerState.node.expanded ? 
+              {ownerState.dirent.expanded ? 
                 <FsIcon small icon={FsIcons.ExpandMore} className={classes.iconExpand} /> : 
                 <FsIcon small icon={FsIcons.ChevronRight} className={classes.iconExpand} />}
             </IconButton>
           ) : (<Box sx={{ width: 21, mr: 0.5 }} />)
           }
           
-          <ListItemIcon className={classes[ownerState.nodeIconClassName]}>
-            <NodeDecorator node={ownerState.node}>
-              <NodeIcon node={ownerState.node}/>
-            </NodeDecorator>
+          <ListItemIcon className={classes[ownerState.direntIconClassName]}>
+            <DirentDecorator dirent={ownerState.dirent}>
+              <DirentIcon dirent={ownerState.dirent}/>
+            </DirentDecorator>
           </ListItemIcon>
 
-          <FsDirentName node={ownerState.node}
+          <FsDirentName dirent={ownerState.dirent}
             isDarkTheme={ownerState.isDarkMode}
             error={ownerState.showError ? true : false}
             searchTerm={ownerState.searchTerm}
@@ -46,12 +46,12 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
         </Box>
       </ListItem>
       {ownerState.isChildren && (
-        <Collapse in={ownerState.node.expanded} timeout={0}>
+        <Collapse in={ownerState.dirent.expanded} timeout={0}>
           <List component='div' disablePadding>
             {ownerState.children.map((child) => (
               <FsDirent
                 key={child.id}
-                node={child}
+                dirent={child}
                 level={ownerState.level + 1}
                 parentPath={ownerState.fullPath}
                 onToggle={ownerState.onToggle}

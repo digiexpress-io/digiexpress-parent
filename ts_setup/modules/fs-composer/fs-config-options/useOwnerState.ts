@@ -1,23 +1,23 @@
 import { useIntl } from 'react-intl';
-import { ConfigOption, useFs } from '@dxs-ts/fs-api';
+import { FsDirentConfigOption, useFs } from '@dxs-ts/fs-api';
 import { FsConfigOptionsProps } from './FsConfigOptionsProps';
 
 
 export interface OwnerState {
   isDarkMode: boolean;
-  isConfigOptionEnabled: (optionKey: keyof ConfigOption) => boolean;
-  configDescription: (optionKey: keyof ConfigOption) => string;
+  isConfigOptionEnabled: (optionKey: keyof FsDirentConfigOption) => boolean;
+  configDescription: (optionKey: keyof FsDirentConfigOption) => string;
 }
 
 export function useOwnerState(props: FsConfigOptionsProps): OwnerState {
   const intl = useIntl();
   const { isDarkMode } = useFs();
 
-  function isConfigOptionEnabled(optionKey: keyof ConfigOption): boolean {
-    return props.node?.configOptions?.some(configOption => configOption[optionKey] === true) ?? false;
+  function isConfigOptionEnabled(optionKey: keyof FsDirentConfigOption): boolean {
+    return props.dirent?.configOptions?.some(configOption => configOption[optionKey] === true) ?? false;
   }
 
-  function configDescription(optionKey: keyof ConfigOption): string {
+  function configDescription(optionKey: keyof FsDirentConfigOption): string {
     switch (optionKey) {
       case 'devMode':
         return intl.formatMessage({ id: 'fs.configOptions.optionKey.devMode.desc' });

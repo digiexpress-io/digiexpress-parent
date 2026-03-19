@@ -5,6 +5,6 @@ export interface FsPanelProps {
   icon?: React.ReactNode;
   children?: React.ReactNode;
   secondaryChildren?: React.ReactNode;
-  noNodeMessage?: string;
-  activeNode?: boolean;
+  noDirentMessage?: string;
+  activeDirent?: boolean;
 }

@@ -18,7 +18,7 @@ export const FsChanges: React.FC<FsChangesProps> = (props) => {
 
 
   return (
-    <FsPanel title={intl.formatMessage({ id: 'fs.changesView.title' })} icon={<FsIcon icon={FsIcons.Save} large />} activeNode={true}>
+    <FsPanel title={intl.formatMessage({ id: 'fs.changesView.title' })} icon={<FsIcon icon={FsIcons.Save} large />} activeDirent={true}>
       <div className={classes.actionBar}>
         <Button variant='outlined' className={classes.discardButton}>{intl.formatMessage({ id: 'fs.changesView.discardAll' })}</Button>
         <Button>{intl.formatMessage({ id: 'fs.changesView.saveAll' })}</Button>

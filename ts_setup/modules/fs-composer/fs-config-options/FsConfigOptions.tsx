@@ -6,30 +6,29 @@ import { FsPanel } from '../fs-panel';
 import { FsConfigOptionsProps } from './FsConfigOptionsProps';
 import { useOwnerState } from './useOwnerState';
 import { FsConfigOptionsRoot, useUtilityClasses } from './useUtilityClasses';
-import { ConfigOption } from '@dxs-ts/fs-api';
+import { FsDirentConfigOption } from '@dxs-ts/fs-api';
 
-const allConfigOptions: (keyof ConfigOption)[] = ['devMode', 'disabledMode', 'anonymousMode', 'assignableMode'];
+const allConfigOptions: (keyof FsDirentConfigOption)[] = ['devMode', 'disabledMode', 'anonymousMode', 'assignableMode'];
 
 export const FsConfigOptions: React.FC<FsConfigOptionsProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
 
-  const direntName = props.node ? props.node.name : 'eeee';
+  const direntName = props.dirent ? props.dirent.name : 'eeee';
 
-  if (!props.node) {
+  if (!props.dirent) {
     return (
-      <FsPanel
-        title={intl.formatMessage({ id: 'fs.configOptions.title' })}
-        icon={<FsIcon icon={FsIcons.Settings} large />} activeNode={false}
-        noNodeMessage={intl.formatMessage({ id: 'fs.configOptions.message.selectDirent' })}>
+      <FsPanel title={intl.formatMessage({ id: 'fs.configOptions.title' })}
+        icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={false}
+        noDirentMessage={intl.formatMessage({ id: 'fs.configOptions.message.selectDirent' })}>
       </FsPanel>
     );
   }
 
   return (
     <FsPanel title={intl.formatMessage({ id: 'fs.configOptions.title.direntName' }, { direntName })}
-      icon={<FsIcon icon={FsIcons.Settings} large />} activeNode={true}>
+      icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={true}>
       <FsConfigOptionsRoot className={classes.root} ownerState={ownerState}>
         {allConfigOptions.map((optionKey) => (
           <div key={optionKey} className={classes.optionItem}>

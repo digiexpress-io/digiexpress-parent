@@ -9,15 +9,15 @@ import { useOwnerState } from './useOwnerState';
 export const FsDirentReferences: React.FC<FsDirentReferencesProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
-  const { node } = props;
+  const { dirent } = props;
   const classes = useUtilityClasses();
 
   const references = React.useMemo(() => {
-    if (!node) {
+    if (!dirent) {
       return [];
     }
-    return ownerState.findReferencesToNode(node);
-  }, [node, ownerState.findReferencesToNode]);
+    return ownerState.findReferencesToDirent(dirent);
+  }, [dirent, ownerState.findReferencesToDirent]);
 
   return (
     <FsDirentReferencesRoot className={classes.root} ownerState={ownerState}>

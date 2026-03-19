@@ -1,18 +1,18 @@
 import React from 'react';
-import { useFs, FsNode } from '@dxs-ts/fs-api';
+import { useFs, FsDirent } from '@dxs-ts/fs-api';
 import { FsSearchProps } from './FsSearchProps';
-import { FsNodeType } from '../fs-theme';
+import { FsDirentType } from '../fs-theme';
 
 export interface FilterData {
   label: string;
-  type: FsNodeType;
+  type: FsDirentType;
 }
 
 export function filterTreeNodes(
-  nodes: FsNode[],
+  nodes: FsDirent[],
   searchTerm: string,
   visibleFilters: FilterData[]
-): FsNode[] {
+): FsDirent[] {
   const visibleTypes = visibleFilters.map(filter => filter.type);
   const isNoFiltersSelected = visibleFilters.length === 0;
   const isSearchTermEmpty = !searchTerm.trim() || searchTerm.trim().length < 3;
@@ -21,7 +21,7 @@ export function filterTreeNodes(
     return nodes;
   }
 
-  const filtered: FsNode[] = [];
+  const filtered: FsDirent[] = [];
 
   for (const node of nodes) {
     const nameMatches = node.name.toLowerCase().includes(searchTerm.toLowerCase());

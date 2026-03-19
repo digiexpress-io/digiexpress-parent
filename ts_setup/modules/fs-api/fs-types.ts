@@ -1,22 +1,22 @@
 // Mock data structure for Fs component
-export interface FsNode {
+export interface FsDirent {
   id: string;
   name: string;
   description?: string;
   expanded: boolean;
   reference: boolean;
   locked: boolean;
-  type: FsNodeType;
-  children: FsNode[];
-  configOptions: ConfigOption[];
-  comments: FsNodeComment[];
-  changes: FsNodeChange[];
-  permissions: Permission[];
-  labels: FsNodeLabel[];
-  errors: FsNodeError[];
+  type: FsDirentType;
+  children: FsDirent[];
+  configOptions: FsDirentConfigOption[];
+  comments: FsDirentComment[];
+  changes: FsDirentChange[];
+  permissions: FsDirentPermission[];
+  labels: FsDirentLabel[];
+  errors: FsDirentError[];
 }
 
-export interface ConfigOption {
+export interface FsDirentConfigOption {
   devMode?: boolean | undefined;
   assignableMode?: boolean | undefined;
   disabledMode?: boolean | undefined;
@@ -26,42 +26,42 @@ export interface ConfigOption {
 export interface User {
   userName: string;
   email: string;
-  permissions?: PermissionType[];
+  permissions?: FsDirentPermissionType[];
 }
 
-export interface FsNodeError {
+export interface FsDirentError {
   code: string;
-  severity: ErrorSeverityType;
+  severity: FsDirentErrorSeverityType;
   message: string;
 }
 
-export interface FsNodeChange {
-  changeType: FsNodeChangeType;
+export interface FsDirentChange {
+  changeType: FsDirentChangeType;
   changeDate: string;
   changedBy: User;
 }
 
-export interface FsNodeLabel {
-  id: FsNodeLabelId;
+export interface FsDirentLabel {
+  id: FsDirentLabelId;
   value: string;
 }
 
-export interface Permission {
+export interface FsDirentPermission {
   name: string;
-  types: PermissionType[];
+  types: FsDirentPermissionType[];
 }
 
-export interface FsNodeComment {
+export interface FsDirentComment {
   comment: string;
   author: string;
   created: string;
 }
 
-export type FsNodeType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';
-export type FsNodeSecondaryView = 'references' | 'properties' | 'configuration' | 'debug' | 'preview' | 'history' | 'help' | 'errors' | 'changes';
-export type FsNodeChangeType = 'update' | 'create' | 'delete';
-export type PermissionType = 'read' | 'write' | 'view' | 'none';
-export type ErrorSeverityType = 'CRITICAL' | 'WARNING';
+export type FsDirentType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';
+export type FsDirentSecondaryView = 'references' | 'properties' | 'configuration' | 'debug' | 'preview' | 'history' | 'help' | 'errors' | 'changes';
+export type FsDirentChangeType = 'update' | 'create' | 'delete';
+export type FsDirentPermissionType = 'read' | 'write' | 'view' | 'none';
+export type FsDirentErrorSeverityType = 'CRITICAL' | 'WARNING';
 
 export type FolderId = string;
 export type ArticleId = string;
@@ -73,15 +73,15 @@ export type LinkId = string;
 export type PrintoutId = string;
 export type ImageId = string;
 export type TemplateId = string;
-export type FsNodeLabelId = string;
+export type FsDirentLabelId = string;
 
 export interface Folder {
   id: FolderId;
   name: string;
-  labels: FsNodeLabel[] | undefined;
+  labels: FsDirentLabel[] | undefined;
   type: 'folder';
   isExpanded?: boolean;
-  children?: FsNode[] | undefined;
+  children?: FsDirent[] | undefined;
 }
 
 export interface Article {
@@ -90,7 +90,7 @@ export interface Article {
   type: 'article';
   description?: string;
   isExpanded?: boolean;
-  children?: FsNode[];
+  children?: FsDirent[];
 }
 
 export interface Language {
@@ -106,7 +106,7 @@ export interface Service {
   type: 'service';
   isExpanded?: boolean;
   isReference?: boolean;
-  children?: FsNode[];
+  children?: FsDirent[];
 }
 
 export interface Dialob {
@@ -134,7 +134,7 @@ export interface Printout {
   name: string;
   type: 'printout';
   isExpanded?: boolean;
-  children?: FsNode[];
+  children?: FsDirent[];
 }
 
 export interface Image {
@@ -151,7 +151,7 @@ export interface Template {
   description?: string;
 }
 
-export interface FsContextMenuData {
-  node: FsNode;
+export interface FsDirentContextMenuData {
+  dirent: FsDirent;
   anchorPosition: { top: number; left: number };
 }

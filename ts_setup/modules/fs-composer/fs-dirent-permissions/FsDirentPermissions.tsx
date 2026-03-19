@@ -19,7 +19,7 @@ export const FsDirentPermissions: React.FC<FsDirentPermissionsProps> = (props) =
           <div className={classes.tableHeader}>{intl.formatMessage({ id: 'fs.direntPermissions.tableHeader.privilege' })}</div>
         </div>
         <Divider className={classes.divider} />
-        {(props.node?.permissions ?? []).map((permission, index) => (
+        {(props.dirent?.permissions ?? []).map((permission, index) => (
           <div key={index} className={classes.tableRow}>
             <div className={classes.tableCell}>{permission.name}</div>
             <div className={classes.tableCell}>

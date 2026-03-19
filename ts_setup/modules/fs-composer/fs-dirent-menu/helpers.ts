@@ -1,4 +1,4 @@
-import { FsNode, mockFsData } from '@dxs-ts/fs-api';
+import { FsDirent, mockFsData } from '@dxs-ts/fs-api';
 import React from 'react';
 
 export interface PositioningStrategy {
@@ -48,7 +48,7 @@ export interface ItemReferencesEntry {
 
 export function getReferencesCount(nodeId: string, nodeName: string): number {
   let count = 0;
-  function searchInNode(node: FsNode): void {
+  function searchInNode(node: FsDirent): void {
     if (node.reference && node.name === nodeName && node.id !== nodeId) {
       count++;
     }

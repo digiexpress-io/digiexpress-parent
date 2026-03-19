@@ -1,28 +1,28 @@
-import { FsNode } from "@dxs-ts/fs-api";
+import { FsDirent } from "@dxs-ts/fs-api";
 
 
-interface FsNodeMenuProps {
-  node: FsNode | undefined;
+interface FsDirentMenuProps {
+  dirent: FsDirent | undefined;
   anchorPosition: { top: number; left: number } | undefined;
   open: boolean;
   onClose: () => void;
   onExited?: () => void;
 }
 
-interface FsNodeMenuMainProps {
-  node: FsNode | undefined;
+interface FsDirentMenuMainProps {
+  dirent: FsDirent | undefined;
   openSubmenu: string | undefined;
   onSubmenuOpen: (submenuType: string) => void;
   onClose: () => void;
 }
 
-interface FsNodeMenuSubProps {
-  node: FsNode | undefined;
+interface FsDirentMenuSubProps {
+  dirent: FsDirent | undefined;
   openSubmenu: string | undefined;
 }
 
-interface NodeCommentsProps {
-  node: FsNode | undefined;
+interface DirentCommentsProps {
+  dirent: FsDirent | undefined;
 }
 
 interface ItemHistoryEntry {
@@ -32,8 +32,8 @@ interface ItemHistoryEntry {
 }
 
 
-interface NodeReferencessProps {
-  node?: FsNode;
+interface DirentReferencesProps {
+  dirent?: FsDirent;
 }
 
 

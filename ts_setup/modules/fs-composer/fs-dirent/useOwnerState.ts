@@ -1,24 +1,24 @@
 import React from 'react';
-import { ConfigOption, FsNode, useFs } from '@dxs-ts/fs-api';
+import { FsDirentConfigOption, FsDirent, useFs } from '@dxs-ts/fs-api';
 import { FsDirentProps } from './FsDirentProps';
 import { FsDirentClasses } from './useUtilityClasses';
 
 export interface OwnerState {
 
-  onToggle: (nodeId: string) => void;
-  onContextMenu: (event: React.MouseEvent, node: FsNode) => void;
+  onToggle: (direntId: string) => void;
+  onContextMenu: (event: React.MouseEvent, dirent: FsDirent) => void;
 
-  isChildError: (node: FsNode) => boolean;
-  openAsset: (asset: FsNode, pathToTopParent: string) => void;
+  isChildError: (dirent: FsDirent) => boolean;
+  openAsset: (asset: FsDirent, pathToTopParent: string) => void;
 
-  node: FsNode;
-  nodeIconClassName: keyof FsDirentClasses;
+  dirent: FsDirent;
+  direntIconClassName: keyof FsDirentClasses;
   level: number;
   parentPath?: string;
   fullPath: string;
   searchTerm: string;
-  children: FsNode[];
-  options: (keyof ConfigOption)[];
+  children: FsDirent[];
+  options: (keyof FsDirentConfigOption)[];
 
   
   isDarkMode: boolean;
@@ -30,18 +30,18 @@ export interface OwnerState {
 
 
 export const useOwnerState = (props: FsDirentProps): OwnerState => {
-  const { node, level, parentPath, onToggle, onContextMenu, searchTerm } = props;
+  const { dirent, level, parentPath, onToggle, onContextMenu, searchTerm } = props;
   const { isDarkMode, isChildError, openAsset } = useFs();
 
-  const isChildren = !!(node.children && node.children.length > 0);
-  const configOptions = !!(node.configOptions && node.configOptions.length > 0);
-  const childWithError = !!(isChildren && node.children!.some(child => isChildError(child)));
-  const showError = !!((node.errors && node.errors.length > 0) || childWithError);
-  const fullPath = parentPath ? `${parentPath} / ${node.name}` : node.name;
+  const isChildren = !!(dirent.children && dirent.children.length > 0);
+  const configOptions = !!(dirent.configOptions && dirent.configOptions.length > 0);
+  const childWithError = !!(isChildren && dirent.children!.some(child => isChildError(child)));
+  const showError = !!((dirent.errors && dirent.errors.length > 0) || childWithError);
+  const fullPath = parentPath ? `${parentPath} / ${dirent.name}` : dirent.name;
 
   return {
-    node,
-    nodeIconClassName: _getIconClassName(node),
+    dirent,
+    direntIconClassName: _getIconClassName(dirent),
     level,
     parentPath,
     searchTerm,
@@ -53,8 +53,8 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
     showError,
 
     isChildren,
-    children: _sortChildren(node.children ?? []),
-    options: _getConfigOptions(node.configOptions ?? []),
+    children: _sortChildren(dirent.children ?? []),
+    options: _getConfigOptions(dirent.configOptions ?? []),
 
     
     onToggle,
@@ -66,7 +66,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
 
 
 
-function _sortChildren(children: FsNode[]) {
+function _sortChildren(children: FsDirent[]) {
   const order = ['article', 'service', 'dialob', 'flow', 'link', 'language', 'printout', 'image', 'template'];
   return children.sort((a, b) => {
     const aIndex = order.indexOf(a.type);
@@ -75,16 +75,16 @@ function _sortChildren(children: FsNode[]) {
   });
 }
 
-function _getConfigOptions(options: ConfigOption[]) {
+function _getConfigOptions(options: FsDirentConfigOption[]) {
   return options.flatMap((opt) => Object.entries(opt)
       .filter(([_, value]) => value === true)
-      .map(([key]) => key as keyof ConfigOption)
+      .map(([key]) => key as keyof FsDirentConfigOption)
   )
 }
 
 
-function _getIconClassName(node: FsNode): keyof FsDirentClasses {
-  switch (node.type) {
+function _getIconClassName(dirent: FsDirent): keyof FsDirentClasses {
+  switch (dirent.type) {
     case 'folder': return 'iconFolder';
     case 'article': return 'iconArticle';
     case 'service': return 'iconService';

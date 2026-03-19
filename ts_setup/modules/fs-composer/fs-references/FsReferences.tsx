@@ -12,24 +12,24 @@ import { FsReferencesRoot, useUtilityClasses } from './useUtilityClasses';
 export const FsReferences: React.FC<FsReferencesProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
-  const { node } = props;
-  const { findReferencesToNode } = useFs();
+  const { dirent } = props;
+  const { findReferencesToDirent } = useFs();
   const classes = useUtilityClasses();
 
-  if (!node) {
+  if (!dirent) {
     return (
-      <FsPanel title={intl.formatMessage({ id: 'fs.references.title' })} icon={<FsIcon icon={FsIcons.Tree} large />} activeNode={false} noNodeMessage={intl.formatMessage({ id: 'fs.references.message.selectNode' })}>
+      <FsPanel title={intl.formatMessage({ id: 'fs.references.title' })} icon={<FsIcon icon={FsIcons.Tree} large />} activeDirent={false} noDirentMessage={intl.formatMessage({ id: 'fs.references.message.selectNode' })}>
         <></>
       </FsPanel>
     );
   }
 
-  const references = findReferencesToNode(node);
+  const references = findReferencesToDirent(dirent);
 
-  const secondaryContent = node.children && node.children.length > 0 ? (
+  const secondaryContent = dirent.children && dirent.children.length > 0 ? (
     <div className={classes.childrenSection}>
       <Typography variant="subtitle2">{intl.formatMessage({ id: 'fs.references.sectionTitle.childReferences' })}</Typography>
-      {node.children.map((child) => (
+      {dirent.children.map((child) => (
         <Box key={child.id}>
           <Typography variant="body2">{child.name}</Typography>
           <Typography variant="caption">
@@ -41,7 +41,7 @@ export const FsReferences: React.FC<FsReferencesProps> = (props) => {
   ) : undefined;
 
   return (
-    <FsPanel title={intl.formatMessage({ id: 'fs.references.title.nodeName' }, { nodeName: node.name })} icon={<FsIcon icon={FsIcons.Tree} large />} secondaryChildren={secondaryContent} activeNode={true}>
+    <FsPanel title={intl.formatMessage({ id: 'fs.references.title.direntName' }, { direntName: dirent.name })} icon={<FsIcon icon={FsIcons.Tree} large />} secondaryChildren={secondaryContent} activeDirent={true}>
       <FsReferencesRoot className={classes.root} ownerState={ownerState}>
         <div className={classes.referenceSection}>
           {references.length > 0 ? (

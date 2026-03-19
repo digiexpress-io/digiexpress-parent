@@ -1,9 +1,9 @@
 import React from 'react';
-import { FsNode } from '../fs-types';
+import { FsDirent } from '../fs-types';
 import { mockFsData } from '../mock-fs-data';
 
 export interface FsOpenTab {
-  node: FsNode;
+  dirent: FsDirent;
   pathToTopParent: string;
 }
 
@@ -18,10 +18,10 @@ export interface FsContextType {
   openTabs: FsOpenTab[];
   activeTabIndex: number;
   activeTabPath: string;
-  activeNode: FsNode | undefined;
-  isChildError: (node: FsNode) => boolean;
-  findReferencesToNode: (node: FsNode) => ItemReferencesEntry[];
-  openAsset: (asset: FsNode, pathToTopParent: string) => void;
+  activeDirent: FsDirent | undefined;
+  isChildError: (dirent: FsDirent) => boolean;
+  findReferencesToDirent: (dirent: FsDirent) => ItemReferencesEntry[];
+  openAsset: (asset: FsDirent, pathToTopParent: string) => void;
   closeTab: (index: number) => void;
   closeAllTabs: () => void;
   closeTabsToTheRight: (index: number) => void;
@@ -43,11 +43,11 @@ export const FsProvider: React.FC<FsProviderProps> = (props) => {
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
   const [activeTabPath, setActiveTabPath] = React.useState('');
   const activeTab = openTabs[activeTabIndex];
-  const activeNode = activeTab?.node;
+  const activeDirent = activeTab?.dirent;
 
 
 
-  const openAsset = React.useCallback((asset: FsNode, pathToTopParent: string) => {
+  const openAsset = React.useCallback((asset: FsDirent, pathToTopParent: string) => {
     if (asset.type === 'folder') {
       return;
     }
@@ -55,7 +55,7 @@ export const FsProvider: React.FC<FsProviderProps> = (props) => {
     setActiveTabPath(pathToTopParent);
 
     setOpenTabs(prevTabs => {
-      const existingIndex = prevTabs.findIndex(tab => tab.node.id === asset.id);
+      const existingIndex = prevTabs.findIndex(tab => tab.dirent.id === asset.id);
       if (existingIndex !== -1) {
         setActiveTabIndex(existingIndex);
         setActiveTabPath(prevTabs[existingIndex].pathToTopParent);
@@ -63,7 +63,7 @@ export const FsProvider: React.FC<FsProviderProps> = (props) => {
       }
 
       const newTab: FsOpenTab = {
-        node: asset,
+        dirent: asset,
         pathToTopParent,
       };
       const newTabs = [...prevTabs, newTab];
@@ -109,38 +109,38 @@ export const FsProvider: React.FC<FsProviderProps> = (props) => {
     });
   }, []);
 
-  const isChildError = React.useCallback((node: FsNode): boolean => {
-    if (node.errors && node.errors.length > 0) {
+  const isChildError = React.useCallback((dirent: FsDirent): boolean => {
+    if (dirent.errors && dirent.errors.length > 0) {
       return true;
     }
-    if (node.children) {
-      return node.children.some(child => isChildError(child));
+    if (dirent.children) {
+      return dirent.children.some(child => isChildError(child));
     }
     return false;
   }, []);
 
-  const findReferencesToNode = React.useCallback((targetNode: FsNode): ItemReferencesEntry[] => {
+  const findReferencesToDirent = React.useCallback((targetDirent: FsDirent): ItemReferencesEntry[] => {
     const references: ItemReferencesEntry[] = [];
 
-    function searchInNode(node: FsNode, path: string[] = []): void {
-      const currentPath = [...path, node.name];
+    function searchInDirent(dirent: FsDirent, path: string[] = []): void {
+      const currentPath = [...path, dirent.name];
 
-      // Check if this node is a reference to our target node
-      if (node.reference && node.name === targetNode.name && node.id !== targetNode.id) {
+      // Check if this dirent is a reference to our target dirent
+      if (dirent.reference && dirent.name === targetDirent.name && dirent.id !== targetDirent.id) {
         references.push({
-          assetName: node.name,
+          assetName: dirent.name,
           location: currentPath.slice(0, -1).join(' / ')
         });
       }
 
       // Recursively search children
-      if (node.children) {
-        node.children.forEach(child => searchInNode(child, currentPath));
+      if (dirent.children) {
+        dirent.children.forEach(child => searchInDirent(child, currentPath));
       }
     }
 
     // Search through all mock data
-    mockFsData.forEach(rootNode => searchInNode(rootNode));
+    mockFsData.forEach(rootDirent => searchInDirent(rootDirent));
 
     return references;
   }, []);
@@ -152,11 +152,11 @@ export const FsProvider: React.FC<FsProviderProps> = (props) => {
       searchExpanded,
       setSearchExpanded,
       isChildError,
-      findReferencesToNode,
+      findReferencesToDirent,
       openTabs,
       activeTabIndex,
       activeTabPath,
-      activeNode,
+      activeDirent,
       openAsset,
       closeTab,
       closeAllTabs,
@@ -164,7 +164,7 @@ export const FsProvider: React.FC<FsProviderProps> = (props) => {
       setActiveTab,
 
     };
-  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, closeAllTabs, closeTabsToTheRight, setActiveTab, activeNode, isChildError, findReferencesToNode, searchExpanded]);
+  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, closeAllTabs, closeTabsToTheRight, setActiveTab, activeDirent, isChildError, findReferencesToDirent, searchExpanded]);
 
   return (
     <FsContext.Provider value={contextValue}>

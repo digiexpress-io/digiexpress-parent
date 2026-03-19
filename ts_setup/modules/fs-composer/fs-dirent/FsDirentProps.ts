@@ -1,10 +1,10 @@
-import { FsNode } from '@dxs-ts/fs-api';
+import { FsDirent } from '@dxs-ts/fs-api';
 
 export interface FsDirentProps {
-  node: FsNode;
+  dirent: FsDirent;
   level: number;
   parentPath?: string;
-  onToggle: (nodeId: string) => void;
-  onContextMenu: (event: React.MouseEvent, node: FsNode) => void;
+  onToggle: (direntId: string) => void;
+  onContextMenu: (event: React.MouseEvent, dirent: FsDirent) => void;
   searchTerm: string;
 }

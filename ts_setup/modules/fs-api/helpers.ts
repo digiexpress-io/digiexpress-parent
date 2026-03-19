@@ -1,44 +1,44 @@
 import React from 'react';
-import { FsNode, FsContextMenuData } from './fs-types';
+import { FsDirent, FsDirentContextMenuData } from './fs-types';
 
-function collapseAllNodesInternal(nodes: FsNode[]): FsNode[] {
-  return nodes.map((node) => ({
-    ...node,
+function collapseAllDirentsInternal(dirents: FsDirent[]): FsDirent[] {
+  return dirents.map((dirent) => ({
+    ...dirent,
     expanded: false,
-    children: node.children ? collapseAllNodesInternal(node.children) : [],
+    children: dirent.children ? collapseAllDirentsInternal(dirent.children) : [],
   }));
 }
 
 export function collapseAll(
-  fsData: FsNode[],
-  setFsData: React.Dispatch<React.SetStateAction<FsNode[]>>
+  fsData: FsDirent[],
+  setFsData: React.Dispatch<React.SetStateAction<FsDirent[]>>
 ): void {
-  setFsData(collapseAllNodesInternal(fsData));
+  setFsData(collapseAllDirentsInternal(fsData));
 }
 
-function toggleNodeInternal(nodes: FsNode[], nodeId: string): FsNode[] {
-  return nodes.map((node) => {
-    if (node.id === nodeId) {
-      return { ...node, expanded: !node.expanded };
+function toggleDirentInternal(dirents: FsDirent[], direntId: string): FsDirent[] {
+  return dirents.map((dirent) => {
+    if (dirent.id === direntId) {
+      return { ...dirent, expanded: !dirent.expanded };
     }
-    if (node.children) {
-      return { ...node, children: toggleNodeInternal(node.children, nodeId) };
+    if (dirent.children) {
+      return { ...dirent, children: toggleDirentInternal(dirent.children, direntId) };
     }
-    return node;
+    return dirent;
   });
 }
 
-export function toggleNode(nodeId: string, fsData: FsNode[], setFsData: React.Dispatch<React.SetStateAction<FsNode[]>>): void {
-  setFsData(toggleNodeInternal(fsData, nodeId));
+export function toggleDirent(direntId: string, fsData: FsDirent[], setFsData: React.Dispatch<React.SetStateAction<FsDirent[]>>): void {
+  setFsData(toggleDirentInternal(fsData, direntId));
 }
 
-export function handleContextMenu( event: React.MouseEvent, node: FsNode,
-  setContextMenuData: React.Dispatch<React.SetStateAction<FsContextMenuData | undefined>>,
+export function handleContextMenu(event: React.MouseEvent, dirent: FsDirent,
+  setContextMenuData: React.Dispatch<React.SetStateAction<FsDirentContextMenuData | undefined>>,
   setContextMenuOpen: React.Dispatch<React.SetStateAction<boolean>>
 ): void {
   event.preventDefault();
   setContextMenuData({
-    node,
+    dirent,
     anchorPosition: {
       top: event.clientY,
       left: event.clientX,

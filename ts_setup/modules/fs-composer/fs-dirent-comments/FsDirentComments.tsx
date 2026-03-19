@@ -8,11 +8,11 @@ import { useIntl } from 'react-intl';
 export const FsDirentComments: React.FC<FsDirentCommentsProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
-  const { node } = props;
+  const { dirent } = props;
   const classes = useUtilityClasses();
   const [newComment, setNewComment] = React.useState('');
 
-  const comments = node?.comments || [];
+  const comments = dirent?.comments || [];
 
   return (
     <FsDirentCommentsRoot className={classes.root} ownerState={ownerState}>

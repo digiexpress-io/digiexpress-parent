@@ -20,7 +20,7 @@ export interface ContentPanelProps {
 
 export const ContentPanel: React.FC<ContentPanelProps> = ({ ownerState, className }) => {
   const intl = useIntl();
-  const { activeNode, selectedView } = ownerState;
+  const { activeDirent, selectedView } = ownerState;
 
   return (
     <div className={className}>
@@ -29,21 +29,21 @@ export const ContentPanel: React.FC<ContentPanelProps> = ({ ownerState, classNam
           <Typography>{intl.formatMessage({ id: 'fs.main.chooseView.message' })}</Typography>
         </FsPanel>
       ) : selectedView === 'changes' ? (
-          <FsChanges node={activeNode} />
+          <FsChanges dirent={activeDirent} />
         ) : (() => {
           switch (selectedView) {
             case 'errors':
-              return <FsErrors node={activeNode} />;
+              return <FsErrors dirent={activeDirent} />;
             case 'references':
-            return <FsReferences node={activeNode} />;
+              return <FsReferences dirent={activeDirent} />;
           case 'properties':
-            return <FsProperties node={activeNode} />;
+              return <FsProperties dirent={activeDirent} />;
           case 'history':
-            return <FsHistory node={activeNode} />;
+              return <FsHistory dirent={activeDirent} />;
           case 'help':
-            return <FsHelp node={activeNode} />;
+              return <FsHelp dirent={activeDirent} />;
           case 'configuration':
-            return <FsConfigOptions node={activeNode} />;
+              return <FsConfigOptions dirent={activeDirent} />;
           default:
             return (
               <FsPanel title='View not implemented'>

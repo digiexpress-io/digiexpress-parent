@@ -13,19 +13,19 @@ import { FsPropertiesRoot, useUtilityClasses } from './useUtilityClasses';
 export const FsProperties: React.FC<FsPropertiesProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
-  const {node} = props;
+  const { dirent } = props;
   const classes = useUtilityClasses();
 
-  if (!node) {
+  if (!dirent) {
     return (
-      <FsPanel title={intl.formatMessage({ id: 'fs.properties.title' })} icon={<FsIcon icon={FsIcons.Settings} large />} activeNode={false} noNodeMessage={intl.formatMessage({ id: 'fs.properties.message.selectNode' })}>
+      <FsPanel title={intl.formatMessage({ id: 'fs.properties.title' })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={false} noDirentMessage={intl.formatMessage({ id: 'fs.properties.message.selectNode' })}>
         <></>
       </FsPanel>
     );
   }
 
   return (
-    <FsPanel title={intl.formatMessage({ id: 'fs.properties.title.nodeName' }, { nodeName: node.name })} icon={<FsIcon icon={FsIcons.Settings} large />} activeNode={true}>
+    <FsPanel title={intl.formatMessage({ id: 'fs.properties.title.direntName' }, { direntName: dirent.name })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={true}>
       <FsPropertiesRoot className={classes.root} ownerState={ownerState}>
         <div className={classes.propertyRow}>
           <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.pageLocales' })}</Typography>

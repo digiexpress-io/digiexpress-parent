@@ -20,7 +20,7 @@ export const FsDirentHistory: React.FC<FsDirentHistoryProps> = (props) => {
           <div className={classes.tableHeader}>{intl.formatMessage({ id: 'fs.direntHistory.tableHeader.date' })}</div>
         </div>
         <div className={classes.divider} />
-        {(props.node?.changes ?? []).slice().reverse().map((entry, index) => (
+        {(props.dirent?.changes ?? []).slice().reverse().map((entry, index) => (
           <div className={classes.tableRow} key={index}>
             <div className={classes.tableCell}>{entry.changedBy.userName}</div>
             <div className={classes.tableCell}>{intl.formatMessage({ id: `fs.changeType.${entry.changeType}` })}</div>

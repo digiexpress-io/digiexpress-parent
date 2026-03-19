@@ -1,62 +1,62 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { FsExplorerProps } from "./FsExplorerProps";
-import { FilterData, filterTreeNodes } from '../fs-search';
-import { FsContextMenuData, FsNode, mockFsData, useFs, handleContextMenu, collapseAll, toggleNode } from '@dxs-ts/fs-api';
+import { FilterData, filterTreeDirents } from '../fs-search';
+import { FsDirentContextMenuData, FsDirent, mockFsData, useFs, handleContextMenu, collapseAll, toggleDirent } from '@dxs-ts/fs-api';
 
 
 export interface OwnerState {
   isDarkMode: boolean;
   isSearchExpanded: boolean;
-  isAnyNodeExpanded: boolean;
+  isAnyDirentExpanded: boolean;
   isContextMenuOpen: boolean;
 
-  filteredTreeData: FsNode[];
+  filteredTreeData: FsDirent[];
   searchTerm: string;
-  fsData: FsNode[];
+  fsData: FsDirent[];
   filters: FilterData[];
-  contextMenuData: FsContextMenuData | undefined;
+  contextMenuData: FsDirentContextMenuData | undefined;
 
-  setContextMenuData: Dispatch<SetStateAction<FsContextMenuData | undefined>>;
+  setContextMenuData: Dispatch<SetStateAction<FsDirentContextMenuData | undefined>>;
   setContextMenuOpen: Dispatch<SetStateAction<boolean>>;
   onContextMenuClose: () => void;
-  onContextMenu: (event: React.MouseEvent, node: FsNode,
-    setContextMenuData: React.Dispatch<React.SetStateAction<FsContextMenuData | undefined>>,
+  onContextMenu: (event: React.MouseEvent, dirent: FsDirent,
+    setContextMenuData: React.Dispatch<React.SetStateAction<FsDirentContextMenuData | undefined>>,
     setContextMenuOpen: React.Dispatch<React.SetStateAction<boolean>>) => void;
 
   setIsDarkMode: (darkMode: boolean) => void;
   setSearchExpanded: (expanded: boolean) => void;
   setSearchTerm: (searchTerm: string) => void;
-  setFsData: Dispatch<SetStateAction<FsNode[]>>;
+  setFsData: Dispatch<SetStateAction<FsDirent[]>>;
   setFilters: Dispatch<SetStateAction<FilterData[]>>;
-  onDoubleClick: (node: FsNode, pathToTopParent: string) => void;
-  collapseAll: (fsData: FsNode[], setFsData: Dispatch<SetStateAction<FsNode[]>>) => void;
-  toggleNode: (nodeId: string, fsData: FsNode[], setFsData: Dispatch<SetStateAction<FsNode[]>>) => void;
+  onDoubleClick: (dirent: FsDirent, pathToTopParent: string) => void;
+  collapseAll: (fsData: FsDirent[], setFsData: Dispatch<SetStateAction<FsDirent[]>>) => void;
+  toggleDirent: (direntId: string, fsData: FsDirent[], setFsData: Dispatch<SetStateAction<FsDirent[]>>) => void;
 }
 
 export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   const { isDarkMode, setIsDarkMode, openAsset, searchExpanded, setSearchExpanded } = useFs();
-  const [fsData, setFsData] = React.useState<FsNode[]>(mockFsData);
+  const [fsData, setFsData] = React.useState<FsDirent[]>(mockFsData);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
-  const [contextMenuData, setContextMenuData] = React.useState<FsContextMenuData | undefined>();
+  const [contextMenuData, setContextMenuData] = React.useState<FsDirentContextMenuData | undefined>();
   const [searchTerm, setSearchTerm] = React.useState('');
   const [filters, setFilters] = React.useState<FilterData[]>([]);
 
   const filteredTreeData = React.useMemo(() => {
-    return filterTreeNodes(fsData, searchTerm, filters)
+    return filterTreeDirents(fsData, searchTerm, filters)
   }, [fsData, searchTerm, filters])
 
   function onContextMenuClose() {
     setContextMenuOpen(false);
   }
 
-  function onDoubleClick(node: FsNode, pathToTopParent: string) {
-    openAsset(node, pathToTopParent);
+  function onDoubleClick(dirent: FsDirent, pathToTopParent: string) {
+    openAsset(dirent, pathToTopParent);
   }
 
-  const isAnyNodeExpanded = fsData.some(node => node.expanded || (node.children && node.children.some(child => child.expanded)));
+  const isAnyDirentExpanded = fsData.some(dirent => dirent.expanded || (dirent.children && dirent.children.some(child => child.expanded)));
 
   return {
-    isAnyNodeExpanded,
+    isAnyDirentExpanded,
     isDarkMode,
     isSearchExpanded: searchExpanded,
     isContextMenuOpen: contextMenuOpen,
@@ -80,7 +80,7 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     setFilters,
 
     collapseAll,
-    toggleNode,
+    toggleDirent,
   }
 
 }

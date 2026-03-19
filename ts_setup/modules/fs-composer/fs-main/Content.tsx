@@ -17,7 +17,7 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState, childre
     <div className={className}>
       {activeTab ? (
         <Typography>
-          {activeTab.node.name}
+          {activeTab.dirent.name}
           {children}
         </Typography>
       ) : (

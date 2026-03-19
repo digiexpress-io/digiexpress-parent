@@ -24,7 +24,7 @@ export const FsHelp: React.FC<FsHelpProps> = (props) => {
   };
 
   return (
-    <FsPanel title="Help" icon={<FsIcon icon={FsIcons.Help} large />} activeNode={true}>
+    <FsPanel title="Help" icon={<FsIcon icon={FsIcons.Help} large />} activeDirent={true}>
       <FsHelpRoot className={classes.root} ownerState={ownerState}>
         <ReactMarkdown components={
           {
@@ -94,7 +94,7 @@ Switch between different view modes:
 You can also interact with the tree programmatically using the Eveli Tree API:
 
 \`\`\`typescript
-import { FsNode, useFs } from '@dxs-ts/fs-api';
+import { FsDirent, useFs } from '@dxs-ts/fs-api';
 
 // Example: Find and select a specific node
 function useTreeNavigation() {
@@ -114,7 +114,7 @@ function useTreeNavigation() {
     }
   };
 
-  const findNodeById = (id: string): FsNode | null => {
+  const findNodeById = (id: string): FsDirent | null => {
     // Implementation to search tree structure
     return activeNode?.children?.find(child => child.id === id) || null;
   };

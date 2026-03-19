@@ -1,40 +1,40 @@
-import { FsNode } from "@dxs-ts/fs-api";
-import { FsNodeType } from '../fs-theme';
+import { FsDirent } from "@dxs-ts/fs-api";
+import { FsDirentType } from '../fs-theme';
 
 interface FilterData {
   label: string;
-  type: FsNodeType;
+  type: FsDirentType;
 }
 
-export function filterTreeNodes(
-  nodes: FsNode[],
+export function filterTreeDirents(
+  dirents: FsDirent[],
   searchTerm: string,
   visibleFilters: FilterData[]
-): FsNode[] {
+): FsDirent[] {
   const visibleTypes = visibleFilters.map(filter => filter.type);
   const isNoFiltersSelected = visibleFilters.length === 0;
   const isSearchTermEmpty = !searchTerm.trim() || searchTerm.trim().length < 3;
 
   // If no search term and no filters, show everything
   if (isSearchTermEmpty && isNoFiltersSelected) {
-    return nodes;
+    return dirents;
   }
 
-  const filtered: FsNode[] = [];
+  const filtered: FsDirent[] = [];
 
-  for (const node of nodes) {
-    const nameMatches = node.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const descriptionMatches = node.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    const typeMatches = isNoFiltersSelected || visibleTypes.includes(node.type);
-    const childMatches = node.children ? filterTreeNodes(node.children, searchTerm, visibleFilters) : [];
+  for (const dirent of dirents) {
+    const nameMatches = dirent.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const descriptionMatches = dirent.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const typeMatches = isNoFiltersSelected || visibleTypes.includes(dirent.type);
+    const childMatches = dirent.children ? filterTreeDirents(dirent.children, searchTerm, visibleFilters) : [];
 
     const showBySearch = isSearchTermEmpty || nameMatches || descriptionMatches;
 
     if ((showBySearch && typeMatches) || childMatches.length > 0) {
       filtered.push({
-        ...node,
-        expanded: childMatches.length > 0 ? true : node.expanded,
-        children: childMatches.length > 0 ? childMatches : node.children
+        ...dirent,
+        expanded: childMatches.length > 0 ? true : dirent.expanded,
+        children: childMatches.length > 0 ? childMatches : dirent.children
       });
     }
   }

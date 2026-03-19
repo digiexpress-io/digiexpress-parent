@@ -13,18 +13,18 @@ export const FsErrors: React.FC<FsErrorsProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
 
-  if (!props.node) {
+  if (!props.dirent) {
     return (
-      <FsPanel title={intl.formatMessage({ id: 'fs.errors.title' })} icon={<FsIcon icon={FsIcons.Error} large />} activeNode={false} noNodeMessage={intl.formatMessage({ id: 'fs.errors.message.selectNode' })} />
+      <FsPanel title={intl.formatMessage({ id: 'fs.errors.title' })} icon={<FsIcon icon={FsIcons.Error} large />} activeDirent={false} noDirentMessage={intl.formatMessage({ id: 'fs.errors.message.selectDirent' })} />
     );
   }
 
-  const errors = props.node.errors ?? [];
+  const errors = props.dirent.errors ?? [];
   const criticalCount = errors.filter(e => e.severity === 'CRITICAL').length;
   const warningCount = errors.filter(e => e.severity === 'WARNING').length;
 
   return (
-    <FsPanel title={intl.formatMessage({ id: 'fs.errors.title.nodeName' }, { nodeName: props.node.name })} icon={<FsIcon icon={FsIcons.Error} large />} activeNode={true}>
+    <FsPanel title={intl.formatMessage({ id: 'fs.errors.title.direntName' }, { direntName: props.dirent.name })} icon={<FsIcon icon={FsIcons.Error} large />} activeDirent={true}>
       <FsErrorsRoot className={classes.root} ownerState={ownerState}>
         <div className={classes.errorSummary}>
           <Typography className={classes.summaryTitle}>{intl.formatMessage({ id: 'fs.errors.sectionTitle.summary' })}</Typography>

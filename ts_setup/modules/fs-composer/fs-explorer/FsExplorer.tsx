@@ -70,14 +70,14 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
         {ownerState.isDarkMode ? (
           <IconButton className={classes.iconDark}
             onClick={() => ownerState.collapseAll(ownerState.fsData, ownerState.setFsData)}
-            disabled={!ownerState.isAnyNodeExpanded}
+            disabled={!ownerState.isAnyDirentExpanded}
           >
             <FsIcon icon={FsIcons.CollapseAll} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.collapseAll' })} />
           </IconButton>
         ) : (
             <IconButton className={classes.iconLight}
               onClick={() => ownerState.collapseAll(ownerState.fsData, ownerState.setFsData)}
-              disabled={!ownerState.isAnyNodeExpanded}
+              disabled={!ownerState.isAnyDirentExpanded}
             >
             <FsIcon icon={FsIcons.CollapseAll} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.collapseAll' })} />
           </IconButton>
@@ -103,20 +103,20 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
 
       {ownerState.filteredTreeData.length === 0 ? <FsExplorerNoSearchResults /> :
         <List component='nav' disablePadding>
-          {ownerState.filteredTreeData.map((node) => (
+          {ownerState.filteredTreeData.map((dirent) => (
             <FsDirent
-              key={node.id}
-              node={node}
+              key={dirent.id}
+              dirent={dirent}
               level={0}
-              onToggle={(nodeId) => ownerState.toggleNode(nodeId, ownerState.fsData, ownerState.setFsData)}
-              onContextMenu={(event, node) => ownerState.onContextMenu(event, node, ownerState.setContextMenuData, ownerState.setContextMenuOpen)}
+              onToggle={(direntId) => ownerState.toggleDirent(direntId, ownerState.fsData, ownerState.setFsData)}
+              onContextMenu={(event, dirent) => ownerState.onContextMenu(event, dirent, ownerState.setContextMenuData, ownerState.setContextMenuOpen)}
               searchTerm={ownerState.searchTerm}
             />
           ))}
         </List>
       }
       <FsDirentMenu
-        node={ownerState.contextMenuData?.node || undefined}
+        dirent={ownerState.contextMenuData?.dirent || undefined}
         anchorPosition={ownerState.contextMenuData?.anchorPosition || undefined}
         open={ownerState.isContextMenuOpen}
         onClose={ownerState.onContextMenuClose}

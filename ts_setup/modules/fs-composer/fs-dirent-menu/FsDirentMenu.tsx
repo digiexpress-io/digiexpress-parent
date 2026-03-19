@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { FsNode } from '@dxs-ts/fs-api';
+import { FsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses, FsDirentMenuRoot as Root, MENU_HEIGHT } from './useUtilityClasses';
 import { FsDirentMenuMain } from './FsDirentMenuMain';
 import { FsDirentMenuSub } from './FsDirentMenuSub';
 import { usePositioningStrategy } from './helpers';
 
 interface FsDirentMenuProps {
-  node: FsNode | undefined;
+  dirent: FsDirent | undefined;
   anchorPosition: { top: number; left: number } | undefined;
   open: boolean;
   onClose: () => void;
@@ -54,14 +54,14 @@ export const FsDirentMenu: React.FC<FsDirentMenuProps> = (props) => {
     >
       <Box className={classes.menuContainer}>
         <FsDirentMenuMain
-          node={props.node}
+          dirent={props.dirent}
           openSubmenu={openSubmenu}
           onSubmenuOpen={handleSubmenuOpen}
           onClose={props.onClose}
         />
 
         <FsDirentMenuSub
-          node={props.node}
+          dirent={props.dirent}
           openSubmenu={openSubmenu}
         />
       </Box>

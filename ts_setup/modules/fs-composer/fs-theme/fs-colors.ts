@@ -66,9 +66,9 @@ export const FsColors = {
 // HELPER FUNCTIONS
 // =============================================================================
 
-export type FsNodeType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';
+export type FsDirentType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';
 
-export function getNodeColor(nodeType: FsNodeType, isDarkTheme: boolean) {
+export function getNodeColor(nodeType: FsDirentType, isDarkTheme: boolean) {
   const colors = isDarkTheme ? FsColors.nodeTypes.dark : FsColors.nodeTypes.light;
 
   switch (nodeType) {

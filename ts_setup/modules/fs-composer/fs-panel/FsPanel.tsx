@@ -11,7 +11,7 @@ import { useOwnerState } from './useOwnerState';
 export const FsPanel: React.FC<FsPanelProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
-  const { children, title, activeNode, icon, noNodeMessage, secondaryChildren } = props;
+  const { children, title, activeDirent, icon, noDirentMessage, secondaryChildren } = props;
   const classes = useUtilityClasses();
 
   return (
@@ -23,14 +23,14 @@ export const FsPanel: React.FC<FsPanelProps> = (props) => {
         </div>
 
         <div className={classes.mainSection}>
-          {activeNode ? children : (
+          {activeDirent ? children : (
             <Typography>
-              {noNodeMessage || intl.formatMessage({ id: 'fs.panel.message.selectNode' })}
+              {noDirentMessage || intl.formatMessage({ id: 'fs.panel.message.selectNode' })}
             </Typography>
           )}
         </div>
 
-        {activeNode && secondaryChildren && (
+        {activeDirent && secondaryChildren && (
           <div className={classes.secondarySection}>
             {secondaryChildren}
           </div>
