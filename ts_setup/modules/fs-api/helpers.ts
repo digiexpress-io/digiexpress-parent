@@ -1,5 +1,11 @@
 import React from 'react';
-import { FsDirent, FsDirentContextMenuData } from './fs-types';
+import { FsDirent } from './fs-types';
+
+
+interface FsDirentContextMenuData {
+  dirent: FsDirent;
+  anchorPosition: { top: number; left: number };
+}
 
 export function handleContextMenu(event: React.MouseEvent, dirent: FsDirent,
   setContextMenuData: React.Dispatch<React.SetStateAction<FsDirentContextMenuData | undefined>>,
