@@ -1,7 +1,7 @@
 import React from 'react';
 import { Chip, styled, generateUtilityClass } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { FsDirentType, getNodeColor } from '../fs-theme';
+import { FsDirentType, getDirentColor } from '../fs-theme';
 
 const MUI_NAME = 'FsFilterChip';
 
@@ -30,7 +30,7 @@ const FsFilterChipRoot = styled(Chip, {
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'chipType' && prop !== 'isDarkMode',
 })<{ chipType: FsDirentType; isDarkMode: boolean }>(({ theme, chipType, isDarkMode }) => {
-  const baseColor = getNodeColor(chipType, isDarkMode);
+  const baseColor = getDirentColor(chipType, isDarkMode);
   return {
     backgroundColor: baseColor + '20',
     borderColor: baseColor,

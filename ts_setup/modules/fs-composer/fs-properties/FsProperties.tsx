@@ -18,7 +18,7 @@ export const FsProperties: React.FC<FsPropertiesProps> = (props) => {
 
   if (!dirent) {
     return (
-      <FsPanel title={intl.formatMessage({ id: 'fs.properties.title' })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={false} noDirentMessage={intl.formatMessage({ id: 'fs.properties.message.selectNode' })}>
+      <FsPanel title={intl.formatMessage({ id: 'fs.properties.title' })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={false} noDirentMessage={intl.formatMessage({ id: 'fs.properties.message.selectDirent' })}>
         <></>
       </FsPanel>
     );

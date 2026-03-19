@@ -4,7 +4,7 @@ import { Badge, Box, ListItemText, Typography } from '@mui/material';
 import { FsDirentConfigOption, FsDirent, useFs } from '@dxs-ts/fs-api';
 
 import { useUtilityClasses } from './useUtilityClasses';
-import { FsIcons, FsIcon, FsColors, getNodeColor } from '../fs-theme';
+import { FsIcons, FsIcon, FsColors, getDirentColor } from '../fs-theme';
 
 import { OwnerState } from './useOwnerState';
 import { SearchResultHighlight } from '../fs-search';
@@ -120,7 +120,7 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
       sx={{
         color: props.error ? (props.isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight)
           :
-          getNodeColor(props.dirent.type, props.isDarkTheme),
+          getDirentColor(props.dirent.type, props.isDarkTheme),
         fontWeight: props.isDarkTheme ? 400 : 500,
       }}
     >

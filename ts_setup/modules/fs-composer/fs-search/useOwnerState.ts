@@ -8,8 +8,8 @@ export interface FilterData {
   type: FsDirentType;
 }
 
-export function filterTreeNodes(
-  nodes: FsDirent[],
+export function filterTreeDirents(
+  dirents: FsDirent[],
   searchTerm: string,
   visibleFilters: FilterData[]
 ): FsDirent[] {
@@ -18,24 +18,24 @@ export function filterTreeNodes(
   const isSearchTermEmpty = !searchTerm.trim() || searchTerm.trim().length < 3;
 
   if (isSearchTermEmpty && isNoFiltersSelected) {
-    return nodes;
+    return dirents;
   }
 
   const filtered: FsDirent[] = [];
 
-  for (const node of nodes) {
-    const nameMatches = node.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const descriptionMatches = node.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    const typeMatches = isNoFiltersSelected || visibleTypes.includes(node.type);
-    const childMatches = node.children ? filterTreeNodes(node.children, searchTerm, visibleFilters) : [];
+  for (const dirent of dirents) {
+    const nameMatches = dirent.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const descriptionMatches = dirent.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const typeMatches = isNoFiltersSelected || visibleTypes.includes(dirent.type);
+    const childMatches = dirent.children ? filterTreeDirents(dirent.children, searchTerm, visibleFilters) : [];
 
     const showBySearch = isSearchTermEmpty || nameMatches || descriptionMatches;
 
     if ((showBySearch && typeMatches) || childMatches.length > 0) {
       filtered.push({
-        ...node,
-        expanded: childMatches.length > 0 ? true : node.expanded,
-        children: childMatches.length > 0 ? childMatches : node.children
+        ...dirent,
+        expanded: childMatches.length > 0 ? true : dirent.expanded,
+        children: childMatches.length > 0 ? childMatches : dirent.children
       });
     }
   }

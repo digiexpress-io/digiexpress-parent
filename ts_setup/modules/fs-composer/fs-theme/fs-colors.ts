@@ -3,6 +3,8 @@
 // ULTRA-CONSOLIDATED COLOR PALETTE (12 Unique Colors)
 // =============================================================================
 
+import { FsDirentType } from "@dxs-ts/fs-api";
+
 export const FsColors = {
   // Base theme colors
   dark: {
@@ -37,8 +39,8 @@ export const FsColors = {
     highlightDark: '#403d3d'   // Search result text highlighting
   },
 
-  // Node type colors - ultra-consolidated
-  nodeTypes: {
+  // Dirent type colors - ultra-consolidated
+  direntTypes: {
     dark: {
       folder: '#e8e5e5',       // Neutral gray for containers
       content: '#dcdcaa',      // Yellow for content (articles)
@@ -66,12 +68,11 @@ export const FsColors = {
 // HELPER FUNCTIONS
 // =============================================================================
 
-export type FsDirentType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';
 
-export function getNodeColor(nodeType: FsDirentType, isDarkTheme: boolean) {
-  const colors = isDarkTheme ? FsColors.nodeTypes.dark : FsColors.nodeTypes.light;
+export function getDirentColor(direntType: FsDirentType, isDarkTheme: boolean) {
+  const colors = isDarkTheme ? FsColors.direntTypes.dark : FsColors.direntTypes.light;
 
-  switch (nodeType) {
+  switch (direntType) {
     case 'folder':
       return colors.folder;
     case 'article':

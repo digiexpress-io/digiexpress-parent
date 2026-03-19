@@ -18,7 +18,7 @@ export const FsReferences: React.FC<FsReferencesProps> = (props) => {
 
   if (!dirent) {
     return (
-      <FsPanel title={intl.formatMessage({ id: 'fs.references.title' })} icon={<FsIcon icon={FsIcons.Tree} large />} activeDirent={false} noDirentMessage={intl.formatMessage({ id: 'fs.references.message.selectNode' })}>
+      <FsPanel title={intl.formatMessage({ id: 'fs.references.title' })} icon={<FsIcon icon={FsIcons.Tree} large />} activeDirent={false} noDirentMessage={intl.formatMessage({ id: 'fs.references.message.selectDirent' })}>
         <></>
       </FsPanel>
     );

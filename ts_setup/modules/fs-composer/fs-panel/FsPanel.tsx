@@ -25,7 +25,7 @@ export const FsPanel: React.FC<FsPanelProps> = (props) => {
         <div className={classes.mainSection}>
           {activeDirent ? children : (
             <Typography>
-              {noDirentMessage || intl.formatMessage({ id: 'fs.panel.message.selectNode' })}
+              {noDirentMessage || intl.formatMessage({ id: 'fs.panel.message.selectDirent' })}
             </Typography>
           )}
         </div>

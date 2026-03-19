@@ -46,19 +46,19 @@ export interface ItemReferencesEntry {
   location: string;
 }
 
-export function getReferencesCount(nodeId: string, nodeName: string): number {
+export function getReferencesCount(direntId: string, direntName: string): number {
   let count = 0;
-  function searchInNode(node: FsDirent): void {
-    if (node.reference && node.name === nodeName && node.id !== nodeId) {
+  function searchInDirent(dirent: FsDirent): void {
+    if (dirent.reference && dirent.name === direntName && dirent.id !== direntId) {
       count++;
     }
 
-    if (node.children) {
-      node.children.forEach(child => searchInNode(child));
+    if (dirent.children) {
+      dirent.children.forEach(child => searchInDirent(child));
     }
   }
 
-  mockFsData.forEach(rootNode => searchInNode(rootNode));
+  mockFsData.forEach(rootDirent => searchInDirent(rootDirent));
 
   return count;
 }

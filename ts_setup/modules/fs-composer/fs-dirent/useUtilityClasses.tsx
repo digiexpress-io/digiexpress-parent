@@ -1,6 +1,6 @@
 import { generateUtilityClass, styled, alpha } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { FsColors, getNodeColor } from '../fs-theme';
+import { FsColors, getDirentColor } from '../fs-theme';
 
 
 
@@ -67,7 +67,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconFolder`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('folder', isDarkTheme),
+      color: getDirentColor('folder', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -76,7 +76,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconArticle`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('article', isDarkTheme),
+      color: getDirentColor('article', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -85,7 +85,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconService`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('service', isDarkTheme),
+      color: getDirentColor('service', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -94,7 +94,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconDialob`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('dialob', isDarkTheme),
+      color: getDirentColor('dialob', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -103,7 +103,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconFlow`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('flow', isDarkTheme),
+      color: getDirentColor('flow', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -112,7 +112,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconLink`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('link', isDarkTheme),
+      color: getDirentColor('link', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -121,7 +121,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconLanguage`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('language', isDarkTheme),
+      color: getDirentColor('language', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -130,7 +130,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconPrintout`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('printout', isDarkTheme),
+      color: getDirentColor('printout', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -139,7 +139,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconImage`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('image', isDarkTheme),
+      color: getDirentColor('image', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -148,7 +148,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconTemplate`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('template', isDarkTheme),
+      color: getDirentColor('template', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },

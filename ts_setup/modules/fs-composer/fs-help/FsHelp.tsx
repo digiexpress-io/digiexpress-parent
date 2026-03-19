@@ -62,7 +62,7 @@ Welcome to the Eveli Tree file explorer! This help section will guide you throug
 
 ## Basic Navigation
 - **Expand/Collapse**: Click the arrow icons next to folders to expand or collapse them
-- **Select Node**: Click on any item to select it and view its details
+- **Select Dirent**: Click on any item to select it and view its details
 - **Context Menu**: Right-click on items to access additional actions
 
 ## Tree Structure
@@ -96,30 +96,30 @@ You can also interact with the tree programmatically using the Eveli Tree API:
 \`\`\`typescript
 import { FsDirent, useFs } from '@dxs-ts/fs-api';
 
-// Example: Find and select a specific node
+// Example: Find and select a specific dirent
 function useTreeNavigation() {
   const {
-    activeNode,
-    setActiveNode,
+    activeDirent,
+    setActiveDirent,
     openTabs,
     setActiveTab
   } = useFs();
 
-  const selectNodeById = (nodeId: string) => {
-    // Navigate to a specific node
-    const targetNode = findNodeById(nodeId);
-    if (targetNode) {
-      setActiveNode(targetNode);
-      setActiveTab(targetNode.path);
+  const selectDirentById = (nodeId: string) => {
+    // Navigate to a specific dirent
+    const targetDirent = findDirentById(nodeId);
+    if (targetDirent) {
+      setActiveDirent(targetDirent);
+      setActiveTab(targetDirent.path);
     }
   };
 
-  const findNodeById = (id: string): FsDirent | null => {
+  const findDirentById = (id: string): FsDirent | null => {
     // Implementation to search tree structure
-    return activeNode?.children?.find(child => child.id === id) || null;
+    return activeDirent?.children?.find(child => child.id === id) || null;
   };
 
-  return { selectNodeById, currentNode: activeNode };
+  return { selectDirentById, currentDirent: activeDirent };
 }
 \`\`\`
 

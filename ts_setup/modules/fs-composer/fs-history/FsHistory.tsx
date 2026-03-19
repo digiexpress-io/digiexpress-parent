@@ -18,7 +18,7 @@ export const FsHistory: React.FC<FsHistoryProps> = (props) => {
       <FsPanel title={intl.formatMessage({ id: 'fs.history.title' })}
         icon={<FsIcon icon={FsIcons.History} large />}
         activeDirent={false}
-        noDirentMessage={intl.formatMessage({ id: 'fs.history.message.selectNode' })} />
+        noDirentMessage={intl.formatMessage({ id: 'fs.history.message.selectDirent' })} />
     );
   }
 
