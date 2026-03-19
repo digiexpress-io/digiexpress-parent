@@ -41,8 +41,7 @@ export const FsDirentReferencesRoot = styled('div', {
 
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.caption,
-   // color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    color: FsColors.dark.text, //need to finish light mode implementation on menu
+    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     marginBottom: theme.spacing(1),
   },
 

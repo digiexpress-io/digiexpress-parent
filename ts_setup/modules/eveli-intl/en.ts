@@ -1395,6 +1395,7 @@ export const en = {
   'fs.direntCreate.labelsField.label': 'Labels',
   'fs.direntCreate.sectionTitle.createNew': 'Create new asset',
   'fs.direntCreate.sectionTitle.sharing': 'Sharing and permissions',
+  'fs.direntRename.title': 'Rename',
   'fs.direntHistory.title': 'Recent changes to this item',
   'fs.direntHistory.tableHeader.user': 'User',
   'fs.direntHistory.tableHeader.change': 'Change',

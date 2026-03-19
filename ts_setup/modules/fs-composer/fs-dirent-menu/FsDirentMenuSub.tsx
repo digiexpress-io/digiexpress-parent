@@ -6,6 +6,7 @@ import { FsDirentPermissions } from '../fs-dirent-permissions';
 import { FsDirentHistory } from '../fs-dirent-history';
 import { FsDirentReferences } from '../fs-dirent-references';
 import { FsDirentCreate } from '../fs-dirent-create';
+import { FsDirentRename } from '../fs-dirent-rename';
 import { FsDirentComments } from '../fs-dirent-comments';
 import { FsDirentLabels } from '../fs-dirent-labels';
 
@@ -26,6 +27,7 @@ export const FsDirentMenuSub: React.FC<FsDirentMenuSubProps> = (props) => {
         {props.openSubmenu === 'sharing' && <FsDirentPermissions dirent={props.dirent} />}
         {props.openSubmenu === 'history' && <FsDirentHistory dirent={props.dirent} />}
         {props.openSubmenu === 'references' && <FsDirentReferences dirent={props.dirent} />}
+        {props.openSubmenu === 'rename' && <FsDirentRename dirent={props.dirent} />}
         {props.openSubmenu === 'new' && <FsDirentCreate />}
       </Box>
     </Collapse>

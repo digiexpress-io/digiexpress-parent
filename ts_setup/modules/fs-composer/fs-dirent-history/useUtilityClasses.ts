@@ -63,7 +63,7 @@ export const FsDirentHistoryRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-tableHeader`]: {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.border,
+    backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     fontSize: '10px',
     fontWeight: 500,

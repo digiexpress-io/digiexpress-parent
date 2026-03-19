@@ -99,9 +99,14 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.copy' })}
       </MenuItem>
 
-      <MenuItem className={classes.menuItem} onClick={handleDuplicate}>
+      <MenuItem
+        className={props.openSubmenu === 'rename' ? classes.menuItemActive : classes.menuItem}
+        onClick={() => handleSubmenuToggle('rename')}
+      >
         <FsIcon icon={FsIcons.Rename} small />
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.rename' })}
+        <Box flex={1} />
+        <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
 
       <MenuItem className={classes.menuItemDelete} onClick={handleDelete}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { FsDirent } from '@dxs-ts/fs-api';
+import { FsDirent, useFsNav } from '@dxs-ts/fs-api';
 import { useUtilityClasses, FsDirentMenuRoot as Root, MENU_HEIGHT } from './useUtilityClasses';
 import { FsDirentMenuMain } from './FsDirentMenuMain';
 import { FsDirentMenuSub } from './FsDirentMenuSub';
@@ -16,6 +16,7 @@ interface FsDirentMenuProps {
 
 export const FsDirentMenu: React.FC<FsDirentMenuProps> = (props) => {
   const classes = useUtilityClasses();
+  const { isDarkMode } = useFsNav();
   const [openSubmenu, setOpenSubmenu] = React.useState<string | undefined>(undefined);
   const { shouldExpandUpward, vertical } = usePositioningStrategy(props.anchorPosition, MENU_HEIGHT);
 
@@ -36,6 +37,7 @@ export const FsDirentMenu: React.FC<FsDirentMenuProps> = (props) => {
       onClose={props.onClose}
       isSubmenuOpen={!!openSubmenu}
       shouldExpandUpward={shouldExpandUpward}
+      isDarkMode={isDarkMode}
       anchorReference="anchorPosition"
       anchorPosition={props.anchorPosition || undefined}
       anchorOrigin={{

@@ -1,5 +1,5 @@
 import composeClasses from '@mui/utils/composeClasses';
-import { generateUtilityClass, styled, Popover } from '@mui/material';
+import { generateUtilityClass, styled, Popover, darken, lighten } from '@mui/material';
 import { FsColors } from '../fs-theme';
 
 export const MUI_NAME = 'FsTabMenu';
@@ -23,24 +23,30 @@ export const useUtilityClasses = () => {
 export const FsTabMenuRoot = styled(Popover, {
   name: MUI_NAME,
   slot: 'Root',
-})(({ theme }) => ({
-  '& .MuiPaper-root': {
-    backgroundColor: FsColors.dark.surface,
-    color: FsColors.dark.text,
-    border: `1px solid ${FsColors.dark.border}`,
-    padding: theme.spacing(0.5),
-  },
-  [`& .${MUI_NAME}-menuItem`]: {
-    fontSize: '13px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    '&:hover': {
-      backgroundColor: FsColors.dark.border,
+  shouldForwardProp: (prop) => prop !== 'isDarkMode',
+})<{ isDarkMode?: boolean }>(({ theme, isDarkMode }) => {
+  const colors = isDarkMode ? FsColors.dark : FsColors.light;
+  const borderColor = isDarkMode ? lighten(colors.border, 0.15) : darken(colors.border, 0.15);
+
+  return {
+    '& .MuiPaper-root': {
+      backgroundColor: isDarkMode ? lighten(colors.surface, 0.08) : darken(colors.surface, 0.06),
+      color: colors.text,
+      border: `1px solid ${borderColor}`,
+      padding: theme.spacing(0.5),
     },
-    '& .MuiSvgIcon-root': {
-      color: FsColors.dark.text,
-      fontSize: '16px',
+    [`& .${MUI_NAME}-menuItem`]: {
+      fontSize: '13px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: theme.spacing(1),
+      '&:hover': {
+        backgroundColor: colors.border,
+      },
+      '& .MuiSvgIcon-root': {
+        color: colors.text,
+        fontSize: '16px',
+      },
     },
-  },
-}));
+  };
+});
