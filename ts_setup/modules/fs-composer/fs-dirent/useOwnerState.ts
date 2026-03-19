@@ -36,9 +36,9 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
   const direntProps = getDirentProps(dirent.id);
 
   const isChildren = !!(dirent.children && dirent.children.length > 0);
-  const configOptions = !!(direntProps?.configOptions && direntProps.configOptions.length > 0);
+  const configOptions = direntProps.configOptions.length > 0;
   const childWithError = !!(isChildren && dirent.children!.some(child => isChildError(child)));
-  const showError = !!((direntProps?.errors && direntProps.errors.length > 0) || childWithError);
+  const showError = direntProps.errors.length > 0 || childWithError;
   const fullPath = parentPath ? `${parentPath} / ${dirent.name}` : dirent.name;
 
   return {
@@ -56,7 +56,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
 
     isChildren,
     children: _sortChildren(dirent.children ?? []),
-    options: _getConfigOptions(direntProps?.configOptions ?? []),
+    options: _getConfigOptions(direntProps.configOptions),
 
     
     onToggle,

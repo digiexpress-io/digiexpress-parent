@@ -18,8 +18,8 @@ export function useOwnerState(_props: FsBreadcrumbProps): OwnerState {
   const assetName = pathParts[pathParts.length - 1];
   const assetPath = pathParts.slice(0, -1).join(' / ');
 
-  const direntProps = activeDirent ? getDirentProps(activeDirent.id) : undefined;
-  const isError = direntProps?.errors && direntProps.errors.length > 0 ? true : false;
+  const direntProps = getDirentProps(activeDirent?.id ?? '');
+  const isError = direntProps.errors.length > 0;
 
   return {
     assetDirent: activeDirent,

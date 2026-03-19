@@ -3,7 +3,7 @@ import { FsDirentProps } from './fs-types'
 export const mockFsDirentProperties: Record<string, FsDirentProps> = {
   'content': {
       id: 'content',
-      expanded: true,
+      expanded: false,
       reference: false,
       locked: false,
       configOptions: [],
@@ -53,7 +53,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   '000_index': {
       id: '000_index',
-      expanded: true,
+      expanded: false,
       reference: false,
       locked: true,
       configOptions: [],
@@ -110,7 +110,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'main.article': {
       id: 'main.article',
-      expanded: true,
+      expanded: false,
       reference: false,
       locked: false,
       configOptions: [],
@@ -655,7 +655,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'general-message.service': {
       id: 'general-message.service',
-      expanded: true,
+      expanded: false,
       reference: false,
       locked: true,
       configOptions: [],
@@ -1478,7 +1478,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'trustee-info-form.service': {
       id: 'trustee-info-form.service',
-      expanded: true,
+      expanded: false,
       reference: false,
       locked: false,
       configOptions: [],
@@ -2060,7 +2060,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'wilma-preschool.service': {
       id: 'wilma-preschool.service',
-      expanded: true,
+      expanded: false,
       reference: false,
       locked: false,
       configOptions: [],

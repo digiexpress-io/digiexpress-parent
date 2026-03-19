@@ -15,7 +15,7 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
   const classes = useUtilityClasses(ownerState.isDarkMode);
   const { getDirentProps } = useFsDirentProps();
   const direntProps = getDirentProps(props.dirent.id);
-  const expanded = direntProps?.expanded ?? false;
+  const expanded = direntProps.expanded;
 
   return (
     <FsDirentRoot className={classes.root} ownerState={ownerState}>

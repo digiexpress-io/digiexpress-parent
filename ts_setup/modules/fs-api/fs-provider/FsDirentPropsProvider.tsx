@@ -10,10 +10,11 @@ export interface ItemReferencesEntry {
 
 export interface FsDirentPropsContextType {
   direntPropsLoading: boolean;
-  getDirentProps: (id: string) => FsDirentProps | undefined;
+  getDirentProps: (id: string) => FsDirentProps;
   isChildError: (dirent: FsDirent) => boolean;
   findReferencesToDirent: (dirent: FsDirent) => ItemReferencesEntry[];
   setExpanded: (id: string, value: boolean) => void;
+  setExpandedBatch: (ids: string[], value: boolean) => void;
   collapseAll: () => void;
 }
 
@@ -23,9 +24,24 @@ export interface FsDirentPropsProviderProps {
   children: React.ReactNode;
 }
 
+const EMPTY_DIRENT_PROPS: FsDirentProps = {
+  id: '',
+  expanded: false,
+  reference: false,
+  locked: false,
+  configOptions: [],
+  comments: [],
+  changes: [],
+  permissions: [],
+  labels: [],
+  errors: [],
+};
+
 export const FsDirentPropsProvider: React.FC<FsDirentPropsProviderProps> = (props) => {
   const [propsMap, setPropsMap] = React.useState<Record<string, FsDirentProps>>({});
   const [direntPropsLoading, setDirentPropsLoading] = React.useState(true);
+  const propsMapRef = React.useRef(propsMap);
+  propsMapRef.current = propsMap;
 
   React.useEffect(() => {
     Promise.resolve(mockFsDirentProperties).then((data) => {
@@ -34,9 +50,9 @@ export const FsDirentPropsProvider: React.FC<FsDirentPropsProviderProps> = (prop
     });
   }, []);
 
-  const getDirentProps = React.useCallback((id: string): FsDirentProps | undefined => {
-    return propsMap[id];
-  }, [propsMap]);
+  const getDirentProps = React.useCallback((id: string): FsDirentProps => {
+    return propsMapRef.current[id] ?? EMPTY_DIRENT_PROPS;
+  }, []);
 
   const isChildError = React.useCallback((dirent: FsDirent): boolean => {
     const direntProps = propsMap[dirent.id];
@@ -80,6 +96,18 @@ export const FsDirentPropsProvider: React.FC<FsDirentPropsProviderProps> = (prop
     });
   }, []);
 
+  const setExpandedBatch = React.useCallback((ids: string[], value: boolean) => {
+    setPropsMap(prev => {
+      const next = { ...prev };
+      ids.forEach(id => {
+        if (next[id]) {
+          next[id] = { ...next[id], expanded: value };
+        }
+      });
+      return next;
+    });
+  }, []);
+
   const collapseAll = React.useCallback(() => {
     setPropsMap(prev => {
       const next = { ...prev };
@@ -97,9 +125,10 @@ export const FsDirentPropsProvider: React.FC<FsDirentPropsProviderProps> = (prop
       isChildError,
       findReferencesToDirent,
       setExpanded,
+      setExpandedBatch,
       collapseAll,
     };
-  }, [direntPropsLoading, getDirentProps, isChildError, findReferencesToDirent, setExpanded, collapseAll]);
+  }, [direntPropsLoading, getDirentProps, isChildError, findReferencesToDirent, setExpanded, setExpandedBatch, collapseAll]);
 
   return (
     <FsDirentPropsContext.Provider value={contextValue}>

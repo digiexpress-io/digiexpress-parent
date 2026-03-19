@@ -13,10 +13,10 @@ export function useOwnerState(props: FsConfigOptionsProps): OwnerState {
   const intl = useIntl();
   const { isDarkMode } = useFsNav();
   const { getDirentProps } = useFsDirentProps();
-  const direntProps = props.dirent ? getDirentProps(props.dirent.id) : undefined;
+  const direntProps = getDirentProps(props.dirent?.id ?? '');
 
   function isConfigOptionEnabled(optionKey: keyof FsDirentConfigOption): boolean {
-    return direntProps?.configOptions?.some(configOption => configOption[optionKey] === true) ?? false;
+    return direntProps.configOptions.some(configOption => configOption[optionKey] === true);
   }
 
   function configDescription(optionKey: keyof FsDirentConfigOption): string {

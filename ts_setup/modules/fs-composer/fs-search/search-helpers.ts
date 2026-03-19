@@ -9,7 +9,7 @@ export function filterTreeDirents(
   dirents: FsDirent[],
   searchTerm: string,
   visibleFilters: FilterData[],
-  getDirentProps: (id: string) => FsDirentProps | undefined
+  getDirentProps: (id: string) => FsDirentProps
 ): FsDirent[] {
   const visibleTypes = visibleFilters.map(filter => filter.type);
   const isNoFiltersSelected = visibleFilters.length === 0;
@@ -25,7 +25,7 @@ export function filterTreeDirents(
   for (const dirent of dirents) {
     const direntProps = getDirentProps(dirent.id);
     const nameMatches = dirent.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const descriptionMatches = direntProps?.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const descriptionMatches = direntProps.description?.toLowerCase().includes(searchTerm.toLowerCase());
     const typeMatches = isNoFiltersSelected || visibleTypes.includes(dirent.type);
     const childMatches = dirent.children ? filterTreeDirents(dirent.children, searchTerm, visibleFilters, getDirentProps) : [];
 
@@ -34,7 +34,7 @@ export function filterTreeDirents(
     if ((showBySearch && typeMatches) || childMatches.length > 0) {
       filtered.push({
         ...dirent,
-        children: childMatches.length > 0 ? childMatches : dirent.children
+        children: childMatches
       });
     }
   }

@@ -14,7 +14,6 @@ export const FsErrors: React.FC<FsErrorsProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
   const { getDirentProps } = useFsDirentProps();
-  const direntProps = props.dirent ? getDirentProps(props.dirent.id) : undefined;
 
   if (!props.dirent) {
     return (
@@ -22,7 +21,8 @@ export const FsErrors: React.FC<FsErrorsProps> = (props) => {
     );
   }
 
-  const errors = direntProps?.errors ?? [];
+  const direntProps = getDirentProps(props.dirent.id);
+  const errors = direntProps.errors;
   const criticalCount = errors.filter(e => e.severity === 'CRITICAL').length;
   const warningCount = errors.filter(e => e.severity === 'WARNING').length;
 

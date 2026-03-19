@@ -50,14 +50,14 @@ export const DirentDecorator = (props: { dirent: FsDirent, children: React.React
   const { dirent, children } = props;
   const direntProps = getDirentProps(dirent.id);
 
-  if (direntProps?.errors && direntProps.errors.length > 0) {
+  if (direntProps.errors.length > 0) {
     return (
       <Box display='flex' alignItems='center' sx={{ color: isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight }}>
         {children}
       </Box>
     );
   }
-  if (direntProps?.reference) {
+  if (direntProps.reference) {
     return (
       <Badge variant="dot"
         anchorOrigin={{
@@ -87,11 +87,11 @@ export const DirentIcon = (props: { dirent: FsDirent }) => {
   const direntProps = getDirentProps(dirent.id);
   switch (dirent.type) {
     case 'folder':
-      return direntProps?.expanded ?? false ? <FsIcons.FolderOpen /> : <FsIcons.FolderClosed />;
+      return direntProps.expanded ? <FsIcons.FolderOpen /> : <FsIcons.FolderClosed />;
     case 'article':
-      return direntProps?.expanded ?? false ? <FsIcons.ArticleOutlined /> : <FsIcons.Article />;
+      return direntProps.expanded ? <FsIcons.ArticleOutlined /> : <FsIcons.Article />;
     case 'service':
-      return direntProps?.expanded ?? false ? <FsIcons.SettingsOutlined /> : <FsIcons.Settings />;
+      return direntProps.expanded ? <FsIcons.SettingsOutlined /> : <FsIcons.Settings />;
     case 'dialob':
       return <FsIcons.Form />;
     case 'flow':
@@ -131,7 +131,7 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
       }}
     >
       <SearchResultHighlight text={props.dirent.name} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />
-      {direntProps?.description && (
+      {direntProps.description && (
         <Typography component='span' variant='caption' sx={{ ml: 1, color: FsColors.dark.textMuted, fontStyle: 'italic' }}>
           - "<SearchResultHighlight text={direntProps.description} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />"
         </Typography>

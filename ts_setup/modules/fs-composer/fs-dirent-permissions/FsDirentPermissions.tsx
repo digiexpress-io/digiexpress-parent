@@ -11,7 +11,7 @@ export const FsDirentPermissions: React.FC<FsDirentPermissionsProps> = (props) =
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
   const { getDirentProps } = useFsDirentProps();
-  const direntProps = props.dirent ? getDirentProps(props.dirent.id) : undefined;
+  const direntProps = getDirentProps(props.dirent?.id ?? '');
 
   return (
     <FsDirentPermissionsRoot className={classes.root} ownerState={ownerState}>
@@ -22,7 +22,7 @@ export const FsDirentPermissions: React.FC<FsDirentPermissionsProps> = (props) =
           <div className={classes.tableHeader}>{intl.formatMessage({ id: 'fs.direntPermissions.tableHeader.privilege' })}</div>
         </div>
         <Divider className={classes.divider} />
-        {(direntProps?.permissions ?? []).map((permission, index) => (
+        {direntProps.permissions.map((permission, index) => (
           <div key={index} className={classes.tableRow}>
             <div className={classes.tableCell}>{permission.name}</div>
             <div className={classes.tableCell}>

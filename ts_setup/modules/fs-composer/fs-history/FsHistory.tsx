@@ -14,8 +14,6 @@ export const FsHistory: React.FC<FsHistoryProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
   const { getDirentProps } = useFsDirentProps();
-  const direntProps = props.dirent ? getDirentProps(props.dirent.id) : undefined;
-  const changes = direntProps?.changes ?? [];
 
   if (!props.dirent) {
     return (
@@ -25,6 +23,9 @@ export const FsHistory: React.FC<FsHistoryProps> = (props) => {
         noDirentMessage={intl.formatMessage({ id: 'fs.history.message.selectDirent' })} />
     );
   }
+
+  const direntProps = getDirentProps(props.dirent.id);
+  const changes = direntProps.changes;
 
   return (
     <FsPanel title={intl.formatMessage({ id: 'fs.history.title.direntName' }, { direntName: props.dirent.name })}
