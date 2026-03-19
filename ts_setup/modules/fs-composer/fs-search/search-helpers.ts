@@ -1,5 +1,4 @@
-import { FsDirent } from "@dxs-ts/fs-api";
-import { FsDirentType } from '../fs-theme';
+import { FsDirent, FsDirentType } from "@dxs-ts/fs-api";
 
 interface FilterData {
   label: string;

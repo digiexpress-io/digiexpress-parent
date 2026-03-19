@@ -1,5 +1,5 @@
 import React from 'react';
-import { FsDirent, FsDirentSecondaryView, FsOpenTab, useFs } from '@dxs-ts/fs-api';
+import { FsDirent, FsDirentSecondaryView, FsOpenTab, useFsNav } from '@dxs-ts/fs-api';
 import { FsIcons } from '../fs-theme/fs-icons';
 import { FsMainProps } from './FsMainProps';
 
@@ -33,10 +33,10 @@ export interface OwnerState {
 const toolbarWidth = '50px';
 
 export const useOwnerState = (_props: FsMainProps): OwnerState => {
-  const { isDarkMode, activeDirent } = useFs();
+  const { isDarkMode, activeDirent } = useFsNav();
   const [isRightPanelOpen, setIsRightPanelOpen] = React.useState(true);
   const [selectedView, setSelectedView] = React.useState<FsDirentSecondaryView | undefined>();
-  const { activeTabIndex, openTabs } = useFs();
+  const { activeTabIndex, openTabs } = useFsNav();
 
   const toggleRightPanel = React.useCallback(() => {
     setIsRightPanelOpen(prev => !prev);

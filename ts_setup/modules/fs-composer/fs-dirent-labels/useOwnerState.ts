@@ -1,4 +1,4 @@
-import { useFs } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-api';
 import { FsDirentLabelsProps } from './FsDirentLabelsProps';
 
 export interface OwnerState {
@@ -6,7 +6,7 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (_props: FsDirentLabelsProps): OwnerState => {
-  const { isDarkMode } = useFs();
+  const { isDarkMode } = useFsNav();
  
   return ({ isDarkMode });
 };

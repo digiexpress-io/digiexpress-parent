@@ -1,4 +1,4 @@
-import { useFs } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-api';
 import React, { Dispatch, SetStateAction } from 'react';
 import { FsChangesProps } from './FsChangesProps';
 import { FsColors } from '../fs-theme';
@@ -14,7 +14,7 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (_props: FsChangesProps): OwnerState => {
-  const { isDarkMode } = useFs();
+  const { isDarkMode } = useFsNav();
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
   return ({ isDarkMode, confirmOpen, setConfirmOpen, getStatusColor });

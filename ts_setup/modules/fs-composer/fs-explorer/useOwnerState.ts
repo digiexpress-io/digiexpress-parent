@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { FsExplorerProps } from "./FsExplorerProps";
 import { FilterData, filterTreeDirents } from '../fs-search';
-import { FsDirentContextMenuData, FsDirent, mockFsData, useFs, handleContextMenu, collapseAll, toggleDirent } from '@dxs-ts/fs-api';
+import { FsDirentContextMenuData, FsDirent, mockFsData, useFsNav, handleContextMenu, collapseAll, toggleDirent } from '@dxs-ts/fs-api';
 
 
 export interface OwnerState {
@@ -34,7 +34,7 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
-  const { isDarkMode, setIsDarkMode, openAsset, searchExpanded, setSearchExpanded } = useFs();
+  const { isDarkMode, setIsDarkMode, openAsset, searchExpanded, setSearchExpanded } = useFsNav();
   const [fsData, setFsData] = React.useState<FsDirent[]>(mockFsData);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<FsDirentContextMenuData | undefined>();

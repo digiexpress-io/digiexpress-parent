@@ -1,7 +1,7 @@
 import React from 'react';
 import { MenuItem } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFs } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-api';
 import { FsTabMenuProps } from './FsTabMenuProps';
 import { useOwnerState } from './useOwnerState';
 import { FsTabMenuRoot, useUtilityClasses } from './useUtilityClasses';
@@ -11,7 +11,7 @@ export const FsTabMenu: React.FC<FsTabMenuProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
-  const { closeTab, closeAllTabs, closeTabsToTheRight } = useFs();
+  const { closeTab, closeAllTabs, closeTabsToTheRight } = useFsNav();
 
   function handleClose() {
     if (props.tabIndex !== undefined) {

@@ -1,4 +1,4 @@
-import { useFs } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-api';
 import { FsReferencesProps } from './FsReferencesProps';
 
 
@@ -7,7 +7,7 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (_props: FsReferencesProps): OwnerState => {
-  const { isDarkMode } = useFs();
+  const { isDarkMode } = useFsNav();
 
   return ({ isDarkMode});
 }

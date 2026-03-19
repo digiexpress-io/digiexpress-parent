@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, Box, ListItemText, Typography } from '@mui/material';
 
-import { FsDirentConfigOption, FsDirent, useFs } from '@dxs-ts/fs-api';
+import { FsDirentConfigOption, FsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 import { useUtilityClasses } from './useUtilityClasses';
 import { FsIcons, FsIcon, FsColors, getDirentColor } from '../fs-theme';
@@ -45,7 +45,7 @@ function ConfigIcon(props: { type?: keyof FsDirentConfigOption, className: strin
 }
 
 export const DirentDecorator = (props: { dirent: FsDirent, children: React.ReactNode }) => {
-  const { isDarkMode } = useFs();
+  const { isDarkMode } = useFsNav();
   const { dirent, children } = props;
 
   if (dirent.errors && dirent.errors.length > 0) {

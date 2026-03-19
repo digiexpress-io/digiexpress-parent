@@ -1,4 +1,4 @@
-import { useFs } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-api';
 import { FsTabMenuProps } from './FsTabMenuProps';
 
 export interface OwnerState {
@@ -7,7 +7,7 @@ export interface OwnerState {
 }
 
 export function useOwnerState(props: FsTabMenuProps): OwnerState {
-  const { isDarkMode, closeAllTabs } = useFs();
+  const { isDarkMode, closeAllTabs } = useFsNav();
 
   function onCloseAll() {
     closeAllTabs();

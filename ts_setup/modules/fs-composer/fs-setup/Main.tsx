@@ -3,11 +3,11 @@ import { Box } from '@mui/material';
 import { FsTabs } from '../fs-tabs';
 import { FsBreadcrumb } from '../fs-breadcrumb';
 import { FsMain } from '../fs-main';
-import { useFs } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-api';
 import { FsColors } from '../fs-theme';
 
 const Main: React.FC<{}> = () => {
-  const { isDarkMode } = useFs();
+  const { isDarkMode } = useFsNav();
 
   return (
     <Box sx={{

@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcon, FsIcons } from '../fs-theme';
-import { useFs } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-api';
 import { FsPanel } from '../fs-panel';
 import { FsReferencesProps } from './FsReferencesProps';
 import { useOwnerState } from './useOwnerState';
@@ -13,7 +13,7 @@ export const FsReferences: React.FC<FsReferencesProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const { dirent } = props;
-  const { findReferencesToDirent } = useFs();
+  const { findReferencesToDirent } = useFsNav();
   const classes = useUtilityClasses();
 
   if (!dirent) {

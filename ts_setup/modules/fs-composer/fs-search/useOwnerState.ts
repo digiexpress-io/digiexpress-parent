@@ -1,7 +1,6 @@
 import React from 'react';
-import { useFs, FsDirent } from '@dxs-ts/fs-api';
+import { useFsNav, FsDirent, FsDirentType } from '@dxs-ts/fs-api';
 import { FsSearchProps } from './FsSearchProps';
-import { FsDirentType } from '../fs-theme';
 
 export interface FilterData {
   label: string;
@@ -68,7 +67,7 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (props: FsSearchProps): OwnerState => {
-  const { isDarkMode } = useFs();
+  const { isDarkMode } = useFsNav();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     props.onSearchChange(event.target.value);

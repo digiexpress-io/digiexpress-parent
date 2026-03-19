@@ -12,7 +12,7 @@ export interface ItemReferencesEntry {
   location: string;
 }
 
-export interface FsContextType {
+export interface FsNavContextType {
   isDarkMode: boolean;
   searchExpanded: boolean;
   openTabs: FsOpenTab[];
@@ -30,13 +30,13 @@ export interface FsContextType {
   setSearchExpanded: (expanded: boolean) => void;
 }
 
-const FsContext = React.createContext<FsContextType | undefined>(undefined);
+const FsNavContext = React.createContext<FsNavContextType | undefined>(undefined);
 
-export interface FsProviderProps {
+export interface FsNavProviderProps {
   children: React.ReactNode;
 }
 
-export const FsProvider: React.FC<FsProviderProps> = (props) => {
+export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
   const [isDarkMode, setIsDarkMode] = React.useState(false);
   const [searchExpanded, setSearchExpanded] = React.useState(false);
   const [openTabs, setOpenTabs] = React.useState<FsOpenTab[]>([]);
@@ -145,7 +145,7 @@ export const FsProvider: React.FC<FsProviderProps> = (props) => {
     return references;
   }, []);
 
-  const contextValue: FsContextType = React.useMemo(() => {
+  const contextValue: FsNavContextType = React.useMemo(() => {
     return {
       isDarkMode,
       setIsDarkMode,
@@ -167,16 +167,16 @@ export const FsProvider: React.FC<FsProviderProps> = (props) => {
   }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, closeAllTabs, closeTabsToTheRight, setActiveTab, activeDirent, isChildError, findReferencesToDirent, searchExpanded]);
 
   return (
-    <FsContext.Provider value={contextValue}>
+    <FsNavContext.Provider value={contextValue}>
       {props.children}
-    </FsContext.Provider>
+    </FsNavContext.Provider>
   );
 };
 
-export function useFs(): FsContextType {
-  const result = React.useContext(FsContext);
+export function useFsNav(): FsNavContextType {
+  const result = React.useContext(FsNavContext);
   if (!result) {
-    throw new Error('FsContext is not created!');
+    throw new Error('FsNavContext is not created!');
   }
   return result;
 }

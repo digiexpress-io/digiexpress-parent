@@ -1,7 +1,8 @@
 import React from 'react';
 import { Chip, styled, generateUtilityClass } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { FsDirentType, getDirentColor } from '../fs-theme';
+import { getDirentColor } from '../fs-theme';
+import { FsDirentType } from '@dxs-ts/fs-api';
 
 const MUI_NAME = 'FsFilterChip';
 

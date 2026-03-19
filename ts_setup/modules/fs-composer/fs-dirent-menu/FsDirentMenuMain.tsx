@@ -1,7 +1,7 @@
 import React from 'react';
 import { MenuItem, Divider, Typography, Box, Chip } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirent, useFs } from '@dxs-ts/fs-api';
+import { FsDirent, useFsNav } from '@dxs-ts/fs-api';
 import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { getReferencesCount } from './helpers';
@@ -17,7 +17,7 @@ export interface FsDirentMenuMainProps {
 export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { openAsset } = useFs();
+  const { openAsset } = useFsNav();
 
   const referencesCount = props.dirent ? getReferencesCount(props.dirent.id, props.dirent.name) : 0;
   const lastChange = props.dirent?.changes[props.dirent.changes.length - 1];
