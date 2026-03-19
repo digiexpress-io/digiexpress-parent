@@ -155,3 +155,8 @@ export interface Template {
   type: 'template';
   description?: string;
 }
+
+export interface FsDirentContextMenuData {
+  dirent: FsDirent;
+  anchorPosition: { top: number; left: number };
+}
