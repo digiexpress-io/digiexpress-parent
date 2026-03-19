@@ -13,7 +13,7 @@ export function filterTreeDirents(
 ): FsDirent[] {
   const visibleTypes = visibleFilters.map(filter => filter.type);
   const isNoFiltersSelected = visibleFilters.length === 0;
-  const isSearchTermEmpty = !searchTerm.trim() || searchTerm.trim().length < 3;
+  const isSearchTermEmpty = !searchTerm.trim();
 
   // If no search term and no filters, show everything
   if (isSearchTermEmpty && isNoFiltersSelected) {
