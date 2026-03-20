@@ -6,6 +6,7 @@ import { FsDirentPermissions } from '../fs-dirent-permissions';
 import { FsDirentHistory } from '../fs-dirent-history';
 import { FsDirentReferences } from '../fs-dirent-references';
 import { FsDirentCreate } from '../fs-dirent-create';
+import { FsDirentNew } from '../fs-dirent-new';
 import { FsDirentRename } from '../fs-dirent-rename';
 import { FsDirentComments } from '../fs-dirent-comments';
 import { FsDirentLabels } from '../fs-dirent-labels';
@@ -13,6 +14,7 @@ import { FsDirentLabels } from '../fs-dirent-labels';
 export interface FsDirentMenuSubProps {
   dirent: FsDirent | undefined;
   openSubmenu: string | undefined;
+  onClose: () => void;
 }
 
 export const FsDirentMenuSub: React.FC<FsDirentMenuSubProps> = (props) => {
@@ -28,7 +30,7 @@ export const FsDirentMenuSub: React.FC<FsDirentMenuSubProps> = (props) => {
         {props.openSubmenu === 'history' && <FsDirentHistory dirent={props.dirent} />}
         {props.openSubmenu === 'references' && <FsDirentReferences dirent={props.dirent} />}
         {props.openSubmenu === 'rename' && <FsDirentRename dirent={props.dirent} />}
-        {props.openSubmenu === 'new' && <FsDirentCreate />}
+        {props.openSubmenu === 'new' && <FsDirentNew dirent={props.dirent} onClose={props.onClose} />}
       </Box>
     </Collapse>
   );

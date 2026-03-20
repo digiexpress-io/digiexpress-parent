@@ -65,6 +65,7 @@ export const FsDirentMenu: React.FC<FsDirentMenuProps> = (props) => {
         <FsDirentMenuSub
           dirent={props.dirent}
           openSubmenu={openSubmenu}
+          onClose={props.onClose}
         />
       </Box>
     </Root>

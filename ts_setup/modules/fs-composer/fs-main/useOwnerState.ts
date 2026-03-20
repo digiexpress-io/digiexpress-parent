@@ -1,5 +1,5 @@
 import React from 'react';
-import { FsDirent, FsDirentSecondaryView, FsOpenTab, useFsNav } from '@dxs-ts/fs-api';
+import { FsDirent, FsDirentSecondaryView, FsTab, useFsNav } from '@dxs-ts/fs-api';
 import { FsIcons } from '../fs-theme/fs-icons';
 import { FsMainProps } from './FsMainProps';
 
@@ -21,7 +21,7 @@ export interface OwnerState {
   isRightPanelOpen: boolean;
   selectedView: FsDirentSecondaryView | undefined;
   activeTabIndex: number;
-  openTabs: FsOpenTab[];
+  openTabs: FsTab[];
   toggleRightPanel: () => void;
   handleViewChange: (view: FsDirentSecondaryView) => void;
   toolbar: {

@@ -62,7 +62,20 @@ export interface FsDirentComment {
   created: string;
 }
 
-export type FsDirentType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';
+export const FsDirentTypes = {
+  folder: 'folder',
+  article: 'article',
+  service: 'service',
+  dialob: 'dialob',
+  flow: 'flow',
+  link: 'link',
+  language: 'language',
+  printout: 'printout',
+  image: 'image',
+  template: 'template',
+};
+
+export type FsDirentType = keyof typeof FsDirentTypes;
 export type FsDirentSecondaryView = 'references' | 'properties' | 'configuration' | 'debug' | 'preview' | 'history' | 'help' | 'errors' | 'changes';
 export type FsDirentChangeType = 'update' | 'create' | 'delete';
 export type FsDirentPermissionType = 'read' | 'write' | 'view' | 'none';

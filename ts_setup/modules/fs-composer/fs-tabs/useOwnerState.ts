@@ -31,12 +31,12 @@ export function useOwnerState(_props: FsTabProps): OwnerState {
   };
 
   const tabs: OwnerState['tabs'] = openTabs.map((tab, index) => ({
-    id: tab.dirent.id,
-    name: tab.dirent.name,
+    id: tab.type === 'edit' ? tab.dirent.id : `__create__${tab.direntType}`,
+    name: tab.type === 'edit' ? tab.dirent.name : tab.direntType,
     isActive: activeTabIndex === index,
     isFirst: index === 0,
     isLast: index === openTabs.length - 1,
-    isError: getDirentProps(tab.dirent.id).errors.length > 0
+    isError: tab.type === 'edit' ? getDirentProps(tab.dirent.id).errors.length > 0 : false,
   }));
 
 
