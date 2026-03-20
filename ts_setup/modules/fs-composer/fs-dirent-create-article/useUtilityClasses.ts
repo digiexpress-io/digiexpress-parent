@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled, alpha } from '@mui/material';
+import { generateUtilityClass, styled, alpha, darken } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
@@ -9,6 +9,10 @@ export interface FsDirentCreateArticleClasses {
   root: string;
   title: string;
   formContainer: string;
+  expandToggle: string;
+  expandToggleIcon: string;
+  expandToggleIconOpen: string;
+  optionalFields: string;
   label: string;
   textField: string;
   formControl: string;
@@ -32,6 +36,10 @@ export const useUtilityClasses = () => {
     root: ['root'],
     title: ['title'],
     formContainer: ['formContainer'],
+    expandToggle: ['expandToggle'],
+    expandToggleIcon: ['expandToggleIcon'],
+    expandToggleIconOpen: ['expandToggleIconOpen'],
+    optionalFields: ['optionalFields'],
     label: ['label'],
     textField: ['textField'],
     formControl: ['formControl'],
@@ -71,6 +79,35 @@ export const FsDirentCreateArticleRoot = styled('div', {
     flexDirection: 'column',
     gap: theme.spacing(1.5),
     padding: '8px 0',
+  },
+
+  [`& .${MUI_NAME}-expandToggle`]: {
+    ...theme.typography.subtitle2,
+    color: ownerState.isDarkMode ? FsColors.direntTypes.dark.form : (darken(FsColors.direntTypes.light.form, 0.1)),
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    fontWeight: 'bold',
+    '&:hover': {
+      opacity: 0.8,
+    },
+  },
+
+  [`& .${MUI_NAME}-expandToggleIcon`]: {
+    transition: 'transform 200ms ease',
+    transform: 'rotate(0deg)',
+  },
+
+  [`& .${MUI_NAME}-expandToggleIconOpen`]: {
+    transition: 'transform 200ms ease',
+    transform: 'rotate(180deg)',
+  },
+
+  [`& .${MUI_NAME}-optionalFields`]: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1.5),
   },
 
   [`& .${MUI_NAME}-label`]: {
