@@ -68,9 +68,9 @@ export const FsDirentCreateArticleRoot = styled('div', {
   flexDirection: 'column',
 
   [`& .${MUI_NAME}-title`]: {
-    ...theme.typography.subtitle2,
+    ...theme.typography.body1,
     fontWeight: 500,
-    textAlign: 'center',
+    marginBottom: theme.spacing(2),
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
   },
 
