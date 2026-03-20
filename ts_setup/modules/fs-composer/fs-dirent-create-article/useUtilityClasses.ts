@@ -60,7 +60,9 @@ export const FsDirentCreateArticleRoot = styled('div', {
   flexDirection: 'column',
 
   [`& .${MUI_NAME}-title`]: {
-    ...theme.typography.caption,
+    ...theme.typography.subtitle2,
+    fontWeight: 500,
+    textAlign: 'center',
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
   },
 
@@ -72,7 +74,7 @@ export const FsDirentCreateArticleRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-label`]: {
-    ...theme.typography.caption,
+    ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
   },
 
@@ -193,7 +195,7 @@ export const FsDirentCreateArticleRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-sectionTitle`]: {
-    ...theme.typography.caption,
+    ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     marginBottom: '8px',
     display: 'block',
@@ -208,7 +210,7 @@ export const FsDirentCreateArticleRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-sectionContent`]: {
-    ...theme.typography.body2,
+    ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
   },
 

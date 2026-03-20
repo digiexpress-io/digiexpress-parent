@@ -33,7 +33,7 @@ export const FsDirentCreateArticle: React.FC<FsDirentCreateArticleProps> = (prop
           size='small' fullWidth multiline minRows={2} maxRows={5}
         />
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.configOptionsField.label' })}</Typography>
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.configOptionsField.label' })}</Typography>
         <FormControl className={classes.formControl} fullWidth size='small'>
           <Select className={classes.select} multiple
             value={mockSelectedValues}
