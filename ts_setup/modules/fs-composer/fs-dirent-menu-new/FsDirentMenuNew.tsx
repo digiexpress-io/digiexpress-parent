@@ -2,9 +2,9 @@ import React from 'react';
 import { Typography, SvgIconProps } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentType, FsDirentTypes, useFsNav } from '@dxs-ts/fs-api';
-import { FsDirentNewProps } from './FsDirentNewProps';
+import { FsDirentMenuNewProps } from './FsDirentMenuNewProps';
 import { useOwnerState } from './useOwnerState';
-import { useUtilityClasses, FsDirentNewRoot } from './useUtilityClasses';
+import { useUtilityClasses, FsDirentMenuNewRoot } from './useUtilityClasses';
 import { FsIcon, FsIcons } from '../fs-theme';
 
 const DIRENT_TYPE_ICONS: Record<FsDirentType, React.ElementType<SvgIconProps>> = {
@@ -21,7 +21,7 @@ const DIRENT_TYPE_ICONS: Record<FsDirentType, React.ElementType<SvgIconProps>> =
   phone: FsIcons.Phone
 };
 
-export const FsDirentNew: React.FC<FsDirentNewProps> = (props) => {
+export const FsDirentMenuNew: React.FC<FsDirentMenuNewProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
@@ -33,7 +33,7 @@ export const FsDirentNew: React.FC<FsDirentNewProps> = (props) => {
   }
 
   return (
-    <FsDirentNewRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentMenuNewRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.direntNew.title' })}</Typography>
       {(Object.keys(FsDirentTypes) as FsDirentType[]).map((type) => (
         <div key={type} className={classes.listItem} onClick={() => handleTypeClick(type)}>
@@ -41,6 +41,6 @@ export const FsDirentNew: React.FC<FsDirentNewProps> = (props) => {
           {intl.formatMessage({ id: `fs.direntNew.type.${type}` })}
         </div>
       ))}
-    </FsDirentNewRoot>
+    </FsDirentMenuNewRoot>
   );
 };

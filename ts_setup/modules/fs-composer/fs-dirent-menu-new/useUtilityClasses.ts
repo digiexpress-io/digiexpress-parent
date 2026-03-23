@@ -3,15 +3,15 @@ import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
 
-const MUI_NAME = 'FsDirentNew';
+const MUI_NAME = 'FsDirentMenuNew';
 
-export interface FsDirentNewClasses {
+export interface FsDirentMenuNewClasses {
   root: string;
   title: string;
   listItem: string;
 }
 
-export type FsDirentNewClassKey = keyof FsDirentNewClasses;
+export type FsDirentMenuNewClassKey = keyof FsDirentMenuNewClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -23,7 +23,7 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsDirentNewRoot = styled('div', {
+export const FsDirentMenuNewRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',

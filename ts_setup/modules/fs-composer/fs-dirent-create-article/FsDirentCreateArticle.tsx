@@ -1,7 +1,8 @@
 import React from 'react';
-import { Typography, FormControl, Select, MenuItem, Chip, OutlinedInput, Collapse, Box } from '@mui/material';
+import { Typography, Collapse, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcon, FsIcons } from '../fs-theme';
+import { FsDirentMultiSelect } from '../fs-dirent-multi-select';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentTextField } from '../fs-dirent-text-field';
@@ -9,10 +10,18 @@ import { FsDirentCreateArticleProps } from './FsDirentCreateArticleProps';
 import { useUtilityClasses, FsDirentCreateArticleRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
 
+const CONFIG_OPTIONS = [
+  { value: 'devMode', label: 'Development mode' },
+  { value: 'assignableMode', label: 'Assignable mode' },
+  { value: 'disabledMode', label: 'Disabled mode' },
+  { value: 'anonymousMode', label: 'Anonymous mode' },
+];
+
 export const FsDirentCreateArticle: React.FC<FsDirentCreateArticleProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
+  const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
 
   return (
     <FsDirentCreateArticleRoot className={classes.root} ownerState={ownerState}>
@@ -51,40 +60,7 @@ export const FsDirentCreateArticle: React.FC<FsDirentCreateArticleProps> = (prop
             />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.configOptionsField.label' })}</Typography>
-            <FormControl className={classes.formControl} fullWidth size='small'>
-              <Select className={classes.select} multiple
-                value={mockSelectedValues}
-                input={<OutlinedInput />}
-                renderValue={(selected) => (
-                  <div className={classes.chipContainer}>
-                    {(selected as string[]).map((value) => {
-                      const option = configOptions.find(opt => opt.value === value);
-                      const IconComponent = FsIcons[option?.icon as keyof typeof FsIcons];
-                      return (
-                        <Chip key={value}
-                          className={classes.chip}
-                          icon={IconComponent ? <FsIcon icon={IconComponent} small /> : undefined}
-                          label={option?.label}
-                          size="small"
-                        />
-                      );
-                    })}
-                  </div>
-                )}
-              >
-                {configOptions.map((option) => {
-                  const IconComponent = FsIcons[option.icon as keyof typeof FsIcons];
-                  return (
-                    <MenuItem key={option.value} value={option.value} className={classes.menuItem}>
-                      <div className={classes.menuItemContent}>
-                        {IconComponent && <FsIcon icon={IconComponent} small />}
-                        {option.label}
-                      </div>
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+            <FsDirentMultiSelect options={CONFIG_OPTIONS} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.labelsField.label' })}</Typography>
             <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.direntCreate.article.labelsField.placeholder' })} />
@@ -111,11 +87,3 @@ export const FsDirentCreateArticle: React.FC<FsDirentCreateArticleProps> = (prop
   );
 };
 
-const configOptions = [
-  { value: 'devMode', label: 'Development', icon: 'DevMode' },
-  { value: 'assignableMode', label: 'Assignable', icon: 'Assignment' },
-  { value: 'disabledMode', label: 'Disabled', icon: 'Disabled' },
-  { value: 'anonymousMode', label: 'Anonymous', icon: 'Anonymous' },
-];
-
-const mockSelectedValues = ['devMode', 'assignableMode', 'disabledMode', 'anonymousMode'];

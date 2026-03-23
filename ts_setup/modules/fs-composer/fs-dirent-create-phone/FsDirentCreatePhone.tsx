@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Divider, Collapse, Switch } from '@mui/material';
+import { Typography, Divider, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { collectArticles, mockFsData } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
@@ -13,11 +13,17 @@ import { useOwnerState } from './useOwnerState';
 
 const articles = collectArticles(mockFsData);
 
+const CONFIG_OPTIONS = [
+  { value: 'devMode', label: 'Development mode' },
+  { value: 'disabledMode', label: 'Disabled mode' },
+];
+
 export const FsDirentCreatePhone: React.FC<FsDirentCreatePhoneProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
   const [selectedArticles, setSelectedArticles] = React.useState<string[]>([]);
+  const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
 
   return (
     <FsDirentCreatePhoneRoot className={classes.root} ownerState={ownerState}>
@@ -48,10 +54,14 @@ export const FsDirentCreatePhone: React.FC<FsDirentCreatePhoneProps> = (props) =
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.phone.articlesField.label' })}</Typography>
             <FsDirentMultiSelect options={articles} value={selectedArticles} onChange={setSelectedArticles} />
 
-            <div className={classes.configRow}>
-              <Typography className={classes.configLabel}>{intl.formatMessage({ id: 'fs.direntCreate.phone.devModeOption.label' })}</Typography>
-              <Switch className={classes.switchRoot} size='small' />
-            </div>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.phone.configOptionsField.label' })}</Typography>
+            <FsDirentMultiSelect options={CONFIG_OPTIONS} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
+            {selectedConfigOptions.includes('devMode') && (
+              <Typography className={classes.configOptionDescription}>{intl.formatMessage({ id: 'fs.direntCreate.configOption.devMode.description' })}</Typography>
+            )}
+            {selectedConfigOptions.includes('disabledMode') && (
+              <Typography className={classes.configOptionDescription}>{intl.formatMessage({ id: 'fs.direntCreate.configOption.disabledMode.description' })}</Typography>
+            )}
           </div>
         </Collapse>
 

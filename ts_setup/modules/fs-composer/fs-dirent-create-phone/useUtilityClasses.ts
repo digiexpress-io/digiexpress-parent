@@ -14,11 +14,9 @@ export interface FsDirentCreatePhoneClasses {
   expandToggleIconOpen: string;
   optionalFields: string;
   label: string;
+  configOptionDescription: string;
   localeLabel: string;
   localeRow: string;
-  configRow: string;
-  configLabel: string;
-  switchRoot: string;
   buttonContainer: string;
 }
 
@@ -36,9 +34,7 @@ export const useUtilityClasses = () => {
     expandToggleIcon: ['expandToggleIcon'],
     expandToggleIconOpen: ['expandToggleIconOpen'],
     optionalFields: ['optionalFields'],
-    configRow: ['configRow'],
-    configLabel: ['configLabel'],
-    switchRoot: ['switchRoot'],
+    configOptionDescription: ['configOptionDescription'],
     buttonContainer: ['buttonContainer'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -121,29 +117,11 @@ export const FsDirentCreatePhoneRoot = styled('div', {
     gap: theme.spacing(1.5),
   },
 
-  [`& .${MUI_NAME}-configRow`]: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
-  [`& .${MUI_NAME}-configLabel.MuiTypography-root`]: {
+  [`& .${MUI_NAME}-configOptionDescription`]: {
     ...theme.typography.caption,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-  },
-
-  [`& .${MUI_NAME}-switchRoot`]: {
-    '& .MuiSwitch-track': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-    },
-    '& .MuiSwitch-thumb': {
+    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    '&.MuiTypography-root': {
       color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
-    },
-    '& .MuiSwitch-colorPrimary.Mui-checked': {
-      color: ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form,
-    },
-    '& .MuiSwitch-colorPrimary.Mui-checked + .MuiSwitch-track': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form,
     },
   },
 

@@ -14,6 +14,7 @@ export interface FsDirentCreateServiceClasses {
   expandToggleIconOpen: string;
   optionalFields: string;
   label: string;
+  configOptionDescription: string;
   localeLabel: string;
   localeRow: string;
   sectionTitle: string;
@@ -32,6 +33,7 @@ export const useUtilityClasses = () => {
     expandToggleIconOpen: ['expandToggleIconOpen'],
     optionalFields: ['optionalFields'],
     label: ['label'],
+    configOptionDescription: ['configOptionDescription'],
     localeLabel: ['localeLabel'],
     localeRow: ['localeRow'],
     sectionTitle: ['sectionTitle'],
@@ -68,7 +70,7 @@ export const FsDirentCreateServiceRoot = styled('div', {
 
   [`& .${MUI_NAME}-expandToggle`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.direntTypes.dark.service : darken(FsColors.direntTypes.light.service, 0.1),
+    color: ownerState.isDarkMode ? FsColors.direntTypes.dark.form : darken(FsColors.direntTypes.light.form, 0.1),
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
@@ -124,6 +126,14 @@ export const FsDirentCreateServiceRoot = styled('div', {
     display: 'block',
     '&.MuiTypography-root': {
       color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    },
+  },
+
+  [`& .${MUI_NAME}-configOptionDescription`]: {
+    ...theme.typography.caption,
+    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    '&.MuiTypography-root': {
+      color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
     },
   },
 

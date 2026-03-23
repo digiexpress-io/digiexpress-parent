@@ -100,6 +100,18 @@ export const FsDirentCreateService: React.FC<FsDirentCreateServiceProps> = (prop
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.service.configOptionsField.label' })}</Typography>
             <FsDirentMultiSelect options={CONFIG_OPTIONS} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
+            {selectedConfigOptions.includes('devMode') && (
+              <Typography className={classes.configOptionDescription}>{intl.formatMessage({ id: 'fs.direntCreate.configOption.devMode.description' })}</Typography>
+            )}
+            {selectedConfigOptions.includes('assignableMode') && (
+              <Typography className={classes.configOptionDescription}>{intl.formatMessage({ id: 'fs.direntCreate.configOption.assignableMode.description' })}</Typography>
+            )}
+            {selectedConfigOptions.includes('disabledMode') && (
+              <Typography className={classes.configOptionDescription}>{intl.formatMessage({ id: 'fs.direntCreate.configOption.disabledMode.description' })}</Typography>
+            )}
+            {selectedConfigOptions.includes('anonymousMode') && (
+              <Typography className={classes.configOptionDescription}>{intl.formatMessage({ id: 'fs.direntCreate.configOption.anonymousMode.description' })}</Typography>
+            )}
           </div>
         </Collapse>
 

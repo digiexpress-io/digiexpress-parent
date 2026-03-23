@@ -1,6 +1,6 @@
 import { FsDirent } from "@dxs-ts/fs-api";
 
-export interface FsDirentNewProps {
+export interface FsDirentMenuNewProps {
   dirent: FsDirent | undefined;
   onClose: () => void;
 }

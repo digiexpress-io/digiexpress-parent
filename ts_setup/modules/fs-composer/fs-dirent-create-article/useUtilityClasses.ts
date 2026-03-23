@@ -14,12 +14,6 @@ export interface FsDirentCreateArticleClasses {
   expandToggleIconOpen: string;
   optionalFields: string;
   label: string;
-  formControl: string;
-  select: string;
-  chipContainer: string;
-  chip: string;
-  menuItem: string;
-  menuItemContent: string;
   sectionTitle: string;
   sectionBox: string;
   sectionContent: string;
@@ -38,12 +32,6 @@ export const useUtilityClasses = () => {
     expandToggleIconOpen: ['expandToggleIconOpen'],
     optionalFields: ['optionalFields'],
     label: ['label'],
-    formControl: ['formControl'],
-    select: ['select'],
-    chipContainer: ['chipContainer'],
-    chip: ['chip'],
-    menuItem: ['menuItem'],
-    menuItemContent: ['menuItemContent'],
     sectionTitle: ['sectionTitle'],
     sectionBox: ['sectionBox'],
     sectionContent: ['sectionContent'],
@@ -107,85 +95,6 @@ export const FsDirentCreateArticleRoot = styled('div', {
   [`& .${MUI_NAME}-label`]: {
     ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-  },
-
-  [`& .${MUI_NAME}-formControl`]: {
-    width: '100%',
-    marginTop: 'unset !important',
-  },
-
-  [`& .${MUI_NAME}-select`]: {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    borderRadius: 0,
-    '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-      borderRadius: 0,
-    },
-    '&:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary,
-    },
-    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text}`
-    },
-    '& .MuiSvgIcon-root': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    },
-    '& .MuiSelect-select': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-      padding: '8px 12px',
-      ...theme.typography.caption,
-    },
-  },
-
-  [`& .${MUI_NAME}-chipContainer`]: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '4px',
-  },
-
-  [`& .${MUI_NAME}-chip`]: {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    '&.MuiChip-root': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    },
-    '& .MuiChip-label': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-      ...theme.typography.caption,
-    },
-    '& .MuiChip-icon': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    },
-    '& .MuiSvgIcon-root': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    },
-  },
-
-  [`& .${MUI_NAME}-menuItem`]: {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
-    '&:hover': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-    },
-    '&.Mui-selected': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary,
-      '&:hover': {
-        backgroundColor: ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.text,
-      },
-    },
-  },
-
-  [`& .${MUI_NAME}-menuItemContent`]: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-
-    '& .MuiSvgIcon-root': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    },
   },
 
   [`& .${MUI_NAME}-sectionTitle`]: {
