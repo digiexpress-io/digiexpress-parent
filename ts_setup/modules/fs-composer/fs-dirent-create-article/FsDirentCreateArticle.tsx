@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, Typography, FormControl, Select, MenuItem, Chip, OutlinedInput, Collapse } from '@mui/material';
+import { TextField, Typography, FormControl, Select, MenuItem, Chip, OutlinedInput, Collapse, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentCreateArticleProps } from './FsDirentCreateArticleProps';
@@ -15,6 +15,19 @@ export const FsDirentCreateArticle: React.FC<FsDirentCreateArticleProps> = (prop
     <FsDirentCreateArticleRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.direntCreate.article.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
+
+        {ownerState.parentArticle && (
+          <>
+            <Box display='flex' justifyContent='space-between' alignItems='center'>
+              <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.parentArticleField.label' })}</Typography>
+              <FsIcon icon={FsIcons.Info} small tooltip={intl.formatMessage({ id: 'fs.direntCreate.article.parentArticleField.desc' })} />
+            </Box>
+            <TextField className={classes.textField}
+              value={ownerState.parentArticlePath}
+              size='small' fullWidth disabled
+            />
+          </>
+        )}
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.nameField.label' })}</Typography>
         <TextField className={classes.textField}

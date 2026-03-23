@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography, List, IconButton, Badge } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcons, FsIcon } from '../fs-theme';
+import { useFsNav } from '@dxs-ts/fs-api';
 import { FsDirent } from '../fs-dirent';
 import { FsDirentMenu } from '../fs-dirent-menu';
 import { FsSearch } from '../fs-search';
@@ -14,6 +15,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const ownerState = useOwnerState(props);
+  const { openCreateTab } = useFsNav();
 
 
   return (
@@ -54,13 +56,13 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
           </IconButton>
         )}
         {ownerState.isDarkMode ? (
-          <IconButton className={classes.iconDark}>
+          <IconButton className={classes.iconDark} onClick={() => openCreateTab('folder', undefined)}>
             <Badge className={classes.badgeDark} badgeContent={<FsIcon icon={FsIcons.Add} xsmall />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
               <FsIcon icon={FsIcons.Folder} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.newFolder' })} />
             </Badge>
           </IconButton>
         ) : (
-          <IconButton className={classes.iconLight}>
+          <IconButton className={classes.iconLight} onClick={() => openCreateTab('folder', undefined)}>
             <Badge className={classes.badgeLight} badgeContent={<FsIcon icon={FsIcons.Add} xsmall />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
               <FsIcon icon={FsIcons.Folder} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.newFolder' })} />
             </Badge>

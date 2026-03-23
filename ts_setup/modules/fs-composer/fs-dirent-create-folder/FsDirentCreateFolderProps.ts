@@ -1,6 +1,6 @@
 import { FsDirent } from '@dxs-ts/fs-api';
 
-export interface FsDirentCreateArticleProps {
+export interface FsDirentCreateFolderProps {
   parentFolder: FsDirent | undefined;
   pathToTopParent: string | undefined;
 }

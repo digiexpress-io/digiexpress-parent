@@ -101,7 +101,7 @@ export const mockFsData: FsDirent[] = [
         children: [
           {
             id: 'ref-article-ref1',
-            name: 'ref.article',
+            name: 'ref-residence.article',
             type: 'article',
             children: []
           },
@@ -138,7 +138,7 @@ export const mockFsData: FsDirent[] = [
         children: [
           {
             id: 'ref-article-ref2',
-            name: 'ref.article',
+            name: 'ref-democracy.article',
             type: 'article',
             children: []
           },
@@ -194,7 +194,7 @@ export const mockFsData: FsDirent[] = [
         children: [
           {
             id: 'ref-article-ref3',
-            name: 'ref.article',
+            name: 'ref-education.article',
             type: 'article',
             children: []
           },
@@ -250,7 +250,7 @@ export const mockFsData: FsDirent[] = [
         children: [
           {
             id: 'ref-article-ref4',
-            name: 'ref.article',
+            name: 'ref-traffic.article',
             type: 'article',
             children: []
           },
@@ -311,7 +311,7 @@ export const mockFsData: FsDirent[] = [
         children: [
           {
             id: 'main-invoicing.article',
-            name: 'main.article',
+            name: 'main-invoicing.article',
             type: 'article',
             children: []
           },
@@ -366,7 +366,7 @@ export const mockFsData: FsDirent[] = [
         children: [
           {
             id: 'main-institute.article',
-            name: 'main.article',
+            name: 'main-institute.article',
             type: 'article',
             children: []
           },
@@ -427,7 +427,7 @@ export const mockFsData: FsDirent[] = [
         children: [
           {
             id: 'main-water.article',
-            name: 'main.article',
+            name: 'main-water.article',
             type: 'article',
             children: []
           },
@@ -488,7 +488,7 @@ export const mockFsData: FsDirent[] = [
         children: [
           {
             id: 'main-leisure.article',
-            name: 'main.article',
+            name: 'main-leisure.article',
             type: 'article',
             children: []
           },

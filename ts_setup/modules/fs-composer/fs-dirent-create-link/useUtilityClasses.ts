@@ -3,9 +3,9 @@ import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
 
-const MUI_NAME = 'FsDirentCreateArticle';
+const MUI_NAME = 'FsDirentCreateLink';
 
-export interface FsDirentCreateArticleClasses {
+export interface FsDirentCreateLinkClasses {
   root: string;
   title: string;
   formContainer: string;
@@ -14,6 +14,8 @@ export interface FsDirentCreateArticleClasses {
   expandToggleIconOpen: string;
   optionalFields: string;
   label: string;
+  localeLabel: string;
+  localeRow: string;
   textField: string;
   formControl: string;
   select: string;
@@ -24,12 +26,15 @@ export interface FsDirentCreateArticleClasses {
   sectionTitle: string;
   sectionBox: string;
   sectionContent: string;
+  configRow: string;
+  configLabel: string;
+  switchRoot: string;
   buttonContainer: string;
   cancelButton: string;
   saveButton: string;
 }
 
-export type FsDirentCreateArticleClassKey = keyof FsDirentCreateArticleClasses;
+export type FsDirentCreateLinkClassKey = keyof FsDirentCreateLinkClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -41,6 +46,8 @@ export const useUtilityClasses = () => {
     expandToggleIconOpen: ['expandToggleIconOpen'],
     optionalFields: ['optionalFields'],
     label: ['label'],
+    localeLabel: ['localeLabel'],
+    localeRow: ['localeRow'],
     textField: ['textField'],
     formControl: ['formControl'],
     select: ['select'],
@@ -51,6 +58,9 @@ export const useUtilityClasses = () => {
     sectionTitle: ['sectionTitle'],
     sectionBox: ['sectionBox'],
     sectionContent: ['sectionContent'],
+    configRow: ['configRow'],
+    configLabel: ['configLabel'],
+    switchRoot: ['switchRoot'],
     buttonContainer: ['buttonContainer'],
     cancelButton: ['cancelButton'],
     saveButton: ['saveButton'],
@@ -59,7 +69,7 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsDirentCreateArticleRoot = styled('div', {
+export const FsDirentCreateLinkRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
@@ -72,6 +82,9 @@ export const FsDirentCreateArticleRoot = styled('div', {
     fontWeight: 500,
     marginBottom: theme.spacing(2),
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    '&.MuiTypography-root': {
+      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    },
   },
 
   [`& .${MUI_NAME}-formContainer`]: {
@@ -113,6 +126,23 @@ export const FsDirentCreateArticleRoot = styled('div', {
   [`& .${MUI_NAME}-label`]: {
     ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    '&.MuiTypography-root': {
+      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    },
+  },
+
+  [`& .${MUI_NAME}-localeLabel`]: {
+    ...theme.typography.subtitle2,
+    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    '&.MuiTypography-root': {
+      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    },
+  },
+
+  [`& .${MUI_NAME}-localeRow`]: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.5),
   },
 
   [`& .${MUI_NAME}-textField`]: {
@@ -128,9 +158,6 @@ export const FsDirentCreateArticleRoot = styled('div', {
       },
       '&:hover fieldset': {
         borderColor: ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary,
-      },
-      '&.Mui-disabled:hover fieldset': {
-        borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
       },
       '&.Mui-focused fieldset': {
         border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text}`
@@ -239,6 +266,9 @@ export const FsDirentCreateArticleRoot = styled('div', {
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     marginBottom: '8px',
     display: 'block',
+    '&.MuiTypography-root': {
+      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    },
   },
 
   [`& .${MUI_NAME}-sectionBox`]: {
@@ -252,6 +282,35 @@ export const FsDirentCreateArticleRoot = styled('div', {
   [`& .${MUI_NAME}-sectionContent`]: {
     ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    '&.MuiTypography-root': {
+      color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    },
+  },
+
+  [`& .${MUI_NAME}-configRow`]: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  [`& .${MUI_NAME}-configLabel.MuiTypography-root`]: {
+    ...theme.typography.caption,
+    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+  },
+
+  [`& .${MUI_NAME}-switchRoot`]: {
+    '& .MuiSwitch-track': {
+      backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
+    },
+    '& .MuiSwitch-thumb': {
+      color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    },
+    '& .MuiSwitch-colorPrimary.Mui-checked': {
+      color: ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form,
+    },
+    '& .MuiSwitch-colorPrimary.Mui-checked + .MuiSwitch-track': {
+      backgroundColor: ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form,
+    },
   },
 
   [`& .${MUI_NAME}-buttonContainer`]: {
