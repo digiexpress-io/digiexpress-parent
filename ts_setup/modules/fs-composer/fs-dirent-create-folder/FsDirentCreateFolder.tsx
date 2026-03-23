@@ -1,6 +1,8 @@
 import React from 'react';
 import { TextField, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
+import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentCreateFolderProps } from './FsDirentCreateFolderProps';
 import { useUtilityClasses, FsDirentCreateFolderRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
@@ -28,8 +30,8 @@ export const FsDirentCreateFolder: React.FC<FsDirentCreateFolderProps> = (props)
         />
 
         <div className={classes.buttonContainer}>
-          <button className={classes.cancelButton}>{intl.formatMessage({ id: 'button.cancel' })}</button>
-          <button className={classes.saveButton}>{intl.formatMessage({ id: 'button.save' })}</button>
+          <FsDirentButtonCancel />
+          <FsDirentButtonCreate />
         </div>
 
       </div>

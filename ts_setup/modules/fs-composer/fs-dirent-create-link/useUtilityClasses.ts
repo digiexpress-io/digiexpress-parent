@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled, alpha, darken } from '@mui/material';
+import { generateUtilityClass, styled, darken } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
@@ -30,8 +30,6 @@ export interface FsDirentCreateLinkClasses {
   configLabel: string;
   switchRoot: string;
   buttonContainer: string;
-  cancelButton: string;
-  saveButton: string;
 }
 
 export type FsDirentCreateLinkClassKey = keyof FsDirentCreateLinkClasses;
@@ -62,8 +60,6 @@ export const useUtilityClasses = () => {
     configLabel: ['configLabel'],
     switchRoot: ['switchRoot'],
     buttonContainer: ['buttonContainer'],
-    cancelButton: ['cancelButton'],
-    saveButton: ['saveButton'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -320,33 +316,4 @@ export const FsDirentCreateLinkRoot = styled('div', {
     justifyContent: 'flex-end',
   },
 
-  [`& .${MUI_NAME}-cancelButton`]: {
-    backgroundColor: alpha(ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.1),
-    color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
-    border: `1px solid ${alpha(ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.3)}`,
-    borderRadius: '4px',
-    padding: '6px 16px',
-    textTransform: 'none',
-    fontSize: '12px',
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: alpha(ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.2),
-    },
-  },
-
-  [`& .${MUI_NAME}-saveButton`]: {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-    color: ownerState.isDarkMode ? FsColors.light.background : FsColors.light.text,
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.dark.textSecondary}`,
-    borderRadius: '4px',
-    padding: '6px 16px',
-    textTransform: 'none',
-    fontSize: '12px',
-    fontWeight: 500,
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.dark.text,
-      borderColor: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.dark.textSecondary,
-    },
-  },
 }));

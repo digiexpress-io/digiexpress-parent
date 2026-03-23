@@ -2,6 +2,8 @@ import React from 'react';
 import { TextField, Typography, FormControl, Select, MenuItem, Chip, OutlinedInput, Collapse, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcon, FsIcons } from '../fs-theme';
+import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
+import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentCreateArticleProps } from './FsDirentCreateArticleProps';
 import { useUtilityClasses, FsDirentCreateArticleRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
@@ -109,8 +111,8 @@ export const FsDirentCreateArticle: React.FC<FsDirentCreateArticleProps> = (prop
         </Collapse>
 
         <div className={classes.buttonContainer}>
-          <button className={classes.cancelButton}>{intl.formatMessage({ id: 'button.cancel' })}</button>
-          <button className={classes.saveButton}>{intl.formatMessage({ id: 'button.save' })}</button>
+          <FsDirentButtonCancel />
+          <FsDirentButtonCreate />
         </div>
 
       </div>

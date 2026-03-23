@@ -3,6 +3,8 @@ import { TextField, Typography, FormControl, Select, MenuItem, Chip, OutlinedInp
 import { useIntl } from 'react-intl';
 import { FsDirent, mockFsData } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
+import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
+import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentCreateLinkProps } from './FsDirentCreateLinkProps';
 import { useUtilityClasses, FsDirentCreateLinkRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
@@ -81,8 +83,8 @@ export const FsDirentCreateLink: React.FC<FsDirentCreateLinkProps> = (props) => 
         </Collapse>
 
         <div className={classes.buttonContainer}>
-          <button className={classes.cancelButton}>{intl.formatMessage({ id: 'button.cancel' })}</button>
-          <button className={classes.saveButton}>{intl.formatMessage({ id: 'button.save' })}</button>
+          <FsDirentButtonCancel />
+          <FsDirentButtonCreate />
         </div>
 
       </div>
