@@ -22,12 +22,24 @@ interface BaseDirentProps {
 export interface FolderDirentProps extends BaseDirentProps {
   type: 'folder';
 }
+
 export interface ArticleDirentProps extends BaseDirentProps {
   type: 'article';
 }
+
 export interface ServiceDirentProps extends BaseDirentProps {
   type: 'service';
+  serviceName: string;
+  dialobFormName: string;
+  dialobFormTag: string;
+  flowName: string;
+  validityStart?: string;
+  validityEnd?: string;
+  articles: ArticleId[];
+  configOptions: FsDirentConfigOption[];
+  intlValues: Record<string, string>;
 }
+
 export interface DialobDirentProps extends BaseDirentProps {
   type: 'dialob';
 }
