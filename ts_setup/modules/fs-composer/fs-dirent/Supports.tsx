@@ -106,6 +106,8 @@ export const DirentIcon = (props: { dirent: FsDirent }) => {
       return <FsIcons.Image />;
     case 'template':
       return <FsIcons.Pdf />;
+    case 'phone':
+      return <FsIcons.Phone />;
     default:
       return <FsIcons.Article />;
   }

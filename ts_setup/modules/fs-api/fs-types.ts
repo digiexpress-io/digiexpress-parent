@@ -1,4 +1,3 @@
-// Lightweight tree node — identity and structure only
 export interface FsDirent {
   id: string;
   name: string;
@@ -6,8 +5,7 @@ export interface FsDirent {
   children: FsDirent[];
 }
 
-// Full asset payload — loaded in background, keyed by FsDirent.id
-export interface FsDirentProps {
+interface BaseDirentProps {
   id: string;
   expanded: boolean;
   reference: boolean;
@@ -20,6 +18,57 @@ export interface FsDirentProps {
   labels: FsDirentLabel[];
   errors: FsDirentError[];
 }
+
+export interface FolderDirentProps extends BaseDirentProps {
+  type: 'folder';
+}
+export interface ArticleDirentProps extends BaseDirentProps {
+  type: 'article';
+}
+export interface ServiceDirentProps extends BaseDirentProps {
+  type: 'service';
+}
+export interface DialobDirentProps extends BaseDirentProps {
+  type: 'dialob';
+}
+export interface FlowDirentProps extends BaseDirentProps {
+  type: 'flow';
+}
+export interface LanguageDirentProps extends BaseDirentProps {
+  type: 'language';
+}
+export interface PrintoutDirentProps extends BaseDirentProps {
+  type: 'printout';
+}
+export interface ImageDirentProps extends BaseDirentProps {
+  type: 'image';
+}
+export interface TemplateDirentProps extends BaseDirentProps {
+  type: 'template';
+}
+export interface LinkDirentProps extends BaseDirentProps {
+  type: 'link';
+  urlValue: string;
+  intlValues: Record<string, string>;
+}
+export interface PhoneDirentProps extends BaseDirentProps {
+  type: 'phone';
+  phoneValue: string;
+  intlValues: Record<string, string>;
+}
+
+export type FsDirentProps =
+  | FolderDirentProps
+  | ArticleDirentProps
+  | ServiceDirentProps
+  | DialobDirentProps
+  | FlowDirentProps
+  | LanguageDirentProps
+  | PrintoutDirentProps
+  | ImageDirentProps
+  | TemplateDirentProps
+  | LinkDirentProps
+  | PhoneDirentProps;
 
 export interface FsDirentConfigOption {
   devMode?: boolean | undefined;
@@ -73,6 +122,7 @@ export const FsDirentTypes = {
   printout: 'printout',
   image: 'image',
   template: 'template',
+  phone: 'phone'
 };
 
 export type FsDirentType = keyof typeof FsDirentTypes;
@@ -92,82 +142,7 @@ export type PrintoutId = string;
 export type ImageId = string;
 export type TemplateId = string;
 export type FsDirentLabelId = string;
-
-export interface Folder {
-  id: FolderId;
-  name: string;
-  labels: FsDirentLabel[] | undefined;
-  type: 'folder';
-  isExpanded?: boolean;
-  children?: FsDirent[] | undefined;
-}
-
-export interface Article {
-  id: ArticleId;
-  name: string;
-  type: 'article';
-  description?: string;
-  isExpanded?: boolean;
-  children?: FsDirent[];
-}
-
-export interface Language {
-  id: LanguageId;
-  name: string;
-  type: 'language';
-  description?: string;
-}
-
-export interface Service {
-  id: ServiceId;
-  name: string;
-  type: 'service';
-  isExpanded?: boolean;
-  isReference?: boolean;
-  children?: FsDirent[];
-}
-
-export interface Dialob {
-  id: DialobId;
-  name: string;
-  type: 'dialob';
-}
-
-export interface Flow {
-  id: FlowId;
-  name: string;
-  type: 'flow';
-  isReference?: boolean;
-}
-
-export interface Link {
-  id: LinkId;
-  name: string;
-  type: 'link';
-  description?: string;
-}
-
-export interface Printout {
-  id: PrintoutId;
-  name: string;
-  type: 'printout';
-  isExpanded?: boolean;
-  children?: FsDirent[];
-}
-
-export interface Image {
-  id: ImageId;
-  name: string;
-  type: 'image';
-  description?: string;
-}
-
-export interface Template {
-  id: TemplateId;
-  name: string;
-  type: 'template';
-  description?: string;
-}
+export type PhoneNumberId = string;
 
 export interface FsDirentContextMenuData {
   dirent: FsDirent;

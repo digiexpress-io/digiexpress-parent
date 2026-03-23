@@ -17,6 +17,12 @@ export const mockFsData: FsDirent[] = [
             type: 'article',
             children: [
               {
+                id: 'index-main.phone',
+                name: 'index-main.phone',
+                type: 'phone',
+                children: []
+              },
+              {
                 id: 'ref.article',
                 name: 'ref.article',
                 type: 'article',
@@ -140,7 +146,14 @@ export const mockFsData: FsDirent[] = [
             id: 'ref-article-ref2',
             name: 'ref-democracy.article',
             type: 'article',
-            children: []
+            children: [
+              {
+                id: 'democracy-info.phone',
+                name: 'democracy-info.phone',
+                type: 'phone',
+                children: []
+              }
+            ]
           },
           {
             id: 'trustee-info-form.service',
@@ -429,7 +442,14 @@ export const mockFsData: FsDirent[] = [
             id: 'main-water.article',
             name: 'main-water.article',
             type: 'article',
-            children: []
+            children: [
+              {
+                id: 'water-services.phone',
+                name: 'water-services.phone',
+                type: 'phone',
+                children: []
+              }
+            ]
           },
           {
             id: 'water-supply-maintenance.service',
@@ -559,6 +579,31 @@ export const mockFsData: FsDirent[] = [
         id: 'shared-taskSplitFlow.flow',
         name: 'taskSplitFlow.flow',
         type: 'flow',
+        children: []
+      }
+    ]
+  },
+  {
+    id: 'phone-numbers',
+    name: 'phone-numbers',
+    type: 'folder',
+    children: [
+      {
+        id: 'index-main.phone',
+        name: 'index-main.phone',
+        type: 'phone',
+        children: []
+      },
+      {
+        id: 'democracy-info.phone',
+        name: 'democracy-info.phone',
+        type: 'phone',
+        children: []
+      },
+      {
+        id: 'water-services.phone',
+        name: 'water-services.phone',
+        type: 'phone',
         children: []
       }
     ]

@@ -63,6 +63,7 @@ import {
   AccountTree,
   WorkHistory,
   Help,
+  Phone,
 } from '@mui/icons-material';
 import { SvgIconProps, Tooltip } from '@mui/material';
 
@@ -116,6 +117,7 @@ export const FsIcons = {
   Anonymous: VisibilityOff,
 
   // Utility
+  Phone: Phone,
   Search: Search,
   Close: Close,
   Link: Link,

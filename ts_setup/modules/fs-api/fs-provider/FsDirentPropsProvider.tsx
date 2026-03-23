@@ -1,5 +1,5 @@
 import React from 'react';
-import { FsDirent, FsDirentProps } from '../fs-types';
+import { FsDirent, FsDirentProps, FolderDirentProps } from '../fs-types';
 import { mockFsDirentProperties } from '../mock-fs-dirent-properties';
 import { mockFsData } from '../mock-fs-data';
 
@@ -24,7 +24,8 @@ export interface FsDirentPropsProviderProps {
   children: React.ReactNode;
 }
 
-const EMPTY_DIRENT_PROPS: FsDirentProps = {
+const EMPTY_DIRENT_PROPS: FolderDirentProps = {
+  type: 'folder',
   id: '',
   expanded: false,
   reference: false,

@@ -1,8 +1,67 @@
 import { FsDirentProps } from './fs-types'
 
 export const mockFsDirentProperties: Record<string, FsDirentProps> = {
+  'phone-numbers': {
+    id: 'phone-numbers',
+    type: 'folder',
+    expanded: false,
+    reference: false,
+    locked: false,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+  },
+  'index-main.phone': {
+    id: 'index-main.phone',
+    type: 'phone',
+    expanded: false,
+    reference: false,
+    locked: false,
+    phoneValue: '+358 9 235 11',
+    intlValues: { en: 'City Hall switchboard', fi: 'Kaupungintalon vaihde', sv: 'Stadshuset växel' },
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+  },
+  'democracy-info.phone': {
+    id: 'democracy-info.phone',
+    type: 'phone',
+    expanded: false,
+    reference: false,
+    locked: false,
+    phoneValue: '+358 9 235 22',
+    intlValues: { en: 'Democracy services', fi: 'Demokratiapalvelut', sv: 'Demokratitjänster' },
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+  },
+  'water-services.phone': {
+    id: 'water-services.phone',
+    type: 'phone',
+    expanded: false,
+    reference: false,
+    locked: false,
+    phoneValue: '+358 9 235 33',
+    intlValues: { en: 'Water services', fi: 'Vesihuolto', sv: 'Vattentjänster' },
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+  },
   'content': {
       id: 'content',
+      type: 'folder',
       expanded: false,
       reference: false,
       locked: false,
@@ -53,6 +112,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   '000_index': {
       id: '000_index',
+      type: 'folder',
       expanded: false,
       reference: false,
       locked: true,
@@ -110,6 +170,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'main.article': {
       id: 'main.article',
+      type: 'article',
       expanded: false,
       reference: false,
       locked: false,
@@ -176,6 +237,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'ref.article': {
       id: 'ref.article',
+      type: 'article',
       expanded: false,
       reference: true,
       locked: false,
@@ -219,6 +281,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'fi-ref': {
       id: 'fi-ref',
+      type: 'language',
       expanded: false,
       reference: false,
       locked: false,
@@ -290,6 +353,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'en-ref': {
       id: 'en-ref',
+      type: 'language',
       expanded: false,
       reference: false,
       locked: false,
@@ -338,6 +402,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'fi-main': {
       id: 'fi-main',
+      type: 'language',
       expanded: false,
       reference: false,
       locked: false,
@@ -434,6 +499,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'sv-main': {
       id: 'sv-main',
+      type: 'language',
       expanded: false,
       reference: false,
       locked: false,
@@ -528,6 +594,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'en-main': {
       id: 'en-main',
+      type: 'language',
       expanded: false,
       reference: false,
       locked: false,
@@ -584,6 +651,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'info-gdpr.article': {
       id: 'info-gdpr.article',
+      type: 'article',
       expanded: false,
       reference: false,
       locked: false,
@@ -655,6 +723,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'general-message.service': {
       id: 'general-message.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: true,
@@ -692,6 +761,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'fi-general': {
       id: 'fi-general',
+      type: 'language',
       expanded: false,
       reference: false,
       locked: false,
@@ -770,6 +840,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'sv-general': {
       id: 'sv-general',
+      type: 'language',
       expanded: false,
       reference: false,
       locked: false,
@@ -821,6 +892,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'general-message.dialob': {
       id: 'general-message.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -899,6 +971,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'taskMsgFlow.flow': {
       id: 'taskMsgFlow.flow',
+      type: 'flow',
       expanded: false,
       reference: false,
       locked: false,
@@ -952,6 +1025,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   '100_residence': {
       id: '100_residence',
+      type: 'folder',
       expanded: false,
       reference: false,
       locked: false,
@@ -989,6 +1063,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'ref-article-ref1': {
       id: 'ref-article-ref1',
+      type: 'article',
       expanded: false,
       reference: true,
       locked: false,
@@ -1072,6 +1147,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'general-message-ref1': {
       id: 'general-message-ref1',
+      type: 'service',
       expanded: false,
       reference: true,
       locked: false,
@@ -1139,6 +1215,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'public-inforeq.service': {
       id: 'public-inforeq.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -1213,6 +1290,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'public-inforeq.dialob': {
       id: 'public-inforeq.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -1296,6 +1374,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'taskGenericFlow-ref1': {
       id: 'taskGenericFlow-ref1',
+      type: 'flow',
       expanded: false,
       reference: true,
       locked: false,
@@ -1339,6 +1418,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   '200_democracy': {
       id: '200_democracy',
+      type: 'folder',
       expanded: false,
       reference: false,
       locked: false,
@@ -1404,6 +1484,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'ref-article-ref2': {
       id: 'ref-article-ref2',
+      type: 'article',
       expanded: false,
       reference: true,
       locked: false,
@@ -1478,6 +1559,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'trustee-info-form.service': {
       id: 'trustee-info-form.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -1547,6 +1629,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'fi-trustee': {
       id: 'fi-trustee',
+      type: 'language',
       expanded: false,
       reference: false,
       locked: false,
@@ -1610,6 +1693,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'trustee-info.dialob': {
       id: 'trustee-info.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -1653,6 +1737,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'taskGenericFlow-ref2': {
       id: 'taskGenericFlow-ref2',
+      type: 'flow',
       expanded: false,
       reference: true,
       locked: false,
@@ -1696,6 +1781,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'trustee-travel-pay.service': {
       id: 'trustee-travel-pay.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -1789,6 +1875,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'trustee-travel-pay.dialob': {
       id: 'trustee-travel-pay.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -1857,6 +1944,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'general-message-ref2': {
       id: 'general-message-ref2',
+      type: 'service',
       expanded: false,
       reference: true,
       locked: false,
@@ -1937,6 +2025,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   '350_education': {
       id: '350_education',
+      type: 'folder',
       expanded: false,
       reference: false,
       locked: false,
@@ -1980,6 +2069,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'ref-article-ref3': {
       id: 'ref-article-ref3',
+      type: 'article',
       expanded: false,
       reference: true,
       locked: false,
@@ -2060,6 +2150,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'wilma-preschool.service': {
       id: 'wilma-preschool.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -2113,6 +2204,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'fi-wilma': {
       id: 'fi-wilma',
+      type: 'language',
       expanded: false,
       reference: false,
       locked: false,
@@ -2155,6 +2247,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'wilma-preschool.dialob': {
       id: 'wilma-preschool.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -2220,6 +2313,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'taskGenericFlow-ref3': {
       id: 'taskGenericFlow-ref3',
+      type: 'flow',
       expanded: false,
       reference: true,
       locked: false,
@@ -2272,6 +2366,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'protection-order-school.service': {
       id: 'protection-order-school.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -2334,6 +2429,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'protection-order-school.dialob': {
       id: 'protection-order-school.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -2408,6 +2504,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'general-message-ref3': {
       id: 'general-message-ref3',
+      type: 'service',
       expanded: false,
       reference: true,
       locked: false,
@@ -2460,6 +2557,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   '400_traffic-and-roads': {
       id: '400_traffic-and-roads',
+      type: 'folder',
       expanded: false,
       reference: false,
       locked: false,
@@ -2528,6 +2626,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'ref-article-ref4': {
       id: 'ref-article-ref4',
+      type: 'article',
       expanded: false,
       reference: true,
       locked: false,
@@ -2569,6 +2668,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'dig-permit.service': {
       id: 'dig-permit.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -2606,6 +2706,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'dig-permit.dialob': {
       id: 'dig-permit.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -2643,6 +2744,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'taskSplitFlow.flow': {
       id: 'taskSplitFlow.flow',
+      type: 'flow',
       expanded: false,
       reference: false,
       locked: false,
@@ -2686,6 +2788,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'rent-street-area.service': {
       id: 'rent-street-area.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -2723,6 +2826,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'rent-street-area.dialob': {
       id: 'rent-street-area.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -2781,6 +2885,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'private-road-sign.service': {
       id: 'private-road-sign.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -2853,6 +2958,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'private-road-sign.dialob': {
       id: 'private-road-sign.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -2906,6 +3012,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'general-message-ref4': {
       id: 'general-message-ref4',
+      type: 'service',
       expanded: false,
       reference: true,
       locked: false,
@@ -2962,6 +3069,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   '425_invoicing': {
       id: '425_invoicing',
+      type: 'folder',
       expanded: false,
       reference: false,
       locked: false,
@@ -2999,6 +3107,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'main-invoicing.article': {
       id: 'main-invoicing.article',
+      type: 'article',
       expanded: false,
       reference: false,
       locked: false,
@@ -3055,6 +3164,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'invoicing-erapaiva.service': {
       id: 'invoicing-erapaiva.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -3143,6 +3253,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'invoicing-erapaiva.dialob': {
       id: 'invoicing-erapaiva.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -3195,6 +3306,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'taskGenericFlow-ref4': {
       id: 'taskGenericFlow-ref4',
+      type: 'flow',
       expanded: false,
       reference: true,
       locked: false,
@@ -3289,6 +3401,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'invoice-copy-request.service': {
       id: 'invoice-copy-request.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -3339,6 +3452,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'invoice-copy-request.dialob': {
       id: 'invoice-copy-request.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -3413,6 +3527,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'bank-account-info.service': {
       id: 'bank-account-info.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -3471,6 +3586,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'bank-account-info.dialob': {
       id: 'bank-account-info.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -3508,6 +3624,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   '517_sipoo-institute': {
       id: '517_sipoo-institute',
+      type: 'folder',
       expanded: false,
       reference: false,
       locked: false,
@@ -3545,6 +3662,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'main-institute.article': {
       id: 'main-institute.article',
+      type: 'article',
       expanded: false,
       reference: false,
       locked: false,
@@ -3588,6 +3706,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'teacher-info.service': {
       id: 'teacher-info.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -3625,6 +3744,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'teacher-info.dialob': {
       id: 'teacher-info.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -3675,6 +3795,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'taskGenericFlow-ref5': {
       id: 'taskGenericFlow-ref5',
+      type: 'flow',
       expanded: false,
       reference: true,
       locked: false,
@@ -3712,6 +3833,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'teacher-travel-pay.service': {
       id: 'teacher-travel-pay.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -3768,6 +3890,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'teacher-travel-pay.dialob': {
       id: 'teacher-travel-pay.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -3811,6 +3934,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'study-voucher.service': {
       id: 'study-voucher.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -3848,6 +3972,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'study-voucher.dialob': {
       id: 'study-voucher.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -3921,6 +4046,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'general-message-ref5': {
       id: 'general-message-ref5',
+      type: 'service',
       expanded: false,
       reference: true,
       locked: false,
@@ -3979,6 +4105,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   '520_sipoo-water': {
       id: '520_sipoo-water',
+      type: 'folder',
       expanded: false,
       reference: false,
       locked: false,
@@ -4048,6 +4175,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'main-water.article': {
       id: 'main-water.article',
+      type: 'article',
       expanded: false,
       reference: false,
       locked: false,
@@ -4141,6 +4269,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'water-supply-maintenance.service': {
       id: 'water-supply-maintenance.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -4194,6 +4323,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'water-supply-maintenance.dialob': {
       id: 'water-supply-maintenance.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -4240,6 +4370,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'taskGenericFlow-ref6': {
       id: 'taskGenericFlow-ref6',
+      type: 'flow',
       expanded: false,
       reference: true,
       locked: false,
@@ -4300,6 +4431,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'water-invoice-erapaiva.service': {
       id: 'water-invoice-erapaiva.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -4375,6 +4507,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'water-invoice-erapaiva.dialob': {
       id: 'water-invoice-erapaiva.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -4412,6 +4545,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'water-connection-statement.service': {
       id: 'water-connection-statement.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -4449,6 +4583,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'water-connection-statement.dialob': {
       id: 'water-connection-statement.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -4510,6 +4645,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'general-message-ref6': {
       id: 'general-message-ref6',
+      type: 'service',
       expanded: false,
       reference: true,
       locked: false,
@@ -4576,6 +4712,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   '650_leisure-time-and-youth': {
       id: '650_leisure-time-and-youth',
+      type: 'folder',
       expanded: false,
       reference: false,
       locked: false,
@@ -4613,6 +4750,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'main-leisure.article': {
       id: 'main-leisure.article',
+      type: 'article',
       expanded: false,
       reference: false,
       locked: false,
@@ -4688,6 +4826,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'sports-grant-settlement.service': {
       id: 'sports-grant-settlement.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -4751,6 +4890,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'sports-grant-settlement.dialob': {
       id: 'sports-grant-settlement.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -4823,6 +4963,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'taskGenericFlow-ref7': {
       id: 'taskGenericFlow-ref7',
+      type: 'flow',
       expanded: false,
       reference: true,
       locked: false,
@@ -4864,6 +5005,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'sports-fee-return.service': {
       id: 'sports-fee-return.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -4929,6 +5071,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'sports-fee-return.dialob': {
       id: 'sports-fee-return.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -4966,6 +5109,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'children-sport-grant.service': {
       id: 'children-sport-grant.service',
+      type: 'service',
       expanded: false,
       reference: false,
       locked: false,
@@ -5008,6 +5152,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'children-sport-grant.dialob': {
       id: 'children-sport-grant.dialob',
+      type: 'dialob',
       expanded: false,
       reference: false,
       locked: false,
@@ -5074,6 +5219,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'shared': {
       id: 'shared',
+      type: 'folder',
       expanded: false,
       reference: false,
       locked: false,
@@ -5115,6 +5261,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'shared-taskGenericFlow.flow': {
       id: 'shared-taskGenericFlow.flow',
+      type: 'flow',
       expanded: false,
       reference: false,
       locked: false,
@@ -5202,6 +5349,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'shared-taskMsgFlow.flow': {
       id: 'shared-taskMsgFlow.flow',
+      type: 'flow',
       expanded: false,
       reference: false,
       locked: false,
@@ -5255,6 +5403,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'shared-taskSplitFlow.flow': {
       id: 'shared-taskSplitFlow.flow',
+      type: 'flow',
       expanded: false,
       reference: false,
       locked: false,
@@ -5313,6 +5462,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'links': {
       id: 'links',
+      type: 'folder',
       expanded: false,
       reference: false,
       locked: false,
@@ -5388,9 +5538,12 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'sipoo-main-site.link': {
       id: 'sipoo-main-site.link',
+      type: 'link',
       expanded: false,
       reference: false,
       locked: false,
+    urlValue: 'https://www.sipoo.fi',
+    intlValues: { en: 'Sipoo main site', fi: 'Sipoon pääsivu', sv: 'Sibbos huvudsida' },
       description: 'https://www.sipoo.fi',
       configOptions: [
         {
@@ -5430,9 +5583,12 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'wilma-info.link': {
       id: 'wilma-info.link',
+      type: 'link',
       expanded: false,
       reference: false,
       locked: false,
+    urlValue: 'https://wilma.sipoo.fi',
+    intlValues: { en: 'Wilma info', fi: 'Wilma tiedot', sv: 'Wilma information' },
       configOptions: [
         {
           disabledMode: true
@@ -5503,9 +5659,12 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'lupapiste.link': {
       id: 'lupapiste.link',
+      type: 'link',
       expanded: false,
       reference: false,
       locked: false,
+    urlValue: 'https://www.lupapiste.fi',
+    intlValues: { en: 'Lupapiste', fi: 'Lupapiste', sv: 'Lupapiste' },
       configOptions: [
         {
           disabledMode: true
@@ -5555,6 +5714,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'printouts': {
       id: 'printouts',
+      type: 'folder',
       expanded: false,
       reference: false,
       locked: false,
@@ -5592,6 +5752,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'sipoo-main-logo.png': {
       id: 'sipoo-main-logo.png',
+      type: 'image',
       expanded: false,
       reference: false,
       locked: false,
@@ -5647,6 +5808,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'sipoo-color-logo.png': {
       id: 'sipoo-color-logo.png',
+      type: 'image',
       expanded: false,
       reference: false,
       locked: false,
@@ -5714,6 +5876,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'municipal-seal.svg': {
       id: 'municipal-seal.svg',
+      type: 'image',
       expanded: false,
       reference: false,
       locked: false,
@@ -5781,6 +5944,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'new-construction-permit.printout': {
       id: 'new-construction-permit.printout',
+      type: 'printout',
       expanded: false,
       reference: false,
       locked: false,
@@ -5865,6 +6029,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'fi-construction-permit': {
       id: 'fi-construction-permit',
+      type: 'template',
       expanded: false,
       reference: false,
       locked: false,
@@ -5908,6 +6073,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'sv-construction-permit': {
       id: 'sv-construction-permit',
+      type: 'template',
       expanded: false,
       reference: false,
       locked: false,
@@ -5971,6 +6137,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'municipal-services-guide.printout': {
       id: 'municipal-services-guide.printout',
+      type: 'printout',
       expanded: false,
       reference: false,
       locked: false,
@@ -6046,6 +6213,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'fi-services-guide': {
       id: 'fi-services-guide',
+      type: 'template',
       expanded: false,
       reference: false,
       locked: false,
@@ -6106,6 +6274,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'sv-services-guide': {
       id: 'sv-services-guide',
+      type: 'template',
       expanded: false,
       reference: false,
       locked: false,
@@ -6174,6 +6343,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'en-services-guide': {
       id: 'en-services-guide',
+      type: 'template',
       expanded: false,
       reference: false,
       locked: false,
@@ -6262,6 +6432,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'waste-management-info.printout': {
       id: 'waste-management-info.printout',
+      type: 'printout',
       expanded: false,
       reference: false,
       locked: false,
@@ -6328,6 +6499,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'fi-waste-info': {
       id: 'fi-waste-info',
+      type: 'template',
       expanded: false,
       reference: false,
       locked: false,
@@ -6366,6 +6538,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'tax-information-leaflet.printout': {
       id: 'tax-information-leaflet.printout',
+      type: 'printout',
       expanded: false,
       reference: false,
       locked: false,
@@ -6403,6 +6576,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'fi-tax-info': {
       id: 'fi-tax-info',
+      type: 'template',
       expanded: false,
       reference: false,
       locked: false,
@@ -6441,6 +6615,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'sv-tax-info': {
       id: 'sv-tax-info',
+      type: 'template',
       expanded: false,
       reference: false,
       locked: false,
@@ -6484,6 +6659,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'en-tax-info': {
       id: 'en-tax-info',
+      type: 'template',
       expanded: false,
       reference: false,
       locked: false,
@@ -6531,6 +6707,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     },
   'ee-tax-info': {
       id: 'ee-tax-info',
+      type: 'template',
       expanded: false,
       reference: false,
       locked: false,
