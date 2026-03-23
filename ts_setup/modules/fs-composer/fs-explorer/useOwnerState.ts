@@ -27,7 +27,7 @@ export interface OwnerState {
   setSearchExpanded: (expanded: boolean) => void;
   setSearchTerm: (term: string) => void;
   setFsData: Dispatch<SetStateAction<FsDirent[]>>;
-  setFilters: Dispatch<SetStateAction<FilterData[]>>;
+  setFilters: (filters: FilterData[]) => void;
   onDoubleClick: (dirent: FsDirent, pathToTopParent: string) => void;
   collapseAll: () => void;
   toggleDirent: (direntId: string) => void;
@@ -70,6 +70,14 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     }, 350);
   }
 
+  function handleSetFilters(newFilters: FilterData[]) {
+    setFilters(newFilters);
+    if (newFilters.length > 0) {
+      const filtered = filterTreeDirents(fsData, searchTerm, newFilters, getDirentProps);
+      setExpandedBatch(collectParentIds(filtered), true);
+    }
+  }
+
   function onContextMenuClose() {
     setContextMenuOpen(false);
   }
@@ -105,7 +113,7 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     setSearchTerm: handleSetSearchTerm,
     setContextMenuData,
     setFsData,
-    setFilters,
+    setFilters: handleSetFilters,
 
     collapseAll,
     toggleDirent: (direntId: string) => {

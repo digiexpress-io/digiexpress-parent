@@ -15,6 +15,7 @@ interface FsFilterChipProps {
   label: string;
   chipType: FsDirentType;
   isDarkMode: boolean;
+  onDelete: () => void;
 }
 
 
@@ -62,6 +63,8 @@ export const FsFilterChip: React.FC<FsFilterChipProps> = (props) => {
       className={classes.root}
       label={props.label}
       size="small"
+      onDelete={props.onDelete}
+      onMouseDown={(e) => e.stopPropagation()}
     />
   );
 };

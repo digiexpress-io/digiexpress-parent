@@ -74,6 +74,7 @@ export const FsSearch: React.FC<FsSearchProps> = (props) => {
                         label={label}
                         chipType={filter?.type || 'folder'}
                         isDarkMode={ownerState.isDarkMode}
+                        onDelete={() => ownerState.handleFilterSelectChange((selected as string[]).filter(l => l !== label))}
                       />
                     );
                   })}
