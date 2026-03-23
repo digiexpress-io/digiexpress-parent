@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled } from '@mui/material';
+import { generateUtilityClass, styled, darken } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
@@ -9,9 +9,16 @@ export interface FsDirentCreatePhoneClasses {
   root: string;
   title: string;
   formContainer: string;
+  expandToggle: string;
+  expandToggleIcon: string;
+  expandToggleIconOpen: string;
+  optionalFields: string;
   label: string;
   localeLabel: string;
   localeRow: string;
+  configRow: string;
+  configLabel: string;
+  switchRoot: string;
   buttonContainer: string;
 }
 
@@ -25,6 +32,13 @@ export const useUtilityClasses = () => {
     label: ['label'],
     localeLabel: ['localeLabel'],
     localeRow: ['localeRow'],
+    expandToggle: ['expandToggle'],
+    expandToggleIcon: ['expandToggleIcon'],
+    expandToggleIconOpen: ['expandToggleIconOpen'],
+    optionalFields: ['optionalFields'],
+    configRow: ['configRow'],
+    configLabel: ['configLabel'],
+    switchRoot: ['switchRoot'],
     buttonContainer: ['buttonContainer'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -76,6 +90,61 @@ export const FsDirentCreatePhoneRoot = styled('div', {
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(0.5),
+  },
+
+  [`& .${MUI_NAME}-expandToggle`]: {
+    ...theme.typography.subtitle2,
+    color: ownerState.isDarkMode ? FsColors.direntTypes.dark.form : (darken(FsColors.direntTypes.light.form, 0.1)),
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    fontWeight: 'bold',
+    '&:hover': {
+      opacity: 0.8,
+    },
+  },
+
+  [`& .${MUI_NAME}-expandToggleIcon`]: {
+    transition: 'transform 200ms ease',
+    transform: 'rotate(0deg)',
+  },
+
+  [`& .${MUI_NAME}-expandToggleIconOpen`]: {
+    transition: 'transform 200ms ease',
+    transform: 'rotate(180deg)',
+  },
+
+  [`& .${MUI_NAME}-optionalFields`]: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1.5),
+  },
+
+  [`& .${MUI_NAME}-configRow`]: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  [`& .${MUI_NAME}-configLabel.MuiTypography-root`]: {
+    ...theme.typography.caption,
+    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+  },
+
+  [`& .${MUI_NAME}-switchRoot`]: {
+    '& .MuiSwitch-track': {
+      backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
+    },
+    '& .MuiSwitch-thumb': {
+      color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    },
+    '& .MuiSwitch-colorPrimary.Mui-checked': {
+      color: ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form,
+    },
+    '& .MuiSwitch-colorPrimary.Mui-checked + .MuiSwitch-track': {
+      backgroundColor: ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form,
+    },
   },
 
   [`& .${MUI_NAME}-buttonContainer`]: {

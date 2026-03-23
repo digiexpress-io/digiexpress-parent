@@ -1,7 +1,8 @@
 import React from 'react';
-import { Typography, FormControl, Select, MenuItem, Chip, OutlinedInput, Collapse, Divider, Switch } from '@mui/material';
+import { Typography, Collapse, Divider, Switch } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirent, mockFsData } from '@dxs-ts/fs-api';
+import { collectArticles, mockFsData } from '@dxs-ts/fs-api';
+import { FsDirentMultiSelect } from '../fs-dirent-multi-select';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
@@ -10,10 +11,13 @@ import { FsDirentCreateLinkProps } from './FsDirentCreateLinkProps';
 import { useUtilityClasses, FsDirentCreateLinkRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
 
+const articles = collectArticles(mockFsData);
+
 export const FsDirentCreateLink: React.FC<FsDirentCreateLinkProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
+  const [selectedArticles, setSelectedArticles] = React.useState<string[]>([]);
 
   return (
     <FsDirentCreateLinkRoot className={classes.root} ownerState={ownerState}>
@@ -25,7 +29,7 @@ export const FsDirentCreateLink: React.FC<FsDirentCreateLinkProps> = (props) => 
 
         <Divider />
 
-              <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.direntCreate.link.sectionTitle.createLocaleLabels' })}</Typography>
+        <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.direntCreate.link.sectionTitle.createLocaleLabels' })}</Typography>
 
 
         {ownerState.locales.map((locale) => (
@@ -43,32 +47,7 @@ export const FsDirentCreateLink: React.FC<FsDirentCreateLinkProps> = (props) => 
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.link.articlesField.label' })}</Typography>
-            <FormControl className={classes.formControl} fullWidth size='small'>
-              <Select className={classes.select} multiple
-                value={mockSelectedArticleValues}
-                input={<OutlinedInput />}
-                renderValue={(selected) => (
-                  <div className={classes.chipContainer}>
-                    {(selected as string[]).map((value) => {
-                      const option = MOCK_ARTICLE_OPTIONS.find(opt => opt.value === value);
-                      return (
-                        <Chip key={value}
-                          className={classes.chip}
-                          label={option?.label}
-                          size="small"
-                        />
-                      );
-                    })}
-                  </div>
-                )}
-              >
-                {MOCK_ARTICLE_OPTIONS.map((option) => (
-                  <MenuItem key={option.value} value={option.value} className={classes.menuItem}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <FsDirentMultiSelect options={articles} value={selectedArticles} onChange={setSelectedArticles} />
 
             <div className={classes.configRow}>
               <Typography className={classes.configLabel}>{intl.formatMessage({ id: 'fs.direntCreate.link.devModeOption.label' })}</Typography>
@@ -87,18 +66,4 @@ export const FsDirentCreateLink: React.FC<FsDirentCreateLinkProps> = (props) => 
   );
 };
 
-function collectArticles(nodes: FsDirent[]): { value: string; label: string }[] {
-  const result: { value: string; label: string }[] = [];
-  nodes.forEach(node => {
-    if (node.type === 'article') {
-      result.push({ value: node.id, label: node.name });
-    }
-    if (node.children && node.children.length > 0) {
-      result.push(...collectArticles(node.children));
-    }
-  });
-  return result;
-}
 
-const MOCK_ARTICLE_OPTIONS = collectArticles(mockFsData);
-const mockSelectedArticleValues: string[] = [];

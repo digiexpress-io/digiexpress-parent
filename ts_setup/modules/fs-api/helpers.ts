@@ -1,6 +1,19 @@
 import React from 'react';
 import { FsDirent } from './fs-types';
 
+export function collectArticles(nodes: FsDirent[]): { value: string; label: string }[] {
+  const result: { value: string; label: string }[] = [];
+  nodes.forEach(node => {
+    if (node.type === 'article') {
+      result.push({ value: node.id, label: node.name });
+    }
+    if (node.children && node.children.length > 0) {
+      result.push(...collectArticles(node.children));
+    }
+  });
+  return result;
+}
+
 
 interface FsDirentContextMenuData {
   dirent: FsDirent;
