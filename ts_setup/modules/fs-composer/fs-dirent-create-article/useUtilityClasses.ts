@@ -14,7 +14,6 @@ export interface FsDirentCreateArticleClasses {
   expandToggleIconOpen: string;
   optionalFields: string;
   label: string;
-  textField: string;
   formControl: string;
   select: string;
   chipContainer: string;
@@ -39,7 +38,6 @@ export const useUtilityClasses = () => {
     expandToggleIconOpen: ['expandToggleIconOpen'],
     optionalFields: ['optionalFields'],
     label: ['label'],
-    textField: ['textField'],
     formControl: ['formControl'],
     select: ['select'],
     chipContainer: ['chipContainer'],
@@ -109,46 +107,6 @@ export const FsDirentCreateArticleRoot = styled('div', {
   [`& .${MUI_NAME}-label`]: {
     ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-  },
-
-  [`& .${MUI_NAME}-textField`]: {
-    width: '100%',
-    marginTop: '0px !important',
-    '& .MuiInputBase-root': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-      borderRadius: 0,
-      '& fieldset': {
-        borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-        borderRadius: 0,
-      },
-      '&:hover fieldset': {
-        borderColor: ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary,
-      },
-      '&.Mui-disabled:hover fieldset': {
-        borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-      },
-      '&.Mui-focused fieldset': {
-        border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text}`
-      },
-    },
-    '& .MuiInputBase-input': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-      ...theme.typography.caption,
-      padding: '8px 12px',
-      '&::placeholder': {
-        color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
-        opacity: 1,
-        ...theme.typography.caption,
-      },
-    },
-    '& .MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputMultiline': {
-      padding: 'unset',
-    },
-    '& .MuiInputLabel-root': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-      ...theme.typography.caption,
-    },
   },
 
   [`& .${MUI_NAME}-formControl`]: {

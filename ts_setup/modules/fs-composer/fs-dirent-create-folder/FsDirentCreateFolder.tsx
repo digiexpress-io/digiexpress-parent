@@ -1,8 +1,9 @@
 import React from 'react';
-import { TextField, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentCreateFolderProps } from './FsDirentCreateFolderProps';
 import { useUtilityClasses, FsDirentCreateFolderRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
@@ -18,16 +19,10 @@ export const FsDirentCreateFolder: React.FC<FsDirentCreateFolderProps> = (props)
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.folder.locationField.label' })}</Typography>
-        <TextField className={classes.textField}
-          value={ownerState.locationPath || intl.formatMessage({ id: 'fs.direntCreate.folder.locationField.root' })}
-          size='small' fullWidth disabled
-        />
+        <FsDirentTextField value={ownerState.locationPath || intl.formatMessage({ id: 'fs.direntCreate.folder.locationField.root' })} disabled />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.folder.nameField.label' })}</Typography>
-        <TextField className={classes.textField}
-          placeholder={intl.formatMessage({ id: 'fs.direntCreate.folder.nameField.placeholder' })}
-          size='small' fullWidth
-        />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.direntCreate.folder.nameField.placeholder' })} />
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonCancel />

@@ -1,10 +1,11 @@
 import React from 'react';
-import { TextField, Typography, FormControl, Select, MenuItem, Chip, OutlinedInput, Collapse, Divider, Switch } from '@mui/material';
+import { Typography, FormControl, Select, MenuItem, Chip, OutlinedInput, Collapse, Divider, Switch } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirent, mockFsData } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentCreateLinkProps } from './FsDirentCreateLinkProps';
 import { useUtilityClasses, FsDirentCreateLinkRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
@@ -20,10 +21,7 @@ export const FsDirentCreateLink: React.FC<FsDirentCreateLinkProps> = (props) => 
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.link.valueField.label' })}</Typography>
-        <TextField className={classes.textField}
-          placeholder={intl.formatMessage({ id: 'fs.direntCreate.link.valueField.placeholder' })}
-          size='small' fullWidth
-        />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.direntCreate.link.valueField.placeholder' })} />
 
         <Divider />
 
@@ -33,10 +31,7 @@ export const FsDirentCreateLink: React.FC<FsDirentCreateLinkProps> = (props) => 
         {ownerState.locales.map((locale) => (
           <div key={locale} className={classes.localeRow}>
             <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.direntCreate.link.labelField.${locale}.label` })}</Typography>
-            <TextField className={classes.textField}
-              placeholder={intl.formatMessage({ id: 'fs.direntCreate.link.labelField.placeholder' })}
-              size='small' fullWidth
-            />
+            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.direntCreate.link.labelField.placeholder' })} />
           </div>
         ))}
 

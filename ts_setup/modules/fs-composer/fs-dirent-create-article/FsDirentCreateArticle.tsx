@@ -1,9 +1,10 @@
 import React from 'react';
-import { TextField, Typography, FormControl, Select, MenuItem, Chip, OutlinedInput, Collapse, Box } from '@mui/material';
+import { Typography, FormControl, Select, MenuItem, Chip, OutlinedInput, Collapse, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentCreateArticleProps } from './FsDirentCreateArticleProps';
 import { useUtilityClasses, FsDirentCreateArticleRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
@@ -24,24 +25,18 @@ export const FsDirentCreateArticle: React.FC<FsDirentCreateArticleProps> = (prop
               <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.parentArticleField.label' })}</Typography>
               <FsIcon icon={FsIcons.Info} small tooltip={intl.formatMessage({ id: 'fs.direntCreate.article.parentArticleField.desc' })} />
             </Box>
-            <TextField className={classes.textField}
+            <FsDirentTextField
               value={ownerState.parentArticlePath}
-              size='small' fullWidth disabled
+              disabled
             />
           </>
         )}
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.nameField.label' })}</Typography>
-        <TextField className={classes.textField}
-          placeholder={intl.formatMessage({ id: 'fs.direntCreate.article.nameField.placeholder' })}
-          size='small' fullWidth
-        />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.direntCreate.article.nameField.placeholder' })} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.orderNumberField.label' })}</Typography>
-        <TextField className={classes.textField}
-          placeholder={intl.formatMessage({ id: 'fs.direntCreate.article.orderNumberField.placeholder' })}
-          size='small' fullWidth
-        />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.direntCreate.article.orderNumberField.placeholder' })} />
 
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
           {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.direntCreate.article.expandToggle.hide' : 'fs.direntCreate.article.expandToggle.show' })}
@@ -51,9 +46,8 @@ export const FsDirentCreateArticle: React.FC<FsDirentCreateArticleProps> = (prop
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.descriptionField.label' })}</Typography>
-            <TextField className={classes.textField}
-              placeholder={intl.formatMessage({ id: 'fs.direntCreate.article.descriptionField.placeholder' })}
-              size='small' fullWidth multiline minRows={2} maxRows={5}
+            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.direntCreate.article.descriptionField.placeholder' })}
+              multiline minRows={2} maxRows={5}
             />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.configOptionsField.label' })}</Typography>
@@ -93,14 +87,11 @@ export const FsDirentCreateArticle: React.FC<FsDirentCreateArticleProps> = (prop
             </FormControl>
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.labelsField.label' })}</Typography>
-            <TextField className={classes.textField} size='small' fullWidth
-              placeholder={intl.formatMessage({ id: 'fs.direntCreate.article.labelsField.placeholder' })}
-            />
+            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.direntCreate.article.labelsField.placeholder' })} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.commentsField.label' })}</Typography>
-            <TextField className={classes.textField}
-              placeholder={intl.formatMessage({ id: 'fs.direntCreate.article.commentsField.placeholder' })}
-              size='small' fullWidth multiline minRows={2} maxRows={5}
+            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.direntCreate.article.commentsField.placeholder' })}
+              multiline minRows={2} maxRows={5}
             />
 
             <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.direntCreate.article.sectionTitle.sharing' })}</Typography>
