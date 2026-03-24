@@ -1,9 +1,9 @@
-import { FsDirent } from "@dxs-ts/fs-api";
+import { FsDirentEntry } from "@dxs-ts/fs-api";
 
 
 
 export interface FsPropertiesProps {
-  dirent: FsDirent | undefined;
+  dirent: FsDirentEntry | undefined;
 }
 
 

@@ -1,7 +1,19 @@
 import React from 'react';
-import { FsDirent, FsDirentProps, FolderDirentProps } from '../fs-types';
+import { FsDirent, FsDirentEntry, FsDirentProps, FolderDirentProps } from '../fs-types';
 import { mockFsDirentProperties } from '../mock-fs-dirent-properties';
 import { mockFsData } from '../mock-fs-data';
+
+function flattenDirents(nodes: FsDirent[]): Record<string, FsDirent> {
+  const result: Record<string, FsDirent> = {};
+  function collectNode(node: FsDirent): void {
+    result[node.id] = node;
+    node.children.forEach(collectNode);
+  }
+  nodes.forEach(collectNode);
+  return result;
+}
+
+const DIRENT_MAP = flattenDirents(mockFsData);
 
 export interface ItemReferencesEntry {
   assetName: string;
@@ -10,6 +22,7 @@ export interface ItemReferencesEntry {
 
 export interface FsDirentPropsContextType {
   direntPropsLoading: boolean;
+  getDirent: (id: string) => FsDirentEntry | undefined;
   getDirentProps: (id: string) => FsDirentProps;
   isChildError: (dirent: FsDirent) => boolean;
   findReferencesToDirent: (dirent: FsDirent) => ItemReferencesEntry[];
@@ -49,6 +62,15 @@ export const FsDirentPropsProvider: React.FC<FsDirentPropsProviderProps> = (prop
       setPropsMap(data);
       setDirentPropsLoading(false);
     });
+  }, []);
+
+  const getDirent = React.useCallback((id: string): FsDirentEntry | undefined => {
+    const dirent = DIRENT_MAP[id];
+    const direntProps = propsMapRef.current[id];
+    if (!dirent || !direntProps) {
+      return undefined;
+    }
+    return { ...dirent, ...direntProps } as FsDirentEntry;
   }, []);
 
   const getDirentProps = React.useCallback((id: string): FsDirentProps => {
@@ -122,6 +144,7 @@ export const FsDirentPropsProvider: React.FC<FsDirentPropsProviderProps> = (prop
   const contextValue: FsDirentPropsContextType = React.useMemo(() => {
     return {
       direntPropsLoading,
+      getDirent,
       getDirentProps,
       isChildError,
       findReferencesToDirent,
@@ -129,7 +152,7 @@ export const FsDirentPropsProvider: React.FC<FsDirentPropsProviderProps> = (prop
       setExpandedBatch,
       collapseAll,
     };
-  }, [direntPropsLoading, getDirentProps, isChildError, findReferencesToDirent, setExpanded, setExpandedBatch, collapseAll]);
+  }, [direntPropsLoading, getDirent, getDirentProps, isChildError, findReferencesToDirent, setExpanded, setExpandedBatch, collapseAll]);
 
   return (
     <FsDirentPropsContext.Provider value={contextValue}>

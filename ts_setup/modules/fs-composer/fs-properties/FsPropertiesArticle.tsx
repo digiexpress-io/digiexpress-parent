@@ -1,9 +1,28 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { ArticleDirentProps, FsDirent } from '@dxs-ts/fs-api';
+import { ArticleDirentProps, FsDirent, FsDirentType } from '@dxs-ts/fs-api';
+import { SvgIconProps } from '@mui/material';
+import { FsIcon, FsIcons } from '../fs-theme';
 import { useUtilityClasses } from './useUtilityClasses';
 
+
+function getTypeIcon(type: FsDirentType): React.ElementType<SvgIconProps> {
+  switch (type) {
+    case 'folder': return FsIcons.FolderClosed;
+    case 'article': return FsIcons.Article;
+    case 'service': return FsIcons.Settings;
+    case 'dialob': return FsIcons.Form;
+    case 'flow': return FsIcons.Flow;
+    case 'link': return FsIcons.Link;
+    case 'language': return FsIcons.Language;
+    case 'printout': return FsIcons.Print;
+    case 'image': return FsIcons.Image;
+    case 'template': return FsIcons.Pdf;
+    case 'phone': return FsIcons.Phone;
+    default: return FsIcons.Article;
+  }
+}
 
 export interface FsPropertiesArticleProps {
   direntProps: ArticleDirentProps;
@@ -19,7 +38,10 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ childr
       <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
       <div className={classes.commentList}>
         {children.map((child, index) => (
-          <Typography key={index} className={classes.propertyValue}>{child.name}</Typography>
+          <div key={index} className={classes.childRow}>
+            <FsIcon small icon={getTypeIcon(child.type)} />
+            <Typography className={classes.propertyValue}>{child.name}</Typography>
+          </div>
         ))}
       </div>
     </div>

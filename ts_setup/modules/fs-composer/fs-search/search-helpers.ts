@@ -1,4 +1,4 @@
-import { FsDirent, FsDirentType, FsDirentProps } from "@dxs-ts/fs-api";
+import { FsDirent, FsDirentEntry, FsDirentType } from "@dxs-ts/fs-api";
 
 interface FilterData {
   label: string;
@@ -9,7 +9,7 @@ export function filterTreeDirents(
   dirents: FsDirent[],
   searchTerm: string,
   visibleFilters: FilterData[],
-  getDirentProps: (id: string) => FsDirentProps
+  getDirent: (id: string) => FsDirentEntry | undefined
 ): FsDirent[] {
   const visibleTypes = visibleFilters.map(filter => filter.type);
   const isNoFiltersSelected = visibleFilters.length === 0;
@@ -23,11 +23,11 @@ export function filterTreeDirents(
   const filtered: FsDirent[] = [];
 
   for (const dirent of dirents) {
-    const direntProps = getDirentProps(dirent.id);
+    const direntEntry = getDirent(dirent.id);
     const nameMatches = dirent.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const descriptionMatches = direntProps.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const descriptionMatches = direntEntry?.description?.toLowerCase().includes(searchTerm.toLowerCase());
     const typeMatches = isNoFiltersSelected || visibleTypes.includes(dirent.type);
-    const childMatches = dirent.children ? filterTreeDirents(dirent.children, searchTerm, visibleFilters, getDirentProps) : [];
+    const childMatches = dirent.children ? filterTreeDirents(dirent.children, searchTerm, visibleFilters, getDirent) : [];
 
     const showBySearch = isSearchTermEmpty || nameMatches || descriptionMatches;
 

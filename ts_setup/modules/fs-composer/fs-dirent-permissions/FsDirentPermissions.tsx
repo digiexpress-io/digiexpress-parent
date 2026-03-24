@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography, Divider } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsDirentProps } from '@dxs-ts/fs-api';
 import { FsDirentPermissionsProps } from './FsDirentPermissionsProps';
 import { useUtilityClasses, FsDirentPermissionsRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
@@ -10,8 +9,7 @@ export const FsDirentPermissions: React.FC<FsDirentPermissionsProps> = (props) =
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
-  const { getDirentProps } = useFsDirentProps();
-  const direntProps = getDirentProps(props.dirent?.id ?? '');
+  const permissions = props.dirent?.permissions ?? [];
 
   return (
     <FsDirentPermissionsRoot className={classes.root} ownerState={ownerState}>
@@ -22,7 +20,7 @@ export const FsDirentPermissions: React.FC<FsDirentPermissionsProps> = (props) =
           <div className={classes.tableHeader}>{intl.formatMessage({ id: 'fs.direntPermissions.tableHeader.privilege' })}</div>
         </div>
         <Divider className={classes.divider} />
-        {direntProps.permissions.map((permission, index) => (
+        {permissions.map((permission, index) => (
           <div key={index} className={classes.tableRow}>
             <div className={classes.tableCell}>{permission.name}</div>
             <div className={classes.tableCell}>

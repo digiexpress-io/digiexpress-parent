@@ -1,5 +1,5 @@
 import React from 'react';
-import { FsDirent, FsDirentSecondaryView, FsTab, useFsNav } from '@dxs-ts/fs-api';
+import { FsDirentEntry, FsDirentSecondaryView, FsTab, useFsNav, useFsDirentProps } from '@dxs-ts/fs-api';
 import { FsIcons } from '../fs-theme/fs-icons';
 import { FsMainProps } from './FsMainProps';
 
@@ -17,7 +17,7 @@ export interface PanelButton {
 
 export interface OwnerState {
   isDarkMode: boolean;
-  activeDirent: FsDirent | undefined;
+  activeDirent: FsDirentEntry | undefined;
   isRightPanelOpen: boolean;
   selectedView: FsDirentSecondaryView | undefined;
   activeTabIndex: number;
@@ -33,10 +33,17 @@ export interface OwnerState {
 const toolbarWidth = '50px';
 
 export const useOwnerState = (_props: FsMainProps): OwnerState => {
-  const { isDarkMode, activeDirent } = useFsNav();
+  const { isDarkMode, activeDirent, activeTabIndex, openTabs } = useFsNav();
+  const { getDirent } = useFsDirentProps();
+  const activeDirentEntry = activeDirent ? getDirent(activeDirent.id) : undefined;
   const [isRightPanelOpen, setIsRightPanelOpen] = React.useState(true);
   const [selectedView, setSelectedView] = React.useState<FsDirentSecondaryView | undefined>();
-  const { activeTabIndex, openTabs } = useFsNav();
+
+  React.useEffect(() => {
+    if (activeDirent) {
+      setSelectedView('properties');
+    }
+  }, [activeDirent?.id]);
 
   const toggleRightPanel = React.useCallback(() => {
     setIsRightPanelOpen(prev => !prev);
@@ -135,7 +142,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
 
   return {
     isDarkMode,
-    activeDirent,
+    activeDirent: activeDirentEntry,
     activeTabIndex,
     openTabs,
     isRightPanelOpen,

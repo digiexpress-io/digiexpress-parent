@@ -94,6 +94,8 @@ export type FsDirentProps =
   | LinkDirentProps
   | PhoneDirentProps;
 
+export type FsDirentEntry = FsDirent & FsDirentProps;
+
 export type FsDirentConfigOption = 'devMode' | 'assignableMode' | 'disabledMode' | 'anonymousMode';
 
 export interface User {

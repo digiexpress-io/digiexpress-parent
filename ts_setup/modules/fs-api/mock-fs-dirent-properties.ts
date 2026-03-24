@@ -66,7 +66,10 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     ],
     changes: [],
     permissions: [],
-    labels: [],
+    labels: [
+      { id: 'label-003', value: 'Needs translation' },
+      { id: 'label-004', value: 'Under review' }
+    ],
     errors: [
       { code: 'MISSING_LOCALE', severity: 'WARNING', message: 'Swedish locale content is missing.' }
     ],
@@ -165,7 +168,9 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
       { changeType: 'create', changeDate: '15.03.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } }
     ],
     permissions: [],
-    labels: [],
+    labels: [
+      { id: 'label-005', value: 'Draft' }
+    ],
     errors: [
       { code: 'MISSING_FLOW', severity: 'CRITICAL', message: 'No flow assigned to service.' }
     ],
@@ -190,7 +195,10 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     comments: [],
     changes: [],
     permissions: [],
-    labels: [],
+    labels: [
+      { id: 'label-006', value: 'Active' },
+      { id: 'label-007', value: 'Reviewed' }
+    ],
     errors: [],
     serviceName: 'Public Information Request',
     dialobFormName: 'public-inforeq.dialob',
@@ -490,7 +498,10 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     ],
     changes: [],
     permissions: [],
-    labels: [],
+    labels: [
+      { id: 'label-008', value: 'Needs translation' },
+      { id: 'label-009', value: 'Pending approval' }
+    ],
     errors: [],
     printoutServiceName: 'NewConstructionPermitService',
     orchestratorName: 'taskSplitFlow.flow',
@@ -526,7 +537,9 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     comments: [],
     changes: [],
     permissions: [],
-    labels: [],
+    labels: [
+      { id: 'label-010', value: 'Outdated' }
+    ],
     errors: [],
     printoutServiceName: 'WasteManagementService',
     orchestratorName: 'taskGenericFlow.flow',

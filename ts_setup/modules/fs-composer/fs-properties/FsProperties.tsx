@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirent, FsDirentProps } from '@dxs-ts/fs-api';
+import { FsDirentEntry } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
 import { FsPropertiesProps } from './FsPropertiesProps';
@@ -17,7 +17,7 @@ import { FsPropertiesPhone } from './FsPropertiesPhone';
 
 
 
-function renderTypeSpecificRows(direntProps: FsDirentProps, dirent: FsDirent): React.ReactNode {
+function renderTypeSpecificRows(direntProps: FsDirentEntry): React.ReactNode {
   switch (direntProps.type) {
     case 'article': return null;
     case 'service': return <FsPropertiesService direntProps={direntProps} />;
@@ -34,11 +34,10 @@ function renderTypeSpecificRows(direntProps: FsDirentProps, dirent: FsDirent): R
 export const FsProperties: React.FC<FsPropertiesProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
-  const { dirent } = props;
   const { direntProps } = ownerState;
   const classes = useUtilityClasses();
 
-  if (!dirent || !direntProps) {
+  if (!direntProps) {
     return (
       <FsPanel title={intl.formatMessage({ id: 'fs.properties.title' })} icon={<FsIcon icon={FsIcons.Settings} large />}
         activeDirent={false}
@@ -53,18 +52,19 @@ export const FsProperties: React.FC<FsPropertiesProps> = (props) => {
   const comments = direntProps.comments;
 
   return (
-    <FsPanel title={intl.formatMessage({ id: 'fs.properties.title.direntName' }, { direntName: dirent.name })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={true}>
+    <FsPanel title={intl.formatMessage({ id: 'fs.properties.title.direntName' }, { direntName: direntProps.name })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={true}>
       <FsPropertiesRoot className={classes.root} ownerState={ownerState}>
 
-        {renderTypeSpecificRows(direntProps, dirent)}
+        {renderTypeSpecificRows(direntProps)}
 
         <div className={classes.propertyRow}>
           <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.labels' })}</Typography>
           <div className={classes.propertyList}>
-            {labels.map((label, index) => <Box key={index} className={classes.propertyListItem}>{label}</Box>)}
-          </div>
-          <div className={classes.tagLabel}>
-            <Typography component="span">{intl.formatMessage({ id: 'fs.properties.tagLabel.label' })}</Typography>
+            {labels.map((label, index) => (
+              <div key={index} className={classes.label}>
+                <Typography component="span">{label}</Typography>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -84,8 +84,7 @@ export const FsProperties: React.FC<FsPropertiesProps> = (props) => {
               <div key={index} className={classes.commentItem}>
                 <Typography className={classes.commentText}>{c.comment}</Typography>
                 <div className={classes.commentMeta}>
-                  <Typography component="span" className={classes.commentAuthor}>{c.author}</Typography>
-                  <Typography component="span" className={classes.commentDate}>{c.created}</Typography>
+                  <Typography component="span" className={classes.commentAuthor}>{c.author}{', '}{c.created}</Typography>
                 </div>
               </div>
             ))}
@@ -93,7 +92,7 @@ export const FsProperties: React.FC<FsPropertiesProps> = (props) => {
         </div>
 
         {direntProps.type === 'article' && (
-          <FsPropertiesArticle direntProps={direntProps} children={dirent.children} />
+          <FsPropertiesArticle direntProps={direntProps} children={direntProps.children} />
         )}
 
       </FsPropertiesRoot>

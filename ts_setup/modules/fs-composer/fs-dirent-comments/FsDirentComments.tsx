@@ -2,7 +2,6 @@ import React from 'react';
 import { TextField, Typography, Divider } from '@mui/material';
 import { useIntl } from 'react-intl';
 
-import { useFsDirentProps } from '@dxs-ts/fs-api';
 import { FsDirentCommentsProps } from './FsDirentCommentsProps';
 import { useUtilityClasses, FsDirentCommentsRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
@@ -11,12 +10,9 @@ import { useOwnerState } from './useOwnerState';
 export const FsDirentComments: React.FC<FsDirentCommentsProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
-  const { getDirentProps } = useFsDirentProps();
-  const direntProps = getDirentProps(props.dirent?.id ?? '');
   const classes = useUtilityClasses();
+  const comments = props.dirent?.comments ?? [];
   const [newComment, setNewComment] = React.useState('');
-
-  const comments = direntProps.comments;
 
   return (
     <FsDirentCommentsRoot className={classes.root} ownerState={ownerState}>
@@ -40,9 +36,7 @@ export const FsDirentComments: React.FC<FsDirentCommentsProps> = (props) => {
               {index > 0 && <Divider className={classes.divider} />}
               <div className={classes.commentItem}>
                 <Typography className={classes.commentContent}>{comment.comment}</Typography>
-                <div className={classes.commentMeta}>
-                  <Typography>{comment.author} • {comment.created}</Typography>
-                </div>
+                <Typography>{comment.author} • {comment.created}</Typography>
               </div>
             </div>
           ))

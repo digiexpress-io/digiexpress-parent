@@ -14,13 +14,14 @@ export interface FsPropertiesClasses {
   propertyValue: string;
   propertyList: string;
   propertyListItem: string;
-  tagLabel: string;
+  label: string;
   commentList: string;
   commentItem: string;
   commentText: string;
   commentMeta: string;
   commentAuthor: string;
   commentDate: string;
+  childRow: string;
 }
 
 export type FsPropertiesClassKey = keyof FsPropertiesClasses;
@@ -33,13 +34,14 @@ export const useUtilityClasses = () => {
     propertyValue: ['propertyValue'],
     propertyList: ['propertyList'],
     propertyListItem: ['propertyListItem'],
-    tagLabel: ['tagLabel'],
+    label: ['label'],
     commentList: ['commentList'],
     commentItem: ['commentItem'],
     commentText: ['commentText'],
     commentMeta: ['commentMeta'],
     commentAuthor: ['commentAuthor'],
     commentDate: ['commentDate'],
+    childRow: ['childRow'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -52,6 +54,7 @@ export const FsPropertiesRoot = styled('div', {
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
+  width: '100%',
   border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
 
   [`& > .${MUI_NAME}-propertyRow:nth-of-type(odd)`]: {
@@ -105,11 +108,12 @@ export const FsPropertiesRoot = styled('div', {
     paddingRight: theme.spacing(0.625),
   },
 
-  [`& .${MUI_NAME}-tagLabel`]: {
+  [`& .${MUI_NAME}-label`]: {
     position: "relative",
     display: "inline-flex",
     alignItems: "center",
     height: 28,
+    marginLeft: 12,
     padding: "0 12px 0 16px",
     background: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
@@ -148,14 +152,13 @@ export const FsPropertiesRoot = styled('div', {
   [`& .${MUI_NAME}-commentList`]: {
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(0.5),
-    flex: 1,
+    gap: theme.spacing(1),
+    width: '100%',
   },
 
   [`& .${MUI_NAME}-commentItem`]: {
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(0.25),
   },
 
   [`& .${MUI_NAME}-commentText`]: {
@@ -166,7 +169,7 @@ export const FsPropertiesRoot = styled('div', {
 
   [`& .${MUI_NAME}-commentMeta`]: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
   },
 
   [`& .${MUI_NAME}-commentAuthor`]: {
@@ -178,5 +181,11 @@ export const FsPropertiesRoot = styled('div', {
   [`& .${MUI_NAME}-commentDate`]: {
     ...theme.typography.caption,
     color: ownerState.isDarkMode ? FsColors.dark.textMuted : FsColors.light.textSecondary,
+  },
+
+  [`& .${MUI_NAME}-childRow`]: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.75),
   },
 }));

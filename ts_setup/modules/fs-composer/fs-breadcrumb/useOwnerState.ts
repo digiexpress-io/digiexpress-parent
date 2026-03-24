@@ -32,14 +32,13 @@ function getAssetPath(activeTab: FsTab | undefined): string | undefined {
 
 export function useOwnerState(_props: FsBreadcrumbProps): OwnerState {
   const { isDarkMode, openTabs, activeTabIndex, activeDirent } = useFsNav();
-  const { getDirentProps } = useFsDirentProps();
+  const { getDirent } = useFsDirentProps();
 
   const activeTab = openTabs[activeTabIndex];
   const assetName = getAssetName(activeTab);
   const assetPath = getAssetPath(activeTab);
-
-  const direntProps = getDirentProps(activeDirent?.id ?? '');
-  const isError = direntProps.errors.length > 0;
+  const activeDirentEntry = activeDirent ? getDirent(activeDirent.id) : undefined;
+  const isError = (activeDirentEntry?.errors.length ?? 0) > 0;
 
   return {
     assetDirent: activeDirent,

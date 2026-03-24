@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsDirentProps } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
 import { FsHistoryProps } from './FsHistoryProps';
@@ -13,7 +12,6 @@ export const FsHistory: React.FC<FsHistoryProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
-  const { getDirentProps } = useFsDirentProps();
 
   if (!props.dirent) {
     return (
@@ -24,8 +22,7 @@ export const FsHistory: React.FC<FsHistoryProps> = (props) => {
     );
   }
 
-  const direntProps = getDirentProps(props.dirent.id);
-  const changes = direntProps.changes;
+  const changes = props.dirent.changes;
 
   return (
     <FsPanel title={intl.formatMessage({ id: 'fs.history.title.direntName' }, { direntName: props.dirent.name })}

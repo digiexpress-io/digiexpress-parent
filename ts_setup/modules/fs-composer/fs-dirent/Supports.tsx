@@ -42,18 +42,18 @@ function ConfigIcon(props: { type: FsDirentConfigOption, className: string }) {
 
 export const DirentDecorator = (props: { dirent: FsDirent, children: React.ReactNode }) => {
   const { isDarkMode } = useFsNav();
-  const { getDirentProps } = useFsDirentProps();
+  const { getDirent } = useFsDirentProps();
   const { dirent, children } = props;
-  const direntProps = getDirentProps(dirent.id);
+  const direntEntry = getDirent(dirent.id);
 
-  if (direntProps.errors.length > 0) {
+  if ((direntEntry?.errors.length ?? 0) > 0) {
     return (
       <Box display='flex' alignItems='center' sx={{ color: isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight }}>
         {children}
       </Box>
     );
   }
-  if (direntProps.reference) {
+  if (direntEntry?.reference) {
     return (
       <Badge variant="dot"
         anchorOrigin={{
@@ -79,15 +79,15 @@ export const DirentDecorator = (props: { dirent: FsDirent, children: React.React
 
 export const DirentIcon = (props: { dirent: FsDirent }) => {
   const { dirent } = props;
-  const { getDirentProps } = useFsDirentProps();
-  const direntProps = getDirentProps(dirent.id);
+  const { getDirent } = useFsDirentProps();
+  const expanded = getDirent(dirent.id)?.expanded;
   switch (dirent.type) {
     case 'folder':
-      return direntProps.expanded ? <FsIcons.FolderOpen /> : <FsIcons.FolderClosed />;
+      return expanded ? <FsIcons.FolderOpen /> : <FsIcons.FolderClosed />;
     case 'article':
-      return direntProps.expanded ? <FsIcons.ArticleOutlined /> : <FsIcons.Article />;
+      return expanded ? <FsIcons.ArticleOutlined /> : <FsIcons.Article />;
     case 'service':
-      return direntProps.expanded ? <FsIcons.SettingsOutlined /> : <FsIcons.Settings />;
+      return expanded ? <FsIcons.SettingsOutlined /> : <FsIcons.Settings />;
     case 'dialob':
       return <FsIcons.Form />;
     case 'flow':
@@ -117,8 +117,8 @@ interface FsDirentNameProps {
 }
 
 export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
-  const { getDirentProps } = useFsDirentProps();
-  const direntProps = getDirentProps(props.dirent.id);
+  const { getDirent } = useFsDirentProps();
+  const description = getDirent(props.dirent.id)?.description;
   return (
     <ListItemText primary={<Typography variant='subtitle2'
       sx={{
@@ -129,9 +129,9 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
       }}
     >
       <SearchResultHighlight text={props.dirent.name} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />
-      {direntProps.description && (
+      {description && (
         <Typography component='span' variant='caption' sx={{ ml: 1, color: FsColors.dark.textMuted, fontStyle: 'italic' }}>
-          - "<SearchResultHighlight text={direntProps.description} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />"
+          - "<SearchResultHighlight text={description} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />"
         </Typography>
       )}
     </Typography>

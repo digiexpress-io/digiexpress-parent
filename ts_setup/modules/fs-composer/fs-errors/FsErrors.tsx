@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsDirentProps } from '@dxs-ts/fs-api';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
 import { FsErrorsProps } from './FsErrorsProps';
@@ -13,7 +12,6 @@ export const FsErrors: React.FC<FsErrorsProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
-  const { getDirentProps } = useFsDirentProps();
 
   if (!props.dirent) {
     return (
@@ -21,8 +19,7 @@ export const FsErrors: React.FC<FsErrorsProps> = (props) => {
     );
   }
 
-  const direntProps = getDirentProps(props.dirent.id);
-  const errors = direntProps.errors;
+  const errors = props.dirent.errors;
   const criticalCount = errors.filter(e => e.severity === 'CRITICAL').length;
   const warningCount = errors.filter(e => e.severity === 'WARNING').length;
 

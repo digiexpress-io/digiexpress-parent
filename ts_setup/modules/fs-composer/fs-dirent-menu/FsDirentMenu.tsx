@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { FsDirent, useFsNav } from '@dxs-ts/fs-api';
+import { FsDirent, useFsNav, useFsDirentProps } from '@dxs-ts/fs-api';
 import { useUtilityClasses, FsDirentMenuRoot as Root, MENU_HEIGHT } from './useUtilityClasses';
 import { FsDirentMenuMain } from './FsDirentMenuMain';
 import { FsDirentMenuSub } from './FsDirentMenuSub';
@@ -17,8 +17,10 @@ interface FsDirentMenuProps {
 export const FsDirentMenu: React.FC<FsDirentMenuProps> = (props) => {
   const classes = useUtilityClasses();
   const { isDarkMode } = useFsNav();
-  const [openSubmenu, setOpenSubmenu] = React.useState<string | undefined>(undefined);
+  const { getDirent } = useFsDirentProps();
   const { shouldExpandUpward, vertical } = usePositioningStrategy(props.anchorPosition, MENU_HEIGHT);
+  const direntEntry = props.dirent ? getDirent(props.dirent.id) : undefined;
+  const [openSubmenu, setOpenSubmenu] = React.useState<string | undefined>(undefined);
 
   React.useEffect(() => {
     if (!props.open) {
@@ -56,14 +58,14 @@ export const FsDirentMenu: React.FC<FsDirentMenuProps> = (props) => {
     >
       <Box className={classes.menuContainer}>
         <FsDirentMenuMain
-          dirent={props.dirent}
+          dirent={direntEntry}
           openSubmenu={openSubmenu}
           onSubmenuOpen={handleSubmenuOpen}
           onClose={props.onClose}
         />
 
         <FsDirentMenuSub
-          dirent={props.dirent}
+          dirent={direntEntry}
           openSubmenu={openSubmenu}
           onClose={props.onClose}
         />

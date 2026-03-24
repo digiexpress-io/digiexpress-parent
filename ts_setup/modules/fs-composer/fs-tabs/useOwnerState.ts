@@ -21,7 +21,7 @@ export interface OwnerState {
 export function useOwnerState(_props: FsTabProps): OwnerState {
   const intl = useIntl();
   const { isDarkMode, openTabs, activeTabIndex, setActiveTab, closeTab } = useFsNav();
-  const { getDirentProps } = useFsDirentProps();
+  const { getDirent } = useFsDirentProps();
 
   const onTabClick = (index: number) => {
     setActiveTab(index);
@@ -38,7 +38,7 @@ export function useOwnerState(_props: FsTabProps): OwnerState {
     isActive: activeTabIndex === index,
     isFirst: index === 0,
     isLast: index === openTabs.length - 1,
-    isError: tab.type === 'edit' ? getDirentProps(tab.dirent.id).errors.length > 0 : false,
+    isError: tab.type === 'edit' ? (getDirent(tab.dirent.id)?.errors.length ?? 0) > 0 : false,
   }));
 
 

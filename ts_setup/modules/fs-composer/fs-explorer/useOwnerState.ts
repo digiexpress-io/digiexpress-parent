@@ -35,7 +35,7 @@ export interface OwnerState {
 
 export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   const { isDarkMode, setIsDarkMode, openAsset, searchExpanded, setSearchExpanded } = useFsNav();
-  const { getDirentProps, collapseAll, setExpanded, setExpandedBatch } = useFsDirentProps();
+  const { getDirent, collapseAll, setExpanded, setExpandedBatch } = useFsDirentProps();
   const [fsData, setFsData] = React.useState<FsDirent[]>(mockFsData);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<FsDirentContextMenuData | undefined>();
@@ -44,8 +44,8 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   const [filters, setFilters] = React.useState<FilterData[]>([]);
 
   const filteredTreeData = React.useMemo(() => {
-    return filterTreeDirents(fsData, searchTerm, filters, getDirentProps)
-  }, [fsData, searchTerm, filters, getDirentProps])
+    return filterTreeDirents(fsData, searchTerm, filters, getDirent)
+  }, [fsData, searchTerm, filters, getDirent])
 
   function collectParentIds(nodes: FsDirent[], acc: string[] = []): string[] {
     nodes.forEach(node => {
@@ -64,7 +64,7 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     }
     debounceRef.current = setTimeout(() => {
       if (term) {
-        const filtered = filterTreeDirents(fsData, term, filters, getDirentProps);
+        const filtered = filterTreeDirents(fsData, term, filters, getDirent);
         setExpandedBatch(collectParentIds(filtered), true);
       }
     }, 350);
@@ -73,7 +73,7 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   function handleSetFilters(newFilters: FilterData[]) {
     setFilters(newFilters);
     if (newFilters.length > 0) {
-      const filtered = filterTreeDirents(fsData, searchTerm, newFilters, getDirentProps);
+      const filtered = filterTreeDirents(fsData, searchTerm, newFilters, getDirent);
       setExpandedBatch(collectParentIds(filtered), true);
     }
   }
@@ -87,8 +87,8 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   }
 
   const isAnyDirentExpanded = fsData.some(dirent =>
-    getDirentProps(dirent.id).expanded ||
-    (dirent.children && dirent.children.some(child => getDirentProps(child.id).expanded))
+    getDirent(dirent.id)?.expanded ||
+    (dirent.children && dirent.children.some(child => getDirent(child.id)?.expanded))
   );
 
   return {
@@ -117,7 +117,7 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
 
     collapseAll,
     toggleDirent: (direntId: string) => {
-      const current = getDirentProps(direntId).expanded;
+      const current = getDirent(direntId)?.expanded;
       setExpanded(direntId, !current);
     },
   }

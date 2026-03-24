@@ -13,9 +13,8 @@ import { ConfigOptionIcons, FsDirentName, DirentDecorator, DirentIcon } from './
 export const FsDirent: React.FC<FsDirentProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(ownerState.isDarkMode);
-  const { getDirentProps } = useFsDirentProps();
-  const direntProps = getDirentProps(props.dirent.id);
-  const expanded = direntProps.expanded;
+  const { getDirent } = useFsDirentProps();
+  const expanded = getDirent(props.dirent.id)?.expanded ?? false;
 
   return (
     <FsDirentRoot className={classes.root} ownerState={ownerState}>
