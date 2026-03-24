@@ -50,6 +50,7 @@ export const FsColors = {
       link: '#98d982',         // Green for external links
       document: '#ce9178',     // Orange for documents (language, template, printout)
       asset: '#dda0dd',        // Light purple for assets/images (changed from red)
+      phone: '#f48fb1',        // Rose/coral for phone numbers
     },
     light: {
       folder: '#333333',       // Dark gray for containers (same as text)
@@ -60,6 +61,7 @@ export const FsColors = {
       link: '#228b22',         // Forest green for external links (same as semantic.success)
       document: '#5d2f0a',     // Darker brown for all documents (language, template, printout) - made darker for better visibility
       asset: '#663399',        // Dark purple for assets/images - changed from red
+      phone: '#880e4f',        // Dark rose for phone numbers
     }
   }
 } as const;
@@ -85,6 +87,8 @@ export function getDirentColor(direntType: FsDirentType, isDarkTheme: boolean) {
       return colors.flow;
     case 'link':
       return colors.link;
+    case 'phone':
+      return colors.phone;
     case 'language':
     case 'template':
     case 'printout':

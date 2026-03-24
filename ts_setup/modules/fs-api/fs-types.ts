@@ -5,7 +5,7 @@ export interface FsDirent {
   children: FsDirent[];
 }
 
-interface BaseDirentProps {
+export interface BaseDirentProps {
   id: string;
   expanded: boolean;
   reference: boolean;

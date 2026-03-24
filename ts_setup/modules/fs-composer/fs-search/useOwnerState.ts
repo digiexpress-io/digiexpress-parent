@@ -49,6 +49,8 @@ const allAvailableFilters: FilterData[] = [
   { label: 'Services', type: 'service' },
   { label: 'Pages', type: 'folder' },
   { label: 'Links', type: 'link' },
+  { label: 'Phone Numbers', type: 'phone' },
+  { label: 'Languages', type: 'language' },
   { label: 'Flows', type: 'flow' },
   { label: 'Printouts', type: 'printout' },
   { label: 'Images', type: 'image' }

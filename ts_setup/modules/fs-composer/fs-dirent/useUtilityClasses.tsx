@@ -22,6 +22,7 @@ export interface FsDirentClasses {
   iconPrintout: string;
   iconImage: string;
   iconTemplate: string;
+  iconPhone: string;
   iconExpand: string;
   iconConfig: string;
 }
@@ -44,6 +45,7 @@ export const useUtilityClasses = (_isDarkTheme: boolean) => {
     iconPrintout: ['iconPrintout'],
     iconImage: ['iconImage'],
     iconTemplate: ['iconTemplate'],
+    iconPhone: ['iconPhone'],
     iconExpand: ['iconExpand'],
     iconConfig: ['iconConfig'],
   };
@@ -149,6 +151,15 @@ export const FsDirentRoot = styled('div', {
       minWidth: 10,
       marginRight: theme.spacing(1),
       color: getDirentColor('template', isDarkTheme),
+      '& .MuiSvgIcon-root': {
+        fontSize: '15px',
+      },
+    },
+
+    [`& .${MUI_NAME}-iconPhone`]: {
+      minWidth: 10,
+      marginRight: theme.spacing(1),
+      color: getDirentColor('phone', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },

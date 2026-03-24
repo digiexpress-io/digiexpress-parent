@@ -99,6 +99,7 @@ function _getIconClassName(dirent: FsDirent): keyof FsDirentClasses {
     case 'printout': return 'iconPrintout';
     case 'image': return 'iconImage';
     case 'template': return 'iconTemplate';
+    case 'phone': return 'iconPhone';
     default: return 'iconFolder';
   }
 }

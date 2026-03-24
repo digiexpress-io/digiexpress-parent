@@ -14,6 +14,19 @@ export function collectArticles(nodes: FsDirent[]): { value: string; label: stri
   return result;
 }
 
+export function collectFlows(nodes: FsDirent[]): { value: string; label: string }[] {
+  const result: { value: string; label: string }[] = [];
+  nodes.forEach(node => {
+    if (node.type === 'flow') {
+      result.push({ value: node.name, label: node.name });
+    }
+    if (node.children && node.children.length > 0) {
+      result.push(...collectFlows(node.children));
+    }
+  });
+  return result;
+}
+
 
 export interface ConfigOption {
   value: string;
