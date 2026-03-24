@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Collapse, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { getConfigOptionsForType } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentMultiSelect } from '../fs-dirent-multi-select';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -10,18 +11,14 @@ import { FsDirentCreateArticleProps } from './FsDirentCreateArticleProps';
 import { useUtilityClasses, FsDirentCreateArticleRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
 
-const CONFIG_OPTIONS = [
-  { value: 'devMode', label: 'Development mode' },
-  { value: 'assignableMode', label: 'Assignable mode' },
-  { value: 'disabledMode', label: 'Disabled mode' },
-  { value: 'anonymousMode', label: 'Anonymous mode' },
-];
 
 export const FsDirentCreateArticle: React.FC<FsDirentCreateArticleProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
+  const configOptions = getConfigOptionsForType('article');
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
+
 
   return (
     <FsDirentCreateArticleRoot className={classes.root} ownerState={ownerState}>
@@ -60,7 +57,7 @@ export const FsDirentCreateArticle: React.FC<FsDirentCreateArticleProps> = (prop
             />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.configOptionsField.label' })}</Typography>
-            <FsDirentMultiSelect options={CONFIG_OPTIONS} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
+            <FsDirentMultiSelect options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.article.labelsField.label' })}</Typography>
             <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.direntCreate.article.labelsField.placeholder' })} />

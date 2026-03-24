@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Collapse, Divider } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { collectArticles, mockFsData } from '@dxs-ts/fs-api';
+import { collectArticles, mockFsData, getConfigOptionsForType } from '@dxs-ts/fs-api';
 import { FsDirentMultiSelect } from '../fs-dirent-multi-select';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -13,15 +13,12 @@ import { useOwnerState } from './useOwnerState';
 
 const articles = collectArticles(mockFsData);
 
-const CONFIG_OPTIONS = [
-  { value: 'devMode', label: 'Development mode' },
-  { value: 'disabledMode', label: 'Disabled mode' },
-];
 
 export const FsDirentCreateLink: React.FC<FsDirentCreateLinkProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
+  const configOptions = getConfigOptionsForType('link');
   const [selectedArticles, setSelectedArticles] = React.useState<string[]>([]);
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
 
@@ -56,7 +53,7 @@ export const FsDirentCreateLink: React.FC<FsDirentCreateLinkProps> = (props) => 
             <FsDirentMultiSelect options={articles} value={selectedArticles} onChange={setSelectedArticles} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.link.configOptionsField.label' })}</Typography>
-            <FsDirentMultiSelect options={CONFIG_OPTIONS} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
+            <FsDirentMultiSelect options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
             {selectedConfigOptions.includes('devMode') && (
               <Typography className={classes.configOptionDescription}>{intl.formatMessage({ id: 'fs.direntCreate.configOption.devMode.description' })}</Typography>
             )}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Divider, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { collectArticles, mockFsData } from '@dxs-ts/fs-api';
+import { collectArticles, mockFsData, getConfigOptionsForType } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
@@ -30,12 +30,6 @@ const FLOW_OPTIONS = [
   { value: 'flow-notification', label: 'Notification Flow' },
 ];
 
-const CONFIG_OPTIONS = [
-  { value: 'devMode', label: 'Development mode' },
-  { value: 'assignableMode', label: 'Assignable mode' },
-  { value: 'disabledMode', label: 'Disabled mode' },
-  { value: 'anonymousMode', label: 'Anonymous mode' },
-];
 
 const articles = collectArticles(mockFsData);
 
@@ -43,6 +37,7 @@ export const FsDirentCreateService: React.FC<FsDirentCreateServiceProps> = (prop
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
+  const configOptions = getConfigOptionsForType('service');
 
   const [selectedDialobForm, setSelectedDialobForm] = React.useState<string>('');
   const [selectedDialobTag, setSelectedDialobTag] = React.useState<string>('');
@@ -99,7 +94,7 @@ export const FsDirentCreateService: React.FC<FsDirentCreateServiceProps> = (prop
             <FsDirentMultiSelect options={articles} value={selectedArticles} onChange={setSelectedArticles} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.service.configOptionsField.label' })}</Typography>
-            <FsDirentMultiSelect options={CONFIG_OPTIONS} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
+            <FsDirentMultiSelect options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
             {selectedConfigOptions.includes('devMode') && (
               <Typography className={classes.configOptionDescription}>{intl.formatMessage({ id: 'fs.direntCreate.configOption.devMode.description' })}</Typography>
             )}

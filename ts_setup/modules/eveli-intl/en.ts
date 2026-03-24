@@ -1471,6 +1471,7 @@ export const en = {
   'fs.direntCreate.language.descriptionField.label': 'Description',
   'fs.direntCreate.language.descriptionField.placeholder': 'Enter language description',
   'fs.direntCreate.language.configOptionsField.label': 'Config options',
+  'fs.direntCreate.language.configOption.disabledMode.description': 'Disabled mode: This language and all its associated assets will not appear on the client-facing application.',
   'fs.direntNew.title': 'New',
   'fs.direntNew.type.folder': 'Folder',
   'fs.direntNew.type.article': 'Article',

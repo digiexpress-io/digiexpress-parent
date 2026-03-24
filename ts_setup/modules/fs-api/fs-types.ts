@@ -48,7 +48,6 @@ export interface FlowDirentProps extends BaseDirentProps {
 }
 export interface LanguageDirentProps extends BaseDirentProps {
   type: 'language';
-  id: string;
   localeCode: string;
 }
 

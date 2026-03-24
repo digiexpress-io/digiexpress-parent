@@ -1,5 +1,5 @@
 import React from 'react';
-import { FsDirent } from './fs-types';
+import { FsDirent, FsDirentType } from './fs-types';
 
 export function collectArticles(nodes: FsDirent[]): { value: string; label: string }[] {
   const result: { value: string; label: string }[] = [];
@@ -14,6 +14,37 @@ export function collectArticles(nodes: FsDirent[]): { value: string; label: stri
   return result;
 }
 
+
+export interface ConfigOption {
+  value: string;
+  label: string;
+}
+
+const ALL_CONFIG_OPTIONS: ConfigOption[] = [
+  { value: 'devMode', label: 'Development mode' },
+  { value: 'assignableMode', label: 'Assignable mode' },
+  { value: 'disabledMode', label: 'Disabled mode' },
+  { value: 'anonymousMode', label: 'Anonymous mode' },
+];
+
+export function getConfigOptionsForType(type: FsDirentType): ConfigOption[] {
+  switch (type) {
+    case 'link':
+    case 'phone': {
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'devMode' || o.value === 'disabledMode');
+    }
+    case 'service':
+    case 'article': {
+      return ALL_CONFIG_OPTIONS;
+    }
+    case 'language': {
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'disabledMode');
+    }
+    default: {
+      return [];
+    }
+  }
+}
 
 interface FsDirentContextMenuData {
   dirent: FsDirent;

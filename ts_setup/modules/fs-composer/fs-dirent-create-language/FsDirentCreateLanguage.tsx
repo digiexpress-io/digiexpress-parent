@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { getConfigOptionsForType } from '@dxs-ts/fs-api';
 import { FsDirentMultiSelect } from '../fs-dirent-multi-select';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
@@ -9,14 +10,12 @@ import { FsDirentCreateLanguageProps } from './FsDirentCreateLanguageProps';
 import { useUtilityClasses, FsDirentCreateLanguageRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
 
-const CONFIG_OPTIONS = [
-  { value: 'disabledMode', label: 'Disabled mode' },
-];
 
 export const FsDirentCreateLanguage: React.FC<FsDirentCreateLanguageProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
+  const configOptions = getConfigOptionsForType('language');
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
 
   return (
@@ -33,7 +32,7 @@ export const FsDirentCreateLanguage: React.FC<FsDirentCreateLanguageProps> = (pr
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.direntCreate.language.configOptionsField.label' })}</Typography>
-        <FsDirentMultiSelect options={CONFIG_OPTIONS} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
+        <FsDirentMultiSelect options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
 
         {selectedConfigOptions.includes('disabledMode') && (
           <Typography className={classes.configOptionDescription}>{intl.formatMessage({ id: 'fs.direntCreate.language.configOption.disabledMode.description' })}</Typography>
