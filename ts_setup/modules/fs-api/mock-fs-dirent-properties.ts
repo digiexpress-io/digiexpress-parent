@@ -282,6 +282,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
   'fi-ref': {
       id: 'fi-ref',
       type: 'language',
+      localeCode: 'fi',
       expanded: false,
       reference: false,
       locked: false,
@@ -354,6 +355,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
   'en-ref': {
       id: 'en-ref',
       type: 'language',
+      localeCode: 'en',
       expanded: false,
       reference: false,
       locked: false,
@@ -403,6 +405,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
   'fi-main': {
       id: 'fi-main',
       type: 'language',
+      localeCode: 'fi',
       expanded: false,
       reference: false,
       locked: false,
@@ -500,6 +503,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
   'sv-main': {
       id: 'sv-main',
       type: 'language',
+      localeCode: 'sv',
       expanded: false,
       reference: false,
       locked: false,
@@ -595,6 +599,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
   'en-main': {
       id: 'en-main',
       type: 'language',
+      localeCode: 'en',
       expanded: false,
       reference: false,
       locked: false,
@@ -768,6 +773,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
   'fi-general': {
       id: 'fi-general',
       type: 'language',
+      localeCode: 'fi',
       expanded: false,
       reference: false,
       locked: false,
@@ -847,6 +853,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
   'sv-general': {
       id: 'sv-general',
       type: 'language',
+      localeCode: 'sv',
       expanded: false,
       reference: false,
       locked: false,
@@ -1654,6 +1661,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
   'fi-trustee': {
       id: 'fi-trustee',
       type: 'language',
+      localeCode: 'fi',
       expanded: false,
       reference: false,
       locked: false,
@@ -2247,6 +2255,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
   'fi-wilma': {
       id: 'fi-wilma',
       type: 'language',
+      localeCode: 'fi',
       expanded: false,
       reference: false,
       locked: false,

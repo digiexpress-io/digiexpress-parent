@@ -7,6 +7,7 @@ import { FsDirentCreateFolder } from '../fs-dirent-create-folder';
 import { FsDirentCreateLink } from '../fs-dirent-create-link';
 import { FsDirentCreatePhone } from '../fs-dirent-create-phone';
 import { FsDirentCreateService } from '../fs-dirent-create-service';
+import { FsDirentCreateLanguage } from '../fs-dirent-create-language';
 
 export interface ContentProps {
   ownerState: OwnerState;
@@ -64,6 +65,13 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState, childre
       return (
         <div className={className}>
           <FsDirentCreateService parentFolder={parentFolder} pathToTopParent={pathToTopParent} />
+        </div>
+      );
+    }
+    case 'create.language': {
+      return (
+        <div className={className}>
+          <FsDirentCreateLanguage parentFolder={parentFolder} pathToTopParent={pathToTopParent} />
         </div>
       );
     }
