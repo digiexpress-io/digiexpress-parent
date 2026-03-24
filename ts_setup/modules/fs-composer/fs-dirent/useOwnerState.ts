@@ -18,7 +18,7 @@ export interface OwnerState {
   fullPath: string;
   searchTerm: string;
   children: FsDirent[];
-  options: (keyof FsDirentConfigOption)[];
+  options: FsDirentConfigOption[];
 
   
   isDarkMode: boolean;
@@ -58,7 +58,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
 
     isChildren,
     children: _sortChildren(dirent.children ?? []),
-    options: _getConfigOptions(direntProps.configOptions),
+    options: direntProps.configOptions,
 
     
     onToggle,
@@ -77,13 +77,6 @@ function _sortChildren(children: FsDirent[]) {
     const bIndex = order.indexOf(b.type);
     return aIndex - bIndex;
   });
-}
-
-function _getConfigOptions(options: FsDirentConfigOption[]) {
-  return options.flatMap((opt) => Object.entries(opt)
-      .filter(([_, value]) => value === true)
-      .map(([key]) => key as keyof FsDirentConfigOption)
-  )
 }
 
 

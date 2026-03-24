@@ -15,6 +15,12 @@ export interface FsPropertiesClasses {
   propertyList: string;
   propertyListItem: string;
   tagLabel: string;
+  commentList: string;
+  commentItem: string;
+  commentText: string;
+  commentMeta: string;
+  commentAuthor: string;
+  commentDate: string;
 }
 
 export type FsPropertiesClassKey = keyof FsPropertiesClasses;
@@ -28,6 +34,12 @@ export const useUtilityClasses = () => {
     propertyList: ['propertyList'],
     propertyListItem: ['propertyListItem'],
     tagLabel: ['tagLabel'],
+    commentList: ['commentList'],
+    commentItem: ['commentItem'],
+    commentText: ['commentText'],
+    commentMeta: ['commentMeta'],
+    commentAuthor: ['commentAuthor'],
+    commentDate: ['commentDate'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -131,5 +143,40 @@ export const FsPropertiesRoot = styled('div', {
       fontSize: "inherit",
       fontWeight: "inherit",
     },
+  },
+
+  [`& .${MUI_NAME}-commentList`]: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.5),
+    flex: 1,
+  },
+
+  [`& .${MUI_NAME}-commentItem`]: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.25),
+  },
+
+  [`& .${MUI_NAME}-commentText`]: {
+    ...theme.typography.subtitle2,
+    fontWeight: 400,
+    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+  },
+
+  [`& .${MUI_NAME}-commentMeta`]: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+
+  [`& .${MUI_NAME}-commentAuthor`]: {
+    ...theme.typography.caption,
+    color: ownerState.isDarkMode ? FsColors.dark.textMuted : FsColors.light.textSecondary,
+    fontStyle: 'italic',
+  },
+
+  [`& .${MUI_NAME}-commentDate`]: {
+    ...theme.typography.caption,
+    color: ownerState.isDarkMode ? FsColors.dark.textMuted : FsColors.light.textSecondary,
   },
 }));

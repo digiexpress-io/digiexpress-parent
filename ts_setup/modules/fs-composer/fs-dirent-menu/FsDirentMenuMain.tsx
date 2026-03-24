@@ -121,22 +121,11 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
           <div>
             <div>{intl.formatMessage({ id: 'fs.direntMenu.menuItem.configOptions' })}</div>
             <div>
-              <Box sx={{
-                mt: 0.5,
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 0.5,
-                maxWidth: MENU_WIDTH - 32,
-                overflow: 'hidden'
-              }}>
-                {direntProps.configOptions.map((config, index) => (
-                  <React.Fragment key={index}>
-                    {config.devMode && (<Chip icon={<FsIcon icon={FsIcons.DevMode} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.devMode' })} size='small' className={classes.label} />)}
-                    {config.assignableMode && (<Chip icon={<FsIcon icon={FsIcons.Assignment} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.assignable' })} size='small' className={classes.label} />)}
-                    {config.disabledMode && (<Chip icon={<FsIcon icon={FsIcons.Disabled} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.disabled' })} size='small' className={classes.label} />)}
-                    {config.anonymousMode && (<Chip icon={<FsIcon icon={FsIcons.Anonymous} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.anonymous' })} size='small' className={classes.label} />)}
-                  </React.Fragment>
-                ))}
+              <Box sx={{ mt: 0.5, display: 'flex', flexWrap: 'wrap', gap: 0.5, maxWidth: MENU_WIDTH - 32, overflow: 'hidden' }}>
+                {direntProps.configOptions.includes('devMode') && (<Chip icon={<FsIcon icon={FsIcons.DevMode} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.devMode' })} size='small' className={classes.label} />)}
+                {direntProps.configOptions.includes('assignableMode') && (<Chip icon={<FsIcon icon={FsIcons.Assignment} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.assignable' })} size='small' className={classes.label} />)}
+                {direntProps.configOptions.includes('disabledMode') && (<Chip icon={<FsIcon icon={FsIcons.Disabled} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.disabled' })} size='small' className={classes.label} />)}
+                {direntProps.configOptions.includes('anonymousMode') && (<Chip icon={<FsIcon icon={FsIcons.Anonymous} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.anonymous' })} size='small' className={classes.label} />)}
               </Box>
             </div>
           </div>

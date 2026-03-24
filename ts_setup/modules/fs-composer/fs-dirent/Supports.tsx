@@ -22,19 +22,15 @@ export const ConfigOptionIcons: React.FC<{ ownerState: OwnerState }> = ({ ownerS
   const { options } = ownerState;
   return (
     <Box sx={{ marginLeft: 'auto', paddingRight: 1, display: 'flex', gap: 0.5 }}>
-      {ownerState.options.length === 0 && (<Align><ConfigIcon className={classes.iconConfig} /></Align>)}
+      {ownerState.options.length === 0 && (<Align><FsIcon small icon={FsIcons.Settings} className={classes.iconConfig} tooltip='Configuration' key='configuration' /></Align>)}
       {options.map((type) => (<Align key={type}><ConfigIcon type={type} className={classes.iconConfig} /></Align>))}
     </Box>
   )
 }
 
 
-function ConfigIcon(props: { type?: keyof FsDirentConfigOption, className: string }) {
+function ConfigIcon(props: { type: FsDirentConfigOption, className: string }) {
   const { className, type } = props;
-
-  if (type == undefined) {
-    return <FsIcon small icon={FsIcons.Settings} className={className} tooltip='Configuration' key='configuration' />
-  }
 
   switch (type) {
     case 'devMode': return <FsIcon small icon={FsIcons.DevMode} className={className} tooltip='Development Mode' key='development' />;

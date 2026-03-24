@@ -5,8 +5,8 @@ import { FsConfigOptionsProps } from './FsConfigOptionsProps';
 
 export interface OwnerState {
   isDarkMode: boolean;
-  isConfigOptionEnabled: (optionKey: keyof FsDirentConfigOption) => boolean;
-  configDescription: (optionKey: keyof FsDirentConfigOption) => string;
+  isConfigOptionEnabled: (optionKey: FsDirentConfigOption) => boolean;
+  configDescription: (optionKey: FsDirentConfigOption) => string;
 }
 
 export function useOwnerState(props: FsConfigOptionsProps): OwnerState {
@@ -15,11 +15,11 @@ export function useOwnerState(props: FsConfigOptionsProps): OwnerState {
   const { getDirentProps } = useFsDirentProps();
   const direntProps = getDirentProps(props.dirent?.id ?? '');
 
-  function isConfigOptionEnabled(optionKey: keyof FsDirentConfigOption): boolean {
-    return direntProps.configOptions.some(configOption => configOption[optionKey] === true);
+  function isConfigOptionEnabled(optionKey: FsDirentConfigOption): boolean {
+    return direntProps.configOptions.includes(optionKey);
   }
 
-  function configDescription(optionKey: keyof FsDirentConfigOption): string {
+  function configDescription(optionKey: FsDirentConfigOption): string {
     switch (optionKey) {
       case 'devMode':
         return intl.formatMessage({ id: 'fs.configOptions.optionKey.devMode.desc' });
