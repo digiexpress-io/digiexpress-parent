@@ -37,8 +37,8 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ childr
     <div className={classes.propertyRow}>
       <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
       <div className={classes.commentList}>
-        {children.map((child, index) => (
-          <div key={index} className={classes.childRow}>
+        {children.map((child) => (
+          <div key={child.id} className={classes.childRow}>
             <FsIcon small icon={getTypeIcon(child.type)} />
             <Typography className={classes.propertyValue}>{child.name}</Typography>
           </div>
