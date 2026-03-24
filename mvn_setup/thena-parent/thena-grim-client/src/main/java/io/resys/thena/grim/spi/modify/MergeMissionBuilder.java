@@ -179,7 +179,6 @@ public class MergeMissionBuilder implements MergeMission {
         .filter(a -> a.getRelation() == null)
         .filter(e -> e.getAssignmentType().equals(assigneeType))
         .map(e -> {
-          logger.rm(e);
           return e;
         })
         .toList());
@@ -192,7 +191,7 @@ public class MergeMissionBuilder implements MergeMission {
       
       final var builder = new NewAssignmentBuilder(logger, missionId, null, Collections.unmodifiableMap(all_assignments));
       assignment.accept(builder);
-      final var built = builder.close();
+      final var built = builder.close(false);
       
       // previous version exists and is exactly the same
       final var previous = toBeDeleted.stream()
@@ -206,12 +205,13 @@ public class MergeMissionBuilder implements MergeMission {
         toBeDeleted.remove(previous.get());
       } else {
         all_assignments.put(built.getId(), built);
-        this.batch.addAssignments(built);        
+        this.batch.addAssignments(built);
+        logger.add(built);
       }
     }
     
     this.batch.addAllDeleteAssignments(toBeDeleted);
-    
+    toBeDeleted.forEach(e -> logger.rm(e));
     
     updateVersion();
     return this;
