@@ -40,6 +40,9 @@ export function getConfigOptionsForType(type: FsDirentType): ConfigOption[] {
     case 'language': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'disabledMode');
     }
+    case 'printout': {
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'devMode');
+    }
     default: {
       return [];
     }

@@ -9,6 +9,7 @@ import { FsDirentCreatePhone } from '../fs-dirent-create-phone';
 import { FsDirentCreateService } from '../fs-dirent-create-service';
 import { FsDirentCreateLanguage } from '../fs-dirent-create-language';
 import { FsDirentCreateDialob } from '../fs-dirent-create-dialob';
+import { FsDirentCreatePrintout } from '../fs-dirent-create-printout';
 
 export interface ContentProps {
   ownerState: OwnerState;
@@ -66,6 +67,13 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState, childre
       return (
         <div className={className}>
           <FsDirentCreateService parentFolder={parentFolder} pathToTopParent={pathToTopParent} />
+        </div>
+      );
+    }
+    case 'create.printout': {
+      return (
+        <div className={className}>
+          <FsDirentCreatePrintout parentFolder={parentFolder} pathToTopParent={pathToTopParent} />
         </div>
       );
     }
