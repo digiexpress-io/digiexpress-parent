@@ -5,4 +5,6 @@ export interface FsDirentTextFieldProps {
   multiline?: boolean;
   minRows?: number;
   maxRows?: number;
+  required?: boolean;
+  onChange?: (value: string) => void;
 }

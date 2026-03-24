@@ -3,9 +3,14 @@ import { FsDirentTextFieldProps } from './FsDirentTextFieldProps';
 
 export interface OwnerState {
   isDarkMode: boolean;
+  isRequired: boolean;
+  showRequiredError: boolean;
 }
 
-export const useOwnerState = (_props: FsDirentTextFieldProps): OwnerState => {
+export const useOwnerState = (props: FsDirentTextFieldProps): OwnerState => {
   const { isDarkMode } = useFsNav();
-  return { isDarkMode };
+  const isRequired = props.required === true;
+  const showRequiredError = isRequired && !props.value?.trim();
+
+  return { isDarkMode, isRequired, showRequiredError };
 };

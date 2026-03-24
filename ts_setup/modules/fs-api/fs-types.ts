@@ -42,6 +42,9 @@ export interface ServiceDirentProps extends BaseDirentProps {
 
 export interface DialobDirentProps extends BaseDirentProps {
   type: 'dialob';
+  formName: string; // reader-friendly form name
+  formTechnicalId: string; // user-created id
+  versionTag?: string;
 }
 export interface FlowDirentProps extends BaseDirentProps {
   type: 'flow';
@@ -53,12 +56,19 @@ export interface LanguageDirentProps extends BaseDirentProps {
 
 export interface PrintoutDirentProps extends BaseDirentProps {
   type: 'printout';
+  printoutServiceName: string;
+  orchestratorName: string;
+  intlValues: Record<string, string>;
 }
+
 export interface ImageDirentProps extends BaseDirentProps {
   type: 'image';
 }
 export interface TemplateDirentProps extends BaseDirentProps {
   type: 'template';
+  serviceId: string;
+  localeId: string;
+  content?: string;
 }
 export interface LinkDirentProps extends BaseDirentProps {
   type: 'link';

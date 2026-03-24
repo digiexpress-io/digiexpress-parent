@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled, TextField } from '@mui/material';
+import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
@@ -7,6 +7,7 @@ const MUI_NAME = 'FsDirentTextField';
 
 export interface FsDirentTextFieldClasses {
   root: string;
+  requiredMessage: string;
 }
 
 export type FsDirentTextFieldClassKey = keyof FsDirentTextFieldClasses;
@@ -14,18 +15,24 @@ export type FsDirentTextFieldClassKey = keyof FsDirentTextFieldClasses;
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
+    requiredMessage: ['requiredMessage'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsDirentTextFieldRoot = styled(TextField, {
+export const FsDirentTextFieldRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   width: '100%',
   marginTop: '0px !important',
+  '& .MuiFormControl-root': {
+    width: '100%',
+    marginTop: '0 !important',
+    marginBottom: '0 !important',
+  },
   '& .MuiInputBase-root': {
     backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
@@ -60,5 +67,26 @@ export const FsDirentTextFieldRoot = styled(TextField, {
   '& .MuiInputLabel-root': {
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     ...theme.typography.caption,
+  },
+  ...(ownerState.showRequiredError && {
+    '& .MuiOutlinedInput-root fieldset': {
+      borderColor: theme.palette.error.main,
+    },
+    '& .MuiOutlinedInput-root:hover fieldset': {
+      borderColor: theme.palette.error.main,
+    },
+    '& .MuiOutlinedInput-root.Mui-focused fieldset': {
+      borderColor: theme.palette.error.main,
+    },
+  }),
+
+  [`& .${MUI_NAME}-requiredMessage`]: {
+    ...theme.typography.caption,
+    color: theme.palette.error.main,
+    marginTop: '3px',
+    marginLeft: 0,
+    '&.MuiTypography-root': {
+      color: theme.palette.error.main,
+    },
   },
 }));
