@@ -27,6 +27,19 @@ export function collectFlows(nodes: FsDirent[]): { value: string; label: string 
   return result;
 }
 
+export function collectLocales(nodes: FsDirent[]): string[] {
+  const result: string[] = [];
+  nodes.forEach(node => {
+    if (node.type === 'language') {
+      result.push(node.name.replace('.language', ''));
+    }
+    if (node.children && node.children.length > 0) {
+      result.push(...collectLocales(node.children));
+    }
+  });
+  return result;
+}
+
 
 export interface ConfigOption {
   value: string;

@@ -4,8 +4,8 @@ import { FsTab } from '@dxs-ts/fs-api';
 import { OwnerState } from './useOwnerState';
 import { FsDirentArticle } from '../fs-dirent-article';
 import { FsDirentCreateFolder } from '../fs-dirent-create-folder';
-import { FsDirentCreateLink } from '../fs-dirent-create-link';
-import { FsDirentCreatePhone } from '../fs-dirent-create-phone';
+import { FsDirentLink } from '../fs-dirent-link';
+import { FsDirentPhone } from '../fs-dirent-phone';
 import { FsDirentCreateService } from '../fs-dirent-create-service';
 import { FsDirentCreateLanguage } from '../fs-dirent-create-language';
 import { FsDirentCreateDialob } from '../fs-dirent-create-dialob';
@@ -37,8 +37,8 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
   switch (tabKey) {
     case 'article': return (activeTab && (<div className={className}><FsDirentArticle tab={activeTab} /></div>));
     case 'folder': return (activeTab && (<div className={className}><FsDirentCreateFolder parentFolder={parentFolder} pathToTopParent={pathToTopParent} /></div>));
-    case 'link': return (activeTab && (<div className={className}><FsDirentCreateLink parentFolder={parentFolder} pathToTopParent={pathToTopParent} /></div>));
-    case 'phone': return (activeTab && (<div className={className}><FsDirentCreatePhone parentFolder={parentFolder} pathToTopParent={pathToTopParent} /></div>));
+    case 'link': return (activeTab && (<div className={className}><FsDirentLink tab={activeTab} /></div>));
+    case 'phone': return (activeTab && (<div className={className}><FsDirentPhone tab={activeTab} /></div>));
     case 'service': return (activeTab && (<div className={className}><FsDirentCreateService parentFolder={parentFolder} pathToTopParent={pathToTopParent} /></div>));
     case 'printout': return (activeTab && (<div className={className}><FsDirentCreatePrintout parentFolder={parentFolder} pathToTopParent={pathToTopParent} /></div>));
     case 'dialob': return (activeTab && (<div className={className}><FsDirentCreateDialob parentFolder={parentFolder} pathToTopParent={pathToTopParent} /></div>));
