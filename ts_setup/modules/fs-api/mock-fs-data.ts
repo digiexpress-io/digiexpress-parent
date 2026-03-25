@@ -7,41 +7,51 @@ export const mockFsData: FsDirent[] = [
     type: 'folder',
     children: [
       {
-        id: 'main.article',
-        name: 'main.article',
+        id: 'index.article',
+        name: 'index.article',
         type: 'article',
         children: [
-          {
-            id: 'ref.article',
-            name: 'ref.article',
-            type: 'article',
-            children: []
-          },
-          {
-            id: 'fi-main',
-            name: 'fi.language',
-            type: 'language',
-            children: []
-          },
-          {
-            id: 'sv-main',
-            name: 'sv.language',
-            type: 'language',
-            children: []
-          },
-          {
-            id: 'en-main',
-            name: 'en.language',
-            type: 'language',
-            children: []
-          }
+          { id: 'fi-index', name: 'fi.language', type: 'language', children: [] },
+          { id: 'sv-index', name: 'sv.language', type: 'language', children: [] },
+          { id: 'en-index', name: 'en.language', type: 'language', children: [] },
         ]
       },
       {
-        id: 'info-gdpr.article',
-        name: 'info-gdpr.article',
+        id: 'gdpr.article',
+        name: 'gdpr.article',
         type: 'article',
-        children: []
+        children: [
+          {
+            id: 'gdpr-child.article',
+            name: 'gdpr-child.article',
+            type: 'article',
+            children: [
+              { id: 'fi-gdpr-child', name: 'fi.language', type: 'language', children: [] },
+              { id: 'sv-gdpr-child', name: 'sv.language', type: 'language', children: [] },
+            ]
+          },
+          { id: 'fi-gdpr', name: 'fi.language', type: 'language', children: [] },
+          { id: 'sv-gdpr', name: 'sv.language', type: 'language', children: [] },
+        ]
+      },
+      {
+        id: 'democracy.article',
+        name: 'democracy.article',
+        type: 'article',
+        children: [
+          { id: 'fi-democracy', name: 'fi.language', type: 'language', children: [] },
+          { id: 'sv-democracy', name: 'sv.language', type: 'language', children: [] },
+          { id: 'en-democracy', name: 'en.language', type: 'language', children: [] },
+        ]
+      },
+      {
+        id: 'city-living.article',
+        name: 'city-living.article',
+        type: 'article',
+        children: [
+          { id: 'fi-city-living', name: 'fi.language', type: 'language', children: [] },
+          { id: 'sv-city-living', name: 'sv.language', type: 'language', children: [] },
+        ]
       },
       {
         id: 'general-message.service',

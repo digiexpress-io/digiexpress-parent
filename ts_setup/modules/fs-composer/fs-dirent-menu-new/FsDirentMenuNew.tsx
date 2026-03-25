@@ -18,7 +18,8 @@ const DIRENT_TYPE_ICONS: Record<FsDirentType, React.ElementType<SvgIconProps>> =
   printout: FsIcons.Print,
   image: FsIcons.Image,
   template: FsIcons.Pdf,
-  phone: FsIcons.Phone
+  phone: FsIcons.Phone,
+  page: FsIcons.Form
 };
 
 export const FsDirentMenuNew: React.FC<FsDirentMenuNewProps> = (props) => {

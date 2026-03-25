@@ -38,10 +38,18 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ childr
       <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
       <div className={classes.commentList}>
         {children.map((child) => (
-          <div key={child.id} className={classes.childRow}>
-            <FsIcon small icon={getTypeIcon(child.type)} />
-            <Typography className={classes.propertyValue}>{child.name}</Typography>
-          </div>
+          <React.Fragment key={child.id}>
+            <div className={classes.childRow}>
+              <FsIcon small icon={getTypeIcon(child.type)} />
+              <Typography className={classes.propertyValue}>{child.name}</Typography>
+            </div>
+            {child.children.map((grandchild) => (
+              <div key={grandchild.id} className={classes.childRowIndented}>
+                <FsIcon small icon={getTypeIcon(grandchild.type)} />
+                <Typography className={classes.propertyValue}>{grandchild.name}</Typography>
+              </div>
+            ))}
+          </React.Fragment>
         ))}
       </div>
     </div>

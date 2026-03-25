@@ -64,6 +64,7 @@ import {
   WorkHistory,
   Help,
   Phone,
+  FormatListNumbered,
 } from '@mui/icons-material';
 import { SvgIconProps, Tooltip } from '@mui/material';
 
@@ -132,6 +133,7 @@ export const FsIcons = {
   Tree: AccountTree,
   History: WorkHistory,
   Help: Help,
+  ArticleOrder: FormatListNumbered,
 };
 
 export interface FsIconProps {

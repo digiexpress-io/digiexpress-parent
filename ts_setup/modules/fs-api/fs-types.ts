@@ -25,6 +25,7 @@ export interface FolderDirentProps extends BaseDirentProps {
 
 export interface ArticleDirentProps extends BaseDirentProps {
   type: 'article';
+  orderNumber: number;
 }
 
 export interface ServiceDirentProps extends BaseDirentProps {
@@ -52,6 +53,12 @@ export interface FlowDirentProps extends BaseDirentProps {
 export interface LanguageDirentProps extends BaseDirentProps {
   type: 'language';
   localeCode: string;
+}
+
+export interface PageDirentProps extends BaseDirentProps {
+  type: 'page';
+  localeCode: string;
+  content?: string;
 }
 
 export interface PrintoutDirentProps extends BaseDirentProps {
@@ -90,11 +97,13 @@ export type FsDirentProps =
   | LanguageDirentProps
   | PrintoutDirentProps
   | ImageDirentProps
+  | PageDirentProps
   | TemplateDirentProps
   | LinkDirentProps
   | PhoneDirentProps;
 
 export type FsDirentEntry = FsDirent & FsDirentProps;
+export type ArticleEntry = FsDirent & ArticleDirentProps;
 
 export type FsDirentConfigOption = 'devMode' | 'assignableMode' | 'disabledMode' | 'anonymousMode';
 
@@ -143,11 +152,12 @@ export const FsDirentTypes = {
   printout: 'printout',
   image: 'image',
   template: 'template',
-  phone: 'phone'
+  phone: 'phone',
+  page: 'page'
 };
 
 export type FsDirentType = keyof typeof FsDirentTypes;
-export type FsDirentSecondaryView = 'references' | 'properties' | 'configuration' | 'debug' | 'preview' | 'history' | 'help' | 'errors' | 'changes';
+export type FsDirentSecondaryView = 'references' | 'properties' | 'configuration' | 'debug' | 'preview' | 'history' | 'help' | 'errors' | 'changes' | 'article-order';
 export type FsDirentChangeType = 'update' | 'create' | 'delete';
 export type FsDirentPermissionType = 'read' | 'write' | 'view' | 'none';
 export type FsDirentErrorSeverityType = 'CRITICAL' | 'WARNING';

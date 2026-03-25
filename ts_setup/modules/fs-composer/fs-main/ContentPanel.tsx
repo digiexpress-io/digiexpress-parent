@@ -3,6 +3,7 @@ import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsPanel } from '../fs-panel';
 
+import { FsArticleOrder } from '../fs-article-order';
 import { FsChanges } from '../fs-changes';
 import { FsConfigOptions } from '../fs-config-options';
 import { FsErrors } from '../fs-errors';
@@ -44,6 +45,8 @@ export const ContentPanel: React.FC<ContentPanelProps> = ({ ownerState, classNam
               return <FsHelp dirent={activeDirent} />;
           case 'configuration':
               return <FsConfigOptions dirent={activeDirent} />;
+          case 'article-order':
+              return <FsArticleOrder />;
           default:
             return (
               <FsPanel title='View not implemented'>

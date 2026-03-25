@@ -52,12 +52,13 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     errors: [],
   },
 
-  'main.article': {
-    id: 'main.article',
+  'index.article': {
+    id: 'index.article',
     type: 'article',
     expanded: false,
     reference: false,
     locked: false,
+    orderNumber: 0,
     description: 'Main landing article for the municipal services portal.',
     configOptions: [],
     comments: [
@@ -75,12 +76,31 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     ],
   },
 
-  'ref.article': {
-    id: 'ref.article',
+  'gdpr.article': {
+    id: 'gdpr.article',
     type: 'article',
     expanded: false,
-    reference: true,
+    reference: false,
     locked: false,
+    orderNumber: 100,
+    description: 'GDPR information and data protection policy.',
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [
+      { id: 'label-011', value: 'Under review' }
+    ],
+    errors: [],
+  },
+
+  'gdpr-child.article': {
+    id: 'gdpr-child.article',
+    type: 'article',
+    expanded: false,
+    reference: false,
+    locked: false,
+    orderNumber: 100,
     description: undefined,
     configOptions: [],
     comments: [],
@@ -90,8 +110,44 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     errors: [],
   },
 
-  'fi-main': {
-    id: 'fi-main',
+  'democracy.article': {
+    id: 'democracy.article',
+    type: 'article',
+    expanded: false,
+    reference: false,
+    locked: false,
+    orderNumber: 200,
+    description: 'Democracy and civic participation services.',
+    configOptions: [],
+    comments: [
+      { comment: 'Content needs review after the 2025 municipal elections.', author: 'Lars Eriksson', created: '12.02.2025' }
+    ],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+  },
+
+  'city-living.article': {
+    id: 'city-living.article',
+    type: 'article',
+    expanded: false,
+    reference: false,
+    locked: false,
+    orderNumber: 300,
+    description: undefined,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [
+      { id: 'label-012', value: 'Draft' }
+    ],
+    errors: [],
+  },
+
+  'fi-index': {
+    id: 'fi-index',
     type: 'language',
     expanded: false,
     reference: false,
@@ -106,8 +162,8 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     localeCode: 'fi',
   },
 
-  'sv-main': {
-    id: 'sv-main',
+  'sv-index': {
+    id: 'sv-index',
     type: 'language',
     expanded: false,
     reference: false,
@@ -122,8 +178,8 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     localeCode: 'sv',
   },
 
-  'en-main': {
-    id: 'en-main',
+  'en-index': {
+    id: 'en-index',
     type: 'language',
     expanded: false,
     reference: false,
@@ -138,9 +194,9 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     localeCode: 'en',
   },
 
-  'info-gdpr.article': {
-    id: 'info-gdpr.article',
-    type: 'article',
+  'fi-gdpr': {
+    id: 'fi-gdpr',
+    type: 'language',
     expanded: false,
     reference: false,
     locked: false,
@@ -151,6 +207,135 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     permissions: [],
     labels: [],
     errors: [],
+    localeCode: 'fi',
+  },
+
+  'sv-gdpr': {
+    id: 'sv-gdpr',
+    type: 'language',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+    localeCode: 'sv',
+  },
+
+  'fi-gdpr-child': {
+    id: 'fi-gdpr-child',
+    type: 'language',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+    localeCode: 'fi',
+  },
+
+  'sv-gdpr-child': {
+    id: 'sv-gdpr-child',
+    type: 'language',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+    localeCode: 'sv',
+  },
+
+  'fi-democracy': {
+    id: 'fi-democracy',
+    type: 'language',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+    localeCode: 'fi',
+  },
+
+  'sv-democracy': {
+    id: 'sv-democracy',
+    type: 'language',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+    localeCode: 'sv',
+  },
+
+  'en-democracy': {
+    id: 'en-democracy',
+    type: 'language',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+    localeCode: 'en',
+  },
+
+  'fi-city-living': {
+    id: 'fi-city-living',
+    type: 'language',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+    localeCode: 'fi',
+  },
+
+  'sv-city-living': {
+    id: 'sv-city-living',
+    type: 'language',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+    localeCode: 'sv',
   },
 
   'general-message.service': {
@@ -180,7 +365,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     flowName: 'taskMsgFlow.flow',
     validityStart: '01.01.2025',
     validityEnd: undefined,
-    articles: ['main.article'],
+    articles: ['index.article'],
     intlValues: { en: 'General message', fi: 'Yleinen viesti', sv: 'Allmänt meddelande' },
   },
 
@@ -206,7 +391,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     flowName: 'taskGenericFlow.flow',
     validityStart: '01.03.2024',
     validityEnd: undefined,
-    articles: ['info-gdpr.article'],
+    articles: ['gdpr.article'],
     intlValues: { en: 'Public information request', fi: 'Julkinen tietopyyntö', sv: 'Offentlig informationsbegäran' },
   },
 
@@ -233,7 +418,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     flowName: 'taskGenericFlow.flow',
     validityStart: '01.08.2024',
     validityEnd: undefined,
-    articles: ['main.article', 'info-gdpr.article'],
+    articles: ['index.article', 'gdpr.article'],
     intlValues: { en: 'Preschool application', fi: 'Varhaiskasvatushakemus', sv: 'Ansökan om förskola' },
   },
 

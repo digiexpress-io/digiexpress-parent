@@ -22,6 +22,7 @@ export interface FsPropertiesClasses {
   commentAuthor: string;
   commentDate: string;
   childRow: string;
+  childRowIndented: string;
 }
 
 export type FsPropertiesClassKey = keyof FsPropertiesClasses;
@@ -42,6 +43,7 @@ export const useUtilityClasses = () => {
     commentAuthor: ['commentAuthor'],
     commentDate: ['commentDate'],
     childRow: ['childRow'],
+    childRowIndented: ['childRowIndented'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -187,5 +189,12 @@ export const FsPropertiesRoot = styled('div', {
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.75),
+  },
+
+  [`& .${MUI_NAME}-childRowIndented`]: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.75),
+    paddingLeft: theme.spacing(3),
   },
 }));

@@ -24,6 +24,7 @@ export interface FsDirentPropsContextType {
   direntPropsLoading: boolean;
   getDirent: (id: string) => FsDirentEntry | undefined;
   getDirentProps: (id: string) => FsDirentProps;
+  getArticles: () => FsDirentEntry[];
   isChildError: (dirent: FsDirent) => boolean;
   findReferencesToDirent: (dirent: FsDirent) => ItemReferencesEntry[];
   setExpanded: (id: string, value: boolean) => void;
@@ -76,6 +77,13 @@ export const FsDirentPropsProvider: React.FC<FsDirentPropsProviderProps> = (prop
   const getDirentProps = React.useCallback((id: string): FsDirentProps => {
     return propsMapRef.current[id] ?? EMPTY_DIRENT_PROPS;
   }, []);
+
+  const getArticles = React.useCallback((): FsDirentEntry[] => {
+    return Object.values(DIRENT_MAP)
+      .filter(dirent => dirent.type === 'article')
+      .map(dirent => getDirent(dirent.id))
+      .filter((dirent): dirent is FsDirentEntry => dirent !== undefined);
+  }, [getDirent]);
 
   const isChildError = React.useCallback((dirent: FsDirent): boolean => {
     const direntProps = propsMap[dirent.id];
@@ -146,13 +154,14 @@ export const FsDirentPropsProvider: React.FC<FsDirentPropsProviderProps> = (prop
       direntPropsLoading,
       getDirent,
       getDirentProps,
+      getArticles,
       isChildError,
       findReferencesToDirent,
       setExpanded,
       setExpandedBatch,
       collapseAll,
     };
-  }, [direntPropsLoading, getDirent, getDirentProps, isChildError, findReferencesToDirent, setExpanded, setExpandedBatch, collapseAll]);
+  }, [direntPropsLoading, getDirent, getDirentProps, getArticles, isChildError, findReferencesToDirent, setExpanded, setExpandedBatch, collapseAll]);
 
   return (
     <FsDirentPropsContext.Provider value={contextValue}>
