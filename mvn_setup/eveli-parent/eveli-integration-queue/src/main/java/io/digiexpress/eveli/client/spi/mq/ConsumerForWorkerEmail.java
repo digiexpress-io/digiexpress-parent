@@ -44,6 +44,7 @@ public class ConsumerForWorkerEmail implements ThenaMqConsumer {
   
   private final CommsClient commsClient;
   private final OrgClient orgClient;
+  private final TaskNotificationTransformer transformer;
   private final String email_locale = "fi";
 
   @Override
@@ -83,11 +84,11 @@ public class ConsumerForWorkerEmail implements ThenaMqConsumer {
   }
   
   private String getMessage(TaskNotification notification) {
-    return notification.getEmail().get(email_locale);
+    return transformer.transform(notification.getEmail().get(email_locale), notification, email_locale);
   }
   
   private String getTitle(TaskNotification notification) {
-    return notification.getTitle().get(email_locale);
+    return transformer.transform(notification.getTitle().get(email_locale), notification, email_locale);
   }
   
   private List<String> getEmails(TaskNotification notification) {
