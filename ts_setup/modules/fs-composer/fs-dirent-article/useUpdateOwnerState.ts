@@ -1,9 +1,8 @@
 import React from 'react';
 import { ArticleEntry, FsDirentConfigOption, useFsDirentProps, useFsNav } from '@dxs-ts/fs-api';
-import { FsDirentUpdateArticleProps } from './FsDirentUpdateArticleProps';
 
 
-export interface OwnerState {
+export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: ArticleEntry | undefined;
   name: string;
@@ -22,7 +21,7 @@ export interface OwnerState {
   onToggleExpanded: () => void;
 }
 
-export const useOwnerState = (props: FsDirentUpdateArticleProps): OwnerState => {
+export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirentProps();
 

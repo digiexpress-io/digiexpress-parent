@@ -1,11 +1,10 @@
 import { generateUtilityClass, styled, darken } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
-import { OwnerState } from './useOwnerState';
 
-const MUI_NAME = 'FsDirentUpdateArticle';
+const MUI_NAME = 'FsDirentArticle';
 
-export interface FsDirentUpdateArticleClasses {
+export interface FsDirentArticleClasses {
   root: string;
   title: string;
   formContainer: string;
@@ -20,7 +19,7 @@ export interface FsDirentUpdateArticleClasses {
   buttonContainer: string;
 }
 
-export type FsDirentUpdateArticleClassKey = keyof FsDirentUpdateArticleClasses;
+export type FsDirentArticleClassKey = keyof FsDirentArticleClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -41,11 +40,11 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsDirentUpdateArticleRoot = styled('div', {
+export const FsDirentArticleRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
+})<{ ownerState: { isDarkMode: boolean } }>(({ theme, ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
 
