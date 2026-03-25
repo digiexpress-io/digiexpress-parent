@@ -107,12 +107,12 @@ public class EveliAutoConfigMq {
     return new DeliveryForChannels(config, client);
   }
   @Bean
-  public ThenaMqConsumer consumerForCustomerNotification(CommsClient client, TaskClient proc) {
-    return new ConsumerForCustomerNotification(client, proc);
+  public ThenaMqConsumer consumerForCustomerNotification(CommsClient client, TaskClient proc, TaskNotificationTransformer transformer) {
+    return new ConsumerForCustomerNotification(client, proc, transformer);
   }
   @Bean
-  public ThenaMqConsumer consumerForWorkerEmail(CommsClient client, OrgClient orgClient) {
-    return new ConsumerForWorkerEmail(client, orgClient);
+  public ThenaMqConsumer consumerForWorkerEmail(CommsClient client, OrgClient orgClient, TaskNotificationTransformer transformer) {
+    return new ConsumerForWorkerEmail(client, orgClient, transformer);
   }
   @Bean
   public ThenaMqConsumer loggingThenaMqConsumer() {
@@ -137,5 +137,11 @@ public class EveliAutoConfigMq {
   @Bean 
   public QueueApiController queueApiController(ThenaMqClient client, ThenaMqAppConfig config) {
     return new QueueApiController(client, config);
+  }
+  
+  @Bean
+  @ConditionalOnMissingBean
+  public TaskNotificationTransformer taskNotificationTransformer() {
+    return new DefaultTaskNotificationTransformer();
   }
 }
