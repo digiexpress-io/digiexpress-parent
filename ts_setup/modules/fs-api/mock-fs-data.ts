@@ -11,9 +11,9 @@ export const mockFsData: FsDirent[] = [
         name: 'index.article',
         type: 'article',
         children: [
-          { id: 'fi-index', name: 'fi.language', type: 'language', children: [] },
-          { id: 'sv-index', name: 'sv.language', type: 'language', children: [] },
-          { id: 'en-index', name: 'en.language', type: 'language', children: [] },
+          { id: 'fi-index', name: 'fi.page', type: 'page', children: [] },
+          { id: 'sv-index', name: 'sv.page', type: 'page', children: [] },
+          { id: 'en-index', name: 'en.page', type: 'page', children: [] },
         ]
       },
       {
@@ -26,12 +26,12 @@ export const mockFsData: FsDirent[] = [
             name: 'gdpr-child.article',
             type: 'article',
             children: [
-              { id: 'fi-gdpr-child', name: 'fi.language', type: 'language', children: [] },
-              { id: 'sv-gdpr-child', name: 'sv.language', type: 'language', children: [] },
+              { id: 'fi-gdpr-child', name: 'fi.page', type: 'page', children: [] },
+              { id: 'sv-gdpr-child', name: 'sv.page', type: 'page', children: [] },
             ]
           },
-          { id: 'fi-gdpr', name: 'fi.language', type: 'language', children: [] },
-          { id: 'sv-gdpr', name: 'sv.language', type: 'language', children: [] },
+          { id: 'fi-gdpr', name: 'fi.page', type: 'page', children: [] },
+          { id: 'sv-gdpr', name: 'sv.page', type: 'page', children: [] },
         ]
       },
       {
@@ -39,9 +39,9 @@ export const mockFsData: FsDirent[] = [
         name: 'democracy.article',
         type: 'article',
         children: [
-          { id: 'fi-democracy', name: 'fi.language', type: 'language', children: [] },
-          { id: 'sv-democracy', name: 'sv.language', type: 'language', children: [] },
-          { id: 'en-democracy', name: 'en.language', type: 'language', children: [] },
+          { id: 'fi-democracy', name: 'fi.page', type: 'page', children: [] },
+          { id: 'sv-democracy', name: 'sv.page', type: 'page', children: [] },
+          { id: 'en-democracy', name: 'en.page', type: 'page', children: [] },
         ]
       },
       {
@@ -49,8 +49,8 @@ export const mockFsData: FsDirent[] = [
         name: 'city-living.article',
         type: 'article',
         children: [
-          { id: 'fi-city-living', name: 'fi.language', type: 'language', children: [] },
-          { id: 'sv-city-living', name: 'sv.language', type: 'language', children: [] },
+          { id: 'fi-city-living', name: 'fi.page', type: 'page', children: [] },
+          { id: 'sv-city-living', name: 'sv.page', type: 'page', children: [] },
         ]
       },
       {
@@ -153,6 +153,16 @@ export const mockFsData: FsDirent[] = [
     ]
   },
   {
+    id: 'languages',
+    name: 'languages',
+    type: 'folder',
+    children: [
+      { id: 'fi.language', name: 'fi.language', type: 'language', children: [] },
+      { id: 'sv.language', name: 'sv.language', type: 'language', children: [] },
+      { id: 'en.language', name: 'en.language', type: 'language', children: [] },
+    ],
+  },
+  {
     id: 'printouts',
     name: 'printouts',
     type: 'folder',
@@ -195,19 +205,19 @@ export const mockFsData: FsDirent[] = [
       },
       {
         id: 'fi-construction-permit',
-        name: 'fi',
+        name: 'fi.template',
         type: 'template',
         children: []
       },
       {
         id: 'sv-construction-permit',
-        name: 'sv',
+        name: 'sv.template',
         type: 'template',
         children: []
       },
       {
         id: 'en-construction-permit',
-        name: 'en',
+        name: 'en.template',
         type: 'template',
         children: []
       }

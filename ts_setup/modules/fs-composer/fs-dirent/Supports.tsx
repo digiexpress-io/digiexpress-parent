@@ -118,9 +118,10 @@ interface FsDirentNameProps {
 
 export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   const { getDirent } = useFsDirentProps();
+  const classes = useUtilityClasses(props.isDarkTheme);
   const description = getDirent(props.dirent.id)?.description;
   return (
-    <ListItemText primary={<Typography variant='subtitle2'
+    <ListItemText className={classes.direntName} primary={<Typography variant='subtitle2'
       sx={{
         color: props.error ? (props.isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight)
           :

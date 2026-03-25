@@ -45,7 +45,8 @@ export const FsExplorerRoot = styled('div', {
     height: '100%',
     maxHeight: '100vh',
     fontSize: '13px',
-    overflow: 'auto',
+    overflowY: 'auto',
+    overflowX: 'hidden',
 
     [`& .${MUI_NAME}-title`]: {
       borderBottom: `1px solid ${treeThemeColors.border}`,

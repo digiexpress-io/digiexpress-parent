@@ -52,6 +52,69 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     errors: [],
   },
 
+  'languages': {
+    id: 'languages',
+    type: 'folder',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+  },
+
+  'fi.language': {
+    id: 'fi.language',
+    type: 'language',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+    localeCode: 'fi',
+  },
+
+  'sv.language': {
+    id: 'sv.language',
+    type: 'language',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+    localeCode: 'sv',
+  },
+
+  'en.language': {
+    id: 'en.language',
+    type: 'language',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [],
+    changes: [],
+    permissions: [],
+    labels: [],
+    errors: [],
+    localeCode: 'en',
+  },
+
   'index.article': {
     id: 'index.article',
     type: 'article',
@@ -148,7 +211,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
 
   'fi-index': {
     id: 'fi-index',
-    type: 'language',
+    type: 'page',
     expanded: false,
     reference: false,
     locked: false,
@@ -164,7 +227,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
 
   'sv-index': {
     id: 'sv-index',
-    type: 'language',
+    type: 'page',
     expanded: false,
     reference: false,
     locked: false,
@@ -180,7 +243,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
 
   'en-index': {
     id: 'en-index',
-    type: 'language',
+    type: 'page',
     expanded: false,
     reference: false,
     locked: false,
@@ -196,7 +259,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
 
   'fi-gdpr': {
     id: 'fi-gdpr',
-    type: 'language',
+    type: 'page',
     expanded: false,
     reference: false,
     locked: false,
@@ -212,7 +275,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
 
   'sv-gdpr': {
     id: 'sv-gdpr',
-    type: 'language',
+    type: 'page',
     expanded: false,
     reference: false,
     locked: false,
@@ -228,7 +291,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
 
   'fi-gdpr-child': {
     id: 'fi-gdpr-child',
-    type: 'language',
+    type: 'page',
     expanded: false,
     reference: false,
     locked: false,
@@ -244,7 +307,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
 
   'sv-gdpr-child': {
     id: 'sv-gdpr-child',
-    type: 'language',
+    type: 'page',
     expanded: false,
     reference: false,
     locked: false,
@@ -260,7 +323,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
 
   'fi-democracy': {
     id: 'fi-democracy',
-    type: 'language',
+    type: 'page',
     expanded: false,
     reference: false,
     locked: false,
@@ -276,7 +339,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
 
   'sv-democracy': {
     id: 'sv-democracy',
-    type: 'language',
+    type: 'page',
     expanded: false,
     reference: false,
     locked: false,
@@ -292,7 +355,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
 
   'en-democracy': {
     id: 'en-democracy',
-    type: 'language',
+    type: 'page',
     expanded: false,
     reference: false,
     locked: false,
@@ -308,7 +371,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
 
   'fi-city-living': {
     id: 'fi-city-living',
-    type: 'language',
+    type: 'page',
     expanded: false,
     reference: false,
     locked: false,
@@ -324,7 +387,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
 
   'sv-city-living': {
     id: 'sv-city-living',
-    type: 'language',
+    type: 'page',
     expanded: false,
     reference: false,
     locked: false,

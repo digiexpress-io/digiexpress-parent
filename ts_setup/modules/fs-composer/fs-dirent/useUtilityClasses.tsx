@@ -25,6 +25,7 @@ export interface FsDirentClasses {
   iconPhone: string;
   iconExpand: string;
   iconConfig: string;
+  direntName: string;
 }
 
 export type FsDirentClassKey = keyof FsDirentClasses;
@@ -48,6 +49,7 @@ export const useUtilityClasses = (_isDarkTheme: boolean) => {
     iconPhone: ['iconPhone'],
     iconExpand: ['iconExpand'],
     iconConfig: ['iconConfig'],
+    direntName: ['direntName'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -59,7 +61,9 @@ export const FsDirentRoot = styled('div', {
   shouldForwardProp: (prop) => prop !== 'ownerState'
 })<{ ownerState: any }>(({ theme, ownerState }) => {
   const isDarkTheme = ownerState.isDarkMode;
+
   return {
+
     [`& .${MUI_NAME}-icon`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
@@ -193,6 +197,17 @@ export const FsDirentRoot = styled('div', {
       display: 'flex',
       alignItems: 'center',
       width: '100%',
+      overflow: 'hidden',
+    },
+
+    [`& .${MUI_NAME}-direntName`]: {
+      minWidth: 0,
+      overflow: 'hidden',
+      '& .MuiTypography-root': {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      },
     },
   };
 });
