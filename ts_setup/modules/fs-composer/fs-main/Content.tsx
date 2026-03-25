@@ -10,6 +10,7 @@ import { FsDirentCreateService } from '../fs-dirent-create-service';
 import { FsDirentCreateLanguage } from '../fs-dirent-create-language';
 import { FsDirentCreateDialob } from '../fs-dirent-create-dialob';
 import { FsDirentCreatePrintout } from '../fs-dirent-create-printout';
+import { FsDirentUpdateArticle } from '../fs-dirent-update-article';
 
 export interface ContentProps {
   ownerState: OwnerState;
@@ -22,7 +23,7 @@ function getTabKey(tab: FsTab | undefined): string {
     return 'none';
   }
   if (tab.type === 'edit') {
-    return 'edit';
+    return `update.${tab.dirent.type}`;
   }
   return `create.${tab.direntType}`;
 }
@@ -33,6 +34,7 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState, childre
   const tabKey = getTabKey(activeTab);
   const parentFolder = activeTab?.type === 'create' ? activeTab.parentFolder : undefined;
   const pathToTopParent = activeTab?.type === 'create' ? activeTab.pathToTopParent : undefined;
+  const editDirentId = activeTab?.type === 'edit' ? activeTab.dirent.id : undefined;
 
   switch (tabKey) {
     case 'create.folder': {
@@ -91,10 +93,10 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState, childre
         </div>
       );
     }
-    case 'edit': {
+    case 'update.article': {
       return (
         <div className={className}>
-          {children}
+          <FsDirentUpdateArticle direntId={editDirentId ?? ''} />
         </div>
       );
     }
