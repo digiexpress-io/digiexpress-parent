@@ -1256,5 +1256,6 @@ export const fi = {
   'task.audit.ai.similar.unavailable': 'Samanlaista palautetta ei ole saatavilla',
   'taskcard.body.customerName.none': 'Ei määritelty',
   'taskcard.body.form.canPublishFeedback.yes': 'Kyllä',
-  'taskcard.body.form.representative.placeholder': 'Edustajan nimi'
+  'taskcard.body.form.representative.placeholder': 'Edustajan nimi',
+  'fs.dirent.language.localeCodeField.placeholder': 'fi'
 }

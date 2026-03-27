@@ -107,6 +107,7 @@ export type FsDirentProps =
 export type FsDirentEntry = FsDirent & FsDirentProps;
 export type ArticleEntry = FsDirent & ArticleDirentProps;
 export type ServiceEntry = FsDirent & ServiceDirentProps;
+export type LanguageEntry = FsDirent & LanguageDirentProps;
 
 export type FsDirentConfigOption = 'devMode' | 'assignableMode' | 'disabledMode' | 'anonymousMode';
 

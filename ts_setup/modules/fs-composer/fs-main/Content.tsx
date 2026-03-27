@@ -7,6 +7,7 @@ import { FsDirentFolder } from '../fs-dirent-folder';
 import { FsDirentLink } from '../fs-dirent-link';
 import { FsDirentPhone } from '../fs-dirent-phone';
 import { FsDirentService } from '../fs-dirent-service';
+import { FsDirentLanguage } from '../fs-dirent-language';
 
 
 export interface ContentProps {
@@ -38,7 +39,7 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
     case 'service': return (activeTab && (<div className={className}><FsDirentService tab={activeTab} /></div>));
     case 'printout': return (activeTab && (<div className={className}>TODO</div>));
     case 'dialob': return (activeTab && (<div className={className}>TODO</div>));
-    case 'language': return (activeTab && (<div className={className}>TODO</div>));
+    case 'language': return (activeTab && (<div className={className}><FsDirentLanguage tab={activeTab} /></div>));
     default: return (<div className={className}>{intl.formatMessage({ id: 'fs.main.message.noAssetSelected' })}</div>);
   }
 };
