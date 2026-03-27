@@ -6,7 +6,7 @@ import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentTextField } from '../fs-dirent-text-field';
-import { FsDirentSingleSelect } from '../fs-dirent-single-select';
+import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentServiceCreateProps } from './FsDirentServiceProps';
 import { useUtilityClasses, FsDirentServiceRoot } from './useUtilityClasses';
@@ -44,13 +44,13 @@ export const FsDirentServiceCreate: React.FC<FsDirentServiceCreateProps> = (prop
         <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.dialobForm' })}</Typography>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobFormField.label' })}</Typography>
-        <FsDirentSingleSelect options={dialobForms} value={selectedDialobForm} onChange={setSelectedDialobForm} />
+        <FsDirentSelectSingle options={dialobForms} value={selectedDialobForm} onChange={setSelectedDialobForm} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobTagField.label' })}</Typography>
-        <FsDirentSingleSelect options={dialobTags} value={selectedDialobTag} onChange={setSelectedDialobTag} />
+        <FsDirentSelectSingle options={dialobTags} value={selectedDialobTag} onChange={setSelectedDialobTag} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.flowField.label' })}</Typography>
-        <FsDirentSingleSelect options={flows} value={selectedFlow} onChange={setSelectedFlow} />
+        <FsDirentSelectSingle options={flows} value={selectedFlow} onChange={setSelectedFlow} />
 
         <Divider />
 

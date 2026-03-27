@@ -1,15 +1,15 @@
 import React from 'react';
 import { Select, MenuItem, OutlinedInput } from '@mui/material';
-import { FsDirentSingleSelectProps } from './FsDirentSingleSelectProps';
-import { useUtilityClasses, FsDirentSingleSelectRoot } from './useUtilityClasses';
+import { FsDirentSelectSingleProps } from './FsDirentSelectSingleProps';
+import { useUtilityClasses, FsDirentSelectSingleRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
 
-export const FsDirentSingleSelect: React.FC<FsDirentSingleSelectProps> = (props) => {
+export const FsDirentSelectSingle: React.FC<FsDirentSelectSingleProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentSingleSelectRoot className={classes.root} ownerState={ownerState} fullWidth size='small'>
+    <FsDirentSelectSingleRoot className={classes.root} ownerState={ownerState} fullWidth size='small'>
       <Select className={classes.select}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value as string)}
@@ -21,6 +21,6 @@ export const FsDirentSingleSelect: React.FC<FsDirentSingleSelectProps> = (props)
           </MenuItem>
         ))}
       </Select>
-    </FsDirentSingleSelectRoot>
+    </FsDirentSelectSingleRoot>
   );
 };

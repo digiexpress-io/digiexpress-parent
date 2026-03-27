@@ -3,14 +3,14 @@ import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
 
-const MUI_NAME = 'FsDirentSingleSelect';
+const MUI_NAME = 'FsDirentSelectSingle';
 
-export interface FsDirentSingleSelectClasses {
+export interface FsDirentSelectSingleClasses {
   root: string;
   select: string;
 }
 
-export type FsDirentSingleSelectClassKey = keyof FsDirentSingleSelectClasses;
+export type FsDirentSelectSingleClassKey = keyof FsDirentSelectSingleClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -21,7 +21,7 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsDirentSingleSelectRoot = styled(FormControl, {
+export const FsDirentSelectSingleRoot = styled(FormControl, {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
