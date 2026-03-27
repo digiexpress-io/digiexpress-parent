@@ -50,6 +50,9 @@ export const FsDirentTextFieldRoot = styled('div', {
     '&.Mui-focused fieldset': {
       border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text}`,
     },
+    '&.Mui-focused:has(:is(input, textarea):placeholder-shown) fieldset': {
+      border: `2px solid ${ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight}`,
+    },
   },
   '& .MuiInputBase-input': {
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
@@ -71,23 +74,23 @@ export const FsDirentTextFieldRoot = styled('div', {
   },
   ...(ownerState.showRequiredError && {
     '& .MuiOutlinedInput-root fieldset': {
-      borderColor: theme.palette.error.main,
+      borderColor: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
     },
     '& .MuiOutlinedInput-root:hover fieldset': {
-      borderColor: theme.palette.error.main,
+      borderColor: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
     },
     '& .MuiOutlinedInput-root.Mui-focused fieldset': {
-      borderColor: theme.palette.error.main,
+      borderColor: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
     },
   }),
 
   [`& .${MUI_NAME}-requiredMessage`]: {
     ...theme.typography.caption,
-    color: theme.palette.error.main,
+    color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
     marginTop: '3px',
     marginLeft: 0,
     '&.MuiTypography-root': {
-      color: theme.palette.error.main,
+      color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
     },
   },
 }));

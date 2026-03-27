@@ -28,7 +28,7 @@ export const FsDirentPhoneCreate: React.FC<FsDirentPhoneCreateProps> = (props) =
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.phoneValueField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.phone.phoneValueField.placeholder' })} />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.phone.phoneValueField.placeholder' })} required />
 
         {ownerState.locales.map((locale) => (
           <div key={locale} className={classes.localeRow}>

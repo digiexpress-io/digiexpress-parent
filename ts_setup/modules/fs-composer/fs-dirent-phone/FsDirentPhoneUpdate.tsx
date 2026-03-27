@@ -26,9 +26,8 @@ export const FsDirentPhoneUpdate: React.FC<FsDirentPhoneUpdateProps> = (props) =
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.phoneValueField.label' })}</Typography>
-        <FsDirentTextField
-          value={ownerState.phoneValue}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.phone.phoneValueField.placeholder' })}
+        <FsDirentTextField required
+          value={ownerState.phoneValue} placeholder={intl.formatMessage({ id: 'fs.dirent.phone.phoneValueField.placeholder' })}
           onChange={ownerState.onChangePhoneValue}
         />
 
