@@ -3,13 +3,11 @@ import { useIntl } from 'react-intl';
 import { FsTab } from '@dxs-ts/fs-api';
 import { OwnerState } from './useOwnerState';
 import { FsDirentArticle } from '../fs-dirent-article';
-import { FsDirentCreateFolder } from '../fs-dirent-create-folder';
+import { FsDirentFolder } from '../fs-dirent-folder';
 import { FsDirentLink } from '../fs-dirent-link';
 import { FsDirentPhone } from '../fs-dirent-phone';
-import { FsDirentCreateService } from '../fs-dirent-create-service';
-import { FsDirentCreateLanguage } from '../fs-dirent-create-language';
-import { FsDirentCreateDialob } from '../fs-dirent-create-dialob';
-import { FsDirentCreatePrintout } from '../fs-dirent-create-printout';
+import { FsDirentService } from '../fs-dirent-service';
+
 
 export interface ContentProps {
   ownerState: OwnerState;
@@ -31,18 +29,16 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
   const intl = useIntl();
   const activeTab = ownerState.openTabs[ownerState.activeTabIndex];
   const tabKey = getTabKey(activeTab);
-  const parentFolder = activeTab?.type === 'create' ? activeTab.parentFolder : undefined;
-  const pathToTopParent = activeTab?.type === 'create' ? activeTab.pathToTopParent : undefined;
 
   switch (tabKey) {
     case 'article': return (activeTab && (<div className={className}><FsDirentArticle tab={activeTab} /></div>));
-    case 'folder': return (activeTab && (<div className={className}><FsDirentCreateFolder parentFolder={parentFolder} pathToTopParent={pathToTopParent} /></div>));
+    case 'folder': return (activeTab && (<div className={className}><FsDirentFolder tab={activeTab} /></div>));
     case 'link': return (activeTab && (<div className={className}><FsDirentLink tab={activeTab} /></div>));
     case 'phone': return (activeTab && (<div className={className}><FsDirentPhone tab={activeTab} /></div>));
-    case 'service': return (activeTab && (<div className={className}><FsDirentCreateService parentFolder={parentFolder} pathToTopParent={pathToTopParent} /></div>));
-    case 'printout': return (activeTab && (<div className={className}><FsDirentCreatePrintout parentFolder={parentFolder} pathToTopParent={pathToTopParent} /></div>));
-    case 'dialob': return (activeTab && (<div className={className}><FsDirentCreateDialob parentFolder={parentFolder} pathToTopParent={pathToTopParent} /></div>));
-    case 'language': return (activeTab && (<div className={className}><FsDirentCreateLanguage parentFolder={parentFolder} pathToTopParent={pathToTopParent} /></div>));
+    case 'service': return (activeTab && (<div className={className}><FsDirentService tab={activeTab} /></div>));
+    case 'printout': return (activeTab && (<div className={className}>TODO</div>));
+    case 'dialob': return (activeTab && (<div className={className}>TODO</div>));
+    case 'language': return (activeTab && (<div className={className}>TODO</div>));
     default: return (<div className={className}>{intl.formatMessage({ id: 'fs.main.message.noAssetSelected' })}</div>);
   }
 };

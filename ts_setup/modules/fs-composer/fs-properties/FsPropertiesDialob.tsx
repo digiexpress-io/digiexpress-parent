@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { DialobDirentProps } from '@dxs-ts/fs-api';
+import { DialobDirentProps, getActiveDialobTag } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
@@ -12,6 +12,7 @@ export interface FsPropertiesDialobProps {
 export const FsPropertiesDialob: React.FC<FsPropertiesDialobProps> = ({ direntProps }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
+  const activeDialobTag = getActiveDialobTag(direntProps);
 
   return (
     <>
@@ -27,7 +28,7 @@ export const FsPropertiesDialob: React.FC<FsPropertiesDialobProps> = ({ direntPr
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.versionTag' })}</Typography>
-        <Typography className={classes.propertyValue}>{direntProps.versionTag}</Typography>
+        <Typography className={classes.propertyValue}>{activeDialobTag}</Typography>
       </div>
     </>
   );

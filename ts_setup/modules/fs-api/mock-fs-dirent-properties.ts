@@ -424,7 +424,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     ],
     serviceName: 'General Message',
     dialobFormName: 'general-message.dialob',
-    dialobFormTag: 'latest',
+    dialobFormTag: 'LATEST',
     flowName: 'taskMsgFlow.flow',
     validityStart: '01.01.2025',
     validityEnd: undefined,
@@ -477,7 +477,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     errors: [],
     serviceName: 'Wilma Preschool Application',
     dialobFormName: 'wilma-preschool.dialob',
-    dialobFormTag: 'latest',
+    dialobFormTag: 'LATEST',
     flowName: 'taskGenericFlow.flow',
     validityStart: '01.08.2024',
     validityEnd: undefined,
@@ -500,7 +500,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     errors: [],
     formName: 'General Message Form',
     formTechnicalId: 'general_msg_v1',
-    versionTag: 'latest',
+    versionTags: ['version 1', 'Test version 1.2'],
   },
 
   'public-inforeq.dialob': {
@@ -520,7 +520,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     ],
     formName: 'Public Info Request Form',
     formTechnicalId: 'pub_inforeq_v2',
-    versionTag: 'v2',
+    versionTags: ['v1', 'v2'],
   },
 
   'wilma-preschool.dialob': {
@@ -538,7 +538,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     errors: [],
     formName: 'Preschool Application Form',
     formTechnicalId: 'wilma_preschool_v1',
-    versionTag: undefined,
+    versionTags: ['My_test-first_137ao7r'],
   },
 
   'taskMsgFlow.flow': {

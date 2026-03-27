@@ -3,7 +3,7 @@ import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { collectArticles, mockFsData, getConfigOptionsForType } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
-import { FsDirentMultiSelect } from '../fs-dirent-multi-select';
+import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentTextField } from '../fs-dirent-text-field';
@@ -45,10 +45,9 @@ export const FsDirentPhoneCreate: React.FC<FsDirentPhoneCreateProps> = (props) =
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.articlesField.label' })}</Typography>
-            <FsDirentMultiSelect options={articles} value={selectedArticles} onChange={setSelectedArticles} />
-
+            <FsDirentSelectMulti options={articles} value={selectedArticles} onChange={setSelectedArticles} />
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.configOptionsField.label' })}</Typography>
-            <FsDirentMultiSelect options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
+            <FsDirentSelectMulti options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
           </div>
         </Collapse>
 

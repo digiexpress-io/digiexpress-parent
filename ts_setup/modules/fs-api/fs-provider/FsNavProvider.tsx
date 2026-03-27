@@ -56,10 +56,6 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
   }, []);
 
   const openAsset = React.useCallback((asset: FsDirent, pathToTopParent: string) => {
-    if (asset.type === 'folder') {
-      return;
-    }
-
     setActiveTabPath(pathToTopParent);
 
     setOpenTabs(prevTabs => {

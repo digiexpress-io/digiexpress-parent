@@ -45,11 +45,13 @@ export interface DialobDirentProps extends BaseDirentProps {
   type: 'dialob';
   formName: string; // reader-friendly form name
   formTechnicalId: string; // user-created id
-  versionTag?: string;
+  versionTags?: string[];
 }
+
 export interface FlowDirentProps extends BaseDirentProps {
   type: 'flow';
 }
+
 export interface LanguageDirentProps extends BaseDirentProps {
   type: 'language';
   localeCode: string;
@@ -104,6 +106,7 @@ export type FsDirentProps =
 
 export type FsDirentEntry = FsDirent & FsDirentProps;
 export type ArticleEntry = FsDirent & ArticleDirentProps;
+export type ServiceEntry = FsDirent & ServiceDirentProps;
 
 export type FsDirentConfigOption = 'devMode' | 'assignableMode' | 'disabledMode' | 'anonymousMode';
 

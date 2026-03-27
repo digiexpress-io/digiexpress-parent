@@ -1,5 +1,5 @@
 import React from 'react';
-import { FsDirent, FsDirentType } from './fs-types';
+import { FsDirent, FsDirentType, FsDirentProps, DialobDirentProps } from './fs-types';
 
 export function collectArticles(nodes: FsDirent[]): { value: string; label: string }[] {
   const result: { value: string; label: string }[] = [];
@@ -25,6 +25,39 @@ export function collectFlows(nodes: FsDirent[]): { value: string; label: string 
     }
   });
   return result;
+}
+
+export function collectDialobs(nodes: FsDirent[]): { value: string; label: string }[] {
+  const result: { value: string; label: string }[] = [];
+  nodes.forEach(node => {
+    if (node.type === 'dialob') {
+      result.push({ value: node.id, label: node.name });
+    }
+    if (node.children && node.children.length > 0) {
+      result.push(...collectDialobs(node.children));
+    }
+  });
+  return result;
+}
+
+export function getActiveDialobTag(props: DialobDirentProps): string {
+  const tags = props.versionTags;
+  if (!tags || tags.length === 0) {
+    return 'LATEST';
+  }
+  return tags[tags.length - 1];
+}
+
+export function collectDialobTags(dialobId: string, properties: Record<string, FsDirentProps>): { value: string; label: string }[] {
+  const entry = properties[dialobId];
+  if (!entry || entry.type !== 'dialob') {
+    return [];
+  }
+  const tags = (entry as DialobDirentProps).versionTags;
+  if (!tags || tags.length === 0) {
+    return [];
+  }
+  return tags.map(tag => ({ value: tag, label: tag }));
 }
 
 export function collectLocales(nodes: FsDirent[]): string[] {

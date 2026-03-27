@@ -54,7 +54,8 @@ export const FsDirentTextFieldRoot = styled('div', {
   '& .MuiInputBase-input': {
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     ...theme.typography.caption,
-    padding: '8px 12px',
+    padding: theme.spacing(1.5),
+
     '&::placeholder': {
       color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
       opacity: 1,

@@ -3,7 +3,7 @@ import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { getConfigOptionsForType } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
-import { FsDirentMultiSelect } from '../fs-dirent-multi-select';
+import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentTextField } from '../fs-dirent-text-field';
@@ -53,7 +53,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
             />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.configOptionsField.label' })}</Typography>
-            <FsDirentMultiSelect options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+            <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.labelsField.label' })}</Typography>
             <FsDirentTextField
