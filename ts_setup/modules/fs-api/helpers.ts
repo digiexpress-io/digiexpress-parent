@@ -99,6 +99,9 @@ export function getConfigOptionsForType(type: FsDirentType): ConfigOption[] {
     case 'language': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'disabledMode');
     }
+    case 'page': {
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'disabledMode' || o.value === 'devMode');
+    }
     case 'printout': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'devMode');
     }

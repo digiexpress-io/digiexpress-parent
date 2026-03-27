@@ -60,6 +60,7 @@ export interface LanguageDirentProps extends BaseDirentProps {
 export interface PageDirentProps extends BaseDirentProps {
   type: 'page';
   localeCode: string;
+  articleId: string;
   content?: string;
 }
 
@@ -108,6 +109,7 @@ export type FsDirentEntry = FsDirent & FsDirentProps;
 export type ArticleEntry = FsDirent & ArticleDirentProps;
 export type ServiceEntry = FsDirent & ServiceDirentProps;
 export type LanguageEntry = FsDirent & LanguageDirentProps;
+export type PageEntry = FsDirent & PageDirentProps;
 
 export type FsDirentConfigOption = 'devMode' | 'assignableMode' | 'disabledMode' | 'anonymousMode';
 

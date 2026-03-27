@@ -223,6 +223,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     labels: [],
     errors: [],
     localeCode: 'fi',
+    articleId: 'index.article',
   },
 
   'sv-index': {
@@ -239,6 +240,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     labels: [],
     errors: [],
     localeCode: 'sv',
+    articleId: 'index.article',
   },
 
   'en-index': {
@@ -255,6 +257,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     labels: [],
     errors: [],
     localeCode: 'en',
+    articleId: 'index.article',
   },
 
   'fi-gdpr': {
@@ -271,6 +274,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     labels: [],
     errors: [],
     localeCode: 'fi',
+    articleId: 'gdpr.article',
   },
 
   'sv-gdpr': {
@@ -287,6 +291,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     labels: [],
     errors: [],
     localeCode: 'sv',
+    articleId: 'gdpr.article',
   },
 
   'fi-gdpr-child': {
@@ -303,6 +308,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     labels: [],
     errors: [],
     localeCode: 'fi',
+    articleId: 'gdpr-child.article',
   },
 
   'sv-gdpr-child': {
@@ -319,6 +325,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     labels: [],
     errors: [],
     localeCode: 'sv',
+    articleId: 'gdpr-child.article',
   },
 
   'fi-democracy': {
@@ -335,6 +342,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     labels: [],
     errors: [],
     localeCode: 'fi',
+    articleId: 'democracy.article',
   },
 
   'sv-democracy': {
@@ -351,6 +359,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     labels: [],
     errors: [],
     localeCode: 'sv',
+    articleId: 'democracy.article',
   },
 
   'en-democracy': {
@@ -367,6 +376,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     labels: [],
     errors: [],
     localeCode: 'en',
+    articleId: 'democracy.article',
   },
 
   'fi-city-living': {
@@ -383,6 +393,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     labels: [],
     errors: [],
     localeCode: 'fi',
+    articleId: 'city-living.article',
   },
 
   'sv-city-living': {
@@ -399,6 +410,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
     labels: [],
     errors: [],
     localeCode: 'sv',
+    articleId: 'city-living.article',
   },
 
   'general-message.service': {
