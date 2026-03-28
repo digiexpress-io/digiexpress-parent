@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { collectArticles, mockFsData, getConfigOptionsForType } from '@dxs-ts/fs-api';
+import { FsDirentData, mockFsData, mockFsDirentProperties } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -11,14 +11,15 @@ import { useUtilityClasses, FsDirentPhoneRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPhoneUpdateProps } from './FsDirentPhoneProps';
 
-const articles = collectArticles(mockFsData);
+const data = new FsDirentData(mockFsData, mockFsDirentProperties);
+const articles = data.articles;
+const configOptions = FsDirentData.getConfigOptionsForType('phone');
 
 
 export const FsDirentPhoneUpdate: React.FC<FsDirentPhoneUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const configOptions = getConfigOptionsForType('phone');
 
   return (
     <FsDirentPhoneRoot className={classes.root} ownerState={ownerState}>

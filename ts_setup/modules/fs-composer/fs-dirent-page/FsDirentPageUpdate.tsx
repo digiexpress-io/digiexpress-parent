@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { collectArticles, getConfigOptionsForType, mockFsData } from '@dxs-ts/fs-api';
+import { mockFsData, mockFsDirentProperties, FsDirentData } from '@dxs-ts/fs-api';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -12,13 +12,14 @@ import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPageUpdateProps } from './FsDirentPageProps';
 
 
-const articleOptions = collectArticles(mockFsData);
-const configOptions = getConfigOptionsForType('page');
+const configOptions = FsDirentData.getConfigOptionsForType('page');
 
 export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
+  const data = new FsDirentData(mockFsData, mockFsDirentProperties);
+  const articleOptions = data.articles;
 
   return (
     <FsDirentPageRoot className={classes.root} ownerState={ownerState}>

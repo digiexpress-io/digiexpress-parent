@@ -1,7 +1,18 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { FsExplorerProps } from "./FsExplorerProps";
 import { FilterData, filterTreeDirents } from '../fs-search';
-import { FsDirentContextMenuData, FsDirent, mockFsData, useFsNav, useFsDirentProps, handleContextMenu } from '@dxs-ts/fs-api';
+import { FsDirentContextMenuData, FsDirent, mockFsData, useFsNav, useFsDirentProps } from '@dxs-ts/fs-api';
+
+function handleContextMenu(
+  event: React.MouseEvent,
+  dirent: FsDirent,
+  setContextMenuData: React.Dispatch<React.SetStateAction<FsDirentContextMenuData | undefined>>,
+  setContextMenuOpen: React.Dispatch<React.SetStateAction<boolean>>
+) {
+  event.preventDefault();
+  setContextMenuData({ dirent, anchorPosition: { top: event.clientY, left: event.clientX } });
+  setContextMenuOpen(true);
+}
 
 
 export interface OwnerState {

@@ -1,8 +1,9 @@
 import React from 'react';
-import { FsDirent, FsDirentConfigOption, PhoneDirentProps, collectLocales, mockFsData, useFsDirentProps, useFsNav } from '@dxs-ts/fs-api';
+import { FsDirent, FsDirentConfigOption, FsDirentData, PhoneDirentProps, mockFsData, mockFsDirentProperties, useFsDirentProps, useFsNav } from '@dxs-ts/fs-api';
 
 
-const locales = collectLocales(mockFsData);
+const data = new FsDirentData(mockFsData, mockFsDirentProperties);
+const locales = data.languages;
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;

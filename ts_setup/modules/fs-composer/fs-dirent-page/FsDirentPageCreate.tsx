@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { collectArticles, getConfigOptionsForType, mockFsData } from '@dxs-ts/fs-api';
+import { mockFsDirentProperties, FsDirentData, mockFsData } from '@dxs-ts/fs-api';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -12,13 +12,15 @@ import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentPageCreateProps } from './FsDirentPageProps';
 
 
-const articleOptions = collectArticles(mockFsData);
-const configOptions = getConfigOptionsForType('page');
+const configOptions = FsDirentData.getConfigOptionsForType('page');
 
 export const FsDirentPageCreate: React.FC<FsDirentPageCreateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState(props);
   const classes = useUtilityClasses();
+  const direntData = new FsDirentData(mockFsData, mockFsDirentProperties);
+  const articleOptions = direntData.articles;
+
   const [selectedArticleId, setSelectedArticleId] = React.useState('');
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
 

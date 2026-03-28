@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { getConfigOptionsForType } from '@dxs-ts/fs-api';
+import { FsDirentData } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -16,7 +16,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const configOptions = getConfigOptionsForType('article');
+  const configOptions = FsDirentData.getConfigOptionsForType('article');
 
   return (
     <FsDirentArticleRoot className={classes.root} ownerState={ownerState}>

@@ -1,8 +1,8 @@
 import React from 'react';
-import { FsDirent, collectLocales, mockFsData, useFsNav } from '@dxs-ts/fs-api';
+import { FsDirent, mockFsData, useFsNav, FsDirentData, mockFsDirentProperties } from '@dxs-ts/fs-api';
 
 
-const locales = collectLocales(mockFsData);
+const data = new FsDirentData(mockFsData, mockFsDirentProperties);
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
@@ -14,6 +14,8 @@ export interface CreateOwnerState {
 
 export const useCreateOwnerState = (props: { parentFolder: FsDirent | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
   const { isDarkMode } = useFsNav();
+  const locales = data.languages;
+
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   function onToggleExpanded() {

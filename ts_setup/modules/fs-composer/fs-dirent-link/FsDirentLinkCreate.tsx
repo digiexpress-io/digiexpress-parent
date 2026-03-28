@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { collectArticles, mockFsData, getConfigOptionsForType } from '@dxs-ts/fs-api';
+import { mockFsData, FsDirentData, mockFsDirentProperties } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -11,14 +11,15 @@ import { useUtilityClasses, FsDirentLinkRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentLinkCreateProps } from './FsDirentLinkProps';
 
-const articles = collectArticles(mockFsData);
-
+const data = new FsDirentData(mockFsData, mockFsDirentProperties);
+const articles = data.articles;
+const configOptions = FsDirentData.getConfigOptionsForType('link');
 
 export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState(props);
   const classes = useUtilityClasses();
-  const configOptions = getConfigOptionsForType('link');
+
   const [selectedArticles, setSelectedArticles] = React.useState<string[]>([]);
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
 

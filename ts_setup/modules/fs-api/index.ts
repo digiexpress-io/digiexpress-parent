@@ -1,5 +1,5 @@
 export * from './fs-types';
 export * from './mock-fs-data';
 export * from './mock-fs-dirent-properties';
-export * from './helpers';
 export * from './fs-provider';
+export * from './FsDirentData';
