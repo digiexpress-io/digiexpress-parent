@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentData } from '@dxs-ts/fs-api';
+import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
@@ -11,12 +11,12 @@ import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentLanguageCreateProps } from './FsDirentLanguageProps';
 
 
-const configOptions = FsDirentData.getConfigOptionsForType('language');
-
 export const FsDirentLanguageCreate: React.FC<FsDirentLanguageCreateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState(props);
   const classes = useUtilityClasses();
+  const { getConfigOptionsForType } = useFsDirent();
+  const configOptions = getConfigOptionsForType('language');
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
 
   return (

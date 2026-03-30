@@ -1,9 +1,5 @@
 import React from 'react';
-import { FsDirentConfigOption, FsDirentData, PhoneEntry, mockFsData, mockFsDirentProperties, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
-
-
-const data = new FsDirentData(mockFsData, mockFsDirentProperties);
-const locales = data.languages;
+import { FsDirentConfigOption, PhoneEntry, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
@@ -21,9 +17,10 @@ export interface UpdateOwnerState {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const { getDirent } = useFsDirent();
+  const { getDirent, selectOptions } = useFsDirent();
 
   const dirent = getDirent<PhoneEntry>(props.direntId);
+  const locales = selectOptions.languages;
 
   const [phoneValue, setPhoneValue] = React.useState(dirent?.phoneValue ?? '');
   const [intlValues, setIntlValues] = React.useState<Record<string, string>>(dirent?.intlValues ?? {});

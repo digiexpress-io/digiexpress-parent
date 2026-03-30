@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentData, mockFsData, mockFsDirentProperties } from '@dxs-ts/fs-api';
+import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -11,15 +11,14 @@ import { useUtilityClasses, FsDirentPhoneRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentPhoneCreateProps } from './FsDirentPhoneProps';
 
-const data = new FsDirentData(mockFsData, mockFsDirentProperties);
-const articles = data.articles;
-const configOptions = FsDirentData.getConfigOptionsForType('phone');
-
 
 export const FsDirentPhoneCreate: React.FC<FsDirentPhoneCreateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState(props);
   const classes = useUtilityClasses();
+  const { selectOptions, getConfigOptionsForType } = useFsDirent();
+  const articles = selectOptions.articles;
+  const configOptions = getConfigOptionsForType('phone');
   const [selectedArticles, setSelectedArticles] = React.useState<string[]>([]);
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
 

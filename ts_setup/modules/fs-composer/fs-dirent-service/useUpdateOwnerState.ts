@@ -1,8 +1,5 @@
 import React from 'react';
-import { useFsNav, useFsDirent, FsDirentData, mockFsData, mockFsDirentProperties, FsDirentConfigOption, ServiceEntry } from '@dxs-ts/fs-api';
-
-
-const data = new FsDirentData(mockFsData, mockFsDirentProperties);
+import { useFsNav, useFsDirent, FsDirentConfigOption, ServiceEntry } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
@@ -32,7 +29,7 @@ export interface UpdateOwnerState {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const { getDirent } = useFsDirent();
+  const { getDirent, selectOptions } = useFsDirent();
 
   const dirent = getDirent<ServiceEntry>(props.direntId);
 
@@ -49,7 +46,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [intlValues, setIntlValues] = React.useState<Record<string, string>>(dirent?.intlValues ?? {});
   const [isExpanded, setIsExpanded] = React.useState(false);
 
-  const locales = data.languages;
+  const locales = selectOptions.languages;
 
   function onChangeName(value: string) {
     setName(value);

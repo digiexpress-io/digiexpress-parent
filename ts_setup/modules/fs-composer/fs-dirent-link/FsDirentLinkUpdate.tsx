@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { mockFsData, FsDirentData, mockFsDirentProperties } from '@dxs-ts/fs-api';
+import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -11,14 +11,13 @@ import { useUtilityClasses, FsDirentLinkRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentLinkUpdateProps } from './FsDirentLinkProps';
 
-const data = new FsDirentData(mockFsData, mockFsDirentProperties);
-const articles = data.articles;
-const configOptions = FsDirentData.getConfigOptionsForType('link');
-
 export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
+  const { selectOptions, getConfigOptionsForType } = useFsDirent();
+  const articles = selectOptions.articles;
+  const configOptions = getConfigOptionsForType('link');
 
   return (
     <FsDirentLinkRoot className={classes.root} ownerState={ownerState}>

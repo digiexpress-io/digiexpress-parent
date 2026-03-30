@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Divider, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentData, mockFsData, mockFsDirentProperties } from '@dxs-ts/fs-api';
+import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
@@ -13,17 +13,16 @@ import { useUtilityClasses, FsDirentServiceRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 
 
-const data = new FsDirentData(mockFsData, mockFsDirentProperties);
-const dialobForms = data.dialobs;
-const flows = data.flows;
-const articles = data.articles;
-const configOptions = FsDirentData.getConfigOptionsForType('service');
-
 export const FsDirentServiceUpdate: React.FC<FsDirentServiceUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const dialobTags = data.collectDialobTags(ownerState.dialobFormName);
+  const { selectOptions, getConfigOptionsForType } = useFsDirent();
+  const dialobForms = selectOptions.dialobs;
+  const flows = selectOptions.flows;
+  const articles = selectOptions.articles;
+  const configOptions = getConfigOptionsForType('service');
+  const dialobTags = selectOptions.collectDialobTags(ownerState.dialobFormName);
 
   return (
     <FsDirentServiceRoot className={classes.root} ownerState={ownerState}>

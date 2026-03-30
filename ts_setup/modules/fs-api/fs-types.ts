@@ -171,6 +171,11 @@ export const FsDirentTypes = {
 };
 
 export type FsDirentType = keyof typeof FsDirentTypes;
+
+export interface SelectOption {
+  value: string;
+  label: string;
+}
 export type FsDirentSecondaryView = 'references' | 'properties' | 'configuration' | 'debug' | 'preview' | 'history' | 'help' | 'errors' | 'changes' | 'article-order';
 export type FsDirentChangeType = 'update' | 'create' | 'delete';
 export type FsDirentPermissionType = 'read' | 'write' | 'view' | 'none';

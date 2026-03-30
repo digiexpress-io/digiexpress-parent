@@ -1,19 +1,54 @@
 import React from 'react';
-import { FsDirent, FsDirentEntry, FsDirentProps, FolderDirentProps } from '../fs-types';
+import { FsDirent, FsDirentEntry, FsDirentProps, FsDirentType, SelectOption } from '../fs-types';
+import { FsDirentData } from '../FsDirentData';
 import { mockFsDirentProperties } from '../mock-fs-dirent-properties';
 import { mockFsData } from '../mock-fs-data';
 
+
+function collectDirents(result: Record<string, FsDirent>, node: FsDirent): void {
+  result[node.id] = node;
+  node.children.forEach(child => collectDirents(result, child));
+}
+
 function flattenDirents(nodes: FsDirent[]): Record<string, FsDirent> {
   const result: Record<string, FsDirent> = {};
-  function collectNode(node: FsDirent): void {
-    result[node.id] = node;
-    node.children.forEach(collectNode);
-  }
-  nodes.forEach(collectNode);
+  nodes.forEach(node => collectDirents(result, node));
   return result;
 }
 
-const DIRENT_MAP = flattenDirents(mockFsData);
+const ALL_DIRENTS = flattenDirents(mockFsData);
+
+const ALL_CONFIG_OPTIONS: SelectOption[] = [
+  { value: 'devMode', label: 'Development mode' },
+  { value: 'assignableMode', label: 'Assignable mode' },
+  { value: 'disabledMode', label: 'Disabled mode' },
+  { value: 'anonymousMode', label: 'Anonymous mode' },
+];
+
+function getConfigOptionsForType(type: FsDirentType): SelectOption[] {
+  switch (type) {
+    case 'link':
+    case 'phone': {
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'devMode' || o.value === 'disabledMode');
+    }
+    case 'service':
+    case 'article': {
+      return ALL_CONFIG_OPTIONS;
+    }
+    case 'language': {
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'disabledMode');
+    }
+    case 'page': {
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'disabledMode' || o.value === 'devMode');
+    }
+    case 'printout': {
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'devMode');
+    }
+    default: {
+      return [];
+    }
+  }
+}
 
 export interface ItemReferencesEntry {
   assetName: string;
@@ -22,9 +57,10 @@ export interface ItemReferencesEntry {
 
 export interface FsDirentContextType {
   direntPropsLoading: boolean;
+  dirents: FsDirent[];
+  selectOptions: FsDirentData;
+  getConfigOptionsForType: (type: FsDirentType) => SelectOption[];
   getDirent: <T extends FsDirentEntry>(id: string) => T | undefined;
-  getDirentProps: (id: string) => FsDirentProps;
-  getArticles: () => FsDirentEntry[];
   isChildError: (dirent: FsDirent) => boolean;
   findReferencesToDirent: (dirent: FsDirent) => ItemReferencesEntry[];
   setExpanded: (id: string, value: boolean) => void;
@@ -38,25 +74,9 @@ export interface FsDirentProviderProps {
   children: React.ReactNode;
 }
 
-const EMPTY_DIRENT_PROPS: FolderDirentProps = {
-  type: 'folder',
-  id: '',
-  expanded: false,
-  reference: false,
-  locked: false,
-  configOptions: [],
-  comments: [],
-  changes: [],
-  permissions: [],
-  labels: [],
-  errors: [],
-};
-
 export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
   const [propsMap, setPropsMap] = React.useState<Record<string, FsDirentProps>>({});
   const [direntPropsLoading, setDirentPropsLoading] = React.useState(true);
-  const propsMapRef = React.useRef(propsMap);
-  propsMapRef.current = propsMap;
 
   React.useEffect(() => {
     Promise.resolve(mockFsDirentProperties).then((data) => {
@@ -66,24 +86,18 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
   }, []);
 
   const getDirent = React.useCallback(<T extends FsDirentEntry>(id: string): T | undefined => {
-    const dirent = DIRENT_MAP[id];
-    const direntProps = propsMapRef.current[id];
+    const dirent = ALL_DIRENTS[id];
+    const direntProps = propsMap[id];
     if (!dirent || !direntProps) {
       return undefined;
     }
     return { ...dirent, ...direntProps } as unknown as T;
-  }, []);
+  }, [propsMap]);
 
-  const getDirentProps = React.useCallback((id: string): FsDirentProps => {
-    return propsMapRef.current[id] ?? EMPTY_DIRENT_PROPS;
-  }, []);
-
-  const getArticles = React.useCallback((): FsDirentEntry[] => {
-    return Object.values(DIRENT_MAP)
-      .filter(dirent => dirent.type === 'article')
-      .map(dirent => getDirent(dirent.id))
-      .filter((dirent): dirent is FsDirentEntry => dirent !== undefined);
-  }, [getDirent]);
+  const selectOptions = React.useMemo(
+    () => new FsDirentData(mockFsData, propsMap),
+    [propsMap]
+  );
 
   const isChildError = React.useCallback((dirent: FsDirent): boolean => {
     const direntProps = propsMap[dirent.id];
@@ -152,16 +166,17 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
   const contextValue: FsDirentContextType = React.useMemo(() => {
     return {
       direntPropsLoading,
+      dirents: mockFsData,
+      selectOptions,
+      getConfigOptionsForType,
       getDirent,
-      getDirentProps,
-      getArticles,
       isChildError,
       findReferencesToDirent,
       setExpanded,
       setExpandedBatch,
       collapseAll,
     };
-  }, [direntPropsLoading, getDirent, getDirentProps, getArticles, isChildError, findReferencesToDirent, setExpanded, setExpandedBatch, collapseAll]);
+  }, [direntPropsLoading, selectOptions, getDirent, isChildError, findReferencesToDirent, setExpanded, setExpandedBatch, collapseAll]);
 
   return (
     <FsDirentContext.Provider value={contextValue}>

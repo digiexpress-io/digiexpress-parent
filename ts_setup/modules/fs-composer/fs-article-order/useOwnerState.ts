@@ -9,10 +9,11 @@ export interface OwnerState {
 
 export const useOwnerState = (_props: FsArticleOrderProps): OwnerState => {
   const { isDarkMode } = useFsNav();
-  const { getArticles } = useFsDirent();
+  const { getDirent, selectOptions } = useFsDirent();
 
-  const articles = getArticles()
-    .filter((dirent): dirent is ArticleEntry => dirent.type === 'article')
+  const articles = selectOptions.articles
+    .map(opt => getDirent<ArticleEntry>(opt.value))
+    .filter((a): a is ArticleEntry => a !== undefined)
     .sort((a, b) => a.orderNumber - b.orderNumber);
 
   return { isDarkMode, articles };

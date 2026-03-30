@@ -1,11 +1,9 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { DialobDirentProps, FsDirentData, mockFsData, mockFsDirentProperties } from '@dxs-ts/fs-api';
+import { DialobDirentProps, useFsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
-
-const data = new FsDirentData(mockFsData, mockFsDirentProperties);
 
 export interface FsPropertiesDialobProps {
   direntProps: DialobDirentProps;
@@ -14,7 +12,8 @@ export interface FsPropertiesDialobProps {
 export const FsPropertiesDialob: React.FC<FsPropertiesDialobProps> = ({ direntProps }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const activeDialobTag = data.getActiveDialobTag(direntProps);
+  const { selectOptions } = useFsDirent();
+  const activeDialobTag = selectOptions.getActiveDialobTag(direntProps);
 
   return (
     <>
