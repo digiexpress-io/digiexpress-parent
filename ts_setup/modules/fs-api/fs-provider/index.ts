@@ -1,2 +1,2 @@
 export * from './FsNavProvider';
-export * from './FsDirentPropsProvider';
+export * from './FsDirentProvider';

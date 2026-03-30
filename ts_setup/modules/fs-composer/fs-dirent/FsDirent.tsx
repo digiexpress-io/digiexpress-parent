@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Collapse, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
 
-import { useFsDirentProps } from '@dxs-ts/fs-api';
+import { useFsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses, FsDirentRoot } from './useUtilityClasses';
 import { FsIcons, FsIcon } from '../fs-theme';
 import { FsDirentProps } from './FsDirentProps';
@@ -13,7 +13,7 @@ import { ConfigOptionIcons, FsDirentName, DirentDecorator, DirentIcon } from './
 export const FsDirent: React.FC<FsDirentProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(ownerState.isDarkMode);
-  const { getDirent } = useFsDirentProps();
+  const { getDirent } = useFsDirent();
   const expanded = getDirent(props.dirent.id)?.expanded ?? false;
 
   return (

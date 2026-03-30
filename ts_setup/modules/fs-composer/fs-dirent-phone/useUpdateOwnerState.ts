@@ -1,5 +1,5 @@
 import React from 'react';
-import { FsDirent, FsDirentConfigOption, FsDirentData, PhoneDirentProps, mockFsData, mockFsDirentProperties, useFsDirentProps, useFsNav } from '@dxs-ts/fs-api';
+import { FsDirent, FsDirentConfigOption, FsDirentData, PhoneDirentProps, mockFsData, mockFsDirentProperties, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 
 const data = new FsDirentData(mockFsData, mockFsDirentProperties);
@@ -21,7 +21,7 @@ export interface UpdateOwnerState {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const { getDirent } = useFsDirentProps();
+  const { getDirent } = useFsDirent();
 
   const dirent = getDirent(props.direntId) as (FsDirent & PhoneDirentProps) | undefined;
 

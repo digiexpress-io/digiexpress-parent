@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, Box, ListItemText, Typography } from '@mui/material';
 
-import { FsDirentConfigOption, FsDirent, useFsNav, useFsDirentProps } from '@dxs-ts/fs-api';
+import { FsDirentConfigOption, FsDirent, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
 
 import { useUtilityClasses } from './useUtilityClasses';
 import { FsIcons, FsIcon, FsColors, getDirentColor } from '../fs-theme';
@@ -42,7 +42,7 @@ function ConfigIcon(props: { type: FsDirentConfigOption, className: string }) {
 
 export const DirentDecorator = (props: { dirent: FsDirent, children: React.ReactNode }) => {
   const { isDarkMode } = useFsNav();
-  const { getDirent } = useFsDirentProps();
+  const { getDirent } = useFsDirent();
   const { dirent, children } = props;
   const direntEntry = getDirent(dirent.id);
 
@@ -79,7 +79,7 @@ export const DirentDecorator = (props: { dirent: FsDirent, children: React.React
 
 export const DirentIcon = (props: { dirent: FsDirent }) => {
   const { dirent } = props;
-  const { getDirent } = useFsDirentProps();
+  const { getDirent } = useFsDirent();
   const expanded = getDirent(dirent.id)?.expanded;
   switch (dirent.type) {
     case 'folder':
@@ -117,7 +117,7 @@ interface FsDirentNameProps {
 }
 
 export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
-  const { getDirent } = useFsDirentProps();
+  const { getDirent } = useFsDirent();
   const classes = useUtilityClasses(props.isDarkTheme);
   const description = getDirent(props.dirent.id)?.description;
   return (

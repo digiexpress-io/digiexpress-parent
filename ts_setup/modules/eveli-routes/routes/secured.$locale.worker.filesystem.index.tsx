@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { EveliSetup } from '../eveli-setup';
 import { FsSetup } from '@dxs-ts/fs-composer';
 import { EveliApp } from '../eveli-app';
-import { FsNavProvider, FsDirentPropsProvider } from '@dxs-ts/fs-api';
+import { FsNavProvider, FsDirentProvider } from '@dxs-ts/fs-api';
 
 export const Route = createFileRoute('/secured/$locale/worker/filesystem/')({
   component: Component,
@@ -15,7 +15,7 @@ const MergedToolbar: React.FC = () => {
 
 function Component() {
   return (
-    <FsDirentPropsProvider>
+    <FsDirentProvider>
       <FsNavProvider>
         <EveliApp
           main={FsSetup.Main}
@@ -24,6 +24,6 @@ function Component() {
           drawerWidth={450}
         />
       </FsNavProvider>
-    </FsDirentPropsProvider>
+    </FsDirentProvider>
   );
 }
