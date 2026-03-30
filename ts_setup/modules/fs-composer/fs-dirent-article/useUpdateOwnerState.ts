@@ -25,7 +25,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent(props.direntId) as ArticleEntry | undefined;
+  const dirent = getDirent<ArticleEntry>(props.direntId);
 
   const [name, setName] = React.useState(dirent?.name ?? '');
   const [orderNumber, setOrderNumber] = React.useState(dirent?.orderNumber != null ? String(dirent.orderNumber) : '');

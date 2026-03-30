@@ -19,7 +19,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent(props.direntId) as LanguageEntry | undefined;
+  const dirent = getDirent<LanguageEntry>(props.direntId);
 
   const [name, setName] = React.useState(dirent?.name ?? '');
   const [localeCode, setLocaleCode] = React.useState(dirent?.localeCode ?? '');

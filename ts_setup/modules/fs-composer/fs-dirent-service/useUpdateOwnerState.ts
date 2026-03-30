@@ -34,7 +34,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent(props.direntId) as ServiceEntry | undefined;
+  const dirent = getDirent<ServiceEntry>(props.direntId);
 
   const [name, setName] = React.useState(dirent?.name ?? '');
   const [dialobFormName, setDialobFormName] = React.useState(dirent?.dialobFormName ?? '');
