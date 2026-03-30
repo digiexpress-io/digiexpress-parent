@@ -556,6 +556,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
   'taskMsgFlow.flow': {
     id: 'taskMsgFlow.flow',
     type: 'flow',
+    name: 'taskMessagingFlow',
     expanded: false,
     reference: false,
     locked: false,
@@ -571,6 +572,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
   'taskGenericFlow.flow': {
     id: 'taskGenericFlow.flow',
     type: 'flow',
+    name: 'taskGenericFlow',
     expanded: false,
     reference: false,
     locked: false,
@@ -586,6 +588,7 @@ export const mockFsDirentProperties: Record<string, FsDirentProps> = {
   'taskSplitFlow.flow': {
     id: 'taskSplitFlow.flow',
     type: 'flow',
+    name: 'taskSplitFlow',
     expanded: false,
     reference: false,
     locked: false,

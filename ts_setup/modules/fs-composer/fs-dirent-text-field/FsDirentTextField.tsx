@@ -21,7 +21,7 @@ export const FsDirentTextField: React.FC<FsDirentTextFieldProps> = (props) => {
         maxRows={props.maxRows}
         onChange={(e) => props.onChange?.(e.target.value)}
       />
-      {ownerState.showRequiredError && (
+      {ownerState.isRequired && (
         <Typography className={classes.requiredMessage}>
           {intl.formatMessage({ id: 'fs.direntTextField.required' })}
         </Typography>

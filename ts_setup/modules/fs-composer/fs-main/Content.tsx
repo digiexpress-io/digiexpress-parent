@@ -9,6 +9,7 @@ import { FsDirentPhone } from '../fs-dirent-phone';
 import { FsDirentService } from '../fs-dirent-service';
 import { FsDirentLanguage } from '../fs-dirent-language';
 import { FsDirentPage } from '../fs-dirent-page';
+import { FsDirentFlow } from '../fs-dirent-flow';
 
 
 export interface ContentProps {
@@ -38,6 +39,7 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
     case 'link': return (activeTab && (<div className={className}><FsDirentLink tab={activeTab} /></div>));
     case 'phone': return (activeTab && (<div className={className}><FsDirentPhone tab={activeTab} /></div>));
     case 'service': return (activeTab && (<div className={className}><FsDirentService tab={activeTab} /></div>));
+    case 'flow': return (activeTab && (<div className={className}><FsDirentFlow tab={activeTab} /></div>));
     case 'printout': return (activeTab && (<div className={className}>TODO</div>));
     case 'dialob': return (activeTab && (<div className={className}>TODO</div>));
     case 'language': return (activeTab && (<div className={className}><FsDirentLanguage tab={activeTab} /></div>));

@@ -50,6 +50,7 @@ export interface DialobDirentProps extends BaseDirentProps {
 
 export interface FlowDirentProps extends BaseDirentProps {
   type: 'flow';
+  name: string;
 }
 
 export interface LanguageDirentProps extends BaseDirentProps {
