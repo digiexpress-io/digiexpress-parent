@@ -1,54 +1,9 @@
 import React from 'react';
-import { FsDirent, FsDirentEntry, FsDirentProps, FsDirentType, SelectOption } from '../fs-types';
-import { FsDirentData } from '../FsDirentData';
+import { DialobDirentProps, FsDirent, FsDirentEntry, FsDirentProps, FsDirentType, FsSelectOptions, SelectOption } from '../fs-types';
 import { mockFsDirentProperties } from '../mock-fs-dirent-properties';
 import { mockFsData } from '../mock-fs-data';
+import { ALL_DIRENTS, collectArticles, collectDialobs, collectFlows, collectLanguages, getConfigOptionsForType } from './helpers';
 
-
-function collectDirents(result: Record<string, FsDirent>, node: FsDirent): void {
-  result[node.id] = node;
-  node.children.forEach(child => collectDirents(result, child));
-}
-
-function flattenDirents(nodes: FsDirent[]): Record<string, FsDirent> {
-  const result: Record<string, FsDirent> = {};
-  nodes.forEach(node => collectDirents(result, node));
-  return result;
-}
-
-const ALL_DIRENTS = flattenDirents(mockFsData);
-
-const ALL_CONFIG_OPTIONS: SelectOption[] = [
-  { value: 'devMode', label: 'Development mode' },
-  { value: 'assignableMode', label: 'Assignable mode' },
-  { value: 'disabledMode', label: 'Disabled mode' },
-  { value: 'anonymousMode', label: 'Anonymous mode' },
-];
-
-function getConfigOptionsForType(type: FsDirentType): SelectOption[] {
-  switch (type) {
-    case 'link':
-    case 'phone': {
-      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'devMode' || o.value === 'disabledMode');
-    }
-    case 'service':
-    case 'article': {
-      return ALL_CONFIG_OPTIONS;
-    }
-    case 'language': {
-      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'disabledMode');
-    }
-    case 'page': {
-      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'disabledMode' || o.value === 'devMode');
-    }
-    case 'printout': {
-      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'devMode');
-    }
-    default: {
-      return [];
-    }
-  }
-}
 
 export interface ItemReferencesEntry {
   assetName: string;
@@ -58,7 +13,7 @@ export interface ItemReferencesEntry {
 export interface FsDirentContextType {
   direntPropsLoading: boolean;
   dirents: FsDirent[];
-  selectOptions: FsDirentData;
+  selectOptions: FsSelectOptions;
   getConfigOptionsForType: (type: FsDirentType) => SelectOption[];
   getDirent: <T extends FsDirentEntry>(id: string) => T | undefined;
   isChildError: (dirent: FsDirent) => boolean;
@@ -94,10 +49,25 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
     return { ...dirent, ...direntProps } as unknown as T;
   }, [propsMap]);
 
-  const selectOptions = React.useMemo(
-    () => new FsDirentData(mockFsData, propsMap),
-    [propsMap]
-  );
+  const selectOptions = React.useMemo((): FsSelectOptions => ({
+    articles: collectArticles(mockFsData),
+    flows: collectFlows(mockFsData),
+    dialobs: collectDialobs(mockFsData),
+    languages: collectLanguages(mockFsData),
+    direntProps: propsMap,
+    collectDialobTags: (dialobId: string): SelectOption[] => {
+      const entry = propsMap[dialobId];
+      if (!entry || entry.type !== 'dialob') { return []; }
+      const tags = (entry as DialobDirentProps).versionTags;
+      if (!tags || tags.length === 0) { return []; }
+      return tags.map(tag => ({ value: tag, label: tag }));
+    },
+    getActiveDialobTag: (props: DialobDirentProps): string => {
+      const tags = props.versionTags;
+      if (!tags || tags.length === 0) { return 'LATEST'; }
+      return tags[tags.length - 1];
+    },
+  }), [propsMap]);
 
   const isChildError = React.useCallback((dirent: FsDirent): boolean => {
     const direntProps = propsMap[dirent.id];
@@ -192,3 +162,4 @@ export function useFsDirent(): FsDirentContextType {
   }
   return result;
 }
+

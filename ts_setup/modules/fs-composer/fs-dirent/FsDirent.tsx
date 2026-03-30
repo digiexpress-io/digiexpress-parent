@@ -15,13 +15,33 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
   const classes = useUtilityClasses(ownerState.isDarkMode);
   const { getDirent } = useFsDirent();
   const expanded = getDirent(props.dirent.id)?.expanded ?? false;
+  const clickTimerRef = React.useRef<number | undefined>(undefined);
+
+  function handleClick() {
+    if (!ownerState.isChildren) {
+      return;
+    }
+    if (clickTimerRef.current) {
+      clearTimeout(clickTimerRef.current);
+    }
+    clickTimerRef.current = window.setTimeout(() => {
+      ownerState.onToggle(ownerState.dirent.id);
+    }, 250);
+  }
+
+  function handleDoubleClick() {
+    if (clickTimerRef.current) {
+      clearTimeout(clickTimerRef.current);
+    }
+    ownerState.openAsset(ownerState.dirent, ownerState.fullPath);
+  }
 
   return (
     <FsDirentRoot className={classes.root} ownerState={ownerState}>
       <ListItem
         className={`${classes.explorerDirent} ${ownerState.showError ? 'error' : ''}`}
-        onClick={() => ownerState.isChildren && ownerState.onToggle(ownerState.dirent.id)}
-        onDoubleClick={() => ownerState.openAsset(ownerState.dirent, ownerState.fullPath)}
+        onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
         onContextMenu={(event) => ownerState.onContextMenu(event, ownerState.dirent)}
       >
         <Box className={classes.explorerDirentContent}>

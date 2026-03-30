@@ -176,6 +176,16 @@ export interface SelectOption {
   value: string;
   label: string;
 }
+
+export interface FsSelectOptions {
+  articles: SelectOption[];
+  flows: SelectOption[];
+  dialobs: SelectOption[];
+  languages: string[];
+  direntProps: Record<string, FsDirentProps>;
+  collectDialobTags: (dialobId: string) => SelectOption[];
+  getActiveDialobTag: (props: DialobDirentProps) => string;
+}
 export type FsDirentSecondaryView = 'references' | 'properties' | 'configuration' | 'debug' | 'preview' | 'history' | 'help' | 'errors' | 'changes' | 'article-order';
 export type FsDirentChangeType = 'update' | 'create' | 'delete';
 export type FsDirentPermissionType = 'read' | 'write' | 'view' | 'none';
