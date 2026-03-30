@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  FsDirent, FsDirentConfigOption, LinkDirentProps, mockFsData,
+  FsDirentConfigOption, LinkEntry, mockFsData,
   useFsDirent, useFsNav, FsDirentData, mockFsDirentProperties
 } from '@dxs-ts/fs-api';
 
@@ -9,7 +9,7 @@ const data = new FsDirentData(mockFsData, mockFsDirentProperties);
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: (FsDirent & LinkDirentProps) | undefined;
+  dirent: LinkEntry | undefined;
   locales: string[];
   urlValue: string;
   intlValues: Record<string, string>;
@@ -25,7 +25,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent(props.direntId) as (FsDirent & LinkDirentProps) | undefined;
+  const dirent = getDirent<LinkEntry>(props.direntId);
   const locales = data.languages;
 
   const [urlValue, setUrlValue] = React.useState(dirent?.urlValue ?? '');

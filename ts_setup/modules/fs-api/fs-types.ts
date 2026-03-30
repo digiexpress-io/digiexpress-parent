@@ -106,10 +106,18 @@ export type FsDirentProps =
   | PhoneDirentProps;
 
 export type FsDirentEntry = FsDirent & FsDirentProps;
+export type FolderEntry = FsDirent & FolderDirentProps;
 export type ArticleEntry = FsDirent & ArticleDirentProps;
 export type ServiceEntry = FsDirent & ServiceDirentProps;
+export type DialobEntry = FsDirent & DialobDirentProps;
+export type FlowEntry = FsDirent & FlowDirentProps;
 export type LanguageEntry = FsDirent & LanguageDirentProps;
 export type PageEntry = FsDirent & PageDirentProps;
+export type PrintoutEntry = FsDirent & PrintoutDirentProps;
+export type ImageEntry = FsDirent & ImageDirentProps;
+export type TemplateEntry = FsDirent & TemplateDirentProps;
+export type LinkEntry = FsDirent & LinkDirentProps;
+export type PhoneEntry = FsDirent & PhoneDirentProps;
 
 export type FsDirentConfigOption = 'devMode' | 'assignableMode' | 'disabledMode' | 'anonymousMode';
 

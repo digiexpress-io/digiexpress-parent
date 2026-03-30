@@ -1,10 +1,10 @@
 import React from 'react';
-import { FsDirent, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
+import { FolderEntry, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: (FsDirent & { type: 'folder' }) | undefined;
+  dirent: FolderEntry | undefined;
   location: string;
   name: string;
   onChangeName: (value: string) => void;
@@ -14,7 +14,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent(props.direntId) as (FsDirent & { type: 'folder' }) | undefined;
+  const dirent = getDirent<FolderEntry>(props.direntId);
 
   const [name, setName] = React.useState(dirent?.name ?? '');
 
