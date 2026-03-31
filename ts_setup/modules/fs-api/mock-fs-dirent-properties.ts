@@ -224,6 +224,20 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     errors: [],
     localeCode: 'fi',
     articleId: 'index.article',
+    content: `# This is markdown content
+
+* bullet 1
+* **Bullet 2**
+*
+* Other
+
+*bold*
+---
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.
+
+Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.
+
+Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.`,
   },
 
   'sv-index': {
@@ -258,6 +272,31 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     errors: [],
     localeCode: 'en',
     articleId: 'index.article',
+    content: `# Welcome to the Service Portal
+
+This portal gives you access to municipal services, allowing you to submit applications, track the status of your cases, and communicate with the relevant departments.
+
+## Getting Started
+
+1. Sign in using your personal identity number or bank credentials
+2. Browse available services from the navigation menu
+3. Complete the application form and attach any required documents
+4. Submit your application — a confirmation will be sent to your registered email address
+
+## Processing Times
+
+| Service | Estimated Time |
+|---|---|
+| Building permit | 10 weeks |
+| Social assistance | 2 weeks |
+| School placement | 4 weeks |
+| Business licence | 6 weeks |
+
+## Opening Hours
+
+The service centre is open Monday to Friday, **08:00–16:30**.
+
+> **Note:** For urgent matters, please contact the relevant department directly rather than using this portal.`,
   },
 
   'fi-gdpr': {
@@ -292,6 +331,40 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     errors: [],
     localeCode: 'sv',
     articleId: 'gdpr.article',
+    content: `# Privacy Notice
+
+This notice explains how we collect, use, and protect your personal data in accordance with the General Data Protection Regulation (GDPR).
+
+## What Data We Collect
+
+- **Identity information**: name, personal identity number, date of birth
+- **Contact details**: postal address, email address, phone number
+- **Case data**: applications submitted, decisions made, correspondence
+
+## Purpose of Processing
+
+Your personal data is processed in order to:
+- Handle your service applications and requests
+- Fulfil legal obligations under municipal law
+- Send notifications related to your active cases
+
+## Your Rights
+
+Under GDPR you have the right to:
+
+1. **Access** — request a copy of the data we hold about you
+2. **Rectification** — correct inaccurate or incomplete data
+3. **Erasure** — request deletion of data where legally permitted
+4. **Restriction** — limit how your data is processed in certain circumstances
+5. **Portability** — receive your data in a structured, machine-readable format
+
+## Data Retention
+
+Personal data is retained only as long as required by law or the purpose for which it was collected. Case records are kept for a minimum of **10 years** in accordance with national archiving legislation.
+
+## Contact
+
+For questions regarding your personal data, contact our Data Protection Officer at **dpo@municipality.fi**.`,
   },
 
   'fi-gdpr-child': {
