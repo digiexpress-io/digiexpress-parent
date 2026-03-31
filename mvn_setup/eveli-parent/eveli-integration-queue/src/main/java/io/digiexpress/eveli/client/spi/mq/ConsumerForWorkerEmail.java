@@ -1,8 +1,8 @@
 package io.digiexpress.eveli.client.spi.mq;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -91,18 +91,21 @@ public class ConsumerForWorkerEmail implements ThenaMqConsumer {
   }
   
   private List<String> getEmails(TaskNotification notification) {
-    final List<String> emails = StringUtils.isNotEmpty(notification.getAssigneeEmail()) ? Arrays.asList(notification.getAssigneeEmail()) :
-        (StringUtils.isNotEmpty(notification.getTaskGroupId()) ? 
-            orgClient.queryGroupEmails().findAllByGroupName(notification.getTaskGroupId()) :Collections.emptyList()); 
-    
-    final var updaterIsAssignee = notification.getUpdaterId().equals(notification.getAssigneeId());
-    
-    if(updaterIsAssignee) {
-      return emails.stream()
-        .filter(e -> updaterIsAssignee ? !e.equals(notification.getAssigneeEmail()) : true)
-        .toList();
+    final Set<String> emails = new HashSet<>(); 
+    if(StringUtils.isNotEmpty(notification.getAssigneeEmail())) {
+      emails.add(notification.getAssigneeEmail());
+    }
+    else {
+      notification.getTaskGroupIds().forEach(id -> {
+        emails.addAll(orgClient.queryGroupEmails().findAllByGroupName(id));
+      });
     }
     
-    return emails;
+    final var updaterIsAssignee = notification.getUpdaterId().equals(notification.getAssigneeUser());
+    if(updaterIsAssignee) {
+      emails.remove(notification.getAssigneeEmail());
+    }
+    
+    return emails.stream().toList();
   }
 }
