@@ -43,7 +43,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
 
   React.useEffect(() => {
     if (activeDirent) {
-      setSelectedView('properties');
+      setSelectedView(activeDirent.type === 'page' ? 'preview' : 'properties');
     }
   }, [activeDirent?.id]);
 

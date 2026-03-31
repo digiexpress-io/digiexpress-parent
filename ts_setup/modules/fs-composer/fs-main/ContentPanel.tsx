@@ -10,6 +10,7 @@ import { FsPanelErrors } from '../fs-panel-errors';
 import { FsPanelHelp } from '../fs-panel-help';
 import { FsPanelHistory } from '../fs-panel-history';
 import { FsPanelProperties } from '../fs-panel-properties';
+import { FsPanelPreview } from '../fs-panel-preview';
 import { FsPanelReferences } from '../fs-panel-references';
 
 import { OwnerState } from './useOwnerState';
@@ -45,6 +46,8 @@ export const ContentPanel: React.FC<ContentPanelProps> = ({ ownerState, classNam
               return <FsPanelHelp dirent={activeDirent} />;
           case 'configuration':
               return <FsPanelConfigOptions dirent={activeDirent} />;
+          case 'preview':
+              return <FsPanelPreview dirent={activeDirent} />;
           case 'article-order':
               return <FsPanelArticleOrder />;
           default:

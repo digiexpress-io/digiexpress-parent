@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
+import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -16,13 +17,17 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-
-  const [content, setContent] = React.useState(ownerState.dirent?.content ?? '');
+  const { updateDirent } = useFsDirent();
 
   return (
     <FsDirentPageRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.page.sectionTitle.edit' })}</Typography>
       <div className={classes.formContainer}>
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}</Typography>
+        <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
+          <MDEditor preview="edit" value={ownerState.dirent?.content ?? ''} onChange={(val) => updateDirent(props.direntId, { content: val ?? '' })} />
+        </div>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.articleField.label' })}</Typography>
         <FsDirentSelectSingle options={ownerState.articleOptions} value={ownerState.articleId} onChange={ownerState.onChangeArticleId} />
@@ -39,12 +44,6 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.configOptionsField.label' })}</Typography>
         <FsDirentSelectMulti options={ownerState.availableConfigOptions} value={ownerState.configOptions as string[]} onChange={ownerState.onChangeConfigOptions} />
-
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}</Typography>
-        <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
-          <MDEditor value={content} onChange={(val) => setContent(val ?? '')} />
-        </div>
-
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonCancel />

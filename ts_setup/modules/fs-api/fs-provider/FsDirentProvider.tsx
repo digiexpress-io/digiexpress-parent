@@ -18,6 +18,7 @@ export interface FsDirentContextType {
   getDirent: <T extends Fs.DirentAsset>(id: string) => T | undefined;
   isChildError: (dirent: Fs.DirentBase) => boolean;
   findReferencesToDirent: (dirent: Fs.DirentBase) => ItemReferencesEntry[];
+  updateDirent: (id: string, updated: Partial<Fs.Props>) => void;
   setExpanded: (id: string, value: boolean) => void;
   setExpandedBatch: (ids: string[], value: boolean) => void;
   collapseAll: () => void;
@@ -104,6 +105,15 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
     return references;
   }, [propsMap]);
 
+  const updateDirent = React.useCallback((id: string, updated: Partial<Fs.Props>) => {
+    setPropsMap(prev => {
+      if (!prev[id]) {
+        return prev;
+      }
+      return { ...prev, [id]: { ...prev[id], ...updated } as Fs.Props };
+    });
+  }, []);
+
   const setExpanded = React.useCallback((id: string, value: boolean) => {
     setPropsMap(prev => {
       if (!prev[id]) return prev;
@@ -142,11 +152,12 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       getDirent,
       isChildError,
       findReferencesToDirent,
+      updateDirent,
       setExpanded,
       setExpandedBatch,
       collapseAll,
     };
-  }, [direntPropsLoading, selectOptions, getDirent, isChildError, findReferencesToDirent, setExpanded, setExpandedBatch, collapseAll]);
+  }, [direntPropsLoading, selectOptions, getDirent, isChildError, findReferencesToDirent, updateDirent, setExpanded, setExpandedBatch, collapseAll]);
 
   return (
     <FsDirentContext.Provider value={contextValue}>
