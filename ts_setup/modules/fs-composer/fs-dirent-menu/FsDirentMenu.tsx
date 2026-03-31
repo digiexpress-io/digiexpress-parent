@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { FsDirent, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { Fs, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses, FsDirentMenuRoot as Root, MENU_HEIGHT } from './useUtilityClasses';
 import { FsDirentMenuMain } from './FsDirentMenuMain';
 import { FsDirentMenuSub } from './FsDirentMenuSub';
 import { usePositioningStrategy } from './helpers';
 
 interface FsDirentMenuProps {
-  dirent: FsDirent.Dirent | undefined;
+  dirent: Fs.Dirent | undefined;
   anchorPosition: { top: number; left: number } | undefined;
   open: boolean;
   onClose: () => void;

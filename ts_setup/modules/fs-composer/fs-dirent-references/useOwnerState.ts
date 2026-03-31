@@ -1,10 +1,10 @@
-import { FsDirent, ItemReferencesEntry, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { Fs, ItemReferencesEntry, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
 import { FsDirentReferencesProps } from './FsDirentReferencesProps';
 
 
 export interface OwnerState {
   isDarkMode: boolean;
-  findReferencesToDirent: (dirent: FsDirent.Dirent) => ItemReferencesEntry[];
+  findReferencesToDirent: (dirent: Fs.Dirent) => ItemReferencesEntry[];
 }
 
 export const useOwnerState = (_props: FsDirentReferencesProps): OwnerState => {

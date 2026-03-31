@@ -1,12 +1,12 @@
 
-export namespace FsDirent { }
+export namespace Fs { }
 
-export declare namespace FsDirent {
+export declare namespace Fs {
 
   export interface Dirent {
     id: string;
     name: string;
-    type: FsDirent.Type;
+    type: Fs.Type;
     children: Dirent[];
   }
 
@@ -178,7 +178,7 @@ export declare namespace FsDirent {
     flows: SelectOption[];
     dialobs: SelectOption[];
     languages: string[];
-    direntProps: Record<string, FsDirent.Props>;
+    direntProps: Record<string, Fs.Props>;
     collectDialobTags: (dialobId: string) => SelectOption[];
     getActiveDialobTag: (props: DialobProps) => string;
   }

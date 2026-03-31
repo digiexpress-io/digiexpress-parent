@@ -1,10 +1,10 @@
 import React from 'react';
-import { FsDirent, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: FsDirent.Flow | undefined;
+  dirent: Fs.Flow | undefined;
   name: string;
   onChangeName: (value: string) => void;
 }
@@ -13,7 +13,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent<FsDirent.Flow>(props.direntId);
+  const dirent = getDirent<Fs.Flow>(props.direntId);
 
   const [name, setName] = React.useState(dirent?.name ?? '');
 

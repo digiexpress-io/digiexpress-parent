@@ -3,7 +3,7 @@ import { Box, Typography, List, IconButton, Badge } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcons, FsIcon } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-api';
-import { FsDirent } from '../fs-dirent';
+import { Fs } from '../fs-dirent';
 import { FsDirentMenu } from '../fs-dirent-menu';
 import { FsSearch } from '../fs-search';
 import { FsExplorerNoSearchResults } from './FsExplorerNoSearchResults';
@@ -106,7 +106,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
       {ownerState.filteredTreeData.length === 0 ? <FsExplorerNoSearchResults /> :
         <List component='nav' disablePadding>
           {ownerState.filteredTreeData.map((dirent) => (
-            <FsDirent
+            <Fs
               key={dirent.id}
               dirent={dirent}
               level={0}

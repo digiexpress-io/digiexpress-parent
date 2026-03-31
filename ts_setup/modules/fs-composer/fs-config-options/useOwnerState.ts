@@ -1,12 +1,12 @@
 import { useIntl } from 'react-intl';
-import { FsDirent, useFsNav } from '@dxs-ts/fs-api';
+import { Fs, useFsNav } from '@dxs-ts/fs-api';
 import { FsConfigOptionsProps } from './FsConfigOptionsProps';
 
 
 export interface OwnerState {
   isDarkMode: boolean;
-  isConfigOptionEnabled: (optionKey: FsDirent.ConfigOption) => boolean;
-  configDescription: (optionKey: FsDirent.ConfigOption) => string;
+  isConfigOptionEnabled: (optionKey: Fs.ConfigOption) => boolean;
+  configDescription: (optionKey: Fs.ConfigOption) => string;
 }
 
 export function useOwnerState(props: FsConfigOptionsProps): OwnerState {
@@ -14,11 +14,11 @@ export function useOwnerState(props: FsConfigOptionsProps): OwnerState {
   const { isDarkMode } = useFsNav();
   const configOptions = props.dirent?.configOptions ?? [];
 
-  function isConfigOptionEnabled(optionKey: FsDirent.ConfigOption): boolean {
+  function isConfigOptionEnabled(optionKey: Fs.ConfigOption): boolean {
     return configOptions.includes(optionKey);
   }
 
-  function configDescription(optionKey: FsDirent.ConfigOption): string {
+  function configDescription(optionKey: Fs.ConfigOption): string {
     switch (optionKey) {
       case 'devMode':
         return intl.formatMessage({ id: 'fs.configOptions.optionKey.devMode.desc' });

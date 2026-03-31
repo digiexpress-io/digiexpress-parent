@@ -1,5 +1,5 @@
 import React from 'react';
-import { FsDirent } from '../fs-types';
+import { Fs } from '../fs-types';
 import { mockFsDirentProperties } from '../mock-fs-dirent-properties';
 import { mockFsData } from '../mock-fs-data';
 import { ALL_DIRENTS, collectArticles, collectDialobs, collectFlows, collectLanguages, getConfigOptionsForType } from './helpers';
@@ -12,12 +12,12 @@ export interface ItemReferencesEntry {
 
 export interface FsDirentContextType {
   direntPropsLoading: boolean;
-  dirents: FsDirent.Dirent[];
-  selectOptions: FsDirent.SelectOptions;
-  getConfigOptionsForType: (type: FsDirent.Type) => FsDirent.SelectOption[];
-  getDirent: <T extends FsDirent.Entry>(id: string) => T | undefined;
-  isChildError: (dirent: FsDirent.Dirent) => boolean;
-  findReferencesToDirent: (dirent: FsDirent.Dirent) => ItemReferencesEntry[];
+  dirents: Fs.Dirent[];
+  selectOptions: Fs.SelectOptions;
+  getConfigOptionsForType: (type: Fs.Type) => Fs.SelectOption[];
+  getDirent: <T extends Fs.Entry>(id: string) => T | undefined;
+  isChildError: (dirent: Fs.Dirent) => boolean;
+  findReferencesToDirent: (dirent: Fs.Dirent) => ItemReferencesEntry[];
   setExpanded: (id: string, value: boolean) => void;
   setExpandedBatch: (ids: string[], value: boolean) => void;
   collapseAll: () => void;
@@ -30,7 +30,7 @@ export interface FsDirentProviderProps {
 }
 
 export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
-  const [propsMap, setPropsMap] = React.useState<Record<string, FsDirent.Props>>({});
+  const [propsMap, setPropsMap] = React.useState<Record<string, Fs.Props>>({});
   const [direntPropsLoading, setDirentPropsLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -40,7 +40,7 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
     });
   }, []);
 
-  const getDirent = React.useCallback(<T extends FsDirent.Entry>(id: string): T | undefined => {
+  const getDirent = React.useCallback(<T extends Fs.Entry>(id: string): T | undefined => {
     const dirent = ALL_DIRENTS[id];
     const direntProps = propsMap[id];
     if (!dirent || !direntProps) {
@@ -49,27 +49,27 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
     return { ...dirent, ...direntProps } as unknown as T;
   }, [propsMap]);
 
-  const selectOptions = React.useMemo((): FsDirent.SelectOptions => ({
+  const selectOptions = React.useMemo((): Fs.SelectOptions => ({
     articles: collectArticles(mockFsData),
     flows: collectFlows(mockFsData),
     dialobs: collectDialobs(mockFsData),
     languages: collectLanguages(mockFsData),
     direntProps: propsMap,
-    collectDialobTags: (dialobId: string): FsDirent.SelectOption[] => {
+    collectDialobTags: (dialobId: string): Fs.SelectOption[] => {
       const entry = propsMap[dialobId];
       if (!entry || entry.type !== 'dialob') { return []; }
-      const tags = (entry as FsDirent.DialobProps).versionTags;
+      const tags = (entry as Fs.DialobProps).versionTags;
       if (!tags || tags.length === 0) { return []; }
       return tags.map(tag => ({ value: tag, label: tag }));
     },
-    getActiveDialobTag: (props: FsDirent.DialobProps): string => {
+    getActiveDialobTag: (props: Fs.DialobProps): string => {
       const tags = props.versionTags;
       if (!tags || tags.length === 0) { return 'LATEST'; }
       return tags[tags.length - 1];
     },
   }), [propsMap]);
 
-  const isChildError = React.useCallback((dirent: FsDirent.Dirent): boolean => {
+  const isChildError = React.useCallback((dirent: Fs.Dirent): boolean => {
     const direntProps = propsMap[dirent.id];
     if (direntProps?.errors && direntProps.errors.length > 0) {
       return true;
@@ -80,10 +80,10 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
     return false;
   }, [propsMap]);
 
-  const findReferencesToDirent = React.useCallback((targetDirent: FsDirent.Dirent): ItemReferencesEntry[] => {
+  const findReferencesToDirent = React.useCallback((targetDirent: Fs.Dirent): ItemReferencesEntry[] => {
     const references: ItemReferencesEntry[] = [];
 
-    function searchInDirent(dirent: FsDirent.Dirent, path: string[] = []): void {
+    function searchInDirent(dirent: Fs.Dirent, path: string[] = []): void {
       const currentPath = [...path, dirent.name];
       const direntProps = propsMap[dirent.id];
 

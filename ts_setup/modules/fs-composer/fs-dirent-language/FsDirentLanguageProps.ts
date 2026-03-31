@@ -1,8 +1,8 @@
-import { FsDirent, FsTab } from '@dxs-ts/fs-api';
+import { Fs, FsTab } from '@dxs-ts/fs-api';
 
 
 export interface FsDirentLanguageCreateProps {
-  parentFolder: FsDirent.Dirent | undefined;
+  parentFolder: Fs.Dirent | undefined;
   pathToTopParent: string | undefined;
 }
 

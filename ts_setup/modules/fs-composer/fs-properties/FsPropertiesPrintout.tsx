@@ -1,12 +1,12 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirent } from '@dxs-ts/fs-api';
+import { Fs } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesPrintoutProps {
-  direntProps: FsDirent.PrintoutProps;
+  direntProps: Fs.PrintoutProps;
 }
 
 export const FsPropertiesPrintout: React.FC<FsPropertiesPrintoutProps> = ({ direntProps }) => {

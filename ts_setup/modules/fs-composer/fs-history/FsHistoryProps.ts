@@ -1,7 +1,7 @@
-import { FsDirent } from "@dxs-ts/fs-api";
+import { Fs } from "@dxs-ts/fs-api";
 
 export interface FsHistoryProps {
-  dirent: FsDirent.Entry | undefined;
+  dirent: Fs.Entry | undefined;
 }
 
 

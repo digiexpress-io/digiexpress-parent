@@ -1,24 +1,24 @@
-import { FsDirent } from "../fs-types";
+import { Fs } from "../fs-types";
 import { mockFsData } from "../mock-fs-data";
 
 
 
 
-function collectDirents(result: Record<string, FsDirent.Dirent>, node: FsDirent.Dirent): void {
+function collectDirents(result: Record<string, Fs.Dirent>, node: Fs.Dirent): void {
   result[node.id] = node;
   node.children.forEach(child => collectDirents(result, child));
 }
 
-function flattenDirents(nodes: FsDirent.Dirent[]): Record<string, FsDirent.Dirent> {
-  const result: Record<string, FsDirent.Dirent> = {};
+function flattenDirents(nodes: Fs.Dirent[]): Record<string, Fs.Dirent> {
+  const result: Record<string, Fs.Dirent> = {};
   nodes.forEach(node => collectDirents(result, node));
   return result;
 }
 
 export const ALL_DIRENTS = flattenDirents(mockFsData);
 
-export function collectArticles(nodes: FsDirent.Dirent[]): FsDirent.SelectOption[] {
-  const result: FsDirent.SelectOption[] = [];
+export function collectArticles(nodes: Fs.Dirent[]): Fs.SelectOption[] {
+  const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {
     if (node.type === 'article') { result.push({ value: node.id, label: node.name }); }
     if (node.children && node.children.length > 0) { result.push(...collectArticles(node.children)); }
@@ -26,8 +26,8 @@ export function collectArticles(nodes: FsDirent.Dirent[]): FsDirent.SelectOption
   return result;
 }
 
-export function collectFlows(nodes: FsDirent.Dirent[]): FsDirent.SelectOption[] {
-  const result: FsDirent.SelectOption[] = [];
+export function collectFlows(nodes: Fs.Dirent[]): Fs.SelectOption[] {
+  const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {
     if (node.type === 'flow') { result.push({ value: node.name, label: node.name }); }
     if (node.children && node.children.length > 0) { result.push(...collectFlows(node.children)); }
@@ -35,8 +35,8 @@ export function collectFlows(nodes: FsDirent.Dirent[]): FsDirent.SelectOption[] 
   return result;
 }
 
-export function collectDialobs(nodes: FsDirent.Dirent[]): FsDirent.SelectOption[] {
-  const result: FsDirent.SelectOption[] = [];
+export function collectDialobs(nodes: Fs.Dirent[]): Fs.SelectOption[] {
+  const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {
     if (node.type === 'dialob') { result.push({ value: node.id, label: node.name }); }
     if (node.children && node.children.length > 0) { result.push(...collectDialobs(node.children)); }
@@ -44,7 +44,7 @@ export function collectDialobs(nodes: FsDirent.Dirent[]): FsDirent.SelectOption[
   return result;
 }
 
-export function collectLanguages(nodes: FsDirent.Dirent[]): string[] {
+export function collectLanguages(nodes: Fs.Dirent[]): string[] {
   const result: string[] = [];
   nodes.forEach(node => {
     if (node.type === 'language') { result.push(node.name.replace('.language', '')); }
@@ -53,14 +53,14 @@ export function collectLanguages(nodes: FsDirent.Dirent[]): string[] {
   return result;
 }
 
-const ALL_CONFIG_OPTIONS: FsDirent.SelectOption[] = [
+const ALL_CONFIG_OPTIONS: Fs.SelectOption[] = [
   { value: 'devMode', label: 'Development mode' },
   { value: 'assignableMode', label: 'Assignable mode' },
   { value: 'disabledMode', label: 'Disabled mode' },
   { value: 'anonymousMode', label: 'Anonymous mode' },
 ];
 
-export function getConfigOptionsForType(type: FsDirent.Type): FsDirent.SelectOption[] {
+export function getConfigOptionsForType(type: Fs.Type): Fs.SelectOption[] {
   switch (type) {
     case 'link':
     case 'phone': {

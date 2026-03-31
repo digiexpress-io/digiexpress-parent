@@ -1,4 +1,4 @@
-import { FsDirent, FsTab, useFsNav, useFsDirent } from "@dxs-ts/fs-api";
+import { Fs, FsTab, useFsNav, useFsDirent } from "@dxs-ts/fs-api";
 import { FsBreadcrumbProps } from "./FsBreadcrumbProps";
 
 
@@ -6,7 +6,7 @@ export interface OwnerState {
   isDarkMode: boolean;
   assetName: string | undefined;
   assetPath: string | undefined;
-  assetDirent: FsDirent.Dirent | undefined;
+  assetDirent: Fs.Dirent | undefined;
   isError: boolean | undefined;
 }
 

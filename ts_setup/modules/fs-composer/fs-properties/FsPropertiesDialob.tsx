@@ -1,12 +1,12 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirent, useFsDirent } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesDialobProps {
-  direntProps: FsDirent.DialobProps;
+  direntProps: Fs.DialobProps;
 }
 
 export const FsPropertiesDialob: React.FC<FsPropertiesDialobProps> = ({ direntProps }) => {

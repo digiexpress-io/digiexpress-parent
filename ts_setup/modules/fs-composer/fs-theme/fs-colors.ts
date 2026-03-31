@@ -3,7 +3,7 @@
 // ULTRA-CONSOLIDATED COLOR PALETTE (12 Unique Colors)
 // =============================================================================
 
-import { FsDirent } from "@dxs-ts/fs-api";
+import { Fs } from "@dxs-ts/fs-api";
 
 export const FsColors = {
   // Base theme colors
@@ -77,7 +77,7 @@ export const FsColors = {
 // =============================================================================
 
 
-export function getDirentColor(direntType: FsDirent.Type, isDarkTheme: boolean) {
+export function getDirentColor(direntType: Fs.Type, isDarkTheme: boolean) {
   const colors = isDarkTheme ? FsColors.direntTypes.dark : FsColors.direntTypes.light;
 
   switch (direntType) {

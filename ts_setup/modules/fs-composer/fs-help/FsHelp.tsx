@@ -94,7 +94,7 @@ Switch between different view modes:
 You can also interact with the tree programmatically using the Eveli Tree API:
 
 \`\`\`typescript
-import { FsDirent, useFs } from '@dxs-ts/fs-api';
+import { Fs, useFs } from '@dxs-ts/fs-api';
 
 // Example: Find and select a specific dirent
 function useTreeNavigation() {
@@ -114,7 +114,7 @@ function useTreeNavigation() {
     }
   };
 
-  const findDirentById = (id: string): FsDirent | null => {
+  const findDirentById = (id: string): Fs | null => {
     // Implementation to search tree structure
     return activeDirent?.children?.find(child => child.id === id) || null;
   };

@@ -6,9 +6,9 @@ import { FsPanel } from '../fs-panel';
 import { FsConfigOptionsProps } from './FsConfigOptionsProps';
 import { useOwnerState } from './useOwnerState';
 import { FsConfigOptionsRoot, useUtilityClasses } from './useUtilityClasses';
-import { FsDirent } from '@dxs-ts/fs-api';
+import { Fs } from '@dxs-ts/fs-api';
 
-const allConfigOptions: FsDirent.ConfigOption[] = ['devMode', 'disabledMode', 'anonymousMode', 'assignableMode'];
+const allConfigOptions: Fs.ConfigOption[] = ['devMode', 'disabledMode', 'anonymousMode', 'assignableMode'];
 
 export const FsConfigOptions: React.FC<FsConfigOptionsProps> = (props) => {
   const intl = useIntl();

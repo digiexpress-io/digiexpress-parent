@@ -1,4 +1,4 @@
-import { FsDirent, useFsNav } from '@dxs-ts/fs-api';
+import { Fs, useFsNav } from '@dxs-ts/fs-api';
 
 
 export interface CreateOwnerState {
@@ -6,7 +6,7 @@ export interface CreateOwnerState {
   locationPath: string;
 }
 
-function getFolderLocationPath(pathToTopParent: string | undefined, parentFolder: FsDirent.Dirent | undefined): string {
+function getFolderLocationPath(pathToTopParent: string | undefined, parentFolder: Fs.Dirent | undefined): string {
   if (!parentFolder) {
     return '';
   }
@@ -21,7 +21,7 @@ function getFolderLocationPath(pathToTopParent: string | undefined, parentFolder
   return segments.slice(0, -1).join(' / ');
 }
 
-export const useCreateOwnerState = (props: { parentFolder: FsDirent.Dirent | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
+export const useCreateOwnerState = (props: { parentFolder: Fs.Dirent | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
   const { isDarkMode } = useFsNav();
   const locationPath = getFolderLocationPath(props.pathToTopParent, props.parentFolder);
   return { isDarkMode, locationPath };

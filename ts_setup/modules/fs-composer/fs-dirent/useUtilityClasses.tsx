@@ -4,7 +4,7 @@ import { FsColors, getDirentColor } from '../fs-theme';
 
 
 
-export const MUI_NAME = 'FsDirent';
+export const MUI_NAME = 'Fs';
 
 export interface FsDirentClasses {
   root: string;
