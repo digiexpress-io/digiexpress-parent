@@ -10,6 +10,20 @@ export declare namespace Fs {
     children: DirentBase[];
   }
 
+  export interface PropsBase {
+    id: string;
+    expanded: boolean;
+    reference: boolean;
+    locked: boolean;
+    description?: string;
+    configOptions: ConfigOption[];
+    comments: Comment[];
+    changes: Change[];
+    permissions: Permission[];
+    labels: Label[];
+    errors: AssetError[];
+  }
+
   export interface PropsMap {
     folder: FolderProps;
     article: ArticleProps;
@@ -41,20 +55,6 @@ export declare namespace Fs {
   export type Template = DirentBase & TemplateProps;
   export type Link = DirentBase & LinkProps;
   export type Phone = DirentBase & PhoneProps;
-
-  export interface PropsBase {
-    id: string;
-    expanded: boolean;
-    reference: boolean;
-    locked: boolean;
-    description?: string;
-    configOptions: ConfigOption[];
-    comments: Comment[];
-    changes: Change[];
-    permissions: Permission[];
-    labels: Label[];
-    errors: AssetError[];
-  }
 
   export interface FolderProps extends PropsBase {
     type: 'folder';
