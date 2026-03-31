@@ -29,18 +29,18 @@ export declare namespace Fs {
   export type Props = PropsMap[Type];
   export type DirentAsset = DirentBase & Props;
 
-  export type Folder = DirentBase & PropsMap['folder'];
-  export type Article = DirentBase & PropsMap['article'];
-  export type Service = DirentBase & PropsMap['service'];
-  export type Dialob = DirentBase & PropsMap['dialob'];
-  export type Flow = DirentBase & PropsMap['flow'];
-  export type Language = DirentBase & PropsMap['language'];
-  export type Printout = DirentBase & PropsMap['printout'];
-  export type Image = DirentBase & PropsMap['image'];
-  export type Page = DirentBase & PropsMap['page'];
-  export type Template = DirentBase & PropsMap['template'];
-  export type Link = DirentBase & PropsMap['link'];
-  export type Phone = DirentBase & PropsMap['phone'];
+  export type Folder = DirentBase & FolderProps;
+  export type Article = DirentBase & ArticleProps;
+  export type Service = DirentBase & ServiceProps;
+  export type Dialob = DirentBase & DialobProps;
+  export type Flow = DirentBase & FlowProps;
+  export type Language = DirentBase & LanguageProps;
+  export type Printout = DirentBase & PrintoutProps;
+  export type Image = DirentBase & ImageProps;
+  export type Page = DirentBase & PageProps;
+  export type Template = DirentBase & TemplateProps;
+  export type Link = DirentBase & LinkProps;
+  export type Phone = DirentBase & PhoneProps;
 
   export interface PropsBase {
     id: string;
