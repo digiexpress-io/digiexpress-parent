@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import jakarta.annotation.Nullable;
-
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -42,12 +40,14 @@ import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
 public class WrenchFlowCommand {
+  private static final String CHANGE_TYPE_TASK_ROLES_UPDATED = "TASK_ROLES_UPDATED";
   private final EveliEnvirClient envir;
   private final String flowName = "task_mq_router";
   private final String default_locale = "fi";
@@ -104,8 +104,8 @@ public class WrenchFlowCommand {
               .put("taskId", diff.getTask().getId())
               .put("updaterId", diff.getTask().getUpdaterId())
               .put("customerLocale", language)
-              .put("assigneeId", diff.getTask().getAssignedId())
-              .put("taskGroupId", diff.getTask().getAssignedRoles().isEmpty() ? "" : diff.getTask().getAssignedRoles().iterator().next())
+              .put("assigneeUser", diff.getTask().getAssignedUser())
+              .put("taskGroupIds", findDiffGroupId(diff, diffValue, match))
               .put("assigneeEmail", diff.getTask().getAssignedUserEmail());
           
           final var notification = json.mapTo(TaskNotification.class);
@@ -123,6 +123,15 @@ public class WrenchFlowCommand {
     
 
   }
+
+  private List<String> findDiffGroupId(TaskDiff diff, TaskDiffValue diffValue, Map<String, Object> match) {
+    // in case of task role update diff value contains added or updated role
+    if (CHANGE_TYPE_TASK_ROLES_UPDATED.equals(match.get("changeType"))) {
+      return List.of(diffValue.getValue());
+    }
+    // in other cases notify all task's roles
+    return diff.getTask().getAssignedRoles().stream().toList();
+  }
   
   @JsonSerialize(as = ImmutableTaskNotification.class)
   @JsonDeserialize(as = ImmutableTaskNotification.class)
@@ -130,7 +139,7 @@ public class WrenchFlowCommand {
   @Value.Immutable
   public interface TaskNotification {
     @Nullable String getUpdaterId();
-    @Nullable String getAssigneeId();
+    @Nullable String getAssigneeUser();
     @Nullable String getAssigneeEmail();
     String getChangeType();
     String getQueue();
@@ -139,7 +148,7 @@ public class WrenchFlowCommand {
     String getCustomerId();
     String getTaskRef();
     String getTaskId();
-    String getTaskGroupId();
+    List<String> getTaskGroupIds();
     MessageType getMessageType();
       
     // Locale based message data, locale(fi/sv/en) - "translated message"
