@@ -1257,6 +1257,5 @@ export const fi = {
   'taskcard.body.customerName.none': 'Ei määritelty',
   'taskcard.body.form.canPublishFeedback.yes': 'Kyllä',
   'taskcard.body.form.representative.placeholder': 'Edustajan nimi',
-  'fs.dirent.language.localeCodeField.placeholder': 'fi',
-  'fs.dirent.page.localeCodeField.placeholder': 'fi'
+  'fs.dirent.language.localeCodeField.placeholder': 'fi'
 }

@@ -25,73 +25,82 @@ export const FsDirentTextFieldRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
-  width: '100%',
-  marginTop: '0px !important',
-  '& .MuiFormControl-root': {
-    width: '100%',
-    marginTop: '0 !important',
-    marginBottom: '0 !important',
-  },
-  '& .MuiInputBase-root': {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    borderRadius: 0,
-    '& fieldset': {
-      borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-      borderRadius: 0,
-    },
-    '&:hover fieldset': {
-      borderColor: ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary,
-    },
-    '&.Mui-disabled:hover fieldset': {
-      borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-    },
-    '&.Mui-focused fieldset': {
-      border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text}`,
-    },
-    '&.Mui-focused:has(:is(input, textarea):placeholder-shown) fieldset': {
-      border: `2px solid ${ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight}`,
-    },
-  },
-  '& .MuiInputBase-input': {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    ...theme.typography.caption,
-    padding: theme.spacing(1.5),
+})<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
+  const dangerColor    = ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight;
+  const borderColor    = ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border;
+  const hoverColor     = ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary;
+  const focusColor     = ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text;
+  const textColor      = ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text;
+  const bgColor        = ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background;
+  const placeholderColor = ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary;
 
-    '&::placeholder': {
-      color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
-      opacity: 1,
+  const activeBorderColor  = ownerState.showRequiredError ? dangerColor : borderColor;
+  const activeHoverColor   = ownerState.showRequiredError ? dangerColor : hoverColor;
+  const activeFocusBorder  = ownerState.showRequiredError ? `1px solid ${dangerColor}` : `1px solid ${focusColor}`;
+
+  return {
+    width: '100%',
+    marginTop: '0px !important',
+
+    '& .MuiFormControl-root': {
+      width: '100%',
+      marginTop: '0 !important',
+      marginBottom: '0 !important',
+    },
+
+    '& .MuiInputBase-root': {
+      backgroundColor: bgColor,
+      color: textColor,
+      borderRadius: 0,
+
+      '& fieldset': {
+        borderColor: activeBorderColor,
+        borderRadius: 0,
+      },
+      '&:hover fieldset': {
+        borderColor: activeHoverColor,
+      },
+      '&.Mui-disabled:hover fieldset': {
+        borderColor: borderColor,
+      },
+      '&.Mui-focused fieldset': {
+        border: activeFocusBorder,
+      },
+      '&.Mui-focused:has(:is(input, textarea):placeholder-shown) fieldset': {
+        border: ownerState.isRequired ? `2px solid ${dangerColor}` : activeFocusBorder,
+      },
+    },
+
+    '& .MuiInputBase-input': {
+      color: textColor,
+      ...theme.typography.caption,
+      padding: theme.spacing(1.5),
+
+      '&::placeholder': {
+        color: placeholderColor,
+        opacity: 1,
+        ...theme.typography.caption,
+      },
+    },
+
+    '& .MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputMultiline': {
+      padding: 'unset',
+    },
+
+    '& .MuiInputLabel-root': {
+      color: textColor,
       ...theme.typography.caption,
     },
-  },
-  '& .MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputMultiline': {
-    padding: 'unset',
-  },
-  '& .MuiInputLabel-root': {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    ...theme.typography.caption,
-  },
-  ...(ownerState.showRequiredError && {
-    '& .MuiOutlinedInput-root fieldset': {
-      borderColor: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
-    },
-    '& .MuiOutlinedInput-root:hover fieldset': {
-      borderColor: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
-    },
-    '& .MuiOutlinedInput-root.Mui-focused fieldset': {
-      borderColor: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
-    },
-  }),
 
-  [`& .${MUI_NAME}-requiredMessage`]: {
-    ...theme.typography.caption,
-    visibility: ownerState.showRequiredError ? 'visible' : 'hidden',
-    color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
-    marginTop: '3px',
-    marginLeft: 0,
-    '&.MuiTypography-root': {
-      color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
+    [`& .${MUI_NAME}-requiredMessage`]: {
+      ...theme.typography.caption,
+      visibility: ownerState.showRequiredError ? 'visible' : 'hidden',
+      color: dangerColor,
+      marginTop: '3px',
+      marginLeft: 0,
+      '&.MuiTypography-root': {
+        color: dangerColor,
+      },
     },
-  },
-}));
+  };
+});

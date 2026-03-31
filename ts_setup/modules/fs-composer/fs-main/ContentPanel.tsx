@@ -3,14 +3,14 @@ import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsPanel } from '../fs-panel';
 
-import { FsArticleOrder } from '../fs-article-order';
-import { FsChanges } from '../fs-changes';
-import { FsConfigOptions } from '../fs-config-options';
-import { FsErrors } from '../fs-errors';
-import { FsHelp } from '../fs-help';
-import { FsHistory } from '../fs-history';
-import { FsProperties } from '../fs-properties';
-import { FsReferences } from '../fs-references';
+import { FsPanelArticleOrder } from '../fs-panel-article-order';
+import { FsPanelChanges } from '../fs-panel-changes';
+import { FsPanelConfigOptions } from '../fs-panel-config-options';
+import { FsPanelErrors } from '../fs-panel-errors';
+import { FsPanelHelp } from '../fs-panel-help';
+import { FsPanelHistory } from '../fs-panel-history';
+import { FsPanelProperties } from '../fs-panel-properties';
+import { FsPanelReferences } from '../fs-panel-references';
 
 import { OwnerState } from './useOwnerState';
 
@@ -30,23 +30,23 @@ export const ContentPanel: React.FC<ContentPanelProps> = ({ ownerState, classNam
           <Typography>{intl.formatMessage({ id: 'fs.main.chooseView.message' })}</Typography>
         </FsPanel>
       ) : selectedView === 'changes' ? (
-          <FsChanges dirent={activeDirent} />
+          <FsPanelChanges dirent={activeDirent} />
         ) : (() => {
           switch (selectedView) {
             case 'errors':
-              return <FsErrors dirent={activeDirent} />;
+              return <FsPanelErrors dirent={activeDirent} />;
             case 'references':
-              return <FsReferences dirent={activeDirent} />;
+              return <FsPanelReferences dirent={activeDirent} />;
           case 'properties':
-              return <FsProperties dirent={activeDirent} />;
+              return <FsPanelProperties dirent={activeDirent} />;
           case 'history':
-              return <FsHistory dirent={activeDirent} />;
+              return <FsPanelHistory dirent={activeDirent} />;
           case 'help':
-              return <FsHelp dirent={activeDirent} />;
+              return <FsPanelHelp dirent={activeDirent} />;
           case 'configuration':
-              return <FsConfigOptions dirent={activeDirent} />;
+              return <FsPanelConfigOptions dirent={activeDirent} />;
           case 'article-order':
-              return <FsArticleOrder />;
+              return <FsPanelArticleOrder />;
           default:
             return (
               <FsPanel title='View not implemented'>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsDirent } from '@dxs-ts/fs-api';
+import MDEditor from '@uiw/react-md-editor';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -16,37 +16,35 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { selectOptions, getConfigOptionsForType } = useFsDirent();
-  const articleOptions = selectOptions.articles;
-  const configOptions = getConfigOptionsForType('page');
+
+  const [content, setContent] = React.useState(ownerState.dirent?.content ?? '');
 
   return (
     <FsDirentPageRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.page.sectionTitle.edit' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.localeCodeField.label' })}</Typography>
-        <FsDirentTextField
-          value={ownerState.localeCode}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.page.localeCodeField.placeholder' })}
-          onChange={ownerState.onChangeLocaleCode}
-          required
-        />
-
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.articleField.label' })}</Typography>
-        <FsDirentSelectSingle options={articleOptions} value={ownerState.articleId} onChange={ownerState.onChangeArticleId} />
+        <FsDirentSelectSingle options={ownerState.articleOptions} value={ownerState.articleId} onChange={ownerState.onChangeArticleId} />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.localeField.label' })}</Typography>
+        <FsDirentSelectSingle options={ownerState.localeOptions} value={ownerState.localeCode} onChange={ownerState.onChangeLocaleCode} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.descriptionField.label' })}</Typography>
-        <FsDirentTextField
-          value={ownerState.description}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.page.descriptionField.placeholder' })}
+        <FsDirentTextField value={ownerState.description} placeholder={intl.formatMessage({ id: 'fs.dirent.page.descriptionField.placeholder' })}
           onChange={ownerState.onChangeDescription}
-          multiline minRows={2} maxRows={4}
+          multiline
+          minRows={2} maxRows={4}
         />
 
-
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.configOptionsField.label' })}</Typography>
-        <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+        <FsDirentSelectMulti options={ownerState.availableConfigOptions} value={ownerState.configOptions as string[]} onChange={ownerState.onChangeConfigOptions} />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}</Typography>
+        <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
+          <MDEditor value={content} onChange={(val) => setContent(val ?? '')} />
+        </div>
+
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonCancel />

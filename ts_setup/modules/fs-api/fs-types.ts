@@ -25,8 +25,8 @@ export declare namespace Fs {
     phone: PhoneProps;
   }
 
-  export type Type     = keyof PropsMap;
-  export type Props    = PropsMap[Type];
+  export type Type = keyof PropsMap;
+  export type Props = PropsMap[Type];
   export type DirentAsset = DirentBase & Props;
 
   export type Folder = DirentBase & PropsMap['folder'];
