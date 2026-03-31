@@ -1,12 +1,12 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { PhoneDirentProps } from '@dxs-ts/fs-api';
+import { FsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesPhoneProps {
-  direntProps: PhoneDirentProps;
+  direntProps: FsDirent.PhoneProps;
 }
 
 export const FsPropertiesPhone: React.FC<FsPropertiesPhoneProps> = ({ direntProps }) => {

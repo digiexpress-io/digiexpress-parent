@@ -1,10 +1,10 @@
-import { FsDirentEntry, useFsNav } from '@dxs-ts/fs-api';
+import { FsDirent, useFsNav } from '@dxs-ts/fs-api';
 import { FsPropertiesProps } from './FsPropertiesProps';
 
 
 export interface OwnerState {
   isDarkMode: boolean;
-  direntProps: FsDirentEntry | undefined;
+  direntProps: FsDirent.Entry | undefined;
 }
 
 export const useOwnerState = (props: FsPropertiesProps): OwnerState => {

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { LanguageDirentProps } from '@dxs-ts/fs-api';
+import { FsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesLanguageProps {
-  direntProps: LanguageDirentProps;
+  direntProps: FsDirent.LanguageProps;
 }
 
 export const FsPropertiesLanguage: React.FC<FsPropertiesLanguageProps> = ({ direntProps }) => {

@@ -1,10 +1,10 @@
-import { useFsNav, useFsDirent, ArticleEntry } from '@dxs-ts/fs-api';
+import { useFsNav, useFsDirent, FsDirent } from '@dxs-ts/fs-api';
 import { FsArticleOrderProps } from './FsArticleOrderProps';
 
 
 export interface OwnerState {
   isDarkMode: boolean;
-  articles: ArticleEntry[];
+  articles: FsDirent.Article[];
 }
 
 export const useOwnerState = (_props: FsArticleOrderProps): OwnerState => {
@@ -12,8 +12,8 @@ export const useOwnerState = (_props: FsArticleOrderProps): OwnerState => {
   const { getDirent, selectOptions } = useFsDirent();
 
   const articles = selectOptions.articles
-    .map(opt => getDirent<ArticleEntry>(opt.value))
-    .filter((a): a is ArticleEntry => a !== undefined)
+    .map(opt => getDirent<FsDirent.Article>(opt.value))
+    .filter((a): a is FsDirent.Article => a !== undefined)
     .sort((a, b) => a.orderNumber - b.orderNumber);
 
   return { isDarkMode, articles };

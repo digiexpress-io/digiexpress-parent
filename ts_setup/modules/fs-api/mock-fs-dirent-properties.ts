@@ -1,6 +1,6 @@
-import { FsDirentProps } from './fs-types'
+import { FsDirent } from './fs-types'
 
-export const mockFsDirentProperties: Record<string, FsDirentProps> = {
+export const mockFsDirentProperties: Record<string, FsDirent.Props> = {
 
   'content': {
     id: 'content',

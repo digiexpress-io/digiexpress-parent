@@ -2,7 +2,7 @@ import { FsDirent, FsTab } from '@dxs-ts/fs-api';
 
 
 export interface FsDirentLinkCreateProps {
-  parentFolder: FsDirent | undefined;
+  parentFolder: FsDirent.Dirent | undefined;
   pathToTopParent: string | undefined;
 }
 

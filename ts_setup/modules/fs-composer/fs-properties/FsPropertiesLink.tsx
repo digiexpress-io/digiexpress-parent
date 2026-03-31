@@ -1,12 +1,12 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { LinkDirentProps } from '@dxs-ts/fs-api';
+import { FsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesLinkProps {
-  direntProps: LinkDirentProps;
+  direntProps: FsDirent.LinkProps;
 }
 
 export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ direntProps }) => {

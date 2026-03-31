@@ -1,16 +1,16 @@
 import React from 'react';
 import {
-  FsDirentConfigOption, LinkEntry,
+  FsDirent,
   useFsDirent, useFsNav
 } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: LinkEntry | undefined;
+  dirent: FsDirent.Link | undefined;
   locales: string[];
   urlValue: string;
   intlValues: Record<string, string>;
-  configOptions: FsDirentConfigOption[];
+  configOptions: FsDirent.ConfigOption[];
   isExpanded: boolean;
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
@@ -22,13 +22,13 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent, selectOptions } = useFsDirent();
 
-  const dirent = getDirent<LinkEntry>(props.direntId);
+  const dirent = getDirent<FsDirent.Link>(props.direntId);
   const locales = selectOptions.languages;
 
   const [urlValue, setUrlValue] = React.useState(dirent?.urlValue ?? '');
   const [intlValues, setIntlValues] = React.useState<Record<string, string>>(dirent?.intlValues ?? {});
-  const [configOptions, setConfigOptions] = React.useState<FsDirentConfigOption[]>(
-    (dirent?.configOptions ?? []) as FsDirentConfigOption[]
+  const [configOptions, setConfigOptions] = React.useState<FsDirent.ConfigOption[]>(
+    (dirent?.configOptions ?? []) as FsDirent.ConfigOption[]
   );
   const [isExpanded, setIsExpanded] = React.useState(false);
 
@@ -41,7 +41,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeConfigOptions(value: string[]) {
-    setConfigOptions(value as FsDirentConfigOption[]);
+    setConfigOptions(value as FsDirent.ConfigOption[]);
   }
 
   function onToggleExpanded() {

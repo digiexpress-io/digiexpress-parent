@@ -1,13 +1,13 @@
 import React from 'react';
 import { MenuItem, Divider, Typography, Box, Chip } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentEntry, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { FsDirent, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
 import { FsIcon, FsIcons } from '../fs-theme';
 
 
 export interface FsDirentMenuMainProps {
-  dirent: FsDirentEntry | undefined;
+  dirent: FsDirent.Entry | undefined;
   openSubmenu: string | undefined;
   onSubmenuOpen: (submenuType: string) => void;
   onClose: () => void;

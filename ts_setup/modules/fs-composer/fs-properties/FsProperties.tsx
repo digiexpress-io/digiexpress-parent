@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentEntry } from '@dxs-ts/fs-api';
+import { FsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
 import { FsPropertiesProps } from './FsPropertiesProps';
@@ -17,7 +17,7 @@ import { FsPropertiesPhone } from './FsPropertiesPhone';
 
 
 
-function renderTypeSpecificRows(direntProps: FsDirentEntry): React.ReactNode {
+function renderTypeSpecificRows(direntProps: FsDirent.Entry): React.ReactNode {
   switch (direntProps.type) {
     case 'article': return null;
     case 'service': return <FsPropertiesService direntProps={direntProps} />;

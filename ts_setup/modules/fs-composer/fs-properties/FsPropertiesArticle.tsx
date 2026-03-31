@@ -1,13 +1,13 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { ArticleDirentProps, FsDirent, FsDirentType } from '@dxs-ts/fs-api';
+import { FsDirent } from '@dxs-ts/fs-api';
 import { SvgIconProps } from '@mui/material';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
-function getTypeIcon(type: FsDirentType): React.ElementType<SvgIconProps> {
+function getTypeIcon(type: FsDirent.Type): React.ElementType<SvgIconProps> {
   switch (type) {
     case 'folder': return FsIcons.FolderClosed;
     case 'article': return FsIcons.Article;
@@ -25,8 +25,8 @@ function getTypeIcon(type: FsDirentType): React.ElementType<SvgIconProps> {
 }
 
 export interface FsPropertiesArticleProps {
-  direntProps: ArticleDirentProps;
-  children: FsDirent[];
+  direntProps: FsDirent.ArticleProps;
+  children: FsDirent.Dirent[];
 }
 
 export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ children }) => {

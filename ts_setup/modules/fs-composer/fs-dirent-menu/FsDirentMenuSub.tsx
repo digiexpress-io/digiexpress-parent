@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Collapse, Divider } from '@mui/material';
-import { FsDirentEntry } from '@dxs-ts/fs-api';
+import { FsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 import { FsDirentPermissions } from '../fs-dirent-permissions';
 import { FsDirentHistory } from '../fs-dirent-history';
@@ -11,7 +11,7 @@ import { FsDirentComments } from '../fs-dirent-comments';
 import { FsDirentLabels } from '../fs-dirent-labels';
 
 export interface FsDirentMenuSubProps {
-  dirent: FsDirentEntry | undefined;
+  dirent: FsDirent.Entry | undefined;
   openSubmenu: string | undefined;
   onClose: () => void;
 }

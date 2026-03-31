@@ -1,24 +1,24 @@
 import React from 'react';
-import { FsDirentConfigOption, FsDirent, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { FsDirent, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
 import { FsDirentProps } from './FsDirentProps';
 import { FsDirentClasses } from './useUtilityClasses';
 
 export interface OwnerState {
 
   onToggle: (direntId: string) => void;
-  onContextMenu: (event: React.MouseEvent, dirent: FsDirent) => void;
+  onContextMenu: (event: React.MouseEvent, dirent: FsDirent.Dirent) => void;
 
-  isChildError: (dirent: FsDirent) => boolean;
-  openAsset: (asset: FsDirent, pathToTopParent: string) => void;
+  isChildError: (dirent: FsDirent.Dirent) => boolean;
+  openAsset: (asset: FsDirent.Dirent, pathToTopParent: string) => void;
 
-  dirent: FsDirent;
+  dirent: FsDirent.Dirent;
   direntIconClassName: keyof FsDirentClasses;
   level: number;
   parentPath?: string;
   fullPath: string;
   searchTerm: string;
-  children: FsDirent[];
-  options: FsDirentConfigOption[];
+  children: FsDirent.Dirent[];
+  options: FsDirent.ConfigOption[];
 
   
   isDarkMode: boolean;
@@ -70,7 +70,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
 
 
 
-function _sortChildren(children: FsDirent[]) {
+function _sortChildren(children: FsDirent.Dirent[]) {
   const order = ['article', 'service', 'dialob', 'flow', 'link', 'language', 'printout', 'image', 'template'];
   return children.sort((a, b) => {
     const aIndex = order.indexOf(a.type);
@@ -80,7 +80,7 @@ function _sortChildren(children: FsDirent[]) {
 }
 
 
-function _getIconClassName(dirent: FsDirent): keyof FsDirentClasses {
+function _getIconClassName(dirent: FsDirent.Dirent): keyof FsDirentClasses {
   switch (dirent.type) {
     case 'folder': return 'iconFolder';
     case 'article': return 'iconArticle';

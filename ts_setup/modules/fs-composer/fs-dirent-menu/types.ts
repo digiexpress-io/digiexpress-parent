@@ -2,7 +2,7 @@ import { FsDirent } from "@dxs-ts/fs-api";
 
 
 interface FsDirentMenuProps {
-  dirent: FsDirent | undefined;
+  dirent: FsDirent.Dirent | undefined;
   anchorPosition: { top: number; left: number } | undefined;
   open: boolean;
   onClose: () => void;
@@ -10,19 +10,19 @@ interface FsDirentMenuProps {
 }
 
 interface FsDirentMenuMainProps {
-  dirent: FsDirent | undefined;
+  dirent: FsDirent.Dirent | undefined;
   openSubmenu: string | undefined;
   onSubmenuOpen: (submenuType: string) => void;
   onClose: () => void;
 }
 
 interface FsDirentMenuSubProps {
-  dirent: FsDirent | undefined;
+  dirent: FsDirent.Dirent | undefined;
   openSubmenu: string | undefined;
 }
 
 interface DirentCommentsProps {
-  dirent: FsDirent | undefined;
+  dirent: FsDirent.Dirent | undefined;
 }
 
 interface ItemHistoryEntry {
@@ -33,7 +33,7 @@ interface ItemHistoryEntry {
 
 
 interface DirentReferencesProps {
-  dirent?: FsDirent;
+  dirent?: FsDirent.Dirent;
 }
 
 

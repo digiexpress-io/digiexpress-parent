@@ -1,12 +1,12 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { FsExplorerProps } from "./FsExplorerProps";
 import { FilterData, filterTreeDirents } from '../fs-search';
-import { FsDirentContextMenuData, FsDirent, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { FsDirent, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
 
 function handleContextMenu(
   event: React.MouseEvent,
-  dirent: FsDirent,
-  setContextMenuData: React.Dispatch<React.SetStateAction<FsDirentContextMenuData | undefined>>,
+  dirent: FsDirent.Dirent,
+  setContextMenuData: React.Dispatch<React.SetStateAction<FsDirent.ContextMenuData | undefined>>,
   setContextMenuOpen: React.Dispatch<React.SetStateAction<boolean>>
 ) {
   event.preventDefault();
@@ -21,25 +21,25 @@ export interface OwnerState {
   isAnyDirentExpanded: boolean;
   isContextMenuOpen: boolean;
 
-  filteredTreeData: FsDirent[];
+  filteredTreeData: FsDirent.Dirent[];
   searchTerm: string;
-  fsData: FsDirent[];
+  fsData: FsDirent.Dirent[];
   filters: FilterData[];
-  contextMenuData: FsDirentContextMenuData | undefined;
+  contextMenuData: FsDirent.ContextMenuData | undefined;
 
-  setContextMenuData: Dispatch<SetStateAction<FsDirentContextMenuData | undefined>>;
+  setContextMenuData: Dispatch<SetStateAction<FsDirent.ContextMenuData | undefined>>;
   setContextMenuOpen: Dispatch<SetStateAction<boolean>>;
   onContextMenuClose: () => void;
-  onContextMenu: (event: React.MouseEvent, dirent: FsDirent,
-    setContextMenuData: React.Dispatch<React.SetStateAction<FsDirentContextMenuData | undefined>>,
+  onContextMenu: (event: React.MouseEvent, dirent: FsDirent.Dirent,
+    setContextMenuData: React.Dispatch<React.SetStateAction<FsDirent.ContextMenuData | undefined>>,
     setContextMenuOpen: React.Dispatch<React.SetStateAction<boolean>>) => void;
 
   setIsDarkMode: (darkMode: boolean) => void;
   setSearchExpanded: (expanded: boolean) => void;
   setSearchTerm: (term: string) => void;
-  setFsData: Dispatch<SetStateAction<FsDirent[]>>;
+  setFsData: Dispatch<SetStateAction<FsDirent.Dirent[]>>;
   setFilters: (filters: FilterData[]) => void;
-  onDoubleClick: (dirent: FsDirent, pathToTopParent: string) => void;
+  onDoubleClick: (dirent: FsDirent.Dirent, pathToTopParent: string) => void;
   collapseAll: () => void;
   toggleDirent: (direntId: string) => void;
 }
@@ -47,9 +47,9 @@ export interface OwnerState {
 export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   const { isDarkMode, setIsDarkMode, openAsset, searchExpanded, setSearchExpanded } = useFsNav();
   const { getDirent, dirents, collapseAll, setExpanded, setExpandedBatch } = useFsDirent();
-  const [fsData, setFsData] = React.useState<FsDirent[]>(dirents);
+  const [fsData, setFsData] = React.useState<FsDirent.Dirent[]>(dirents);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
-  const [contextMenuData, setContextMenuData] = React.useState<FsDirentContextMenuData | undefined>();
+  const [contextMenuData, setContextMenuData] = React.useState<FsDirent.ContextMenuData | undefined>();
   const [searchTerm, setSearchTerm] = React.useState('');
   const debounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [filters, setFilters] = React.useState<FilterData[]>([]);
@@ -58,7 +58,7 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     return filterTreeDirents(fsData, searchTerm, filters, getDirent)
   }, [fsData, searchTerm, filters, getDirent])
 
-  function collectParentIds(nodes: FsDirent[], acc: string[] = []): string[] {
+  function collectParentIds(nodes: FsDirent.Dirent[], acc: string[] = []): string[] {
     nodes.forEach(node => {
       if (node.children && node.children.length > 0) {
         acc.push(node.id);
@@ -93,7 +93,7 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     setContextMenuOpen(false);
   }
 
-  function onDoubleClick(dirent: FsDirent, pathToTopParent: string) {
+  function onDoubleClick(dirent: FsDirent.Dirent, pathToTopParent: string) {
     openAsset(dirent, pathToTopParent);
   }
 

@@ -2,7 +2,7 @@ import { FsDirent, FsTab } from '@dxs-ts/fs-api';
 
 
 export interface FsDirentPhoneCreateProps {
-  parentFolder: FsDirent | undefined;
+  parentFolder: FsDirent.Dirent | undefined;
   pathToTopParent: string | undefined;
 }
 

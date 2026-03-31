@@ -1,14 +1,14 @@
 import React from 'react';
-import { FsDirentConfigOption, PageEntry, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
+import { FsDirent, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: PageEntry | undefined;
+  dirent: FsDirent.Page | undefined;
   localeCode: string;
   articleId: string;
   description: string;
-  configOptions: FsDirentConfigOption[];
+  configOptions: FsDirent.ConfigOption[];
   onChangeLocaleCode: (value: string) => void;
   onChangeArticleId: (value: string) => void;
   onChangeDescription: (value: string) => void;
@@ -19,13 +19,13 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent<PageEntry>(props.direntId);
+  const dirent = getDirent<FsDirent.Page>(props.direntId);
 
   const [localeCode, setLocaleCode] = React.useState(dirent?.localeCode ?? '');
   const [articleId, setArticleId] = React.useState(dirent?.articleId ?? '');
   const [description, setDescription] = React.useState(dirent?.description ?? '');
-  const [configOptions, setConfigOptions] = React.useState<FsDirentConfigOption[]>(
-    (dirent?.configOptions ?? []) as FsDirentConfigOption[]
+  const [configOptions, setConfigOptions] = React.useState<FsDirent.ConfigOption[]>(
+    (dirent?.configOptions ?? []) as FsDirent.ConfigOption[]
   );
 
   function onChangeLocaleCode(value: string) {
@@ -41,7 +41,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeConfigOptions(value: string[]) {
-    setConfigOptions(value as FsDirentConfigOption[]);
+    setConfigOptions(value as FsDirent.ConfigOption[]);
   }
 
   return ({

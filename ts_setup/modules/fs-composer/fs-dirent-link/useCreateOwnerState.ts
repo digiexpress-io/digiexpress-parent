@@ -4,13 +4,13 @@ import { FsDirent, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
-  parentFolder: FsDirent | undefined;
+  parentFolder: FsDirent.Dirent | undefined;
   locales: string[];
   isExpanded: boolean;
   onToggleExpanded: () => void;
 }
 
-export const useCreateOwnerState = (props: { parentFolder: FsDirent | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
+export const useCreateOwnerState = (props: { parentFolder: FsDirent.Dirent | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
   const { isDarkMode } = useFsNav();
   const { selectOptions } = useFsDirent();
   const locales = selectOptions.languages;

@@ -1,9 +1,9 @@
 import React from 'react';
-import { useFsNav, useFsDirent, FsDirentConfigOption, ServiceEntry } from '@dxs-ts/fs-api';
+import { useFsNav, useFsDirent, FsDirent } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: ServiceEntry | undefined;
+  dirent: FsDirent.Service | undefined;
   name: string;
   dialobFormName: string;
   dialobFormTag: string;
@@ -11,7 +11,7 @@ export interface UpdateOwnerState {
   validityStart: string;
   validityEnd: string;
   articles: string[];
-  configOptions: FsDirentConfigOption[];
+  configOptions: FsDirent.ConfigOption[];
   intlValues: Record<string, string>;
   locales: string[];
   isExpanded: boolean;
@@ -31,7 +31,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent, selectOptions } = useFsDirent();
 
-  const dirent = getDirent<ServiceEntry>(props.direntId);
+  const dirent = getDirent<FsDirent.Service>(props.direntId);
 
   const [name, setName] = React.useState(dirent?.name ?? '');
   const [dialobFormName, setDialobFormName] = React.useState(dirent?.dialobFormName ?? '');
@@ -40,8 +40,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [validityStart, setValidityStart] = React.useState(dirent?.validityStart ?? '');
   const [validityEnd, setValidityEnd] = React.useState(dirent?.validityEnd ?? '');
   const [articles, setArticles] = React.useState<string[]>((dirent?.articles ?? []) as string[]);
-  const [configOptions, setConfigOptions] = React.useState<FsDirentConfigOption[]>(
-    (dirent?.configOptions ?? []) as FsDirentConfigOption[]
+  const [configOptions, setConfigOptions] = React.useState<FsDirent.ConfigOption[]>(
+    (dirent?.configOptions ?? []) as FsDirent.ConfigOption[]
   );
   const [intlValues, setIntlValues] = React.useState<Record<string, string>>(dirent?.intlValues ?? {});
   const [isExpanded, setIsExpanded] = React.useState(false);
@@ -77,7 +77,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeConfigOptions(value: string[]) {
-    setConfigOptions(value as FsDirentConfigOption[]);
+    setConfigOptions(value as FsDirent.ConfigOption[]);
   }
 
   function onChangeIntlValues(locale: string, value: string) {

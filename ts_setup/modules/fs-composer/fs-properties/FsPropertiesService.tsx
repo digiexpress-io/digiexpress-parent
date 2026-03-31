@@ -1,12 +1,12 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { ServiceDirentProps } from '@dxs-ts/fs-api';
+import { FsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesServiceProps {
-  direntProps: ServiceDirentProps;
+  direntProps: FsDirent.ServiceProps;
 }
 
 export const FsPropertiesService: React.FC<FsPropertiesServiceProps> = ({ direntProps }) => {

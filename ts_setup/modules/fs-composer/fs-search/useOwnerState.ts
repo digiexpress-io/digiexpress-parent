@@ -1,18 +1,18 @@
 import React from 'react';
-import { useFsNav, FsDirent, FsDirentEntry, FsDirentType } from '@dxs-ts/fs-api';
+import { useFsNav, FsDirent } from '@dxs-ts/fs-api';
 import { FsSearchProps } from './FsSearchProps';
 
 export interface FilterData {
   label: string;
-  type: FsDirentType;
+  type: FsDirent.Type;
 }
 
 export function filterTreeDirents(
-  dirents: FsDirent[],
+  dirents: FsDirent.Dirent[],
   searchTerm: string,
   visibleFilters: FilterData[],
-  getDirent: (id: string) => FsDirentEntry | undefined
-): FsDirent[] {
+  getDirent: (id: string) => FsDirent.Entry | undefined
+): FsDirent.Dirent[] {
   const visibleTypes = visibleFilters.map(filter => filter.type);
   const isNoFiltersSelected = visibleFilters.length === 0;
   const isSearchTermEmpty = !searchTerm.trim() || searchTerm.trim().length < 3;
@@ -21,7 +21,7 @@ export function filterTreeDirents(
     return dirents;
   }
 
-  const filtered: FsDirent[] = [];
+  const filtered: FsDirent.Dirent[] = [];
 
   for (const dirent of dirents) {
     const direntEntry = getDirent(dirent.id);

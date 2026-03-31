@@ -1,16 +1,16 @@
 import React from 'react';
-import { FsDirent, FsDirentType } from '../fs-types';
+import { FsDirent } from '../fs-types';
 
 export interface FsEditTab {
   type: 'edit';
-  dirent: FsDirent;
+  dirent: FsDirent.Dirent;
   pathToTopParent: string;
 }
 
 export interface FsCreateTab {
   type: 'create';
-  direntType: FsDirentType;
-  parentFolder: FsDirent | undefined;
+  direntType: FsDirent.Type;
+  parentFolder: FsDirent.Dirent | undefined;
   pathToTopParent: string;
 }
 
@@ -22,9 +22,9 @@ export interface FsNavContextType {
   openTabs: FsTab[];
   activeTabIndex: number;
   activeTabPath: string;
-  activeDirent: FsDirent | undefined;
-  openAsset: (asset: FsDirent, pathToTopParent: string) => void;
-  openCreateTab: (direntType: FsDirentType, parentFolder: FsDirent | undefined) => void;
+  activeDirent: FsDirent.Dirent | undefined;
+  openAsset: (asset: FsDirent.Dirent, pathToTopParent: string) => void;
+  openCreateTab: (direntType: FsDirent.Type, parentFolder: FsDirent.Dirent | undefined) => void;
   registerDirentPath: (id: string, path: string) => void;
   closeTab: (index: number) => void;
   closeAllTabs: () => void;
@@ -55,7 +55,7 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
     direntPathsRef.current[id] = path;
   }, []);
 
-  const openAsset = React.useCallback((asset: FsDirent, pathToTopParent: string) => {
+  const openAsset = React.useCallback((asset: FsDirent.Dirent, pathToTopParent: string) => {
     setActiveTabPath(pathToTopParent);
 
     setOpenTabs(prevTabs => {
@@ -77,7 +77,7 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
     });
   }, []);
 
-  const openCreateTab = React.useCallback((direntType: FsDirentType, parentFolder: FsDirent | undefined) => {
+  const openCreateTab = React.useCallback((direntType: FsDirent.Type, parentFolder: FsDirent.Dirent | undefined) => {
     const registeredPath = parentFolder ? (direntPathsRef.current[parentFolder.id] ?? parentFolder.name) : '';
 
     const pathToTopParent = parentFolder?.type === 'folder' ? registeredPath : registeredPath

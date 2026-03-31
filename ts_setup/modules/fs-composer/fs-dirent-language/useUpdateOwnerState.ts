@@ -1,14 +1,14 @@
 import React from 'react';
-import { FsDirentConfigOption, LanguageEntry, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
+import { FsDirent, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: LanguageEntry | undefined;
+  dirent: FsDirent.Language | undefined;
   name: string;
   localeCode: string;
   description: string;
-  configOptions: FsDirentConfigOption[];
+  configOptions: FsDirent.ConfigOption[];
   onChangeName: (value: string) => void;
   onChangeLocaleCode: (value: string) => void;
   onChangeDescription: (value: string) => void;
@@ -19,13 +19,13 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent<LanguageEntry>(props.direntId);
+  const dirent = getDirent<FsDirent.Language>(props.direntId);
 
   const [name, setName] = React.useState(dirent?.name ?? '');
   const [localeCode, setLocaleCode] = React.useState(dirent?.localeCode ?? '');
   const [description, setDescription] = React.useState(dirent?.description ?? '');
-  const [configOptions, setConfigOptions] = React.useState<FsDirentConfigOption[]>(
-    (dirent?.configOptions ?? []) as FsDirentConfigOption[]
+  const [configOptions, setConfigOptions] = React.useState<FsDirent.ConfigOption[]>(
+    (dirent?.configOptions ?? []) as FsDirent.ConfigOption[]
   );
 
   function onChangeName(value: string) {
@@ -41,7 +41,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeConfigOptions(value: string[]) {
-    setConfigOptions(value as FsDirentConfigOption[]);
+    setConfigOptions(value as FsDirent.ConfigOption[]);
   }
 
   return ({

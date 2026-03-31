@@ -1,9 +1,9 @@
-import { FsDirentEntry } from "@dxs-ts/fs-api";
+import { FsDirent } from "@dxs-ts/fs-api";
 import { Components } from "react-markdown";
 
 
 export interface FsHelpProps {
-  dirent: FsDirentEntry | undefined;
+  dirent: FsDirent.Entry | undefined;
   remarkPlugins?: any[] | undefined;
   overrides?: Components;
 }

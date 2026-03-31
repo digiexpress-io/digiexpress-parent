@@ -1,13 +1,13 @@
 import React from 'react';
-import { FsDirentConfigOption, PhoneEntry, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
+import { FsDirent, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: PhoneEntry | undefined;
+  dirent: FsDirent.Phone | undefined;
   locales: string[];
   phoneValue: string;
   intlValues: Record<string, string>;
-  configOptions: FsDirentConfigOption[];
+  configOptions: FsDirent.ConfigOption[];
   isExpanded: boolean;
   onChangePhoneValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
@@ -19,13 +19,13 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent, selectOptions } = useFsDirent();
 
-  const dirent = getDirent<PhoneEntry>(props.direntId);
+  const dirent = getDirent<FsDirent.Phone>(props.direntId);
   const locales = selectOptions.languages;
 
   const [phoneValue, setPhoneValue] = React.useState(dirent?.phoneValue ?? '');
   const [intlValues, setIntlValues] = React.useState<Record<string, string>>(dirent?.intlValues ?? {});
-  const [configOptions, setConfigOptions] = React.useState<FsDirentConfigOption[]>(
-    (dirent?.configOptions ?? []) as FsDirentConfigOption[]
+  const [configOptions, setConfigOptions] = React.useState<FsDirent.ConfigOption[]>(
+    (dirent?.configOptions ?? []) as FsDirent.ConfigOption[]
   );
   const [isExpanded, setIsExpanded] = React.useState(false);
 
@@ -38,7 +38,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeConfigOptions(value: string[]) {
-    setConfigOptions(value as FsDirentConfigOption[]);
+    setConfigOptions(value as FsDirent.ConfigOption[]);
   }
 
   function onToggleExpanded() {

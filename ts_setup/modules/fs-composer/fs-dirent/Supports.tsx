@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, Box, ListItemText, Typography } from '@mui/material';
 
-import { FsDirentConfigOption, FsDirent, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { FsDirent, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
 
 import { useUtilityClasses } from './useUtilityClasses';
 import { FsIcons, FsIcon, FsColors, getDirentColor } from '../fs-theme';
@@ -29,7 +29,7 @@ export const ConfigOptionIcons: React.FC<{ ownerState: OwnerState }> = ({ ownerS
 }
 
 
-function ConfigIcon(props: { type: FsDirentConfigOption, className: string }) {
+function ConfigIcon(props: { type: FsDirent.ConfigOption, className: string }) {
   const { className, type } = props;
 
   switch (type) {
@@ -40,7 +40,7 @@ function ConfigIcon(props: { type: FsDirentConfigOption, className: string }) {
   }
 }
 
-export const DirentDecorator = (props: { dirent: FsDirent, children: React.ReactNode }) => {
+export const DirentDecorator = (props: { dirent: FsDirent.Dirent, children: React.ReactNode }) => {
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
   const { dirent, children } = props;
@@ -77,7 +77,7 @@ export const DirentDecorator = (props: { dirent: FsDirent, children: React.React
 }
 
 
-export const DirentIcon = (props: { dirent: FsDirent }) => {
+export const DirentIcon = (props: { dirent: FsDirent.Dirent }) => {
   const { dirent } = props;
   const { getDirent } = useFsDirent();
   const expanded = getDirent(dirent.id)?.expanded;
@@ -110,7 +110,7 @@ export const DirentIcon = (props: { dirent: FsDirent }) => {
 }
 
 interface FsDirentNameProps {
-  dirent: FsDirent;
+  dirent: FsDirent.Dirent;
   isDarkTheme: boolean;
   error: boolean;
   searchTerm: string;

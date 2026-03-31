@@ -1,6 +1,6 @@
 import { FsDirent } from './fs-types'
 
-export const mockFsData: FsDirent[] = [
+export const mockFsData: FsDirent.Dirent[] = [
   {
     id: 'content',
     name: 'content',
