@@ -3,14 +3,14 @@ import { Fs } from '../fs-types';
 
 export interface FsEditTab {
   type: 'edit';
-  dirent: Fs.Dirent;
+  dirent: Fs.DirentBase;
   pathToTopParent: string;
 }
 
 export interface FsCreateTab {
   type: 'create';
   direntType: Fs.Type;
-  parentFolder: Fs.Dirent | undefined;
+  parentFolder: Fs.DirentBase | undefined;
   pathToTopParent: string;
 }
 
@@ -22,9 +22,9 @@ export interface FsNavContextType {
   openTabs: FsTab[];
   activeTabIndex: number;
   activeTabPath: string;
-  activeDirent: Fs.Dirent | undefined;
-  openAsset: (asset: Fs.Dirent, pathToTopParent: string) => void;
-  openCreateTab: (direntType: Fs.Type, parentFolder: Fs.Dirent | undefined) => void;
+  activeDirent: Fs.DirentBase | undefined;
+  openAsset: (asset: Fs.DirentBase, pathToTopParent: string) => void;
+  openCreateTab: (direntType: Fs.Type, parentFolder: Fs.DirentBase | undefined) => void;
   registerDirentPath: (id: string, path: string) => void;
   closeTab: (index: number) => void;
   closeAllTabs: () => void;
@@ -55,7 +55,7 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
     direntPathsRef.current[id] = path;
   }, []);
 
-  const openAsset = React.useCallback((asset: Fs.Dirent, pathToTopParent: string) => {
+  const openAsset = React.useCallback((asset: Fs.DirentBase, pathToTopParent: string) => {
     setActiveTabPath(pathToTopParent);
 
     setOpenTabs(prevTabs => {
@@ -77,7 +77,7 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
     });
   }, []);
 
-  const openCreateTab = React.useCallback((direntType: Fs.Type, parentFolder: Fs.Dirent | undefined) => {
+  const openCreateTab = React.useCallback((direntType: Fs.Type, parentFolder: Fs.DirentBase | undefined) => {
     const registeredPath = parentFolder ? (direntPathsRef.current[parentFolder.id] ?? parentFolder.name) : '';
 
     const pathToTopParent = parentFolder?.type === 'folder' ? registeredPath : registeredPath

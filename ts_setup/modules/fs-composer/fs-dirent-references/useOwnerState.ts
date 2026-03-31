@@ -4,7 +4,7 @@ import { FsDirentReferencesProps } from './FsDirentReferencesProps';
 
 export interface OwnerState {
   isDarkMode: boolean;
-  findReferencesToDirent: (dirent: Fs.Dirent) => ItemReferencesEntry[];
+  findReferencesToDirent: (dirent: Fs.DirentBase) => ItemReferencesEntry[];
 }
 
 export const useOwnerState = (_props: FsDirentReferencesProps): OwnerState => {

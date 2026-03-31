@@ -7,7 +7,7 @@ import { FsDirentMenuSub } from './FsDirentMenuSub';
 import { usePositioningStrategy } from './helpers';
 
 interface FsDirentMenuProps {
-  dirent: Fs.Dirent | undefined;
+  dirent: Fs.DirentBase | undefined;
   anchorPosition: { top: number; left: number } | undefined;
   open: boolean;
   onClose: () => void;

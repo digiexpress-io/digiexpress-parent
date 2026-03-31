@@ -6,18 +6,18 @@ import { FsDirentClasses } from './useUtilityClasses';
 export interface OwnerState {
 
   onToggle: (direntId: string) => void;
-  onContextMenu: (event: React.MouseEvent, dirent: Fs.Dirent) => void;
+  onContextMenu: (event: React.MouseEvent, dirent: Fs.DirentBase) => void;
 
-  isChildError: (dirent: Fs.Dirent) => boolean;
-  openAsset: (asset: Fs.Dirent, pathToTopParent: string) => void;
+  isChildError: (dirent: Fs.DirentBase) => boolean;
+  openAsset: (asset: Fs.DirentBase, pathToTopParent: string) => void;
 
-  dirent: Fs.Dirent;
+  dirent: Fs.DirentBase;
   direntIconClassName: keyof FsDirentClasses;
   level: number;
   parentPath?: string;
   fullPath: string;
   searchTerm: string;
-  children: Fs.Dirent[];
+  children: Fs.DirentBase[];
   options: Fs.ConfigOption[];
 
   
@@ -70,7 +70,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
 
 
 
-function _sortChildren(children: Fs.Dirent[]) {
+function _sortChildren(children: Fs.DirentBase[]) {
   const order = ['article', 'service', 'dialob', 'flow', 'link', 'language', 'printout', 'image', 'template'];
   return children.sort((a, b) => {
     const aIndex = order.indexOf(a.type);
@@ -80,7 +80,7 @@ function _sortChildren(children: Fs.Dirent[]) {
 }
 
 
-function _getIconClassName(dirent: Fs.Dirent): keyof FsDirentClasses {
+function _getIconClassName(dirent: Fs.DirentBase): keyof FsDirentClasses {
   switch (dirent.type) {
     case 'folder': return 'iconFolder';
     case 'article': return 'iconArticle';

@@ -6,11 +6,11 @@ interface FilterData {
 }
 
 export function filterTreeDirents(
-  dirents: Fs.Dirent[],
+  dirents: Fs.DirentBase[],
   searchTerm: string,
   visibleFilters: FilterData[],
-  getDirent: (id: string) => Fs.Entry | undefined
-): Fs.Dirent[] {
+  getDirent: (id: string) => Fs.DirentAsset | undefined
+): Fs.DirentBase[] {
   const visibleTypes = visibleFilters.map(filter => filter.type);
   const isNoFiltersSelected = visibleFilters.length === 0;
   const isSearchTermEmpty = !searchTerm.trim();
@@ -20,7 +20,7 @@ export function filterTreeDirents(
     return dirents;
   }
 
-  const filtered: Fs.Dirent[] = [];
+  const filtered: Fs.DirentBase[] = [];
 
   for (const dirent of dirents) {
     const direntEntry = getDirent(dirent.id);

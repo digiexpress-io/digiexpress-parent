@@ -26,7 +26,7 @@ function getTypeIcon(type: Fs.Type): React.ElementType<SvgIconProps> {
 
 export interface FsPropertiesArticleProps {
   direntProps: Fs.ArticleProps;
-  children: Fs.Dirent[];
+  children: Fs.DirentBase[];
 }
 
 export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ children }) => {

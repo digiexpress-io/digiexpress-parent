@@ -3,11 +3,11 @@ export namespace Fs { }
 
 export declare namespace Fs {
 
-  export interface Dirent {
+  export interface DirentBase {
     id: string;
     name: string;
     type: Fs.Type;
-    children: Dirent[];
+    children: DirentBase[];
   }
 
   export interface PropsMap {
@@ -27,20 +27,20 @@ export declare namespace Fs {
 
   export type Type     = keyof PropsMap;
   export type Props    = PropsMap[Type];
-  export type Entry    = Dirent & Props;
+  export type DirentAsset = DirentBase & Props;
 
-  export type Folder   = Dirent & PropsMap['folder'];
-  export type Article  = Dirent & PropsMap['article'];
-  export type Service  = Dirent & PropsMap['service'];
-  export type Dialob   = Dirent & PropsMap['dialob'];
-  export type Flow     = Dirent & PropsMap['flow'];
-  export type Language = Dirent & PropsMap['language'];
-  export type Printout = Dirent & PropsMap['printout'];
-  export type Image    = Dirent & PropsMap['image'];
-  export type Page     = Dirent & PropsMap['page'];
-  export type Template = Dirent & PropsMap['template'];
-  export type Link     = Dirent & PropsMap['link'];
-  export type Phone    = Dirent & PropsMap['phone'];
+  export type Folder = DirentBase & PropsMap['folder'];
+  export type Article = DirentBase & PropsMap['article'];
+  export type Service = DirentBase & PropsMap['service'];
+  export type Dialob = DirentBase & PropsMap['dialob'];
+  export type Flow = DirentBase & PropsMap['flow'];
+  export type Language = DirentBase & PropsMap['language'];
+  export type Printout = DirentBase & PropsMap['printout'];
+  export type Image = DirentBase & PropsMap['image'];
+  export type Page = DirentBase & PropsMap['page'];
+  export type Template = DirentBase & PropsMap['template'];
+  export type Link = DirentBase & PropsMap['link'];
+  export type Phone = DirentBase & PropsMap['phone'];
 
   export interface PropsBase {
     id: string;
@@ -202,7 +202,7 @@ export declare namespace Fs {
   export type PhoneNumberId = string;
 
   export interface ContextMenuData {
-    dirent: Dirent;
+    dirent: DirentBase;
     anchorPosition: { top: number; left: number };
   }
 }

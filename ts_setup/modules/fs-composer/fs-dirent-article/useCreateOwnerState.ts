@@ -4,21 +4,21 @@ import { Fs, useFsNav } from '@dxs-ts/fs-api';
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
-  parentFolder: Fs.Dirent | undefined;
-  parentArticle: Fs.Dirent | undefined;
+  parentFolder: Fs.DirentBase | undefined;
+  parentArticle: Fs.DirentBase | undefined;
   parentArticlePath: string | undefined;
   isExpanded: boolean;
   onToggleExpanded: () => void;
 }
 
-function getParentArticlePath(pathToTopParent: string | undefined, parentArticle: Fs.Dirent): string {
+function getParentArticlePath(pathToTopParent: string | undefined, parentArticle: Fs.DirentBase): string {
   if (pathToTopParent) {
     return `${pathToTopParent} / ${parentArticle.name}`;
   }
   return parentArticle.name;
 }
 
-export const useCreateOwnerState = (props: { parentFolder: Fs.Dirent | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
+export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
   const { isDarkMode } = useFsNav();
   const [isExpanded, setIsExpanded] = React.useState(false);
 

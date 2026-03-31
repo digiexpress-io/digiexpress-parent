@@ -4,20 +4,20 @@ import { mockFsData } from "../mock-fs-data";
 
 
 
-function collectDirents(result: Record<string, Fs.Dirent>, node: Fs.Dirent): void {
+function collectDirents(result: Record<string, Fs.DirentBase>, node: Fs.DirentBase): void {
   result[node.id] = node;
   node.children.forEach(child => collectDirents(result, child));
 }
 
-function flattenDirents(nodes: Fs.Dirent[]): Record<string, Fs.Dirent> {
-  const result: Record<string, Fs.Dirent> = {};
+function flattenDirents(nodes: Fs.DirentBase[]): Record<string, Fs.DirentBase> {
+  const result: Record<string, Fs.DirentBase> = {};
   nodes.forEach(node => collectDirents(result, node));
   return result;
 }
 
 export const ALL_DIRENTS = flattenDirents(mockFsData);
 
-export function collectArticles(nodes: Fs.Dirent[]): Fs.SelectOption[] {
+export function collectArticles(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
   const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {
     if (node.type === 'article') { result.push({ value: node.id, label: node.name }); }
@@ -26,7 +26,7 @@ export function collectArticles(nodes: Fs.Dirent[]): Fs.SelectOption[] {
   return result;
 }
 
-export function collectFlows(nodes: Fs.Dirent[]): Fs.SelectOption[] {
+export function collectFlows(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
   const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {
     if (node.type === 'flow') { result.push({ value: node.name, label: node.name }); }
@@ -35,7 +35,7 @@ export function collectFlows(nodes: Fs.Dirent[]): Fs.SelectOption[] {
   return result;
 }
 
-export function collectDialobs(nodes: Fs.Dirent[]): Fs.SelectOption[] {
+export function collectDialobs(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
   const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {
     if (node.type === 'dialob') { result.push({ value: node.id, label: node.name }); }
@@ -44,7 +44,7 @@ export function collectDialobs(nodes: Fs.Dirent[]): Fs.SelectOption[] {
   return result;
 }
 
-export function collectLanguages(nodes: Fs.Dirent[]): string[] {
+export function collectLanguages(nodes: Fs.DirentBase[]): string[] {
   const result: string[] = [];
   nodes.forEach(node => {
     if (node.type === 'language') { result.push(node.name.replace('.language', '')); }

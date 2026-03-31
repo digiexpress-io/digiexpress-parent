@@ -12,12 +12,12 @@ export interface ItemReferencesEntry {
 
 export interface FsDirentContextType {
   direntPropsLoading: boolean;
-  dirents: Fs.Dirent[];
+  dirents: Fs.DirentBase[];
   selectOptions: Fs.SelectOptions;
   getConfigOptionsForType: (type: Fs.Type) => Fs.SelectOption[];
-  getDirent: <T extends Fs.Entry>(id: string) => T | undefined;
-  isChildError: (dirent: Fs.Dirent) => boolean;
-  findReferencesToDirent: (dirent: Fs.Dirent) => ItemReferencesEntry[];
+  getDirent: <T extends Fs.DirentAsset>(id: string) => T | undefined;
+  isChildError: (dirent: Fs.DirentBase) => boolean;
+  findReferencesToDirent: (dirent: Fs.DirentBase) => ItemReferencesEntry[];
   setExpanded: (id: string, value: boolean) => void;
   setExpandedBatch: (ids: string[], value: boolean) => void;
   collapseAll: () => void;
@@ -40,7 +40,7 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
     });
   }, []);
 
-  const getDirent = React.useCallback(<T extends Fs.Entry>(id: string): T | undefined => {
+  const getDirent = React.useCallback(<T extends Fs.DirentAsset>(id: string): T | undefined => {
     const dirent = ALL_DIRENTS[id];
     const direntProps = propsMap[id];
     if (!dirent || !direntProps) {
@@ -69,7 +69,7 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
     },
   }), [propsMap]);
 
-  const isChildError = React.useCallback((dirent: Fs.Dirent): boolean => {
+  const isChildError = React.useCallback((dirent: Fs.DirentBase): boolean => {
     const direntProps = propsMap[dirent.id];
     if (direntProps?.errors && direntProps.errors.length > 0) {
       return true;
@@ -80,10 +80,10 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
     return false;
   }, [propsMap]);
 
-  const findReferencesToDirent = React.useCallback((targetDirent: Fs.Dirent): ItemReferencesEntry[] => {
+  const findReferencesToDirent = React.useCallback((targetDirent: Fs.DirentBase): ItemReferencesEntry[] => {
     const references: ItemReferencesEntry[] = [];
 
-    function searchInDirent(dirent: Fs.Dirent, path: string[] = []): void {
+    function searchInDirent(dirent: Fs.DirentBase, path: string[] = []): void {
       const currentPath = [...path, dirent.name];
       const direntProps = propsMap[dirent.id];
 

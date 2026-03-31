@@ -17,7 +17,7 @@ import { FsPropertiesPhone } from './FsPropertiesPhone';
 
 
 
-function renderTypeSpecificRows(direntProps: Fs.Entry): React.ReactNode {
+function renderTypeSpecificRows(direntProps: Fs.DirentAsset): React.ReactNode {
   switch (direntProps.type) {
     case 'article': return null;
     case 'service': return <FsPropertiesService direntProps={direntProps} />;

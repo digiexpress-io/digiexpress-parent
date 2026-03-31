@@ -7,7 +7,7 @@ import { FsIcon, FsIcons } from '../fs-theme';
 
 
 export interface FsDirentMenuMainProps {
-  dirent: Fs.Entry | undefined;
+  dirent: Fs.DirentAsset | undefined;
   openSubmenu: string | undefined;
   onSubmenuOpen: (submenuType: string) => void;
   onClose: () => void;

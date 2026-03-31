@@ -6,7 +6,7 @@ export interface OwnerState {
   isDarkMode: boolean;
   assetName: string | undefined;
   assetPath: string | undefined;
-  assetDirent: Fs.Dirent | undefined;
+  assetDirent: Fs.DirentBase | undefined;
   isError: boolean | undefined;
 }
 

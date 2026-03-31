@@ -40,7 +40,7 @@ function ConfigIcon(props: { type: Fs.ConfigOption, className: string }) {
   }
 }
 
-export const DirentDecorator = (props: { dirent: Fs.Dirent, children: React.ReactNode }) => {
+export const DirentDecorator = (props: { dirent: Fs.DirentBase, children: React.ReactNode }) => {
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
   const { dirent, children } = props;
@@ -77,7 +77,7 @@ export const DirentDecorator = (props: { dirent: Fs.Dirent, children: React.Reac
 }
 
 
-export const DirentIcon = (props: { dirent: Fs.Dirent }) => {
+export const DirentIcon = (props: { dirent: Fs.DirentBase }) => {
   const { dirent } = props;
   const { getDirent } = useFsDirent();
   const expanded = getDirent(dirent.id)?.expanded;
@@ -110,7 +110,7 @@ export const DirentIcon = (props: { dirent: Fs.Dirent }) => {
 }
 
 interface FsDirentNameProps {
-  dirent: Fs.Dirent;
+  dirent: Fs.DirentBase;
   isDarkTheme: boolean;
   error: boolean;
   searchTerm: string;

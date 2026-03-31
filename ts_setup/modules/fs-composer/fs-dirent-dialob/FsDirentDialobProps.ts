@@ -2,7 +2,7 @@ import { Fs, FsTab } from '@dxs-ts/fs-api';
 
 
 export interface FsDirentDialobCreateProps {
-  parentFolder: Fs.Dirent | undefined;
+  parentFolder: Fs.DirentBase | undefined;
   pathToTopParent: string | undefined;
 }
 

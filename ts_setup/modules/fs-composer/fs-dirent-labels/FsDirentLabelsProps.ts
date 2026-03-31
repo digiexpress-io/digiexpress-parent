@@ -2,5 +2,5 @@ import { Fs } from "@dxs-ts/fs-api";
 
 
 export interface FsDirentLabelsProps {
-    dirent: Fs.Entry | undefined;
+    dirent: Fs.DirentAsset | undefined;
 }
