@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentTextField } from '../fs-dirent-text-field';
@@ -9,12 +10,11 @@ import { useUtilityClasses, FsDirentDialobRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentDialobCreateProps } from './FsDirentDialobProps';
 
-const LABEL_OPTIONS = ['label-a', 'label-b', 'label-c'];
-
 export const FsDirentDialobCreate: React.FC<FsDirentDialobCreateProps> = (_props) => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
+  const { selectOptions } = useFsDirent();
   const [labels, setLabels] = React.useState<string[]>([]);
 
   return (
@@ -30,7 +30,7 @@ export const FsDirentDialobCreate: React.FC<FsDirentDialobCreateProps> = (_props
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.dialob.labelsField.label' })}</Typography>
         <FsDirentTextFieldAutocomplete
-          options={LABEL_OPTIONS}
+          options={selectOptions.labels}
           value={labels}
           onChange={setLabels}
           placeholder={intl.formatMessage({ id: 'fs.dirent.dialob.labelsField.placeholder' })}

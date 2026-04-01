@@ -9,14 +9,14 @@ export interface UpdateOwnerState {
   orderNumber: string;
   description: string;
   configOptions: Fs.ConfigOption[];
-  labels: string;
+  labels: string[];
   comments: string;
   isExpanded: boolean;
   onChangeName: (value: string) => void;
   onChangeOrderNumber: (value: string) => void;
   onChangeDescription: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
-  onChangeLabels: (value: string) => void;
+  onChangeLabels: (value: string[]) => void;
   onChangeComments: (value: string) => void;
   onToggleExpanded: () => void;
 }
@@ -33,8 +33,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.configOptions ?? []) as Fs.ConfigOption[]
   );
-  const [labels, setLabels] = React.useState(
-    (dirent?.labels ?? []).map(l => l.value).join(', ')
+  const [labels, setLabels] = React.useState<string[]>(
+    (dirent?.labels ?? []).map(l => l.value)
   );
   const [comments, setComments] = React.useState(
     (dirent?.comments ?? []).map(c => c.comment).join('\n')
@@ -57,7 +57,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setConfigOptions(value as Fs.ConfigOption[]);
   }
 
-  function onChangeLabels(value: string) {
+  function onChangeLabels(value: string[]) {
     setLabels(value);
   }
 

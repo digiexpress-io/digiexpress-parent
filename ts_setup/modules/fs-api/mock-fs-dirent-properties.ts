@@ -189,7 +189,7 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
       { changeType: 'create', changeDate: '20.06.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } }
     ],
     permissions: [],
-    labels: [],
+    labels: [{ id: 'review-label', value: 'review' }],
     errors: [],
   },
 
@@ -210,7 +210,7 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
       { changeType: 'update', changeDate: '14.02.2025', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
     ],
     permissions: [],
-    labels: [],
+    labels: [{ id: 'public-label', value: 'public' }, { id: 'review-label', value: 'review' }],
     errors: [],
   },
 
@@ -643,7 +643,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
       { changeType: 'create', changeDate: '15.03.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } }
     ],
     permissions: [],
-    labels: [],
+    labels: [{ id: 'review-label', value: 'review' }],
     errors: [],
     formName: 'General Message Form',
     formTechnicalId: 'general_msg_v1',
@@ -664,7 +664,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
       { changeType: 'update', changeDate: '10.04.2024', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
     ],
     permissions: [],
-    labels: [],
+    labels: [{ id: 'approved-label', value: 'approved' }],
     errors: [
       { code: 'FORM_VERSION_MISMATCH', severity: 'WARNING', message: 'Form version tag does not match deployed version.' }
     ],
@@ -687,7 +687,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
       { changeType: 'update', changeDate: '20.01.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } }
     ],
     permissions: [],
-    labels: [],
+    labels: [{ id: 'approved-label', value: 'approved' }],
     errors: [],
     formName: 'Preschool Application Form',
     formTechnicalId: 'wilma_preschool_v1',
@@ -709,7 +709,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
       { changeType: 'create', changeDate: '10.02.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
     ],
     permissions: [],
-    labels: [],
+    labels: [{ id: 'internal-label', value: 'internal' }],
     errors: [],
   },
 
@@ -729,7 +729,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
       { changeType: 'update', changeDate: '05.11.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } }
     ],
     permissions: [],
-    labels: [],
+    labels: [{ id: 'approved-label', value: 'approved' }, { id: 'internal-label', value: 'internal' }],
     errors: [],
   },
 
@@ -748,7 +748,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
       { changeType: 'create', changeDate: '20.05.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
     ],
     permissions: [],
-    labels: [],
+    labels: [{ id: 'internal-label', value: 'internal' }],
     errors: [],
   },
 

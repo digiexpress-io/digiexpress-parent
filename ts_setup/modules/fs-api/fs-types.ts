@@ -179,6 +179,7 @@ export declare namespace Fs {
     flows: SelectOption[];
     dialobs: SelectOption[];
     languages: string[];
+    labels: string[];
     direntProps: Record<string, Fs.Props>;
     collectDialobTags: (dialobId: string) => SelectOption[];
     getActiveDialobTag: (props: DialobProps) => string;

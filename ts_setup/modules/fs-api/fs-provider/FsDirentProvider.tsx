@@ -2,7 +2,7 @@ import React from 'react';
 import { Fs } from '../fs-types';
 import { mockFsDirentProperties } from '../mock-fs-dirent-properties';
 import { mockFsData } from '../mock-fs-data';
-import { ALL_DIRENTS, collectArticles, collectDialobs, collectFlows, collectLanguages, getConfigOptionsForType } from './helpers';
+import { ALL_DIRENTS, collectArticles, collectDialobs, collectFlows, collectLanguages, collectLabels, getConfigOptionsForType } from './helpers';
 
 
 export interface ItemReferencesEntry {
@@ -55,6 +55,7 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
     flows: collectFlows(mockFsData),
     dialobs: collectDialobs(mockFsData),
     languages: collectLanguages(mockFsData),
+    labels: collectLabels(propsMap),
     direntProps: propsMap,
     collectDialobTags: (dialobId: string): Fs.SelectOption[] => {
       const entry = propsMap[dialobId];

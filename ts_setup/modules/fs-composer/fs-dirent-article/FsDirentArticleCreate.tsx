@@ -7,6 +7,7 @@ import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentArticleCreateProps } from './FsDirentArticleProps';
@@ -16,9 +17,10 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = (prop
   const intl = useIntl();
   const ownerState = useCreateOwnerState(props);
   const classes = useUtilityClasses();
-  const { getConfigOptionsForType } = useFsDirent();
+  const { getConfigOptionsForType, selectOptions } = useFsDirent();
   const configOptions = getConfigOptionsForType('article');
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
+  const [labels, setLabels] = React.useState<string[]>([]);
 
   return (
     <FsDirentArticleRoot className={classes.root} ownerState={ownerState}>
@@ -60,7 +62,7 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = (prop
             <FsDirentSelectMulti options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.labelsField.label' })}</Typography>
-            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.article.labelsField.placeholder' })} />
+            <FsDirentTextFieldAutocomplete options={selectOptions.labels} value={labels} onChange={setLabels} placeholder={intl.formatMessage({ id: 'fs.dirent.article.labelsField.placeholder' })} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.commentsField.label' })}</Typography>
             <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.article.commentsField.placeholder' })}

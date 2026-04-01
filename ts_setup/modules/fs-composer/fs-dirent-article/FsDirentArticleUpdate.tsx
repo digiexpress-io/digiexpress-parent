@@ -7,6 +7,7 @@ import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentArticleUpdateProps } from './FsDirentArticleProps';
@@ -16,7 +17,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { getConfigOptionsForType } = useFsDirent();
+  const { getConfigOptionsForType, selectOptions } = useFsDirent();
   const configOptions = getConfigOptionsForType('article');
 
   return (
@@ -57,11 +58,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
             <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.labelsField.label' })}</Typography>
-            <FsDirentTextField
-              value={ownerState.labels}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.article.labelsField.placeholder' })}
-              onChange={ownerState.onChangeLabels}
-            />
+            <FsDirentTextFieldAutocomplete options={selectOptions.labels} value={ownerState.labels} onChange={ownerState.onChangeLabels} placeholder={intl.formatMessage({ id: 'fs.dirent.article.labelsField.placeholder' })} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.commentsField.label' })}</Typography>
             <FsDirentTextField

@@ -53,6 +53,14 @@ export function collectLanguages(nodes: Fs.DirentBase[]): string[] {
   return result;
 }
 
+export function collectLabels(propsMap: Record<string, Fs.Props>): string[] {
+  const labelSet = new Set<string>();
+  Object.values(propsMap).forEach(entry => {
+    entry.labels.forEach(l => labelSet.add(l.value));
+  });
+  return Array.from(labelSet).sort();
+}
+
 const ALL_CONFIG_OPTIONS: Fs.SelectOption[] = [
   { value: 'devMode', label: 'Development mode' },
   { value: 'assignableMode', label: 'Assignable mode' },
