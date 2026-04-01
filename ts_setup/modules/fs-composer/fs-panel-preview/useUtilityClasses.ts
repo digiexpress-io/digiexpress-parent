@@ -9,6 +9,7 @@ const MUI_NAME = 'FsPanelPreview';
 export interface FsPanelPreviewClasses {
   root: string;
   content: string;
+  editor: string;
 }
 
 export type FsPanelPreviewClassKey = keyof FsPanelPreviewClasses;
@@ -17,6 +18,7 @@ export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
     content: ['content'],
+    editor: ['editor'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -36,5 +38,10 @@ export const FsPanelPreviewRoot = styled('div', {
   [`& .${MUI_NAME}-content`]: {
     ...theme.typography.body2,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+  },
+
+  [`& .${MUI_NAME}-editor`]: {
+    height: '500px',
+    overflow: 'hidden',
   },
 }));

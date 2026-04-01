@@ -88,6 +88,7 @@ export declare namespace Fs {
   export interface FlowProps extends PropsBase {
     type: 'flow';
     name: string;
+    content?: string;
   }
 
   export interface LanguageProps extends PropsBase {

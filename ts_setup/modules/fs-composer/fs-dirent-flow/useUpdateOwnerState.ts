@@ -7,6 +7,8 @@ export interface UpdateOwnerState {
   dirent: Fs.Flow | undefined;
   name: string;
   onChangeName: (value: string) => void;
+  content: string;
+  onChangeContent: (value: string) => void;
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
@@ -16,9 +18,14 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const dirent = getDirent<Fs.Flow>(props.direntId);
 
   const [name, setName] = React.useState(dirent?.name ?? '');
+  const [content, setContent] = React.useState(dirent?.content ?? '');
 
   function onChangeName(value: string) {
     setName(value);
+  }
+
+  function onChangeContent(value: string) {
+    setContent(value);
   }
 
   return ({
@@ -26,5 +33,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     dirent,
     name,
     onChangeName,
+    content,
+    onChangeContent,
   });
 };

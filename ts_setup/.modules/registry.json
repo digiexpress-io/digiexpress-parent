@@ -1465,6 +1465,7 @@
         "react-intl",
         "@dxs-ts/fs-api",
         "@mui/utils",
+        "@monaco-editor/react",
         "@uiw/react-md-editor",
         "@mui/icons-material",
         "react-markdown"
@@ -1474,6 +1475,7 @@
         "@mui/material",
         "react-intl",
         "@mui/utils",
+        "@monaco-editor/react",
         "@uiw/react-md-editor",
         "@mui/icons-material",
         "react-markdown"
@@ -1483,6 +1485,7 @@
       ],
       "missingDependencies": [
         "react-intl",
+        "@monaco-editor/react",
         "@uiw/react-md-editor"
       ],
       "unusedDependencies": [
@@ -4625,6 +4628,6 @@
       ]
     }
   },
-  "checksum": "22000d89c420e01c22b06cbc83fa61494c51fb361b64f285d5dd413d01787903",
-  "generatedAt": "2026-04-01T06:08:06.343Z"
+  "checksum": "f5f2220d93af7ea75531391617d86a02038a6adf183f8e70c993d9251d496ff3",
+  "generatedAt": "2026-04-01T06:59:54.048Z"
 }

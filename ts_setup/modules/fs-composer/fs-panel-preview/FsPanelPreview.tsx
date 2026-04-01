@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
+import MonacoReact from '@monaco-editor/react';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
 import { FsPanelPreviewProps } from './FsPanelPreviewProps';
@@ -17,6 +18,18 @@ export const FsPanelPreview: React.FC<FsPanelPreviewProps> = (props) => {
   if (!props.dirent) {
     return (
       <FsPanel title={intl.formatMessage({ id: 'fs.panelPreview.title' })} icon={<FsIcon icon={FsIcons.Preview} large />} activeDirent={false} noDirentMessage={intl.formatMessage({ id: 'fs.panelPreview.message.selectDirent' })} />
+    );
+  }
+
+  if (ownerState.isFlow) {
+    return (
+      <FsPanel title={intl.formatMessage({ id: 'fs.panelPreview.title' })} icon={<FsIcon icon={FsIcons.Preview} large />} activeDirent={true}>
+        <FsPanelPreviewRoot className={classes.root} ownerState={ownerState}>
+          <div className={classes.editor}>
+            NICE BUBBLE THING
+          </div>
+        </FsPanelPreviewRoot>
+      </FsPanel>
     );
   }
 

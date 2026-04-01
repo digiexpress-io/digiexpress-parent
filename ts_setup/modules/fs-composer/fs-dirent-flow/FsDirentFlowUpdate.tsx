@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
+import MonacoReact from '@monaco-editor/react';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentTextField } from '../fs-dirent-text-field';
@@ -26,6 +27,20 @@ export const FsDirentFlowUpdate: React.FC<FsDirentFlowUpdateProps> = (props) => 
           onChange={ownerState.onChangeName}
           required
         />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.flow.contentField.label' })}</Typography>
+        <div className={classes.editor}>
+          <MonacoReact
+            height="100%"
+            value={ownerState.content}
+            defaultLanguage="yaml"
+            onChange={(value) => ownerState.onChangeContent(value ?? '')}
+            options={{
+              wordBasedSuggestions: 'off',
+              minimap: { enabled: false },
+            }}
+          />
+        </div>
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonCancel />

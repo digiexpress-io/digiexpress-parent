@@ -12,6 +12,7 @@ export interface FsDirentFlowClasses {
   sectionTitle: string;
   sectionBox: string;
   sectionContent: string;
+  editor: string;
   buttonContainer: string;
 }
 
@@ -26,6 +27,7 @@ export const useUtilityClasses = () => {
     sectionTitle: ['sectionTitle'],
     sectionBox: ['sectionBox'],
     sectionContent: ['sectionContent'],
+    editor: ['editor'],
     buttonContainer: ['buttonContainer'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -77,6 +79,13 @@ export const FsDirentFlowRoot = styled('div', {
   [`& .${MUI_NAME}-sectionContent`]: {
     ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+  },
+
+  [`& .${MUI_NAME}-editor`]: {
+    height: '500px',
+    border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    borderRadius: '4px',
+    overflow: 'hidden',
   },
 
   [`& .${MUI_NAME}-buttonContainer`]: {

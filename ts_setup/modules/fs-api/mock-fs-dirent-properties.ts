@@ -702,6 +702,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
     reference: false,
     locked: false,
     description: 'Task messaging workflow',
+    content: `id: taskMessagingFlow\ndescription: "task messaging flow"\n\ninputs:\n  taskId:\n    required: true\n    type: STRING\n  messageType:\n    required: true\n    type: STRING\n  recipientId:\n    required: true\n    type: STRING`,
     configOptions: [],
     comments: [],
     changes: [
@@ -720,6 +721,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
     reference: false,
     locked: false,
     description: undefined,
+    content: `id: taskGenericFlow\ndescription: "generic task flow"\n\ninputs:\n  taskId:\n    required: true\n    type: STRING\n  assigneeId:\n    required: false\n    type: STRING\n  dueDate:\n    required: false\n    type: STRING`,
     configOptions: [],
     comments: [],
     changes: [
@@ -739,6 +741,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
     reference: false,
     locked: false,
     description: undefined,
+    content: `id: taskSplitFlow\ndescription: "task split flow"\n\ninputs:\n  taskId:\n    required: true\n    type: STRING\n  splitType:\n    required: true\n    type: STRING\n  targetIds:\n    required: true\n    type: STRING`,
     configOptions: [],
     comments: [],
     changes: [
