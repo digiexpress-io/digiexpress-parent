@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { FsExplorerProps } from "./FsExplorerProps";
-import { FilterData, filterTreeDirents } from '../fs-search';
+import { FilterData, filterTreeDirents, useFsSearch } from '../fs-search';
 import { Fs, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
 
 function handleContextMenu(
@@ -37,7 +37,6 @@ export interface OwnerState {
   setIsDarkMode: (darkMode: boolean) => void;
   setSearchExpanded: (expanded: boolean) => void;
   setSearchTerm: (term: string) => void;
-  setFsData: Dispatch<SetStateAction<Fs.DirentBase[]>>;
   setFilters: (filters: FilterData[]) => void;
   onDoubleClick: (dirent: Fs.DirentBase, pathToTopParent: string) => void;
   collapseAll: () => void;
@@ -45,18 +44,17 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
-  const { isDarkMode, setIsDarkMode, openAsset, searchExpanded, setSearchExpanded } = useFsNav();
+  const { isDarkMode, setIsDarkMode, openAsset } = useFsNav();
   const { getDirent, dirents, collapseAll, setExpanded, setExpandedBatch } = useFsDirent();
-  const [fsData, setFsData] = React.useState<Fs.DirentBase[]>(dirents);
+  const { search } = useFsSearch();
+  const debounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<Fs.ContextMenuData | undefined>();
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const debounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const [filters, setFilters] = React.useState<FilterData[]>([]);
 
   const filteredTreeData = React.useMemo(() => {
-    return filterTreeDirents(fsData, searchTerm, filters, getDirent)
-  }, [fsData, searchTerm, filters, getDirent])
+    return filterTreeDirents(dirents, search.searchTerm, search.activeFilters, getDirent);
+  }, [dirents, search.searchTerm, search.activeFilters, getDirent]);
 
   function collectParentIds(nodes: Fs.DirentBase[], acc: string[] = []): string[] {
     nodes.forEach(node => {
@@ -69,22 +67,22 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   }
 
   function handleSetSearchTerm(term: string) {
-    setSearchTerm(term);
+    search.setSearchTerm(term);
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
     debounceRef.current = setTimeout(() => {
       if (term) {
-        const filtered = filterTreeDirents(fsData, term, filters, getDirent);
+        const filtered = filterTreeDirents(dirents, term, search.activeFilters, getDirent);
         setExpandedBatch(collectParentIds(filtered), true);
       }
     }, 350);
   }
 
   function handleSetFilters(newFilters: FilterData[]) {
-    setFilters(newFilters);
+    search.setActiveFilters(newFilters);
     if (newFilters.length > 0) {
-      const filtered = filterTreeDirents(fsData, searchTerm, newFilters, getDirent);
+      const filtered = filterTreeDirents(dirents, search.searchTerm, newFilters, getDirent);
       setExpandedBatch(collectParentIds(filtered), true);
     }
   }
@@ -97,7 +95,7 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     openAsset(dirent, pathToTopParent);
   }
 
-  const isAnyDirentExpanded = fsData.some(dirent =>
+  const isAnyDirentExpanded = dirents.some(dirent =>
     getDirent(dirent.id)?.expanded ||
     (dirent.children && dirent.children.some(child => getDirent(child.id)?.expanded))
   );
@@ -105,13 +103,13 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   return {
     isAnyDirentExpanded,
     isDarkMode,
-    isSearchExpanded: searchExpanded,
+    isSearchExpanded: search.open,
     isContextMenuOpen: contextMenuOpen,
 
     filteredTreeData,
-    searchTerm,
-    fsData,
-    filters,
+    searchTerm: search.searchTerm,
+    fsData: dirents,
+    filters: search.activeFilters,
     contextMenuData,
 
     onContextMenu: handleContextMenu,
@@ -119,12 +117,12 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     onContextMenuClose,
 
     setContextMenuOpen,
-    setSearchExpanded,
+    setSearchExpanded: search.setOpen,
     setIsDarkMode,
     setSearchTerm: handleSetSearchTerm,
     setContextMenuData,
-    setFsData,
     setFilters: handleSetFilters,
+
 
     collapseAll,
     toggleDirent: (direntId: string) => {

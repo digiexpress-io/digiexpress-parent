@@ -1,60 +1,12 @@
 import React from 'react';
-import { useFsNav, Fs } from '@dxs-ts/fs-api';
+import { useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import type { FilterData } from './search-helpers';
 import { FsSearchProps } from './FsSearchProps';
+import { useFsSearch } from './FsSearchProvider';
 
-export interface FilterData {
-  label: string;
-  type: Fs.Type;
-}
+export type { FilterData };
 
-export function filterTreeDirents(
-  dirents: Fs.DirentBase[],
-  searchTerm: string,
-  visibleFilters: FilterData[],
-  getDirent: (id: string) => Fs.DirentAsset | undefined
-): Fs.DirentBase[] {
-  const visibleTypes = visibleFilters.map(filter => filter.type);
-  const isNoFiltersSelected = visibleFilters.length === 0;
-  const isSearchTermEmpty = !searchTerm.trim() || searchTerm.trim().length < 3;
 
-  if (isSearchTermEmpty && isNoFiltersSelected) {
-    return dirents;
-  }
-
-  const filtered: Fs.DirentBase[] = [];
-
-  for (const dirent of dirents) {
-    const direntEntry = getDirent(dirent.id);
-    const nameMatches = dirent.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const descriptionMatches = direntEntry?.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    const typeMatches = isNoFiltersSelected || visibleTypes.includes(dirent.type);
-    const childMatches = dirent.children ? filterTreeDirents(dirent.children, searchTerm, visibleFilters, getDirent) : [];
-
-    const showBySearch = isSearchTermEmpty || nameMatches || descriptionMatches;
-
-    if ((showBySearch && typeMatches) || childMatches.length > 0) {
-      filtered.push({
-        ...dirent,
-        children: childMatches.length > 0 ? childMatches : dirent.children
-      });
-    }
-  }
-
-  return filtered;
-}
-
-const allAvailableFilters: FilterData[] = [
-  { label: 'Articles', type: 'article' },
-  { label: 'Dialobs', type: 'dialob' },
-  { label: 'Services', type: 'service' },
-  { label: 'Pages', type: 'folder' },
-  { label: 'Links', type: 'link' },
-  { label: 'Phone Numbers', type: 'phone' },
-  { label: 'Languages', type: 'language' },
-  { label: 'Flows', type: 'flow' },
-  { label: 'Printouts', type: 'printout' },
-  { label: 'Images', type: 'image' }
-];
 
 export interface OwnerState {
   searchTerm: string;
@@ -62,36 +14,39 @@ export interface OwnerState {
   open: boolean;
   onSearchChange: (value: string) => void;
   onFiltersChange: (filters: FilterData[]) => void;
-
+  availableLabelOptions: string[];
   isDarkMode: boolean;
   allAvailableFilters: FilterData[];
   handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleFilterSelectChange: (selectedLabels: string[]) => void;
 }
 
-export const useOwnerState = (props: FsSearchProps): OwnerState => {
+export const useOwnerState = (_props: FsSearchProps): OwnerState => {
   const { isDarkMode } = useFsNav();
+  const { selectOptions } = useFsDirent();
+  const { search } = useFsSearch();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    props.onSearchChange(event.target.value);
+    search.handleSearchChange(event);
   };
 
   const handleFilterSelectChange = (selectedLabels: string[]) => {
-    const selectedFilters = allAvailableFilters.filter(filter =>
-      selectedLabels.includes(filter.label)
-    );
-    props.onFiltersChange(selectedFilters);
+    search.handleFilterSelectChange(selectedLabels);
   };
 
   return {
-    searchTerm: props.searchTerm,
-    visibleFilters: props.visibleFilters,
-    open: props.open,
-    onSearchChange: props.onSearchChange,
-    onFiltersChange: props.onFiltersChange,
     isDarkMode,
-    allAvailableFilters,
+
+    searchTerm: search.searchTerm,
+    visibleFilters: search.activeFilters,
+    open: search.open,
+    allAvailableFilters: search.allAvailableFilters,
+    availableLabelOptions: selectOptions.labels,
+
     handleSearchChange,
     handleFilterSelectChange,
+
+    onSearchChange: search.setSearchTerm,
+    onFiltersChange: search.setActiveFilters,
   };
 };

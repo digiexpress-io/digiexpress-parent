@@ -88,6 +88,7 @@ export const FsSearch: React.FC<FsSearchProps> = (props) => {
               </MenuItem>
             ))}
           </Select>
+
         </div>
       </FsSearchRoot>
       <Divider />

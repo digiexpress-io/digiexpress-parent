@@ -18,7 +18,6 @@ export type FsTab = FsEditTab | FsCreateTab;
 
 export interface FsNavContextType {
   isDarkMode: boolean;
-  searchExpanded: boolean;
   openTabs: FsTab[];
   activeTabIndex: number;
   activeTabPath: string;
@@ -31,7 +30,6 @@ export interface FsNavContextType {
   closeTabsToTheRight: (index: number) => void;
   setActiveTab: (index: number) => void;
   setIsDarkMode: (isDarkMode: boolean) => void;
-  setSearchExpanded: (expanded: boolean) => void;
 }
 
 const FsNavContext = React.createContext<FsNavContextType | undefined>(undefined);
@@ -42,7 +40,6 @@ export interface FsNavProviderProps {
 
 export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
   const [isDarkMode, setIsDarkMode] = React.useState(false);
-  const [searchExpanded, setSearchExpanded] = React.useState(false);
   const [openTabs, setOpenTabs] = React.useState<FsTab[]>([]);
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
   const [activeTabPath, setActiveTabPath] = React.useState('');
@@ -141,8 +138,6 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
     return {
       isDarkMode,
       setIsDarkMode,
-      searchExpanded,
-      setSearchExpanded,
       openTabs,
       activeTabIndex,
       activeTabPath,
@@ -155,7 +150,7 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
       closeTabsToTheRight,
       setActiveTab,
     };
-  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, openCreateTab, registerDirentPath, closeTab, closeAllTabs, closeTabsToTheRight, setActiveTab, activeDirent, searchExpanded]);
+  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, openCreateTab, registerDirentPath, closeTab, closeAllTabs, closeTabsToTheRight, setActiveTab, activeDirent]);
 
   return (
     <FsNavContext.Provider value={contextValue}>

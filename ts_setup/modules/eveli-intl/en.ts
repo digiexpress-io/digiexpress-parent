@@ -1661,5 +1661,6 @@ export const en = {
   'fs.references.label.refMarker': '(REF)',
   'fs.references.message.noReferences': 'This dirent does not contain any references.',
   'fs.search.searchField.placeholder': 'Search',
-  'fs.search.filterSelect.placeholder': 'Filter by type'
+  'fs.search.filterSelect.placeholder': 'Filter by type',
+  'fs.search.labelFilter.placeholder': 'Filter by label'
 }

@@ -10,7 +10,7 @@ import { useOwnerState } from './useOwnerState';
 import { ConfigOptionIcons, FsDirentName, DirentDecorator, DirentIcon } from './Supports';
 
 
-export const Fs: React.FC<FsDirentProps> = (props) => {
+export const FsDirent: React.FC<FsDirentProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(ownerState.isDarkMode);
   const { getDirent } = useFsDirent();
@@ -72,7 +72,7 @@ export const Fs: React.FC<FsDirentProps> = (props) => {
         <Collapse in={expanded} timeout={0}>
           <List component='div' disablePadding>
             {ownerState.children.map((child) => (
-              <Fs
+              <FsDirent
                 key={child.id}
                 dirent={child}
                 level={ownerState.level + 1}

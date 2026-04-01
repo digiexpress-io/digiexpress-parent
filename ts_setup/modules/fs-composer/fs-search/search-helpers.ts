@@ -9,13 +9,12 @@ export function filterTreeDirents(
   dirents: Fs.DirentBase[],
   searchTerm: string,
   visibleFilters: FilterData[],
-  getDirent: (id: string) => Fs.DirentAsset | undefined
+  getDirent: (id: string) => Fs.DirentAsset | undefined,
 ): Fs.DirentBase[] {
   const visibleTypes = visibleFilters.map(filter => filter.type);
   const isNoFiltersSelected = visibleFilters.length === 0;
   const isSearchTermEmpty = !searchTerm.trim();
 
-  // If no search term and no filters, show everything
   if (isSearchTermEmpty && isNoFiltersSelected) {
     return dirents;
   }
