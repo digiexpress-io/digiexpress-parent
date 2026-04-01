@@ -66,6 +66,7 @@ import {
   Phone,
   FormatListNumbered,
   Feed,
+  SubdirectoryArrowRight,
 } from '@mui/icons-material';
 import { SvgIconProps, Tooltip } from '@mui/material';
 
@@ -136,6 +137,7 @@ export const FsIcons = {
   Help: Help,
   ArticleOrder: FormatListNumbered,
   Page: Feed,
+  ChildItem: SubdirectoryArrowRight,
 };
 
 export interface FsIconProps {

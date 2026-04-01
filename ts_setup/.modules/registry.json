@@ -1467,8 +1467,7 @@
         "@mui/utils",
         "@uiw/react-md-editor",
         "@mui/icons-material",
-        "react-markdown",
-        "@uiw/react-markdown-preview"
+        "react-markdown"
       ],
       "actualExternalDependencies": [
         "react",
@@ -1477,16 +1476,14 @@
         "@mui/utils",
         "@uiw/react-md-editor",
         "@mui/icons-material",
-        "react-markdown",
-        "@uiw/react-markdown-preview"
+        "react-markdown"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/fs-api"
       ],
       "missingDependencies": [
         "react-intl",
-        "@uiw/react-md-editor",
-        "@uiw/react-markdown-preview"
+        "@uiw/react-md-editor"
       ],
       "unusedDependencies": [
         "@dxs-ts/eveli-primitives"
@@ -4628,6 +4625,6 @@
       ]
     }
   },
-  "checksum": "c7e3e4a4d3d374228936e56dad96795b4632642c3d6dec686daabc232fdc5783",
-  "generatedAt": "2026-03-31T12:29:25.294Z"
+  "checksum": "22000d89c420e01c22b06cbc83fa61494c51fb361b64f285d5dd413d01787903",
+  "generatedAt": "2026-04-01T06:08:06.343Z"
 }

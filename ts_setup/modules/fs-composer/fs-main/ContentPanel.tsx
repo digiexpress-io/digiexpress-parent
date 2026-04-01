@@ -12,6 +12,7 @@ import { FsPanelHistory } from '../fs-panel-history';
 import { FsPanelProperties } from '../fs-panel-properties';
 import { FsPanelPreview } from '../fs-panel-preview';
 import { FsPanelReferences } from '../fs-panel-references';
+import { FsPanelOverview } from '../fs-panel-overview';
 
 import { OwnerState } from './useOwnerState';
 
@@ -50,6 +51,8 @@ export const ContentPanel: React.FC<ContentPanelProps> = ({ ownerState, classNam
               return <FsPanelPreview dirent={activeDirent} />;
           case 'article-order':
               return <FsPanelArticleOrder />;
+          case 'overview':
+              return <FsPanelOverview />;
           default:
             return (
               <FsPanel title='View not implemented'>

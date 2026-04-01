@@ -31,7 +31,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -46,7 +48,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -61,7 +65,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -76,7 +82,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -92,7 +100,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -108,7 +118,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -128,7 +140,10 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
       { comment: 'This article needs updated localization for the 2025 service period.', author: 'Anna Virtanen', created: '07.01.2025' },
       { comment: 'Images are missing from the Swedish version.', author: 'Mikael Berg', created: '15.02.2025' }
     ],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '20.06.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
+      { changeType: 'update', changeDate: '10.01.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } }
+    ],
     permissions: [],
     labels: [
       { id: 'label-003', value: 'Needs translation' },
@@ -149,7 +164,10 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     description: 'GDPR information and data protection policy.',
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '20.06.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
+      { changeType: 'update', changeDate: '05.03.2024', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [
       { id: 'label-011', value: 'Under review' }
@@ -167,7 +185,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '20.06.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -185,7 +205,10 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     comments: [
       { comment: 'Content needs review after the 2025 municipal elections.', author: 'Lars Eriksson', created: '12.02.2025' }
     ],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '20.06.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
+      { changeType: 'update', changeDate: '14.02.2025', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -201,7 +224,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '05.09.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [
       { id: 'label-012', value: 'Draft' }
@@ -218,7 +243,10 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     description: undefined,
     configOptions: ['disabledMode'],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '20.06.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
+      { changeType: 'update', changeDate: '12.01.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -249,7 +277,9 @@ Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saep
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '20.06.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -266,7 +296,10 @@ Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saep
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.08.2023', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } },
+      { changeType: 'update', changeDate: '20.01.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -308,7 +341,10 @@ The service centre is open Monday to Friday, **08:00–16:30**.
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '01.07.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } },
+      { changeType: 'update', changeDate: '10.03.2024', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -325,7 +361,10 @@ The service centre is open Monday to Friday, **08:00–16:30**.
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '01.07.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } },
+      { changeType: 'update', changeDate: '12.03.2024', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -376,7 +415,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '01.07.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -393,7 +434,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '01.07.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -410,7 +453,10 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.09.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } },
+      { changeType: 'update', changeDate: '18.02.2025', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -427,7 +473,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.09.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -444,7 +492,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.09.2023', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -461,7 +511,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '05.09.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -478,7 +530,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '05.09.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -526,7 +580,10 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '01.03.2024', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } },
+      { changeType: 'update', changeDate: '15.04.2024', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } }
+    ],
     permissions: [],
     labels: [
       { id: 'label-006', value: 'Active' },
@@ -552,7 +609,10 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: ['devMode', 'assignableMode'],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.07.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
+      { changeType: 'update', changeDate: '03.02.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } }
+    ],
     permissions: [
       { name: 'admin', types: ['read', 'write'] }
     ],
@@ -579,7 +639,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.03.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -597,7 +659,10 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '01.03.2024', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } },
+      { changeType: 'update', changeDate: '10.04.2024', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [
@@ -617,7 +682,10 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.07.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
+      { changeType: 'update', changeDate: '20.01.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -636,7 +704,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: 'Task messaging workflow',
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.02.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -652,7 +722,10 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.02.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
+      { changeType: 'update', changeDate: '05.11.2024', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -668,7 +741,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '20.05.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -683,7 +758,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -700,7 +777,10 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: ['devMode'],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
+      { changeType: 'update', changeDate: '10.01.2025', changedBy: { userName: 'Sarah Johnson', email: 'sarah.johnson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -717,7 +797,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -734,7 +816,10 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: ['disabledMode'],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
+      { changeType: 'update', changeDate: '01.09.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -751,7 +836,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '15.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -768,7 +855,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '20.08.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -785,7 +874,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -800,7 +891,10 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } },
+      { changeType: 'update', changeDate: '15.04.2024', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -815,7 +909,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.06.2023', changedBy: { userName: 'Mikael Berg', email: 'mikael.berg@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -832,7 +928,10 @@ For questions regarding your personal data, contact our Data Protection Officer 
     comments: [
       { comment: 'Swedish template needs review before next release.', author: 'Lars Eriksson', created: '20.03.2025' }
     ],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.10.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } },
+      { changeType: 'update', changeDate: '05.03.2025', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [
       { id: 'label-008', value: 'Needs translation' },
@@ -853,7 +952,10 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.10.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } },
+      { changeType: 'update', changeDate: '20.01.2025', changedBy: { userName: 'Anna Virtanen', email: 'anna.virtanen@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -871,7 +973,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.10.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [
       { id: 'label-010', value: 'Outdated' }
@@ -891,7 +995,10 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.10.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } },
+      { changeType: 'update', changeDate: '08.03.2025', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -909,7 +1016,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.10.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],
@@ -927,7 +1036,9 @@ For questions regarding your personal data, contact our Data Protection Officer 
     description: undefined,
     configOptions: [],
     comments: [],
-    changes: [],
+    changes: [
+      { changeType: 'create', changeDate: '10.10.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
     permissions: [],
     labels: [],
     errors: [],

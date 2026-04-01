@@ -140,6 +140,14 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       onClick: () => handleViewChange('article-order'),
     },
     {
+      id: 'overview',
+      type: 'view',
+      icon: FsIcons.Tree,
+      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.overview' }),
+      isSelected: selectedView === 'overview',
+      onClick: () => handleViewChange('overview'),
+    },
+    {
       id: 'changes',
       type: 'save',
       icon: FsIcons.Save,
