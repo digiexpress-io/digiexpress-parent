@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useFsNav, useFsDirent } from '@dxs-ts/fs-api';
-import type { FilterData } from './search-helpers';
+import { allAvailableFilters, FilterData } from './search-helpers';
 
 interface FsSearchContextType {
   searchTerm: string;
@@ -68,15 +68,3 @@ export const useFsSearch = () => {
 };
 
 
-export const allAvailableFilters: FilterData[] = [
-  { label: 'Articles', type: 'article' },
-  { label: 'Dialobs', type: 'dialob' },
-  { label: 'Services', type: 'service' },
-  { label: 'Pages', type: 'folder' },
-  { label: 'Links', type: 'link' },
-  { label: 'Phone Numbers', type: 'phone' },
-  { label: 'Languages', type: 'language' },
-  { label: 'Flows', type: 'flow' },
-  { label: 'Printouts', type: 'printout' },
-  { label: 'Images', type: 'image' }
-];

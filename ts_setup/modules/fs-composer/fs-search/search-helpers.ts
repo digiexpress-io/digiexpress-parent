@@ -41,4 +41,17 @@ export function filterTreeDirents(
   return filtered;
 }
 
+export const allAvailableFilters: FilterData[] = [
+  { label: 'Articles', type: 'article' },
+  { label: 'Dialobs', type: 'dialob' },
+  { label: 'Services', type: 'service' },
+  { label: 'Pages', type: 'folder' },
+  { label: 'Links', type: 'link' },
+  { label: 'Phone Numbers', type: 'phone' },
+  { label: 'Languages', type: 'language' },
+  { label: 'Flows', type: 'flow' },
+  { label: 'Printouts', type: 'printout' },
+  { label: 'Images', type: 'image' }
+];
+
 export type { FilterData };
