@@ -75,6 +75,7 @@ export const FsDirentSelectMultiRoot = styled(FormControl, {
     alignItems: 'center',
     minHeight: theme.spacing(3),
     gap: theme.spacing(0.5),
+    maxWidth: `calc(100% - ${theme.spacing(4)})`,
   },
 
   [`& .${MUI_NAME}-clearButton`]: {
