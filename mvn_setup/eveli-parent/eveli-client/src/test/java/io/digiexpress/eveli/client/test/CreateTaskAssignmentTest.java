@@ -124,7 +124,8 @@ public class CreateTaskAssignmentTest extends TaskEnvirSetup {
     List<TaskDiffValue> assigned_diffs = filterTechnicalProperties(diff_version);
     Assert.assertEquals(2, assigned_diffs.size());
     Assert.assertEquals(JsonPatch.Operation.REMOVE, assigned_diffs.get(0).getOp());
-    Assert.assertEquals("/assignedRoles/0", assigned_diffs.get(0).getPath());
+    // index of removed role is not determined, can't assert it by index
+    Assert.assertTrue(assigned_diffs.get(0).getPath().startsWith("/assignedRoles/"));
     
     
     final var assignee_change4 = taskClient.taskBuilder()
