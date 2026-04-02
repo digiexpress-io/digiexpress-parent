@@ -1,19 +1,21 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useFsNav, useFsDirent } from '@dxs-ts/fs-api';
-import { allAvailableFilters, FilterData } from './search-helpers';
+import { allAvailableTypeFilters, AssetTypeFilter, FilterData, LabelFilter } from './search-helpers';
 
 interface FsSearchContextType {
   searchTerm: string;
   activeFilters: FilterData[];
   open: boolean;
   isDarkMode: boolean;
-  allAvailableFilters: FilterData[];
-  
+  allAvailableTypeFilters: AssetTypeFilter[];
+  availableLabelOptions: string[];
+
   setSearchTerm: (value: string) => void;
   setActiveFilters: (filters: FilterData[]) => void;
   setOpen: (isOpen: boolean) => void;
   handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleFilterSelectChange: (selectedLabels: string[]) => void;
+  handleLabelFilterSelectChange: (selectedValues: string[]) => void;
 }
 
 
@@ -31,11 +33,16 @@ export const FsSearchProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setSearchTerm(event.target.value);
   };
 
-  const handleFilterSelectChange = (selectedLabels: string[]) => {
-    const selectedFilters = allAvailableFilters.filter(filter =>
-      selectedLabels.includes(filter.label)
-    );
-    setActiveFilters(selectedFilters);
+  const handleFilterSelectChange = (selectedValues: string[]) => {
+    const newTypeFilters = allAvailableTypeFilters.filter(f => selectedValues.includes(f.value));
+    const currentLabelFilters = activeFilters.filter((f): f is LabelFilter => f.type === 'label');
+    setActiveFilters([...currentLabelFilters, ...newTypeFilters]);
+  };
+
+  const handleLabelFilterSelectChange = (selectedValues: string[]) => {
+    const newLabelFilters: LabelFilter[] = selectedValues.map(v => ({ type: 'label', label: v, value: v }));
+    const currentTypeFilters = activeFilters.filter((f): f is AssetTypeFilter => f.type === 'asset');
+    setActiveFilters([...currentTypeFilters, ...newLabelFilters]);
   };
 
   const contextValue = useMemo(() => ({
@@ -43,13 +50,14 @@ export const FsSearchProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     activeFilters,
     open,
     isDarkMode,
-    allAvailableFilters,
+    allAvailableTypeFilters,
     availableLabelOptions: selectOptions.labels,
     setSearchTerm,
     setActiveFilters,
     setOpen,
     handleSearchChange,
-    handleFilterSelectChange
+    handleFilterSelectChange,
+    handleLabelFilterSelectChange,
   }), [searchTerm, activeFilters, open, isDarkMode, selectOptions.labels]);
 
   return (

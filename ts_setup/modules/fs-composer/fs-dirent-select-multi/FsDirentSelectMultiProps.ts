@@ -7,4 +7,6 @@ export interface FsDirentSelectMultiProps {
   options: FsDirentSelectMultiOption[];
   value: string[];
   onChange: (value: string[]) => void;
+  placeholder?: string;
+  onClearAll?: () => void;
 }

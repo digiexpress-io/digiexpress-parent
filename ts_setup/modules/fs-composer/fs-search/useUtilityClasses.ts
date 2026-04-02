@@ -30,27 +30,6 @@ export const useUtilityClasses = (_props: FsSearchProps) => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const menuDarkMode = {
-  backgroundColor: FsColors.dark.surface,
-  color: FsColors.dark.text,
-  borderWidth: '1px',
-  borderTop: 'unset',
-  '& .MuiMenuItem-root': {
-    backgroundColor: FsColors.dark.surface,
-  },
-  '& .MuiMenuItem-root:hover': {
-    backgroundColor: FsColors.dark.background,
-  },
-  '& .Mui-selected': {
-    color: FsColors.dark.text,
-    backgroundColor: FsColors.dark.background,
-  },
-  '& .Mui-selected:hover': {
-    backgroundColor: FsColors.dark.surface,
-    color: FsColors.dark.text,
-  },
-};
-
 export const FsSearchRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',

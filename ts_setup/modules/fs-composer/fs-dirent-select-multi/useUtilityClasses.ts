@@ -11,6 +11,8 @@ export interface FsDirentSelectMultiClasses {
   chipContainer: string;
   chip: string;
   menuItem: string;
+  placeholderText: string;
+  clearButton: string;
 }
 
 export type FsDirentSelectMultiClassKey = keyof FsDirentSelectMultiClasses;
@@ -22,6 +24,8 @@ export const useUtilityClasses = () => {
     chipContainer: ['chipContainer'],
     chip: ['chip'],
     menuItem: ['menuItem'],
+    placeholderText: ['placeholderText'],
+    clearButton: ['clearButton'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -60,10 +64,30 @@ export const FsDirentSelectMultiRoot = styled(FormControl, {
     },
   },
 
+  [`& .${MUI_NAME}-placeholderText`]: {
+    ...theme.typography.caption,
+    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+  },
+
   [`& .${MUI_NAME}-chipContainer`]: {
     display: 'flex',
     flexWrap: 'wrap',
-    gap: '4px',
+    alignItems: 'center',
+    minHeight: theme.spacing(3),
+    gap: theme.spacing(0.5),
+  },
+
+  [`& .${MUI_NAME}-clearButton`]: {
+    position: 'absolute',
+    right: theme.spacing(4),
+    top: '50%',
+    transform: 'translateY(-50%)',
+    padding: 0,
+    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    '&:hover': {
+      backgroundColor: 'transparent',
+      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    },
   },
 
   [`& .${MUI_NAME}-chip`]: {

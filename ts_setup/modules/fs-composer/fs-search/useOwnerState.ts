@@ -1,10 +1,10 @@
 import React from 'react';
-import { useFsNav, useFsDirent } from '@dxs-ts/fs-api';
-import type { FilterData } from './search-helpers';
+import { useFsNav } from '@dxs-ts/fs-api';
+import type { AssetTypeFilter, FilterData } from './search-helpers';
 import { FsSearchProps } from './FsSearchProps';
 import { useFsSearch } from './FsSearchProvider';
 
-export type { FilterData };
+export type { FilterData, AssetTypeFilter };
 
 
 
@@ -16,22 +16,26 @@ export interface OwnerState {
   onFiltersChange: (filters: FilterData[]) => void;
   availableLabelOptions: string[];
   isDarkMode: boolean;
-  allAvailableFilters: FilterData[];
+  allAvailableTypeFilters: AssetTypeFilter[];
   handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleFilterSelectChange: (selectedLabels: string[]) => void;
+  handleTypeFilterSelectChange: (selectedLabels: string[]) => void;
+  handleLabelFilterSelectChange: (selectedValues: string[]) => void;
 }
 
 export const useOwnerState = (_props: FsSearchProps): OwnerState => {
   const { isDarkMode } = useFsNav();
-  const { selectOptions } = useFsDirent();
   const { search } = useFsSearch();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     search.handleSearchChange(event);
   };
 
-  const handleFilterSelectChange = (selectedLabels: string[]) => {
+  const handleTypeFilterSelectChange = (selectedLabels: string[]) => {
     search.handleFilterSelectChange(selectedLabels);
+  };
+
+  const handleLabelFilterSelectChange = (selectedValues: string[]) => {
+    search.handleLabelFilterSelectChange(selectedValues);
   };
 
   return {
@@ -40,11 +44,12 @@ export const useOwnerState = (_props: FsSearchProps): OwnerState => {
     searchTerm: search.searchTerm,
     visibleFilters: search.activeFilters,
     open: search.open,
-    allAvailableFilters: search.allAvailableFilters,
-    availableLabelOptions: selectOptions.labels,
+    allAvailableTypeFilters: search.allAvailableTypeFilters,
+    availableLabelOptions: search.availableLabelOptions,
 
     handleSearchChange,
-    handleFilterSelectChange,
+    handleTypeFilterSelectChange,
+    handleLabelFilterSelectChange,
 
     onSearchChange: search.setSearchTerm,
     onFiltersChange: search.setActiveFilters,
