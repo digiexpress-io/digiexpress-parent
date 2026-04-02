@@ -27,7 +27,7 @@ export const FsPropertiesPrintout: React.FC<FsPropertiesPrintoutProps> = ({ dire
       </div>
 
       <div className={classes.propertyRow}>
-        <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.locales' })}</Typography>
+        <Typography className={classes.propertyListItem}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.locales' })}</Typography>
         <div className={classes.propertyList}>
           {locales.map((locale, index) => <Box key={index} className={classes.propertyListItem}>{locale}</Box>)}
         </div>

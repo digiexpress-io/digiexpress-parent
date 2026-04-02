@@ -60,8 +60,8 @@ export const FsDirentTextFieldRoot = styled('div', {
       '&:hover fieldset': {
         borderColor: activeHoverColor,
       },
-      '&.Mui-disabled:hover fieldset': {
-        borderColor: borderColor,
+      '&.Mui-disabled': {
+        pointerEvents: 'none',
       },
       '&.Mui-focused fieldset': {
         border: activeFocusBorder,
@@ -80,6 +80,10 @@ export const FsDirentTextFieldRoot = styled('div', {
         color: placeholderColor,
         opacity: 1,
         ...theme.typography.caption,
+      },
+
+      '&.Mui-disabled': {
+        '-webkit-text-fill-color': placeholderColor,
       },
     },
 

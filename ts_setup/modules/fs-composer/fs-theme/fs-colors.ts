@@ -34,6 +34,7 @@ export const FsColors = {
     success: '#228b22',        // Success states, links (also used for link icons in light theme)
     info: '#9cdcfe',           // Information, dialob forms (also used for form icons in dark theme)
     primary: '#4ec9b0',        // Primary actions, services (also used for service icons in dark theme)
+    secondary: '#b1f8ea',        // Primary actions, services (also used for service icons in dark theme)
     active: '#4c4b4b',         // Active menu item background
     highlightLight: '#eaea25', // Search result text highlighting
     highlightDark: '#403d3d'   // Search result text highlighting

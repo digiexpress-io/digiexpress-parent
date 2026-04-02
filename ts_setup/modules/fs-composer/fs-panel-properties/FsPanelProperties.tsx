@@ -72,7 +72,7 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
           <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.configOptionsEnabled' })}</Typography>
           <div className={classes.propertyList}>
             {configOptionsEnabled.map((option, index) => (
-              <Box key={index} className={classes.propertyListItem}>{option}</Box>
+              <Box key={index} className={classes.configOptionsListItem}>{option}</Box>
             ))}
           </div>
         </div>

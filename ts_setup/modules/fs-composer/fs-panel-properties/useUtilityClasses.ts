@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled } from "@mui/material";
+import { darken, generateUtilityClass, lighten, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 import { OwnerState } from "./useOwnerState";
 import { FsColors } from "../fs-theme";
@@ -14,6 +14,7 @@ export interface FsPanelPropertiesClasses {
   propertyValue: string;
   propertyList: string;
   propertyListItem: string;
+  configOptionsListItem: string;
   label: string;
   commentList: string;
   commentItem: string;
@@ -35,6 +36,7 @@ export const useUtilityClasses = () => {
     propertyValue: ['propertyValue'],
     propertyList: ['propertyList'],
     propertyListItem: ['propertyListItem'],
+    configOptionsListItem: ['configOptionsListItem'],
     label: ['label'],
     commentList: ['commentList'],
     commentItem: ['commentItem'],
@@ -106,6 +108,16 @@ export const FsPanelPropertiesRoot = styled('div', {
     backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
     borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
     border: '1px solid',
+    paddingLeft: theme.spacing(0.625),
+    paddingRight: theme.spacing(0.625),
+  },
+
+  [`& .${MUI_NAME}-configOptionsListItem`]: {
+    fontWeight: 400,
+    ...theme.typography.subtitle2,
+    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    backgroundColor: ownerState.isDarkMode ? darken(FsColors.semantic.info, 0.8) : lighten(FsColors.semantic.info, 0.5),
+    border: `1px solid ${ownerState.isDarkMode ? darken(FsColors.semantic.info, 0.1) : darken(FsColors.semantic.info, 0.3)}`,
     paddingLeft: theme.spacing(0.625),
     paddingRight: theme.spacing(0.625),
   },
