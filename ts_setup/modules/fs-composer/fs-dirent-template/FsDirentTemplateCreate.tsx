@@ -25,9 +25,7 @@ export const FsDirentTemplateCreate: React.FC<FsDirentTemplateCreateProps> = (pr
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.template.contentField.label' })}</Typography>
         <div className={classes.editor}>
-          <MonacoReact
-            height="100%"
-            defaultLanguage="html"
+          <MonacoReact height="100%" defaultLanguage="html"
             options={{
               wordBasedSuggestions: 'off',
               minimap: { enabled: false },

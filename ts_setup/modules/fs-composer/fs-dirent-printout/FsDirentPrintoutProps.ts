@@ -8,6 +8,7 @@ export interface FsDirentPrintoutCreateProps {
 
 export interface FsDirentPrintoutUpdateProps {
   direntId: string;
+  pathToTopParent: string | undefined;
 }
 
 export interface FsDirentPrintoutProps {

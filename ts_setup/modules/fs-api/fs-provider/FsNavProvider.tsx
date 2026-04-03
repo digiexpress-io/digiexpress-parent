@@ -53,7 +53,8 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
   }, []);
 
   const openAsset = React.useCallback((asset: Fs.DirentBase, pathToTopParent: string) => {
-    setActiveTabPath(pathToTopParent);
+    const resolvedPath = direntPathsRef.current[asset.id] ?? pathToTopParent;
+    setActiveTabPath(resolvedPath);
 
     setOpenTabs(prevTabs => {
       const existingIndex = prevTabs.findIndex(tab => tab.type === 'edit' && tab.dirent.id === asset.id);
@@ -66,7 +67,7 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
       const newTab: FsEditTab = {
         type: 'edit',
         dirent: asset,
-        pathToTopParent,
+        pathToTopParent: resolvedPath,
       };
       const newTabs = [...prevTabs, newTab];
       setActiveTabIndex(newTabs.length - 1);
