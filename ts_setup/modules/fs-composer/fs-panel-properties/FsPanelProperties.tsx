@@ -64,7 +64,7 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
           <div className={classes.propertyList}>
             {labels.map((label, index) => (
               <div key={index} className={classes.label}>
-                <Typography component="span">{label}</Typography>
+                <Typography component="span">{label ?? "-"}</Typography>
               </div>
             ))}
           </div>
