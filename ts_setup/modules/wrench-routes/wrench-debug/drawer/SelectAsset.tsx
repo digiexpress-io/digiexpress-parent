@@ -41,13 +41,13 @@ const SelectAsset: React.FC<SelectAssetProps> = ({ onClose, onSelect, selected }
   const intl = useIntl();
   const { decisions, services, flows } = Composer.useSite();
   const [name, setName] = React.useState("");
-  const [type, setType] = React.useState<HdesApi.AstBodyType>("DT");
+  const [type, setType] = React.useState<HdesApi.AstBodyType>("DECISION_TABLE");
   const [link, setLink] = React.useState<HdesApi.Entity<HdesApi.AstBody>>();
 
   const assets: HdesApi.Entity<HdesApi.AstBody>[] = React.useMemo(() => {
 
     const getValues = () => {
-      if (type === "DT") {
+      if (type === "DECISION_TABLE") {
         return Object.values(decisions);
       } else if (type === 'FLOW_TASK') {
         return Object.values(services);

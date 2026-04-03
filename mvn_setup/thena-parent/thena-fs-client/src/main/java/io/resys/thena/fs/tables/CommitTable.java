@@ -38,30 +38,31 @@ import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.Commit;
 import io.resys.thena.fs.entities.ImmutableCommit;
-import io.resys.thena.fs.entities.ImmutableTree;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tree;
+import io.resys.thena.fs.jackson.NodesAndBlobStdDeserializer;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.support.TableUtils;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.smallrye.mutiny.tuples.Tuple3;
-import io.vertx.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
+import jakarta.annotation.Nullable;
 
 @TenantSql.Table(
   name = "commit",
   order = 500,
   ddl = """
     CREATE TABLE {commit} (
-      commit_id TEXT PRIMARY KEY,
+      commit_id UUID PRIMARY KEY,
       commit_created_at TIMESTAMPTZ NOT NULL,
       commit_author TEXT NOT NULL,
       commit_message TEXT NOT NULL,
-      tree_id TEXT NOT NULL REFERENCES {tree}(tree_id),
-      parent_id TEXT REFERENCES {commit}(commit_id),
-      merge_id TEXT REFERENCES {commit}(commit_id)
+      tree_id UUID NOT NULL REFERENCES {tree}(tree_id),
+      parent_id UUID REFERENCES {commit}(commit_id),
+      merge_id UUID REFERENCES {commit}(commit_id)
     );
     
     CREATE INDEX {commit}_tree_idx ON {commit}(tree_id);
@@ -78,7 +79,9 @@ import io.vertx.mutiny.sqlclient.Tuple;
     COMMENT ON COLUMN {commit}.parent_id IS 'Reference to the previous commit in the linear history (NULL for initial commit)';
     COMMENT ON COLUMN {commit}.merge_id IS 'Reference to the second parent commit for merge commits (NULL for regular commits)';
   """,
-  constraints = "",
+  constraints = """
+      
+      """,
   drop = """
     DROP TABLE IF EXISTS {commit} CASCADE;
   """
@@ -86,17 +89,24 @@ import io.vertx.mutiny.sqlclient.Tuple;
 public interface CommitTable {
 
   
-  record NodesAndBlobsFilter(String commitId, List<String> blobTypes) { }
+  record NodesAndBlobsFilter(UUID commitId, List<String> blobTypes) { }
   @TenantSql.Find(
     optional = false,
     sql = """
     SELECT 
-        commit.*,
-        cardinality(tree.tree_nodes) as commit_nodes_count, 
-        nodes_and_blobs.tree_node_blob
+      commit.*,
+      cardinality(tree.tree_nodes) as commit_nodes_count, 
+      tree_view.tree_node_blob::TEXT
+      
     FROM {commit} as commit
     JOIN {tree} as tree ON tree.tree_id = commit.tree_id
-    LEFT JOIN LATERAL (__nodes_json) as nodes_and_blobs ON TRUE
+    JOIN LATERAL {tree_view} (
+      tree.tree_id,
+      true::boolean, -- hydrate_all
+      '[]'::jsonb,    -- hydrate_ids   
+      $2::jsonb       -- hydrate_types 
+    ) AS tree_view ON TRUE
+    
     WHERE commit.commit_id = $1
     """,
     rowMapper = CommitAndTreeMapper.class,
@@ -105,17 +115,22 @@ public interface CommitTable {
   SqlTuple getByIdWithNodesAndBlobs(NodesAndBlobsFilter filter);
   
   
-  record NodesFilter(String commitId, List<String> blobTypes) { }
+  record NodesFilter(UUID commitId, List<String> blobTypes) { }
   @TenantSql.Find(
     optional = false,
     sql = """
     SELECT 
-        commit.*,
-        cardinality(tree.tree_nodes) as commit_nodes_count,  
-        nodes_and_blobs.tree_node_blob
+      commit.*,
+      cardinality(tree.tree_nodes) as commit_nodes_count,  
+      tree_view.tree_node_blob::TEXT
     FROM {commit} as commit ON commit.commit_id = ref.commit_id
     JOIN {tree} as tree ON tree.tree_id = commit.tree_id
-    LEFT JOIN LATERAL (__nodes_json) as nodes_and_blobs ON TRUE
+    JOIN LATERAL {tree_view} (
+      tree.tree_id,
+      false::boolean, -- hydrate_all
+      '[]'::jsonb,    -- hydrate_ids   
+      $2::jsonb       -- hydrate_types 
+    ) AS tree_view  ON TRUE
     WHERE commit.commit_id = $1
     """,
     rowMapper = CommitAndTreeMapper.class,
@@ -180,11 +195,11 @@ public interface CommitTable {
         FROM {ref} as ref
         RIGHT JOIN {commit} as commit ON commit.commit_id = ref.commit_id
         JOIN {tree} as tree ON tree.tree_id = commit.tree_id
-        WHERE ref.ref_id::text = $1 OR ref.ref_name = $1
+        WHERE ref.ref_id = $1 OR ref.ref_name = $2
       """,
       rowMapper = CommitOrRefMapper.class
     )
-  SqlTuple findByCommitIdOrRef(String commitId);
+  SqlTuple findByCommitIdOrRef(@Nullable UUID commitId, String refName);
   
   
   @TenantSql.FindAll(
@@ -207,7 +222,7 @@ public interface CommitTable {
         """,
     rowMapper = CommitMapper.class
   )
-  SqlTuple findAllByTreeId(String treeId);
+  SqlTuple findAllByTreeId(UUID treeId);
 
   @TenantSql.InsertAll(
     sql = """
@@ -301,17 +316,13 @@ public interface CommitTable {
     public SqlTuple apply(Tenant tenant, String baseline, NodesFilter filter) {
       final var params = new ArrayList<Object>();
       params.add(filter.commitId);
-      final var index = new MutableInt(1);
-      final var nodes_json = NodeTable.sql()
-        .includeBlobs(false)
-        .includeBlobTypes(filter.blobTypes)
-        .build((prop) -> {
-          params.add(prop);
-          return index.incrementAndGet();
-        });
+      params.add(Optional.ofNullable(filter.blobTypes())
+          .map(JsonArray::new)
+          .orElse(new JsonArray())
+          .encode());
     
       return ImmutableSqlTuple.builder()
-          .value(baseline.replace("__nodes_json", nodes_json))
+          .value(baseline)
           .props(Tuple.from(params))
           .build();
     }
@@ -322,18 +333,10 @@ public interface CommitTable {
     public SqlTuple apply(Tenant tenant, String baseline, NodesAndBlobsFilter filter) {
       final var params = new ArrayList<Object>();
       params.add(filter.commitId);
-      final var index = new MutableInt(1);
-      
-      final var nodes_json = NodeTable.sql()
-        .includeBlobs(true)
-        .includeBlobTypes(filter.blobTypes)
-        .build((prop) -> {
-          params.add(prop);
-          return index.incrementAndGet();
-        });
+      params.add(Optional.ofNullable(filter.blobTypes).map(JsonArray::new).orElse(new JsonArray()));
       
       return ImmutableSqlTuple.builder()
-          .value(baseline.replace("__nodes_json", nodes_json))
+          .value(baseline)
           .props(Tuple.from(params))
           .build();
     }
@@ -371,19 +374,14 @@ public interface CommitTable {
     public Tuple2<Commit, Optional<Tree>> apply(Row row) {
       final var commit = CommitMapper.fromRow(row);
       
-      final var tree_node_blob = row.getJsonArray("tree_node_blob");
-      if(tree_node_blob == null) {
+      final var tree_node_blob_text = row.getString("tree_node_blob");
+      if(tree_node_blob_text == null) {
         return Tuple2.of(commit, Optional.empty());
       }
       
-      final var allNodes = tree_node_blob
-        .stream().map(node_json -> (JsonObject) node_json)
-        .map(NodeTable.NodeMapper::fromJson)
-        .toList();
-      final var tree = ImmutableTree.builder()
-          .id(row.getString("tree_id"))
-          .treeNodes(allNodes)
-          .build();
+      final var tree_node_blob = NodesAndBlobStdDeserializer.deserialize(tree_node_blob_text);
+      final var tree = tree_node_blob.toTreeBuilder().id(row.getUUID("tree_id")).build();
+
       return Tuple2.of(commit, Optional.of(tree));
     }
   }
@@ -395,16 +393,16 @@ public interface CommitTable {
     }
     
     public static Commit fromRow(Row row) {
-      final String parentId = row.getString("parent_id");
-      final String mergeId = row.getString("merge_id");
+      final var parentId = row.getUUID("parent_id");
+      final var mergeId = row.getUUID("merge_id");
 
       return ImmutableCommit.builder()
         .commitNodesCount(row.getInteger("commit_nodes_count"))
-        .id(row.getString("commit_id"))
+        .id(row.getUUID("commit_id"))
         .commitCreatedAt(row.getOffsetDateTime("commit_created_at"))
         .commitAuthor(row.getString("commit_author"))
         .commitMessage(row.getString("commit_message"))
-        .treeId(row.getString("tree_id"))
+        .treeId(row.getUUID("tree_id"))
         .commitNodesCount(row.getInteger("commit_nodes_count"))
         .parentId(Optional.ofNullable(parentId))
         .mergeId(Optional.ofNullable(mergeId))
@@ -430,7 +428,7 @@ public interface CommitTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Commit commit) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        commit.getId()
+          commit.getId()
       });
     }
   }

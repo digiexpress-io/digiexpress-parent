@@ -41,7 +41,7 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
-  const link = site.links[linkId];
+  const link = site.articleLinks[linkId];
 
   const [value, setValue] = React.useState(link.body.value);
   const [labels, setLabels] = React.useState(link.body.labels);

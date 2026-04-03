@@ -35,34 +35,35 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDiff;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDiffValue;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
+import io.resys.limaone.spi.program.input.DefaultProgramInput;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+
+
 @RequiredArgsConstructor
 @Slf4j
 public class WrenchFlowCommand {
   private static final String CHANGE_TYPE_TASK_ROLES_UPDATED = "TASK_ROLES_UPDATED";
-  private final EveliEnvirClient envir;
+  private final io.resys.limaone.program.Runtime envir;
+
   private final String flowName = "task_mq_router";
   private final String default_locale = "fi";
   private final TaskCommentSource source;
 
   public Uni<List<TaskNotification>> getQueueMessages(TaskDiff diff) {
-    return envir.runtimeQuery().getOne().onItem().transform(runtime -> runFlow(diff, runtime, source));
+    return Uni.createFrom().item(() -> runFlow(diff, source));
   }
   
-  private List<TaskNotification> runFlow(TaskDiff diff, EveliRuntime envir, TaskCommentSource source) {
+  private List<TaskNotification> runFlow(TaskDiff diff, TaskCommentSource source) {
     try {
       final List<TaskNotification> queues = new ArrayList<>();
       final var taskGroupId = diff.getTask().getAssignedRoles().isEmpty() ? "" : diff.getTask().getAssignedRoles().iterator().next();
       for(final var diffValue : diff.getValues()) {
-        queues.addAll(processDiffValue(diff, diffValue, envir, taskGroupId));
+        queues.addAll(processDiffValue(diff, diffValue, taskGroupId));
       }
       return queues.stream().distinct().toList();
     } catch(Exception e) {
@@ -72,23 +73,24 @@ public class WrenchFlowCommand {
   }
   
   
-  private List<TaskNotification> processDiffValue(TaskDiff diff, TaskDiffValue diffValue, EveliRuntime envir, String taskGroupId) {
+  private List<TaskNotification> processDiffValue(TaskDiff diff, TaskDiffValue diffValue, String taskGroupId) {
     
     final var language = Optional.ofNullable(diff.getTask().getClientLanguage()).orElse(default_locale);
     
     try {
-      final FlowResult run = envir.getWrench()
-          .inputMap(Map.of(
-              "operation", diffValue.getOp().operationName().toLowerCase(),
-              "path", diffValue.getPath(),
-              "taskRef",  diff.getTask().getTaskRef(),
-              "clientId", diff.getTask().getClientIdentificator(),
-              "taskGroupId", taskGroupId,
-              "clientLanguage", language,
-              "taskSource", source 
-          ))
-          .flow(flowName)
-          .andGetBody();
+      
+      final var run = envir.getBundle().queryFlows()
+        .name(flowName)
+        .findOne().get()
+        .run(DefaultProgramInput.of(Map.of(
+            "operation", diffValue.getOp().operationName().toLowerCase(),
+            "path", diffValue.getPath(),
+            "taskRef",  diff.getTask().getTaskRef(),
+            "clientId", diff.getTask().getClientIdentificator(),
+            "taskGroupId", taskGroupId,
+            "clientLanguage", language,
+            "taskSource", source 
+        ))).andGetBody();
       
       @SuppressWarnings("unchecked")
       final List<Map<String, Object>> dtMatches = (List<Map<String, Object>>) run.getReturns().get("");

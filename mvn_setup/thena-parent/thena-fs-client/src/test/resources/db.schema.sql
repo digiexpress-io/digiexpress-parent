@@ -1,12 +1,13 @@
 CREATE DOMAIN node_required_text AS TEXT NOT NULL;
+CREATE DOMAIN node_required_uuid AS UUID NOT NULL;
 CREATE TYPE node AS (
-  node_id node_required_text,
+  node_id node_required_uuid,
   object_id node_required_text,
   -- technical id of the object (user api generated)
   node_path TEXT,
   node_name node_required_text,
-  blob_id TEXT,
-  props_id TEXT
+  blob_id UUID,
+  props_id UUID
 );
 CREATE DOMAIN node_strict AS node CHECK (
   -- num_nonnulls returns 1 if exactly one of the fields is NOT NULL
@@ -14,7 +15,7 @@ CREATE DOMAIN node_strict AS node CHECK (
 );
 COMMENT ON TYPE node IS 'File or directory entry within a version tree. Represents a single item in the filesystem hierarchy with optional references to content and metadata. Referential integrity for blob_id and props_id is enforced via triggers since PostgreSQL cannot validate foreign keys within composite types.';
 CREATE TABLE blob (
-  blob_id TEXT PRIMARY KEY,
+  blob_id UUID PRIMARY KEY,
   blob_type TEXT NOT NULL,
   blob_class TEXT,
   blob_value JSONB NOT NULL
@@ -26,7 +27,7 @@ COMMENT ON COLUMN blob.blob_type IS 'Content type classification (e.g., MIME typ
 COMMENT ON COLUMN blob.blob_class IS 'Classifier for mapping specific application-level class or entity';
 COMMENT ON COLUMN blob.blob_value IS 'File content stored as JSONB for structured data support';
 CREATE TABLE props (
-  props_id TEXT PRIMARY KEY,
+  props_id UUID PRIMARY KEY,
   props_labels JSONB,
   props_comments JSONB,
   props_permissions JSONB,
@@ -38,18 +39,18 @@ COMMENT ON COLUMN props.props_labels IS 'User-defined labels and tags in JSONB f
 COMMENT ON COLUMN props.props_comments IS 'Comments and annotations in JSONB format';
 COMMENT ON COLUMN props.props_permissions IS 'Access control and permission settings in JSONB format';
 COMMENT ON COLUMN props.props_flags IS 'Boolean flags like hidden, disabled, etc. in JSONB format';
-CREATE TABLE tree (tree_id TEXT PRIMARY KEY, tree_nodes node [ ] NOT NULL);
+CREATE TABLE tree (tree_id UUID PRIMARY KEY, tree_nodes node [ ] NOT NULL);
 COMMENT ON TABLE tree IS 'Directory structure snapshots. Each tree represents the complete filesystem hierarchy state at a specific point in time. Referential integrity for node array elements is enforced via triggers.';
 COMMENT ON COLUMN tree.tree_id IS 'Content hash of the tree structure, enabling deduplication of identical directory states';
 COMMENT ON COLUMN tree.tree_nodes IS 'Array of node entries representing files and subdirectories in this tree';
 CREATE TABLE commit (
-  commit_id TEXT PRIMARY KEY,
+  commit_id UUID PRIMARY KEY,
   commit_created_at TIMESTAMPTZ NOT NULL,
   commit_author TEXT NOT NULL,
   commit_message TEXT NOT NULL,
-  tree_id TEXT NOT NULL REFERENCES tree(tree_id),
-  parent_id TEXT REFERENCES commit(commit_id),
-  merge_id TEXT REFERENCES commit(commit_id)
+  tree_id UUID NOT NULL REFERENCES tree(tree_id),
+  parent_id UUID REFERENCES commit(commit_id),
+  merge_id UUID REFERENCES commit(commit_id)
 );
 CREATE INDEX commit_tree_idx ON commit(tree_id);
 CREATE INDEX commit_parent_idx ON commit(parent_id);
@@ -63,6 +64,21 @@ COMMENT ON COLUMN commit.commit_message IS 'Commit message describing the change
 COMMENT ON COLUMN commit.tree_id IS 'Reference to the root tree representing the complete filesystem state';
 COMMENT ON COLUMN commit.parent_id IS 'Reference to the previous commit in the linear history (NULL for initial commit)';
 COMMENT ON COLUMN commit.merge_id IS 'Reference to the second parent commit for merge commits (NULL for regular commits)';
+CREATE DOMAIN tree_index_required_text AS TEXT NOT NULL;
+CREATE DOMAIN tree_index_required_uuid AS UUID NOT NULL;
+CREATE TYPE tree_index_type AS (
+  object_id tree_index_required_text,
+  created_by tree_index_required_uuid,
+  updated_by tree_index_required_uuid
+);
+CREATE TABLE tree_index (
+  tree_id UUID PRIMARY KEY REFERENCES tree(tree_id),
+  tree_ancestry tree_index_type [ ] NOT NULL
+);
+COMMENT ON TYPE tree_index_type IS 'Dedicated type for fast created/updated access';
+COMMENT ON TABLE tree_index IS 'Sideloaded state for nodes, tracking the birth and last mutation of a logical object independent of its content hash.';
+COMMENT ON COLUMN tree_index.tree_id IS 'Reference to the root tree representing the complete filesystem state';
+COMMENT ON COLUMN tree_index.tree_ancestry IS 'Array of node entries representing files and subdirectories in this tree';
 CREATE TABLE ref (
   ref_id UUID PRIMARY KEY,
   ref_name TEXT UNIQUE NOT NULL,
@@ -72,8 +88,10 @@ CREATE TABLE ref (
   ref_flags JSONB,
   ref_author TEXT,
   ref_created_at TIMESTAMPTZ NOT NULL,
-  ref_created_from UUID,
-  commit_id TEXT NOT NULL REFERENCES commit(commit_id)
+  ref_created_from UUID REFERENCES ref(ref_id) ON DELETE
+  SET
+    NULL,
+    commit_id UUID NOT NULL REFERENCES commit(commit_id)
 );
 CREATE INDEX ref_commit_idx ON ref(commit_id);
 CREATE INDEX ref_name_idx ON ref(ref_name);
@@ -102,9 +120,9 @@ CREATE TABLE tag (
   tag_errors JSONB,
   tag_report JSONB,
   external_id TEXT,
-  ref_id TEXT,
+  ref_id UUID,
   --soft link
-  commit_id TEXT NOT NULL REFERENCES commit(commit_id)
+  commit_id UUID NOT NULL REFERENCES commit(commit_id)
 );
 CREATE INDEX tag_name_idx ON tag(tag_name);
 CREATE INDEX tag_commit_idx ON tag(commit_id);
@@ -188,13 +206,6 @@ OR REPLACE FUNCTION tree_validate_tree() RETURNS TRIGGER AS $$
  IF missing_count > 0 THEN
  RAISE EXCEPTION 'Node(code 008) validation failed: % props_id references do not exist', missing_count;
  END IF;
- -- Validate object index
- -- SELECT count(*) INTO missing_count
- -- FROM unnest(NEW.tree_nodes) nodes
- -- RIGHT JOIN object_index p ON p.object_id = nodes.object_id;
- -- IF missing_count <> 1 THEN
- -- RAISE EXCEPTION 'Node(code 009) validation failed: % object_id references do not exist', missing_count;
- -- END IF;
  RETURN NEW;
  END;
  $$ LANGUAGE plpgsql;

@@ -45,12 +45,17 @@ export const Main: React.FC<{}> = () => {
         if (!entity) {
           return (<>not found</>)
         }
-        if (entity.source.bodyType === 'DT') {
-          return (<Box sx={root}><DecisionEdit decision={entity} /></Box>);
-        } else if (entity.source.bodyType === 'FLOW') {
-          return (<Box sx={root}><FlowEdit flow={entity} /></Box>);
-        } else if (entity.source.bodyType === 'FLOW_TASK') {
-          return (<Box sx={root}><ServiceEdit service={entity} /></Box>);
+        try {
+          if (entity.ast.bodyType === 'DECISION_TABLE') {
+            return (<Box sx={root}><DecisionEdit decision={entity} /></Box>);
+          } else if (entity.ast.bodyType === 'FLOW') {
+            return (<Box sx={root}><FlowEdit flow={entity} /></Box>);
+          } else if (entity.ast.bodyType === 'FLOW_TASK') {
+            return (<Box sx={root}><ServiceEdit service={entity} /></Box>);
+          }
+        } catch(e) {
+          console.error(e);
+          return (<>{JSON.stringify(entity)}</>)
         }
         return (<></>)
       }

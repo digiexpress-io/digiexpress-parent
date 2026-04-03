@@ -135,6 +135,14 @@ public class TenantRegistrySqlImpl implements TenantRegistry {
     return TenantRegistrySqlImpl::repo;
   }
   private static Tenant repo(Row row) {
+    StructureType type;
+    
+    try {
+      type = StructureType.valueOf(row.getString("type"));
+    } catch(Exception e) {
+      type = StructureType.unknown;
+    }
+    
     return ImmutableTenant.builder()
         .id(row.getString("id"))
         .rev(row.getString("rev"))
@@ -142,7 +150,7 @@ public class TenantRegistrySqlImpl implements TenantRegistry {
         .externalId(row.getString("external_id"))
         .label(row.getString("label"))
         .comment(row.getString("comment"))
-        .type(StructureType.valueOf(row.getString("type")))
+        .type(type)
         .prefix(row.getString("prefix"))
         .build();
   }
@@ -150,25 +158,75 @@ public class TenantRegistrySqlImpl implements TenantRegistry {
   @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement()
-        .append("CREATE TABLE IF NOT EXISTS ").append(options.getTenant()).ln()
-        .append("(").ln()
-        .append("  id VARCHAR(40) PRIMARY KEY,").ln()
-        .append("  rev VARCHAR(40) NOT NULL,").ln()
-        .append("  prefix VARCHAR(40) NOT NULL,").ln()
-        .append("  type VARCHAR(40) NOT NULL,").ln()
-        .append("  name VARCHAR(255) NOT NULL,").ln()
-        .append("  external_id VARCHAR(255),").ln()
-        .append("  label TEXT,").ln()
-        .append("  comment TEXT,").ln()
-        .append("  UNIQUE(name), UNIQUE(rev), UNIQUE(prefix), UNIQUE(external_id)").ln()
-        .append(");").ln()
+        .append(
+"""
+CREATE TABLE IF NOT EXISTS {tenant} (
+  id VARCHAR(40) PRIMARY KEY,
+  rev VARCHAR(40) NOT NULL,
+  prefix VARCHAR(40) NOT NULL,
+  type VARCHAR(40) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  external_id VARCHAR(255),
+  label TEXT,
+  comment TEXT,
+  UNIQUE(name), UNIQUE(rev), UNIQUE(prefix), UNIQUE(external_id)
+);
 
-        .append("CREATE INDEX IF NOT EXISTS ").append(options.getTenant()).append("_NAME_INDEX")
-        .append(" ON ").append(options.getTenant()).append(" (name);").ln()
-        .append("CREATE INDEX IF NOT EXISTS ").append(options.getTenant()).append("_EXT_INDEX")
-        .append(" ON ").append(options.getTenant()).append(" (external_id);").ln()
-        
-        .build()).build();
+CREATE INDEX IF NOT EXISTS {tenant}_NAME_INDEX ON {tenant} (name);
+CREATE INDEX IF NOT EXISTS {tenant}_EXT_INDEX ON {tenant} (external_id);
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = '{alias}_config') THEN
+
+    CREATE DOMAIN {alias}_text AS TEXT NOT NULL;
+    CREATE DOMAIN {alias}_jsonb AS JSONB NOT NULL;
+
+    CREATE TYPE {alias}_config AS (
+      config_type {alias}_text,
+      config_body {alias}_jsonb
+    );
+  END IF;
+END
+$$;
+
+CREATE TABLE IF NOT EXISTS {alias} (
+  id UUID PRIMARY KEY,
+  ref_tenant_id TEXT NOT NULL REFERENCES {tenant}(id),
+  alias_tenant_id TEXT NOT NULL REFERENCES {tenant}(id),
+  
+  created_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL,
+  
+  created_by TEXT NOT NULL,
+  updated_by TEXT NOT NULL,
+  
+  alias_name TEXT NOT NULL UNIQUE,
+  alias_desc TEXT,
+  alias_config {alias}_config[]
+);
+
+CREATE INDEX IF NOT EXISTS {alias}_REF_INDEX ON {alias} (ref_tenant_id);
+CREATE INDEX IF NOT EXISTS {alias}_ALIAS_INDEX ON {alias} (alias_tenant_id);
+CREATE INDEX IF NOT EXISTS {alias}_NAME_INDEX ON {alias} (alias_name);
+
+
+CREATE TABLE IF NOT EXISTS {member} (
+  id UUID PRIMARY KEY,
+  external_id TEXT NOT NULL,
+  alias_id UUID REFERENCES {alias}(id),
+  alias_status BOOLEAN NOT NULL,
+  
+  UNIQUE (external_id, alias_id)
+);
+
+CREATE INDEX IF NOT EXISTS {member}_EXT_INDEX ON {member} (external_id);
+CREATE INDEX IF NOT EXISTS {member}_ALIAS_INDEX ON {member} (alias_id);
+CREATE INDEX IF NOT EXISTS {member}_GRP_INDEX ON {member} (external_id, alias_id);
+
+""".replace("{tenant}", options.getTenant())
+   .replace("{member}", options.getMember())
+   .replace("{alias}", options.getAlias())).build()).build();
   }
   @Override
   public Sql createConstraints() {
@@ -178,6 +236,10 @@ public class TenantRegistrySqlImpl implements TenantRegistry {
   public Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE IF EXISTS ").append(options.getTenant()).append(";").ln()
+        .append("DROP TABLE IF EXISTS ").append(options.getMember()).append(";").ln()
+        .append("DROP TABLE IF EXISTS ").append(options.getAlias()).append(";").ln()
+        .append("DROP TYPE IF EXISTS ").append(options.getAlias()).append("_config;").ln()
+        
         .build()).build();
   }
 }

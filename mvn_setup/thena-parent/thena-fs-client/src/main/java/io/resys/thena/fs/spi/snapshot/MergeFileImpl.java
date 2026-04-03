@@ -129,4 +129,11 @@ public class MergeFileImpl implements MergeFile {
     Blob blob;
     Optional<Props> props;    
   }
+
+  @Override
+  public String toString() {
+    return "MergeFileImpl [prevNode=" + prevNode + ", filePath=" + filePath
+        + ", fileName=" + fileName + ", fileValue=" + fileValue + ", fileProps="
+        + fileProps + ", validated=" + validated + "]";
+  }
 }

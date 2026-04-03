@@ -78,6 +78,14 @@ public class FileSystem_ThenaImpl implements FileSystem {
     return this.withTenant(repo.getId());
   }
   @Override
+  public Uni<FileSystem> withDefaultTenant(Optional<String> tenantIdOrName) {
+    if(tenantIdOrName.isEmpty()) {
+      return Uni.createFrom().item(this);
+    }
+    return startingState.withTenant(tenantIdOrName.get())
+        .onItem().transform(impl -> new FileSystem_ThenaImpl(impl, config));
+  }
+  @Override
   public FileSystemTenant withTenant(String tenantId) {
     RepoAssert.notEmpty(tenantId, () -> "tenantId can't be empty!");
     
@@ -89,7 +97,7 @@ public class FileSystem_ThenaImpl implements FileSystem {
       @Override public CommitQuery commitQuery() { return new CommitQueryImpl(start, tenantId); }
       @Override public CommitBuilder commitBuilder() { return new CommitBuilderImpl(start, tenantId, config); }
       
-      @Override public BranchQuery branchQuery() { return new BranchQueryImpl(start, config); }
+      @Override public BranchQuery branchQuery() { return new BranchQueryImpl(start, tenantId, config); }
       @Override public CreateBranch createBranch() { return new CreateBranchImpl(start, tenantId); }
       
       @Override public CreateTag createTag() { return new CreateTagImpl(start, tenantId); }
@@ -159,4 +167,5 @@ public class FileSystem_ThenaImpl implements FileSystem {
   public String getTenantName() {
     return startingState.getDataSource().getTenant().getName();
   }
+
 }

@@ -26,16 +26,13 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.digiexpress.eveli.client.api.ImmutableTenantConfig;
 import io.digiexpress.eveli.client.api.TenantConfigClient;
+import io.digiexpress.eveli.client.api.TenantConfigClient.TenantConfig;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWrenchController;
 import io.digiexpress.eveli.client.web.resources.worker.TenantApiController;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
-import io.resys.hdes.client.api.HdesClient;
-import io.resys.hdes.client.spi.HdesComposerImpl;
+import io.resys.limaone.authoring.Authoring;
+import io.resys.limaone.program.Compiler;
 import io.smallrye.mutiny.Uni;
 
 
@@ -46,77 +43,29 @@ public class EveliWrenchOnlyTenantAutoConfig {
   public static String FEATURE_USER_PROFILE = "user_profile";
 
   @Bean 
-  public AssetsWrenchController assetsWrenchController(ObjectMapper objectMapper, HdesClient client) {
-    final EveliEnvirClient envir = new EmptyEnvir(); // not needed
-    return new AssetsWrenchController(objectMapper, new HdesComposerImpl(client), envir) {
-      @Override
+  public AssetsWrenchController assetsWrenchController(Authoring composer, Compiler compiler) {
+    return new AssetsWrenchController(composer, compiler) {
+      @Override 
       public Uni<List<String>> flowNames() {
-        return Uni.createFrom().item(Collections.emptyList());
+        return Uni.createFrom().item(Collections.emptyList()); 
       }
     };
   }
   
   @Bean
   public TenantApiController tenantApiController() {
-    final TenantConfigClient client = new TenantConfigClient() {
+    final Uni<TenantConfig> tenant = Uni.createFrom().item(ImmutableTenantConfig.builder().addFeatures(FEATURE_WRENCH_ONLY).build());
+    
+    return new TenantApiController(new TenantConfigClient() {
       @Override
       public TenantConfigClientConfigQuery createConfigQuery() {
-        return new TenantConfigClientConfigQuery() {
-          
-          @Override
-          public Uni<TenantConfig> getOne() {
-            return Uni.createFrom().item(ImmutableTenantConfig
-                .builder()
-                .addFeatures(FEATURE_WRENCH_ONLY)
-                .build());
-          }
+        return new TenantConfigClientConfigQuery() { 
+          @Override 
+          public Uni<TenantConfig> getOne() { 
+            return tenant; 
+          } 
         };
       }
-    };
-    return new TenantApiController(client);
-  }
-  
-  private static class EmptyEnvir implements EveliEnvirClient {
-
-    @Override
-    public CreateOneDeployment createOneDeployment() {
-      throw new RuntimeException("Empty envir does not support this operation!");
-    }
-
-    @Override
-    public EveliDeploymentCompiler deploymentCompiler() {
-      throw new RuntimeException("Empty envir does not support this operation!");
-    }
-
-    @Override
-    public DeploymentQuery deploymentQuery() {
-      throw new RuntimeException("Empty envir does not support this operation!");
-    }
-
-    @Override
-    public DeploymentStatusBuilder deploymentStatusBuilder() {
-      throw new RuntimeException("Empty envir does not support this operation!");
-    }
-
-    @Override
-    public void invalidateCache() {
-      
-    }
-
-    @Override
-    public ModifyOneDeployment modifyOneDeployment() {
-      throw new RuntimeException("Empty envir does not support this operation!");
-    }
-
-    @Override
-    public EveliRuntimeQuery runtimeQuery() {
-      throw new RuntimeException("Empty envir does not support this operation!");
-    }
-
-    @Override
-    public EveliEnvirClient withCockpitIdSupplier(CockpitIdSupplier supplier) {
-      return this;
-    }
-    
+    });
   }
 }

@@ -1,0 +1,160 @@
+package io.resys.limaone.spi.compiler;
+
+/*-
+ * #%L
+ * limaone-compiler
+ * %%
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import io.resys.limaone.ast.AST_Parser;
+import io.resys.limaone.ast.DecisionTable_AST;
+import io.resys.limaone.ast.Simple_AST;
+import io.resys.limaone.model.DecisionTable;
+import io.resys.limaone.model.ImmutableModelError;
+import io.resys.limaone.model.Model;
+import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.model.ModelError;
+import io.resys.limaone.model.Parameter.ValueType;
+import io.resys.limaone.program.DecisionProgram.DecisionRow;
+import io.resys.limaone.program.ImmutableDecisionRow;
+import io.resys.limaone.program.ImmutableDecisionRowAccepts;
+import io.resys.limaone.program.ImmutableDecisionRowReturns;
+import io.resys.limaone.program.Program.ProgramAssociation;
+import io.resys.limaone.program.Program.ProgramStatus;
+import io.resys.limaone.spi.program.DecisionProgramImpl;
+import lombok.RequiredArgsConstructor;
+
+
+
+@RequiredArgsConstructor
+public class Compiler_DecisionTable implements CompilableUnit {
+  private final AST_Parser parser;
+  @SuppressWarnings("unused")
+  private final ModelWorld world;
+  private final Model<DecisionTable> target;
+  
+  @Override
+  public ArtifactLink compile(NewArtifact resolution) {
+    final DecisionTable_AST ast = parser.parseDecisionTable()
+        .nodes(target.getBody().getNodes())
+        .parse();
+    
+    // register to bundler
+    resolution.ast(ast).name(ast.getName()).id(target.getId()).build();
+    
+    // start "compilation", close is triggered when dependency tree is resolved
+    return new ArtifactLink() {
+      @Override
+      public Simple_AST getAst() {
+        return ast;
+      }
+      @Override
+      public RuntimeLink accept(Artifact artifact) {        
+        return (runtime) -> {
+          final List<ProgramAssociation> assocs = artifact.getAssociations();
+          final List<ModelError> errors = new ArrayList<>(artifact.getErrors());
+          
+          List<DecisionRow> rows;
+          ProgramStatus status = artifact.getProgramStatus();
+          try {
+            rows = createRows(ast);
+            status = ProgramStatus.UP;
+          } catch(Exception e) {
+            rows = Collections.emptyList();
+            status = ProgramStatus.ERROR;
+            errors.add(ImmutableModelError.builder()
+                .exception(e)
+                .msg(e.getMessage())
+                .build());
+          }
+          final var program = new DecisionProgramImpl(runtime, target.getId(), ast, status, rows, errors, assocs);
+          return program;
+        };
+      }
+    };
+  }
+  
+  private List<DecisionRow> createRows(DecisionTable_AST ast) {
+    final List<DecisionRow> result = new ArrayList<>();    
+    try {
+      final var accepts = ast.getHeaders().getAcceptDefs().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+      
+      final var returns = new HashMap<>(ast.getHeaders()
+          .getReturnDefs().stream()
+          .collect(Collectors.toMap(e -> e.getId(), e -> e)));
+      
+      accepts.values().forEach(e -> {
+        returns.put("_" + e.getId(), e);
+      });
+      
+      
+      final List<DecisionTable_AST.DecisionRowNode> rows = new ArrayList<>(ast.getRows());
+      Collections.sort(rows, (o1, o2) -> Integer.compare(o1.getOrder(), o2.getOrder()));
+      
+
+      for(var row : rows) {
+
+        final var programRow = ImmutableDecisionRow.builder().order(row.getOrder());
+        for(final var value : row.getCells()) {
+          
+          if(accepts.containsKey(value.getHeader())) {
+            if(value.getValue() == null || value.getValue().isBlank()) {
+              continue;
+            }
+            final var typeDef = accepts.get(value.getHeader());
+            programRow.addAccepts(ImmutableDecisionRowAccepts.builder()
+                .key(typeDef)
+                .expression(Compiler_Expression.build(value.getValue(), typeDef.getValueType()))
+                .build());
+          } else {
+            final var typeDef = returns.get(value.getHeader());
+            if(value.getValue() == null && typeDef.getValueType() != ValueType.INTL) {
+              continue;
+            }
+            
+            try {
+              programRow.addReturns(ImmutableDecisionRowReturns.builder()
+                  .key(typeDef)
+                  .value(typeDef.toValue(value.getValue()))
+                  .build());
+            } catch(Exception e) {
+              throw new CompilerException(
+                  row.getOrder(), typeDef.getOrder(),
+                  "Failed to create expression: '" + value.getValue() + "'!" +
+                  System.lineSeparator() + e.getMessage(), e);
+              
+            }
+          }
+        }
+        result.add(programRow.build());
+      }
+      return result;
+    } catch(CompilerException ex) {
+      throw ex;
+    } catch(Exception e) {
+      throw new CompilerException(
+          "Failed to create decision program from ast: '" + ast.getName() + "'!" +
+          System.lineSeparator() + e.getMessage(), e);
+    }
+  }
+}

@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import io.resys.thena.fs.api.commits.CommitQuery.CommitsByObject;
 import io.resys.thena.fs.entities.Blob;
@@ -37,10 +38,10 @@ import lombok.RequiredArgsConstructor;
 public class CommitsByObjectImpl implements CommitsByObject {
   private final String objectId;
   
-  private Map<String, Node> nodesById = new HashMap<>();
-  private Map<String, Commit> commitsById = new HashMap<>();
-  private Map<String, Blob> blobs = new HashMap<>();
-  private Map<String, Props> props = new HashMap<>();
+  private Map<UUID, Node> nodesById = new HashMap<>();
+  private Map<UUID, Commit> commitsById = new HashMap<>();
+  private Map<UUID, Blob> blobs = new HashMap<>();
+  private Map<UUID, Props> props = new HashMap<>();
   
   @Override
   public String getObjectId() {
@@ -48,22 +49,22 @@ public class CommitsByObjectImpl implements CommitsByObject {
   }
 
   @Override
-  public Map<String, Node> getNodesById() {
+  public Map<UUID, Node> getNodesById() {
     return nodesById;
   }
 
   @Override
-  public Map<String, Commit> getCommitsById() {
+  public Map<UUID, Commit> getCommitsById() {
     return commitsById;
   }
 
   @Override
-  public Map<String, Blob> getBlobsById() {
+  public Map<UUID, Blob> getBlobsById() {
     return blobs;
   }
 
   @Override
-  public Map<String, Props> getPropsById() {
+  public Map<UUID, Props> getPropsById() {
     return props;
   }
   public CommitsByObjectImpl addProps(Optional<Props> props) {

@@ -10,10 +10,10 @@ function hook(_props: {}) {
   const { url } = params;
 
   return {
-    getOneCockpit: async (cockpitId: string): Promise<CockpitApi.CockpitContainer> => {
+    getOneCockpit: async (cockpitId: string): Promise<CockpitApi.CockpitSummary> => {
       return params.fetch(url({ cockpitId }))
         .then(response => response.json())
-        .then((data: CockpitApi.CockpitContainer) => {
+        .then((data: CockpitApi.CockpitSummary) => {
           return data;
         })
     }

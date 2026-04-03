@@ -1,7 +1,6 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
 import java.time.OffsetDateTime;
-import java.util.Collections;
 import java.util.Optional;
 
 /*-
@@ -32,15 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CustomerFeedback;
 import io.digiexpress.eveli.client.api.GamutAuthClient;
-import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerType;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
-import io.digiexpress.thena.cockpit.client.api.CockpitClient;
-import io.digiexpress.thena.cockpit.client.api.entities.CockpitConfig;
+import io.resys.limaone.authoring.Authoring;
+import io.resys.limaone.program.ArticleProgram.LocalizedSite;
+import io.resys.limaone.program.ImmutableLocalizedSite;
+import io.resys.limaone.spi.program.input.DefaultArticleProgramInput;
+import io.resys.thena.api.entities.Alias;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.thestencil.client.api.ImmutableLocalizedSite;
-import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,49 +46,62 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/portal/site")
 @RequiredArgsConstructor
 public class GamutSiteController {
-  
-  private final EveliEnvirClient envir;
+
+  private final io.resys.limaone.program.Runtime runtime;
+  private final Optional<Authoring> authoring;
   private final FeedbackClient feedback;
   private final GamutAuthClient auth;
-  private final Optional<CockpitClient> cockpitClient;
-  
+ 
   @GetMapping
   public Uni<LocalizedSite> getOneSiteByLocale(
       @RequestParam(name = "locale") String locale, 
       @RequestParam(name = "cockpitId", required = false) String cockpitId) {
     
-    final CockpitIdSupplier cockpitIdSupplier = () -> Uni.createFrom().item(Optional.ofNullable(cockpitId));
-    final var isAuth = auth.getCustomer().getType() != CustomerType.ANON; 
-    
-    return envir.withCockpitIdSupplier(cockpitIdSupplier).runtimeQuery().getOne().onItem().transform(runtime -> {
-      final var data = runtime.getStencil(OffsetDateTime.now(), isAuth).getSites().get(locale);
-      if(data == null) {
-        final LocalizedSite failsafe = ImmutableLocalizedSite.builder().id("not-found")
-            .images("images")
-            .locale(locale)
-            .build();
-        return failsafe;
+    final LocalizedSite failsafe = ImmutableLocalizedSite.builder()
+        .id("under-construction")
+        .images("images")
+        .locale(locale)
+        .build();
+
+    try {
+      final var runtime = this.runtime.withTenant(Optional.ofNullable(cockpitId));
+      final var bundle = runtime.getBundle();
+      final var article = bundle.queryArticles().findOne();
+      
+      if(article.isEmpty()) {
+        return Uni.createFrom().item(failsafe);
       }
-      return ImmutableLocalizedSite.builder().from(data).id(data.getId()).build();
-    }).onFailure().recoverWithItem(error -> {
-      log.error("Failed to resolve site for locale: {}, because of error: {}", locale, error.getMessage(), error);
-      final LocalizedSite failsafe = ImmutableLocalizedSite.builder().id("under-construction")
-          .images("images")
+      
+      final var input = DefaultArticleProgramInput.builder()
+          .runtime(runtime)
           .locale(locale)
+          .targetDate(OffsetDateTime.now())
+          .user(auth.getParticipant())
           .build();
-          
-      return failsafe;
-    });
+      
+      final var sites = article.get().run(input).getSites();
+      final var site =  Optional.ofNullable(sites.get(locale));
+      if(site.isEmpty()) {
+        return Uni.createFrom().item(failsafe);
+      }
+      
+      return Uni.createFrom().item(site.get());
+    } catch(Exception error) {
+      log.error("Failed to resolve site for locale: {}, because of error: {}", locale, error.getMessage(), error);
+      return Uni.createFrom().item(failsafe);
+    }
   }
   
   @GetMapping(path = "feedback")
   public Multi<CustomerFeedback> findAllFeedback() {
     return feedback.queryCustomerFeedbacks().findAll();
   }
+  
   @GetMapping(path = "cockpits")
-  public Multi<CockpitConfig> findAllCockpits() {
-    return cockpitClient
-        .map(client -> client.queries().cockpitQuery().findAll().onItem().transform(e -> e.getConfig()))
-        .orElse(Multi.createFrom().items(Collections.<CockpitConfig>emptyList().stream()));
-  } 
+  public Multi<Alias> findAllCockpits() {
+    if(authoring.isEmpty()) {
+      return Multi.createFrom().empty();
+    }
+    return authoring.get().tid().aliasQuery().findAll();
+  }
 }

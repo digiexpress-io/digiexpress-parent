@@ -106,4 +106,9 @@ public interface NameExpressionBuilder {
    * @return builder for method chaining
    */
   NameExpressionBuilder and();
+  
+  /**
+   * @return convenient way to check if expression is empty
+   */
+  boolean isEmpty();
 }

@@ -31,7 +31,6 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDiff;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher.MqEvent;
 import io.digiexpress.eveli.client.spi.mq.WrenchFlowCommand.TaskNotification;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
@@ -47,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PublisherForTaskEvents {
   private final TaskClient taskClient;
   private final ThenaMqClient mqClient;
-  private final EveliEnvirClient envir;
+  private final io.resys.limaone.program.Runtime envir;
   
   @EventListener(MqEvent.class)
   @Async

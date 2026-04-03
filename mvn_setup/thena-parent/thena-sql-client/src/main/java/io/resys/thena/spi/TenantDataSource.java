@@ -1,6 +1,7 @@
 package io.resys.thena.spi;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /*-
  * #%L
@@ -24,6 +25,8 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.Alias;
+import io.resys.thena.api.entities.Member;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.datasource.ThenaDataSource;
 import io.smallrye.mutiny.Multi;
@@ -34,7 +37,34 @@ import io.smallrye.mutiny.Uni;
 public interface TenantDataSource {
   ThenaDataSource getDataSource();
   InternalTenantQuery tenant();
-
+  InternalAliasQuery alias();
+  InternalMemberQuery member();
+  
+  
+  interface InternalAliasQuery {
+    Uni<Alias> getByName(String name);
+    Uni<Alias> getByNameOrId(String nameOrId);
+    Uni<Optional<Alias>> findByNameOrId(String nameOrId);
+    Multi<Alias> findAll();
+    Uni<Alias> delete(Alias existing);
+    Uni<Alias> insert(Alias newAlias);
+    Uni<Alias> merge(Alias existing);
+  }
+  
+  interface InternalMemberQuery {
+    Uni<Optional<Member>> findById(UUID id);
+    Uni<Member> getById(UUID id);
+    Uni<Optional<Member>> findByExtIdAndAliasId(String extId, UUID uuid);
+    
+    Multi<Member> findByExtIdAndAliasIdAndRef(String extId, UUID uuid, String ref);
+    
+    Multi<Member> findAllByExtId(String externalId);
+    Multi<Member> findAll();
+    Uni<Member> delete(Member existing);
+    Uni<Member> insert(Member newMember);
+    Uni<Member> merge(Member existing);
+    
+  }
   
   interface InternalTenantQuery {
     Uni<Tenant> getByName(String name);

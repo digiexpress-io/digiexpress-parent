@@ -16,28 +16,33 @@ import io.digiexpress.eveli.mig.v6.wrench.MigrateWrenchEvent;
 import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.fs.api.FileSystem;
 import io.resys.thena.fs.spi.FileSystem_ThenaImpl;
+import io.resys.thena.fs.spi.commit.CommitBuilderImpl.EmptyCommitException;
 import io.resys.thena.fs.tables.spi.FsTableNames;
 import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.vertx.mutiny.sqlclient.Pool;
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 public class V6Migration {
   private final OldGit oldGit;
   private final OldEnvir oldEnvir;
-  private final Pool pool;
+  private final Pool pool_old;
+  private final Pool pool_new;
   private String stencil;
   private String wrench;
   private String envir;
   private String fs;
   
-  public V6Migration(Pool pool) {
+  public V6Migration(Pool pool_old, Pool pool_new) {
     super();
-    this.oldGit = new OldGit_Impl(pool);
-    this.oldEnvir = new OldEnvir_impl(pool);
-    this.pool = pool;
+    this.oldGit = new OldGit_Impl(pool_old);
+    this.oldEnvir = new OldEnvir_impl(pool_old);
+    this.pool_old = pool_old;
+    this.pool_new = pool_new;
   }
   public V6Migration stencil(String stencil) {
     this.stencil = RepoAssert.notEmpty(stencil, () -> "stencil repo name must be deifned");
@@ -89,9 +94,17 @@ public class V6Migration {
   private Object commit(List<AssetEvent> events) {
     final var fs = createFs();
 
-    
     for(final var event : events) {
-      getMigration(fs, event).execute().await().atMost(Duration.ofMinutes(1));
+      if(event.getOperations().isEmpty()) {
+        continue;
+      }
+      
+      try {
+        getMigration(fs, event).execute()
+          .await().atMost(Duration.ofMinutes(1));
+      } catch(EmptyCommitException e) {
+        log.error("empty commit, skipping!");
+      }
     }
     return 0;
   }
@@ -106,7 +119,11 @@ public class V6Migration {
   }
   
   private FileSystem_ThenaImpl createFs() {
-    final var fs = FileSystem_ThenaImpl.createInstance().client(pool).errorHandler(new PgErrors()).build();
+    final var fs = FileSystem_ThenaImpl.createInstance()
+        .client(pool_new)
+        .errorHandler(new PgErrors())
+        .tenantName(this.fs)
+        .build();
     
     final var tenant = fs.tenants().createOneTenant()
       .buildOnlyIfNotCreated()
@@ -118,26 +135,26 @@ public class V6Migration {
     final var isWipe = true;
     
     if(isWipe) {
-      datasource.getClient().query("delete from " + names.getObjectIndex())
-        .execute().await().atMost(Duration.ofMillis(100));
+      datasource.getClient().query("delete from " + names.getTreeIndex())
+        .execute().await().atMost(Duration.ofMillis(1000));
       
       datasource.getClient().query("delete from " + names.getTag())
-        .execute().await().atMost(Duration.ofMillis(100));
+        .execute().await().atMost(Duration.ofMillis(1000));
       
       datasource.getClient().query("delete from " + names.getRef())
-        .execute().await().atMost(Duration.ofMillis(100));
+        .execute().await().atMost(Duration.ofMinutes(5));
       
       datasource.getClient().query("delete from " + names.getCommit())
-        .execute().await().atMost(Duration.ofMillis(100));
+        .execute().await().atMost(Duration.ofMillis(1000));
       
       datasource.getClient().query("delete from " + names.getTree())
-        .execute().await().atMost(Duration.ofMillis(100));
+        .execute().await().atMost(Duration.ofMillis(1000));
       
       datasource.getClient().query("delete from " + names.getProps())
-        .execute().await().atMost(Duration.ofMillis(100));
+        .execute().await().atMost(Duration.ofMillis(1000));
       
       datasource.getClient().query("delete from " + names.getBlob())
-        .execute().await().atMost(Duration.ofMillis(100));
+        .execute().await().atMost(Duration.ofMillis(1000));
     }
     return fs;
   }

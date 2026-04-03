@@ -25,7 +25,7 @@ const NewPage: React.FC<{ onClose: () => void, articleId?: StencilApi.ArticleId 
 
   const handleCreate = () => {
 
-    const content = template ? site.templates[template].body.content : undefined;
+    const content = template ? site.articleTemplates[template].body.content : undefined;
     const entity: StencilApi.CreatePage = { articleId, locale, content, devMode };
     service.create().page(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
@@ -39,12 +39,12 @@ const NewPage: React.FC<{ onClose: () => void, articleId?: StencilApi.ArticleId 
     })
   }
   const message = <FormattedMessage id="snack.page.createdMessage" />
-  const definedLocales: StencilApi.LocaleId[] = Object.values(site.pages)
+  const definedLocales: StencilApi.LocaleId[] = Object.values(site.articlePages)
     .filter(p => p.body.article === articleId).map(p => p.body.locale);
 
   const articles: StencilApi.Article[] = session.articles.map(w => w.article);
   const locales: StencilApi.SiteLocale[] = Object.values(site.locales).filter(l => !definedLocales.includes(l.id));
-  const templates: StencilApi.Template[] = Object.values(site.templates);
+  const templates: StencilApi.Template[] = Object.values(site.articleTemplates);
 
   return (
     <Dialog open={true} onClose={props.onClose}>

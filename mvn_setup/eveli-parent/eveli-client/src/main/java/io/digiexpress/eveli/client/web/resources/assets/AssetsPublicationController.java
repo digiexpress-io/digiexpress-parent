@@ -1,7 +1,5 @@
 package io.digiexpress.eveli.client.web.resources.assets;
 
-import java.time.Duration;
-
 /*-
  * #%L
  * eveli-client
@@ -25,48 +23,27 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
 import java.util.Optional;
 
 import org.immutables.value.Value;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.dialob.api.form.Form;
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
-import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
-import io.digiexpress.eveli.envir.spi.actions.ImmutableEveliEnvirInvalidateCache;
-import io.resys.hdes.client.api.HdesClient;
-import io.resys.hdes.client.api.HdesComposer.ComposerState;
-import io.resys.hdes.client.api.ImmutableCreateEntity;
-import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
-import io.resys.hdes.client.api.ast.AstTag;
-import io.resys.hdes.client.spi.HdesComposerImpl;
+import io.digiexpress.eveli.client.spi.assets.EveliDeployment;
+import io.resys.limaone.authoring.Authoring;
+import io.resys.limaone.model.Model.BodyType;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.tuples.Tuple2;
-import io.thestencil.client.api.ImmutableCreateRelease;
-import io.thestencil.client.api.StencilClient;
-import io.thestencil.client.api.StencilClient.Entity;
-import io.thestencil.client.api.StencilClient.Release;
-import io.thestencil.client.api.StencilClient.Workflow;
-import io.thestencil.client.api.StencilComposer.SiteState;
-import io.thestencil.client.spi.StencilComposerImpl;
-import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -78,177 +55,64 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AssetsPublicationController {
   
-  private final EveliEnvirClient envirClient;
-  private final StencilClient stencilClient;
-  private final HdesClient wrenchClient;
-  private final DialobClient dialobClient;
-  private final WorkerAuthClient securityClient;
-  private final ApplicationEventPublisher publisher;
-
+  private final Authoring authoring;
+  private final boolean isReadOnly;
   
+
   @GetMapping
-  public Uni<List<EveliDeployment>> findAllPublications() {
-    return envirClient.deploymentQuery().findAll();
+  public Multi<EveliDeployment> findAllPublications() {
+    return authoring.worldQuery()
+        .docs(BodyType.DEPLOYMENT)
+        .findAll()
+        .onItem().transformToMulti(world -> Multi.createFrom().items(world.getDeployments().values().stream()))
+        .onItem().transform(item -> EveliDeployment.from(item, null));
   }
   
   @GetMapping("/{name}")
   public Uni<EveliDeployment> getOnePublicationByName(@PathVariable("name") String name) {
-    return envirClient.deploymentQuery().getOneById(name);
+    return authoring.worldQuery()
+        .docs(BodyType.DEPLOYMENT)
+        .findAll()
+        .onItem().transform(world -> world.getDeployments().values().stream()
+          .filter(dep -> 
+            dep.getId().equals(name) ||
+            dep.getBody().getName().equals(name) || 
+            name.equals(dep.getBody().getExternalId()))
+          .findFirst()
+          .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404)))
+        ).onItem().transformToUni(deployment -> authoring.worldQuery()
+          .docs(BodyType.without(BodyType.DEPLOYMENT))
+          .commitId(deployment.getBody().getFromCommitId())
+          .findAll()
+          .onItem().transform(world -> EveliDeployment.from(deployment, world))
+        );
   }
   
   @PostMapping
   public Uni<EveliDeployment> createOnePublication(@RequestBody CreatePublication publication) {
-    final var userId = securityClient.getUser().getPrincipal().getUsername();
-    final var stencilSrc = getOrCreateStencilSrc(publication)
-        .onItem().transformToUni(stencil -> getForms(stencil).onItem().transform(forms -> Tuple2.of(stencil, forms)));
-    final var hdesSrc = getOrCreateWrenchSrc(publication);
-
-    final var userName = securityClient.getUser().getPrincipal().getUsername();
-    final LocalDateTime liveDateTime = Optional.ofNullable(publication.getLiveDate()).orElse(LocalDateTime.now());
-    final OffsetDateTime liveDate = OffsetDateTime.of(liveDateTime, ZoneOffset.UTC);
-  
-    
-    return Uni.combine().all().unis(stencilSrc, hdesSrc).asTuple()
-      .onItem().transformToUni(src -> envirClient.createOneDeployment()
-          .startsAt(liveDate)
-          .userId(userName)
-          .name(Optional.ofNullable(publication.getName()).orElse(LocalDateTime.now().toString()))
-          .wrench(src.getItem2())
-          .stencil(src.getItem1().getItem1())
-          .dialob(src.getItem1().getItem2())
-          .build()
-      )
-      .onItem().invoke(deployment -> 
-        publisher.publishEvent(new CompileEvent(deployment.getId(), userId))          
-      );
-  }
-  
-  private Uni<AstTag> getOrCreateWrenchSrc(CreatePublication workflowRelease) {    
-    final Uni<ComposerState> composerState;
-    final var tagName = Optional
-        .ofNullable(workflowRelease.getWrenchTag())
-        .orElse((workflowRelease.getName() + "_" + LocalDateTime.now()));
-    
-    if(workflowRelease.getWrenchTag() == null) {    
-      composerState = new HdesComposerImpl(wrenchClient).create(ImmutableCreateEntity.builder()
-          .type(AstBodyType.TAG)
-          .name(tagName)
-          .desc("auto-created")
-          .build());
-    } else {
-      composerState = new HdesComposerImpl(wrenchClient).get();
+    if(isReadOnly) {
+      throw new ResponseStatusException(HttpStatusCode.valueOf(404));
     }
     
-    return composerState.onItem().transform(state -> {
-      final var rel = state.getTags().values().stream().filter(tag -> tag.getAst().getName().equals(tagName)).findFirst();
-      if(rel.isEmpty()) {
-        throw new WrenchTagNotFoundException("Wrench tag with name: '" + tagName + "' is not found!");
-      }
-      return rel.get().getAst();
-    });
-  }
-  
-  private Uni<SiteState> getOrCreateStencilSrc(CreatePublication workflowRelease) {    
-    final var tagName = Optional.ofNullable(workflowRelease.getStencilTag())
-        .orElse(workflowRelease.getName() + "_" + LocalDateTime.now());
+    final OffsetDateTime now = OffsetDateTime.now();
+    final OffsetDateTime liveDate = OffsetDateTime.of(publication.getLiveDate(), ZoneOffset.UTC);
     
-    final var getRelease = stencilClient.getStore().query().head()
-      .onItem().transform(state -> state.getReleases().values().stream().filter(f -> f.getBody().getName().equals(tagName)).findFirst())
-      .onItem().transformToUni(rel -> {
-        if(rel.isEmpty()) {
-          throw new StencilTagNotFoundException("Stencil tag with name: '" + tagName + "' is not found!");
-        }
-        return stencilClient.getStore().query().release(rel.get().getId());
-      });
-  
-    if(workflowRelease.getStencilTag() == null) {
-      final Uni<Entity<Release>> createRelease = new StencilComposerImpl(stencilClient).create().release(ImmutableCreateRelease.builder()
-          .name(tagName)
-          .note("auto-created")
-          .build());
-      return createRelease.onItem().transformToUni(createdRelease -> getRelease);
-    }
-    return getRelease;
+    return authoring.newModel().newDeployment().props(props -> props
+      .name(Optional.ofNullable(publication.getName()).orElse(now.toString()))
+      .description(publication.getDescription())
+      .liveDate(liveDate))
+      .build()
+      .onItem().transform(deployment -> EveliDeployment.from(deployment, null));
   }
   
-  
-  private Uni<List<Form>> getForms(SiteState site) {    
-    final var workflows = site.getWorkflows().values().stream()
-      .filter(e -> e.getBody().getFormId() != null)
-      .filter(e -> !Boolean.TRUE.equals(e.getBody().getDevMode()))
-      .toList();
-    
-    return Multi.createFrom().items(workflows.stream())
-        .onItem().transform(form -> Optional.of(getFormIdById(form)))
-        .onFailure().recoverWithItem(() -> Optional.<Form>empty())
-        .collect().asList().onItem().transform(items -> items.stream().filter(f -> f.isPresent()).map(e -> e.get()).toList());
-  }
-
-  private Form getFormIdById(final Entity<Workflow> stencilService) {
-    try {
-      return dialobClient.getFormById(stencilService.getBody().getFormId());
-    } catch(Exception e) {
-      final var msg = "Can't resolve for by tag or form name, will try by form id for topic: " + 
-          JsonObject.mapFrom(stencilService).encodePrettily();
-      log.error(msg + e.getMessage(), e);
-      throw new DialobFormNotFoundException(msg);
-    }
-  }
-  
-  
-  @Async
-  @EventListener
-  public void compile(CompileEvent event) {
-    envirClient.deploymentCompiler()
-      .deploymentId(event.getDeploymentId())
-      .userId(event.getUserId())
-      .compile()
-      .await().atMost(Duration.ofMinutes(20));
-  }
-  @Async
-  @EventListener
-  public void compile(ImmutableEveliEnvirInvalidateCache event) {
-    envirClient.invalidateCache();
-  }
 
   @Value.Immutable
   @JsonSerialize(as = ImmutableCreatePublication.class)
   @JsonDeserialize(as = ImmutableCreatePublication.class)
   public interface CreatePublication {
-    @Nullable String getStencilTag(); // auto-create tag on null
-    @Nullable String getWrenchTag();  // auto-create tag on null
     
     @Nullable String getName();  // autoname on null
     @Nullable String getDescription();
-    @Nullable LocalDateTime getLiveDate();
-    
-  }
-
-  
-  @Getter @RequiredArgsConstructor
-  public static class CompileEvent {
-    private final String deploymentId;
-    private final String userId;
-  }
-  public class StencilTagNotFoundException extends RuntimeException {
-    private static final long serialVersionUID = 7190168525508589141L;
-
-    public StencilTagNotFoundException(String message) {
-      super(message);
-    }
-  }
-  public class WrenchTagNotFoundException extends RuntimeException {
-    private static final long serialVersionUID = 7190168525508589141L;
-
-    public WrenchTagNotFoundException(String message) {
-      super(message);
-    }
-  }
-  public class DialobFormNotFoundException extends RuntimeException {
-    private static final long serialVersionUID = 7190168525508589141L;
-
-    public DialobFormNotFoundException(String message) {
-      super(message);
-    }
+    @Nullable LocalDateTime getLiveDate(); 
   }
 }

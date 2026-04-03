@@ -21,6 +21,7 @@ package io.resys.thena.fs.spi.snapshot;
  */
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 
 import io.resys.thena.fs.api.commits.CommitBuilder.MergeFolder;
@@ -86,7 +87,7 @@ public class MergeFolderImpl implements MergeFolder {
 
     final String folderName = this.folderName.orElse(prevNode.getNodeName());
     
-    final Optional<String> blobId = Optional.empty();
+    final Optional<UUID> blobId = Optional.empty();
     final var nextNode = Node.newInstance(
         Optional.ofNullable(folderPath), 
         nodeId, 

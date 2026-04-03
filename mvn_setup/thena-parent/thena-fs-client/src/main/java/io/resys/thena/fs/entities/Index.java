@@ -21,6 +21,7 @@ package io.resys.thena.fs.entities;
  */
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 import org.immutables.value.Value;
 
@@ -32,14 +33,19 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonDeserialize(as = ImmutableIndex.class)
 public interface Index extends Entity {
   String getObjectId();
-  String getCreatedBy();
-  String getUpdatedBy();
+  UUID getTreeId();
+  UUID getCreatedBy();
+  UUID getUpdatedBy();
+  
+  String getCreatedByAuthor();
+  String getUpdatedByAuthor();
+  
   OffsetDateTime getCreatedAt();
   OffsetDateTime getUpdatedAt();
   
   @Override
-  default String getId() {
-    return getObjectId();
+  default UUID getId() {
+    return Entity.uuid().append(getObjectId()).append(getTreeId()).build();
   }
   
   @Override

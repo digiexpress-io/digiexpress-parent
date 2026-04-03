@@ -85,9 +85,9 @@ class SiteCache {
 
   constructor(site: StencilApi.Site) {
     this._site = site;
-    Object.values(site.pages).sort((l0, l1) => l0.body.locale.localeCompare(l1.body.locale)).forEach(page => this.visitPage(page))
-    Object.values(site.links).sort((l0, l1) => l0.body.contentType.localeCompare(l1.body.contentType)).forEach(link => this.visitLink(link))
-    Object.values(site.workflows).sort((l0, l1) => l0.body.value.localeCompare(l1.body.value)).forEach(workflow => this.visitWorkflow(workflow))
+    Object.values(site.articlePages).sort((l0, l1) => l0.body.locale.localeCompare(l1.body.locale)).forEach(page => this.visitPage(page))
+    Object.values(site.articleLinks).sort((l0, l1) => l0.body.contentType.localeCompare(l1.body.contentType)).forEach(link => this.visitLink(link))
+    Object.values(site.articleWorkflows).sort((l0, l1) => l0.body.value.localeCompare(l1.body.value)).forEach(workflow => this.visitWorkflow(workflow))
 
     Object.values(site.articles).sort((a1, a2) => {
       if (a1.body.parentId && a1.body.parentId === a2.body.parentId) {
@@ -192,7 +192,7 @@ class SiteCache {
   private visitArticle(article: StencilApi.Article) {
     const articleId = article.id;
     const site = this._site;
-    const pages: StencilComposerApi.PageView[] = Object.values(site.pages)
+    const pages: StencilComposerApi.PageView[] = Object.values(site.articlePages)
       .filter(page => articleId === page.body.article)
       .map(page => new ImmutablePageView({ page, locale: site.locales[page.body.locale] }));
 
@@ -273,7 +273,7 @@ class SessionData implements StencilComposerApi.Session {
     commitlogs?: StencilApi.SiteCommitLog[];
   }) {
     this._filter = props.filter ? props.filter : new ImmutableSessionFilter({});
-    this._site = props.site ? props.site : { name: "", contentType: "NO_CONNECTION", releases: {}, articles: {}, links: {}, locales: {}, pages: {}, workflows: {}, templates: {} };
+    this._site = props.site ? props.site : { name: "", contentType: "NO_CONNECTION", releases: {}, articles: {}, articleLinks: {}, locales: {}, articlePages: {}, articleWorkflows: {}, articleTemplates: {} };
     this._pages = props.pages ? props.pages : {};
     this._cache = props.cache ? props.cache : new SiteCache(this._site);
     this._commitlogs = (props.commitlogs ?? []).reduce<Record<string, StencilApi.SiteCommitLog[]>>((collector, item) => {
@@ -371,7 +371,7 @@ class SessionData implements StencilComposerApi.Session {
   }
 
   getArticlesForLocale(locale: StencilApi.LocaleId): StencilApi.Article[] {
-    const pages = Object.values(this._site.pages)
+    const pages = Object.values(this._site.articlePages)
     return locale ? Object.values(this._site.articles).filter(article => {
       for (const page of pages) {
         if (page.body.article === article.id && page.body.locale === locale) {
@@ -382,7 +382,7 @@ class SessionData implements StencilComposerApi.Session {
     }) : []
   }
   getArticlesForLocales(locales: StencilApi.LocaleId[]): StencilApi.Article[] {
-    const pages = Object.values(this._site.pages)
+    const pages = Object.values(this._site.articlePages)
     return locales && locales.length > 0 ? Object.values(this._site.articles).filter(article => {
       for (const page of pages) {
         if (page.body.article === article.id && locales.includes(page.body.locale)) {
@@ -411,7 +411,7 @@ class SessionData implements StencilComposerApi.Session {
       return this;
     }
     const pages = Object.assign({}, this._pages);
-    const origin = this._site.pages[page];
+    const origin = this._site.articlePages[page];
     pages[page] = new ImmutablePageUpdate({ origin, saved: true, value: origin.body.content });
     return new SessionData({ site: this._site, pages, cache: this._cache, filter: this._filter, commitlogs: Object.values(this._commitlogs).flatMap(c => c) });
   }

@@ -10,7 +10,7 @@ function hook(_props: {}) {
   const { method, url } = params;
 
   return {
-    changeActivity: async (command: CockpitApi.CockpitActivityChangeActiveIdCommand): Promise<CockpitApi.CockpitActivity> => {
+    changeActivity: async (command: CockpitApi.CockpitActivityChangeActiveIdCommand): Promise<CockpitApi.CockpitSummary> => {
       const props = { method, body: JSON.stringify(command) };
       return params.fetch(url({ }), props).then(response => response.json());
     }

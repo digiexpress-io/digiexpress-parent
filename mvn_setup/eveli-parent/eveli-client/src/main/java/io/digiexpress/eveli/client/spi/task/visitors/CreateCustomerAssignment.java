@@ -21,9 +21,7 @@ package io.digiexpress.eveli.client.spi.task.visitors;
  */
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.CreateCustomerAssignmentCommand;
@@ -36,17 +34,17 @@ import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
 import io.resys.thena.grim.api.GrimCommitActions.ModifyOneMission;
 import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.tuples.Tuple2;
-import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
+
+
 
 @RequiredArgsConstructor
 public class CreateCustomerAssignment implements TaskStoreConfig.MergeTaskVisitor<TaskClient.Task> {
   private final String userId;
   private final String taskId;
   private final List<CreateCustomerAssignmentCommand> commands;
-  private final Sites stencil;
+  private final io.resys.limaone.program.Runtime envir;
   
   private TaskClient.Task previousVersion;
   
@@ -61,9 +59,7 @@ public class CreateCustomerAssignment implements TaskStoreConfig.MergeTaskVisito
     );
     
     
-    final var validLinks = new HashSet<String>();
     for(final var command : commands) {
-      validLinks.add(command.getServiceId());
       if(!command.getTaskId().equals(taskId)) {
         throw TaskException.builder("MODIFY_ONE_TASK_FAIL_TASK_ID_MISMATCH")
         .add("inconsistent data", 
@@ -86,35 +82,21 @@ public class CreateCustomerAssignment implements TaskStoreConfig.MergeTaskVisito
         .build(); 
       }
     }
-  
-    final var templates = stencil.getSites().values().stream()
-      .flatMap(e -> e.getLinks().values().stream().map(l -> Tuple2.of(e.getLocale(), l)))
-      .filter(e -> Boolean.TRUE.equals(e.getItem2().getAssignable()))
-      .filter(e -> validLinks.contains(e.getItem2().getId()))
-      .collect(Collectors.toMap(e -> e.getItem2().getId(), e -> e));
-    
-    if(templates.size() != validLinks.size()) {
-      throw TaskException.builder("MODIFY_ONE_TASK_FAIL_CANT_FIND_ALL_STENCIL_SERVICES")
-      .add("missing data", 
-          "Can't find all stencil services",
-          JsonObject
-          .of("expected", validLinks,
-              "actual", templates.keySet())
-      )
-      .build(); 
-    }
+
+
     
     for(final var command : commands) {
-      final var template = templates.get(command.getServiceId()).getItem2();
-      final var locale = templates.get(command.getServiceId()).getItem1();
+      final var wk = envir.getBundle().queryWorkflows().id(command.getServiceId()).findOne().get();
+      
+      final var locale = command.getLocale();
       merge.addObjective(newObjective -> newObjective
           .type(TaskMapper.OBJECTIVE_TYPE_CUSTOMER_ASSIGNMENT)
           .startDate(LocalDate.now())
-          .title(template.getValue())
-          .description(template.getName())
+          .title(wk.getName())
+          .description(wk.getLabels().get(locale))
           .locale(locale)
           .status(TaskClient.TaskAssignmentStatus.NEW.name())
-          .externalId(template.getId())
+          .externalId(wk.getId())
           .build());
     }
     merge.build();
@@ -136,6 +118,8 @@ public class CreateCustomerAssignment implements TaskStoreConfig.MergeTaskVisito
     throw TaskException.builder("MODIFY_ONE_TASK_FAIL").add(config, envelope).build(); 
   }
 
+  
+  
   @Override
   public Uni<TaskClient.Task> end(GrimStructuredTenant config, OneMissionEnvelope commited) {
     final var task = TaskMapper.map(

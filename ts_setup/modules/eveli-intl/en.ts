@@ -1678,8 +1678,7 @@ export const en = {
   'fs.references.sectionTitle.childReferences': 'Child References',
   'fs.references.label.type': 'Type: {childType}',
   'fs.references.label.refMarker': '(REF)',
-  'fs.references.message.noReferences': 'This dirent does not contain any references.',
+  'fs.references.message.noReferences': 'This node does not contain any references.',
   'fs.search.searchField.placeholder': 'Search',
-  'fs.search.filterSelect.placeholder': 'Filter by type',
-  'fs.search.labelFilter.placeholder': 'Filter by label'
+  'fs.search.filterSelect.placeholder': 'Filter by type'
 }

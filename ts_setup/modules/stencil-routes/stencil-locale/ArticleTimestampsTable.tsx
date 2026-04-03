@@ -16,7 +16,7 @@ export const ArticleTimestampsTable: React.FC = () => {
   const { site, session } = Composer.useComposer();
   const locales = Object.values(site.locales);
   const articles = Object.values(site.articles);
-  const pages = Object.values(site.pages);
+  const pages = Object.values(site.articlePages);
 
   // Find the corresponding page for a given article and locale
   const getPage = (articleId: string, localeId: string) =>

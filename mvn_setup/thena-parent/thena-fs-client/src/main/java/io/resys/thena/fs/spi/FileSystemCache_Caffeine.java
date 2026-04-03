@@ -22,6 +22,7 @@ package io.resys.thena.fs.spi;
 
 import java.time.Duration;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -36,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FileSystemCache_Caffeine implements FileSystemCache {
-  private final Cache<String, CachedNode> nodesById;
+  private final Cache<UUID, CachedNode> nodesById;
   
 
   public FileSystemCache_Caffeine() {
@@ -48,7 +49,7 @@ public class FileSystemCache_Caffeine implements FileSystemCache {
   }
 
   @Override
-  public Optional<Tree> findOneTreeById(String treeId) {
+  public Optional<Tree> findOneTreeById(UUID treeId) {
     final var result = ImmutableTree.builder().id(treeId);
     nodesById.asMap().values().stream().filter(t -> t.getTreeId().equals(treeId))
         .map(e -> e.getNode())
@@ -84,7 +85,7 @@ public class FileSystemCache_Caffeine implements FileSystemCache {
   
   @Value
   private static final class CachedNode {
-    String treeId;
+    UUID treeId;
     Node node;
   }
 }

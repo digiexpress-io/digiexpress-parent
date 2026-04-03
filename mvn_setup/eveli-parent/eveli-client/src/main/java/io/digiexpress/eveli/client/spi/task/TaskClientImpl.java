@@ -60,7 +60,6 @@ import io.digiexpress.eveli.client.spi.task.visitors.ModifyProcessVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.PaginateTasksImpl;
 import io.digiexpress.eveli.client.spi.task.visitors.TaskDiffVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.TransferTaskVisitor;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -70,10 +69,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TaskClientImpl implements TaskClient {
 
-  private final EveliEnvirClient envirClient;
+  
   private final TaskFileClient taskFilesClient;
   private final DocContainerClient docContainerClient;
   private final TaskStore ctx;
+  private final io.resys.limaone.program.Runtime envir;
 
   
   public TaskStore unwrap() {
@@ -91,7 +91,7 @@ public class TaskClientImpl implements TaskClient {
       
       @Override
       public Multi<FormAssignment> findAll(String taskId) {
-        return new FormAssignmentVisitor(envirClient, ctx, taskId).accept();
+        return new FormAssignmentVisitor(envir, ctx, taskId).accept();
       }
     };
   }
@@ -213,7 +213,7 @@ public class TaskClientImpl implements TaskClient {
       public Uni<Task> transferTask(String taskId, TransferTaskCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
-        return new TransferTaskVisitor(envirClient, ctx, taskFilesClient, docContainerClient, userId, taskId, command).accept();
+        return new TransferTaskVisitor(envir, ctx, taskFilesClient, docContainerClient, userId, taskId, command).accept();
       }
       @Override
       public Uni<Task> completeCustomerAssignment(String taskId, CompleteCustomerAssignmentCommand command) {
@@ -226,9 +226,7 @@ public class TaskClientImpl implements TaskClient {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
         
-        return envirClient.runtimeQuery().getOne()
-            .onItem().transform(runtime -> runtime.getStencil(OffsetDateTime.now()))
-            .onItem().transformToUni(sites -> ctx.getConfig().accept(new CreateCustomerAssignment(userId, taskId, command, sites)));
+        return ctx.getConfig().accept(new CreateCustomerAssignment(userId, taskId, command, envir));
       }
       @Override
       public Uni<Task> addFormToCustomerAssignment(String taskId, List<AddFormToCustomerAssignmentCommand> command) {

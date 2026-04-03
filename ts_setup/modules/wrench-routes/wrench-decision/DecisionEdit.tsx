@@ -78,21 +78,21 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
   const { service, actions, session } = Composer.useComposer();
   const update = session.pages[decision.id];
 
-  const commands = React.useMemo(() => update ? update.value : decision.source.commands, [decision, update]);
+  const commands: HdesApi.AstCommand[] = React.useMemo(() => update ? update.value : decision.commands, [decision, update]) as HdesApi.AstCommand[];
   const [ast, setAst] = React.useState<HdesApi.AstDecision | undefined>();
   const [edit, setEdit] = React.useState<EditMode | undefined>();
   const intl = useIntl(); 
   const { getCommands } = useFetch('worker/rest/api/assets/wrench/commands/$id.GET', {});
-
-
-  const onChange = (newCommands: HdesApi.AstCommand[]) => {
-    actions.handlePageUpdate(decision.id, [...commands, ...newCommands])
-  }
-
   const decisionId = decision.id;
 
+  const onChange = (newCommands: HdesApi.AstCommand[]) => {
+    const allCommands: HdesApi.AstCommand[] = [...commands, ...newCommands];
+    actions.handlePageUpdate(decision.id, allCommands);
+  }
+
   React.useEffect(() => {
-    service.ast(decisionId, commands).then(data => {
+
+    service.ast(decisionId, 'DECISION_TABLE', commands).then(data => {
       setAst(data.ast);
     });
 

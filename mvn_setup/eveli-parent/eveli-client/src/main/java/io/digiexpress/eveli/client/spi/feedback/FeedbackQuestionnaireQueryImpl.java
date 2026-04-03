@@ -32,9 +32,9 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.TaskComment;
 import io.digiexpress.eveli.client.config.EveliPropsFeedback;
-import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.eveli.dialob.api.DialobClient.ProxyAnswer;
-import io.digiexpress.eveli.dialob.spi.QuestionnaireWrapperImpl;
+import io.resys.limaone.spi.dialob.FormDb.AnswerAndFormItem;
+import io.resys.limaone.spi.dialob.FormDb.FormInstance;
+import io.resys.limaone.spi.dialob.model.FormInstanceImpl;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,9 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuery {
 
   private final TaskClient taskClient;
-  private final DialobClient dialobClient;
   private final EveliPropsFeedback configProps;
-  
   
   @Override
   public Uni<Optional<FeedbackQuestionnaire>> findOneFromTaskById(String taskIdOrRef) {
@@ -71,8 +69,10 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
           return Optional.empty();
         }
 
-        final var questionnaire = processQuestionnaire.get().mapTo(Questionnaire.class);
-        return Optional.of(new FeedbackQuestionnaireImpl(dialobClient,task, process.get(), comments, questionnaire, configProps));
+        final var questionnaire = new FormInstanceImpl(
+            processQuestionnaire.get().mapTo(Questionnaire.class),
+            false, Optional.empty());
+        return Optional.of(new FeedbackQuestionnaireImpl(task, process.get(), comments, questionnaire, configProps));
       });
     
 
@@ -80,56 +80,52 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
 
   @RequiredArgsConstructor
   public static class FeedbackQuestionnaireImpl implements FeedbackQuestionnaire {
-    private final DialobClient dialobClient;
-    
     private final TaskClient.Task task;
     private final ProcessInstance process;
     private final List<TaskComment> comments;
-    private final Questionnaire questionnaire;
+    private final FormInstance questionnaire;
     private final EveliPropsFeedback configProps;
     
     
-    private Optional<ProxyAnswer> mainCategory;
-    private Optional<ProxyAnswer> subCategory;
+    private Optional<AnswerAndFormItem> mainCategory;
+    private Optional<AnswerAndFormItem> subCategory;
     
-    private Optional<ProxyAnswer> title;
-    private Optional<ProxyAnswer> question;
+    private Optional<AnswerAndFormItem> title;
+    private Optional<AnswerAndFormItem> question;
 
-    public Optional<ProxyAnswer> getMainCat() {
+    public Optional<AnswerAndFormItem> getMainCat() {
       if(mainCategory != null) {
         return mainCategory;
       }
       this.mainCategory = findAnswer(configProps.getCategoryMain()); 
       return this.mainCategory;
     }
-    public Optional<ProxyAnswer> getSubCat() {
+    public Optional<AnswerAndFormItem> getSubCat() {
       if(subCategory != null) {
         return subCategory;
       }
       this.subCategory = findAnswer(configProps.getCategorySub());
       return this.subCategory;
     }
-    public Optional<ProxyAnswer> getTitle() {
+    public Optional<AnswerAndFormItem> getTitle() {
       if(title != null) {
         return title;
       }
       this.title = findAnswer(configProps.getQuestionTitle());
       return this.title;
     }
-    public Optional<ProxyAnswer> getQuestion() {
+    public Optional<AnswerAndFormItem> getQuestion() {
       if(question != null) {
         return question;
       }
       this.question = findAnswer(configProps.getQuestion());
       return this.question;
     }
-    public Optional<ProxyAnswer> findAnswer(List<String> answerId) {
-      return questionnaire.getAnswers().stream()
-        .filter(a -> answerId.contains(a.getId())).map(a -> dialobClient.proxyAnswer(questionnaire, a))
+    public Optional<AnswerAndFormItem> findAnswer(List<String> answerId) {
+      return questionnaire.getAnswerAndFormItems().stream()
+        .filter(a -> answerId.contains(a.getAnswer().getId()))
         .findFirst();
     }
-    
-    
     @Override
     public boolean getEnabled() {
       return configProps.getForms().contains(process.getFormName());
@@ -166,7 +162,7 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
     }
     
     
-    private String getStringAnswer(ProxyAnswer proxyAnswer) {
+    private String getStringAnswer(AnswerAndFormItem proxyAnswer) {
       try {
         final var answer = Optional.ofNullable(proxyAnswer.getAnswer().getValue()).map(Object::toString).orElse("-not-answered-");
         return answer;
@@ -175,7 +171,7 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
         return "failed-to-resolve-string";
       }
     }
-    private String getSelectionAnswer(ProxyAnswer proxyAnswer) {
+    private String getSelectionAnswer(AnswerAndFormItem proxyAnswer) {
       try {
         final var answer = proxyAnswer.getValueSetLabel().orElse("");
         return answer;
@@ -220,10 +216,10 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
       }
       
       
-      final var wrapper = new QuestionnaireWrapperImpl(this.questionnaire);
+      
       
       final var usernames = this.configProps.getUsername().stream()
-        .map(name -> wrapper.context(name))
+        .map(name -> this.questionnaire.context(name))
         .filter(e -> e != null)
         .map(e -> e.toString().trim())
         .filter(e -> !e.isEmpty())
@@ -239,7 +235,7 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
     }
     @Override
     public Questionnaire getQuestionnaire() {
-      return questionnaire;
+      return this.questionnaire.getQuestionnaire();
     }
     @Override
     public ProcessInstance getProcessInstance() {

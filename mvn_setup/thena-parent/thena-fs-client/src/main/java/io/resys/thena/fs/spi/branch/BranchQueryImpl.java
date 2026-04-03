@@ -25,17 +25,22 @@ import java.util.List;
  */
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import io.resys.thena.fs.api.branches.BranchQuery;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
+import io.resys.thena.fs.entities.Index;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.spi.FileSystemConfig;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.filters.ImmutableRefTableFilter;
+import io.resys.thena.fs.tables.filters.ImmutableRefTableNameFilter;
+import io.resys.thena.fs.tables.filters.NameExpressionBuilderImpl;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -44,23 +49,30 @@ import lombok.RequiredArgsConstructor;
 public class BranchQueryImpl implements BranchQuery {
 
   private final Uni<FsDb> db_uni;
+  @SuppressWarnings("unused")
+  private final String tenantId;
   private final List<String> blobTypes = new ArrayList<>();
+  private final List<String> docIds = new ArrayList<>();
   private final FileSystemConfig config;
   private Consumer<NameExpressionBuilder> nameExpr;
   private String branchId;
+  private UUID commitId;
   
-  private boolean excludeBlobs;
-  private boolean excludeNodes;
+  private Boolean includeBlobs = true;
   
-
   @Override
-  public BranchQuery excludeBlobs(boolean excludeBlobs) {
-    this.excludeBlobs = excludeBlobs;
+  public BranchQuery commitId(UUID commitId) {
+    this.commitId = commitId;
     return this;
   }
   @Override
-  public BranchQuery excludeNodes(boolean excludeNodes) {
-    this.excludeNodes = excludeNodes;
+  public BranchQuery docIds(List<String> docIds) {
+    this.docIds.addAll(docIds);
+    return this;
+  }
+  @Override
+  public BranchQuery includeBlobs(boolean includeBlobs) {
+    this.includeBlobs = includeBlobs;
     return this;
   }
   @Override
@@ -97,8 +109,11 @@ public class BranchQueryImpl implements BranchQuery {
             )
           );
         }
-        
-        return join(found.stream().findFirst().get()).map(Optional::of);
+        final var ref = found.stream().findFirst();
+        if(ref.isEmpty()) {
+          return Uni.createFrom().item(Optional.empty());
+        }
+        return join(ref.get()).map(Optional::of);
       });
   }
   @Override
@@ -106,11 +121,13 @@ public class BranchQueryImpl implements BranchQuery {
     return baseline().collect().asList()
       .onItem().transformToUni(found -> {
         final var actual = found.size();
+
         if(actual != 1) {
-          throw new BranchQueryException("Expecting exactly 1 result but found: " + actual + "!", 
+          final var branchName = getBranchName();
+          throw new BranchNotFoundException("Expecting exactly 1 result but found: " + actual + "!", 
             JsonObject.of(
               "branchId", branchId,
-              "isNameExpr", nameExpr == null ? false : true 
+              "branchName", branchName
             )
           );
         }
@@ -118,8 +135,18 @@ public class BranchQueryImpl implements BranchQuery {
       });
   }
 
+
   
   private Multi<Ref> baseline() {
+    if(commitId != null) {
+      return db_uni.onItem().transformToMulti(db -> db.query().queryRef()
+        .findAllByFilterWithoutRef(
+          Boolean.TRUE.equals(includeBlobs), 
+          new JsonArray(docIds), new JsonArray(blobTypes), 
+          commitId)
+        );
+    }
+    
     final ImmutableRefTableFilter.Builder filter = ImmutableRefTableFilter.builder();
     if(branchId == null && nameExpr == null) {
       filter.branchId(branchId).nameExpr(nameExpr);
@@ -127,9 +154,9 @@ public class BranchQueryImpl implements BranchQuery {
       filter.branchId(BranchConstants.DEFAULT_BRANCH);
     }
     filter
+      .docIds(docIds)
       .blobTypes(blobTypes)
-      .excludeNodes(Boolean.TRUE.equals(excludeNodes))
-      .excludeBlobs(Boolean.TRUE.equals(excludeBlobs));
+      .includeBlobs(Boolean.TRUE.equals(includeBlobs));
     
     
 //    final var isBlobs = !excludeBlobs && !excludeNodes;
@@ -157,5 +184,40 @@ public class BranchQueryImpl implements BranchQuery {
       config.getCache().cacheOneTree(tag.getTransitives().getTree());
     }
     return Uni.createFrom().item(tag);
+  }
+  @Override
+  public Multi<Index> findIndexOnly() {
+    RepoAssert.isTrue(branchId != null || nameExpr != null, () -> "branchId can't be empty!");
+
+    final var filter = ImmutableRefTableNameFilter.builder()
+        .nameExpr(nameExpr)
+        .branchId(branchId)
+        .build();
+    
+    return db_uni.onItem().transformToMulti(db -> db.query().queryRef().findAllByName(filter))
+        .collect().asList()
+        .onItem().transformToMulti(branches -> {
+          if(branches.isEmpty()) {
+            return Multi.createFrom().empty();
+          }
+          return db_uni.onItem()
+              .transformToMulti(db -> db.query().queryTreeIndex().findAllByByBranchId(branches.getFirst().getId()));          
+        });
+  }
+
+  private Optional<String> getBranchName() {
+    final List<Object> props = new ArrayList<>();
+    new NameExpressionBuilderImpl("", next -> { props.add(next); return 0; }, new StringBuilder())
+      .close();
+    
+    if(props.size() == 0) {
+      return Optional.empty();
+    }
+    
+    if(props.size() == 1 && props.getFirst() instanceof String &&
+        !BranchConstants.DEFAULT_BRANCH.equals(props.getFirst())) {
+      return Optional.ofNullable((String) props.getFirst());
+    }
+    return Optional.empty();
   }
 }

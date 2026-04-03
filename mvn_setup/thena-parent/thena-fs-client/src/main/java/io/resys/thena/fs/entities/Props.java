@@ -20,15 +20,14 @@ package io.resys.thena.fs.entities;
  * #L%
  */
 
-import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.hash.Hashing;
 
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
@@ -38,7 +37,7 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableProps.class)
 public interface Props extends Entity {
   
-  String getId();
+  UUID getId();
   Optional<JsonObject> getPropsLabels();
   Optional<JsonObject> getPropsComments();
   Optional<JsonObject> getPropsPermissions();
@@ -69,15 +68,14 @@ public interface Props extends Entity {
       JsonObject permissions, 
       JsonObject flags
     ) {
-    final var content = new StringBuilder();
+    final var content = Entity.uuid();
     content.append(labels != null ? Blob.canonicalizeJson(labels) : "null");
     content.append(comments != null ? Blob.canonicalizeJson(comments) : "null");
     content.append(permissions != null ? Blob.canonicalizeJson(permissions) : "null");
     content.append(flags != null ? Blob.canonicalizeJson(flags) : "null");
     
-    final var hash = Hashing.murmur3_128().hashString(content.toString(), StandardCharsets.UTF_8).toString();
     return ImmutableProps.builder()
-        .id(hash)
+        .id(content.build())
         .propsLabels(Optional.ofNullable(labels))
         .propsComments(Optional.ofNullable(comments))
         .propsPermissions(Optional.ofNullable(permissions))

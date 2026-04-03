@@ -22,7 +22,9 @@ package io.resys.thena.fs.spi.snapshot;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import io.resys.thena.fs.entities.Commit;
@@ -30,21 +32,36 @@ import io.resys.thena.fs.entities.ImmutableIndex;
 import io.resys.thena.fs.entities.Index;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.tables.ImmutableTreeIndex;
+import io.resys.thena.fs.tables.TreeIndexTable.TreeIndex;
 import io.resys.thena.support.RepoAssert;
-import lombok.RequiredArgsConstructor;
-import lombok.Value;
 
-@RequiredArgsConstructor
+
 public class MergeIndex {
   private final Optional<Ref> ref;
   private final OffsetDateTime now;
-  
+  private final Map<String, Index> index = new HashMap<>();
+
   private final List<ImmutableIndex.Builder> updates = new ArrayList<>();
   private final List<ImmutableIndex.Builder> inserts = new ArrayList<>();
   
+  public MergeIndex(Optional<Ref> ref, OffsetDateTime now) {
+    super();
+    this.ref = ref;
+    this.now = now;
+    
+    if(ref.isPresent()) {
+      ref.get().getTransitives().getTree().getTreeNodes()
+        .forEach(node -> index.put(
+            node.getObjectId(), 
+            node.getTransitives().getObjectIndex()
+        ));
+    }
+  }
+  
   public void rm(List<Node> nodes) {
     for(final var node : nodes) {
-      merge(node, node);
+      index.remove(node.getObjectId());
     }
   }
   
@@ -53,9 +70,10 @@ public class MergeIndex {
     RepoAssert.isTrue(prev.getTransitives() != null, () ->  "previous 'node.transitives' must be loaded!");
     RepoAssert.isTrue(prev.getTransitives().getObjectIndex() != null, () ->  "previous node 'node.transitives.objectIndex' must be loaded!");
     
-    updates.add(ImmutableIndex.builder()
+    final var index = ImmutableIndex.builder()
         .from(prev.getTransitives().getObjectIndex())
-        .updatedAt(now));
+        .updatedAt(now);
+    updates.add(index);
   }
   
   public void create(Node next) {
@@ -66,15 +84,30 @@ public class MergeIndex {
   }
   
   public MergeIndexResult close(Commit commit) {
-    return new MergeIndexResult(
-        updates.stream().map(b -> b.updatedBy(commit.getId()).build()).toList(), 
-        inserts.stream().map(b ->  b.createdBy(commit.getId()).updatedBy(commit.getId()).build()).toList()
-    );
+
+    updates.stream()
+      .map(b -> b
+        .updatedBy(commit.getId())
+        .updatedByAuthor(commit.getCommitAuthor())
+        .treeId(commit.getTreeId())
+        .build())
+      .forEach(index -> this.index.put(index.getObjectId(), index));
+    
+    inserts.stream()
+      .map(b ->  b
+        .createdBy(commit.getId())
+        .createdByAuthor(commit.getCommitAuthor())
+        .treeId(commit.getTreeId())
+        .updatedBy(commit.getId())
+        .updatedByAuthor(commit.getCommitAuthor())
+        .build())
+      .forEach(index -> this.index.put(index.getObjectId(), index));
+    
+    return new MergeIndexResult(ImmutableTreeIndex.builder()
+        .treeId(commit.getTreeId())
+        .objectIndices(index.values().stream().sorted((a, b) -> a.getObjectId().compareTo(b.getObjectId())).toList())
+        .build());
   }
   
-  @Value
-  public static class MergeIndexResult {
-    List<? extends Index> updates;
-    List<? extends Index> inserts;
-  }
+  public record MergeIndexResult(TreeIndex index) {}
 }

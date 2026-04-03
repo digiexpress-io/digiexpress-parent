@@ -47,7 +47,11 @@ import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
 import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.spi.RegistryCodeGenerator;
+import io.resys.thena.spi.InternalAliasQueryImpl;
+import io.resys.thena.spi.InternalMemberQueryImpl;
 import io.resys.thena.spi.TenantActionsImpl;
+import io.resys.thena.spi.TenantDataSource.InternalAliasQuery;
+import io.resys.thena.spi.TenantDataSource.InternalMemberQuery;
 import io.resys.thena.spi.TenantDataSource.InternalTenantQuery;
 import io.resys.thena.spi.TenantDataSource.TxScope;
 import io.resys.thena.spi.TenantException;
@@ -75,6 +79,8 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
     
     classBuilder.addMethod(generateGetDataSource());
     classBuilder.addMethod(generateTenant(registry));
+    classBuilder.addMethod(generateAlias(registry));
+    classBuilder.addMethod(generateMember(registry));
     classBuilder.addMethod(generateWithTenantString(registry, interfaceName));
     classBuilder.addMethod(generateWithTenantObject(registry, className, interfaceName));
     classBuilder.addMethod(generateWithTenantDefault(registry, interfaceName));
@@ -111,6 +117,23 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .build();
   }
   
+  private MethodSpec generateAlias(RegistryMetamodel registry) {
+    return MethodSpec.methodBuilder("alias")
+      .addAnnotation(Override.class)
+      .addModifiers(Modifier.PUBLIC)
+      .returns(ClassName.get(InternalAliasQuery.class))
+      .addStatement("return new $T(dataSource)", InternalAliasQueryImpl.class)
+      .build();
+  }
+  
+  private MethodSpec generateMember(RegistryMetamodel registry) {
+    return MethodSpec.methodBuilder("member")
+      .addAnnotation(Override.class)
+      .addModifiers(Modifier.PUBLIC)
+      .returns(ClassName.get(InternalMemberQuery.class))
+      .addStatement("return new $T(dataSource)", InternalMemberQueryImpl.class)
+      .build();
+  }
   private MethodSpec generateWithTenantString(RegistryMetamodel registry, String interfaceName) {
     return MethodSpec.methodBuilder("withTenant")
       .addAnnotation(Override.class)

@@ -24,7 +24,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const { service, actions, site } = Composer.useComposer();
-  const workflow = site.workflows[workflowId];
+  const workflow = site.articleWorkflows[workflowId];
 
   const [startdate, setStartdate] = React.useState<string>(workflow.body.startDate ?? '');
   const [enddate, setEnddate] = React.useState<string>(workflow.body.endDate ?? '');

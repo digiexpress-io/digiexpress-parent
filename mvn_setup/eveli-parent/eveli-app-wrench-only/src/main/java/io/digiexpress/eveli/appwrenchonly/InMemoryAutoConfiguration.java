@@ -2,9 +2,9 @@ package io.digiexpress.eveli.appwrenchonly;
 
 /*-
  * #%L
- * hdes-spring-env
+ * eveli-app-wrench-only
  * %%
- * Copyright (C) 2020 - 2021 Copyright 2020 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,54 +20,13 @@ package io.digiexpress.eveli.appwrenchonly;
  * #L%
  */
 
-
-
-import java.time.Duration;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.resys.hdes.client.api.HdesClient;
-import io.resys.hdes.client.api.programs.ProgramEnvir;
-import io.resys.hdes.client.spi.HdesClientImpl;
-import io.resys.hdes.client.spi.HdesInMemoryStore;
-import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
-import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
-import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 
 
 @ConditionalOnProperty(prefix = "wrench.assets.inmemory", name = "enabled", havingValue = "true")
 @Configuration
 public class InMemoryAutoConfiguration {
 
-  @Bean
-  public HdesClient hdesClient(ObjectMapper objectMapper, ApplicationContext context) {
-    final ServiceInit init = new ServiceInit() {
-      @Override
-      public <T> T get(Class<T> type) {
-        return context.getAutowireCapableBeanFactory().createBean(type);
-      }
-    };
-    final var store = HdesInMemoryStore.builder().objectMapper(objectMapper).build();
-    return HdesClientImpl.builder().objectMapper(objectMapper)
-      .dependencyInjectionContext(new DependencyInjectionContext() {
-        @Override
-        public <T> T get(Class<T> type) {
-          return context.getBean(type);
-        }
-      })
-      .serviceInit(init).store(store).build();    
-  }
-  @Bean
-  public ProgramEnvir staticAssets(HdesClient client) {
-    final var source = client.store().query().get().await().atMost(Duration.ofMinutes(1));
-    return ComposerEntityMapper
-        .toEnvir(client.envir(), source)
-        .tagName("inmemory")
-        .build();
-  }
+
 }

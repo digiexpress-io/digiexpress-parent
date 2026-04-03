@@ -21,6 +21,7 @@ package io.resys.thena.fs.spi.snapshot;
  */
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import io.resys.thena.fs.api.commits.CommitBuilder.NewFolder;
@@ -75,7 +76,7 @@ public class NewFolderImpl implements NewFolder {
     
     final var path = this.folderPath;
     final var name = this.folderName;
-    final var blobId = Optional.<String>empty(); 
+    final var blobId = Optional.<UUID>empty(); 
     
     final var props = Optional.ofNullable(this.folderProps).map(p -> {
       final var builder = new PropsBuilderImpl(Optional.empty());

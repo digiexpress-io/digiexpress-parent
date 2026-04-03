@@ -30,7 +30,7 @@ const GAMUT_SAFE_COMMANDS = [
 const TemplateEdit: React.FC<TemplateEditProps> = ({ onClose, templateId }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { site } = Composer.useComposer();
-  const template = site.templates[templateId];
+  const template = site.articleTemplates[templateId];
 
   const [name, setName] = React.useState(template.body.name);
   const [description, setDescription] = React.useState(template.body.description);

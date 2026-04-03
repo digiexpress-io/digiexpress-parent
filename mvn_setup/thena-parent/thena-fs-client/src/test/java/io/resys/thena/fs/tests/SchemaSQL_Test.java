@@ -63,6 +63,7 @@ public class SchemaSQL_Test {
       .append(registry.props().createTable().getValue())
       .append(registry.trees().createTable().getValue())
       .append(registry.commits().createTable().getValue())
+      .append(registry.treeIndexs().createTable().getValue())
       .append(registry.refs().createTable().getValue())
       .append(registry.tags().createTable().getValue())
 

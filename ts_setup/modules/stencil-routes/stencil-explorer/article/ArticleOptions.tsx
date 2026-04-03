@@ -72,7 +72,7 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
         onClick={() => setDialogOpen('PageEdit')}
         labelText={<FormattedMessage id="pages.change" />}>
       </Burger.TreeItemOption>
-      {Object.values(site.pages).filter(p => p.body.article === article.id).length > 0 && <Burger.TreeItemOption nodeId={article.id + 'pages.change.devmode'}
+      {Object.values(site.articlePages).filter(p => p.body.article === article.id).length > 0 && <Burger.TreeItemOption nodeId={article.id + 'pages.change.devmode'}
         color='page'
         icon={EditIcon}
         onClick={() => setDialogOpen('PageEditDev')}

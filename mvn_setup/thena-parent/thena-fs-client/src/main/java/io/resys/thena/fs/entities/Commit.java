@@ -20,28 +20,27 @@ package io.resys.thena.fs.entities;
  * #L%
  */
 
-import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.hash.Hashing;
 
 @Value.Immutable
 @JsonSerialize(as = ImmutableCommit.class)
 @JsonDeserialize(as = ImmutableCommit.class)
 public interface Commit extends Entity {
   
-  String getId();
+  UUID getId();
   OffsetDateTime getCommitCreatedAt();
   String getCommitAuthor();
   String getCommitMessage();
-  String getTreeId();
-  Optional<String> getParentId();
-  Optional<String> getMergeId();
+  UUID getTreeId();
+  Optional<UUID> getParentId();
+  Optional<UUID> getMergeId();
   Integer getCommitNodesCount();
 
 
@@ -52,14 +51,14 @@ public interface Commit extends Entity {
 
   // H(commit) = μ(H(tree) ⊕ H(parent) ⊕ H(merge) ⊕ author ⊕ timestamp ⊕ message)
   public static ImmutableCommit.Builder newInstance(
-      String treeId, 
-      Optional<String> parentId, 
-      Optional<String> mergeId, 
+      UUID treeId, 
+      Optional<UUID> parentId, 
+      Optional<UUID> mergeId, 
       String author, 
       OffsetDateTime createdAt, 
       String message) {
     
-    final var content = new StringBuilder();
+    final var content = Entity.uuid();
     content.append("tree ").append(treeId);
     if (parentId.isPresent()) {
       content.append("parent ").append(parentId.get());
@@ -71,9 +70,9 @@ public interface Commit extends Entity {
     content.append("committer ").append(author).append(" ").append(createdAt.toEpochSecond());
     content.append(message);
     
-    final var hash = Hashing.murmur3_128().hashString(content.toString(), StandardCharsets.UTF_8).toString();
+    
     return ImmutableCommit.builder()
-        .id(hash)
+        .id(content.build())
         .treeId(treeId)
         .parentId(parentId)
         .mergeId(mergeId)

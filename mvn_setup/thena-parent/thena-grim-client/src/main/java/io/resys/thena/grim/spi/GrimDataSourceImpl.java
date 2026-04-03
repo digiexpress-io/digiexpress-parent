@@ -24,6 +24,8 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.datasource.ThenaDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.grim.spi.builders.GrimDbInternalTenantQuery;
+import io.resys.thena.spi.InternalAliasQueryImpl;
+import io.resys.thena.spi.InternalMemberQueryImpl;
 import io.resys.thena.support.RepoAssert.RepoAssertException;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +78,16 @@ public class GrimDataSourceImpl implements GrimDataSource {
       log.error(text);
       throw new RepoAssertException(text);
     }); 
+  }
+
+  @Override
+  public InternalAliasQuery alias() {
+    return new InternalAliasQueryImpl(dataSource);
+  }
+
+  @Override
+  public InternalMemberQuery member() {
+    return new InternalMemberQueryImpl(dataSource);
   }
   
 }

@@ -11,7 +11,7 @@ export interface ConfigOptionType {
 }
 
 
-export function useTenantOptions(props: { options: CockpitApi.CockpitConfigTenant[], selected: CockpitApi.CockpitConfigTenant | undefined}) {
+export function useTenantOptions() {
   const [description, setDescription] = React.useState<string | undefined>(props.selected?.cockpitConfigTenantDesc);
   const [active, setActive] = React.useState<ConfigOptionType | undefined>(() => {
     if(props.selected) {

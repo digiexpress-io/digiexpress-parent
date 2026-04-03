@@ -22,6 +22,7 @@ package io.resys.thena.datasource;
 
 import java.util.Optional;
 
+import io.resys.thena.api.entities.Alias;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.datasource.ThenaSqlClient.ThenaSqlPool;
 
@@ -59,7 +60,9 @@ public interface ThenaSqlDataSource extends ThenaDataSource {
   
   interface TenantCache {
     Optional<Tenant> getTenant(String idOrName);
+    Optional<Alias> getAlias(String id);
     void setTenant(Tenant tenant);
+    void setAlias(Alias alias);
     void invalidateAll();
   }
 }

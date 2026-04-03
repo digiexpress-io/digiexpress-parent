@@ -21,11 +21,12 @@ package io.resys.thena.fs.spi.committree;
  */
 
 import java.util.Collection;
+import java.util.UUID;
 
 import lombok.Value;
 
 @Value
 public class CommitTreeBlobsAndProps {
-  Collection<String> blobs;
-  Collection<String> props;
+  Collection<UUID> blobs;
+  Collection<UUID> props;
 }

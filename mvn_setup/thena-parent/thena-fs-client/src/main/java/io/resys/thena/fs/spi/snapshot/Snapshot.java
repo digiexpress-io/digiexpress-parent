@@ -127,8 +127,9 @@ public class Snapshot {
     
     final var prev = lock.get();
     final var prevNode = prev.getTransitives().findOneNode(command.docId()).orElse(null);
-    RepoAssert.notNull(prevNode, () -> "Can't find target node(props, blob) with id = '"+ command.docId() + "'!");
-    
+    if(prevNode == null) {
+      RepoAssert.notNull(prevNode, () -> "Can't find target node(props, blob) with id = '"+ command.docId() + "' for document: '" + command.toString() + "'!");
+    }
     final var merger = new MergeFileImpl(prevNode);
     command.consumer().accept(prevNode, merger);
     final var result = merger.close();
@@ -298,8 +299,7 @@ public class Snapshot {
     return new SnapshotResult(persistenceUnit
         .status(BatchStatus.OK)
         .tenantId(tenantId)
-        .addAllObjectIndexInserts(index.getInserts())
-        .addAllObjectIndexUpdates(index.getUpdates())
+        .addTreeIndexInserts(index.index())
         .log(logged)
         .build(), logged);
   }

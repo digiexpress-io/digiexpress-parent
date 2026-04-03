@@ -21,12 +21,12 @@ function hook(props: {}) {
             contentType: 'NO_CONNECTION',
             name: "not-connected",
             articles: {},
-            links: {},
+            articleLinks: {},
             locales: {},
-            pages: {},
+            articlePages: {},
             releases: {},
-            workflows: {},
-            templates: {},
+            articleWorkflows: {},
+            articleTemplates: {},
           };
     
           return result;

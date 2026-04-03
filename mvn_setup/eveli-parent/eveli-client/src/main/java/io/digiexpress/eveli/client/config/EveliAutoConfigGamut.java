@@ -1,12 +1,10 @@
 package io.digiexpress.eveli.client.config;
 
-import java.util.Optional;
-
 /*-
  * #%L
  * eveli-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +20,8 @@ import java.util.Optional;
  * #L%
  */
 
+
+import java.util.Optional;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -40,53 +40,40 @@ import io.digiexpress.eveli.client.web.resources.gamut.GamutFeedbackController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutIamController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutSiteController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutUserActionsController;
-import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.digiexpress.thena.cockpit.client.api.CockpitClient;
+import io.resys.limaone.authoring.Authoring;
 import lombok.extern.slf4j.Slf4j;
 
 
-
-@Configuration
 @Slf4j
+@Configuration
 public class EveliAutoConfigGamut {
-  
+
   @Bean
   public GamutClient gamutClient(
+      io.resys.limaone.program.Runtime envir,
       TaskClient taskclient,
-      AttachmentCommands attachmentCommands,
-      EveliEnvirClient envir, 
-      DialobClient dialobCommands,
-      MqEventPublisher mqEventPublisher
-    ) {
+      AttachmentCommands attachmentCommands, 
+      MqEventPublisher mqEventPublisher) {
     
-    return new GamutClientImpl( 
-        taskclient, 
-        mqEventPublisher,
-        attachmentCommands, 
-        dialobCommands,
-        envir
-        
-    );
+    return new GamutClientImpl(taskclient, mqEventPublisher, attachmentCommands, envir);
   }
   
   @Bean
   public DialobFillEventPublisher dialobFillEventPublisher(
+      io.resys.limaone.program.Runtime envir, 
       ApplicationEventPublisher publisher,
       TaskClient taskClient,
-      DialobClient dialobClient,
-      SyncDialobAndProcess syncDialobAndProcess
-  ) {
-    return new DialobFillEventPublisher(publisher, dialobClient, syncDialobAndProcess, taskClient);
+      SyncDialobAndProcess syncDialobAndProcess) {
+    return new DialobFillEventPublisher(publisher, envir, syncDialobAndProcess, taskClient);
   }
-  
+
   @Bean
   public GamutFeedbackController gamutFeedbackController(
-      EveliPropsGamut props, GamutClient gamutClient, 
-      DialobClient dialobClient, 
+      io.resys.limaone.program.Runtime runtime, 
+      EveliPropsGamut props,  GamutClient gamutClient, 
       DialobFillEventPublisher publisher,
       GamutAuthClient auth) {
-    return new GamutFeedbackController(gamutClient, dialobClient, publisher, auth);
+    return new GamutFeedbackController(gamutClient, runtime, publisher, auth);
   }
 
   @Bean
@@ -96,18 +83,20 @@ public class EveliAutoConfigGamut {
   
   @Bean
   public GamutSiteController gamutSiteController(
-      EveliEnvirClient envir, FeedbackClient feedback, GamutAuthClient auth, Optional<CockpitClient> cockpitClient) {
-    
-    return new GamutSiteController(envir, feedback, auth, cockpitClient);
+      io.resys.limaone.program.Runtime envir, 
+      FeedbackClient feedback, GamutAuthClient auth, 
+      Optional<Authoring> cockpitClient) {
+    return new GamutSiteController(envir, cockpitClient, feedback, auth);
   }
-  
+
   @Bean
   public GamutUserActionsController gamutUserActionsController(
+      io.resys.limaone.program.Runtime envir, 
       FeedbackClient feedback,
-      GamutClient gamutClient, DialobClient dialobClient, 
+      GamutClient gamutClient,  
       GamutAuthClient crmClient,
-      DialobFillEventPublisher publisher
-      ) {
-    return new GamutUserActionsController(publisher, gamutClient, crmClient, dialobClient, feedback);
+      DialobFillEventPublisher publisher) {
+
+    return new GamutUserActionsController(publisher, gamutClient, crmClient, envir, feedback);
   }
 }

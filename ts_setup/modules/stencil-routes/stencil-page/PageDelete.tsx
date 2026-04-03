@@ -33,7 +33,7 @@ const PageDelete: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleI
   }
 
   const message = <FormattedMessage id="snack.page.deletedMessage" />
-  const articlePages: StencilApi.Page[] = Object.values(site.pages).filter(p => p.body.article === props.articleId);
+  const articlePages: StencilApi.Page[] = Object.values(site.articlePages).filter(p => p.body.article === props.articleId);
 
 
 

@@ -24,14 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.mutable.MutableInt;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.annotations.TenantSql.SqlBuilder;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
-import io.resys.thena.fs.tables.NodeTable;
+import io.vertx.core.json.JsonArray;
 import io.vertx.mutiny.sqlclient.Tuple;
 
 
@@ -39,31 +38,16 @@ import io.vertx.mutiny.sqlclient.Tuple;
 public interface RefTableLockFilter {
   Optional<List<String>> getDocIds();
   String getRefName();
-  Boolean getQueryHeadOnly();
   
-  final static class SQL implements SqlBuilder<RefTableLockFilter> {
-
-    
+  final static class SQL implements SqlBuilder<RefTableLockFilter> {    
     @Override
     public SqlTuple apply(Tenant tenant, String baseline, RefTableLockFilter filter) {
       final var params = new ArrayList<Object>();
       params.add(filter.getRefName());
-      final var index = new MutableInt(1);
-      
-      final String nodes_json;
-      if(Boolean.TRUE.equals(filter.getQueryHeadOnly())) {
-        nodes_json = "-- disabled by user " + System.lineSeparator() + "  SELECT null as tree_node_blob";
-      } else {
-        nodes_json = NodeTable.sql()
-            .objectId(filter.getDocIds().orElse(null))
-            .build((item) -> {
-              params.add(item);
-              return index.incrementAndGet();
-            });
-      }
-    
+      params.add(filter.getDocIds().map(JsonArray::new).orElse(new JsonArray()));
+
       return ImmutableSqlTuple.builder()
-          .value(baseline.replace("__nodes_json", nodes_json))
+          .value(baseline)
           .props(Tuple.from(params))
           .build();
     }

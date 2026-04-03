@@ -9,8 +9,10 @@ import { useIntl } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { WithTableStyles } from '@dxs-ts/xui-table';
 import { CockpitApi, useCockpitsBackend } from '@dxs-ts/cockpit-api';
-import { CockpitCreateDialog } from '../cockpit-create';
+
+
 import { CockpitLink } from './CockpitLink';
+import { CockpitCreateDialog } from '../cockpit-create';
 import { CockpitStatusIndicator } from '../cockpit-status-indicator';
 
 
@@ -28,10 +30,6 @@ export const CockpitTable: React.FC = () => {
     initialData: [],
   });
 
-  const { data: activity } = useQuery({
-    queryKey: [COCKPIT_TABLE_QUERY_KEY, 'activity'],
-    queryFn: () => backend.persistence.findActivity(),
-  });
 
   const columns: ColumnDef<CockpitApi.CockpitSummary, any>[] = [
     {
@@ -43,7 +41,7 @@ export const CockpitTable: React.FC = () => {
       enableResizing: true,
       enableColumnFilter: true,
       cell: ({ row }) => (
-        <CockpitLink name={row.original.name} id={row.original.id} />
+        <CockpitLink name={row.original.alias.aliasName} id={row.original.alias.id} />
       ),
     },
     {
@@ -64,7 +62,7 @@ export const CockpitTable: React.FC = () => {
       enableResizing: true,
       enableColumnFilter: true,
       cell: ({ row }) => {
-        const isActive = activity?.activeCockpitId === row.original.id;
+        const isActive = !!row.original.member?.aliasStatus;
         return (<CockpitStatusIndicator isActive={isActive} />);
       },
     }

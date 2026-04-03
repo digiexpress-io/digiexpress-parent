@@ -118,14 +118,14 @@ public class RenameFolder_Test extends DbTestTemplate {
           .sorted((b, a) -> a.getCommitCreatedAt().compareTo(b.getCommitCreatedAt()))
           .findFirst().get();
       
-      final var lastTree = wholeDb.getTree().get(lastCommit.getTreeId());
+      final var lastTree = wholeDb.getTree().get(lastCommit.getTreeId().toString());
       Assertions.assertEquals(
           """
+root/xyz/yyy
 root/xyz/yyy/file1.txt
 root/xyz/yyy/file2.txt
-root/xyz/yyy/file3.txt
-root/xyz/yyy""",
-          String.join("\n", lastTree.getTreeNodes().stream().map(e -> e.getFullPath()).toList())
+root/xyz/yyy/file3.txt""",
+          String.join("\n", lastTree.getTreeNodes().stream().map(e -> e.getFullPath()).sorted().toList())
       );
   }
 }

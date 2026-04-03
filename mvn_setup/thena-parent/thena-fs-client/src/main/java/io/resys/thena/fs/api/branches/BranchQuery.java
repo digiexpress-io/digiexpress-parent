@@ -1,5 +1,7 @@
 package io.resys.thena.fs.api.branches;
 
+import java.util.List;
+
 /*-
  * #%L
  * thena-fs-client
@@ -21,12 +23,15 @@ package io.resys.thena.fs.api.branches;
  */
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
+import io.resys.thena.fs.entities.Index;
 import io.resys.thena.fs.entities.Ref;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 
 /**
  * Query interface for retrieving branch references with filtering capabilities.
@@ -44,24 +49,14 @@ public interface BranchQuery {
   BranchQuery branchName(Consumer<NameExpressionBuilder> nameExpr);
   
   /**
-   * Excludes blob content from the result set to reduce payload size.
-   * When true, only branch, commit, tree, and node metadata is returned without file content.
+   * Include all blob content from the result set to reduce payload size.
+   * When false, only branch, commit, tree, and node metadata is returned without file content.
    * 
-   * @param excludeBlobs true to exclude blobs, false to include them
+   * @param includeBlobs true to include blobs, false to exclude them
    * @return query builder for method chaining
    */
-  BranchQuery excludeBlobs(boolean excludeBlobs);
-  
-  /**
-   * Excludes node information from the result set to reduce payload size.
-   * When true, also automatically excludes blobs since nodes reference blob content.
-   * Only branch, commit, and tree structure information is returned.
-   * 
-   * @param excludeNodes true to exclude nodes (and blobs), false to include them
-   * @return query builder for method chaining
-   */
-  BranchQuery excludeNodes(boolean excludeNodes);
-  
+  BranchQuery includeBlobs(boolean includeBlobs);
+
   /**
    * Filters to a specific branch by its unique identifier.
    * Used for retrieving exact branch instances or checking branch existence.
@@ -72,6 +67,15 @@ public interface BranchQuery {
   BranchQuery branchId(String branchId);
 
   /**
+   * Filters to a specific commit by its UUID.
+   * Used for retrieving exact commit instances.
+   * 
+   * @param commitId the unique commitId identifier
+   * @return query builder for method chaining
+   */
+  BranchQuery commitId(@Nullable UUID commitId);
+  
+  /**
    * Filters to a specific node and blob types.
    * 
    * @param type the blob types for nodes and blobs that to include
@@ -79,6 +83,13 @@ public interface BranchQuery {
    */
   BranchQuery blobTypes(String ... type);
 
+  /**
+   * Filters to a specific node and blob types with given ids.
+   * 
+   * @param ids for the blob types for nodes and blobs that to include
+   * @return query builder for method chaining
+   */
+  BranchQuery docIds(List<String> docIds);
   
   /**
    * Executes query that may return zero or one branch result.
@@ -103,4 +114,12 @@ public interface BranchQuery {
    * @return reactive stream containing the single matching branch
    */
   Uni<Ref> getOne();
+  
+  /**
+   * Executes query expecting exactly one branch result.
+   * Throws exception if zero or multiple branches match the criteria.
+   * 
+   * @return reactive stream containing the single matching branch index
+   */
+  Multi<Index> findIndexOnly();
 }

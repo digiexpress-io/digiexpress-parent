@@ -22,29 +22,38 @@ package io.resys.thena.datasource;
 
 import java.time.Duration;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import io.resys.thena.api.entities.Alias;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.datasource.ThenaSqlDataSource.TenantCache;
+import io.resys.thena.support.TableUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TenantCacheImpl implements TenantCache {
 
   private final Cache<String, Tenant> tenants_by_id;
+  private final Cache<UUID, Alias> alias_by_id;
   
   public TenantCacheImpl() {
     tenants_by_id = Caffeine.newBuilder()
         .maximumSize(50)
         .expireAfterWrite(Duration.ofDays(1))
         .build();
+    alias_by_id = Caffeine.newBuilder()
+        .maximumSize(50)
+        .expireAfterWrite(Duration.ofDays(1))
+        .build();
     log.info("Tenant cache created with caffeine, expire after writing: 1 day");
   }
   
-  public TenantCacheImpl(Cache<String, Tenant> preconfigured) {
-    tenants_by_id = preconfigured;
+  public TenantCacheImpl(Cache<String, Tenant> tenants_by_id, Cache<UUID, Alias> alias_by_id) {
+    this.tenants_by_id = tenants_by_id;
+    this.alias_by_id = alias_by_id;
     log.info("Tenant cache created with caffeine, with user configuration");
   }
 
@@ -95,5 +104,20 @@ public class TenantCacheImpl implements TenantCache {
   @Override
   public void invalidateAll() {
     tenants_by_id.invalidateAll();
+  }
+
+  @Override
+  public Optional<Alias> getAlias(String id) {
+    return Optional.ofNullable(this.alias_by_id.getIfPresent(TableUtils.toUuid(id)));
+  }
+
+  @Override
+  public void setAlias(Alias alias) {
+    if(alias == null) {
+      log.warn("Null alias passed to cache, ignoring it...");
+    } else {
+      this.alias_by_id.put(alias.getId(), alias);
+    }
+    
   }
 }

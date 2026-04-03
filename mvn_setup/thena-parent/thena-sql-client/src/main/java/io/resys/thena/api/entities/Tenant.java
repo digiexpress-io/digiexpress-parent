@@ -36,5 +36,5 @@ public interface Tenant extends AnyTenantEntity {
   @Nullable String getComment();
   StructureType getType();
   
-  enum StructureType { doc, git, org, grim, fs, batch, contract, ledger, cockpit }
+  enum StructureType { doc, git, org, grim, fs, batch, contract, ledger, unknown }
 }

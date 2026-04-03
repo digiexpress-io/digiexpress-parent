@@ -24,6 +24,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.immutables.value.Value;
 
@@ -50,7 +51,7 @@ public interface Ref extends Entity {
   /**
    * @return the commit hash that this branch currently points to
    */
-  String getCommitId();
+  UUID getCommitId();
   
   /**
    * @return optional description explaining the purpose of this branch
@@ -77,12 +78,16 @@ public interface Ref extends Entity {
    */
   Optional<String> getRefAuthor();
   
-
+  /**
+   * @return when the ref was created
+   */
   OffsetDateTime getRefCreatedAt();
   
-  Optional<String> getRefCreatedFrom();
+  /**
+   * @return from what other ref this was created from
+   */
+  Optional<UUID> getRefCreatedFrom();
   
-
   @Value.Auxiliary
   @Nullable 
   RefTransitives getTransitives();
@@ -104,10 +109,10 @@ public interface Ref extends Entity {
     @Nullable Tree getTree();
     
     // might not be loaded
-    Map<String, Blob> getBlobsById();
+    Map<UUID, Blob> getBlobsById();
     
     // might not be loaded
-    Map<String, Props> getPropsById();  
+    Map<UUID, Props> getPropsById();  
     
 
     default Optional<Node> findOneNode(String objectIdOrFullPath) {
@@ -118,8 +123,8 @@ public interface Ref extends Entity {
   default Ref withTransitives(Commit commit, Tree tree) {
     
     final var trs = ImmutableRefTransitives.builder();
-    final var visitedProps = new ArrayList<String>();
-    final var visitedBlobs = new ArrayList<String>();
+    final var visitedProps = new ArrayList<UUID>();
+    final var visitedBlobs = new ArrayList<UUID>();
     
     for(final var node : tree.getTreeNodes()) {
       

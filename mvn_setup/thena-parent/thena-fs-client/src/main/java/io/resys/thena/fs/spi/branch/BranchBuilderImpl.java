@@ -22,13 +22,14 @@ package io.resys.thena.fs.spi.branch;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import io.resys.thena.fs.api.branches.BranchBuilder;
+import io.resys.thena.fs.entities.Entity;
 import io.resys.thena.fs.entities.ImmutableRef;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Ref.RefTransitives;
 import io.resys.thena.fs.spi.snapshot.MutableField;
-import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -37,11 +38,11 @@ import lombok.Value;
 @RequiredArgsConstructor
 public class BranchBuilderImpl implements BranchBuilder {
   private final Optional<Ref> prevRef;
-  private final String commitId;
+  private final UUID commitId;
   private final RefTransitives refTransitives;  
   private final OffsetDateTime createdAt;
   private final String refAuthor;
-  private final Optional<String> refFrom;
+  private final Optional<UUID> refFrom;
   
   private final MutableField<String> branchName = new MutableField<>();
   private final MutableField<String> branchDescription = new MutableField<>();
@@ -110,7 +111,7 @@ public class BranchBuilderImpl implements BranchBuilder {
     final var finalProps = branchProps.orElse(prevRef.flatMap(Ref::getRefProps).orElse(null));
 
 
-    final var id = this.prevRef.map(Ref::getId).orElseGet(() -> OidUtils.genUUID());
+    final var id = this.prevRef.map(Ref::getId).orElseGet(() -> Entity.genUUID());
     final var ref = ImmutableRef.builder()
         .id(id)
         .commitId(commitId)

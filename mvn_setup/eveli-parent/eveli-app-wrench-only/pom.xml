@@ -97,10 +97,6 @@
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>eveli-integration-git</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.digiexpress</groupId>
       <artifactId>eveli-client</artifactId>
     </dependency>
     <dependency>

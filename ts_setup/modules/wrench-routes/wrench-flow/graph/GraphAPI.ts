@@ -18,16 +18,13 @@ class ModelVisitor {
     this._fl = fl;
     this._models = models;
     this._nested = nested ? true : false;
-
-
-    
     if(nested) {
       this._visited.push(...nested.visited);
     }
   }
 
   visit(): Model {
-    const steps = Object.values(this._fl.src.tasks);    
+    const steps = Object.values(this._fl.parseTree.tasks);    
     
     const start: Node = {
       id: 'start', type: 'start', label: 'start', parents: []
@@ -192,7 +189,7 @@ class ModelVisitor {
       return this.visitEnd(props);
     }
 
-    const next = Object.values(this._fl.src.tasks).filter(step => step.id?.value === then.value);
+    const next = Object.values(this._fl.parseTree.tasks).filter(step => step.id?.value === then.value);
     if (!next.length) {
       return;
     }
@@ -243,12 +240,13 @@ class ModelVisitor {
   }
 
   visitRef(step: HdesApi.AstFlowTaskNode): HdesApi.Entity<any> | undefined {
-    const ref = step.ref?.ref.value;
+
+    const ref = step.ref?.ref?.value;
     if (!ref) {
       return undefined;
     }
     if (step.decisionTable) {
-      return this.findRef(ref, "DT");
+      return this.findRef(ref, "DECISION_TABLE");
     } else if (step.service) {
       return this.findRef(ref, "FLOW_TASK");
     }
@@ -257,7 +255,7 @@ class ModelVisitor {
   
   findRef(name: string, type: HdesApi.AstBodyType): HdesApi.Entity<any> | undefined {
     const models: HdesApi.Entity<any>[] = [];
-    if (type === "DT") {
+    if (type === "DECISION_TABLE") {
       models.push(...Object.values(this._models.decisions));
     } else if (type === "FLOW_TASK") {
       models.push(...Object.values(this._models.services));

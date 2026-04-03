@@ -68,7 +68,7 @@ export class AstNav {
     this._currentLineContent = model.getLineContent(modelPosition.lineNumber);
     this._currentLineEOL = this._currentLineContent.length == this._currentColumn;
 
-    this._nodes_raw = _toNodesRaw(flow.src).sort((a, b) => a.start - b.start);
+    this._nodes_raw = _toNodesRaw(flow.parseTree).sort((a, b) => a.start - b.start);
     this._nodes_nav = _toNodesNav(this._nodes_raw, query);
   }
 

@@ -1,18 +1,10 @@
 package io.digiexpress.eveli.client.web.resources.assets;
 
-import java.time.Duration;
-import java.time.OffsetDateTime;
-
-import org.immutables.value.Value;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
-
 /*-
  * #%L
  * eveli-client
  * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,29 +20,31 @@ import org.springframework.scheduling.annotation.Async;
  * #L%
  */
 
+import java.time.OffsetDateTime;
+
+import org.immutables.value.Value;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliSources;
+import io.digiexpress.eveli.client.spi.assets.EveliDeployment;
+import io.resys.limaone.authoring.Authoring;
+import io.resys.limaone.model.Model.BodyType;
+import io.resys.limaone.model.Model.ModelWorld;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 
 
 @RestController
@@ -59,9 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AssetsDeploymentController {
   
-  private final WorkerAuthClient authClient;
-  private final EveliEnvirClient composer;
-  private final ApplicationEventPublisher publisher;
+  private final Authoring authoring;
   
   @JsonSerialize(as = ImmutableEveliDeploymentUpload.class)
   @JsonDeserialize(as = ImmutableEveliDeploymentUpload.class)
@@ -73,70 +65,32 @@ public class AssetsDeploymentController {
     String getCreatedBy();
     OffsetDateTime getStartsAt();
     String getDescription();
-    EveliSources getSources();
-  }
-  
-  @JsonSerialize(as = ImmutableEveliDeploymentChange.class)
-  @JsonDeserialize(as = ImmutableEveliDeploymentChange.class)
-  @JsonIgnoreProperties(ignoreUnknown = true)
-  @Value.Immutable
-  public interface EveliDeploymentChange {
-    String getId();
-    EveliDeploymentStatus getStatus();
-  }
-  
-  @Getter @RequiredArgsConstructor
-  private static class CompileAndDeployEvent {
-    private final String deploymentId;
-    private final String userId;
-    private final boolean force;
+    ModelWorld getSources();
   }
   
   @GetMapping("/{name}")
   public Uni<EveliDeployment> download(@PathVariable("name") String name) {
-    return composer.deploymentQuery().emptyBranchBody(false).getOneById(name);
-  }
-  
-  @PostMapping
-  public Uni<EveliDeployment> upload(@RequestBody EveliDeploymentUpload body) {
-    final var userId = authClient.getUser().getPrincipal().getUsername();
-    return composer.createOneDeployment()
-
-        .dialob(body.getSources().getDialob())
-        .stencil(body.getSources().getStencil())
-        .wrench(body.getSources().getWrench())
-
-        .name(body.getName())
-        .startsAt(body.getStartsAt())
-        .userId(body.getCreatedBy())
-        
-        .build()
-        .onItem().invoke(deployment -> 
-          publisher.publishEvent(new CompileAndDeployEvent(deployment.getId(), userId, false))          
+    return authoring.worldQuery()
+        .docs(BodyType.DEPLOYMENT)
+        .findAll()
+        .onItem().transform(world -> world.getDeployments().values().stream()
+          .filter(dep -> 
+            dep.getId().equals(name) ||
+            dep.getBody().getName().equals(name) || 
+            name.equals(dep.getBody().getExternalId()))
+          .findFirst()
+          .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404)))
+        ).onItem().transformToUni(deployment -> authoring.worldQuery()
+          .docs(BodyType.without(BodyType.DEPLOYMENT))
+          .commitId(deployment.getBody().getFromCommitId())
+          .findAll()
+          .onItem().transform(world -> EveliDeployment.from(deployment, world))
         );
   }
   
-  @PutMapping("/{name}")
-  public Uni<EveliDeployment> updateDeployment(@RequestBody EveliDeploymentChange body) {
-    final var userId = authClient.getUser().getPrincipal().getUsername();
-    if(body.getStatus() == EveliDeploymentStatus.DEPLOYED) {
-      publisher.publishEvent(new CompileAndDeployEvent(body.getId(), userId, true));
-      return composer.deploymentQuery().getOneById(body.getId());
-    }
-    return composer.deploymentStatusBuilder().undeployed().deploymentId(body.getId()).userId(userId).build();
-  }
-
-  @Async
-  @EventListener
-  public void compileAndDeploy(CompileAndDeployEvent event) {
-    composer.deploymentCompiler()
-      .deploymentId(event.getDeploymentId())
-      .userId(event.getUserId())
-      .forced(event.isForce())
-      .compile()
-      .onItem().transformToUni(e -> 
-        composer.deploymentStatusBuilder().deployed().deploymentId(e.getId()).userId(event.getUserId()).build()
-      )
-      .await().atMost(Duration.ofMinutes(20));
+  @PostMapping
+  public Uni<ResponseEntity<?>> upload(@RequestBody EveliDeploymentUpload body) {
+    return authoring.worldImport().source(body.getSources()).build()
+        .onItem().transform(ignore -> ResponseEntity.ok().build());
   }
 }

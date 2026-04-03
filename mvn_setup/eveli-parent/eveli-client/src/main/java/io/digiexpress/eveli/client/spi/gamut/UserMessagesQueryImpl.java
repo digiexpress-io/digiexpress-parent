@@ -20,13 +20,13 @@ package io.digiexpress.eveli.client.spi.gamut;
  * #L%
  */
 
-import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessagesQuery;
 import io.digiexpress.eveli.client.api.ImmutableUserMessage;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskComment;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
+import io.resys.limaone.program.ProgramInput.Participant;
 import io.smallrye.mutiny.Multi;
 import lombok.RequiredArgsConstructor;
 
@@ -37,7 +37,7 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
   private final TaskClient taskClient;
   
   @Override
-  public Multi<UserMessage> findAllByActionId(Customer customer, String actionId) {
+  public Multi<UserMessage> findAllByActionId(Participant customer, String actionId) {
     TaskAssert.notNull(actionId, () -> "actionId can't be null!");
     
     return taskClient.queryTaskProcesess().findOneById(actionId)
@@ -52,21 +52,21 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
           .filter(comment -> Boolean.TRUE.equals(comment.getExternal()))
           .map(comment -> visitUserMessage(comment, customer))
           .onSubscription().call(sub -> taskClient.taskBuilder()
-            .userId(customer.getPrincipal().getUsername(), null)
+            .userId(customer.getUsername(), null)
             .addCustomerCommitViewer(taskId)
           );
       });
   }
   
   @Override
-  public Multi<UserMessage> findAllByUserId(Customer customer) {
+  public Multi<UserMessage> findAllByUserId(Participant customer) {
     return taskClient.queryTaskComments()
-        .findAllByReporterId(customer.getPrincipal().getUsername())
+        .findAllByReporterId(customer.getUsername())
         .filter(comment -> Boolean.TRUE.equals(comment.getExternal()))
         .map(comment -> visitUserMessage(comment, customer));
   }
   
-  public static UserMessage visitUserMessage(TaskComment msg, Customer customer) {
+  public static UserMessage visitUserMessage(TaskComment msg, Participant customer) {
     final var replyToId = msg.getReplyToId();
     final var userMsg = ImmutableUserMessage.builder()
         .id(msg.getId().toString())
@@ -80,26 +80,13 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
     return userMsg;
   }
 
-  public static String visitMessageUserName(TaskComment entity, Customer customer) {
+  public static String visitMessageUserName(TaskComment entity, Participant customer) {
     
-    final var user = customer.getPrincipal();
-    
-    final String userName;
-    if(user.getRepresentedPerson() != null) {
-      final var personNames = user.getRepresentedPerson().getRepresentativeName();
-      userName = personNames[1] + " " + personNames[0];
-    } else if(user.getRepresentedCompany() != null) {
-      userName = user.getRepresentedCompany().getName();
-    } else {
-      userName = null;
-    }
-    
-    final var representativeUserName = user.getUsername();
-    
-    if(entity.getUserName().equals(userName)) {
+    final var user = customer;
+    if(entity.getUserName().equals(user.getUsername())) {
       return entity.getUserName();
     }
-    if(entity.getUserName().equals(representativeUserName)) {
+    if(entity.getUserName().equals(user.getRepresentativeUsername())) {
       return entity.getUserName();
     } 
     return "";

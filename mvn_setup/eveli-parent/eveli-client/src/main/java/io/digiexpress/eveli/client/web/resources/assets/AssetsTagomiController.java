@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.tagomi.api.TagomiClient;
 import io.digiexpress.tagomi.api.TagomiComposer;
 import io.digiexpress.tagomi.api.commands.ImmutableCreateLocale;
@@ -64,7 +63,6 @@ public class AssetsTagomiController {
   
   private final TagomiClient client;
   private final TagomiComposer composer;
-  private final EveliEnvirClient envir;
   
   @GetMapping("/")
   public Uni<TagomiContainer> root() {
@@ -77,42 +75,36 @@ public class AssetsTagomiController {
   
   @PostMapping("/resources") 
   public Uni<TagomiContainer.Resource> createResource(@RequestBody ImmutableCreateResource body) {
-    return getComposer().onItem().transformToUni(composer -> composer.create().resource(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+    return getComposer().onItem().transformToUni(composer -> composer.create().resource(body));
   }
   @PutMapping("/resources") 
   public Uni<TagomiContainer.Resource> updateResource(@RequestBody ImmutableResourceMutator body) {
-    return getComposer().onItem().transformToUni(composer -> composer.update().resource(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+    return getComposer().onItem().transformToUni(composer -> composer.update().resource(body));
   }
   @DeleteMapping("/resources/{id}") 
   public Uni<TagomiContainer.Resource> deleteResource(@PathVariable("id") String linkId, @RequestParam(name = "articleId", required = false) String articleId) {
     if(articleId == null || articleId.isEmpty()) {
-      return getComposer().onItem().transformToUni(composer -> composer.delete().resource(linkId))
-          .onItem().invoke(() -> envir.invalidateCache());
+      return getComposer().onItem().transformToUni(composer -> composer.delete().resource(linkId));
     } 
     return getComposer().onItem().transformToUni(composer -> composer.delete().resourceOnTemplate(ImmutableResourceOnTemplate.builder()
       .templateId(articleId)
       .resourceId(linkId)
-      .build()))
-      .onItem().invoke(() -> envir.invalidateCache());  
+      .build()));  
 
   }
   
   
   @PostMapping("/services") 
   public Uni<TagomiContainer.Service> createService(@RequestBody ImmutableCreateService body) {
-    return getComposer().onItem().transformToUni(composer -> composer.create().service(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+    return getComposer().onItem().transformToUni(composer -> composer.create().service(body));
   }
   @PutMapping("/services") 
   public Uni<TagomiContainer.Service> updateService(@RequestBody ImmutableServiceMutator body) {
-    return getComposer().onItem().transformToUni(composer -> composer.update().service(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+    return getComposer().onItem().transformToUni(composer -> composer.update().service(body));
   }
   @DeleteMapping("/services/{id}") 
   public Uni<TagomiContainer.Service> deleteService(@PathVariable("id") String serviceId) {
-    return getComposer().onItem().transformToUni(composer -> composer.delete().service(serviceId)).onItem().invoke(() -> envir.invalidateCache());
+    return getComposer().onItem().transformToUni(composer -> composer.delete().service(serviceId));
   }
   
   @PostMapping("/services/{id}/pdf/{locale}") 
@@ -125,47 +117,39 @@ public class AssetsTagomiController {
   
   @PostMapping("/locales") 
   public Uni<TagomiContainer.Locale> createLocale(@RequestBody ImmutableCreateLocale body) {
-    return getComposer().onItem().transformToUni(composer -> composer.create().locale(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+    return getComposer().onItem().transformToUni(composer -> composer.create().locale(body));
   }
   @PutMapping("/locales") 
   public Uni<TagomiContainer.Locale> updateLocale(@RequestBody ImmutableLocaleMutator body) {
-    return getComposer().onItem().transformToUni(composer -> composer.update().locale(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+    return getComposer().onItem().transformToUni(composer -> composer.update().locale(body));
   }
   @DeleteMapping("/locales/{id}") 
   public Uni<TagomiContainer.Locale> deleteLocale(@PathVariable("id") String id) {
-    return getComposer().onItem().transformToUni(composer -> composer.delete().locale(id))
-        .onItem().invoke(() -> envir.invalidateCache());
+    return getComposer().onItem().transformToUni(composer -> composer.delete().locale(id));
   }
   
   
   @PostMapping("/templates") 
   public Uni<TagomiContainer.Template> createTemplate(@RequestBody ImmutableCreateTemplate body) {
-    return getComposer().onItem().transformToUni(composer -> composer.create().template(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+    return getComposer().onItem().transformToUni(composer -> composer.create().template(body));
   }
   @PutMapping("/templates") 
   public Uni<List<TagomiContainer.Template>> updateTemplate(@RequestBody List<ImmutableTemplateMutator> body) {
-    return getComposer().onItem().transformToUni(composer -> composer.update().templates(new ArrayList<>(body)))
-        .onItem().invoke(() -> envir.invalidateCache());
+    return getComposer().onItem().transformToUni(composer -> composer.update().templates(new ArrayList<>(body)));
   }
   @DeleteMapping("/templates/{id}") 
   public Uni<TagomiContainer.Template> deleteTemplate(@PathVariable("id") String id) {
-    return getComposer().onItem().transformToUni(composer -> composer.delete().template(id))
-        .onItem().invoke(() -> envir.invalidateCache());
+    return getComposer().onItem().transformToUni(composer -> composer.delete().template(id));
   }
   
   
   @PostMapping("/tags") 
   public Uni<TagomiContainer.Tag> createTag(@RequestBody ImmutableCreateTag body) {
-    return getComposer().onItem().transformToUni(composer -> composer.create().tag(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+    return getComposer().onItem().transformToUni(composer -> composer.create().tag(body));
   }
   @DeleteMapping("/tags/{id}") 
   public Uni<TagomiContainer.Tag> deleteTag(@PathVariable("id") String id) {
-    return getComposer().onItem().transformToUni(composer -> composer.delete().tag(id))
-        .onItem().invoke(() -> envir.invalidateCache());
+    return getComposer().onItem().transformToUni(composer -> composer.delete().tag(id));
   }
   
   protected Uni<TagomiComposer> getComposer() {

@@ -127,7 +127,7 @@ const FlowItem: React.FC<{ flowId: HdesApi.FlowId }> = ({ flowId }) => {
   const lastUpdated = session.getLastUpdated(flowId);
 
   const decisions: RefDecision[] = flow.associations
-    .filter(a => a.refType === "DT")
+    .filter(a => a.refType === "DECISION_TABLE")
     .map(a => ({ entity: session.getDecision(a.ref), ref: a }));
   const services: RefService[] = flow.associations
     .filter(a => a.owner && a.refType === "FLOW_TASK")
@@ -168,11 +168,10 @@ const FlowItem: React.FC<{ flowId: HdesApi.FlowId }> = ({ flowId }) => {
               return flow.status;
           }
         })()}
-        labelInfo={`${flow.errors.length + flow.warnings.length}`}
+        labelInfo={`${flow.errors.length}`}
         labelcolor={theme.palette.primary.dark}>
 
         {flow.errors.map((view, index) => (<ErrorItem key={index} msg={view} nodeId={`${view.id}-error-${index}`} />))}
-        {flow.warnings.map((view, index) => (<WarningItem key={index} msg={view} nodeId={`${view.id}-warning-${index}`} />))}
       </TreeItem>
 
       {/** Decision options */}

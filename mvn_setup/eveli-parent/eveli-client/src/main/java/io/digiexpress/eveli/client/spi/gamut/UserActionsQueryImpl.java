@@ -32,13 +32,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
-import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerRoles;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessAuthorization;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionQuery;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.api.GamutClient.UserSubAction;
+import io.digiexpress.eveli.client.api.ImmutableProcessAuthorization;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ImmutableUserActionAttachment;
 import io.digiexpress.eveli.client.api.ImmutableUserSubAction;
@@ -46,7 +45,8 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.resys.limaone.program.ProgramInput.Participant;
+import io.resys.limaone.spi.program.input.DefaultAuthProgramInput;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
@@ -63,16 +63,15 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class UserActionsQueryImpl implements UserActionQuery {
   
-  private final EveliEnvirClient eveliEnvir;
+  private final io.resys.limaone.program.Runtime runtime;
   private final TaskClient taskClient;
   private final AttachmentCommands attachmentsCommands;
 
+  private Participant customer;
   private String cockpitId;
-  private Customer customer;
-  private CustomerRoles customerRoles;
+  
   @Override
-  public UserActionQuery customer(Customer customer, CustomerRoles customerRoles) {
-    this.customerRoles = customerRoles;
+  public UserActionQuery customer(Participant customer) {
     this.customer = customer;
     return this;
   }
@@ -99,7 +98,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
       final var auth = tuple.getItem2();
       final var tasks = tuple.getItem3();
       
-      return processes.stream().filter(proc -> customer.getCustomerId().getHolderId().equals(proc.getUserId()))
+      return processes.stream().filter(proc -> customer.getPartId().getRealId().equals(proc.getUserId()))
         .filter(process -> isAuthorizedProcess(process, auth))
         .map(process -> visitUserAction(process, tasks))
         .findFirst();
@@ -108,9 +107,9 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
   @Override
   public Multi<UserAction> findAll() {
-    final var customer = this.customer.getCustomerId();
+    final var customer = this.customer.getPartId();
     return Uni.combine().all().unis(
-        taskClient.queryTaskProcesess().findAllNotArchivedyUserId(customer.getHolderId()).collect().asList(), 
+        taskClient.queryTaskProcesess().findAllNotArchivedyUserId(customer.getRealId()).collect().asList(), 
         visitAuthorization()
     )
     .asTuple()
@@ -180,7 +179,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
     
     return Uni.combine().all().unis(
         taskClient.queryTasks().findAll(taskIds), 
-        grim.find().commitViewersQuery().usedBy(customer.getCustomerId().getSafeId()).findAll()
+        grim.find().commitViewersQuery().usedBy(customer.getPartId().getHashId()).findAll()
       )
       .asTuple()
       .onItem().transform(tuple -> {
@@ -197,13 +196,13 @@ public class UserActionsQueryImpl implements UserActionQuery {
   }
   
   private Uni<Optional<ProcessAuthorization>> visitAuthorization() {
-    if(customer.getPrincipal().getRepresentedId() != null) {
-      final var userRoles = customerRoles.getRoles();  
-      return new ProcessAuthorizationQueryImpl(eveliEnvir)
-          .cockpitId(cockpitId)
-          .userRoles(userRoles)
-          .getOne()
-          .onItem().transform(allowed -> Optional.of(allowed));
+    if(customer.getRepresentativeIdentity() != null) {
+      final var allowed = runtime.withTenant(Optional.ofNullable(cockpitId))
+        .getBundle().queryArticles().getOne()
+        .run(DefaultAuthProgramInput.builder().runtime(runtime).user(customer).build())
+        .getAllowed();
+      
+      return Uni.createFrom().item(Optional.of(ImmutableProcessAuthorization.builder().allowedProcessNames(allowed).build()));
     }
     
     return Uni.createFrom().item(Optional.empty());

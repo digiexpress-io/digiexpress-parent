@@ -51,6 +51,26 @@ public class TenantActionsImpl implements TenantActions {
   public CreateOneTenant createOneTenant() {
     return new TenantBuilderImpl(state, type);
   }
+
+  @Override
+  public CreateOneAlias createOneAlias() {
+    return new CreateOneAliasImpl(state);
+  }
+
+  @Override
+  public ModifyOneAlias modifyOneAlias() {
+    return new ModifyOneAliasImpl(state);
+  }
+
+  @Override
+  public CreateOneMember createOneMember() {
+    return new CreateOneMemberImpl(state);
+  }
+
+  @Override
+  public ModifyOneMember modifyOneMember() {
+    return new ModifyOneMemberImpl(state);
+  }
   @Override
   public Uni<Void> deleteAllTenants() {
 
@@ -66,4 +86,15 @@ public class TenantActionsImpl implements TenantActions {
     .onItem().transformToUni(junk -> state.tenant().delete());
     
   }
+
+  @Override
+  public AliasQuery queryAliases() {
+    return new AliasQueryImpl(state);
+  }
+
+  @Override
+  public MemberQuery queryMembers() {
+    return new MemberQueryImpl(state);
+  }
+
 }

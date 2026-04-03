@@ -34,6 +34,7 @@ import io.resys.thena.fs.api.branches.BranchResult;
 import io.resys.thena.fs.api.branches.CreateBranch;
 import io.resys.thena.fs.api.branches.ImmutableBranchResult;
 import io.resys.thena.fs.entities.Commit;
+import io.resys.thena.fs.entities.Entity;
 import io.resys.thena.fs.entities.ImmutableRefTransitives;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tree;
@@ -110,7 +111,7 @@ public class CreateBranchImpl implements CreateBranch {
   }
 
   private Uni<BranchResult> visitTransaction(FsDb tx) {
-    return tx.query().queryCommit().findByCommitIdOrRef(commitIdOrBranchName)
+    return tx.query().queryCommit().findByCommitIdOrRef(Entity.toUuidOrNull(commitIdOrBranchName), commitIdOrBranchName)
         .map(found -> {
           if(found.isEmpty()) {
             throw new BranchCreationException("Can't find commit or branch by given id", JsonObject.of("id", commitIdOrBranchName));

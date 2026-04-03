@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -34,13 +36,12 @@ import io.digiexpress.eveli.client.config.EveliAutoConfigBatches.BatchTenantCond
 import io.digiexpress.eveli.client.spi.batch.reject_stale_forms.BatchJob_RejectStaleForms_Definition;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
 import io.digiexpress.eveli.client.web.resources.worker.BatchApiCotroller;
-import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.thena.batch.client.api.BatchClient;
 import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
 import io.digiexpress.thena.batch.client.api.entities.BatchConfig;
 import io.digiexpress.thena.batch.client.spi.BatchClientImpl;
 import io.digiexpress.thena.batch.client.spi.persistence.sql.BatchDbImpl;
-import io.resys.thena.api.ThenaAware;
+import io.resys.limaone.spi.dialob.FormDb;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -58,28 +59,27 @@ public class EveliAutoConfigBatches {
   }
 
   @Bean
-  public BatchDefinition tasksCleanUpStaleDataJob(TaskClient taskClient, DialobClient dialobClient) {
+  public BatchDefinition tasksCleanUpStaleDataJob(TaskClient taskClient, FormDb dialobClient) {
     return BatchJob_RejectStaleForms_Definition.create(taskClient, dialobClient);
   }
   
   @Bean
-  public BatchClient batchClient(ApplicationContext applicationContext, List<BatchDefinition> definitions, io.vertx.mutiny.sqlclient.Pool pgPool, ThenaAware thenaAware) {
+  public BatchClient batchClient(ApplicationContext applicationContext, List<BatchDefinition> definitions, io.vertx.mutiny.sqlclient.Pool pgPool) {
     final var store = BatchDbImpl.create().tenant("batch").client(pgPool).build();
     final var batchClientImpl = new BatchClientImpl(store);
-    thenaAware.register(store.getClass(), store.createIfNot()
-        .onItem().transformToUni(batchDb -> 
-          new BatchClientImpl(batchDb)
-            .createBatchConfig()
-            .appId("eveli-app")
-            .commitAuthor("spring-boot-bean")
-            .commitMessage("default system config, with no. of jobs: " + definitions.size())
-            .addAll(definitions)
-            .build())
-        .onItem().transform(e -> e.getObject())
-        .onItem().invoke(batchConfig -> {
-          this.batchConfig = batchConfig;
-        })
-    );
+    store.createIfNot()
+      .onItem().transformToUni(batchDb -> 
+        new BatchClientImpl(batchDb)
+          .createBatchConfig()
+          .appId("eveli-app")
+          .commitAuthor("spring-boot-bean")
+          .commitMessage("default system config, with no. of jobs: " + definitions.size())
+          .addAll(definitions)
+          .build())
+      .onItem().transform(e -> e.getObject())
+      .onItem().invoke(batchConfig -> {
+        this.batchConfig = batchConfig;
+      }).await().atMost(Duration.ofMinutes(1));
     return batchClientImpl;
   }
   

@@ -1,5 +1,7 @@
 package io.resys.thena.fs.printer;
 
+import java.io.Serializable;
+
 /*-
  * #%L
  * thena-fs-client
@@ -70,9 +72,9 @@ public class FileSystemPrinter {
     final boolean isStatic = mode == PrintingMode.IMAGINARY;
     final Map<String, String> wipes = new HashMap<>();
     
-    final Function<String, String> ID = (id) -> {
+    final Function<Serializable, String> ID = (id) -> {
       if (!isStatic) {
-        return id;
+        return id.toString();
       }
       if (id == null) {
         return null;
@@ -81,7 +83,7 @@ public class FileSystemPrinter {
         return replacements.get(id);
       }
       final var next = String.valueOf(replacements.size() + 1);
-      replacements.put(id, next);
+      replacements.put(id.toString(), next);
       return next;
     };
 

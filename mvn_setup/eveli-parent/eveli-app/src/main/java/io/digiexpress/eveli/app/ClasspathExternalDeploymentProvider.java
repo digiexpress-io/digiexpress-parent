@@ -1,12 +1,10 @@
 package io.digiexpress.eveli.app;
 
-import java.io.InputStream;
-
 /*-
  * #%L
  * eveli-app
  * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,17 +20,17 @@ import java.io.InputStream;
  * #L%
  */
 
-import java.util.Optional;
+import java.io.InputStream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
-import io.digiexpress.eveli.envir.api.ExternalDeploymentProvider;
-import io.smallrye.mutiny.Uni;
+import io.digiexpress.eveli.client.spi.assets.EveliDeployment;
+import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties.WSP;
 
 
 
-public class ClasspathExternalDeploymentProvider implements ExternalDeploymentProvider {
+public class ClasspathExternalDeploymentProvider implements WSP {
 
   private final EveliDeployment deployment;
   
@@ -43,10 +41,9 @@ public class ClasspathExternalDeploymentProvider implements ExternalDeploymentPr
       throw new RuntimeException(e.getMessage(), e);
     }
   }
-  
-  
+
   @Override
-  public Uni<Optional<EveliDeployment>> getDeployment(boolean emptyBranchBody) {
-    return Uni.createFrom().item(Optional.ofNullable(deployment));
+  public ModelWorld getWorld() {
+    return deployment.getSources();
   }
 }

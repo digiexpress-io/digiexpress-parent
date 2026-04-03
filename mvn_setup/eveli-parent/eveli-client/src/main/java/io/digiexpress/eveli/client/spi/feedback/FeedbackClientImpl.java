@@ -29,14 +29,12 @@ import io.digiexpress.eveli.client.api.FeedbackCategoriesReader;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliPropsFeedback;
-import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class FeedbackClientImpl implements FeedbackClient {
   private final TaskClient taskClient;
-  private final DialobClient dialobClient;
   private final JdbcTemplate jdbc;
   private final FeedbackWithHistory feedbackWithHistory;
   private final EveliPropsFeedback configProps;
@@ -65,7 +63,7 @@ public class FeedbackClientImpl implements FeedbackClient {
   
   @Override
   public FeedbackQuestionnaireQuery queryQuestionnaire() {
-    return new FeedbackQuestionnaireQueryImpl(taskClient, dialobClient, configProps);
+    return new FeedbackQuestionnaireQueryImpl(taskClient, configProps);
   }
 
   @Override

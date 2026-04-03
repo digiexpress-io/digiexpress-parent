@@ -21,6 +21,7 @@ package io.resys.thena.fs.tests;
  */
 
 import java.time.Duration;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -104,7 +105,7 @@ public class CreateTag_Test extends DbTestTemplate {
     
     {
       final var tag_0 = fs.createTag()
-        .commitId(commit_1.getCommit().getId())
+        .commitId(commit_1.getCommit().getId().toString())
         .tagAuthor("john doe")
         .newTag(newTag -> newTag.tagName("super-tag-0").build())
         .build()
@@ -156,7 +157,7 @@ public class CreateTag_Test extends DbTestTemplate {
       
       Assertions.assertEquals(commit_1.getCommit().getId(), tag_1.getTransitives().getCommit().getId());
       Assertions.assertEquals(1, tag_1.getTransitives().getTree().getTreeNodes().size());
-      Assertions.assertEquals("Sam", tag_1.getTransitives().getTree().getTreeNodes().getFirst().getTransitives().getBlob().getBlobValue().getString("firstName")); 
+      Assertions.assertEquals("Sam", new ArrayList<>(tag_1.getTransitives().getTree().getTreeNodes()).getFirst().getTransitives().getBlob().getBlobValue().getString("firstName")); 
     }
     
     
@@ -174,7 +175,7 @@ public class CreateTag_Test extends DbTestTemplate {
       
       Assertions.assertEquals(commit_3.getCommit().getId(), tag_1.getTransitives().getCommit().getId());
       Assertions.assertEquals(1, tag_1.getTransitives().getTree().getTreeNodes().size());
-      Assertions.assertEquals("Lady Sybil", tag_1.getTransitives().getTree().getTreeNodes().getFirst().getTransitives().getBlob().getBlobValue().getString("firstName")); 
+      Assertions.assertEquals("Lady Sybil", new ArrayList<>(tag_1.getTransitives().getTree().getTreeNodes()).getFirst().getTransitives().getBlob().getBlobValue().getString("firstName")); 
     }
   }
 }

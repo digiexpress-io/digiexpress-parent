@@ -43,8 +43,8 @@ import io.digiexpress.eveli.client.spi.dms.ImmutableDoc;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStore;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
+import io.resys.limaone.program.FlowProgram.FlowResult;
+import io.resys.limaone.spi.program.input.DefaultProgramInput;
 import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.smallrye.mutiny.Uni;
@@ -55,7 +55,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TransferTaskVisitor {
   
-  private final EveliEnvirClient envir;
+  private final io.resys.limaone.program.Runtime envir;
   private final TaskStore ctx;
   private final TaskFileClient taskFileClient;
   private final DocContainerClient docContainerClient;
@@ -74,13 +74,11 @@ public class TransferTaskVisitor {
       // find all the files
       // pass the task down the pipeline 
       Uni.combine().all().unis(
-          getQuestionnairePropsFromFlow(task), 
-          getTaskFiles(), 
-          Uni.createFrom().item(task)).asTuple()
-      
+        Uni.createFrom().item(getQuestionnairePropsFromFlow(task)), 
+        getTaskFiles(), 
+        Uni.createFrom().item(task)).asTuple()
     )
     .onItem().transformToUni(tuple -> {
-      
       return createDocContainer(tuple.getItem3(), tuple.getItem1(), tuple.getItem2())
           .onItem().transformToUni(created -> updateTask(created, tuple.getItem1(), tuple.getItem2(), tuple.getItem3()));
     });
@@ -196,10 +194,11 @@ public class TransferTaskVisitor {
   }
 
   
-  private Uni<Map<String, String>> getQuestionnairePropsFromFlow(Task task) {
+  private Map<String, String> getQuestionnairePropsFromFlow(Task task) {
 
-    return envir.runtimeQuery().getOne().onItem().transform(runtime -> {
-      if (!runtime.getWrench().getFlowNames().contains(flowName)) {
+    try {
+      final var flow = envir.getBundle().queryFlows().name(flowName).findOne();
+      if (flow.isEmpty()) {
         return Map.<String, String>of();
       }
       final String questionnaireId = task.getQuestionnaireId(); 
@@ -209,16 +208,14 @@ public class TransferTaskVisitor {
       final var flowInput = new HashMap<String, Serializable>();
       flowInput.put("questionnaireId", questionnaireId);
       flowInput.put("assigneeId", assigneeId);
-      final FlowResult run = runtime.getWrench()
-          .inputMap(flowInput)
-          .flow(flowName)
-          .andGetBody();
+      final FlowResult run = flow.get().run(DefaultProgramInput.of(flowInput)).andGetBody();
       
       return run.getReturns().entrySet().stream()
           .filter(e -> e.getValue() != null)
           .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().toString()));
-    }).onFailure().recoverWithItem(error -> {
-      return Map.of("failed", ExceptionUtils.getStackTrace(error));
-    });
+    
+    } catch(Exception error) {
+      return Map.of("failed", ExceptionUtils.getStackTrace(error)); 
+    }      
   }
 }

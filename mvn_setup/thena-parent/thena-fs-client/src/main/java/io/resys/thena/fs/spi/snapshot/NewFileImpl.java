@@ -21,6 +21,7 @@ package io.resys.thena.fs.spi.snapshot;
  */
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import io.resys.thena.fs.api.commits.CommitBuilder.NewFile;
@@ -34,8 +35,9 @@ import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @RequiredArgsConstructor
 public class NewFileImpl implements NewFile {
   private final Optional<Ref> lock;
@@ -96,6 +98,7 @@ public class NewFileImpl implements NewFile {
   
   public NewFileResult close() {
     RepoAssert.isTrue(validated, () -> "build() method must be called before close()");
+    log.trace("Add new file: {}", fileClass.getNewValue());
     
     final var prevNode = lock.flatMap(ref -> {
       if(this.fileId.isNewValueSet()) {
@@ -144,7 +147,7 @@ public class NewFileImpl implements NewFile {
     return Optional.ofNullable(filePath);
   }
   
-  private Optional<String> getPropsId(Optional<Node> prevNode, Optional<Props> props) {
+  private Optional<UUID> getPropsId(Optional<Node> prevNode, Optional<Props> props) {
     if(props.isPresent()) {
       return props.map(Props::getId);
     }

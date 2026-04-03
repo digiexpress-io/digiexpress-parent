@@ -32,7 +32,6 @@ import io.dialob.api.proto.Actions;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionFillEvent;
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class DialobFillEventPublisher {
   private final ApplicationEventPublisher publisher;
-  private final DialobClient dialobClient;
+  private final io.resys.limaone.program.Runtime runtime;
   private final SyncDialobAndProcess syncDialobAndProcess;
   private final TaskClient taskClient;
   
@@ -76,21 +75,21 @@ public class DialobFillEventPublisher {
       return Uni.createFrom().voidItem();
     }
     
-    final var questionnaire = dialobClient.getDialobById(event.getSessionId());
+    final var questionnaire = runtime.getProperties().getFormDb().withTenant().formInstanceQuery().findOneSync(event.getSessionId()).get();
     final var isCompleted = (
-        questionnaire.unwrap().getMetadata().getStatus() == Questionnaire.Metadata.Status.COMPLETED &&
+        questionnaire.metadata().getStatus() == Questionnaire.Metadata.Status.COMPLETED &&
         actions.getActions().stream().filter(action -> action.getType() == Action.Type.COMPLETE).findFirst().isPresent()
     );
     
     if(!isCompleted) {
-      log.error("Skipping session sync because questionnaire: {} status is: {}", event.getSessionId(), questionnaire.unwrap().getMetadata().getStatus());
+      log.error("Skipping session sync because questionnaire: {} status is: {}", event.getSessionId(), questionnaire.metadata().getStatus());
       return Uni.createFrom().voidItem();
     }
     
     return taskClient.queryTaskProcesess().findOneByQuestionnaireId(event.getSessionId())
       .onItem().transformToUni(proc -> {
         if(proc.isPresent()) {
-          return syncDialobAndProcess.executeFlowForInstance(proc.get(), Optional.of(questionnaire.unwrap()));
+          return syncDialobAndProcess.executeFlowForInstance(proc.get(), Optional.of(questionnaire.getQuestionnaire()));
         }
         return Uni.createFrom().voidItem();
       });

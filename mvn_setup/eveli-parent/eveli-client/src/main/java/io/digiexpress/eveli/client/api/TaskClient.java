@@ -343,6 +343,7 @@ public interface TaskClient {
   interface CreateCustomerAssignmentCommand {
     String getServiceId();
     String getTaskId();
+    String getLocale();
     @Nullable String getTaskVersion(); // perform version check if not null
   }
   

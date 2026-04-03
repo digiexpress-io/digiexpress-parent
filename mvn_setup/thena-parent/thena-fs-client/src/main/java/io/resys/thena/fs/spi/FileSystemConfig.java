@@ -21,6 +21,7 @@ package io.resys.thena.fs.spi;
  */
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.immutables.value.Value;
 
@@ -31,7 +32,7 @@ public interface FileSystemConfig {
   FileSystemCache getCache();
   
   interface FileSystemCache {
-    Optional<Tree> findOneTreeById(String treeId);
+    Optional<Tree> findOneTreeById(UUID treeId);
     Tree cacheOneTree(Tree tree);
 
     void flushAll();

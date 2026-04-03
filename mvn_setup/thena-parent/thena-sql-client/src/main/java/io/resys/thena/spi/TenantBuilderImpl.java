@@ -115,7 +115,7 @@ public class TenantBuilderImpl implements TenantActions.CreateOneTenant {
     log.debug("Creating repository '{}' of type {}.", name, type);
 
     RepoAssert.notEmpty(name, () -> "repo name not defined!");
-    RepoAssert.notNull(type, () -> "type name not defined!");
+    RepoAssert.notNull(type, () -> "type not defined!");
     RepoAssert.isName(name, () -> "repo name has invalid characters!");
 
     return state.tenant().getByName(name)

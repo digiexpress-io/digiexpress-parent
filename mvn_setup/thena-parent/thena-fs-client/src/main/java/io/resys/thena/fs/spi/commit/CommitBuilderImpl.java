@@ -24,6 +24,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -61,8 +62,7 @@ public class CommitBuilderImpl implements CommitBuilder {
   private final Uni<FsDb> db_uni;
   private final String tenantId;
   private final FileSystemConfig config;
-
-  private String lockCommitId;
+  private UUID lockCommitId;
   private String branchName = BranchConstants.DEFAULT_BRANCH;
   private String commitAuthor;
   private String commitMessage;
@@ -73,8 +73,8 @@ public class CommitBuilderImpl implements CommitBuilder {
 
 
   @Override
-  public CommitBuilder branchLock(String commitId) {
-    this.lockCommitId = RepoAssert.notEmpty(commitId, () -> "branchHead commitId can't be empty!");
+  public CommitBuilder branchLock(UUID commitId) {
+    this.lockCommitId = commitId;
     return this;
   }
   @Override
@@ -154,8 +154,9 @@ public class CommitBuilderImpl implements CommitBuilder {
         () -> "Either branchName or branchHead must be set before calling build()!");
     
     // Ensure at least one operation is defined
-    RepoAssert.isTrue(!changes.isEmpty(), 
-        () -> "At least one operation (newFolder, mergeFolder, newFile, mergeFile, or remove) must be added before calling build()!");
+    if(changes.isEmpty()) {
+      throw new EmptyCommitException("At least one operation (newFolder, mergeFolder, newFile, mergeFile, or remove) must be added before calling build()!");
+    }
     
     final var scope = ImmutableTxScope.builder()
         .commitAuthor(commitAuthor)
@@ -236,7 +237,6 @@ public class CommitBuilderImpl implements CommitBuilder {
     final var query = ImmutableRefTableLockFilter.builder()
       .refName(branchName)
       .docIds(Optional.ofNullable(allIds.isEmpty() ? null : allIds))
-      .queryHeadOnly(true)
       .build();
     return tx.query().queryRef().findOneWithLock(query)
       .onItem().transformToUni(lock -> {
@@ -328,10 +328,12 @@ public class CommitBuilderImpl implements CommitBuilder {
           );    
         }
       });
+
       
       final var createdAt = commitCreatedAt != null ? commitCreatedAt : OffsetDateTime.now();
       final var snapshot = new Snapshot(tenantId, lock, branchName, createdAt);
       final var unit = snapshot.addAll(this.changes).build(commitAuthor, commitMessage, createdAt);
+
 
       return tx.builder().from(unit.getPersistenceUnit()).persist()
           .map(persisted -> new Snapshot.SnapshotResult(persisted, unit.getLog()))
@@ -351,4 +353,11 @@ public class CommitBuilderImpl implements CommitBuilder {
     }
   }
 
+  
+  public static class EmptyCommitException extends RuntimeException {
+    private static final long serialVersionUID = -4591134376273636375L;
+    public EmptyCommitException(String msg) {
+      super(msg);
+    }
+  }
 }

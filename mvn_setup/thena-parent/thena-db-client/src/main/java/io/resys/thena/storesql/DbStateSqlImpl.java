@@ -34,6 +34,8 @@ import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.spi.InternalAliasQueryImpl;
+import io.resys.thena.spi.InternalMemberQueryImpl;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.structures.fs.FsState;
 import io.resys.thena.structures.org.OrgState;
@@ -55,7 +57,14 @@ public class DbStateSqlImpl implements DbState {
   public InternalTenantQuery tenant() {
     return new DbStateTenantQuery(dataSource);
   }
-  
+  @Override
+  public InternalAliasQuery alias() {
+    return new InternalAliasQueryImpl(dataSource);
+  }
+  @Override
+  public InternalMemberQuery member() {
+    return new InternalMemberQueryImpl(dataSource);
+  }
   
   
   @Override
@@ -153,4 +162,6 @@ public class DbStateSqlImpl implements DbState {
       return new ThenaClientPgSql(state);
     }
   }
+
+
 }

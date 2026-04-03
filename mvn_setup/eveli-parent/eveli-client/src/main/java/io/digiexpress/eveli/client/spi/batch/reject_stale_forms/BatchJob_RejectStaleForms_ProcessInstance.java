@@ -28,7 +28,6 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.spi.batch.reject_stale_forms.BatchJob_RejectStaleForms_ProcessInstance.ProcAndQuestionnaireToReject;
 import io.digiexpress.eveli.client.spi.batch.reject_stale_forms.BatchJob_RejectStaleForms_ProcessInstance.RejectStaleFormsConfig;
-import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.thena.batch.client.api.executor.Executor;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorConfig;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
@@ -37,6 +36,7 @@ import io.digiexpress.thena.batch.client.api.executor.ExecutorQuery;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorResult;
 import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorEntity;
 import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorResult;
+import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -49,7 +49,7 @@ import lombok.RequiredArgsConstructor;
 public class BatchJob_RejectStaleForms_ProcessInstance implements Executor<ProcAndQuestionnaireToReject, RejectStaleFormsConfig> {
 
   private final TaskClient taskClient;
-  private final DialobClient dialobClient;
+  private final FormDb dialobClient;
 
   @Override
   public ExecutorQuery<ProcAndQuestionnaireToReject, RejectStaleFormsConfig> before(ExecutorContext context) {
@@ -66,7 +66,7 @@ public class BatchJob_RejectStaleForms_ProcessInstance implements Executor<ProcA
             .findAllStaleWithoutTasks(OffsetDateTime.now().minusMonths(config.getAgeInMonths()))
             .onItem().transform(proc -> {
               try {
-                final var questionnaire = Optional.ofNullable(dialobClient.getQuestionnaireById(proc.getQuestionnaireId()));
+                final var questionnaire = dialobClient.withTenant().formInstanceQuery().findOneSync(proc.getQuestionnaireId()).map(e -> e.getQuestionnaire());
                 return new ProcAndQuestionnaireToReject(proc, questionnaire);
               } catch(Exception e) {
                 return new ProcAndQuestionnaireToReject(proc, Optional.empty());                

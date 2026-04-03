@@ -21,6 +21,7 @@ package io.resys.thena.fs.api.tags;
  */
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import io.resys.thena.fs.api.tags.TagBuilder.BeforeTagCompletion;
@@ -41,7 +42,15 @@ public interface CreateTag {
    * @return builder for method chaining
    */
   CreateTag commitId(String commitIdOrBranchName);
-  
+
+  /**
+   * Sets the commit that this tag points to.
+   * The tag will mark this specific commit in the repository history.
+   * 
+   * @param commitId the hash identifier of the target commit
+   * @return builder for method chaining
+   */
+  CreateTag commitId(UUID commitId);
   /**
    * Create new tag based on commitId or branchName.
    * The system will query the current commit and branch state within the transaction

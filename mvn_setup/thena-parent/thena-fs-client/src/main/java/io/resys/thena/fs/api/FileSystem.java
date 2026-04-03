@@ -1,5 +1,7 @@
 package io.resys.thena.fs.api;
 
+import java.util.Optional;
+
 /*-
  * #%L
  * thena-fs-client
@@ -30,6 +32,7 @@ import io.resys.thena.fs.api.commits.CommitQuery;
 import io.resys.thena.fs.api.tags.CreateTag;
 import io.resys.thena.fs.api.tags.ModifyTag;
 import io.resys.thena.fs.api.tags.TagQuery;
+import io.smallrye.mutiny.Uni;
 
 /**
  * Main entry point for Git-like filesystem operations with multi-tenant support.
@@ -51,6 +54,13 @@ public interface FileSystem {
    * @return tenant actions for managing filesystem tenants
    */
   TenantActions tenants();
+  /**
+   * Creates new instance of filesystem with reconfigured tenant.
+   * 
+   * @param tenantIdOrName the tenant identifier or human-readable name
+   * @return reconfigured new instance of filesystem
+   */
+  Uni<FileSystem> withDefaultTenant(Optional<String> tenantIdOrName);
   
   /**
    * Creates a filesystem context for the default tenant.

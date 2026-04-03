@@ -17,7 +17,6 @@
   <modules>
     <module>thena-test-client</module>
     <module>thena-sql-client</module>
-    <module>thena-sql-client-pg</module>
     <module>thena-sql-client-annot-proc</module>
     <module>thena-sql-client-sample</module>
     <module>thena-db-client</module>
@@ -29,7 +28,6 @@
     <module>thena-product-client</module>
     <module>thena-contract-client</module>
     <module>thena-ledger-client</module>
-    <module>thena-cockpit-client</module>
     <module>thena-fs-client</module>
   </modules>
 
