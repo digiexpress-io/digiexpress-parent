@@ -42,8 +42,6 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskDiff;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDiffValue;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.test.task.TaskEnvirSetup;
-import io.resys.hdes.client.api.HdesClient;
-import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
 import jakarta.json.JsonPatch;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,8 +52,6 @@ public class CreateTaskAssignmentTest extends TaskEnvirSetup {
   @BeforeAll static void beforeAll() { start(CONTAINER); }
   @AfterAll static void afterAll() { end(); }
   @Autowired TaskClient taskClient;
-  @Autowired HdesClient hdesClient;
-  @Autowired HdesTypesMapper hdesTypesMapper;
   
   private Duration atMost = Duration.ofMinutes(5);
 
