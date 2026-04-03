@@ -1640,7 +1640,7 @@ export const en = {
   'fs.properties.propertyLabel.dialobFormName': 'Dialob Form Name',
   'fs.properties.propertyLabel.dialobFormTag': 'Dialob Form Tag',
   'fs.properties.propertyLabel.flowName': 'Flow Name',
-  'fs.properties.propertyLabel.configOptionsEnabled': 'Config Options Enabled',
+  'fs.properties.propertyLabel.configOptionsEnabled': 'Config options',
   'fs.properties.propertyLabel.selectedArticles': 'Selected Articles',
   'fs.properties.propertyLabel.comments': 'Comments',
   'fs.properties.propertyLabel.locales': 'Locales',

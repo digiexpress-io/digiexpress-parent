@@ -93,6 +93,7 @@ function _getIconClassName(dirent: Fs.DirentBase): keyof FsDirentClasses {
     case 'image': return 'iconImage';
     case 'template': return 'iconTemplate';
     case 'phone': return 'iconPhone';
+    case 'page': return 'iconPage';
     default: return 'iconFolder';
   }
 }

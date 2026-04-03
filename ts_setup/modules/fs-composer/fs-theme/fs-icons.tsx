@@ -66,6 +66,7 @@ import {
   Phone,
   FormatListNumbered,
   Feed,
+  MenuBook,
   SubdirectoryArrowRight,
 } from '@mui/icons-material';
 import { SvgIconProps, Tooltip } from '@mui/material';
@@ -88,7 +89,7 @@ export const FsIcons = {
   FolderOpen: FolderOpen,
 
   // Document Types
-  Article: Article,
+  Article: MenuBook,
   ArticleOutlined: ArticleOutlined,
   Form: Description,
   Print: PrintOutlined,

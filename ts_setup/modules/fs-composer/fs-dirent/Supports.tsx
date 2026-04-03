@@ -85,7 +85,7 @@ export const DirentIcon = (props: { dirent: Fs.DirentBase }) => {
     case 'folder':
       return expanded ? <FsIcons.FolderOpen /> : <FsIcons.FolderClosed />;
     case 'article':
-      return expanded ? <FsIcons.ArticleOutlined /> : <FsIcons.Article />;
+      return <FsIcons.Article />;
     case 'service':
       return expanded ? <FsIcons.SettingsOutlined /> : <FsIcons.Settings />;
     case 'dialob':
@@ -104,6 +104,8 @@ export const DirentIcon = (props: { dirent: Fs.DirentBase }) => {
       return <FsIcons.Pdf />;
     case 'phone':
       return <FsIcons.Phone />;
+    case 'page':
+      return <FsIcons.Page />;
     default:
       return <FsIcons.Article />;
   }

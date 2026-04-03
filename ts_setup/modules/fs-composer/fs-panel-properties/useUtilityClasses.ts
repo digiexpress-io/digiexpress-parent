@@ -82,7 +82,7 @@ export const FsPanelPropertiesRoot = styled('div', {
     fontWeight: 500,
     textTransform: 'uppercase',
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    width: '230px',
+    width: '200px',
     flexShrink: 0,
     paddingRight: theme.spacing(1.875),
   },

@@ -20,6 +20,7 @@ function getTypeIcon(type: Fs.Type): React.ElementType<SvgIconProps> {
     case 'image': return FsIcons.Image;
     case 'template': return FsIcons.Pdf;
     case 'phone': return FsIcons.Phone;
+    case 'page': return FsIcons.Page;
     default: return FsIcons.Article;
   }
 }
@@ -35,7 +36,7 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ childr
 
   return (
     <div className={classes.propertyRow}>
-      <Typography className={classes.propertyListItem}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
+      <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
       <div className={classes.commentList}>
         {children.map((child) => (
           <React.Fragment key={child.id}>
