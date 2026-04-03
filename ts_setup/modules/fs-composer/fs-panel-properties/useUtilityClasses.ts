@@ -126,12 +126,12 @@ export const FsPanelPropertiesRoot = styled('div', {
     position: "relative",
     display: "inline-flex",
     alignItems: "center",
-    height: 28,
-    marginLeft: 12,
+    height: theme.spacing(3),
+    marginLeft: theme.spacing(1.5),
     padding: "0 12px 0 16px",
     background: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
-    fontSize: 13,
+    ...theme.typography.subtitle2,
     borderRadius: 0,
 
     // left triangle (arrow)
@@ -141,8 +141,8 @@ export const FsPanelPropertiesRoot = styled('div', {
       left: -12,
       width: 0,
       height: 0,
-      borderTop: "14px solid transparent",
-      borderBottom: "14px solid transparent",
+      borderTop: "12px solid transparent",
+      borderBottom: "12px solid transparent",
       borderRight: `12px solid ${theme.palette.primary.main}`,
     },
 
@@ -150,7 +150,7 @@ export const FsPanelPropertiesRoot = styled('div', {
     "&::after": {
       content: '""',
       position: "absolute",
-      left: -6,
+      left: -2,
       width: 6,
       height: 6,
       borderRadius: "50%",

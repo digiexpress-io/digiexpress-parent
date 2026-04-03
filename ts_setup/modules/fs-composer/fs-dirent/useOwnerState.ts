@@ -22,6 +22,7 @@ export interface OwnerState {
 
   
   isDarkMode: boolean;
+  isActive: boolean;
   isChildren: boolean;
   configOptions: boolean;
   childWithError: boolean;
@@ -31,7 +32,7 @@ export interface OwnerState {
 
 export const useOwnerState = (props: FsDirentProps): OwnerState => {
   const { dirent, level, parentPath, onToggle, onContextMenu, searchTerm } = props;
-  const { isDarkMode, openAsset, registerDirentPath } = useFsNav();
+  const { isDarkMode, openAsset, registerDirentPath, activeDirent } = useFsNav();
   const { isChildError, getDirent } = useFsDirent();
   const direntProps = getDirent(dirent.id);
 
@@ -53,6 +54,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
     configOptions,
 
     isDarkMode,
+    isActive: activeDirent?.id === dirent.id,
     childWithError,
     showError,
 

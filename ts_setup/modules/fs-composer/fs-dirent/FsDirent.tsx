@@ -39,7 +39,7 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
   return (
     <FsDirentRoot className={classes.root} ownerState={ownerState}>
       <ListItem
-        className={`${classes.explorerDirent} ${ownerState.showError ? 'error' : ''}`}
+        className={`${classes.explorerDirent} ${ownerState.showError ? 'error' : ''} ${ownerState.isActive ? 'active' : ''}`}
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         onContextMenu={(event) => ownerState.onContextMenu(event, ownerState.dirent)}

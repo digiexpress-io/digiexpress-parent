@@ -196,6 +196,10 @@ export const FsDirentRoot = styled('div', {
       '&:hover': {
         backgroundColor: isDarkTheme ? FsColors.dark.surface : FsColors.light.surface,
       },
+      '&.active': {
+        backgroundColor: isDarkTheme ? alpha(FsColors.semantic.primary, 0.15) : alpha(FsColors.semantic.primary, 0.1),
+        outline: `1px solid ${isDarkTheme ? alpha(FsColors.semantic.primary, 0.6) : alpha(FsColors.semantic.primary, 0.5)}`,
+      },
       '&.error': {
         backgroundColor: alpha(isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.1),
         '&:hover': {
