@@ -98,7 +98,7 @@ export const FsDirentTextFieldRoot = styled('div', {
 
     [`& .${MUI_NAME}-requiredMessage`]: {
       ...theme.typography.caption,
-      visibility: ownerState.showRequiredError ? 'visible' : 'hidden',
+      display: ownerState.showRequiredError ? 'block' : 'none',
       color: dangerColor,
       marginTop: '3px',
       marginLeft: 0,
