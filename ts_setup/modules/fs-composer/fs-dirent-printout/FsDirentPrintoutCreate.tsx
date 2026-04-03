@@ -20,33 +20,23 @@ export const FsDirentPrintoutCreate: React.FC<FsDirentPrintoutCreateProps> = (pr
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.nameField.label' })}</Typography>
-        <FsDirentTextField
-          placeholder={intl.formatMessage({ id: 'fs.dirent.printout.nameField.placeholder' })}
-          required
-        />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.printout.nameField.placeholder' })} required />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.printoutServiceNameField.label' })}</Typography>
-        <FsDirentTextField
-          placeholder={intl.formatMessage({ id: 'fs.dirent.printout.printoutServiceNameField.placeholder' })}
-        />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.printout.printoutServiceNameField.placeholder' })} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.orchestratorNameField.label' })}</Typography>
-        <FsDirentTextField
-          placeholder={intl.formatMessage({ id: 'fs.dirent.printout.orchestratorNameField.placeholder' })}
-        />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.printout.orchestratorNameField.placeholder' })} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.descriptionField.label' })}</Typography>
-        <FsDirentTextField
-          placeholder={intl.formatMessage({ id: 'fs.dirent.printout.descriptionField.placeholder' })}
-          multiline minRows={2} maxRows={5}
-        />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.printout.descriptionField.placeholder' })} multiline minRows={2} maxRows={5} />
 
         <Divider />
         <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.printout.sectionTitle.localeLabels' })}</Typography>
 
         {ownerState.locales.map((locale) => (
           <div key={locale} className={classes.localeRow}>
-            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.printout.labelField.${locale}.label` })}</Typography>
+            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: 'fs.dirent.printout.labelField.label' }, { locale })}</Typography>
             <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.printout.labelField.placeholder' })} />
           </div>
         ))}

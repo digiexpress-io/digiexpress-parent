@@ -189,37 +189,28 @@ export const mockFsData: Fs.DirentBase[] = [
         id: 'new-construction-permit.printout',
         name: 'new-construction-permit.printout',
         type: 'printout',
-        children: []
+        children: [
+          { id: 'fi-construction-permit', name: 'Uudisrakennuslupa.template', type: 'template', children: [] },
+          { id: 'sv-construction-permit', name: 'Nybyggnadstillstånd.template', type: 'template', children: [] },
+          { id: 'en-construction-permit', name: 'New construction permit.template', type: 'template', children: [] },
+        ]
       },
       {
         id: 'municipal-services-guide.printout',
         name: 'municipal-services-guide.printout',
         type: 'printout',
-        children: []
+        children: [
+          { id: 'fi-municipal-services-guide', name: 'Kunnallispalveluopas.template', type: 'template', children: [] },
+          { id: 'en-municipal-services-guide', name: 'Municipal services guide.template', type: 'template', children: [] },
+        ]
       },
       {
         id: 'waste-management-info.printout',
         name: 'waste-management-info.printout',
         type: 'printout',
-        children: []
-      },
-      {
-        id: 'fi-construction-permit',
-        name: 'fi.template',
-        type: 'template',
-        children: []
-      },
-      {
-        id: 'sv-construction-permit',
-        name: 'sv.template',
-        type: 'template',
-        children: []
-      },
-      {
-        id: 'en-construction-permit',
-        name: 'en.template',
-        type: 'template',
-        children: []
+        children: [
+          { id: 'fi-waste-management-info', name: 'Jätehuolto-ohje.template', type: 'template', children: [] },
+        ]
       }
     ]
   }

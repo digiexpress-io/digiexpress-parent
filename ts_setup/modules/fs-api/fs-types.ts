@@ -116,7 +116,7 @@ export declare namespace Fs {
 
   export interface TemplateProps extends PropsBase {
     type: 'template';
-    serviceId: string;
+    printoutServiceId: string;
     localeId: string;
     content?: string;
   }

@@ -943,7 +943,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
     errors: [],
     printoutServiceName: 'NewConstructionPermitService',
     orchestratorName: 'taskSplitFlow.flow',
-    intlValues: { fi: 'Uudisrakennuslupa', sv: 'Nybyggnadstillstånd' },
+    intlValues: { fi: 'Uudisrakennuslupa', sv: 'Nybyggnadstillstånd', en: 'New construction permit' },
   },
 
   'municipal-services-guide.printout': {
@@ -964,7 +964,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
     errors: [],
     printoutServiceName: 'MunicipalServicesGuideService',
     orchestratorName: 'taskGenericFlow.flow',
-    intlValues: { fi: 'Kunnallispalveluopas', sv: 'Kommunal serviceguide', en: 'Municipal services guide' },
+    intlValues: { fi: 'Kunnallispalveluopas', en: 'Municipal services guide' },
   },
 
   'waste-management-info.printout': {
@@ -997,7 +997,10 @@ For questions regarding your personal data, contact our Data Protection Officer 
     locked: false,
     description: undefined,
     configOptions: [],
-    comments: [],
+    comments: [
+      { comment: 'Permit fee table needs to reflect the 2025 rate schedule.', author: 'Lars Eriksson', created: '12.03.2025' },
+      { comment: 'Legal disclaimer section updated to match the new building code.', author: 'Anna Virtanen', created: '18.03.2025' }
+    ],
     changes: [
       { changeType: 'create', changeDate: '10.10.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } },
       { changeType: 'update', changeDate: '08.03.2025', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
@@ -1005,7 +1008,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
     permissions: [],
     labels: [],
     errors: [],
-    serviceId: 'new-construction-permit.printout',
+    printoutServiceId: 'new-construction-permit.printout',
     localeId: 'fi',
     content: undefined,
   },
@@ -1025,7 +1028,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
     permissions: [],
     labels: [],
     errors: [],
-    serviceId: 'new-construction-permit.printout',
+    printoutServiceId: 'new-construction-permit.printout',
     localeId: 'sv',
     content: undefined,
   },
@@ -1045,8 +1048,75 @@ For questions regarding your personal data, contact our Data Protection Officer 
     permissions: [],
     labels: [],
     errors: [],
-    serviceId: 'municipal-services-guide.printout',
+    printoutServiceId: 'new-construction-permit.printout',
     localeId: 'en',
+    content: undefined,
+  },
+
+  'fi-municipal-services-guide': {
+    id: 'fi-municipal-services-guide',
+    type: 'template',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [
+      { comment: 'Contact details for the city hall section are outdated — please update before next print run.', author: 'Mikael Berg', created: '22.01.2025' }
+    ],
+    changes: [
+      { changeType: 'create', changeDate: '10.10.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
+    permissions: [],
+    labels: [],
+    errors: [],
+    printoutServiceId: 'municipal-services-guide.printout',
+    localeId: 'fi',
+    content: undefined,
+  },
+
+  'en-municipal-services-guide': {
+    id: 'en-municipal-services-guide',
+    type: 'template',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [
+      { comment: 'English translation is a rough draft — needs proofreading before publishing.', author: 'Sarah Johnson', created: '05.02.2025' },
+      { comment: 'Confirmed with legal: the liability clause wording is correct for EN locale.', author: 'Lars Eriksson', created: '10.02.2025' }
+    ],
+    changes: [
+      { changeType: 'create', changeDate: '10.10.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
+    permissions: [],
+    labels: [],
+    errors: [],
+    printoutServiceId: 'municipal-services-guide.printout',
+    localeId: 'en',
+    content: undefined,
+  },
+
+  'fi-waste-management-info': {
+    id: 'fi-waste-management-info',
+    type: 'template',
+    expanded: false,
+    reference: false,
+    locked: false,
+    description: undefined,
+    configOptions: [],
+    comments: [
+      { comment: 'Recycling collection schedule updated for Q2 2025 — template reflects the new dates.', author: 'Anna Virtanen', created: '28.03.2025' }
+    ],
+    changes: [
+      { changeType: 'create', changeDate: '10.10.2023', changedBy: { userName: 'Lars Eriksson', email: 'lars.eriksson@example.com' } }
+    ],
+    permissions: [],
+    labels: [],
+    errors: [],
+    printoutServiceId: 'waste-management-info.printout',
+    localeId: 'fi',
     content: undefined,
   },
 

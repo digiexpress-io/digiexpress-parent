@@ -51,7 +51,7 @@ export const FsDirentPrintoutUpdate: React.FC<FsDirentPrintoutUpdateProps> = (pr
         <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.printout.sectionTitle.localeLabels' })}</Typography>
         {ownerState.locales.map((locale) => (
           <div key={locale} className={classes.localeRow}>
-            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.printout.labelField.${locale}.label` })}</Typography>
+            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: 'fs.dirent.printout.labelField.label' }, { locale })}</Typography>
             <FsDirentTextField
               value={ownerState.intlValues[locale] ?? ''}
               placeholder={intl.formatMessage({ id: 'fs.dirent.printout.labelField.placeholder' })}

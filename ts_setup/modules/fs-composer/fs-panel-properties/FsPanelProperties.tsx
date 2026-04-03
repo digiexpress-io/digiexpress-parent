@@ -14,6 +14,7 @@ import { FsPropertiesLanguage } from './FsPropertiesLanguage';
 import { FsPropertiesPrintout } from './FsPropertiesPrintout';
 import { FsPropertiesLink } from './FsPropertiesLink';
 import { FsPropertiesPhone } from './FsPropertiesPhone';
+import { FsPropertiesTemplate } from './FsPropertiesTemplate';
 
 
 
@@ -23,9 +24,10 @@ function renderTypeSpecificRows(direntProps: Fs.DirentAsset): React.ReactNode {
     case 'service': return <FsPropertiesService direntProps={direntProps} />;
     case 'dialob': return <FsPropertiesDialob direntProps={direntProps} />;
     case 'language': return <FsPropertiesLanguage direntProps={direntProps} />;
-    case 'printout': return <FsPropertiesPrintout direntProps={direntProps} />;
+    case 'printout': return null;
     case 'link': return <FsPropertiesLink direntProps={direntProps} />;
     case 'phone': return <FsPropertiesPhone direntProps={direntProps} />;
+    case 'template': return <FsPropertiesTemplate direntProps={direntProps} />;
     default: return null;
   }
 }
@@ -93,6 +95,10 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
 
         {direntProps.type === 'article' && (
           <FsPropertiesArticle direntProps={direntProps} children={direntProps.children} />
+        )}
+
+        {direntProps.type === 'printout' && (
+          <FsPropertiesPrintout direntProps={direntProps} children={direntProps.children} />
         )}
 
       </FsPanelPropertiesRoot>

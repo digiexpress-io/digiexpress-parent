@@ -12,6 +12,7 @@ import { FsDirentPage } from '../fs-dirent-page';
 import { FsDirentFlow } from '../fs-dirent-flow';
 import { FsDirentDialob } from '../fs-dirent-dialob';
 import { FsDirentPrintout } from '../fs-dirent-printout';
+import { FsDirentTemplate } from '../fs-dirent-template';
 
 
 export interface ContentProps {
@@ -43,6 +44,7 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
     case 'service': return (activeTab && (<div className={className}><FsDirentService tab={activeTab} /></div>));
     case 'flow': return (activeTab && (<div className={className}><FsDirentFlow tab={activeTab} /></div>));
     case 'printout': return (activeTab && (<div className={className}><FsDirentPrintout tab={activeTab} /></div>));
+    case 'template': return (activeTab && (<div className={className}><FsDirentTemplate tab={activeTab} /></div>));
     case 'dialob': return (activeTab && (<div className={className}><FsDirentDialob tab={activeTab} /></div>));
     case 'language': return (activeTab && (<div className={className}><FsDirentLanguage tab={activeTab} /></div>));
     case 'page': return (activeTab && (<div className={className}><FsDirentPage tab={activeTab} /></div>));

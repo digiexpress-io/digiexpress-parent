@@ -20,12 +20,11 @@ export interface UpdateOwnerState {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const { getDirent, selectOptions } = useFsDirent();
+  const { getDirent } = useFsDirent();
 
   const dirent = getDirent<Fs.Printout>(props.direntId);
-  const locales = selectOptions.languages;
-
   const printout = dirent as Fs.PrintoutProps | undefined;
+  const locales = Object.keys(printout?.intlValues ?? {});
 
   const [name, setName] = React.useState(dirent?.name ?? '');
   const [printoutServiceName, setPrintoutServiceName] = React.useState(printout?.printoutServiceName ?? '');

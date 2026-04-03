@@ -1,4 +1,4 @@
-import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
+import { Fs, useFsNav } from '@dxs-ts/fs-api';
 
 
 export interface CreateOwnerState {
@@ -9,8 +9,6 @@ export interface CreateOwnerState {
 
 export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const { selectOptions } = useFsDirent();
-  const locales = selectOptions.languages;
 
-  return ({ isDarkMode, parentFolder: props.parentFolder, locales });
+  return ({ isDarkMode, parentFolder: props.parentFolder, locales: [] });
 };
