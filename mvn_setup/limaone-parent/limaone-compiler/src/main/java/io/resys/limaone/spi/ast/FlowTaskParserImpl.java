@@ -72,32 +72,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
 
-  private final List<String> imports = Arrays.asList(
-    java.time.LocalDate.class.getCanonicalName(),
-    java.time.Period.class.getCanonicalName(),
-    java.time.format.DateTimeFormatter.class.getCanonicalName(),
-    java.time.DayOfWeek.class.getCanonicalName(),
-    java.time.Duration.class.getCanonicalName(),
-    java.util.Collections.class.getCanonicalName(),
-    java.util.ArrayList.class.getCanonicalName(),
-    java.util.Arrays.class.getCanonicalName(),
-    java.util.List.class.getCanonicalName(),
-    java.util.Optional.class.getCanonicalName(),
-    java.util.Objects.class.getCanonicalName(),
-    java.io.Serializable.class.getCanonicalName(),
-    
-    io.smallrye.mutiny.Uni.class.getCanonicalName(),
-    io.smallrye.mutiny.Multi.class.getCanonicalName(),
-    
-    
-    io.resys.limaone.model.FlowTask.class.getCanonicalName(),
-    io.resys.limaone.model.FlowTask.ServiceRef.class.getCanonicalName(),
-    io.resys.limaone.model.FlowTask.ServiceRefs.class.getCanonicalName(),
-    io.resys.limaone.model.FlowTask.ServiceData.class.getCanonicalName(),
-    io.resys.limaone.program.Runtime.class.getCanonicalName(),
-    io.resys.limaone.program.ProgramInput.class.getCanonicalName()
-  );
-  
   private final List<String> src = new ArrayList<>();
   private final GroovyClassLoader gcl;
   
@@ -121,11 +95,6 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
     final var src = new StringBuilder("package io.resys.limaone.spi.compiler.groovy.pkg_")
         .append(";").append(System.lineSeparator());
     
-    for(final var entry : this.imports) {
-      if(!meta.getImports().contains(entry)) {
-        src.append("import ").append(entry).append(";").append(System.lineSeparator());;
-      }
-    }
     for(final var entry : meta.getImports()) {
       src.append("import ").append(entry).append(";").append(System.lineSeparator());;
     }
