@@ -35,6 +35,15 @@ public class FlowTaskTest {
 
   @Test
   public void type0() throws IOException {
+    final var envir = TestTemplate.compileOneFlowTask("flow-task/Type0Service.txt");
+
+    // map conversion
+    final var result = envir.run(Map.of()).andGetBody();
+    Assertions.assertEquals("{\"sum\":10}", JsonObject.mapFrom(result.getValue()).encode());
+  }
+  
+  @Test
+  public void type1() throws IOException {
     final var envir = TestTemplate.compileOneFlowTask("flow-task/Type1Service.txt");
 
     // map conversion
