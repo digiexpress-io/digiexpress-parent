@@ -33,7 +33,7 @@ export interface OwnerState {
 export const useOwnerState = (props: FsDirentProps): OwnerState => {
   const { dirent, level, parentPath, onToggle, onContextMenu, searchTerm } = props;
   const { isDarkMode, openAsset, registerDirentPath, activeDirent } = useFsNav();
-  const { isChildError, getDirent } = useFsDirent();
+  const { isChildError, getDirent, creatableTypes } = useFsDirent();
   const direntProps = getDirent(dirent.id);
 
   const isChildren = !!(dirent.children && dirent.children.length > 0);
@@ -59,7 +59,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
     showError,
 
     isChildren,
-    children: _sortChildren(dirent.children ?? []),
+    children: _sortChildren(dirent.children ?? [], creatableTypes),
     options: direntProps?.configOptions ?? [],
 
     
@@ -72,8 +72,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
 
 
 
-function _sortChildren(children: Fs.DirentBase[]) {
-  const order = ['article', 'service', 'dialob', 'flow', 'link', 'language', 'printout', 'image', 'template'];
+function _sortChildren(children: Fs.DirentBase[], order: Fs.Type[]) {
   return children.sort((a, b) => {
     const aIndex = order.indexOf(a.type);
     const bIndex = order.indexOf(b.type);

@@ -17,6 +17,14 @@ function flattenDirents(nodes: Fs.DirentBase[]): Record<string, Fs.DirentBase> {
 
 export const ALL_DIRENTS = flattenDirents(mockFsData);
 
+const PROPS_MAP_KEYS: Record<Fs.Type, true> = {
+  folder: true, article: true, service: true, dialob: true,
+  flow: true, language: true, printout: true, image: true,
+  page: true, template: true, link: true, phone: true,
+};
+
+export const ALL_TYPES = Object.keys(PROPS_MAP_KEYS) as Fs.Type[];
+
 export function collectArticles(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
   const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {

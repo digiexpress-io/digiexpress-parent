@@ -13,7 +13,7 @@ import { UndoConfirmDialog } from './FsChangesConfirmDialog';
 export const FsPanelChanges: React.FC<FsPanelChangesProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props)
-  const { confirmOpen, isDarkMode, setConfirmOpen, getStatusColor } = ownerState;
+  const { confirmOpen, isDarkMode, setConfirmOpen, getStatusColor, changes } = ownerState;
   const classes = useUtilityClasses();
 
 
@@ -25,7 +25,7 @@ export const FsPanelChanges: React.FC<FsPanelChangesProps> = (props) => {
       </div>
       {confirmOpen && <UndoConfirmDialog open={confirmOpen} onClose={() => setConfirmOpen(false)} />}
       <FsPanelChangesRoot className={classes.root} ownerState={ownerState}>
-        {assetsWithChanges.map((asset) => (
+        {changes.map((asset) => (
           <div key={asset.id} className={classes.changeRow}>
             <Typography className={classes.assetName}>
               {asset.name}
@@ -49,12 +49,3 @@ export const FsPanelChanges: React.FC<FsPanelChangesProps> = (props) => {
 
 
 
-const assetsWithChanges = [
-  { id: 'main.article', name: 'main.article', status: 'modified' },
-  { id: 'info-gdpr.article', name: 'info-gdpr.article', status: 'modified' },
-  { id: 'general-message.service', name: 'general-message.service', status: 'modified' },
-  { id: 'taskMsgFlow.flow', name: 'taskMsgFlow.flow', status: 'new' },
-  { id: 'public-inforeq.service', name: 'public-inforeq.service', status: 'deleted' },
-  { id: 'trustee-info-form.service', name: 'trustee-info-form.service', status: 'modified' },
-  { id: 'sipoo-main-site.link', name: 'sipoo-main-site.link', status: 'new' }
-];

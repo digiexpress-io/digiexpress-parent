@@ -1,32 +1,40 @@
-import { useFsNav } from '@dxs-ts/fs-api';
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
+import { useFsNav, useFsDirent } from '@dxs-ts/fs-api';
 import { FsPanelChangesProps } from './FsPanelChangesProps';
 import { FsColors } from '../fs-theme';
-
-
 
 
 export interface OwnerState {
   isDarkMode: boolean;
   confirmOpen: boolean;
-  setConfirmOpen: Dispatch<SetStateAction<boolean>>;
+  setConfirmOpen: React.Dispatch<React.SetStateAction<boolean>>;
   getStatusColor: (status: string, isDarkMode: boolean) => string;
+  changes: { id: string; name: string; status: string }[];
 }
 
 export const useOwnerState = (_props: FsPanelChangesProps): OwnerState => {
   const { isDarkMode } = useFsNav();
+  const { dirents, getDirent } = useFsDirent();
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
-  return ({ isDarkMode, confirmOpen, setConfirmOpen, getStatusColor });
+  const changes = dirents
+    .map(dirent => getDirent(dirent.id))
+    .filter(dirent => dirent && dirent.changes.length > 0)
+    .map(dirent => {
+      const latest = dirent!.changes[dirent!.changes.length - 1];
+      return { id: dirent!.id, name: dirent!.id, status: latest.changeType };
+    });
+
+  return ({ isDarkMode, confirmOpen, setConfirmOpen, getStatusColor, changes });
 }
 
 function getStatusColor(status: string, isDarkMode: boolean) {
   switch (status) {
-    case 'deleted':
+    case 'delete':
       return isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight;
-    case 'new':
+    case 'create':
       return FsColors.semantic.success;
-    case 'modified':
+    case 'update':
       return isDarkMode ? FsColors.semantic.warning : FsColors.semantic.warningLight;
     default:
       return isDarkMode ? FsColors.dark.text : FsColors.light.text;

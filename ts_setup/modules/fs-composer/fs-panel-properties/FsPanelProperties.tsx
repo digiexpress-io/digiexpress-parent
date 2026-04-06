@@ -52,12 +52,18 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
   const labels = direntProps.labels.map(l => l.value);
   const configOptionsEnabled = direntProps.configOptions;
   const comments = direntProps.comments;
+  const description = direntProps.description;
 
   return (
     <FsPanel title={intl.formatMessage({ id: 'fs.properties.title.direntName' }, { direntName: direntProps.name })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={true}>
       <FsPanelPropertiesRoot className={classes.root} ownerState={ownerState}>
 
-        {renderTypeSpecificRows(direntProps)}
+
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.description' })}</Typography>
+          <Typography className={classes.propertyValue}>{description}</Typography>
+        </div>
+
 
         <div className={classes.propertyRow}>
           <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.labels' })}</Typography>
@@ -92,6 +98,8 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
             ))}
           </div>
         </div>
+
+        {renderTypeSpecificRows(direntProps)}
 
         {direntProps.type === 'article' && (
           <FsPropertiesArticle direntProps={direntProps} children={direntProps.children} />

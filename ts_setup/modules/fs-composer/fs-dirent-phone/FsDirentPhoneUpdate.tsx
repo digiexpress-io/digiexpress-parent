@@ -49,6 +49,14 @@ export const FsDirentPhoneUpdate: React.FC<FsDirentPhoneUpdateProps> = (props) =
 
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.descriptionField.label' })}</Typography>
+            <FsDirentTextField
+              value={ownerState.description}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.phone.descriptionField.placeholder' })}
+              onChange={ownerState.onChangeDescription}
+              multiline minRows={2} maxRows={5}
+            />
+
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.articlesField.label' })}</Typography>
             <FsDirentSelectMulti options={articles} value={[]} onChange={(_value) => { }} />
 

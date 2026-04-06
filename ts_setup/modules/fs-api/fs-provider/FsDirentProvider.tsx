@@ -2,7 +2,7 @@ import React from 'react';
 import { Fs } from '../fs-types';
 import { mockFsDirentProperties } from '../mock-fs-dirent-properties';
 import { mockFsData } from '../mock-fs-data';
-import { ALL_DIRENTS, collectArticles, collectDialobs, collectFlows, collectLanguages, collectLabels, getConfigOptionsForType } from './helpers';
+import { ALL_DIRENTS, ALL_TYPES, collectArticles, collectDialobs, collectFlows, collectLanguages, collectLabels, getConfigOptionsForType } from './helpers';
 
 
 export interface ItemReferencesEntry {
@@ -13,6 +13,7 @@ export interface ItemReferencesEntry {
 export interface FsDirentContextType {
   direntPropsLoading: boolean;
   dirents: Fs.DirentBase[];
+  creatableTypes: Fs.Type[];
   selectOptions: Fs.SelectOptions;
   getConfigOptionsForType: (type: Fs.Type) => Fs.SelectOption[];
   getDirent: <T extends Fs.DirentAsset>(id: string) => T | undefined;
@@ -148,6 +149,7 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
     return {
       direntPropsLoading,
       dirents: mockFsData,
+      creatableTypes: ALL_TYPES,
       selectOptions,
       getConfigOptionsForType,
       getDirent,

@@ -44,6 +44,11 @@ export const FsDirentPhoneCreate: React.FC<FsDirentPhoneCreateProps> = (props) =
 
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.descriptionField.label' })}</Typography>
+            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.phone.descriptionField.placeholder' })}
+              multiline minRows={2} maxRows={5}
+            />
+
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.articlesField.label' })}</Typography>
             <FsDirentSelectMulti options={articles} value={selectedArticles} onChange={setSelectedArticles} />
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.configOptionsField.label' })}</Typography>

@@ -8,10 +8,12 @@ export interface UpdateOwnerState {
   phoneValue: string;
   intlValues: Record<string, string>;
   configOptions: Fs.ConfigOption[];
+  description: string;
   isExpanded: boolean;
   onChangePhoneValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
+  onChangeDescription: (value: string) => void;
   onToggleExpanded: () => void;
 }
 
@@ -27,6 +29,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.configOptions ?? []) as Fs.ConfigOption[]
   );
+  const [description, setDescription] = React.useState(dirent?.description ?? '');
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   function onChangePhoneValue(value: string) {
@@ -41,6 +44,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setConfigOptions(value as Fs.ConfigOption[]);
   }
 
+  function onChangeDescription(value: string) {
+    setDescription(value);
+  }
+
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
@@ -52,10 +59,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     phoneValue,
     intlValues,
     configOptions,
+    description,
     isExpanded,
     onChangePhoneValue,
     onChangeIntlValue,
     onChangeConfigOptions,
+    onChangeDescription,
     onToggleExpanded,
   });
 };

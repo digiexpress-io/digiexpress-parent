@@ -44,6 +44,11 @@ export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = (props) => 
 
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.descriptionField.label' })}</Typography>
+            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.link.descriptionField.placeholder' })}
+              multiline minRows={2} maxRows={5}
+            />
+
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.articlesField.label' })}</Typography>
             <FsDirentSelectMulti options={articles} value={selectedArticles} onChange={setSelectedArticles} />
 
