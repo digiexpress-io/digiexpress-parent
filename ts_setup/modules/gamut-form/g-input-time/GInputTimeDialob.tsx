@@ -28,6 +28,7 @@ export const GInputTimeDialob: React.FC<GFormBaseElementProps> = ({ disabled, ac
       labelPosition={labelPosition}
       format={undefined}
       onChange={onChange}
+      readOnly={element.readOnly}
     />
   </>);
 }

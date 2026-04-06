@@ -32,8 +32,7 @@ public class CommsClientDummy implements CommsClient {
 
   @Override
   public EmailBuilder createEmail() {
-    // TODO Auto-generated method stub
-    return null;
+    return new EmailBuilderDummy();
   }
 
 }

@@ -21,7 +21,6 @@ package io.digiexpress.eveli.client.test.task;
  */
 
 import java.time.Duration;
-import java.util.HashMap;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +37,6 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
-import io.resys.hdes.client.api.HdesClient;
-import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
-import io.resys.hdes.client.spi.HdesClientImpl;
-import io.resys.hdes.client.spi.HdesInMemoryStore;
-import io.resys.hdes.client.spi.HdesTypeDefsFactory;
-import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
-import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.grim.api.GrimClient;
 import io.resys.thena.grim.spi.GrimClientImpl;
@@ -64,24 +56,6 @@ public abstract class TaskEnvirSetupDebugDb {
   
   private static GrimClient THENA_STATE;
   
-  public static ServiceInit SERVICE_INIT = new ServiceInit() {
-    @Override
-    public <T> T get(Class<T> type) {
-      try {
-        return type.getDeclaredConstructor().newInstance();
-      } catch(Exception e) {
-        throw new RuntimeException(e.getMessage(), e);
-      }
-    }
-  };
-  
-  public static DependencyInjectionContext DI = new DependencyInjectionContext() {
-    @Override
-    public <T> T get(Class<T> type) {
-      return null;
-    }
-  };
-    
   
   @BeforeAll
   public static void start() {
@@ -119,22 +93,6 @@ public abstract class TaskEnvirSetupDebugDb {
   public static class TaskEnvirSetupConfig {
     @Autowired ObjectMapper objectMapper;
     @Autowired ApplicationEventPublisher publisher;
-
-    @Bean
-    public HdesClient hdesClient() {
-      return HdesClientImpl.builder()
-        .objectMapper(objectMapper)
-        .store(new HdesInMemoryStore(new HashMap<>()))
-        .dependencyInjectionContext(DI)
-        .serviceInit(SERVICE_INIT)
-        .build();
-    }
-    
-    @Bean
-    public HdesTypesMapper hdesTypes(ObjectMapper objectMapper) {
-      return new HdesTypeDefsFactory(objectMapper);
-    }
-    
     
     @Bean
     public TaskClient taskClient(ApplicationEventPublisher publisher) {
@@ -152,7 +110,7 @@ public abstract class TaskEnvirSetupDebugDb {
           .await().atMost(Duration.ofMinutes(1));
 
       log.info("repo created: {}", repo);
-      return new TaskClientImpl(null, null, null, store);
+      return new TaskClientImpl(null, null, store, null);
     }
   }
 }

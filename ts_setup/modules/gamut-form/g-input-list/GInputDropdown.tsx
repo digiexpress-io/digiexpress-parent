@@ -1,5 +1,5 @@
 import React from 'react'
-import { SelectChangeEvent } from '@mui/material';
+import { SelectChangeEvent, TextField } from '@mui/material';
 import { Check as CheckIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
@@ -48,6 +48,18 @@ export const GInputDropdown: React.FC<GInputListProps> = (props) => {
     </GInputSelect>
   );
 }
+
+export const ReadOnlyDropdown: React.FC<GInputListProps> = (props) => {
+  const { datasource, value } = props;
+  const classes = useUtilityClasses(props.id, props.variant);
+  const selectedItem = datasource?.entries.find(e => e.key + '' === value + '');
+  const displayValue = selectedItem?.value ?? '--';
+
+  return (
+    <TextField fullWidth value={displayValue} className={classes.input} slotProps={{ input: { readOnly: true } }} />
+  );
+}
+
 
 const Collapsed: React.FC<{
   datasource: DialobApi.ActionValueSet;

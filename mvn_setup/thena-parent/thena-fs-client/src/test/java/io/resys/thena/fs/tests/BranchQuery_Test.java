@@ -21,6 +21,7 @@ package io.resys.thena.fs.tests;
  */
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -82,6 +83,7 @@ public class BranchQuery_Test extends DbTestTemplate {
         .commitAuthor("john smith")
         .commitMessage("create main branch with some content")
         .newFile((newFile) -> newFile
+            .fileId("UNIQUE_ID")
             .fileName("xxx2.txt")
             .filePath("root/xyz")
             .fileType("text")
@@ -91,24 +93,44 @@ public class BranchQuery_Test extends DbTestTemplate {
         .build()
         .await().atMost(atMost);
     
-    final var branches = getClient().withTenant(tenant)
-        .branchQuery().findAll()
-        .collect().asList().await().atMost(atMost)
-        .stream().collect(Collectors.toMap(e -> e.getRefName(), e -> e));
+    {
+      final var branches = getClient().withTenant(tenant)
+          .branchQuery().findAll()
+          .collect().asList().await().atMost(atMost)
+          .stream().collect(Collectors.toMap(e -> e.getRefName(), e -> e));
+      
+      Assertions.assertEquals(4, branches.size());
+      
+      final var main = branches.get("main");
+      final var dev = branches.get("dev");
+      final var issue_1 = branches.get("issue-1");
+      final var issue_2 = branches.get("issue-2");
+      
+      
+      Assertions.assertEquals(main.getTransitives().getCommit().getId(), dev.getTransitives().getCommit().getId());
+      Assertions.assertEquals(null, dev.getTransitives().getCommit().getParentId().orElse(null));
+      Assertions.assertEquals(dev.getCommitId(), issue_1.getTransitives().getCommit().getParentId().get());
+      Assertions.assertEquals(dev.getCommitId(), issue_2.getTransitives().getCommit().getParentId().get());
+    }
     
-    Assertions.assertEquals(4, branches.size());
-    
-    final var main = branches.get("main");
-    final var dev = branches.get("dev");
-    final var issue_1 = branches.get("issue-1");
-    final var issue_2 = branches.get("issue-2");
-    
-    
-    Assertions.assertEquals(main.getTransitives().getCommit().getId(), dev.getTransitives().getCommit().getId());
-    Assertions.assertEquals(null, dev.getTransitives().getCommit().getParentId().orElse(null));
-    Assertions.assertEquals(dev.getCommitId(), issue_1.getTransitives().getCommit().getParentId().get());
-    Assertions.assertEquals(dev.getCommitId(), issue_2.getTransitives().getCommit().getParentId().get());
-    
+    {
+      final var branch = getClient().withTenant(tenant)
+          .branchQuery()
+          .branchName(name -> name.equals("issue-2"))
+          .docIds(Arrays.asList("UNIQUE_ID"))
+          .findOne().await().atMost(atMost);
+      Assertions.assertEquals(1, branch.get().getTransitives().getBlobsById().size());
+
+      
+      final var index = getClient().withTenant(tenant)
+          .branchQuery()
+          .branchId("issue-2")
+          .findIndexOnly()
+          .collect().asList()
+          .await().atMost(atMost);
+      
+      Assertions.assertEquals(2, index.size());
+    }
   }
   
   

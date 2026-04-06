@@ -8,12 +8,11 @@ export interface CockpitsBackendContextType {
     getOneCockpit: (cockpitId: string) => void;
   };
   persistence: {
-    findActivity: () => Promise<CockpitApi.CockpitActivity>
     findAllCockpits: () => Promise<CockpitApi.CockpitSummary[]>;
-    createOneCockpit: (request: CockpitApi.CreateCockpitCommand) => Promise<CockpitApi.CockpitContainer>;
-    getOneCockpit: (cockpitId: string) => Promise<CockpitApi.CockpitContainer>;
-    createOneCockpitTenant: (cockpitId: string, request: CockpitApi.CreateCockpitTenantCommand) => Promise<CockpitApi.CockpitContainer>;
-    changeActiveCockpit: (request: CockpitApi.CockpitActivityChangeActiveIdCommand) => Promise<CockpitApi.CockpitActivity>;
+    createOneCockpit: (request: CockpitApi.CreateCockpitCommand) => Promise<CockpitApi.CockpitSummary>;
+    getOneCockpit: (cockpitId: string) => Promise<CockpitApi.CockpitSummary>;
+    createOneCockpitTenant: (cockpitId: string, request: CockpitApi.CreateCockpitTenantCommand) => Promise<CockpitApi.CockpitSummary>;
+    changeActiveCockpit: (request: CockpitApi.CockpitActivityChangeActiveIdCommand) => Promise<CockpitApi.CockpitSummary>;
   }
 }
 

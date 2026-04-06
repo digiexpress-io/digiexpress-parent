@@ -11,7 +11,7 @@ import { GInputAdornment } from '../g-input-adornment';
 
 
 import { GInputDateRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
-import { DateAndCalendar } from './DateAndCalendar';
+import { DateAndCalendar, ReadOnlyDateAndCalendar } from './DateAndCalendar';
 
 
 
@@ -29,6 +29,7 @@ export interface GInputDateProps {
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
   required: boolean;
+  readOnly?: boolean;
 
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   setExtendedErrors?: (extendedErrors: DialobApi.ActionError[]) => void;
@@ -73,7 +74,7 @@ export const GInputDate: React.FC<GInputDateProps> = (initProps) => {
     slots: {
       error: GInputError,
       label: GInputLabel,
-      input: DateAndCalendar,
+      input: props.readOnly ? ReadOnlyDateAndCalendar : DateAndCalendar,
       adornment: GInputAdornment
     },
     slotProps: {

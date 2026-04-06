@@ -18,7 +18,7 @@ const ArticleWorkflowsComposer: React.FC<{ articleId: StencilApi.ArticleId }> = 
   const { onTabCurrentClose } = useStencilNav();
 
   const view = session.getArticleView(props.articleId);
-  const workflows: StencilApi.Workflow[] = Object.values(site.workflows)
+  const workflows: StencilApi.Workflow[] = Object.values(site.articleWorkflows)
     .map((w) => ({ w, name: session.getWorkflowName(w.id)?.name }))
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((w) => w.w);
@@ -55,10 +55,10 @@ const ArticleWorkflowsComposer: React.FC<{ articleId: StencilApi.ArticleId }> = 
         headers={["services.technicalname", "services.devmode"]}
         rows={workflows.map(row => row.id)}
         filterRow={(row, search) => {
-          const workflow = site.workflows[row];
+          const workflow = site.articleWorkflows[row];
           return workflow.body.value.toLowerCase().indexOf(search) > -1;
         }}
-        renderCells={(row) => [session.getWorkflowName(row).name, site.workflows[row].body.devMode ? "DEV" : ""]}
+        renderCells={(row) => [session.getWorkflowName(row).name, site.articleWorkflows[row].body.devMode ? "DEV" : ""]}
         selected={view.workflows.map(l => l.workflow.id)}
         cancel={{
           label: 'button.cancel',

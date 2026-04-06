@@ -26,7 +26,7 @@ export const FlowCodeEditor: React.FC<{
   const astRef = React.useRef<HdesApi.AstFlow | undefined>(ast);
   const [guided, setGuided] = React.useState<CompletionDialogProps>();
 
-  React.useEffect(() => {
+  React.useEffect(function loadEditor() {
     if (!monaco) {
       return;
     }
@@ -35,25 +35,21 @@ export const FlowCodeEditor: React.FC<{
     if (!model) {
       return;
     }
-  
     const lineCount = model.getLineCount();
   
     const markers = messages
       .map(msg => {
-        const lineNumber = msg.line + 1;
+        const lineNumber = msg.line;
   
         if (lineNumber < 1 || lineNumber > lineCount) {
           return null;
         }
-  
+        console.error(msg)
+
         const content = model.getLineContent(lineNumber);
-  
         return {
-          message: msg.value,
-          severity:
-            msg.type === 'WARNING'
-              ? monaco.MarkerSeverity.Warning
-              : monaco.MarkerSeverity.Error,
+          message: msg.msg,
+          severity: monaco.MarkerSeverity.Error,
           startLineNumber: lineNumber,
           endLineNumber: lineNumber,
           startColumn: 1,

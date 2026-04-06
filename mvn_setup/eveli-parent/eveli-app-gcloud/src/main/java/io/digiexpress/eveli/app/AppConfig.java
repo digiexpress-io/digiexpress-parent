@@ -39,6 +39,8 @@ import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClientDummy;
 import io.digiexpress.eveli.client.spi.org.OrgClientImpl;
 import io.digiexpress.notification.client.*;
+import io.resys.limaone.program.Runtime.EnvironmentProperties;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -102,11 +104,15 @@ public class AppConfig {
   public EveliEditEnvir eveliEditEnvir(
       EveliProps eveliProps, 
       EveliPropsAssets assetProps,
-      ObjectMapper objectMapper,
       ApplicationContext context,
-      io.vertx.mutiny.sqlclient.Pool pgPool) {
+      io.vertx.mutiny.sqlclient.Pool pgPool,
+      EnvironmentProperties envir,
+      io.resys.limaone.program.Runtime runtime
+  ) {
     
-    return EveliAutoConfigAssets.getOrCreateDb(EveliAutoConfigAssets.eveliEditEnvir(eveliProps, assetProps, objectMapper, context, pgPool))
+    final var dev = EveliAutoConfigAssets.eveliEditEnvir(context, pgPool, envir, runtime, assetProps);
+    
+    return EveliAutoConfigAssets.getOrCreateDb(dev)
         .await().atMost(Duration.ofMinutes(5));
   }
   

@@ -3,6 +3,8 @@
 // ULTRA-CONSOLIDATED COLOR PALETTE (12 Unique Colors)
 // =============================================================================
 
+import { Fs } from "@dxs-ts/fs-api";
+
 export const FsColors = {
   // Base theme colors
   dark: {
@@ -32,13 +34,14 @@ export const FsColors = {
     success: '#228b22',        // Success states, links (also used for link icons in light theme)
     info: '#9cdcfe',           // Information, dialob forms (also used for form icons in dark theme)
     primary: '#4ec9b0',        // Primary actions, services (also used for service icons in dark theme)
+    secondary: '#b1f8ea',        // Primary actions, services (also used for service icons in dark theme)
     active: '#4c4b4b',         // Active menu item background
     highlightLight: '#eaea25', // Search result text highlighting
     highlightDark: '#403d3d'   // Search result text highlighting
   },
 
-  // Node type colors - ultra-consolidated
-  nodeTypes: {
+  // Dirent type colors - ultra-consolidated
+  direntTypes: {
     dark: {
       folder: '#e8e5e5',       // Neutral gray for containers
       content: '#dcdcaa',      // Yellow for content (articles)
@@ -46,8 +49,12 @@ export const FsColors = {
       form: '#9cdcfe',         // Light blue for forms/dialobs (same as semantic.info)
       flow: '#c586c0',         // Purple for workflows
       link: '#98d982',         // Green for external links
-      document: '#ce9178',     // Orange for documents (language, template, printout)
+      document: '#ce9178',     // Orange for documents (template)
+      language: '#b0bec5',     // Blue-grey for global language definitions
+      printout: '#d4a27a',     // Sandy brown for printout documents
       asset: '#dda0dd',        // Light purple for assets/images (changed from red)
+      phone: '#f48fb1',        // Rose/coral for phone numbers
+      page: '#b2ebf2',         // Light cyan for pages (localised markdown content)
     },
     light: {
       folder: '#333333',       // Dark gray for containers (same as text)
@@ -56,8 +63,12 @@ export const FsColors = {
       form: '#0056b3',         // Dark blue for forms/dialobs
       flow: '#8b008b',         // Dark magenta for workflows (merged with content)
       link: '#228b22',         // Forest green for external links (same as semantic.success)
-      document: '#5d2f0a',     // Darker brown for all documents (language, template, printout) - made darker for better visibility
+      document: '#5d2f0a',     // Brown for documents (template)
+      language: '#455a64',     // Dark blue-grey for global language definitions
+      printout: '#5d4037',     // Brown for printout documents
       asset: '#663399',        // Dark purple for assets/images - changed from red
+      phone: '#880e4f',        // Dark rose for phone numbers
+      page: '#00838f',         // Dark cyan for pages (localised markdown content)
     }
   }
 } as const;
@@ -66,12 +77,11 @@ export const FsColors = {
 // HELPER FUNCTIONS
 // =============================================================================
 
-export type FsNodeType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';
 
-export function getNodeColor(nodeType: FsNodeType, isDarkTheme: boolean) {
-  const colors = isDarkTheme ? FsColors.nodeTypes.dark : FsColors.nodeTypes.light;
+export function getDirentColor(direntType: Fs.Type, isDarkTheme: boolean) {
+  const colors = isDarkTheme ? FsColors.direntTypes.dark : FsColors.direntTypes.light;
 
-  switch (nodeType) {
+  switch (direntType) {
     case 'folder':
       return colors.folder;
     case 'article':
@@ -84,9 +94,15 @@ export function getNodeColor(nodeType: FsNodeType, isDarkTheme: boolean) {
       return colors.flow;
     case 'link':
       return colors.link;
+    case 'phone':
+      return colors.phone;
+    case 'page':
+      return colors.page;
     case 'language':
-    case 'template':
+      return colors.language;
     case 'printout':
+      return colors.printout;
+    case 'template':
       return colors.document;
     case 'image':
       return colors.asset;

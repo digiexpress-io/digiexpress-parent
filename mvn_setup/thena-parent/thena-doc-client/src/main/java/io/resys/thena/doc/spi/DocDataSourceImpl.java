@@ -25,6 +25,8 @@ import io.resys.thena.datasource.ThenaDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.doc.api.DocDataSource;
 import io.resys.thena.doc.spi.builders.DocInternalTenantQueryImpl;
+import io.resys.thena.spi.InternalAliasQueryImpl;
+import io.resys.thena.spi.InternalMemberQueryImpl;
 import io.resys.thena.support.RepoAssert.RepoAssertException;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +45,14 @@ public class DocDataSourceImpl implements DocDataSource {
   public InternalTenantQuery tenant() {
     return new DocInternalTenantQueryImpl(dataSource);
   }
-  
+  @Override
+  public InternalAliasQuery alias() {
+    return new InternalAliasQueryImpl(dataSource);
+  }
+  @Override
+  public InternalMemberQuery member() {
+    return new InternalMemberQueryImpl(dataSource);
+  }
   // doc state
   @Override
   public Uni<DocState> toDocState(String tenantId) {
@@ -75,4 +84,5 @@ public class DocDataSourceImpl implements DocDataSource {
       throw new RepoAssertException(text);
     }); 
   }
+
 }

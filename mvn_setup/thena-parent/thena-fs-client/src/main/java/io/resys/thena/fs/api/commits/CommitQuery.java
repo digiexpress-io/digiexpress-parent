@@ -22,6 +22,7 @@ package io.resys.thena.fs.api.commits;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
@@ -116,21 +117,21 @@ public interface CommitQuery {
     /**
      * @return the filesystem node (file or folder) that was tracked
      */
-    Map<String, Node> getNodesById();
+    Map<UUID, Node> getNodesById();
     
     /**
      * @return map of commit ID to commit object for all commits that modified this node
      */
-    Map<String, Commit> getCommitsById();
+    Map<UUID, Commit> getCommitsById();
     
     /**
      * @return map of blob ID to file content for each blob (empty for folders)
      */
-    Map<String, Blob> getBlobsById();
+    Map<UUID, Blob> getBlobsById();
     
     /**
      * @return map of props ID to prop for each props
      */
-    Map<String, Props> getPropsById();
+    Map<UUID, Props> getPropsById();
   }
 }

@@ -20,6 +20,7 @@ export interface GInputMultilistProps {
   datasource: DialobApi.ActionValueSet;
   disabled: boolean;
   required: boolean;
+  readOnly?: boolean;
 
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;

@@ -15,7 +15,7 @@ const LocalesOverview: React.FC<{ site: StencilApi.Site }> = ({ site }) => {
 
   const locales: StencilApi.SiteLocale[] = Object.values(site.locales);
   const articles: StencilApi.Article[] = Object.values(site.articles);
-  const pages: StencilApi.Page[] = Object.values(site.pages);
+  const pages: StencilApi.Page[] = Object.values(site.articlePages);
 
 
   //check if page has content

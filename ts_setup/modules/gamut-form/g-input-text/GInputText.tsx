@@ -27,7 +27,7 @@ export interface GInputTextProps {
   required: boolean;
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
-
+  readOnly?: boolean;
 
   variant: OverridableStringUnion<
     'text',
@@ -37,14 +37,14 @@ export interface GInputTextProps {
   slots?: Record<OverridableStringUnion<
     'text',
     GInputTextPropsVariantOverrides>,
-    React.ElementType>; 
+    React.ElementType>;
 
   component?: React.ElementType<GInputTextProps>;
 }
 
 
 export const GInputText: React.FC<GInputTextProps> = (initProps) => {
-  
+
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,
@@ -54,6 +54,7 @@ export const GInputText: React.FC<GInputTextProps> = (initProps) => {
   const classes = useUtilityClasses(props.id, variant);
   const ownerState = { ...props, variant };
 
+
   const { id, label, description } = props;
   const slots: GInputBaseProps<GInputTextProps> = {
     id,
@@ -61,7 +62,7 @@ export const GInputText: React.FC<GInputTextProps> = (initProps) => {
       error: GInputError,
       label: GInputLabel,
       adornment: GInputAdornment,
-      input: TextInput,
+      input: props.readOnly ? ReadOnlyTextInput : TextInput,
     },
     slotProps: {
       error: { id, errors },
@@ -79,7 +80,24 @@ export const GInputText: React.FC<GInputTextProps> = (initProps) => {
 }
 
 
+const ReadOnlyTextInput: React.FC<GInputBaseAnyProps & GInputTextProps> = (props) => {
+  const classes = useUtilityClasses(props.id, props.variant);
+  return (
+    <TextField value={props.value || '--'} className={classes.input} slotProps={{ input: { readOnly: true } }} />
+  );
+}
+
 const TextInput: React.FC<GInputBaseAnyProps & GInputTextProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
-  return (<TextField disabled={props.disabled} value={props.value ?? ''} name={props.name} onChange={props.onChange} className={classes.input} error={(props.errors?.length ?? 0) > 0} />)
+  return (<>
+    <TextField
+      disabled={props.disabled}
+      value={props.value ?? ''}
+      name={props.name}
+      onChange={props.onChange}
+      className={classes.input}
+      error={(props.errors?.length ?? 0) > 0}
+    />
+  </>
+  )
 }

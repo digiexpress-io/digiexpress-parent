@@ -40,7 +40,8 @@ export const FsBreadcrumbRoot = styled('div', {
 
     [`& .${MUI_NAME}-assetPath`]: {
       color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
-      ...theme.typography.subtitle2
+      ...theme.typography.subtitle2,
+      marginLeft: theme.spacing(1)
     },
     [`& .${MUI_NAME}-assetName`]: {
       ...theme.typography.subtitle2,

@@ -31,15 +31,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import io.digiexpress.eveli.client.config.DialobAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
-import io.digiexpress.eveli.client.config.EveliAutoConfigEnvir;
 import io.digiexpress.eveli.client.config.EveliAutoConfigGamut;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.config.EveliAutoConfigPermissions;
 import io.digiexpress.eveli.client.config.EveliAutoConfigWorker;
 import io.digiexpress.eveli.client.spi.mq.EveliAutoConfigMq;
-import io.digiexpress.eveli.dialob.config.DialobAutoConfig;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -57,7 +56,6 @@ import lombok.extern.slf4j.Slf4j;
     DialobAutoConfig.class,
     EveliAutoConfigGamut.class,
     EveliAutoConfigWorker.class,
-    EveliAutoConfigEnvir.class,
     EveliAutoConfigPermissions.class
 })
 public class Application {

@@ -19,7 +19,7 @@ import { TemplateEdit } from './TemplateEdit';
 
 const TemplatesView: React.FC<{}> = () => {
   const { site } = Composer.useComposer();
-  const templates = Object.values(site.templates);
+  const templates = Object.values(site.articleTemplates);
   const [templateComposer, setTemplateComposer] = React.useState(false);
   const [templateDelete, setTemplateDelete] = React.useState<StencilApi.TemplateId>();
   const [templateEdit, setTemplateEdit] = React.useState<StencilApi.TemplateId>();

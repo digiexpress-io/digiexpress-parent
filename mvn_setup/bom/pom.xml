@@ -35,6 +35,11 @@
         <artifactId>lp-products</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>limaone-compiler</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>io.digiexpress</groupId>
@@ -82,11 +87,7 @@
         <artifactId>eveli-integration-suomifi-wsl</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>eveli-integration-git</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+      
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>eveli-integration-queue</artifactId>
@@ -123,45 +124,15 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>eveli-envir</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>    
-        <artifactId>dialob-client</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>dialob-review</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
         <groupId>io.digiexpress</groupId>    
         <artifactId>tagomi-client</artifactId>
         <version>${project.version}</version>
       </dependency>
 
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>hdes-client</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>stencil-client</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+      
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>thena-fs-client</artifactId>
-        <version>${project.version}</version>
-      </dependency>      
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>thena-sql-client-pg</artifactId>
         <version>${project.version}</version>
       </dependency>      
       <dependency>
@@ -174,11 +145,7 @@
         <artifactId>thena-sql-client-annot-proc</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>thena-cockpit-client</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+      
     </dependencies>
   </dependencyManagement>
 </project>

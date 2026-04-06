@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.resys.thena.fs.api.commits.CommitQuery.CommitsByObject;
+import io.resys.thena.fs.entities.Entity;
 import io.resys.thena.fs.spi.commit.CommitsByObjectImpl;
 import lombok.RequiredArgsConstructor;
 
@@ -44,7 +45,7 @@ public class GroupByObject implements CommitTreeVisitor {
   }
 
   private void init(CommitTree next) {
-    for(final var entry : next.getNodes().entrySet()) {
+    for(final var entry : next.getNodes()) {
       final var objectId = entry.getValue().getObjectId();
       getBuilder(objectId)
         .add(next.getCommit())
@@ -55,14 +56,14 @@ public class GroupByObject implements CommitTreeVisitor {
   }
       
   private void diff(CommitTree previous, CommitTree next) {
-    for(final var entry : next.getNodes().entrySet()) {
+    for(final var entry : next.getNodes()) {
 
       final var objectId = entry.getValue().getObjectId();
-      final var prev_node = previous.getNodes().get(objectId);
-      final var next_node = next.getNodes().get(objectId);
+      final var prev_node = previous.getNode(objectId);
+      final var next_node = next.getNode(objectId);
       
-      final var isBlobChanged = prev_node.getBlobId().orElse("").equals(next_node.getBlobId().orElse(""));
-      final var isPropsChanged = prev_node.getPropsId().orElse("").equals(next_node.getPropsId().orElse(""));
+      final var isBlobChanged = prev_node.getBlobId().orElse(Entity.EMPTY_UUID).equals(next_node.getBlobId().orElse(Entity.EMPTY_UUID));
+      final var isPropsChanged = prev_node.getPropsId().orElse(Entity.EMPTY_UUID).equals(next_node.getPropsId().orElse(Entity.EMPTY_UUID));
       
       if(isBlobChanged || isPropsChanged) {
         getBuilder(objectId)

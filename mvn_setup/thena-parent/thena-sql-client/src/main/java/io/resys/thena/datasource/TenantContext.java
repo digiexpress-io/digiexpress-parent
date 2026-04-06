@@ -29,6 +29,8 @@ public abstract class TenantContext {
 
   public abstract String getDb();
   public abstract String getTenant();
+  public abstract String getMember();
+  public abstract String getAlias();
   public abstract String getPrefix();
   
   public TenantContext withTenant(Tenant repo) {
@@ -40,6 +42,8 @@ public abstract class TenantContext {
     return ImmutableTenantContext.builder()
         .db(this.getDb())
         .tenant(this.getTenant())
+        .alias(this.getAlias())
+        .member(this.getMember())
         .prefix(prefix)
         .build();
   }
@@ -48,6 +52,8 @@ public abstract class TenantContext {
     return ImmutableTenantContext.builder()
         .db(db == null ? "docdb" : db)
         .tenant("tenants")
+        .alias("tenant_alias")
+        .member("tenant_member")
         .prefix("")
         .build();
   }

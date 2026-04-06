@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
@@ -194,7 +195,8 @@ public class SnapshotLogger {
     return this;
   }
 
-  private String shortHash(String hash) {
+  private String shortHash(UUID uuid) {
+    final var hash = uuid == null ? null : uuid.toString().replace("-", "");
     return hash != null && hash.length() > 7 ? hash.substring(0, 8) : hash;
   }
   

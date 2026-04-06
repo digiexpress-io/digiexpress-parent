@@ -44,7 +44,7 @@ const NewArticlePage: React.FC<NewArticlePageProps> = ({ article, open, onClose,
 
 
   const articleName = site.articles[article.id].body.name;
-  const templates: StencilApi.Template[] = Object.values(site.templates);
+  const templates: StencilApi.Template[] = Object.values(site.articleTemplates);
 
   return (
     <Dialog open={open ? true : false} onClose={onClose}>

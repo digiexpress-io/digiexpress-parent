@@ -1,5 +1,5 @@
 import React from 'react';
-import { OutlinedInput } from '@mui/material';
+import { OutlinedInput, TextField } from '@mui/material';
 import { DatePicker as XuiDatePicker } from '@dxs-ts/xui-datetime';
 import { DateTime } from 'luxon';
 
@@ -48,6 +48,18 @@ const input = React.forwardRef<any, DelegateInputProps>((props, _ref) => {
   />)
 })
 
+export const ReadOnlyDateAndCalendar: React.FC<GInputDateProps> = (props) => {
+  const classes = useUtilityClasses(props.id, props.variant);
+  const ownerState = { variant: props.variant ?? 'date' };
+  const parsed = parseInit(props.value);
+  const displayValue = parsed ? parsed.toFormat('dd.MM.yyyy') : '--';
+  return (
+    <GInputDateInput ownerState={ownerState} className={classes.input}>
+      <TextField fullWidth value={displayValue} slotProps={{ input: { readOnly: true } }} />
+    </GInputDateInput>
+  );
+}
+
 export const DateAndCalendar: React.FC<GInputDateProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
   const [value, setValue] = React.useState<DateTime | null>(parseInit(props.value));
@@ -57,8 +69,7 @@ export const DateAndCalendar: React.FC<GInputDateProps> = (props) => {
   return (
     <GInputDateInput ownerState={ownerState} className={classes.input}>
       <InputHidden dateTime={value} onChange={props.onChange} id={props.id} />
-      <OutlinedInput fullWidth 
-        slots={{ input }}
+      <OutlinedInput fullWidth slots={{ input }}
         slotProps={{
           input:
             { value, disabled, setValue, setExtendedErrors } as any

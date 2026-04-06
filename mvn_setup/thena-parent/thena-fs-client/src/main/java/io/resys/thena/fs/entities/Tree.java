@@ -20,66 +20,61 @@ package io.resys.thena.fs.entities;
  * #L%
  */
 
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
-import org.immutables.value.Value;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.hash.Hashing;
-
-import io.resys.thena.support.RepoAssert;
-
-@Value.Immutable
-@JsonSerialize(as = ImmutableTree.class)
-@JsonDeserialize(as = ImmutableTree.class)
 public interface Tree extends Entity {
   
-  String getId();
-  List<Node> getTreeNodes();
+  UUID getId();
+  Collection<Node> getTreeNodes();
+  Collection<Node> findAllNodes(List<String> filters, Consumer<String> onMissing);
+  Optional<Node> findOneNode(String fullPath);
+  Node getOneNode(String fullPath);
   
   @Override
   default FileSystemEntityType getDocType() { 
     return FileSystemEntityType.TREE; 
   }
   
+
   
-  default Optional<Node> findOneNode(String fullPath) {
-    final var found = getTreeNodes().stream()
-        .filter(node -> (
-            node.getFullPath().equals(fullPath) || 
-            node.getId().equals(fullPath) || 
-            node.getObjectId().equals(fullPath)
-        ))
-        .toList();
+  default Tree withTransitives(Stream<Node> merge) {
+    final Map<UUID, Node> all = new HashMap<>();
     
-    RepoAssert.isTrue(found.size() <= 1, () -> "Expected exactly 0..1 nodes, but found: " + found.size() + " for path: " + fullPath);
-    return found.stream().findFirst();
-  }
-  
-  default Node getOneNode(String fullPath) {
-    final var found = findOneNode(fullPath);
-    RepoAssert.isTrue(found.isPresent(), () -> "Expected exactly 1 node, but found: 0 for path: " + fullPath);
-    return found.get();
+    merge.forEach(node -> {
+      if(all.containsKey(node.getId())) {
+        if(node.getTransitives() == null || node.getTransitives().getBlob() == null) {
+          return;
+        }
+        all.put(node.getId(), node);
+      } else {
+        all.put(node.getId(), node);
+      }
+    });
+    return ImmutableTree.builder()
+        .id(getId())
+        .treeNodes(all.values())
+        .build();
   }
 
 
   // H(tree) = μ(∑ᵢ₌₁ⁿ H(nodeᵢ))
   public static ImmutableTree.Builder newInstance(Collection<Node> nodes) {
-    final var content = new StringBuilder();
-    
+    final var content = Entity.uuid();
     final var sorted = nodes.stream()
-        .sorted((a, b) -> (a.getFullPath()).compareTo(b.getFullPath()))
-        .map(node -> {
-          content.append(node.getId());
-          return node;
-        })
-        .toList();
-    
-    final var hash = Hashing.murmur3_128().hashString(content.toString(), StandardCharsets.UTF_8).toString();
-    return ImmutableTree.builder().id(hash).treeNodes(sorted);
+      .sorted((a, b) -> (a.getFullPath()).compareTo(b.getFullPath()))
+      .map(node -> {
+        content.append(node.getId());
+        return node;
+      })
+      .toList();
+    return ImmutableTree.builder().id(content.build()).treeNodes(sorted);
   }
 }

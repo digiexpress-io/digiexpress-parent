@@ -34,6 +34,7 @@ export const GInputBooleanDialob: React.FC<GFormBaseElementProps> = ({ disabled,
         value={element.value}
         onChange={onChange}
         labelPosition={labelPosition}
+        readOnly={element.readOnly}
       />
     </>
   );

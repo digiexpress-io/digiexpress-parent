@@ -19,7 +19,7 @@ export const LinkDelete: React.FC<LinkDeleteProps> = ({ linkId, onClose }) => {
   const { service, actions, site } = Composer.useComposer();
   const classes = useLinkDeleteUtilityClasses();
 
-  const link = site?.links?.[linkId];
+  const link = site?.articleLinks?.[linkId];
   const linkType = link?.body?.contentType;
   const linkValue = link?.body?.value ?? '';
 

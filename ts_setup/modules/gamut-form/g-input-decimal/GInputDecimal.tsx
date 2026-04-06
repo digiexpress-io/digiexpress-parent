@@ -25,6 +25,7 @@ export interface GInputDecimalProps {
   description: string | undefined;
   disabled: boolean;
   required: boolean;
+  readOnly?: boolean;
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
@@ -39,7 +40,7 @@ export interface GInputDecimalProps {
   slots?: Record<OverridableStringUnion<
     'decimal',
     GInputDecimalPropsVariantOverrides>,
-    React.ElementType>; 
+    React.ElementType>;
 
   component?: React.ElementType<GInputDecimalProps>;
 }
@@ -56,12 +57,12 @@ export const GInputDecimal: React.FC<GInputDecimalProps> = (initProps) => {
   const ownerState = { ...props, variant };
   const classes = useUtilityClasses(id, variant);
 
-  const slots: GInputBaseProps<GInputDecimalProps> =  {
+  const slots: GInputBaseProps<GInputDecimalProps> = {
     id,
     slots: {
       error: GInputError,
       label: GInputLabel,
-      input: DecimalInput,
+      input: props.readOnly ? ReadOnlyDecimalInput : DecimalInput,
       adornment: GInputAdornment
     },
     slotProps: {
@@ -86,15 +87,19 @@ const DEFAULT_FORMAT: numbro.Format = {
 
 
 
+const ReadOnlyDecimalInput: React.FC<GInputBaseAnyProps & GInputDecimalProps> = (props) => {
+  return <TextField value={props.value || '--'} slotProps={{ input: { readOnly: true } }} />;
+}
+
 const DecimalInput: React.FC<GInputBaseAnyProps & GInputDecimalProps> = (props) => {
   const [value, setValue] = React.useState(format(props.value));
 
 
   function format(value: string | undefined): string {
-    if(value === '' || value === undefined || value === null) {
+    if (value === '' || value === undefined || value === null) {
       return '';
     }
-    if(props.formatter) {
+    if (props.formatter) {
       return props.formatter(props.id, value);
     }
     const themeFormat = props.format ? props.format(props.id) : undefined;
@@ -118,8 +123,10 @@ const DecimalInput: React.FC<GInputBaseAnyProps & GInputDecimalProps> = (props) 
 
   const themeFormat = props.format ? props.format(props.id) : undefined;
   const finalFormat = themeFormat ?? DEFAULT_FORMAT;
-  return <>
-    <InputHidden id={props.id} value={value} format={finalFormat} onChange={props.onChange} />
-    <TextField disabled={props.disabled} value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0} />
-  </>
+  return (
+    <>
+      <InputHidden id={props.id} value={value} format={finalFormat} onChange={props.onChange} />
+      <TextField disabled={props.disabled} value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0} />
+    </>
+  )
 }

@@ -28,7 +28,12 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>lp-batches</artifactId>
     </dependency>
-    
+        
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>limaone-compiler</artifactId>
+    </dependency>
+
     
     <dependency>
       <groupId>io.digiexpress</groupId>
@@ -42,10 +47,7 @@
       <groupId>io.digiexpress</groupId>    
       <artifactId>tagomi-client</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.digiexpress</groupId>
-      <artifactId>eveli-envir</artifactId>
-    </dependency>
+
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>eveli-user-profile</artifactId>

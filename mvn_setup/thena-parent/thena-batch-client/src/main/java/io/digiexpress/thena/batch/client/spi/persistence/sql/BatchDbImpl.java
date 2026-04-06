@@ -22,7 +22,6 @@ package io.digiexpress.thena.batch.client.spi.persistence.sql;
 
 import java.util.Optional;
 
-
 import io.digiexpress.thena.batch.client.api.BatchException;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDb;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDbBuilder;
@@ -38,6 +37,8 @@ import io.resys.thena.datasource.ThenaSqlDataSource.TenantCache;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
+import io.resys.thena.spi.InternalAliasQueryImpl;
+import io.resys.thena.spi.InternalMemberQueryImpl;
 import io.resys.thena.spi.TenantActionsImpl;
 import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.RepoAssert;
@@ -60,7 +61,14 @@ public class BatchDbImpl implements BatchDb {
   public InternalTenantQuery tenant() {
     return new BatchDbInternalTenantQuery(dataSource);
   }
-
+  @Override
+  public InternalAliasQuery alias() {
+    return new InternalAliasQueryImpl(dataSource);
+  }
+  @Override
+  public InternalMemberQuery member() {
+    return new InternalMemberQueryImpl(dataSource);
+  }
   @Override
   public Uni<BatchDb> withTenant(String tenantId) {
     return tenant().getByNameOrId(tenantId).onItem().transformToUni(tenant -> {

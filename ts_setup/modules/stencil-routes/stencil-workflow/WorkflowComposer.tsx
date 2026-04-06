@@ -45,7 +45,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const handleCreate = () => {
     const entity: StencilApi.CreateWorkflow = {
-      value: technicalname,
+      value: technicalname.trim(),
       articles: articleId,
       labels,
       devMode: workflowOptions.devMode,
@@ -125,7 +125,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           required
           value={technicalname}
           onChange={setTechnicalname} />
-        {!technicalname && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
+        {!technicalname.trim() && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
 
 
         <Box display="flex">
@@ -192,7 +192,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       </DialogContent>
       <DialogActions>
         <CancelButton onClick={onClose} />
-        <Button onClick={handleCreate} disabled={!technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1}>
+        <Button onClick={handleCreate} disabled={!technicalname.trim() || !flowName || !formName || !formTag || changeInProgress || labels.length < 1}>
           <FormattedMessage id='button.add' />
         </Button>
       </DialogActions>

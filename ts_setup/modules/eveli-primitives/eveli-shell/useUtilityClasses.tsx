@@ -76,6 +76,12 @@ export const EveliShellRoot = styled('div', {
       backgroundColor: theme.palette.secondary.dark
     },
 
+    '& .EveliShellLargeBar': {
+      flex: 1,
+      minWidth: 0,
+      overflow: 'hidden',
+    },
+
     '& .EveliShellMiniBar > div': {
       marginBottom: theme.spacing(1),
     },

@@ -240,7 +240,7 @@ const RelRow: React.FC<{ release: Release }> = ({ release }) => {
   const { service, actions, site } = Composer.useComposer();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { onNavReset } = useWrenchNav();
-  const branches = Object.values(site.branches).map((b) => b.ast!);
+  const branches = Object.values(site.branches ?? {}).map((b) => b.ast!);
   const [assetToDelete, setAssetToDelete] = React.useState<ReleaseBranch | Release>();
   //const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
   //const [deleteBranchDialogOpen, setDeleteBranchDialogOpen] = React.useState<boolean>(false);
@@ -270,6 +270,8 @@ const RelRow: React.FC<{ release: Release }> = ({ release }) => {
 
   const handleCreateBranch = (releaseName: string, releaseId: string) => {
     const branchName = resolveNewBranchName(releaseName, branches);
+    throw Error("not implemented");
+    /**
     const command: HdesApi.AstCommand = {
       type: 'CREATE_BRANCH',
       value: branchName,
@@ -293,6 +295,7 @@ const RelRow: React.FC<{ release: Release }> = ({ release }) => {
       .catch((error: HdesApi.StoreError) => {
         console.error(error)
       });
+       */
   }
 
   const handleCheckout = (branchName: string) => {

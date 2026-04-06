@@ -22,13 +22,14 @@ package io.resys.thena.fs.spi.tag;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import io.resys.thena.fs.api.tags.TagBuilder;
+import io.resys.thena.fs.entities.Entity;
 import io.resys.thena.fs.entities.ImmutableTag;
 import io.resys.thena.fs.entities.Tag;
 import io.resys.thena.fs.entities.Tag.TagTransitives;
 import io.resys.thena.fs.spi.snapshot.MutableField;
-import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
@@ -38,8 +39,8 @@ import lombok.Value;
 @RequiredArgsConstructor
 public class TagBuilderImpl implements TagBuilder {
   private final Optional<Tag> prevTag;
-  private final String commitId;
-  private final Optional<String> refId;
+  private final UUID commitId;
+  private final Optional<UUID> refId;
   private final TagTransitives tagTransitives;  
   private final OffsetDateTime createdAt;
   private final String tagAuthor;
@@ -133,7 +134,7 @@ public class TagBuilderImpl implements TagBuilder {
     final var finalTagReport = tagReport.orElse(prevTag.flatMap(Tag::getTagReport).orElse(null));
 
 
-    final var id = this.prevTag.map(Tag::getId).orElseGet(() -> OidUtils.genUUID());
+    final var id = this.prevTag.map(Tag::getId).orElseGet(() -> Entity.genUUID());
     final var tag = ImmutableTag.builder()
         .id(id)
         .refId(refId)

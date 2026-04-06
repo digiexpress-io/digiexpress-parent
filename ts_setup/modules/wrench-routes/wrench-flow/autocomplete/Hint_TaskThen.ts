@@ -49,7 +49,7 @@ export class Hint_TaskThen {
   private static findAllTaskThen(container: Container, taskId: string | undefined): { id: string, text: string }[] {
     return taskId ? [
       { id: "end", text: "then: end" },
-      ...Object.entries(container.flow.src.tasks)
+      ...Object.entries(container.flow.parseTree.tasks)
         .filter(([, body]) => body.id?.value)
         .filter(([, body]) => (body.id?.value !== taskId))
         .map(([name, body]) => ({

@@ -23,7 +23,6 @@ package io.digiexpress.eveli.app;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -31,11 +30,7 @@ import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
-import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController;
-import io.digiexpress.eveli.client.web.resources.assets.AssetsPublicationControllerReadOnly;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.digiexpress.eveli.envir.api.ExternalDeploymentProvider;
+import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties.WSP;
 
 
 @Profile("prod")
@@ -46,18 +41,8 @@ public class AppConfigProd {
   Resource prodDeployment;
   
   @Bean
-  public ExternalDeploymentProvider classpathExternalDeploymentProvider(ObjectMapper om) throws IOException {
+  public WSP classpathExternalDeploymentProvider(ObjectMapper om) throws IOException {
     return new ClasspathExternalDeploymentProvider(prodDeployment.getInputStream(), om);
   }
-  
-  @Bean
-  public AssetsPublicationControllerReadOnly assetsPublicationControllerReadOnly(EveliEnvirClient envirClient) {
-    return new AssetsPublicationControllerReadOnly(envirClient);
-  }
-  
-  @Bean
-  public AssetsDeploymentController AssetsDeploymentController(WorkerAuthClient authClient, EveliEnvirClient envirClient, ApplicationEventPublisher publisher) {
-    return new AssetsDeploymentController(authClient, envirClient, publisher);
-  }
-  
+
 }

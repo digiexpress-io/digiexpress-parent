@@ -1,11 +1,12 @@
 import React from 'react';
-import { FsNode, FsNodeSecondaryView, FsOpenTab, useFs } from '@dxs-ts/fs-api';
+import { useIntl } from 'react-intl';
+import { Fs, FsTab, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcons } from '../fs-theme/fs-icons';
 import { FsMainProps } from './FsMainProps';
 
 type ToolbarButtonType = 'toggle' | 'view' | 'save';
 
-export interface Button {
+export interface PanelButton {
   id: string;
   type: ToolbarButtonType;
   icon: React.ElementType;
@@ -17,44 +18,52 @@ export interface Button {
 
 export interface OwnerState {
   isDarkMode: boolean;
-  activeNode: FsNode | undefined;
+  activeDirent: Fs.DirentAsset | undefined;
   isRightPanelOpen: boolean;
-  selectedView: FsNodeSecondaryView | undefined;
+  selectedView: Fs.SecondaryView | undefined;
   activeTabIndex: number;
-  openTabs: FsOpenTab[];
+  openTabs: FsTab[];
   toggleRightPanel: () => void;
-  handleViewChange: (view: FsNodeSecondaryView) => void;
+  handleViewChange: (view: Fs.SecondaryView) => void;
   toolbar: {
     width: string;
-    buttons: Button[];
+    buttons: PanelButton[];
   };
 }
 
 const toolbarWidth = '50px';
 
 export const useOwnerState = (_props: FsMainProps): OwnerState => {
-  const { isDarkMode, activeNode } = useFs();
+  const intl = useIntl();
+  const { isDarkMode, activeDirent, activeTabIndex, openTabs } = useFsNav();
+  const { getDirent } = useFsDirent();
+  const activeDirentEntry = activeDirent ? getDirent(activeDirent.id) : undefined;
   const [isRightPanelOpen, setIsRightPanelOpen] = React.useState(true);
-  const [selectedView, setSelectedView] = React.useState<FsNodeSecondaryView | undefined>();
-  const { activeTabIndex, openTabs } = useFs();
+  const [selectedView, setSelectedView] = React.useState<Fs.SecondaryView | undefined>();
+
+  React.useEffect(() => {
+    if (activeDirent) {
+      setSelectedView(activeDirent.type === 'page' || activeDirent.type === 'flow' || activeDirent.type === 'template' ? 'preview' : 'properties');
+    }
+  }, [activeDirent?.id]);
 
   const toggleRightPanel = React.useCallback(() => {
     setIsRightPanelOpen(prev => !prev);
   }, []);
 
-  const handleViewChange = React.useCallback((view: FsNodeSecondaryView) => {
+  const handleViewChange = React.useCallback((view: Fs.SecondaryView) => {
     setSelectedView(view);
     if (!isRightPanelOpen) {
       setIsRightPanelOpen(true);
     }
   }, [isRightPanelOpen]);
 
-  const toolbarButtons = React.useMemo((): Button[] => [
+  const toolbarButtons = React.useMemo((): PanelButton[] => [
     {
       id: 'toggle-panel',
       type: 'toggle',
       icon: isRightPanelOpen ? FsIcons.CollapseAll : FsIcons.ExpandAll,
-      tooltip: isRightPanelOpen ? 'Collapse Panel' : 'Expand Panel',
+      tooltip: isRightPanelOpen ? intl.formatMessage({ id: 'fs.main.tooltip.togglePanelCollapse' }) : intl.formatMessage({ id: 'fs.main.tooltip.togglePanelExpand' }),
       isSelected: false,
       onClick: toggleRightPanel,
     },
@@ -62,7 +71,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       id: 'properties',
       type: 'view',
       icon: FsIcons.Info,
-      tooltip: 'Properties',
+      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.properties' }),
       isSelected: selectedView === 'properties',
       onClick: () => handleViewChange('properties'),
     },
@@ -70,7 +79,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       id: 'configuration',
       type: 'view',
       icon: FsIcons.Settings,
-      tooltip: 'Configuration',
+      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.configuration' }),
       isSelected: selectedView === 'configuration',
       onClick: () => handleViewChange('configuration'),
     },
@@ -78,7 +87,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       id: 'references',
       type: 'view',
       icon: FsIcons.Tree,
-      tooltip: 'References',
+      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.references' }),
       isSelected: selectedView === 'references',
       onClick: () => handleViewChange('references'),
     },
@@ -86,7 +95,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       id: 'debug',
       type: 'view',
       icon: FsIcons.Debug,
-      tooltip: 'Debug',
+      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.debug' }),
       isSelected: selectedView === 'debug',
       onClick: () => handleViewChange('debug'),
     },
@@ -94,7 +103,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       id: 'errors',
       type: 'view',
       icon: FsIcons.Error,
-      tooltip: 'Errors',
+      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.errors' }),
       isSelected: selectedView === 'errors',
       onClick: () => handleViewChange('errors'),
     },
@@ -102,7 +111,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       id: 'preview',
       type: 'view',
       icon: FsIcons.Preview,
-      tooltip: 'Preview',
+      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.preview' }),
       isSelected: selectedView === 'preview',
       onClick: () => handleViewChange('preview'),
     },
@@ -110,7 +119,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       id: 'history',
       type: 'view',
       icon: FsIcons.History,
-      tooltip: 'History',
+      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.history' }),
       isSelected: selectedView === 'history',
       onClick: () => handleViewChange('history'),
     },
@@ -118,15 +127,31 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       id: 'help',
       type: 'view',
       icon: FsIcons.Help,
-      tooltip: 'Help',
+      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.help' }),
       isSelected: selectedView === 'help',
       onClick: () => handleViewChange('help'),
+    },
+    {
+      id: 'article-order',
+      type: 'view',
+      icon: FsIcons.ArticleOrder,
+      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.articleOrder' }),
+      isSelected: selectedView === 'article-order',
+      onClick: () => handleViewChange('article-order'),
+    },
+    {
+      id: 'overview',
+      type: 'view',
+      icon: FsIcons.Tree,
+      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.overview' }),
+      isSelected: selectedView === 'overview',
+      onClick: () => handleViewChange('overview'),
     },
     {
       id: 'changes',
       type: 'save',
       icon: FsIcons.Save,
-      tooltip: 'Save',
+      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.changes' }),
       isSelected: selectedView === 'changes',
       badge: 7,
       onClick: () => handleViewChange('changes'),
@@ -135,7 +160,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
 
   return {
     isDarkMode,
-    activeNode,
+    activeDirent: activeDirentEntry,
     activeTabIndex,
     openTabs,
     isRightPanelOpen,

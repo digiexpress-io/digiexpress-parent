@@ -34,7 +34,7 @@ function useSave() {
       return;
     }
     const unsavedArticlePages: WrenchComposerApi.PageUpdate = unsaved;
-    composer.service.update(entity.id, unsavedArticlePages.value).then(async success => {
+    composer.service.update(entity.id, entity.ast.bodyType, unsavedArticlePages.value).then(async success => {
       await composer.actions.handleLoadSite(success)
       composer.actions.handlePageUpdateRemove([entity.id]);
       enqueueSnackbar(

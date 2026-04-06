@@ -40,7 +40,7 @@ export class Hint_TaskInputMapping {
         .build());
     }
 
-    for (const task of Object.values(container.flow.src.tasks)) {
+    for (const task of Object.values(container.flow.parseTree.tasks)) {
       if (task.start > node.start) {
         continue;
       }

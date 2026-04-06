@@ -1,0 +1,23 @@
+<configuration>
+    <!-- Silence Vert.x -->
+    <logger name="io.vertx.core.impl.BlockedThreadChecker" level="OFF"/>
+    <logger name="io.vertx" level="OFF"/>
+    
+    <!-- Debug for your package -->
+    <logger name="io.resys.thena.test" level="OFF"/>
+    <logger name="tc" level="OFF"/>
+    <logger name="io.netty" level="OFF"/>
+    <logger name="org.testcontainers" level="INFO"/>
+    
+    <logger name="io.resys.thena.show_sql" level="OFF"/>
+    
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

@@ -1,9 +1,34 @@
 import React from 'react'
-import { FormControlLabel, Radio, SelectChangeEvent } from '@mui/material'
+import { Box, FormControlLabel, Radio, SelectChangeEvent, Typography } from '@mui/material'
+import { RadioButtonChecked as RadioButtonCheckedIcon, RadioButtonUnchecked as RadioButtonUncheckedIcon } from '@mui/icons-material'
 
 
 import { GInputRadioGroup, useUtilityClasses } from './useUtilityClasses';
 import { GInputListProps } from './g-input-list-types';
+
+
+export const ReadOnlyRadio: React.FC<GInputListProps> = (props) => {
+  const { datasource, value: selectedValue } = props;
+  const classes = useUtilityClasses(props.id, props.variant);
+
+  if (!datasource) {
+    return <>valueset is not defined</>;
+  }
+
+  return (
+    <div className={classes.input}>
+      {datasource.entries.map(({ key, value }) => {
+        const selected = key + '' === selectedValue + '';
+        return (
+          <Box key={key} className={classes.option}>
+            {selected ? <RadioButtonCheckedIcon /> : <RadioButtonUncheckedIcon />}
+            <Typography>{value}</Typography>
+          </Box>
+        );
+      })}
+    </div>
+  );
+}
 
 
 export const GInputRadio: React.FC<GInputListProps> = (props) => {

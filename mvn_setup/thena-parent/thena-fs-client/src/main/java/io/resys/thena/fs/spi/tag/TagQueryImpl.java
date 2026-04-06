@@ -1,5 +1,7 @@
 package io.resys.thena.fs.spi.tag;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * thena-fs-client
@@ -26,6 +28,8 @@ import java.util.function.Consumer;
 import io.resys.thena.fs.api.tags.TagQuery;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
 import io.resys.thena.fs.entities.Tag;
+import io.resys.thena.fs.tables.CommitTable.NodesAndBlobsFilter;
+import io.resys.thena.fs.tables.CommitTable.NodesFilter;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.filters.ImmutableTagTableFilter;
 import io.resys.thena.support.RepoAssert;
@@ -112,16 +116,16 @@ public class TagQueryImpl implements TagQuery {
     // load all 
     if(isBlobs) {
       return db_uni
-        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(tag.getCommitId()))
-        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2())); 
+        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(new NodesAndBlobsFilter(tag.getCommitId(), Collections.emptyList())))
+        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2().get())); 
     }
     
     // load nodes
     final var isNodes = !excludeNodes;
     if(isNodes) {
       return db_uni
-        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(tag.getCommitId()))
-        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2()));
+        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(new NodesFilter(tag.getCommitId(), Collections.emptyList())))
+        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2().get()));
     }    
     return Uni.createFrom().item(tag);
   }

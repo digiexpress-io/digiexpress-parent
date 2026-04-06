@@ -24,6 +24,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -34,6 +35,7 @@ import io.resys.thena.fs.api.commits.CommitBuilder;
 import io.resys.thena.fs.api.commits.ImmutableCommitResult;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.spi.FileSystemConfig;
 import io.resys.thena.fs.spi.branch.BranchConstants;
 import io.resys.thena.fs.spi.snapshot.ChangeCommand;
 import io.resys.thena.fs.spi.snapshot.ChangeCommand.MergeFileCommand;
@@ -45,6 +47,7 @@ import io.resys.thena.fs.spi.snapshot.Snapshot;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.FsDbBuilder.FsBuilderException;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
+import io.resys.thena.fs.tables.TreeTable.TreeFilter;
 import io.resys.thena.fs.tables.filters.ImmutableRefTableLockFilter;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.RepoAssert;
@@ -58,9 +61,8 @@ import lombok.RequiredArgsConstructor;
 public class CommitBuilderImpl implements CommitBuilder {
   private final Uni<FsDb> db_uni;
   private final String tenantId;
-  
-  // Builder state
-  private String lockCommitId;
+  private final FileSystemConfig config;
+  private UUID lockCommitId;
   private String branchName = BranchConstants.DEFAULT_BRANCH;
   private String commitAuthor;
   private String commitMessage;
@@ -69,9 +71,10 @@ public class CommitBuilderImpl implements CommitBuilder {
   private final List<ChangeCommand> changes = new ArrayList<>();
   private final List<String> allIds = new ArrayList<>();
 
+
   @Override
-  public CommitBuilder branchLock(String commitId) {
-    this.lockCommitId = RepoAssert.notEmpty(commitId, () -> "branchHead commitId can't be empty!");
+  public CommitBuilder branchLock(UUID commitId) {
+    this.lockCommitId = commitId;
     return this;
   }
   @Override
@@ -151,8 +154,9 @@ public class CommitBuilderImpl implements CommitBuilder {
         () -> "Either branchName or branchHead must be set before calling build()!");
     
     // Ensure at least one operation is defined
-    RepoAssert.isTrue(!changes.isEmpty(), 
-        () -> "At least one operation (newFolder, mergeFolder, newFile, mergeFile, or remove) must be added before calling build()!");
+    if(changes.isEmpty()) {
+      throw new EmptyCommitException("At least one operation (newFolder, mergeFolder, newFile, mergeFile, or remove) must be added before calling build()!");
+    }
     
     final var scope = ImmutableTxScope.builder()
         .commitAuthor(commitAuthor)
@@ -229,51 +233,131 @@ public class CommitBuilderImpl implements CommitBuilder {
     return CommitResultStatus.ERROR;
   }
   
-  private Uni<Optional<Ref>> visitLock(FsDb tx) {    
+  private Uni<Optional<Ref>> visitLock(FsDb tx) {
     final var query = ImmutableRefTableLockFilter.builder()
       .refName(branchName)
       .docIds(Optional.ofNullable(allIds.isEmpty() ? null : allIds))
       .build();
     return tx.query().queryRef().findOneWithLock(query)
-        .invoke(lock -> {
-          if(lockCommitId == null) {
-            return;
-          }
-          
-          if(lock.isEmpty() && lockCommitId != null) {
-            throw new CommitBuilderException(
-                "Could not find branch for locking", 
-                JsonObject.of("tenantId", tenantId, "lockCommitId", lockCommitId)
-            );
-          }
-          
-          if( lock.isPresent() && lockCommitId != null &&
-              !lock.get().getCommitId().equals(lockCommitId)) {
-          
-            throw new CommitBuilderException(
-                "Find branch for locking but commits do not match", 
-                JsonObject.of(
-                    "tenantId", tenantId, 
-                    "expectedCommitId", lockCommitId,
-                    "actualCommitId", lock.get().getCommitId()
-                ));
-          }
-          
-          
-        });
+      .onItem().transformToUni(lock -> {
+        validateLock(lock);
+        return join(lock, tx);
+      });
+  }
+  
+  private Uni<Optional<Ref>> join(Optional<Ref> raw, FsDb tx) {
+    if(raw.isEmpty()) {
+      return Uni.createFrom().item(raw);
+    }
+    
+    // find the tree
+    final var ref = raw.get();
+    final var commit = ref.getTransitives().getCommit();
+    final var cachedTree = config.getCache().findOneTreeById(commit.getTreeId());
+    
+    // no cache at all OR tree is partially cached - easy, query all 
+    final var isPartialTree = commit.getCommitNodesCount() != cachedTree.map(tree -> tree.getTreeNodes().size()).orElse(0);
+    
+    if(isPartialTree) {
+      return tx.query().queryTree().getById(new TreeFilter(commit.getTreeId(), allIds, null))
+      .onItem().transform(tree -> {
+        final var refWithTr = ref.withTransitives(commit, tree);
+        config.getCache().cacheOneTree(tree);
+        return Optional.of(refWithTr);
+      });
+    }
+    
+    final var missingNodes = new ArrayList<String>();
+    final var cachedNodes = cachedTree.get();
+    cachedNodes.findAllNodes(allIds, missingNodes::add);
+    
+    // get missing
+    if(!missingNodes.isEmpty()) {
+      return tx.query().queryTree().getByIdWithOnlySpecifiedNodes(new TreeFilter(commit.getTreeId(), missingNodes, null))
+      .onItem().transform(freshTree -> {
+        final var recached = config.getCache().cacheOneTree(freshTree);
+        final var refWithTr = ref.withTransitives(commit, recached);
+        return Optional.of(refWithTr);
+      });
+    }
+    
+    final var cached = ref.withTransitives(commit, cachedTree.get());
+    return Uni.createFrom().item(Optional.of(cached));
+  }
+  
+  private void validateLock(Optional<Ref> lock) {
+    if(lockCommitId == null) {
+      return;
+    }
+    
+    if(lock.isEmpty() && lockCommitId != null) {
+      throw new CommitBuilderException(
+          "Could not find branch for locking", 
+          JsonObject.of("tenantId", tenantId, "lockCommitId", lockCommitId)
+      );
+    }
+    
+    if( lock.isPresent() && lockCommitId != null &&
+        !lock.get().getCommitId().equals(lockCommitId)) {
+    
+      throw new CommitBuilderException(
+          "Find branch for locking but commits do not match", 
+          JsonObject.of(
+              "tenantId", tenantId, 
+              "expectedCommitId", lockCommitId,
+              "actualCommitId", lock.get().getCommitId()
+          ));
+    }
   }
   
   private Uni<Snapshot.SnapshotResult> visitPersistenceUnit(FsDb tx, Optional<Ref> lock) {
     try {
+      
+      lock.ifPresent(ref -> {
+        final var expectedCount = ref.getTransitives().getCommit().getCommitNodesCount();
+        final var actualCount = ref.getTransitives().getTree().getTreeNodes().size();
+        
+        if(expectedCount != actualCount) {
+          
+          throw new CommitBuilderException("Partial tree update is not supported yet!", 
+              JsonObject.of(
+                "tenantId", tenantId,
+                "fullTree", expectedCount,
+                "actualTree", actualCount 
+            )
+          );    
+        }
+      });
+
+      
       final var createdAt = commitCreatedAt != null ? commitCreatedAt : OffsetDateTime.now();
       final var snapshot = new Snapshot(tenantId, lock, branchName, createdAt);
       final var unit = snapshot.addAll(this.changes).build(commitAuthor, commitMessage, createdAt);
 
+
       return tx.builder().from(unit.getPersistenceUnit()).persist()
-          .map(persisted -> new Snapshot.SnapshotResult(persisted, unit.getLog()));
+          .map(persisted -> new Snapshot.SnapshotResult(persisted, unit.getLog()))
+          .onItem().transform(result -> {
+            
+            // cache the successful save
+            //result.getPersistenceUnit().getTreeInserts()
+            //  .forEach(tree -> config.getCache().cacheOneTree(tree));
+            
+            return result;
+          });
       
+    } catch(CommitBuilderException e) {
+      throw e;
     } catch(Exception e) {
       throw new CommitBuilderException(e, JsonObject.of("tenantId", tenantId, "message", e.getMessage()));
+    }
+  }
+
+  
+  public static class EmptyCommitException extends RuntimeException {
+    private static final long serialVersionUID = -4591134376273636375L;
+    public EmptyCommitException(String msg) {
+      super(msg);
     }
   }
 }

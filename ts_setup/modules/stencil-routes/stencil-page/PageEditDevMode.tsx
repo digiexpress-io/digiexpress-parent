@@ -17,17 +17,17 @@ const PageEditDevMode: React.FC<{ onClose: () => void, articleId: StencilApi.Art
     const articleId = props.articleId;
   
     const message = <FormattedMessage id="snack.page.savedMessage" />
-    const articlePages: StencilApi.Page[] = Object.values(site.pages).filter(p => p.body.article === articleId);
+    const articlePages: StencilApi.Page[] = Object.values(site.articlePages).filter(p => p.body.article === articleId);
   
     const [pageId, setPageId] = React.useState(articlePages[0].id);
-    const [devMode, setDevMode] = React.useState(site.pages[pageId].body.devMode || false);
+    const [devMode, setDevMode] = React.useState(site.articlePages[pageId].body.devMode || false);
   
     React.useEffect(() => {
-      setDevMode(site.pages[pageId].body.devMode || false);
-    }, [pageId, site.pages]);
+      setDevMode(site.articlePages[pageId].body.devMode || false);
+    }, [pageId, site.articlePages]);
   
     const handleUpdate = () => {
-      const entity: StencilApi.PageMutator = { locale: site.pages[pageId].body.locale, pageId, content: site.pages[pageId].body.content, devMode };
+      const entity: StencilApi.PageMutator = { locale: site.articlePages[pageId].body.locale, pageId, content: site.articlePages[pageId].body.content, devMode };
       console.log(entity)
       service.update().pages([entity]).then(_success => {
         enqueueSnackbar(message, { variant: 'success' });

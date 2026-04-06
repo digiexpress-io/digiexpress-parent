@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, IconButton, Typography } from '@mui/material'
+import { IconButton, Typography } from '@mui/material'
 import { RadioButtonChecked as RadioButtonCheckedIcon } from '@mui/icons-material'
 import { RadioButtonUnchecked as RadioButtonUncheckedIcon } from '@mui/icons-material'
 
@@ -24,8 +24,41 @@ export interface GInputSurveyQuestionProps {
   navrefid: string,
   errors?: DialobApi.ActionError[] | undefined;
   required: boolean;
+  readOnly?: boolean;
 }
 
+
+
+export const ReadOnlyGInputSurveyQuestion: React.FC<GInputSurveyQuestionProps> = (props) => {
+  const { id, value, description, errors } = props;
+  const classes = useUtilityClasses(id);
+  const delegate: Omit<GInputSurveyQuestionProps, 'onChange'> = props;
+
+  return (
+    <>
+      <GInputSurveyQuestionLabel className={classes.label} {...delegate}>
+        <div className={classes.labelContent}>
+          <div className={classes.labelRow}>
+            <Typography ref={props.navref} id={props.navrefid} color={props.errors?.length ? 'error' : 'inherit'}>{props.label}</Typography>
+            {props.required && (
+              <div className={classes.requiredMark}>
+                <Typography fontSize='15pt' fontWeight='bold' color='error.main'>*</Typography>
+              </div>
+            )}
+          </div>
+          <GInputError errors={errors} id={id} />
+        </div>
+        <GInputAdornment id={`${id}-label`} title={props.label} children={description} disabled={props.disabled} />
+      </GInputSurveyQuestionLabel>
+
+      {props.options.map(e => (
+        <GInputSurveyQuestionBody key={e.label} className={classes.body} {...delegate}>
+          {e.id === value ? <RadioButtonCheckedIcon /> : <RadioButtonUncheckedIcon />}
+        </GInputSurveyQuestionBody>
+      ))}
+    </>
+  );
+}
 
 
 export const GInputSurveyQuestion: React.FC<GInputSurveyQuestionProps> = (props) => {
@@ -43,19 +76,17 @@ export const GInputSurveyQuestion: React.FC<GInputSurveyQuestionProps> = (props)
     <>
       <GInputSurveyQuestionLabel className={classes.label} {...delegate}>
 
-        <Box display='flex' flexDirection='column'>
-
-          <Box display='flex' flexDirection='row' justifyContent='flex-end'>
+        <div className={classes.labelContent}>
+          <div className={classes.labelRow}>
             <Typography ref={navref} id={navrefid} color={props.errors?.length ? 'error' : 'inherit'}>{props.label}</Typography>
             {props.required && (
-              <Box display='flex' alignItems='center'>
-                <Box ml={0.5}><Typography fontSize='15pt' fontWeight='bold' color='error.main'>*</Typography></Box>
-              </Box>
+              <div className={classes.requiredMark}>
+                <Typography fontSize='15pt' fontWeight='bold' color='error.main'>*</Typography>
+              </div>
             )}
-          </Box>
+          </div>
           <GInputError errors={errors} id={id} />
-
-        </Box>
+        </div>
         <GInputAdornment id={`${id}-label`} title={props.label} children={description} disabled={props.disabled} />
         <InputHidden id={id} choice={internalValue} onChange={onChange} />
       </GInputSurveyQuestionLabel>

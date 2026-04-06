@@ -7,4 +7,5 @@ export interface GInputAutoCompleteProps {
   value: string | string[] | undefined;
   datasource: DialobApi.ActionValueSet | undefined;
   onChange: (selectEvent: React.ChangeEvent<any>) => void;
+  readOnly?: boolean;
 }

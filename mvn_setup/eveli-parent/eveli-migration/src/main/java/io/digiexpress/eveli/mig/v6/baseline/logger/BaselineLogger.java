@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.event.Level;
 
 import io.digiexpress.eveli.mig.v6.baseline.OldEnvir.OldEnvirObjects;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit.OldGitObjects;
 import io.digiexpress.eveli.mig.v6.baseline.logger.SqlLogger.LogEvent;
 import io.digiexpress.eveli.mig.v6.baseline.logger.SqlLogger.LogEventLevel;
+import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -23,6 +25,14 @@ public class BaselineLogger {
       @Override
       public void close(List<LogEvent> entries) {
         messages.addAll(entries);
+        
+        for(final var entry : entries) {
+          if(entry.getLevel() == LogEventLevel.ERROR) {
+            log
+              .atLevel(Level.valueOf(entry.getLevel().name()))
+              .log(JsonObject.mapFrom(entry.getProps()).encodePrettily());
+          }
+        }
       }
     };
   }

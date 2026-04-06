@@ -5,6 +5,11 @@ import { useVariantOverride } from '@dxs-ts/gamut-api'
 
 export const MUI_NAME = 'GInputUpload';
 
+interface OwnerState {
+  variant: string;
+  disabled: boolean;
+  readOnly?: boolean;
+}
 
 // ------------------- MATERIAL INFRA, ALLOWS STYLE OVERRIDES --------------
 export const GInputUploadRoot = styled("div", {
@@ -16,7 +21,7 @@ export const GInputUploadRoot = styled("div", {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
+})<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
 
   if (ownerState.disabled) {
     return {
@@ -26,7 +31,15 @@ export const GInputUploadRoot = styled("div", {
       '& .MuiInputBase-input.Mui-disabled': {
         WebkitTextFillColor: theme.palette.info.main,
       },
-      '& .MuiSvgIcon-root': { // disable the "add" icon
+      '& .MuiSvgIcon-root': {
+        display: 'none'
+      }
+    }
+  }
+
+  if (ownerState.readOnly) {
+    return {
+      '& .MuiSvgIcon-root': {
         display: 'none'
       }
     }

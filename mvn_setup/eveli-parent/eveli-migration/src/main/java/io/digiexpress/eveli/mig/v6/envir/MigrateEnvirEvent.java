@@ -8,7 +8,9 @@ import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 public class MigrateEnvirEvent implements AssetEventMigration {
   private final FileSystem fs;
@@ -21,8 +23,8 @@ public class MigrateEnvirEvent implements AssetEventMigration {
     RepoAssert.isTrue(event.getOperations().size() == 1, () -> "Operation count must be exactly 1 but was: " + event.getOperations().size());
 
     final var operation = (TagOperation) event.getOperations().get(0);
-    
-    return commits().onItem().transform(ignore -> fs.withTenant().createTag()
+
+    final var tag = fs.withTenant().createTag()
         .commitId("main")
         .tagCreatedAt(operation.getCreatedAt())
         .tagAuthor(operation.getAuthor())
@@ -36,8 +38,15 @@ public class MigrateEnvirEvent implements AssetEventMigration {
             .build();
         })
         .build()
-        
-      ).onItem().transformToUni(junk -> Uni.createFrom().voidItem());
+        .onItem().invoke(createdTag -> {
+          log.info("Adding new tag: {} - {}", createdTag.getTag().getTagName(), createdTag.getTag().getTagCreatedAt());
+        });
+
+    return Uni.combine().all().unis(
+        tag,
+        commits())
+      .asTuple().onItem()
+      .transformToUni(junk -> Uni.createFrom().voidItem());
   }
   
   
@@ -46,7 +55,7 @@ public class MigrateEnvirEvent implements AssetEventMigration {
     final var sources = operation.getSources();
     final var dialob = sources.getJsonArray("dialob");
     
-    if(dialob.isEmpty()) {
+    if(dialob.isEmpty() || true) {
       return Uni.createFrom().voidItem();
     }
     

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import java.time.Duration;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 
 /*-
@@ -27,7 +29,6 @@ import org.springframework.context.annotation.Configuration;
 
 import io.digiexpress.eveli.client.web.resources.worker.ContractApiController;
 import io.digiexpress.eveli.client.web.resources.worker.LedgerApiController;
-import io.resys.thena.api.ThenaAware;
 import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.contract.client.spi.ContractClientImpl;
 import io.resys.thena.ledger.client.api.LedgerClient;
@@ -42,33 +43,34 @@ import io.vertx.mutiny.sqlclient.Pool;
 public class EveliAutoConfigContract {
   
   @Bean
-  public ContractClient contractClient(Pool pgPool, ThenaAware thenaAware) {
+  public ContractClient contractClient(Pool pgPool) {
     final var contract = ContractClientImpl.create()
       .errorHandler(new PgErrors())
       .client(pgPool)
       .tenantName("INSURANCE")
       .build();
     
-    thenaAware.register(contract.getClass(), contract
+    contract
       .tenants().createOneTenant()
       .name(contract.getTenantName())
-      .build());
+      .build()
+      .await().atMost(Duration.ofMinutes(1));
 
     return contract;
   }
   
   @Bean
-  public LedgerClient ledgerClient(Pool pgPool, ThenaAware thenaAware) {
+  public LedgerClient ledgerClient(Pool pgPool) {
     final var ledger = LedgerClientImpl.create()
       .errorHandler(new PgErrors())
       .client(pgPool)
       .tenantName("SAVINGS")
       .build();
     
-    thenaAware.register(ledger.getClass(), ledger
+    ledger
         .tenants().createOneTenant()
         .name(ledger.getTenantName())
-        .build());
+        .build();
     return ledger;
   }
 

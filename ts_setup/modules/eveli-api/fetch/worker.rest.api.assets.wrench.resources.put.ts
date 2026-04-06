@@ -11,9 +11,15 @@ function hook(props: {}) {
   const headers = Composer.useQueryHeaders();
 
   return {
-    update: async(id: string, body: HdesApi.AstCommand[], branchName: string | undefined): Promise<HdesApi.Site> => {
+    update: async(id: string, bodyType: HdesApi.AstBodyType, commands: HdesApi.AstCommand[], branchName: string | undefined): Promise<HdesApi.Site> => {
+      const payload = JSON.stringify({ 
+        id, 
+        bodyType, 
+        bodySyntax: Array.isArray(commands) ? undefined : commands,
+        bodyStatment: Array.isArray(commands) ? commands : [],
+      });
       return params
-        .fetch(url({}), { method, body: JSON.stringify({ id, body }), headers: { ...headers, ...( branchName ? { 'Branch-Name': branchName } : {})} })
+        .fetch(url({}), { method, body: payload, headers: { ...headers, ...( branchName ? { 'Branch-Name': branchName } : {})} })
         .then(resp => resp.json());
     }
   }

@@ -35,7 +35,6 @@ import io.digiexpress.eveli.client.api.OrgClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliPropsMq;
 import io.digiexpress.eveli.client.web.resources.worker.QueueApiController;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
@@ -107,19 +106,19 @@ public class EveliAutoConfigMq {
     return new DeliveryForChannels(config, client);
   }
   @Bean
-  public ThenaMqConsumer consumerForCustomerNotification(CommsClient client, TaskClient proc) {
-    return new ConsumerForCustomerNotification(client, proc);
+  public ThenaMqConsumer consumerForCustomerNotification(CommsClient client, TaskClient proc, TaskNotificationTransformer transformer) {
+    return new ConsumerForCustomerNotification(client, proc, transformer);
   }
   @Bean
-  public ThenaMqConsumer consumerForWorkerEmail(CommsClient client, OrgClient orgClient) {
-    return new ConsumerForWorkerEmail(client, orgClient);
+  public ThenaMqConsumer consumerForWorkerEmail(CommsClient client, OrgClient orgClient, TaskNotificationTransformer transformer) {
+    return new ConsumerForWorkerEmail(client, orgClient, transformer);
   }
   @Bean
   public ThenaMqConsumer loggingThenaMqConsumer() {
     return new ConsumerForLogging();
   }
   @Bean
-  public PublisherForTaskEvents queueWriter(TaskClient taskClient, ThenaMqClient mqClient, EveliEnvirClient envir) {
+  public PublisherForTaskEvents queueWriter(TaskClient taskClient, ThenaMqClient mqClient, io.resys.limaone.program.Runtime envir) {
     return new PublisherForTaskEvents(taskClient, mqClient, envir);
   }
   @Bean
@@ -137,5 +136,11 @@ public class EveliAutoConfigMq {
   @Bean 
   public QueueApiController queueApiController(ThenaMqClient client, ThenaMqAppConfig config) {
     return new QueueApiController(client, config);
+  }
+  
+  @Bean
+  @ConditionalOnMissingBean
+  public TaskNotificationTransformer taskNotificationTransformer() {
+    return new DefaultTaskNotificationTransformer();
   }
 }

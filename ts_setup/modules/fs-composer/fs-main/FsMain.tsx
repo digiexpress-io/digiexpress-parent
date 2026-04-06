@@ -1,10 +1,11 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import { FsMainProps } from './FsMainProps';
 import { useOwnerState } from './useOwnerState';
 import { FsMainRoot, useUtilityClasses } from './useUtilityClasses';
-import { FsMainLeft } from './FsMainLeft';
-import { FsMainRight } from './FsMainRight';
-import { VerticalToolbar } from './VerticalToolbar';
+import { Content } from './Content';
+import { ContentPanel } from './ContentPanel';
+import { ContentPanelToolbar } from './ContentPanelToolbar';
 
 export const FsMain: React.FC<FsMainProps> = (props) => {
   const ownerState = useOwnerState(props);
@@ -12,16 +13,23 @@ export const FsMain: React.FC<FsMainProps> = (props) => {
 
   return (
     <FsMainRoot ownerState={ownerState} className={classes.root}>
-      <FsMainLeft ownerState={ownerState} className={classes.leftPanel} />
+      <Content ownerState={ownerState} className={classes.leftPanel} children={<MainContent />} />
 
       <div className={classes.divider} />
 
       <div className={`${classes.rightPanel} ${ownerState.isRightPanelOpen ? classes.rightPanelOpen : classes.rightPanelClosed}`}>
-        <FsMainRight ownerState={ownerState} className={classes.rightPanelContent} />
+        <ContentPanel ownerState={ownerState} className={classes.rightPanelContent} />
       </div>
 
-      <VerticalToolbar ownerState={ownerState} className={classes.toolbar} />
+      <ContentPanelToolbar ownerState={ownerState} className={classes.toolbar} />
     </FsMainRoot>
   );
 };
+
+
+const MainContent: React.FC = () => {
+  const intl = useIntl();
+
+  return (<>{intl.formatMessage({ id: 'fs.main.message.mainContent' })}</>)
+}
 

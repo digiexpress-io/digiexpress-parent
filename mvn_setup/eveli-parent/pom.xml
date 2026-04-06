@@ -14,15 +14,12 @@
   
   <modules>
     <module>eveli-client</module>
-    <module>eveli-envir</module>
     <module>eveli-permissions</module>
     <module>eveli-user-profile</module>
     <module>eveli-integration-suomifi-rest</module>
     <module>eveli-integration-suomifi-wsl</module>
     <module>eveli-integration-google</module>
     <module>eveli-integration-queue</module>
-    <module>eveli-integration-git</module>
-    <module>eveli-integration-cache</module>
     <module>eveli-app</module>
     <module>eveli-app-gcloud</module>
     <module>eveli-app-wrench-only</module>

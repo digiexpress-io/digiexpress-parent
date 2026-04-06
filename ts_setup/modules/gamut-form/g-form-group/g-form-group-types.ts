@@ -29,6 +29,7 @@ export interface GFormGroupProps {
    */
   border?: boolean | undefined;
 
+  readOnly?: boolean;
 
   component?: React.ElementType<GFormGroupProps>;
   slots?: {

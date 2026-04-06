@@ -96,12 +96,12 @@ export declare namespace StencilApi {
     name: string,
     contentType: "OK" | "NOT_CREATED" | "EMPTY" | "ERRORS" | "NO_CONNECTION",
     locales: Record<string, SiteLocale>,
-    pages: Record<PageId, Page>,
-    links: Record<LinkId, Link>,
     articles: Record<ArticleId, Article>,
-    workflows: Record<WorkflowId, Workflow>,
-    releases: Record<ReleaseId, Release>,
-    templates: Record<TemplateId, Template>
+    articlePages: Record<PageId, Page>,
+    articleLinks: Record<LinkId, Link>,
+    articleWorkflows: Record<WorkflowId, Workflow>,
+    articleTemplates: Record<TemplateId, Template>,
+    releases: Record<ReleaseId, Release>
   }
 
   export interface SiteLocale {

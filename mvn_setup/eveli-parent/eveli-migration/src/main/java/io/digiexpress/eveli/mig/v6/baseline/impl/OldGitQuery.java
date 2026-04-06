@@ -15,7 +15,6 @@ import io.digiexpress.eveli.mig.v6.baseline.OldGit.Commit;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit.Tag;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit.Tree;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit.TreeValue;
-import io.digiexpress.eveli.mig.v6.baseline.logger.BaselineLogger;
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
@@ -25,11 +24,13 @@ import io.vertx.mutiny.sqlclient.Pool;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.RowSet;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 @RequiredArgsConstructor
 public class OldGitQuery {
-  private final BaselineLogger logger = new BaselineLogger();
+
   private final Pool pool;
   
   public Uni<OldGit.OldGitObjects> findAll(String tenanPrefix) {
@@ -65,26 +66,32 @@ public class OldGitQuery {
 
        final var result = new OldGit.OldGitObjects(sources.getItem7(), branches, tags, trees, blobs, commits);
        
-       logger.ok(result);
+       
        return result;
-     })
-     .onFailure().invoke(e -> logger.fail(e));
+     });
   }
   
   private Uni<Tenant> findTenant(String tenanPrefix) {
     final var sql = "select * from tenants";
     return processAnyQuery(Tenant.class, sql, (row) -> {
+      StructureType type;
       
+      try {
+        type = StructureType.valueOf(row.getString("type"));
+      } catch(Exception e) {
+        type = StructureType.unknown;
+      }
       final Tenant tenant = ImmutableTenant.builder()
         .id(row.getString("id"))
         .rev(row.getString("rev"))
         .prefix(row.getString("prefix"))
         .name(row.getString("name"))
-        .type(StructureType.valueOf(row.getString("type")))
+        .type(type)
         .build();
       
       return tenant;
-    }).onItem().transform(tenants -> {
+    })
+    .onItem().transform(tenants -> {
       final var found = tenants.stream()
           .filter(t -> t.getType() == StructureType.git)
           .filter(tenant -> {
@@ -161,24 +168,21 @@ public class OldGitQuery {
   }
   
   private <T> Uni<List<T>> processAnyQuery(Class<T> type, String sql, Function<io.vertx.mutiny.sqlclient.Row, T> mapper) {
-    final var logger = this.logger.entityQuery(type);
-    logger.query(sql);
+
     return pool.preparedQuery(sql)
       .mapping(row -> {
         try {
           final T result = mapper.apply(row);
-          logger.mappingOk(result);
           return result;
         } catch(Exception e) {
-          logger.mappingFail(row, e);
+          log.error(e.getMessage(), e);
           return null;
         }
       })
       .execute()
       .onItem()
       .transformToMulti(RowSet::toMulti).collect().asList()
-      .onItem().transform(data -> data.stream().filter(e -> e != null).toList())
-      .onItem().invoke(e -> logger.queryOk(e))
-      .onFailure().invoke(e -> logger.queryFail(e));
+      .onItem().transform(data -> data.stream().filter(e -> e != null).toList());
+
   }
 }

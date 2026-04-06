@@ -15,8 +15,8 @@ const ReleasesView: React.FC<{}> = () => {
 
   const { site } = Composer.useComposer();
   const { onTabCurrentClose, onNav } = useWrenchNav();
-  const releases = Object.values(site.tags);
-  const branches = Object.values(site.branches);
+  const releases = Object.values(site.tags ?? {});
+  const branches = Object.values(site.branches ?? {});
 
   const formattedReleases: Release[] = releases.map((release) => {
     const { id } = release;

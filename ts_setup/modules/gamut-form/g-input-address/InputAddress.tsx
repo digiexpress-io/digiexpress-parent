@@ -10,6 +10,10 @@ import { useInput } from './InputProvider';
 
 
 
+export const ReadOnlyInputAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (props) => {
+  return <TextField fullWidth value={props.value || '--'} slotProps={{ input: { readOnly: true } }} />;
+}
+
 export const InputAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (props) => {
   const backendValue = props.value;
 
@@ -55,7 +59,6 @@ export const InputAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (
   function handelRenderInput(params: AutocompleteRenderInputParams) {
     return <TextField  {...params} error={(props.errors?.length ?? 0) > 0} InputLabelProps={{ shrink: true }} />
   }
-
 
   return (
     <Autocomplete fullWidth freeSolo

@@ -19,5 +19,6 @@ export const GInputGroupRowDialob: React.FC<GFormBaseElementProps> = ({ disabled
       total={meta.total}
       columns={element.props?.columns}
       onDelete={(id: string) => store.deleteRow(id)}
+      readOnly={element.readOnly}
     />);
 }

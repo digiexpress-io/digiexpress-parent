@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.api;
 
+import java.nio.charset.StandardCharsets;
+
 /*-
  * #%L
  * eveli-client
@@ -27,20 +29,75 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 
 import io.digiexpress.eveli.client.api.WorkerAuthClient.Liveness;
+import io.resys.limaone.program.ImmutableParticipant;
+import io.resys.limaone.program.ImmutableParticipantId;
+import io.resys.limaone.program.ProgramInput.Participant;
+import io.resys.limaone.program.ProgramInput.ParticipantId;
 import jakarta.annotation.Nullable;
 
 
 
 // currently logged in customer
 public interface GamutAuthClient {
-  @Nullable
-  Liveness getLiveness();
+  @Nullable Liveness getLiveness();
   Customer getCustomer();
   CustomerRoles getCustomerRoles();
+  
+  
+  default Participant getParticipant() {
+    
+    final var user = getCustomer().getPrincipal();
+    final var person = user.getRepresentedPerson();
+    final var company = user.getRepresentedCompany();
+    
+    final var init = ImmutableParticipant.builder()
+      .anon(getCustomer().getType() == CustomerType.ANON)
+      .partId(getCustomer().getCustomerId())
+      .addAllIdentityRoles(getCustomerRoles().getRoles())
+      .protectionOrder(getCustomer().getPrincipal().getProtectionOrder())
+      .username(getCustomer().getPrincipal().getUsername());
+    
+    if(user.getRepresentedPerson() != null) {
+      final var personNames = user.getRepresentedPerson().getRepresentativeName();
+      init.representativeUsername(personNames[1] + " " + personNames[0]);
+    } else if(user.getRepresentedCompany() != null) {
+      init.representativeUsername(user.getRepresentedCompany().getName());
+    }
+    
+    if(person != null) {
+      final var representativeName = person.getRepresentativeName();
+      final var representativeFirstName = representativeName[1];  
+      final var representativeLastName = representativeName[0];
+      return init      
+        .firstName(representativeFirstName)
+        .lastName(representativeLastName)
+        .identity(person.getPersonId())
+        .representativeFirstName(user.getFirstName())
+        .representativeLastName(user.getLastName())
+        .representativeIdentity(user.getSsn())
+        .build();
+    } else if(company != null) {
+      return init
+        .companyName(company.getName())
+        .lastName(company.getName())
+        .identity(company.getCompanyId())
+        .representativeFirstName(user.getFirstName())
+        .representativeLastName(user.getLastName())
+        .representativeIdentity(user.getSsn())
+        .build();
+    }
+    
+    return init
+      .firstName(user.getFirstName())
+      .lastName(user.getLastName())
+      .identity(user.getSsn())
+      .email(user.getContact().getEmail())
+      .address(user.getContact().getAddressValue())
+      .build();
+  }
   
   enum CustomerType {
     ANON, // anonymous 
@@ -48,13 +105,7 @@ public interface GamutAuthClient {
     REP_PERSON, // logged in as a customer who has selected to represent other person
     AUTH_CUSTOMER // normal logged in customer
   }
-  
-  
-  @Value.Immutable @JsonSerialize(as = ImmutableCustomerId.class) @JsonDeserialize(as = ImmutableCustomerId.class)
-  interface CustomerId {
-    String getSafeId();
-    String getHolderId();
-  }
+
 
   
   @Value.Immutable @JsonSerialize(as = ImmutableCustomerRoles.class) @JsonDeserialize(as = ImmutableCustomerRoles.class)
@@ -67,17 +118,14 @@ public interface GamutAuthClient {
     CustomerType getType();
     CustomerPrincipal getPrincipal();
     
-    default CustomerId getCustomerId() {
-
+    default ParticipantId getCustomerId() {
       final var principle = getPrincipal();
       final var holderId = Optional.ofNullable(principle.getRepresentedId()).orElse(principle.getSsn());
-      
-      
-      return ImmutableCustomerId.builder()
-          .holderId(holderId)
-          .safeId(Hashing
+      return ImmutableParticipantId.builder()
+          .realId(holderId)
+          .hashId(Hashing
             .murmur3_128()
-            .hashString(holderId, Charsets.UTF_8)
+            .hashString(holderId, StandardCharsets.UTF_8)
             .toString())
           .build();
     }

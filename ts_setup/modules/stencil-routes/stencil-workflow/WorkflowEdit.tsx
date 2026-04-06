@@ -24,7 +24,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const { service, actions, site } = Composer.useComposer();
-  const workflow = site.workflows[workflowId];
+  const workflow = site.articleWorkflows[workflowId];
 
   const [startdate, setStartdate] = React.useState<string>(workflow.body.startDate ?? '');
   const [enddate, setEnddate] = React.useState<string>(workflow.body.endDate ?? '');
@@ -51,7 +51,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
 
     const entity: StencilApi.WorkflowMutator = {
       workflowId: workflow.id,
-      value: technicalname,
+      value: technicalname.trim(),
       articles: articleId,
       devMode: workflowOptions.devMode,
       anon: workflowOptions.anon,
@@ -125,7 +125,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
           required
           value={technicalname}
           onChange={setTechnicalname} />
-        {!technicalname && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
+        {!technicalname.trim() && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
 
         <Box display="flex">
           <Box>
@@ -190,7 +190,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
       </DialogContent>
       <DialogActions>
         <CancelButton onClick={onClose} />
-        <Button onClick={handleCreate} disabled={!technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1}>
+        <Button onClick={handleCreate} disabled={!technicalname.trim() || !flowName || !formName || !formTag || changeInProgress || labels.length < 1}>
           <FormattedMessage id='button.apply' />
         </Button>
       </DialogActions>

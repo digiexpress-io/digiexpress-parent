@@ -45,6 +45,7 @@ export const GInputMultilistDialob: React.FC<GFormBaseElementProps> = ({ disable
         datasource={valueset!}
         onChange={onChange}
         labelPosition={labelPosition}
+        readOnly={element.readOnly}
       />
     </>
   );

@@ -61,7 +61,7 @@ const getMdCommands = (locale: StencilApi.SiteLocale, color: string, site: Stenc
 
 
   return [localeTitle,
-    commands.group(Object.values(site.templates).map((t) => templateCommand(t)), {
+    commands.group(Object.values(site.articleTemplates).map((t) => templateCommand(t)), {
       name: 'templates',
       groupName: 'templates',
       buttonProps: { 'aria-label': 'Insert Template' },

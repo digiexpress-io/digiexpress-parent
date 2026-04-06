@@ -4,7 +4,7 @@ package io.digiexpress.eveli.client.config;
  * #%L
  * eveli-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ package io.digiexpress.eveli.client.config;
  * #L%
  */
 
-import java.io.IOException;
+import java.time.Duration;
 import java.util.HashMap;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -36,19 +36,13 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
-import io.digiexpress.eveli.client.web.resources.assets.AssetsAnyTagController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDialobController;
-import io.digiexpress.eveli.client.web.resources.assets.AssetsMigrationController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsPublicationController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsStencilController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsTagomiController;
-import io.digiexpress.eveli.client.web.resources.assets.AssetsWorkflowController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWrenchController;
-import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.digiexpress.eveli.envir.api.ExternalDeploymentProvider;
-import io.digiexpress.eveli.envir.spi.ExternalDeploymentProviderDevEnvir;
+import io.digiexpress.eveli.client.web.resources.worker.CockpitApiController;
 import io.digiexpress.tagomi.api.ImmutableImage;
 import io.digiexpress.tagomi.api.ImmutableImageEnvlope;
 import io.digiexpress.tagomi.api.ImmutableTagomiStoreConfig;
@@ -61,27 +55,17 @@ import io.digiexpress.tagomi.spi.TagomiComposerImpl;
 import io.digiexpress.tagomi.spi.TagomiStoreImpl;
 import io.digiexpress.tagomi.spi.json.FromJsonObject;
 import io.digiexpress.tagomi.spi.json.ToJsonObject;
-import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
-import io.resys.hdes.client.api.HdesClient;
-import io.resys.hdes.client.spi.HdesClientImpl;
-import io.resys.hdes.client.spi.HdesComposerImpl;
-import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
-import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
-import io.resys.hdes.client.spi.flow.validators.IdValidator;
-import io.resys.hdes.client.spi.store.ThenaStore;
-import io.resys.thena.api.ThenaAware;
+import io.resys.limaone.authoring.Authoring;
+import io.resys.limaone.persistence.AuthoringImpl;
+import io.resys.limaone.persistence.ImmutableAuthoringConfig;
+import io.resys.limaone.program.Runtime.EnvironmentProperties;
+import io.resys.limaone.spi.compiler.CompilerImpl;
 import io.resys.thena.git.spi.GitDataSourceImpl;
 import io.smallrye.mutiny.Uni;
-import io.thestencil.client.api.StencilClient;
-import io.thestencil.client.spi.StencilClientImpl;
-import io.thestencil.client.spi.StencilComposerImpl;
-import io.thestencil.client.spi.StencilStoreImpl;
-import io.thestencil.client.spi.serializers.ZoeDeserializer;
 import io.vertx.core.json.JsonObject;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 
 
 @ConditionalOnBean(name = EveliAutoConfigAssets.BEAN_NAME)
@@ -90,158 +74,85 @@ import lombok.extern.slf4j.Slf4j;
 public class EveliAutoConfigAssets {
   public static final String BEAN_NAME = "eveliEditEnvir";
 
-  @Getter
-  @RequiredArgsConstructor
+  @Getter @RequiredArgsConstructor
   public static class EveliEditEnvir {  
-    private final StencilClient stencil;
-    private final HdesClient wrench;
+    private final EnvironmentProperties envirProps;
+    private final io.resys.limaone.program.Runtime runtime;
+    private final Authoring authoring;
     private final EveliPropsAssets assetProps;
     private final TagomiStoreConfig tagomi;
   }
 
   @Bean
+  @ConditionalOnBooleanProperty(value = "eveli.cockpit.enabled", havingValue = true, matchIfMissing = false)
+  public CockpitApiController cockpitApiController(EveliEditEnvir envir) {
+    return new CockpitApiController(envir.getAuthoring());
+  }
+  
+  @Bean
   public AssetsTagomiController assetsTagomiController(
       EveliEditEnvir context, 
       WorkerAuthClient security, 
-      DialobClient dialobClient,
-      EveliEnvirClient envir,
       EveliPropsTagomi tagomiProps,
       RestTemplate restTemplate,
-      ObjectMapper objectMapper
-  ) {
+      ObjectMapper objectMapper) {
+
     final var datasource = new TagomiClient.WorldDatasource() {
+      @SuppressWarnings("unchecked")
       @Override
       public Uni<JsonObject> get(Service service, JsonObject props) {
         if(StringUtils.isEmpty(service.getOrchestratorName())) {
           return Uni.createFrom().item(new JsonObject());
         }
-        return envir.runtimeQuery().getOne()
-            .onItem().transform(runtime -> runtime.getWrench()
-                .inputJson(props)
-                .flow(service.getOrchestratorName())
-                .andGetBody())
-            .onItem().transform(result -> new JsonObject(new HashMap<>(result.getReturns())));
+        final var flow = context.getRuntime().getBundle().queryFlows().name(service.getOrchestratorName()).findOne();
+        final var input = props.mapTo(Map.class);
+        final var result = flow.get().run(input).andGetBody();
+        return Uni.createFrom().item(new JsonObject(new HashMap<>(result.getReturns())));
       }
-    }; 
+    };
     
     final var tagomiClient = new TagomiClientImpl(objectMapper, datasource, restTemplate, tagomiProps.getServiceUrl());
-    return new AssetsTagomiController(
-        tagomiClient,
-        new TagomiComposerImpl(new TagomiStoreImpl(context.getTagomi()), context.getTagomi().getImageStorage()), 
-        envir);
+    final var composer = new TagomiComposerImpl(new TagomiStoreImpl(context.getTagomi()), context.getTagomi().getImageStorage());
+    return new AssetsTagomiController(tagomiClient, composer);
   }
-  @Bean
-  public AssetsAnyTagController assetsAnyTagController(
-      EveliEditEnvir context, 
-      WorkerAuthClient security, 
-      DialobClient dialobClient,
-      EveliEnvirClient envir
-  ) {
 
-    return new AssetsAnyTagController(context.getStencil(), context.getWrench());
-  }
   @Bean
-  public AssetsDeploymentController assetsDeploymentController(
-      ApplicationEventPublisher publisher,
-      EveliEditEnvir context, 
-      WorkerAuthClient auth, 
-      DialobClient dialobClient,
-      EveliEnvirClient envir) {
-    
-    return new AssetsDeploymentController(auth, envir, publisher);
+  public AssetsDeploymentController assetsDeploymentController(EveliEditEnvir context) {
+    return new AssetsDeploymentController(context.getAuthoring());
   }
   @Bean 
   public AssetsPublicationController assetReleaseController(
       EveliEditEnvir context, 
       WorkerAuthClient security,
-      DialobClient dialobClient,
-      EveliEnvirClient envir,
       ApplicationEventPublisher publisher
   ) {
-    return new AssetsPublicationController(envir, context.getStencil(), context.getWrench(), dialobClient, security, publisher);
-  }
-  
-  @Bean 
-  public AssetsMigrationController assetsMigrationController(
-      EveliEditEnvir context, 
-      WorkerAuthClient security,
-      DialobClient dialobClient,
-      EveliEnvirClient envir,
-      ApplicationEventPublisher publisher
-  ) {
-    return new AssetsMigrationController(context.getStencil(), context.getWrench(), dialobClient);
+    return new AssetsPublicationController(context.getAuthoring(), false);
   }
   
   @Bean
-  public AssetsDialobController assetsDialobController(DialobClient client) {
-    return new AssetsDialobController(client);
-  }
-  @Bean 
-  public AssetsWorkflowController workflowController(
-      EveliEditEnvir context,
-      DialobClient dialobClient,
-      EveliEnvirClient client
-  ) {
-    return new AssetsWorkflowController(context.getStencil(), dialobClient, client);
-  }
-  @Bean
-  public AssetsWrenchController wrenchComposerController(EveliEditEnvir context, EveliEnvirClient client, ObjectMapper objectMapper) {
-    return new AssetsWrenchController(objectMapper, new HdesComposerImpl(context.getWrench()), client);
-  }
-  @Bean
-  public AssetsStencilController assetsStencilController(EveliEditEnvir context, ObjectMapper objectMapper, EveliEnvirClient client) {
-    return new AssetsStencilController(objectMapper, new StencilComposerImpl(context.getStencil()), client);
+  public AssetsDialobController assetsDialobController(EveliEditEnvir context) {
+    return new AssetsDialobController(context.getEnvirProps().getFormDb());
   }
 
   @Bean
-  public ExternalDeploymentProvider externalDeploymentProvider(EveliEditEnvir context, DialobClient dialob) {
-    return new ExternalDeploymentProviderDevEnvir(context.getStencil(), context.getWrench(), dialob);
+  public AssetsWrenchController wrenchComposerController(EveliEditEnvir context) {
+    return new AssetsWrenchController(context.getAuthoring(), new CompilerImpl(context.getEnvirProps()));
   }
-  
+  @Bean
+  public AssetsStencilController assetsStencilController(EveliEditEnvir context) {
+    return new AssetsStencilController(context.getAuthoring());
+  }
+
   /**
    * Create this bean for edit envir
    */
   public static EveliEditEnvir eveliEditEnvir(
-      EveliProps eveliProps, 
-      EveliPropsAssets assetProps,
-      ObjectMapper objectMapper,
       ApplicationContext context,
-      io.vertx.mutiny.sqlclient.Pool pgPool
+      io.vertx.mutiny.sqlclient.Pool pgPool,
+      EnvironmentProperties envir,
+      io.resys.limaone.program.Runtime runtime,
+      EveliPropsAssets assetProps
     ) {
-    
-    final var cockpitProvider = Optional.ofNullable(context.getBeanProvider(CockpitAwareProvider.class).getIfAvailable());
-    
-    final var wrenchClient = HdesClientImpl.builder()
-        .cockpitAwareProvider(cockpitProvider)
-        .store(ThenaStore.builder()
-            .pgPool(pgPool)
-            .repoName("wrench-assets")
-            .headName("main")
-            .objectMapper(objectMapper)
-            .build())
-        .objectMapper(objectMapper)
-        .serviceInit(new ServiceInit() { @Override public <T> T get(Class<T> type) { return context.getAutowireCapableBeanFactory().createBean(type); } })
-        .dependencyInjectionContext( new DependencyInjectionContext() { @Override public <T> T get(Class<T> type) { return context.getBean(type); } })
-        .flowVisitors(new IdValidator())
-        .build();
-    
-    final var stencilClient = new StencilClientImpl(StencilStoreImpl.builder()
-        .config((builder) -> builder
-            .client(GitDataSourceImpl.create().client(pgPool).build())
-            .objectMapper(objectMapper)
-            .repoName("stencil-assets")
-            .headName("main")
-            .deserializer(new ZoeDeserializer(objectMapper))
-            .serializer((entity) -> {
-              try {
-                return new JsonObject(objectMapper.writeValueAsString(entity));
-              } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-              }
-            })
-            .gidProvider(type -> UUID.randomUUID().toString())
-            .authorProvider(() -> "eveli")
-        ).build(), cockpitProvider);
     
     final var tagomi = ImmutableTagomiStoreConfig.builder()
         .client(GitDataSourceImpl.create().client(pgPool).build())
@@ -274,9 +185,15 @@ public class EveliAutoConfigAssets {
         })
         .build();
     
-    final var dev = new EveliEditEnvir(stencilClient, wrenchClient, assetProps, tagomi);
     
-    context.getBean(ThenaAware.class).register(dev.getClass(), getOrCreateDb(dev));
+    final var authoring = new AuthoringImpl(ImmutableAuthoringConfig.builder()
+        .persistence(envir.getModelDb())
+        .envir(envir)
+        .build());
+    
+    
+    final var dev = new EveliEditEnvir(envir, runtime, authoring, assetProps, tagomi);
+    getOrCreateDb(dev).await().atMost(Duration.ofMinutes(1));
     return dev;
   }
   
@@ -284,18 +201,13 @@ public class EveliAutoConfigAssets {
    * Call this for get/create wrench/stencil db-s only needed for edit envir
    */
   public static Uni<EveliEditEnvir> getOrCreateDb(EveliEditEnvir envir) {
-    final var createdWrench = envir.getWrench().repo().create();
-        /*
-         * Creates default wrench assets
-         * .onItem().transformToUni(init -> 
-          new HdesDefaultAssets(init, Boolean.TRUE.equals(envir.getAssetProps().getOverwrite())).accept()
-          .onItem().transform(junk -> init)
-        );
-        */
-    final var createdStencil = envir.getStencil().repo().create();
+    final var createModelWorld = envir.envirProps.getModelDb().createModelWorldDb().createDbIfNotPresent();
+    
     final var createTagomi = new TagomiStoreImpl(envir.getTagomi()).tenantBuilder().createIfNot();
     return Uni.combine().all()
-        .unis(createdWrench, createdStencil, createTagomi)
+        .unis(createModelWorld, createTagomi)
         .asTuple().onItem().transform(e -> envir);
   }
+  
+
 }

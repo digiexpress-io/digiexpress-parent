@@ -4,12 +4,7 @@ import { CockpitApi } from './cockpit-types';
 import { useCockpitsBackend } from './cockpit-backend'
 
 export interface CockpitProviderContextType {
-  activity: CockpitApi.CockpitActivity,
-  cockpitContainer: CockpitApi.CockpitContainer;
-  tenants: {
-    wrench: CockpitApi.CockpitConfigTenant | undefined;
-    stencil: CockpitApi.CockpitConfigTenant | undefined;
-  };
+  cockpitContainer: CockpitApi.CockpitSummary;
   refresh: () => Promise<void>;
 }
 
@@ -30,26 +25,17 @@ export const CockpitProvider: React.FC<CockpitProviderProps> = (props) => {
   });
 
 
-  const activityQuery = useQuery({
-    queryKey: [COCKPIT_QUERY_KEY, cockpitId, 'activity'],
-    queryFn: () => backend.persistence.findActivity()
-  });
 
   const contextValue: CockpitProviderContextType | undefined = React.useMemo(() => {
-    if (containerQuery.isPending || !containerQuery.data || !activityQuery.data) {
+    if (containerQuery.isPending || !containerQuery.data) {
       return undefined
     }
 
-    const tenants: CockpitProviderContextType['tenants'] = {
-      stencil: containerQuery.data.tenants.find(tenant => tenant.cockpitConfigTenantType === 'STENCIL'),
-      wrench: containerQuery.data.tenants.find(tenant => tenant.cockpitConfigTenantType === 'WRENCH'),
-    };
-
     return { 
-      cockpitContainer: containerQuery.data, activity: activityQuery.data, tenants, 
-      refresh: async () => Promise.all([containerQuery.refetch(), activityQuery.refetch()]).then(_ignore => {return;})
+      cockpitContainer: containerQuery.data, 
+      refresh: async () => containerQuery.refetch().then(_ignore => {return;})
     };
-  }, [cockpitId, backend, containerQuery.isPending, activityQuery.isPending, activityQuery.data?.activeCockpitId]);
+  }, [cockpitId, backend, containerQuery.dataUpdatedAt]);
 
   if (contextValue) {
     return (<CockpitProviderContext.Provider value={contextValue}>{props.children}</CockpitProviderContext.Provider>);

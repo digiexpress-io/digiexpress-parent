@@ -18,5 +18,6 @@ export const GInputGroupDialob: React.FC<GFormBaseElementProps> = ({ disabled, a
       children={children}
       onAddRow={(id: string) => store.addRowToGroup(id)}
       border={border}
+      readOnly={element.readOnly}
     />);
 }

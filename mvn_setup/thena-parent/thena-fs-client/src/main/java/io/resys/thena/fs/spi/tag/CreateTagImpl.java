@@ -21,7 +21,10 @@ package io.resys.thena.fs.spi.tag;
  */
 
 import java.time.OffsetDateTime;
+import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import io.resys.thena.api.envelope.BatchStatus;
@@ -33,12 +36,14 @@ import io.resys.thena.fs.api.tags.TagBuilder;
 import io.resys.thena.fs.api.tags.TagBuilder.BeforeTagCompletion;
 import io.resys.thena.fs.api.tags.TagResult;
 import io.resys.thena.fs.entities.Commit;
+import io.resys.thena.fs.entities.Entity;
 import io.resys.thena.fs.entities.ImmutableTagTransitives;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tag;
 import io.resys.thena.fs.entities.Tree;
 import io.resys.thena.fs.spi.commit.CommitBuilderException;
 import io.resys.thena.fs.spi.commit.CommitBuilderImpl;
+import io.resys.thena.fs.tables.CommitTable.NodesAndBlobsFilter;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.FsDbBuilder.FsBuilderException;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
@@ -49,8 +54,9 @@ import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @RequiredArgsConstructor
 public class CreateTagImpl implements CreateTag {
   private final Uni<FsDb> db_uni;
@@ -61,7 +67,11 @@ public class CreateTagImpl implements CreateTag {
   private OffsetDateTime tagCreatedAt;
   private Consumer<TagBuilder> tagBuilder;
   private BeforeTagCompletion callback;
-  
+  @Override
+  public CreateTag commitId(UUID commitId) {
+    this.commitIdOrBranchName = Objects.requireNonNull(commitId, () -> "commitIdOrBranchName cannot be empty!").toString();
+    return this;
+  }
   @Override
   public CreateTag commitId(String commitIdOrBranchName) {
     this.commitIdOrBranchName = RepoAssert.notEmpty(commitIdOrBranchName, () -> "commitIdOrBranchName cannot be empty!");
@@ -109,7 +119,7 @@ public class CreateTagImpl implements CreateTag {
   }
 
   private Uni<TagResult> visitTransaction(FsDb tx) {
-    return tx.query().queryCommit().findByCommitIdOrRef(commitIdOrBranchName)
+    return tx.query().queryCommit().findByCommitIdOrRef(Entity.toUuidOrNull(commitIdOrBranchName), commitIdOrBranchName)
         .map(found -> {
           if(found.isEmpty()) {
             throw new TagCreationException("Can't find commit or branch by given id", JsonObject.of("id", commitIdOrBranchName));
@@ -118,9 +128,9 @@ public class CreateTagImpl implements CreateTag {
         })
         .onItem().transformToUni(found -> {
           if(callback != null) {
-            return tx.query().queryCommit().getByIdWithNodesAndBlobs(found.getItem1().getId())
+            return tx.query().queryCommit().getByIdWithNodesAndBlobs(new NodesAndBlobsFilter(found.getItem1().getId(), Collections.emptyList()))
               .map(tuple -> tuple.getItem2())
-              .onItem().transform(tree -> new TagRequest(found.getItem1(), Optional.ofNullable(tree), found.getItem2()));  
+              .onItem().transform(tree -> new TagRequest(found.getItem1(), tree, found.getItem2()));  
           }
           return Uni.createFrom().item(new TagRequest(found.getItem1(), Optional.empty(), found.getItem2()));
         })
@@ -129,6 +139,7 @@ public class CreateTagImpl implements CreateTag {
   }
   
   private TagResult visitFailure(Throwable t) {
+    log.error("Failed to created tag, message: {}", t.getMessage(), t);
     if(t instanceof FsBuilderException) {
       final var fs = (FsBuilderException) t;
       final var builder = ImmutableTagResult.builder()
@@ -177,8 +188,11 @@ public class CreateTagImpl implements CreateTag {
       final var createdAt = tagCreatedAt != null ? tagCreatedAt : OffsetDateTime.now();
       final var prevTag = Optional.<Tag>empty();
       final var commitId = request.getLock().getId();
-      final var refId = Optional.<String>ofNullable("");
-      final var tagTransitives = ImmutableTagTransitives.builder().build();  
+      final var refId = Optional.<UUID>empty();
+      final var tagTransitives = ImmutableTagTransitives.builder()
+          .commit(request.getLock())
+          .tree(request.getTree().orElse(null))
+          .build();  
       
       final var tagBuilder = new TagBuilderImpl(prevTag, commitId, refId, tagTransitives, createdAt, tagAuthor);
       this.tagBuilder.accept(tagBuilder);
@@ -205,4 +219,6 @@ public class CreateTagImpl implements CreateTag {
     Optional<Tree> tree;
     Optional<Ref> ref;
   }
+
+
 }

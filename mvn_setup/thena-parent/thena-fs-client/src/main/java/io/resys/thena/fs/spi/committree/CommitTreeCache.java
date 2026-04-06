@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import io.resys.thena.fs.entities.Blob;
 import io.resys.thena.fs.entities.Node;
@@ -36,13 +37,13 @@ import io.resys.thena.support.RepoAssert;
 public class CommitTreeCache {
   
   // master ref
-  private final Map<String, CommitTree> all_commitTrees = new HashMap<>();
+  private final Map<UUID, CommitTree> all_commitTrees = new HashMap<>();
   private final Set<String> all_objectIds = new HashSet<>();
-  private final Map<String, Blob> blobs = new HashMap<>();
-  private final Map<String, Props> props = new HashMap<>();
+  private final Map<UUID, Blob> blobs = new HashMap<>();
+  private final Map<UUID, Props> props = new HashMap<>();
   
-  private final List<String> blobIds = new ArrayList<>();
-  private final List<String> propsIds = new ArrayList<>();
+  private final List<UUID> blobIds = new ArrayList<>();
+  private final List<UUID> propsIds = new ArrayList<>();
   
   
   public void add(CommitTree commitTree) {
@@ -55,7 +56,7 @@ public class CommitTreeCache {
     this.all_objectIds.add(node.getObjectId());
   }
   
-  public CommitTree getTreeByCommitId(String commitId) {
+  public CommitTree getTreeByCommitId(UUID commitId) {
     return RepoAssert.notNull(all_commitTrees.get(commitId), () -> "Can't find commit tree by commit id: " + commitId);
   }
 

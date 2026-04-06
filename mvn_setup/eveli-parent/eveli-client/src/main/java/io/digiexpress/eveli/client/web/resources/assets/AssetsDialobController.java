@@ -1,19 +1,10 @@
 package io.digiexpress.eveli.client.web.resources.assets;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-
 /*-
  * #%L
  * eveli-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +20,9 @@ import org.springframework.http.MediaType;
  * #L%
  */
 
-import org.springframework.http.ResponseEntity;
+import java.util.Map;
+
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,14 +31,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
-import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.eveli.dialob.api.DialobClient.FormListItem;
+import io.resys.limaone.spi.dialob.FormDb;
+import io.resys.limaone.spi.dialob.FormDb.FormAndTag;
+import io.resys.limaone.spi.dialob.FormDb.FormMetadata;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -53,66 +44,46 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AssetsDialobController {
   
-  private final DialobClient dialobCommands;
+  private final FormDb dialobCommands;
 
   
   @GetMapping(value="/fill/{sessionId}")
-  public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
-    ResponseEntity<String> responseEntity = dialobCommands.createProxyClient().sessionGet(sessionId);
-    return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
+  public Uni<?> fillProxyGet(@PathVariable("sessionId") String sessionId) {
+    return dialobCommands.withTenant()
+        .formFillQuery().getOne(sessionId)
+        .onItem().transform(e -> e.unwrap());
   }
   @PostMapping(value="/fill/{sessionId}")
-  public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
-    final var resp = dialobCommands.createProxyClient().sessionPost(sessionId, body);
-    return ResponseEntity.status(resp.getStatusCode()).body(resp.getBody()); 
+  public Uni<?> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
+    return dialobCommands.withTenant().createFormFill()
+        .actions(body)
+        .formInstanceId(sessionId)
+        .build().onItem().transform(e -> e.unwrap());
   }
-  
 
   @RequestMapping(path="/proxy/api/forms/**", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> proxy(
+  public Uni<?> proxy(
       HttpServletRequest request, 
       @RequestBody(required = false) String body,
-      @RequestHeader Map<String, String> headers
-  ) {
+      @RequestHeader Map<String, String> headers) {
     
     final var query = request.getQueryString();
-    final var path = request.getServletPath().substring(46);
-    final var method = HttpMethod.valueOf(request.getMethod());
+    final var path = "/forms" + request.getServletPath().substring(46);
+    final var method = request.getMethod();
     
-    return dialobCommands.createProxyClient().formRequest(path, query, method, body, headers);
+    return dialobCommands.withTenant()
+        .formQuery().proxyAnything()
+        .path(path).httpMethod(method).body(body).headers(headers).query(query).build()
+        .onItem().transform(e -> e.unwrap());
   }
  
   @GetMapping(path="/tags", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<FormTagResult>> allTags() throws JsonMappingException, JsonProcessingException {
-    List<FormTagResult> tags = new ArrayList<>();
-    
-    final var forms = dialobCommands.findAllForms();
-    Map<String, @NotNull String> formLabels = forms.stream().collect(Collectors.toMap(val->val.getId(), val->val.getMetadata().getLabel()));
-    final var formTags = dialobCommands.findAllFormTags();
-    for (var formTag : formTags) {
-      FormTagResult result = new FormTagResult();
-      result.setFormName(formTag.getFormName());
-      result.setFormLabel(formLabels.get(formTag.getFormName()));
-      result.setTagFormId(formTag.getFormId());
-      result.setTagName(formTag.getName());
-      tags.add(result);
-    }
-    return ResponseEntity.status(HttpStatus.OK).body(tags);
+  public Multi<FormAndTag> allTags() {
+    return dialobCommands.withTenant().formTagQuery().flatAll();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<FormListItem> allForms() throws JsonMappingException, JsonProcessingException{
-    return dialobCommands.findAllForms();
-  }
-
-
-
-  
-  @Data
-  public static class FormTagResult {
-    private String formLabel;
-    private String formName;
-    private String tagFormId;
-    private String tagName;
+  public Multi<FormMetadata> allForms() {
+    return dialobCommands.withTenant().formMetaQuery().findAll();
   }
 }

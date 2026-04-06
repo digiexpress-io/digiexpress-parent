@@ -179,7 +179,7 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
       method.addCode("builder.$L(item_$L\n", builderMethodName, i);
       method.addCode("$>.stream()\n");
       method.addCode(".collect($T.toMap(\n", ClassName.get("java.util.stream", "Collectors"));
-      method.addCode("$>e -> e.getId(),\n");
+      method.addCode("$>e -> e.getId().toString(),\n");
       method.addCode("e -> e\n$<");
       method.addCode(")));$<\n");
       

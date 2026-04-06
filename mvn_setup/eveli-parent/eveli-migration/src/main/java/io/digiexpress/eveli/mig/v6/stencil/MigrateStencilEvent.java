@@ -1,5 +1,9 @@
 package io.digiexpress.eveli.mig.v6.stencil;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 import io.digiexpress.eveli.mig.v6.assets.AssetEvent;
 import io.digiexpress.eveli.mig.v6.assets.AssetEvent.AssetEventMigration;
 import io.digiexpress.eveli.mig.v6.assets.AssetEvent.MergeOperation;
@@ -13,23 +17,24 @@ import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 public class MigrateStencilEvent implements AssetEventMigration {
   private final FileSystem fs;
   private final AssetEvent event;
   
   public Uni<Void> execute() {
-    
     if(isJunk()) {
       return Uni.createFrom().voidItem();
     }
-    
     
     final var commitBuilder = fs.withTenant().commitBuilder()
       .commitMessage("migration commit")
       .commitAuthor("V6 migration script")
       .commitCreatedAt(event.getCreatedAt());
+    
     
     for(final var operation : event.getOperations()) {
       switch(operation.getType()) {
@@ -40,6 +45,7 @@ public class MigrateStencilEvent implements AssetEventMigration {
       }
     }
 
+    log.info("Adding new commit: {}", event.getCreatedAt());
     return commitBuilder.build().onItem().transformToUni(log -> {
       return Uni.createFrom().voidItem();
     });
@@ -53,29 +59,63 @@ public class MigrateStencilEvent implements AssetEventMigration {
       return;
     }
     
-    final var type = newOp.getNewObject().getString("type");
+    var type_dirty = newOp.getNewObject().getString("type");
+    if("LINK".equals(type_dirty)) {
+      type_dirty = "ARTICLE_LINK";
+      
+    } else if("WORKFLOW".equals(type_dirty)) {
+      type_dirty = "ARTICLE_WORKFLOW";
+      
+    } else if("PAGE".equals(type_dirty)) {
+      type_dirty = "ARTICLE_PAGE";
+      
+    } else if("TEMPLATE".equals(type_dirty)) {
+      type_dirty = "ARTICLE_TEMPLATE";
+    }
+    
+    
+    final var type = type_dirty;
     commitBuilder.newFile(newFile -> {
       newFile
-        .fileType("STENCIL")
-        .fileClass(type)
+        .fileType(type)
         .fileId(newOp.getObjectId())
-        .filePath(getFilePath(newOp.getObjectId(), newOp.getNewObject(), newOp.getSourceTree(), newOp.getOriginalCommitId()))
-        .fileName(getFileName(newOp.getObjectId(), newOp.getNewObject(), newOp.getSourceTree(), newOp.getOriginalCommitId()) + "." + type.toLowerCase())
-        .fileValue(newOp.getNewObject())
+        .fileName(newOp.getObjectId())
+        //.fileClass(type)
+        //.filePath(getFilePath(newOp.getObjectId(), newOp.getNewObject(), newOp.getSourceTree(), newOp.getOriginalCommitId()))
+        //.fileName(getFileName(newOp.getObjectId(), newOp.getNewObject(), newOp.getSourceTree(), newOp.getOriginalCommitId()) + "." + type.toLowerCase())
+        .fileValue(migrateAsset(newOp.getNewObject()))
         .build();
     });
   }
   private void doMerge(CommitBuilder commitBuilder, MergeOperation mergeOp) {
-    final var type = mergeOp.getNewObject().getString("type");
+    if(isJunk(mergeOp.getNewObject())) {
+      return;
+    }
     commitBuilder.mergeFile(mergeOp.getObjectId(),(pre, mergeFile) -> {
       mergeFile
-        .filePath(getFilePath(mergeOp.getObjectId(), mergeOp.getNewObject(), mergeOp.getSourceTree(), mergeOp.getOriginalCommitId()))
-        .fileName(getFileName(mergeOp.getObjectId(), mergeOp.getNewObject(), mergeOp.getSourceTree(), mergeOp.getOriginalCommitId()) + "." + type.toLowerCase())
-        .fileValue(mergeOp.getNewObject())
+        //.filePath(getFilePath(mergeOp.getObjectId(), mergeOp.getNewObject(), mergeOp.getSourceTree(), mergeOp.getOriginalCommitId()))
+        //.fileName(getFileName(mergeOp.getObjectId(), mergeOp.getNewObject(), mergeOp.getSourceTree(), mergeOp.getOriginalCommitId()) + "." + type.toLowerCase())
+        .fileValue(migrateAsset(mergeOp.getNewObject()))
         .build();
     });
   }
-  
+
+  private JsonObject migrateAsset(JsonObject start) {
+    final var type = start.getString("type");
+    final var body = start.getJsonObject("body");
+    
+    switch(type) {
+      case "WORKFLOW": {
+        final var startDate = toOffsetDateTime(body.getString("startDate"));
+        final var endDate = toOffsetDateTime(body.getString("endDate"));
+        body.put("startDate", startDate);
+        body.put("endDate", endDate);
+      };
+      default: break;
+    }
+    return body;
+  }
+
   private boolean isJunk() {
     if(event.getOperations().size() == 1) {    
       final var op = event.getOperations().get(1);
@@ -136,8 +176,13 @@ public class MigrateStencilEvent implements AssetEventMigration {
     
     String folderName = "";
     JsonObject article = body;
-    
+    var index = 0;
     while(article != null) {
+      if(index > 2) {
+        throw new RuntimeException("cant resolve article folder name");
+      }
+      index++;
+      
       final var articleOrder = String.format("%03d", body.getInteger("order"));
       final var articleName = body.getString("name");    
       
@@ -151,10 +196,23 @@ public class MigrateStencilEvent implements AssetEventMigration {
       if(parentId == null || parentId.isEmpty()) {
         break;
       } 
-      final var blob = git.getBlob(commitId, objectId);
+      final var blob = git.getBlob(commitId, parentId);
       article = RepoAssert.notNull(blob.getValue().getJsonObject("body"), () -> "Failed to resolve blob!");
     }
 
     return "stencil/articles/" + folderName;
+  }
+  
+  private OffsetDateTime toOffsetDateTime(String date_text) {
+    if(date_text == null) {
+      return null;
+    }
+    
+    try {
+      final var date = LocalDateTime.parse(date_text);
+      return OffsetDateTime.of(date, ZoneOffset.UTC);
+    } catch(Exception e) {
+      return OffsetDateTime.parse(date_text);      
+    }
   }
 }

@@ -58,12 +58,7 @@ export const FsMainRoot = styled('div', {
       padding: theme.spacing(2),
       backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
       color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-      overflow: 'auto',
-
-      '& .MuiTypography-root': {
-        ...theme.typography.caption,
-        fontWeight: 500,
-      }
+      overflow: 'auto'
     },
 
     [`& .${MUI_NAME}-divider`]: {

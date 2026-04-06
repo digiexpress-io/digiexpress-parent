@@ -23,6 +23,7 @@ package io.resys.thena.fs.api.commits;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -50,7 +51,7 @@ public interface CommitBuilder {
    * @param commitId the hash of the parent commit, null(no locking) for branch HEAD
    * @return builder for method chaining
    */
-  CommitBuilder branchLock(@Nullable String commitId);
+  CommitBuilder branchLock(@Nullable UUID commitId);
   
   /**
    * Sets the target branch where this commit will be applied.

@@ -28,14 +28,32 @@ export const useUtilityClasses = (itemId: string, variant: string | undefined): 
   return composeClasses(slots, getUtilityClass, {}) as GInputTimeClasses;
 };
 
+interface OwnerState {
+  variant: string;
+  disabled: boolean;
+  readOnly?: boolean;
+}
+
 export const GInputTimeRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (props, styles) => [styles.root, useVariantOverride(props, styles)],
-})<{ ownerState: { variant: string; disabled: boolean } }>(({ ownerState }) => {
+})<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
   if (ownerState.disabled) {
     return {
       '& .MuiSvgIcon-root': { display: 'none' },
+    };
+  }
+  if (ownerState.readOnly) {
+    return {
+      '& .MuiSvgIcon-root': { display: 'none' },
+      '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+      '& .MuiOutlinedInput-root': { backgroundColor: 'transparent' },
+      '& .MuiInputBase-input': {
+        cursor: 'not-allowed',
+        color: theme.palette.text.primary,
+        ...theme.typography.body1,
+      },
     };
   }
   return {};

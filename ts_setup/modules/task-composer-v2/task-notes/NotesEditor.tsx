@@ -63,7 +63,7 @@ export const NotesEditor: React.FC<NotesEditorProps> = ({ task, noteText, onChan
 
             <Box display='flex' alignItems='center' justifyContent='flex-end'>
               <Typography component='div' className={classes.noteAuthor}>
-                {`${comment.userName}` + " noted on " + `${formatAnyDateShort(comment.created)}`}
+                {`${comment.userName}` + " " + `${formatAnyDateShort(comment.created)}`}
               </Typography>
             </Box>
           </Box>

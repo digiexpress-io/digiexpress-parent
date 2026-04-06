@@ -21,6 +21,7 @@ package io.resys.thena.fs.tables.filters;
  */
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -32,9 +33,9 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
-import io.resys.thena.fs.tables.NodeTable;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.support.TableUtils;
+import io.vertx.core.json.JsonArray;
 import io.vertx.mutiny.sqlclient.Tuple;
 import jakarta.annotation.Nullable;
 
@@ -43,15 +44,21 @@ import jakarta.annotation.Nullable;
 public interface RefTableFilter {
   @Nullable Consumer<NameExpressionBuilder> getNameExpr();
   @Nullable String getBranchId();
+  List<String> getBlobTypes();
+  List<String> getDocIds();
+  Boolean getIncludeBlobs();
   
   final static class SQL implements SqlBuilder<RefTableFilter> {
     
     @Override
     public SqlTuple apply(Tenant tenant, String baseline, RefTableFilter filter) {
       final var params = new ArrayList<Object>();
-      final var index = new MutableInt(0);
+      params.add(filter.getIncludeBlobs());
+      params.add(new JsonArray(filter.getDocIds()));
+      params.add(new JsonArray(filter.getBlobTypes()));
+      
+      final var index = new MutableInt(params.size());
       final var stmt = new SqlStatement();
-
 
       // Handle branch ID filter
       if (filter.getBranchId() != null) {
@@ -92,15 +99,8 @@ public interface RefTableFilter {
       final var result = stmt.toString();
       final var clause = (result.isBlank() ? "" : " WHERE ") + result;
       
-      final var nodes_json = NodeTable.sql()
-        .includeBlobs(true)
-        .build((item) -> {
-          params.add(item);
-          return index.incrementAndGet();
-        });
-    
       return ImmutableSqlTuple.builder()
-          .value(baseline.replace("__nodes_json", nodes_json) + clause)
+          .value(baseline + clause)
           .props(Tuple.from(params))
           .build();
     }

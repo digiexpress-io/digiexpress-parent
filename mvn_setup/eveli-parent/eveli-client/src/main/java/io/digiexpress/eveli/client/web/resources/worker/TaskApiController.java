@@ -54,8 +54,6 @@ import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.spi.dialob.DialobCreateEventPublisher;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
-import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.eveli.dialob.api.DialobReviewClient;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.AllArgsConstructor;
@@ -77,11 +75,10 @@ public class TaskApiController {
   private final DialobCreateEventPublisher dialobCreateEventPublisher;
   private final WorkerAuthClient securityClient;
   private final TaskClient taskClient;
-  private final DialobClient dialobClient;
-  private final DialobReviewClient dialobReviewClient;
   private final MqEventPublisher mqEventPublisher;
   private final TaskViewerPublisher viewerPublisher;
   private final TaskAuditClient taskAuditClient;
+  private final io.resys.limaone.program.Runtime envirClient;
   
   
   @GetMapping
@@ -274,21 +271,19 @@ public class TaskApiController {
   public Uni<ResponseEntity<?>> getTaskFormReview(@PathVariable("id") String id)
   {
     return taskClient.queryTasks().getOneById(id)
-    .onItem().transform(task -> {
+    .onItem().transformToUni(task -> {
       
-      if(task.getQuestionnaireId() != null) {
-        final var questionnaire = dialobClient.getQuestionnaireById(task.getQuestionnaireId());
-        final var form = dialobClient.getFormById(questionnaire.getMetadata().getFormId());
-        final var result = Map.of(
-            "form", form,
-            "session", questionnaire
-            );
-        return new ResponseEntity<>(result, HttpStatus.OK);
+      if(task.getQuestionnaireId() == null) {
+        return Uni.createFrom().item(ResponseEntity.notFound().build());
       }
-      //{ form: any, session: any }
-     
-      return ResponseEntity.notFound().build();
-      
+      return envirClient.getProperties().getFormDb().withTenant()
+        .formInstanceQuery()
+        .includeForm(true)
+        .getOne(task.getQuestionnaireId())
+        .onItem().transform(instance -> Map.of(
+            "form", instance.getForm().get(),
+            "session", instance.getQuestionnaire()
+        )).map(result -> new ResponseEntity<>(result, HttpStatus.OK));
     });
   }
   
@@ -296,22 +291,19 @@ public class TaskApiController {
   public Uni<ResponseEntity<?>> getTaskFormReviewActions(@PathVariable("id") String id)
   {
     return taskClient.queryTasks().findAll(Arrays.asList(id))
-    .onItem().transform(tasks -> {
+    .onItem().transformToUni(tasks -> {
       
       final var questionnaireId = Optional.ofNullable(tasks.isEmpty() ? null : tasks.iterator().next())
           .map(task -> task.getQuestionnaireId())
           .orElse(id);
-      try {
-        final var questionnaire = dialobClient.getQuestionnaireById(questionnaireId);
-        final var form = dialobClient.getFormById(questionnaire.getMetadata().getFormId());
-        final var actions = dialobReviewClient.createReview().form(form).formData(questionnaire).build();
-        return new ResponseEntity<>(actions, HttpStatus.OK);
-      } catch(Exception e) {
-        log.error("Can't resolve questionnaire for review: {}, because of: {}", id, e.getMessage(), e);
-      }
-        
-      return ResponseEntity.notFound().build();
       
+      if(questionnaireId == null) {
+        return Uni.createFrom().item(ResponseEntity.notFound().build());
+      }
+      return envirClient.getProperties().getFormDb().withTenant().formFillReview()
+          .formInstanceId(questionnaireId).build()
+          .onItem().transform(actions -> new ResponseEntity<>(actions, HttpStatus.OK));
+
     });
   }
   
@@ -319,23 +311,17 @@ public class TaskApiController {
   public Uni<ResponseEntity<?>> getTaskFormReviewActions(@PathVariable("id") String id, @RequestBody Actions action) {
     
     return taskClient.queryTasks().findAll(Arrays.asList(id))
-    .onItem().transform(tasks -> {
-      
+    .onItem().transformToUni(tasks -> {
       final var questionnaireId = Optional.ofNullable(tasks.isEmpty() ? null : tasks.iterator().next())
           .map(task -> task.getQuestionnaireId())
           .orElse(id);
       
-      try {
-        final var questionnaire = dialobClient.getQuestionnaireById(questionnaireId);
-        final var form = dialobClient.getFormById(questionnaire.getMetadata().getFormId());
-        final var actions = dialobReviewClient.createNav().form(form).formData(questionnaire).navigateTo(action).build();
-        return new ResponseEntity<>(actions, HttpStatus.OK);
-      } catch(Exception e) {
-        log.error("Can't resolve questionnaire for review: {}, because of: {}", id, e.getMessage(), e);
+      if(questionnaireId == null) {
+        return Uni.createFrom().item(ResponseEntity.notFound().build());
       }
-      
-      return ResponseEntity.notFound().build();
-      
+      return envirClient.getProperties().getFormDb().withTenant().formFillReview()
+          .formInstanceId(questionnaireId).navigateTo(action).build()
+          .onItem().transform(actions -> new ResponseEntity<>(actions, HttpStatus.OK));   
     });
   }
   

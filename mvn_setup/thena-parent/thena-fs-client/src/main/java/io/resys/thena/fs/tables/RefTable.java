@@ -1,6 +1,6 @@
 package io.resys.thena.fs.tables;
 
-import java.util.ArrayList;
+import java.time.OffsetDateTime;
 
 /*-
  * #%L
@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.api.annotations.TenantSql.WrapperType;
@@ -32,13 +33,12 @@ import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.ImmutableRef;
 import io.resys.thena.fs.entities.ImmutableRefTransitives;
-import io.resys.thena.fs.entities.ImmutableTree;
 import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.jackson.NodesAndBlobStdDeserializer;
 import io.resys.thena.fs.tables.filters.RefTableFilter;
 import io.resys.thena.fs.tables.filters.RefTableLockFilter;
-import io.resys.thena.support.TableUtils;
+import io.resys.thena.fs.tables.filters.RefTableNameFilter;
 import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -54,9 +54,9 @@ import io.vertx.mutiny.sqlclient.Row;
       ref_flags JSONB,
       ref_author TEXT,
       ref_created_at TIMESTAMPTZ NOT NULL,
-      ref_created_from UUID,
+      ref_created_from UUID REFERENCES {ref}(ref_id) ON DELETE SET NULL,
 
-      commit_id TEXT NOT NULL REFERENCES {commit}(commit_id)
+      commit_id UUID NOT NULL REFERENCES {commit}(commit_id)
     );
     
     CREATE INDEX {ref}_commit_idx ON {ref}(commit_id);
@@ -122,6 +122,27 @@ public interface RefTable {
   )
   SqlTupleList deleteAll(List<Ref> refs);
 
+  @TenantSql.FindAll(
+      sql = """
+  SELECT 
+    ref.*,
+    commit.commit_created_at, 
+    commit.commit_author, 
+    commit.commit_message, 
+    commit.tree_id, 
+    commit.parent_id, 
+    commit.merge_id,
+    cardinality(tree.tree_nodes) as commit_nodes_count,
+    null as tree_node_blob    
+  FROM {ref} as ref
+  JOIN {commit} as commit ON commit.commit_id = ref.commit_id
+  JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+      """,
+      wrapper = WrapperType.MULTI,
+      rowMapper = RefMapper.class,
+      sqlBuilder = RefTableNameFilter.SQL.class
+    )
+    SqlTuple findAllByName(RefTableNameFilter filter);
   
   @TenantSql.FindAll(
       sql = """
@@ -134,13 +155,18 @@ public interface RefTable {
     commit.tree_id, 
     commit.parent_id, 
     commit.merge_id,
-    
-    -- Aggregated Nodes
-    __nodes_json
+    cardinality(tree.tree_nodes) as commit_nodes_count,
+    tree_view.tree_node_blob::TEXT
 
   FROM {ref} as ref
   JOIN {commit} as commit ON commit.commit_id = ref.commit_id
   JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+  JOIN LATERAL {tree_view} (
+    tree.tree_id,
+    $1::boolean, -- hydrate_all
+    $2::jsonb,   -- hydrate_ids   
+    $3::jsonb    -- hydrate_types 
+  ) AS tree_view ON TRUE
       """,
       wrapper = WrapperType.MULTI,
       rowMapper = RefMapper.class,
@@ -148,11 +174,24 @@ public interface RefTable {
     )
     SqlTuple findAllByFilter(RefTableFilter filter);
   
-  // -- Lock branch, get current commit tree
-  @TenantSql.Find(
-    sql = """
+  
+  @TenantSql.FindAll(
+      sql = """
   SELECT 
-    ref.*,
+    commit.commit_id as ref_id,
+    commit.commit_id as commit_id,
+    
+    commit.commit_author as ref_author,
+    commit.commit_message as ref_name,
+    commit.commit_created_at as created_at,
+    commit.commit_id ref_created_from,
+    
+    commit.commit_message as ref_description,
+    null as ref_created_at,
+    null as ref_created_from,
+    null as ref_props,
+    null as ref_permissions,
+    null as ref_flags,
 
     commit.commit_created_at, 
     commit.commit_author, 
@@ -160,13 +199,53 @@ public interface RefTable {
     commit.tree_id, 
     commit.parent_id, 
     commit.merge_id,
-    
-    -- Aggregated Nodes
-    __nodes_json
+    cardinality(tree.tree_nodes) as commit_nodes_count,
+    tree_view.tree_node_blob::TEXT
+
+  FROM {commit} as commit
+  JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+  JOIN LATERAL {tree_view} (
+    tree.tree_id,
+    $1::boolean, -- hydrate_all
+    $2::jsonb,   -- hydrate_ids   
+    $3::jsonb    -- hydrate_types 
+  ) AS tree_view ON TRUE
+  WHERE commit.commit_id = $4;
+      """,
+      wrapper = WrapperType.MULTI,
+      rowMapper = RefMapper.class
+    )
+  SqlTuple findAllByFilterWithoutRef(
+    boolean includeBlob,
+    JsonArray docIds,
+    JsonArray blobTypes,
+    UUID commitId
+  );
+  
+  
+  // -- Lock branch, get current commit tree
+  @TenantSql.Find(
+    sql = """
+  SELECT 
+    ref.*,
+    commit.commit_created_at, 
+    commit.commit_author, 
+    commit.commit_message, 
+    commit.tree_id, 
+    commit.parent_id, 
+    commit.merge_id,
+    cardinality(tree.tree_nodes) as commit_nodes_count,
+    tree_view.tree_node_blob::TEXT
     
   FROM (SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT) as ref
   JOIN {commit} as commit ON commit.commit_id = ref.commit_id
   JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+  JOIN LATERAL {tree_view} (
+    tree.tree_id,
+    false::boolean, -- hydrate_all
+    $2::jsonb,      -- hydrate_ids   
+    '[]'::jsonb     -- hydrate_types 
+  ) AS tree_view ON TRUE
     """,
     rowMapper = RefMapper.class,
     sqlBuilder = RefTableLockFilter.SQL.class
@@ -181,49 +260,30 @@ public interface RefTable {
     }
     
     public static Ref fromRow(Row row) {
+      final var isTreeSelected = row.getColumnIndex("tree_node_blob") != -1;
+      final var tree_node_blob_text = isTreeSelected ? row.getString("tree_node_blob") : null;
+      final var tree_node_blob = NodesAndBlobStdDeserializer.deserialize(tree_node_blob_text);
       final var refTransitives = ImmutableRefTransitives.builder();
-      final var visited_blobs = new ArrayList<String>();
-      final var visited_props = new ArrayList<String>();
       
-      final var isTreeEnabled = row.getColumnIndex("nodes_json") != -1;
+      if(tree_node_blob != null) {
+        refTransitives
+          .putAllBlobsById(tree_node_blob.blobsById())
+          .putAllPropsById(tree_node_blob.propsById());
+      }
       
-      final var allNodes = Optional
-        .ofNullable(isTreeEnabled ? row.getJsonArray("nodes_json") : new JsonArray())
-        .orElseGet(() -> new JsonArray())
-        .stream().map(node_json -> (JsonObject) node_json)
-        .map(node_json -> {
-
-          final var node = NodeTable.NodeMapper.fromJson(node_json);
-
-          final var blob = node.getTransitives().getBlob();
-          if(blob != null && !visited_blobs.contains(blob.getId())) {
-            refTransitives.putBlobsById(blob.getId(), blob);            
-            visited_blobs.add(blob.getId());
-          }
-
-          final var props = node.getTransitives().getProps();
-          if(props != null && !visited_props.contains(props.getId())) {
-            refTransitives.putPropsById(props.getId(), props);
-            visited_props.add(props.getId());
-          }
-          return node;
-        })
-        .toList();
-      
-      final var tree = isTreeEnabled ? ImmutableTree.builder().id(row.getString("tree_id")).treeNodes(allNodes).build() : null;
-      
+      final var tree = isTreeSelected && tree_node_blob != null ? tree_node_blob.toTreeBuilder().id(row.getUUID("tree_id")).build() : null;
       final var isCommitEnabled = row.getColumnIndex("commit_created_at") != -1;
       final var commit = isCommitEnabled ? CommitTable.CommitMapper.fromRow(row) : null;
       
       
       return ImmutableRef.builder()
-        .id(TableUtils.toStringUUID(row, "ref_id"))
-        .commitId(row.getString("commit_id"))
+        .id(row.getUUID("ref_id"))
+        .commitId(row.getUUID("commit_id"))
         
         .refAuthor(Optional.ofNullable(row.getString("ref_author")))
         .refName(row.getString("ref_name"))
-        .refCreatedAt(row.getOffsetDateTime("ref_created_at"))
-        .refCreatedFrom(Optional.ofNullable(TableUtils.toStringUUID(row, "ref_created_from")))
+        .refCreatedAt(Optional.ofNullable(row.getOffsetDateTime("ref_created_at")).orElse(OffsetDateTime.now()))
+        .refCreatedFrom(Optional.ofNullable(row.getUUID("ref_created_from")))
         
         // Add optional ref properties
         .refDescription(Optional.ofNullable(row.getString("ref_description")))
@@ -240,7 +300,7 @@ public interface RefTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Ref ref) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        TableUtils.toUuid(ref.getId()),
+        ref.getId(),
         ref.getRefName(),
         ref.getCommitId(),
         
@@ -268,7 +328,7 @@ public interface RefTable {
         ref.getRefPermissions().orElse(null),
         ref.getRefFlags().orElse(null),
         
-        TableUtils.toUuid(ref.getId())
+        ref.getId()
       });
     }
   }
@@ -277,7 +337,7 @@ public interface RefTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Ref ref) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-          TableUtils.toUuid(ref.getId())
+        ref.getId()
       });
     }
   }

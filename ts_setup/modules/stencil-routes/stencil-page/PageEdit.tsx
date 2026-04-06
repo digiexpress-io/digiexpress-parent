@@ -19,7 +19,7 @@ const PageEdit: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId 
   const [newLocale, setNewLocale] = React.useState('');
 
   const handleUpdate = () => {
-    const entity: StencilApi.PageMutator = { locale: newLocale, pageId, content: site.pages[pageId].body.content, devMode: site.pages[pageId].body.devMode };
+    const entity: StencilApi.PageMutator = { locale: newLocale, pageId, content: site.articlePages[pageId].body.content, devMode: site.articlePages[pageId].body.devMode };
     service.update().pages([entity]).then(_success => {
       enqueueSnackbar(message, { variant: 'success' });
       props.onClose();
@@ -27,7 +27,7 @@ const PageEdit: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId 
     })
   }
   const message = <FormattedMessage id="snack.page.savedMessage" />
-  const articlePages: StencilApi.Page[] = Object.values(site.pages).filter(p => p.body.article === articleId);
+  const articlePages: StencilApi.Page[] = Object.values(site.articlePages).filter(p => p.body.article === articleId);
   const usedLocales: StencilApi.LocaleId[] = articlePages.map(articlePage => articlePage.body.locale)
   const unusedLocales: StencilApi.SiteLocale[] = Object.values(site.locales).filter(siteLocale => !usedLocales.includes(siteLocale.id));
 

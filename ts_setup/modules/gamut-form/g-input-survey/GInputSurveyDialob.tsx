@@ -39,5 +39,7 @@ export const GInputSurveyDialob: React.FC<GFormBaseElementProps> = ({ disabled, 
     required={!!element.required}
     errors={errors}
     onChange={onChange}
-    labelPosition={labelPosition} />);
+    labelPosition={labelPosition}
+    readOnly={element.readOnly}
+  />);
 }

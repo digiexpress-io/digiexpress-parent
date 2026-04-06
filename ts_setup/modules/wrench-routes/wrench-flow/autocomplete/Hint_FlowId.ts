@@ -7,7 +7,7 @@ import { HintUtils } from './HintUtils';
 export class Hint_FlowId {
   static accept(container: Container): languages.CompletionItem[] {
     const result: languages.CompletionItem[] = [];
-    const flow = container.flow.src;
+    const flow = container.flow.parseTree;
     
     const KEY_ID: HdesApi.NodeKeywordTypes = "id";
     const BEFORE: HdesApi.NodeKeywordTypes[] = ['description', 'inputs', 'tasks'];

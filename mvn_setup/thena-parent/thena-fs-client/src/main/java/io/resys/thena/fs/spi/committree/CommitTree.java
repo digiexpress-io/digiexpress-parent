@@ -24,7 +24,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 import io.resys.thena.fs.api.commits.CommitQuery.CommitsByObject;
 import io.resys.thena.fs.entities.Blob;
@@ -45,9 +48,10 @@ public class CommitTree {
   private final Optional<CommitTree> parent;
 
   
-  private final Map<String, CommitTree> children = new HashMap<>();
-  private final Map<String, Ref> refs = new HashMap<>();
-  private final Map<String, Node> nodes = new HashMap<>();
+  private final Map<UUID, CommitTree> children = new HashMap<>();
+  private final Map<UUID, Ref> refs = new HashMap<>();
+  private final Map<UUID, Node> nodes = new HashMap<>();
+  private final Map<String, Node> nodes_by_objectId = new HashMap<>();
 
   public CommitTree() {
     this.commit = null;
@@ -115,9 +119,14 @@ public class CommitTree {
     accept(visitor);
     return visitor.close();
   }
-
-  public Map<String, Node> getNodes() {
-    return nodes;
+  public Set<Entry<UUID, Node>> getNodes() {
+    return nodes.entrySet();
+  }
+  public Node getNode(UUID nodeId) {
+    return nodes.get(nodeId);
+  }
+  public Node getNode(String objectId) {
+    return nodes_by_objectId.get(objectId);
   }
   public Commit getCommit() {
     return commit;
@@ -143,6 +152,7 @@ public class CommitTree {
     refs.forEach(ref -> this.refs.put(ref.getId(), ref));
     nodes.forEach(node -> {
       this.nodes.put(node.getId(), node);
+      this.nodes_by_objectId.put(node.getObjectId(), node);
       this.cache.add(node);
     });
     return this;

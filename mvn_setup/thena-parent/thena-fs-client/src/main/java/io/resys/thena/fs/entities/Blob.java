@@ -20,16 +20,15 @@ package io.resys.thena.fs.entities;
  * #L%
  */
 
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.hash.Hashing;
 
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
@@ -41,7 +40,7 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableBlob.class)
 public interface Blob extends Entity {
   
-  String getId();
+  UUID getId();
   String getBlobType();
   Optional<String> getBlobClass();
   
@@ -61,7 +60,7 @@ public interface Blob extends Entity {
 
   // H(blob) = μ(blob_value ⊕ type ⊕ fileClass)
   public static ImmutableBlob.Builder newInstance(JsonObject content, String type, String fileClass) {    
-    final var hashString = new StringBuilder()
+    final var hashString = Entity.uuid()
       .append(canonicalizeJson(content))
       .append("type ").append(type)
       ;
@@ -69,9 +68,8 @@ public interface Blob extends Entity {
       hashString.append("class ").append(fileClass);
     }
     
-    final var hash = Hashing.murmur3_128().hashString(hashString.toString(), StandardCharsets.UTF_8).toString();
     return ImmutableBlob.builder()
-        .id(hash)
+        .id(hashString.build())
         .blobClass(Optional.ofNullable(fileClass))
         .blobType(type)
         .blobValue(content);

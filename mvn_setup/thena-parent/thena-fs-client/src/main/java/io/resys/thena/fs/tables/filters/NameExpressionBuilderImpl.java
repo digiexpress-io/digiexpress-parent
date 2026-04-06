@@ -37,7 +37,7 @@ public class NameExpressionBuilderImpl implements NameExpressionBuilder {
   // target stream into what to append the sql fragment
   private final StringBuilder sqlBuilder;
   
-  private boolean hasConditions = false;
+  private boolean isAnyConditionDefined = false;
   
   @Override
   public NameExpressionBuilder equals(String name) {
@@ -99,7 +99,7 @@ public class NameExpressionBuilderImpl implements NameExpressionBuilder {
   
   @Override
   public NameExpressionBuilder or() {
-    if (hasConditions) {
+    if (isAnyConditionDefined) {
       sqlBuilder.append(" OR ");
     }
     return this;
@@ -107,18 +107,18 @@ public class NameExpressionBuilderImpl implements NameExpressionBuilder {
   
   @Override
   public NameExpressionBuilder and() {
-    if (hasConditions) {
+    if (isAnyConditionDefined) {
       sqlBuilder.append(" AND ");
     }
     return this;
   }
   
   private void appendCondition(final String condition) {
-    if (hasConditions && !endsWithLogicalOperator()) {
+    if (isAnyConditionDefined && !endsWithLogicalOperator()) {
       sqlBuilder.append(" AND ");
     }
     sqlBuilder.append(condition);
-    hasConditions = true;
+    isAnyConditionDefined = true;
   }
   
   private boolean endsWithLogicalOperator() {
@@ -128,10 +128,15 @@ public class NameExpressionBuilderImpl implements NameExpressionBuilder {
   
   public void close() {
     // Wrap in parentheses if we have conditions
-    if (hasConditions) {
+    if (isAnyConditionDefined) {
       final String content = sqlBuilder.toString();
       sqlBuilder.setLength(0);
       sqlBuilder.append("(").append(content).append(")");
     }
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return !isAnyConditionDefined;
   }
 }

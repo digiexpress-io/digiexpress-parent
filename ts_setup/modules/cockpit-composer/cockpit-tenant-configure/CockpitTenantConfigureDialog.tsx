@@ -21,11 +21,10 @@ export const CockpitTenantConfigureDialog: React.FC<CockpitTenantConfigureDialog
   const classes = useUtilityClasses();
   const intl = useIntl();
   const backend = useCockpitsBackend();
-  const { tenants, activity, cockpitContainer, refresh } = useCockpit();
+  const { cockpitContainer, refresh } = useCockpit();
 
-  const wrenchConfig = useTenantOptions({ selected: tenants.wrench, options: activity.availableTenants.wrench });
-  const stencilConfig = useTenantOptions({ selected: tenants.stencil, options: activity.availableTenants.stencil });
-  const isFormValid = wrenchConfig.isValid && stencilConfig.isValid;
+  const tenantOptions = useTenantOptions();
+  const isFormValid = tenantOptions.isValid;
 
 
   async function handleCreate() {
@@ -36,36 +35,26 @@ export const CockpitTenantConfigureDialog: React.FC<CockpitTenantConfigureDialog
     try {
       // Create wrench tenant if wrench config is provided
       await backend.persistence.createOneCockpitTenant(cockpitId, {
-        tenantType: 'WRENCH',
-        externalId: wrenchConfig.active.value!.externalId,
-        tenantDescription: wrenchConfig.description.value ?? ''
-      });
-
-      // Create stencil tenant if stencil config is provided
-      await backend.persistence.createOneCockpitTenant(cockpitId, {
-        tenantType: 'STENCIL',
-        externalId: stencilConfig.active.value!.externalId,
-        tenantDescription: stencilConfig.description.value ?? ''
+        externalId: tenantOptions.active.value!.externalId,
+        tenantDescription: tenantOptions.description.value ?? ''
       });
 
       await refresh();
       onClose();
-      wrenchConfig.onClose();
-      stencilConfig.onClose();
+      tenantOptions.onClose();
     } catch (error) {
       console.error('Failed to create tenant:', error);
     }
   }
 
   function handleClose() {
-    wrenchConfig.onClose();
-    stencilConfig.onClose();
+    tenantOptions.onClose();
     onClose();
   }
 
   return (
     <StyledCockpitTenantConfigureDialog className={classes.createDialog} open={open} onClose={handleClose} maxWidth='md' slots={{ transition: Zoom }}>
-      <DialogTitle>{intl.formatMessage({ id: 'cockpit.tenantCreate.title' })}{": "}{cockpitContainer.config.cockpitConfigName}</DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'cockpit.tenantCreate.title' })}{": "}{cockpitContainer.alias.aliasName}</DialogTitle>
 
       <DialogContent>
         <Grid2 container spacing={3}>
@@ -81,12 +70,12 @@ export const CockpitTenantConfigureDialog: React.FC<CockpitTenantConfigureDialog
               <Grid2 container spacing={2}>
                 <Grid2 size={12}>
                   <Autocomplete selectOnFocus clearOnBlur freeSolo
-                    value={wrenchConfig.active.value}
-                    onChange={wrenchConfig.active.setValue}
+                    value={tenantOptions.active.value}
+                    onChange={tenantOptions.active.setValue}
 
-                    options={wrenchConfig.options.values}
-                    filterOptions={wrenchConfig.options.filter}
-                    getOptionLabel={wrenchConfig.options.label}
+                    options={tenantOptions.options.values}
+                    filterOptions={tenantOptions.options.filter}
+                    getOptionLabel={tenantOptions.options.label}
 
                     renderOption={(props, option) => {
                       const { key, ...optionProps } = props;
@@ -106,8 +95,8 @@ export const CockpitTenantConfigureDialog: React.FC<CockpitTenantConfigureDialog
                 </Grid2>
                 <Grid2 size={12}>
                   <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.tenantDescription' })}</Typography>
-                  <TextField required fullWidth value={wrenchConfig.description.value}
-                    onChange={wrenchConfig.description.setValue}
+                  <TextField required fullWidth value={tenantOptions.description.value}
+                    onChange={tenantOptions.description.setValue}
                     placeholder={intl.formatMessage({ id: 'cockpit.tenantCreate.description.placeholder' })}
                   />
                 </Grid2>
@@ -123,12 +112,12 @@ export const CockpitTenantConfigureDialog: React.FC<CockpitTenantConfigureDialog
               <Grid2 container spacing={2}>
                 <Grid2 size={12}>
                   <Autocomplete selectOnFocus clearOnBlur freeSolo
-                    value={stencilConfig.active.value}
-                    onChange={stencilConfig.active.setValue}
+                    value={tenantOptions.active.value}
+                    onChange={tenantOptions.active.setValue}
 
-                    options={stencilConfig.options.values}
-                    filterOptions={stencilConfig.options.filter}
-                    getOptionLabel={stencilConfig.options.label}
+                    options={tenantOptions.options.values}
+                    filterOptions={tenantOptions.options.filter}
+                    getOptionLabel={tenantOptions.options.label}
 
                     renderOption={(props, option) => {
                       const { key, ...optionProps } = props;
@@ -148,8 +137,8 @@ export const CockpitTenantConfigureDialog: React.FC<CockpitTenantConfigureDialog
                 </Grid2>
                 <Grid2 size={12}>
                   <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.tenantDescription' })}</Typography>
-                  <TextField required fullWidth value={stencilConfig.description.value}
-                    onChange={stencilConfig.description.setValue}
+                  <TextField required fullWidth value={tenantOptions.description.value}
+                    onChange={tenantOptions.description.setValue}
                     placeholder={intl.formatMessage({ id: 'cockpit.tenantCreate.description.placeholder' })}
                   />
                 </Grid2>

@@ -29,7 +29,6 @@ import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.ImmutableProps;
 import io.resys.thena.fs.entities.Props;
-import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -37,7 +36,7 @@ import io.vertx.mutiny.sqlclient.Row;
   order = 300,
   ddl = """
     CREATE TABLE {props} (
-      props_id TEXT PRIMARY KEY,
+      props_id UUID PRIMARY KEY,
       props_labels JSONB,
       props_comments JSONB,
       props_permissions JSONB,
@@ -96,23 +95,13 @@ public interface PropsTable {
     @Override
     public Props apply(Row row) {
       return ImmutableProps.builder()
-          .id(row.getString("props_id"))
+          .id(row.getUUID("props_id"))
           .propsLabels(Optional.ofNullable(row.getJsonObject("props_labels")))
           .propsComments(Optional.ofNullable(row.getJsonObject("props_comments")))
           .propsPermissions(Optional.ofNullable(row.getJsonObject("props_permissions")))
           .propsFlags(Optional.ofNullable(row.getJsonObject("props_flags")))
           .build();
     }
-    
-    public static Props fromJson(JsonObject json) {
-      return ImmutableProps.builder()
-          .id(json.getString("props_id"))
-          .propsLabels(Optional.ofNullable(json.getJsonObject("props_labels")))
-          .propsComments(Optional.ofNullable(json.getJsonObject("props_comments")))
-          .propsPermissions(Optional.ofNullable(json.getJsonObject("props_permissions")))
-          .propsFlags(Optional.ofNullable(json.getJsonObject("props_flags")))
-          .build();
-    } 
   }
 
   class PropsInsertMapper implements TenantSql.PropsMapper<Props> {

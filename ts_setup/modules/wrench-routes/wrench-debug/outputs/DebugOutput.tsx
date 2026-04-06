@@ -24,7 +24,7 @@ const DebugOutput: React.FC<{
     if (debug.bodyCsv) {
       delegate = <DebugOutputCsv debug={debug.bodyCsv} />;
     }
-  } else if (bodyType === "DT") {
+  } else if (bodyType === "DECISION_TABLE") {
     delegate = (<DebugOutputsDt debug={debug.body as HdesApi.DecisionResult}/>);
   } else if (bodyType === "FLOW_TASK") {
     delegate = (<DebugOutputsFt debug={debug.body as HdesApi.ServiceResult} />);

@@ -4,7 +4,7 @@ package io.digiexpress.eveli.appwrenchonly;
  * #%L
  * eveli-app-wrench-only
  * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,11 @@ package io.digiexpress.eveli.appwrenchonly;
  * #L%
  */
 
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-
-import io.resys.hdes.client.spi.spring.GitAutoConfig;
-import io.resys.hdes.client.spi.spring.GitConfigProps;
 
 
 

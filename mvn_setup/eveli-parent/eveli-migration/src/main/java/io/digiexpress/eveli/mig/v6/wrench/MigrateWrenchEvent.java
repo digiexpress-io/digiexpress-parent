@@ -1,11 +1,6 @@
 package io.digiexpress.eveli.mig.v6.wrench;
 
-import java.util.HashMap;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.util.Arrays;
 
 import io.digiexpress.eveli.mig.v6.assets.AssetEvent;
 import io.digiexpress.eveli.mig.v6.assets.AssetEvent.AssetEventMigration;
@@ -13,53 +8,31 @@ import io.digiexpress.eveli.mig.v6.assets.AssetEvent.MergeOperation;
 import io.digiexpress.eveli.mig.v6.assets.AssetEvent.NewOperation;
 import io.digiexpress.eveli.mig.v6.assets.AssetEvent.ObjectOperationType;
 import io.digiexpress.eveli.mig.v6.assets.AssetEvent.RmOperation;
-import io.resys.hdes.client.api.HdesClient;
-import io.resys.hdes.client.spi.HdesClientImpl;
-import io.resys.hdes.client.spi.HdesInMemoryStore;
-import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
-import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
+import io.resys.limaone.ast.AST_Parser;
+import io.resys.limaone.model.DecisionTable.DecisionStatement;
+import io.resys.limaone.model.ImmutableDecisionTable;
+import io.resys.limaone.model.ImmutableFlow;
+import io.resys.limaone.model.ImmutableFlowTask;
+import io.resys.limaone.spi.ast.AST_ParserImpl;
 import io.resys.thena.fs.api.FileSystem;
 import io.resys.thena.fs.api.commits.CommitBuilder;
+import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 
 
+
+@Slf4j
 public class MigrateWrenchEvent implements AssetEventMigration {
   private final FileSystem fs;
   private final AssetEvent event;
-  private final HdesClient client;
-  private static final ObjectMapper objectMapper = new ObjectMapper()
-      .registerModules(
-          new JavaTimeModule(), 
-          new Jdk8Module(), 
-          new GuavaModule());
+  private final AST_Parser astParser = AST_ParserImpl.builder().build();
   
   public MigrateWrenchEvent(FileSystem fs, AssetEvent event) {
     super();
     this.fs = fs;
     this.event = event;
-    
-    this.client = HdesClientImpl.builder()
-        .objectMapper(objectMapper)
-        .store(new HdesInMemoryStore(new HashMap<>()))
-        .dependencyInjectionContext(new DependencyInjectionContext() {
-          @Override
-          public <T> T get(Class<T> type) {
-            return null;
-          }
-        })
-        .serviceInit(new ServiceInit() {
-            @Override
-            public <T> T get(Class<T> type) {
-              try {
-                return type.getDeclaredConstructor().newInstance();
-              } catch(Exception e) {
-                throw new RuntimeException(e.getMessage(), e);
-              }
-            }
-          })
-        .build();
-    
   }
 
   public Uni<Void> execute() {
@@ -95,24 +68,33 @@ public class MigrateWrenchEvent implements AssetEventMigration {
       return;
     }
     
-    final var type = newOp.getNewObject().getString("bodyType");
+    var type_dirty = newOp.getNewObject().getString("bodyType");
+    if("DT".equals(type_dirty)) {
+      type_dirty = "DECISION_TABLE";
+    }
+    final var type = type_dirty;
+    
     commitBuilder.newFile(newFile -> {
       newFile
         .filePath(getFilePath(newOp.getObjectId(), newOp.getNewObject()))
-        .fileType("WRENCH")
-        .fileClass(type)
+        .fileType(type)
         .fileId(newOp.getObjectId())
-        .fileName(getFileName(newOp.getObjectId(), newOp.getNewObject()) + "." + type.toLowerCase())
-        .fileValue(newOp.getNewObject())
+        .fileName(newOp.getObjectId())
+        .fileValue(migrateAsset(newOp.getNewObject()))
+        //.fileClass(type)
+        //.fileName(getFileName(newOp.getObjectId(), newOp.getNewObject()) + "." + type.toLowerCase())
         .build();
     });
   }
   private void doMerge(CommitBuilder commitBuilder, MergeOperation mergeOp) {
-    final var type = mergeOp.getNewObject().getString("bodyType");
+    if(isJunk(mergeOp.getNewObject())) {
+      return;
+    }
+    
     commitBuilder.mergeFile(mergeOp.getObjectId(),(pre, mergeFile) -> {
       mergeFile
-        .fileName(getFileName(mergeOp.getObjectId(), mergeOp.getNewObject()) + "." + type.toLowerCase())
-        .fileValue(mergeOp.getNewObject())
+        .fileValue(migrateAsset(mergeOp.getNewObject()))
+        //.fileName(getFileName(mergeOp.getObjectId(), mergeOp.getNewObject()) + "." + type.toLowerCase())
         .build();
     });
   }
@@ -131,27 +113,77 @@ public class MigrateWrenchEvent implements AssetEventMigration {
   
   private boolean isJunk(JsonObject content) {
     final var type = content.getString("bodyType");
-    return "TAG".equals(type);
+    return !Arrays.asList("FLOW_TASK", "DT", "FLOW").contains(type);
+  }
+  
+  private JsonObject migrateAsset(JsonObject start) {
+    final var type = start.getString("bodyType");
+    final var commands = start.getJsonArray("body");
+    final var setBody = commands.stream()
+        .map(e -> (JsonObject) e)
+        .filter(e -> e.getString("type").equals("SET_BODY"))
+        .toList();
+    
+    switch(type) {
+      case "FLOW_TASK": {
+        RepoAssert.isTrue(setBody.size() == 1, () -> "SET_BODY must have type 1");
+        final var first = setBody.getFirst().getString("value");
+        final var ast = astParser.parseFlowTask().syntax(first).parse();
+        final var task = ImmutableFlowTask.builder().taskName(ast.getName()).taskValue(first).build();
+        return JsonObject.mapFrom(task);
+      }
+      case "FLOW": {
+        RepoAssert.isTrue(setBody.size() == 1, () -> "SET_BODY must have type 1");
+        final var first = setBody.getFirst().getString("value");
+        final var ast = astParser.parseFlow().syntax(first).parse();
+        final var flow = ImmutableFlow.builder().flowName(ast.getName()).flowValue(first).build();
+        return JsonObject.mapFrom(flow);
+      }
+      
+      case "DT": {
+        final var first = commands.stream().map(e -> (JsonObject) e)
+            .map(e -> e.mapTo(DecisionStatement.class))
+            .toList();
+        final var ast = astParser.parseDecisionTable().nodes(first).parse();
+        final var flow = ImmutableDecisionTable.builder()
+            .name(ast.getName())
+            .nodes(first)
+            .build();
+        return JsonObject.mapFrom(flow);
+      }
+      default: throw new RuntimeException("unknown asset type: " + type);
+    }
   }
   
   private String getFileName(String objectId, JsonObject content) {
     final var type = content.getString("bodyType");
-    final var body = content.getJsonArray("body").encode();
-    final var ast = client.ast().commands(body);
-    
-    
+    final var body = content.getJsonArray("body");
+        
     switch(type) {
       case "FLOW": { 
-        final var flow = ast.flow();
+        final var value = body.stream()
+            .map(e -> (JsonObject) e)
+            .filter(e -> e.getString("type").equals("SET_BODY"))
+            .findFirst();
+        final var flow = astParser.parseFlow().syntax(value.get().getString("value")).parse();
         return flow.getName();
       }
       case "DT": {
-        final var flow = ast.decision();
-        return flow.getName();        
+        final var nodes = body.stream()
+            .map(e -> (JsonObject) e)
+            .map(e -> e.mapTo(DecisionStatement.class))
+            .toList();
+        
+        final var flow = astParser.parseDecisionTable().nodes(nodes).parse();
+        return flow.getName();
       }
       case "FLOW_TASK": {
-        final var flow = ast.service();
-        return flow.getName();
+        final var value = body.stream()
+            .map(e -> (JsonObject) e)
+            .filter(e -> e.getString("type").equals("SET_BODY"))
+            .findFirst();
+        final var flowTask = astParser.parseFlowTask().syntax(value.get().getString("value")).parse();
+        return flowTask.getName();
       }
 
       default: throw new IllegalArgumentException("Unknown docType: " + type);

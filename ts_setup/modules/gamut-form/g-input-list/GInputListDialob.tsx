@@ -42,6 +42,7 @@ export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ disabled, ac
         datasource={valueset}
         onChange={onChange}
         labelPosition={labelPosition}
+        readOnly={element.readOnly}
       />
     </>
   );

@@ -1,6 +1,5 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
-import java.time.Duration;
 import java.util.Collections;
 
 /*-
@@ -41,7 +40,6 @@ import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
-import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,37 +51,34 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/portal/feedback")
 @RequiredArgsConstructor
 public class GamutFeedbackController {
-  private static final Duration timeout = Duration.ofSeconds(15);
   private final GamutClient gamutClient;
-  private final DialobClient dialob;
+  private final io.resys.limaone.program.Runtime runtime;
   private final DialobFillEventPublisher publisher;
   private final GamutAuthClient authClient;
   
   @GetMapping(value="fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
-    ResponseEntity<String> responseEntity = dialob.createProxyClient().sessionGet(sessionId);
-    return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
+  public Uni<?> fillProxyGet(@PathVariable("sessionId") String sessionId) {
+    return runtime.getProperties().getFormDb().withTenant().createFormFill().formInstanceId(sessionId).build()
+        .onItem().transform(questionnaire -> questionnaire.unwrap());
   }
   @PostMapping(value="/fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public Uni<ResponseEntity<String>> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
-    final var resp = dialob.createProxyClient().sessionPost(sessionId, body);
-    
-    if(resp.getStatusCode().is2xxSuccessful()) {
-      return gamutClient.fillEvent()
-        .requestBody(body)
-        .responseBody(resp.getBody())
-        .sessionId(sessionId)
-        .create()
-        .onItem().invoke(publisher::publishEvent)
-        .map(ignore -> ResponseEntity.status(resp.getStatusCode()).body(resp.getBody()));
-      
-    }
-    return Uni.createFrom().item(ResponseEntity.status(resp.getStatusCode()).body(resp.getBody()));
+  public Uni<?> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
+    return runtime.getProperties().getFormDb().withTenant().createFormFill().formInstanceId(sessionId).actions(body)
+        .onCompletion(completion -> {
+          return gamutClient.fillEvent()
+              .requestBody(body)
+              .responseBody(completion)
+              .sessionId(sessionId)
+              .create()
+              .onItem().invoke(event -> publisher.publishEvent(event));
+        })
+        .build()
+        .onItem().transform(questionnaire -> questionnaire.unwrap());
   }
   
   @DeleteMapping(value="/{actionId}")
   public Uni<ResponseEntity<UserAction>> cancelAction(@PathVariable("actionId") String actionId) {
-    final var customer = authClient.getCustomer();    
+    final var customer = authClient.getParticipant();    
     return gamutClient.cancelUserActionBuilder()
         .actionId(actionId).customer(customer).cancelOne()
         .map(body -> new ResponseEntity<>(body, HttpStatus.OK))
@@ -102,7 +97,7 @@ public class GamutFeedbackController {
     
     return gamutClient.userActionQuery()
         .cockpitId(cockpitId)
-        .customer(authClient.getCustomer(), authClient.getCustomerRoles())
+        .customer(authClient.getParticipant())
         .findOneAnonById(actionId)
         .onItem().transform(action -> {
           if(action.isEmpty()) {
@@ -120,28 +115,15 @@ public class GamutFeedbackController {
       @RequestParam("inputParentContextId") String inputParentContextId,
       @RequestParam("actionLocale") String actionLocale) {
     
-    final var customer = authClient.getCustomer();
-    final var customerRoles = authClient.getCustomerRoles();
-    
-    return gamutClient.userActionMetaQuery().actionId(actionId).cockpitId(cockpitId).locale(actionLocale)
-      .getOne().onItem().transformToUni(meta -> {
-        if(!Boolean.TRUE.equals(meta.getTopicLink().getAnon())) {
-          throw new org.springframework.security.access.AccessDeniedException("action: " + meta + ", not allowed!");
-        }
-          return gamutClient.userActionBuilder()
-            .actionId(actionId)
-            .cockpitId(cockpitId)
-            .anon(true)
-            .customer(customer)
-            .customerRoles(customerRoles)
-            .clientLocale(actionLocale)
-            .inputContextId(inputContextId)
-            .inputParentContextId(inputParentContextId)
-            .createOne();
-    })
-    .map(ResponseEntity::ok)
-    .onFailure().recoverWithItem(() -> ResponseEntity.notFound().build())
-    // make the type as "<?>"
-    .map(e -> e);
+    return gamutClient.userActionBuilder()
+        .actionId(actionId)
+        .cockpitId(cockpitId)
+        .participant(authClient.getParticipant())
+        .clientLocale(actionLocale)
+        .inputContextId(inputContextId)
+        .inputParentContextId(inputParentContextId)
+        .createOne()
+        .onItem().transform(action -> new ResponseEntity<>(action, HttpStatus.OK))
+        .onFailure().recoverWithItem(ignore -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
   }
 }

@@ -4,7 +4,7 @@ package io.digiexpress.eveli.client.web.resources.assets;
  * #%L
  * eveli-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,9 @@ package io.digiexpress.eveli.client.web.resources.assets;
  * #L%
  */
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,39 +33,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.resys.limaone.authoring.Authoring;
+import io.resys.limaone.authoring.ModifyArticle.ModifyArticleProps;
+import io.resys.limaone.authoring.ModifyArticleLink.ModifyArticleLinkProps;
+import io.resys.limaone.authoring.ModifyArticlePage.ModifyArticlePageProps;
+import io.resys.limaone.authoring.ModifyArticleTemplate.ModifyArticleTemplateProps;
+import io.resys.limaone.authoring.ModifyArticleWorkflow.ModifyArticleWorkflowProps;
+import io.resys.limaone.authoring.ModifyLocale.ModifyLocaleProps;
+import io.resys.limaone.authoring.NewArticle.NewArticleProps;
+import io.resys.limaone.authoring.NewArticleLink.NewArticleLinkProps;
+import io.resys.limaone.authoring.NewArticlePage.NewArticlePageProps;
+import io.resys.limaone.authoring.NewArticleTemplate.NewArticleTemplateProps;
+import io.resys.limaone.authoring.NewArticleWorkflow.NewArticleWorkflowProps;
+import io.resys.limaone.authoring.NewLocale.NewLocaleProps;
+import io.resys.limaone.model.Article;
+import io.resys.limaone.model.ArticleLink;
+import io.resys.limaone.model.ArticlePage;
+import io.resys.limaone.model.ArticleTemplate;
+import io.resys.limaone.model.ArticleWorkflow;
+import io.resys.limaone.model.Locale;
+import io.resys.limaone.model.Model;
+import io.resys.limaone.model.Model.BodyType;
+import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.model.Model.ModelWorldIndex;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.thestencil.client.api.ImmutableArticleMutator;
-import io.thestencil.client.api.ImmutableCreateArticle;
-import io.thestencil.client.api.ImmutableCreateLink;
-import io.thestencil.client.api.ImmutableCreateLocale;
-import io.thestencil.client.api.ImmutableCreatePage;
-import io.thestencil.client.api.ImmutableCreateRelease;
-import io.thestencil.client.api.ImmutableCreateTemplate;
-import io.thestencil.client.api.ImmutableCreateWorkflow;
-import io.thestencil.client.api.ImmutableLinkArticlePage;
-import io.thestencil.client.api.ImmutableLinkMutator;
-import io.thestencil.client.api.ImmutableLocaleMutator;
-import io.thestencil.client.api.ImmutablePageMutator;
-import io.thestencil.client.api.ImmutableSiteState;
-import io.thestencil.client.api.ImmutableSites;
-import io.thestencil.client.api.ImmutableTemplateMutator;
-import io.thestencil.client.api.ImmutableWorkflowArticlePage;
-import io.thestencil.client.api.ImmutableWorkflowMutator;
-import io.thestencil.client.api.MigrationBuilder.Sites;
-import io.thestencil.client.api.StencilClient.Article;
-import io.thestencil.client.api.StencilClient.Entity;
-import io.thestencil.client.api.StencilClient.Link;
-import io.thestencil.client.api.StencilClient.Locale;
-import io.thestencil.client.api.StencilClient.Page;
-import io.thestencil.client.api.StencilClient.Release;
-import io.thestencil.client.api.StencilClient.SiteCommitLog;
-import io.thestencil.client.api.StencilClient.Template;
-import io.thestencil.client.api.StencilClient.Workflow;
-import io.thestencil.client.api.StencilComposer;
-import io.thestencil.client.api.StencilComposer.SiteState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -77,200 +67,126 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AssetsStencilController {
   
-  private final ObjectMapper objectMapper;
-  private final StencilComposer composer;
-  private final EveliEnvirClient envir;
+  private final Authoring composer; 
+  
   
   @GetMapping("/")
-  public Uni<SiteState> root() {
-    return getComposer().onItem().transformToUni(composer -> composer.query().head());
+  public Uni<ModelWorld> root() {
+    return getSites();
+  }
+  @PostMapping("/sites") 
+  public Uni<ModelWorld> createSites() {
+    return getSites();
+  }
+  @GetMapping("/sites")
+  public Uni<ModelWorld> getSites() {
+    return composer.worldQuery()
+      .docs(
+        BodyType.LOCALE,
+        BodyType.ARTICLE,
+        BodyType.ARTICLE_LINK,
+        BodyType.ARTICLE_WORKFLOW,
+        BodyType.ARTICLE_PAGE,
+        BodyType.ARTICLE_TEMPLATE
+      )
+      .findAll();
+  }
+  @GetMapping(path = "/commitlogs", produces = MediaType.APPLICATION_JSON_VALUE)
+  public Multi<ModelWorldIndex> commitlogs() {
+    return composer.worldIndexQuery().findAll();
   }
   
   @PostMapping("/articles")
-  public Uni<Entity<Article>> createArticle(@RequestBody ImmutableCreateArticle body) {
-    return getComposer().onItem().transformToUni(composer -> composer.create().article(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<Article>> createArticle(@RequestBody NewArticleProps body) {
+    return composer.newModel().newArticle().props(body).build();
   }
   @PutMapping("/articles") 
-  public Uni<Entity<Article>> updateArticle(@RequestBody ImmutableArticleMutator body) {
-    return getComposer().onItem().transformToUni(composer -> composer.update().article(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<Article>> updateArticle(@RequestBody ModifyArticleProps body) {
+    return composer.modifyModel().modifyArticle().props(body).build();
   }
   @DeleteMapping("/articles/{id}") 
-  public Uni<Entity<Article>> deleteArticle(@PathVariable("id") String id) {
-    return getComposer().onItem().transformToUni(composer -> composer.delete().article(id))
-        .onItem().invoke(() -> envir.invalidateCache());
-  }
-  @PostMapping("/migrations") 
-  public Uni<SiteState> createMigration(@RequestBody String json) {
-    byte[] body = json.getBytes(StandardCharsets.UTF_8);
-  
-    final var sites = parseSites(body);
-    if(sites != null) {
-      return getComposer().onItem().transformToUni(composer -> composer.migration().importData(sites))
-          .onItem().invoke(() -> envir.invalidateCache());
-    }
-    
-    final var release = parseSiteState(body);
-    if(release != null) {
-      return getComposer().onItem().transformToUni(composer -> composer.migration().importData(release))
-          .onItem().invoke(() -> envir.invalidateCache());
-    }
-    return Uni.createFrom().nullItem();
-  }
-  @PostMapping("/sites") 
-  public Uni<SiteState> createSites() {
-    return getComposer().onItem().transformToUni(composer -> composer.create().repo())
-        .onItem().invoke(() -> envir.invalidateCache());
-  }
-  
-  @GetMapping("/commitlogs") 
-  public Uni<List<SiteCommitLog>> createCommitLog() {
-    return getComposer().onItem().transformToUni(composer -> composer.getClient().commitLog().build());
-  }
-
-  @GetMapping("/sites")
-  public Uni<SiteState> getSites() {
-    return getComposer().onItem().transformToUni(composer -> composer.query().head());
+  public Uni<Model<?>> deleteArticle(@PathVariable("id") String id) {
+    return composer.deleteModel().deleteAny()
+        .props(props -> props.bodyType(BodyType.ARTICLE).id(id)).build();
   }
   @PostMapping("/links") 
-  public Uni<Entity<Link>> createLink(@RequestBody ImmutableCreateLink body) {
-    return getComposer().onItem().transformToUni(composer -> composer.create().link(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<ArticleLink>> createLink(@RequestBody NewArticleLinkProps body) {
+    return composer.newModel().newArticleLink().props(body).build();
   }
   @PutMapping("/links") 
-  public Uni<Entity<Link>> updateLink(@RequestBody ImmutableLinkMutator body) {
-    return getComposer().onItem().transformToUni(composer -> composer.update().link(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<ArticleLink>> updateLink(@RequestBody ModifyArticleLinkProps body) {
+    return composer.modifyModel().modifyArticleLink().props(body).build();
   }
   @DeleteMapping("/links/{id}") 
-  public Uni<Entity<Link>> deleteLink(@PathVariable("id") String linkId, @RequestParam(name = "articleId", required = false) String articleId) {
+  public Uni<Model<?>> deleteLink(@PathVariable("id") String linkId, @RequestParam(name = "articleId", required = false) String articleId) {
     if(articleId == null || articleId.isEmpty()) {
-      return getComposer().onItem().transformToUni(composer -> composer.delete().link(linkId))
-          .onItem().invoke(() -> envir.invalidateCache());
+      return composer.deleteModel()
+          .deleteArticleLink().props(props -> props.articleId(articleId).linkId(linkId)).build()
+          .map(model -> model);
     } 
-    return getComposer().onItem().transformToUni(composer -> composer.delete().linkArticlePage(ImmutableLinkArticlePage.builder()
-      .articleId(articleId)
-      .linkId(linkId)
-      .build()))
-      .onItem().invoke(() -> envir.invalidateCache());  
+    return composer.deleteModel().deleteAny()
+        .props(props -> props.bodyType(BodyType.ARTICLE_LINK).id(linkId)).build();
 
   }
   @PostMapping("/workflows") 
-  public Uni<Entity<Workflow>> createWorkflow(@RequestBody ImmutableCreateWorkflow body) {
-    return getComposer().onItem().transformToUni(composer -> composer.create().workflow(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<ArticleWorkflow>> createWorkflow(@RequestBody NewArticleWorkflowProps body) {
+    return composer.newModel().newArticleWorkflow().props(body).build();
   }
   @PutMapping("/workflows") 
-  public Uni<Entity<Workflow>> updateWorkflow(@RequestBody ImmutableWorkflowMutator body) {
-    return getComposer().onItem().transformToUni(composer -> composer.update().workflow(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<ArticleWorkflow>> updateWorkflow(@RequestBody ModifyArticleWorkflowProps body) {
+    return composer.modifyModel().modifyArticleWorkflow().props(body).build();
   }
   @DeleteMapping("/workflows/{id}") 
-  public Uni<Entity<Workflow>> deleteWorkflow(@PathVariable("id") String linkId,  @RequestParam(name = "articleId", required = false) String articleId) {
+  public Uni<Model<?>> deleteWorkflow(
+      @PathVariable("id") String linkId,  
+      @RequestParam(name = "articleId", required = false) String articleId) {
+    
     if(articleId == null || articleId.isEmpty()) {
-      return getComposer().onItem().transformToUni(composer -> composer.delete().workflow(linkId)).onItem().invoke(() -> envir.invalidateCache());
+      return composer.deleteModel().deleteArticleWorkflow()
+          .props(props -> props.articleId(articleId).workflowId(linkId)).build()
+          .map(model -> model);
     } 
-    return getComposer().onItem().transformToUni(composer -> composer.delete().workflowArticlePage(ImmutableWorkflowArticlePage.builder()
-      .articleId(articleId)
-      .workflowId(linkId)
-      .build()))
-        .onItem().invoke(() -> envir.invalidateCache());  
+    return composer.deleteModel().deleteAny()
+        .props(props -> props.bodyType(BodyType.ARTICLE_WORKFLOW).id(linkId)).build();
+
   }
   @PostMapping("/locales") 
-  public Uni<Entity<Locale>> createLocale(@RequestBody ImmutableCreateLocale body) {
-    return getComposer().onItem().transformToUni(composer -> composer.create().locale(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<Locale>> createLocale(@RequestBody NewLocaleProps body) {
+    return composer.newModel().newLocale().props(body).build();
   }
   @PutMapping("/locales") 
-  public Uni<Entity<Locale>> updateLocale(@RequestBody ImmutableLocaleMutator body) {
-    return getComposer().onItem().transformToUni(composer -> composer.update().locale(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<Locale>> updateLocale(@RequestBody ModifyLocaleProps body) {
+    return composer.modifyModel().modifyLocale().props(body).build();
   }
   @DeleteMapping("/locales/{id}") 
-  public Uni<Entity<Locale>> deleteLocale(@PathVariable("id") String id) {
-    return getComposer().onItem().transformToUni(composer -> composer.delete().locale(id))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<?>> deleteLocale(@PathVariable("id") String id) {
+    return composer.deleteModel().deleteAny()
+        .props(builder -> builder.bodyType(BodyType.LOCALE).id(id)).build();
   }
   @PostMapping("/pages") 
-  public Uni<Entity<Page>> createPage(@RequestBody ImmutableCreatePage body) {
-    return getComposer().onItem().transformToUni(composer -> composer.create().page(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<ArticlePage>> createPage(@RequestBody NewArticlePageProps body) {
+    return composer.newModel().newArticlePage().props(body).build();
   }
   @PutMapping("/pages") 
-  public Uni<List<Entity<Page>>> updatePage(@RequestBody List<ImmutablePageMutator> body) {
-    return getComposer().onItem().transformToUni(composer -> composer.update().pages(new ArrayList<>(body)))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<List<Model<ArticlePage>>> updatePage(@RequestBody List<ModifyArticlePageProps> body) {
+    return composer.modifyModel().modifyArticlePage().props(body).buildAll();
   }
   @DeleteMapping("/pages/{id}") 
-  public Uni<Entity<Page>> deletePage(@PathVariable("id") String id) {
-    return getComposer().onItem().transformToUni(composer -> composer.delete().page(id))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<?>> deletePage(@PathVariable("id") String id) {
+    return composer.deleteModel().deleteAny()
+        .props(builder -> builder.bodyType(BodyType.ARTICLE_PAGE).id(id)).build();
   }
   @PostMapping("/templates") 
-  public Uni<Entity<Template>> createTemplate(@RequestBody ImmutableCreateTemplate body) {
-    return getComposer().onItem().transformToUni(composer -> composer.create().template(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<ArticleTemplate>> createTemplate(@RequestBody NewArticleTemplateProps body) {
+    return composer.newModel().newArticleTemplate().props(body).build();
   }
   @PutMapping("/templates") 
-  public Uni<Entity<Template>> updateTemplate(@RequestBody ImmutableTemplateMutator body) {
-    return getComposer().onItem().transformToUni(composer -> composer.update().template(body))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<ArticleTemplate>> updateTemplate(@RequestBody ModifyArticleTemplateProps body) {
+    return composer.modifyModel().modifyArticleTemplate().props(body).build();
   }
   @DeleteMapping("/templates/{id}") 
-  public Uni<Entity<Template>> deleteTemplate(@PathVariable("id") String id) {
-    return getComposer().onItem().transformToUni(composer -> composer.delete().template(id))
-        .onItem().invoke(() -> envir.invalidateCache());
+  public Uni<Model<?>> deleteTemplate(@PathVariable("id") String id) {
+    return composer.deleteModel().deleteAny()
+        .props(builder -> builder.bodyType(BodyType.ARTICLE_TEMPLATE).id(id)).build();
   }
-  @PostMapping("/releases") 
-  public Uni<Entity<Release>> createRelease(@RequestBody ImmutableCreateRelease body) {
-    return getComposer().onItem().transformToUni(composer -> composer.create().release(body))
-        .onItem().invoke(() -> envir.invalidateCache());
-  }
-  @GetMapping("/releases/{id}") 
-  public Uni<SiteState> getRelease(@PathVariable("id") String id) {
-    return getComposer().onItem().transformToUni(composer -> composer.query().release(id));
-  }
-  @DeleteMapping("/releases/{id}") 
-  public Uni<Entity<Release>> deleteRelease(@PathVariable("id") String id) {
-    return getComposer().onItem().transformToUni(composer -> composer.delete().release(id))
-        .onItem().invoke(() -> envir.invalidateCache());
-  }
-
-  protected Uni<StencilComposer> getComposer() {
-    return this.composer.withCockpitFromProvider();
-  }
-  
-  private SiteState parseSiteState(byte[] body) {
-    try {
-      return objectMapper.readValue(body, ImmutableSiteState.class);
-    } catch(IOException ex1) {
-      log.error("failed to parse site for migration, " + ex1.getMessage(), ex1);
-    }
-    return null;
-  }
-  
-  private Sites parseSites(byte[] body) {    
-    Sites site = null;
-    try {
-      site = objectMapper.readValue(body, ImmutableSites.class);
-      
-      if(site == null || site.getSites() == null  || site.getSites().isEmpty()) {
-        final var md = composer
-            .markdown().json(new String(body, StandardCharsets.UTF_8), true)
-            .build();
-
-        site = composer
-            .sites().imagePath("/images").created(1l)
-            .source(md)
-            .build();
-      }
-
-      return site;
-    } catch(IOException ex1) {
-      log.error("failed to parse site for migration, " + ex1.getMessage(), ex1);
-    }
-    return null;
-  }
-  
 }

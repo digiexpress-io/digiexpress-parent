@@ -1,0 +1,17 @@
+
+
+public class Type0Service {
+
+  public Output execute() {
+    Output output = new Output();
+    output.sum = 10;
+    return output;
+  }
+  
+
+  
+  @ServiceData
+  public static class Output implements Serializable {
+    Integer sum;
+  }
+}

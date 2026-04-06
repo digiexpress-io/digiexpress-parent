@@ -30,6 +30,7 @@ export const GInputDateDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
         format={undefined}
         required={!!element.required}
         onChange={onChange}
+        readOnly={element.readOnly}
       />
     </>);
 }

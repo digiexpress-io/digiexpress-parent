@@ -27,6 +27,7 @@ export interface GInputUploadProps {
   labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
   disabled: boolean;
+  readOnly?: boolean;
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
@@ -64,7 +65,7 @@ export const GInputUpload: React.FC<GInputUploadProps> = (initProps) => {
       error: GInputError,
       label: GInputLabel,
       adornment: GInputAdornment,
-      input: UploadInput,
+      input: props.readOnly ? ReadOnlyUploadInput : UploadInput,
     },
     slotProps: {
       error: { id, errors },
@@ -79,6 +80,28 @@ export const GInputUpload: React.FC<GInputUploadProps> = (initProps) => {
   </GInputUploadRoot>);
 }
 
+
+const ReadOnlyUploadInput: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) => {
+  const fileNames: string[] = props.value ? JSON.parse(props.value) : [];
+  return (
+    <Table>
+      <TableBody>
+        {fileNames.map((name, index) => (
+          <TableRow key={index}>
+            <TableCell>
+              <TextField
+                fullWidth
+                slotProps={{ input: { readOnly: true } }}
+                label={<FormattedMessage id="attachment.fileName" values={{ index: index + 1 }} />}
+                value={name}
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
 
 const UploadInput: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) => {  
 
@@ -165,7 +188,7 @@ const UploadInput: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) =>
               <TextField
                 fullWidth
                 sx={{ pointerEvents: 'none' }}
-                inputProps={{ readOnly: true }}
+                slotProps={{ input: { readOnly: true } }}
                 label={<FormattedMessage id="attachment.fileName" values={{ index: index + 1 }} />}
                 value={name}
                 error={(props.errors?.length ?? 0) > 0}

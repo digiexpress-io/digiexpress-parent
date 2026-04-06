@@ -27,10 +27,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.commons.collections4.map.HashedMap;
 
 import io.resys.thena.fs.entities.Blob;
+import io.resys.thena.fs.entities.Entity;
 import io.resys.thena.fs.entities.ImmutableNode;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Props;
@@ -45,11 +47,11 @@ public class MergeTree {
   @SuppressWarnings("unused")
   private final Optional<Ref> ref;
   private final Map<String, Node> nodes = new HashedMap<>();
-  private final List<String> sessionNodeIds = new ArrayList<>();
+  private final List<String> sessionObjectsIds = new ArrayList<>();
   private final List<String> sessionNodePaths = new ArrayList<>();
   
-  private final Map<String, Optional<Props>> props = new HashedMap<>();
-  private final Map<String, Optional<Blob>> blobs = new HashedMap<>();
+  private final Map<UUID, Optional<Props>> props = new HashedMap<>();
+  private final Map<UUID, Optional<Blob>> blobs = new HashedMap<>();
   
   private final List<Blob> newBlobs = new ArrayList<>();
   private final List<Props> newProps = new ArrayList<>();
@@ -83,8 +85,9 @@ public class MergeTree {
 
   public List<Node> rm(String idOrPath) {
     // 1. Find the target node (the one being explicitly deleted)
+    final var uuid = Entity.toUuidOrNull(idOrPath);
     final Node target = nodes.values().stream()
-      .filter(n -> n.getId().equals(idOrPath) || n.getFullPath().equals(idOrPath))
+      .filter(n -> n.getId().equals(uuid) || n.getFullPath().equals(idOrPath) ||  n.getObjectId().equals(idOrPath) )
       .findFirst()
       .orElse(null);
 
@@ -107,7 +110,7 @@ public class MergeTree {
   }
   
   public MergeTree add(Node node) {
-    RepoAssert.isTrue(!sessionNodeIds.contains(node.getObjectId()), () -> "Can't add the same node multiple times: '" + node.getFullPath() + "'");
+    RepoAssert.isTrue(!sessionObjectsIds.contains(node.getObjectId()), () -> "Can't add the same node multiple times: '" + node.getFullPath() + "'");
     RepoAssert.isTrue(!sessionNodePaths.contains(node.getFullPath()), () -> "Can't add the same node multiple times: '" + node.getFullPath() + "'");
     
     
@@ -118,7 +121,7 @@ public class MergeTree {
     
     // brand new node
     sessionNodePaths.add(node.getFullPath());
-    sessionNodeIds.add(node.getObjectId());
+    sessionObjectsIds.add(node.getObjectId());
     
     nodes.put(node.getObjectId(), node);
     

@@ -17,6 +17,7 @@ export interface GInputSurveyProps {
   description: string | undefined;
   children: React.ReactNode;
   required: boolean;
+  readOnly?: boolean;
 
   options: { id: string, label: string, description?: undefined | string }[];
   questions: { id: string, label: string, description?: undefined | string, value: undefined | string }[];

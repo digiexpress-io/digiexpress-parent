@@ -17,7 +17,7 @@ export const EditString: React.FC<{ builder: StringBuilder, onChange: (value: st
 
   const handleAddValue = (value?: string) => {
     if (value) {
-      props.onChange(props.builder.withNewValue(value))
+      props.onChange(props.builder.withNewValue(value.trim()))
     }
   }
 

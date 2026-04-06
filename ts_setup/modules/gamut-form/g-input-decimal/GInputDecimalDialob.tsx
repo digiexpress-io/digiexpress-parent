@@ -28,6 +28,7 @@ export const GInputDecimalDialob: React.FC<GFormBaseElementProps> = ({ disabled,
         variant='decimal'
         onChange={onChange}
         labelPosition={labelPosition}
+        readOnly={element.readOnly}
       />
     </>
   );

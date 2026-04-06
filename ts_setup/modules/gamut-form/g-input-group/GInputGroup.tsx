@@ -11,7 +11,7 @@ export interface GInputGroupProps {
   disabled: boolean;
   children: React.ReactNode;
   onAddRow: (id: string) => void;
-
+  readOnly?: boolean;
   /**
 - Styles resembling MUI Paper, which include a border, elevation, and padding/margins   
 - Set in Composer properties: border = true  
@@ -50,7 +50,7 @@ export const GInputGroup: React.FC<GInputGroupProps> = (initProps) => {
           <Typography>{props.label}</Typography>
         </div>
         <Divider flexItem />
-        <IconButton disabled={props.disabled} color='primary' onClick={handleAddRow}>
+        <IconButton disabled={props.disabled || props.readOnly} color='primary' onClick={handleAddRow}>
           <AddIcon />
         </IconButton>
       </Label>

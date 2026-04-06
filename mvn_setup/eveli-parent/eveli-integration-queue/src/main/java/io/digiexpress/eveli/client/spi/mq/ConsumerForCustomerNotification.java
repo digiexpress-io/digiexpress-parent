@@ -43,6 +43,7 @@ public class ConsumerForCustomerNotification implements ThenaMqConsumer {
 
   private final CommsClient commsClient;
   private final TaskClient processClient;
+  private final TaskNotificationTransformer transformer;
   private static final Duration timeout = Duration.ofMillis(10000);
   
   @Override
@@ -89,8 +90,8 @@ public class ConsumerForCustomerNotification implements ThenaMqConsumer {
           .messageId(msg.getId())
           .senderId(userId.get())
           .sms(
-              notification.getTitle().get(customerLocale), 
-              notification.getMessage().get(customerLocale)
+              transformer.transform(notification.getTitle().get(customerLocale), notification, customerLocale), 
+              transformer.transform(notification.getMessage().get(customerLocale), notification, customerLocale)
           );
       
       for(final var emailLocale : ImmutableSet.<String>builder()
@@ -98,8 +99,8 @@ public class ConsumerForCustomerNotification implements ThenaMqConsumer {
           .addAll(notification.getTitle().keySet())
           .addAll(notification.getMessage().keySet()).build()) {
        
-        final var emailTitle = notification.getTitle().get(customerLocale);
-        final var emailMessage = notification.getEmail().get(emailLocale);
+        final var emailTitle = transformer.transform(notification.getTitle().get(customerLocale), notification, customerLocale);
+        final var emailMessage = transformer.transform(notification.getEmail().get(emailLocale), notification, customerLocale);
         
         builder.email(emailLocale, emailTitle, emailMessage);
       }

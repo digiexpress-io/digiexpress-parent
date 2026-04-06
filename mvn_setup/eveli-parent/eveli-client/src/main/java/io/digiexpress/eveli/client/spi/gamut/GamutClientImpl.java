@@ -21,15 +21,12 @@ package io.digiexpress.eveli.client.spi.gamut;
  */
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
-import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerRoles;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
-import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.resys.limaone.program.ProgramInput.Participant;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.smallrye.mutiny.Uni;
@@ -41,14 +38,8 @@ public class GamutClientImpl implements GamutClient {
   private final TaskClient taskClient;
   private final MqEventPublisher mqEventPublisher;
   private final AttachmentCommands attachmentsCommands;
-  private final DialobClient dialobCommands;
-  private final EveliEnvirClient envir;
+  private final io.resys.limaone.program.Runtime envir;
 
-  
-  @Override
-  public ProcessAuthorizationQuery queryAuthorization() {
-    return new ProcessAuthorizationQueryImpl(envir);
-  }
 
   @Override
   public UserActionFillEventBuilder fillEvent() {
@@ -57,7 +48,7 @@ public class GamutClientImpl implements GamutClient {
   
   @Override
   public UserActionBuilder userActionBuilder() {
-    return new UserActionsBuilderImpl(dialobCommands, envir, taskClient);
+    return new UserActionsBuilderImpl(envir, taskClient);
   }
 
   @Override
@@ -89,7 +80,7 @@ public class GamutClientImpl implements GamutClient {
   public CancelUserActionBuilder cancelUserActionBuilder() {
     return new CancelUserActionBuilder() {
       
-      private Customer customer;
+      private Participant customer;
       private String actionId;
       
       @Override
@@ -107,7 +98,7 @@ public class GamutClientImpl implements GamutClient {
           
           return taskClient
             .deleteProcesses()
-            .commitAuthor(customer.getCustomerId().getSafeId())
+            .commitAuthor(customer.getPartId().getHashId())
             .commitMessage("Customer cancellation")
             .deleteOne(process.getId().toString())
             .map(ignore -> ImmutableUserAction.builder()
@@ -134,25 +125,18 @@ public class GamutClientImpl implements GamutClient {
         return this;
       }
       @Override
-      public CancelUserActionBuilder customer(Customer customer) {
+      public CancelUserActionBuilder customer(Participant customer) {
         TaskAssert.notNull(customer, () -> "customer can't be null!");
         this.customer = customer;
         return this;
       }
     };
   }
-
-  @Override
-  public UserActionMetaQuery userActionMetaQuery() {
-    return new UserActionMetaQueryImpl(envir);
-  }
-
   @Override
   public UserActionViewBuilder userActionViewBuilder() {
     return new UserActionViewBuilder() {
       private String actionId;
-      private Customer customer;
-      private CustomerRoles customerRoles;
+      private Participant customer;
       @Override
       public UserActionViewBuilder actionId(String actionId) {
         TaskAssert.notNull(actionId, () -> "actionId can't be null!");
@@ -160,20 +144,17 @@ public class GamutClientImpl implements GamutClient {
         return this;
       }
       @Override
-      public UserActionViewBuilder customer(Customer customer, CustomerRoles customerRoles) {
+      public UserActionViewBuilder customer(Participant customer) {
         TaskAssert.notNull(customer, () -> "customer can't be null!");
-        TaskAssert.notNull(customerRoles, () -> "customerRoles can't be null!");
         this.customer = customer;
-        this.customerRoles = customerRoles;
         return this;
       }
       @Override
       public Uni<Void> create() {
         TaskAssert.notNull(customer, () -> "customer can't be null!");
-        TaskAssert.notNull(customerRoles, () -> "customerRoles can't be null!");
         TaskAssert.notNull(actionId, () -> "actionId can't be null!");
         
-        return userActionQuery().customer(customer, customerRoles).findOneById(actionId)
+        return userActionQuery().customer(customer).findOneById(actionId)
           .onItem().transformToUni(action -> {
           
             if(action.isEmpty()) {
@@ -184,9 +165,9 @@ public class GamutClientImpl implements GamutClient {
               return Uni.createFrom().voidItem();
             }
             
-            final var customerId = customer.getCustomerId();
+            final var customerId = customer.getPartId();
             return taskClient.taskBuilder()
-                .userId(customerId.getSafeId(), null)
+                .userId(customerId.getHashId(), null)
                 .addCustomerCommitViewer(taskId);
         });
       }

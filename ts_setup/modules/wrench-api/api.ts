@@ -54,7 +54,7 @@ export namespace HdesApi {
     create(): HdesApi.CreateBuilder {
       const flow = (name: string) => this.createAsset(name, undefined, "FLOW");
       const service = (name: string) => this.createAsset(name, undefined, "FLOW_TASK");
-      const decision = (name: string) => this.createAsset(name, undefined, "DT");
+      const decision = (name: string) => this.createAsset(name, undefined, "DECISION_TABLE");
       const branch = (body: HdesApi.AstCommand[]) => this.createAsset("branch", undefined, "BRANCH", body);
       const tag = (props: {name: string, desc: string}) => this.createAsset(props.name, props.desc, "TAG");
       const site = () => this.createAsset("repo", undefined, "SITE");
@@ -74,16 +74,16 @@ export namespace HdesApi {
       const tag = (id: HdesApi.TagId) => deleteMethod(id);
       return { flow, service, decision, tag, branch };
     }
-
-    update(id: string, body: HdesApi.AstCommand[]): Promise<HdesApi.Site> {
-      return this._api.update(id, body, this._branchName);
+    ast(id: string, bodyType: HdesApi.AstBodyType, body: HdesApi.AstCommand[]): Promise<HdesApi.Entity<any>> {
+      return this._api.ast(id, bodyType, body, this._branchName);
+    }
+    update(id: string, bodyType: HdesApi.AstBodyType, body: HdesApi.AstCommand[]): Promise<HdesApi.Site> {
+      return this._api.update(id, bodyType, body, this._branchName);
     }
     createAsset(name: string, desc: string | undefined, type: HdesApi.AstBodyType | "SITE", body?: HdesApi.AstCommand[]): Promise<HdesApi.Site> {
       return this._api.createAsset(name, desc, type, body, this._branchName);
     }
-    ast(id: string, body: HdesApi.AstCommand[]): Promise<HdesApi.Entity<any>> {
-      return this._api.ast(id, body, this._branchName);
-    }
+
     getSite(): Promise<HdesApi.Site> {
       return this._api.getSite(this._branchName);
     }
@@ -133,7 +133,7 @@ export declare namespace HdesApi {
   export type ServiceId = string;
   export type DecisionId = string;
   export type BranchId = string;
-  export type AstBodyType = "FLOW" | "FLOW_TASK" | "DT" | "TAG" | "BRANCH";
+  export type AstBodyType = "FLOW" | "FLOW_TASK" | "DECISION_TABLE" | "TAG" | "BRANCH";
   export type Direction = "IN" | "OUT";
   export type ValueType = "TIME" | "DATE" | "DATE_TIME" | "INSTANT" | "PERIOD" | "DURATION" |
     "STRING" | "INTEGER" | "LONG" | "BOOLEAN" | "PERCENT" | "OBJECT" | "ARRAY" | "DECIMAL" | 
@@ -145,9 +145,6 @@ export declare namespace HdesApi {
   export type ColumnExpressionType = "IN" | "EQUALS";
   export type FlowCommandMessageType = "ERROR" | "WARNING";
   export type AstCommandValue = (
-    // flow and service related
-    "SET" | "ADD" | "DELETE" | "SET_BODY" |
-
     // DT related
     "SET_NAME" | "SET_DESCRIPTION" | "IMPORT_CSV" | "IMPORT_ORDERED_CSV" |
     "MOVE_ROW" | "MOVE_HEADER" | "INSERT_ROW" | "COPY_ROW" |
@@ -155,10 +152,7 @@ export declare namespace HdesApi {
     "SET_HEADER_SCRIPT" | "SET_HEADER_DIRECTION" | "SET_HEADER_EXPRESSION" | "SET_HIT_POLICY" | "SET_CELL_VALUE" |
     "DELETE_CELL" | "DELETE_HEADER" | "DELETE_ROW" |
     "ADD_LOG" | "ADD_HEADER_IN" | "ADD_HEADER_OUT" | "ADD_ROW" |
-    "SET_VALUE_SET" |
-
-    // BRANCH related
-    "CREATE_BRANCH" | "SET_BRANCH_NAME" | "SET_BRANCH_TAG" | "SET_BRANCH_CREATED"
+    "SET_VALUE_SET"
   );
   export interface CommandsAndChanges {
     commands: AstCommand[];
@@ -198,6 +192,7 @@ export declare namespace HdesApi {
     description?: string;
     headers: Headers;
     bodyType: AstBodyType;
+    parseTree?: { value: string }
   }
   export interface Headers {
     acceptDefs: TypeDef[];
@@ -207,7 +202,6 @@ export declare namespace HdesApi {
     id: string;
     hash: string;
     bodyType: AstBodyType;
-    commands: AstCommand[];
   }
   export interface ProgramAssociation {
     id?: string;
@@ -239,6 +233,7 @@ export declare namespace HdesApi {
   export interface Entity<A extends AstBody> {
     id: EntityId
     ast?: A;
+    commands: AstCommand[];
     source: AstSource;
     warnings: ProgramMessage[];
     errors: ProgramMessage[];
@@ -267,18 +262,13 @@ export declare namespace HdesApi {
 
   // flow
   export interface AstFlow extends AstBody {
-    src: AstFlowRoot;
-    messages: FlowAstCommandMessage[];
+    parseTree: AstFlowRoot;
+    errors: FlowAstCommandMessage[];
   }
   export interface FlowAstCommandMessage {
     line: number;
-    value: string;
-    type: FlowCommandMessageType;
-    range?: FlowAstCommandRange;
-  }
-  export interface FlowAstCommandRange {
-    start: number;
-    end: number;
+    column: number | undefined;
+    msg: string;
   }
   export interface AstFlowInputType {
     name: string;
@@ -502,8 +492,10 @@ export declare namespace HdesApi {
     branchName: string | undefined;
     delete(): DeleteBuilder;
     create(): CreateBuilder;
-    update(id: string, body: AstCommand[]): Promise<Site>;
-    ast(id: string, body: AstCommand[]): Promise<Entity<any>>;
+    
+    update(id: string, bodyType: HdesApi.AstBodyType, body: AstCommand[] | string): Promise<Site>;
+    ast(id: string, bodyType: HdesApi.AstBodyType, body: AstCommand[] | string): Promise<Entity<any>>;
+
     debug(input: DebugRequest): Promise<DebugResponse>;
     getSite(): Promise<Site>
     getSiteCommitLog(): Promise<CommitLog[]>
@@ -527,9 +519,22 @@ export declare namespace HdesApi {
   }
 
   export interface ServiceRestApi {
-    update(id: string, body: HdesApi.AstCommand[], branchName: string | undefined): Promise<HdesApi.Site>;
+    
+    update(
+      id: string, 
+      bodyType: HdesApi.AstBodyType, 
+      body: HdesApi.AstCommand[] | string, 
+      branchName: string | undefined
+    ): Promise<HdesApi.Site>;
+    
+    ast(
+      id: string, 
+      bodyType: HdesApi.AstBodyType, 
+      body: HdesApi.AstCommand[] | string, 
+      branchName: string | undefined
+    ): Promise<HdesApi.Entity<any>>;
+
     createAsset(name: string, desc: string | undefined, type: HdesApi.AstBodyType | "SITE", body: HdesApi.AstCommand[] | undefined, branchName: string | undefined): Promise<HdesApi.Site>;
-    ast(id: string, body: HdesApi.AstCommand[], branchName: string | undefined): Promise<HdesApi.Entity<any>>;
     getSite(branchName: string | undefined): Promise<HdesApi.Site>;
     getSiteCommitLog(): Promise<HdesApi.CommitLog[]>;
     debug(debug: HdesApi.DebugRequest, branchName: string | undefined): Promise<HdesApi.DebugResponse>;

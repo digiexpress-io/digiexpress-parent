@@ -1,0 +1,112 @@
+[
+  {
+    "id": null,
+    "value": null,
+    "type": "ADD_HEADER_IN"
+  },
+  {
+    "id": "0",
+    "value": "letterCode",
+    "type": "SET_HEADER_REF"
+  },
+  {
+    "id": "0",
+    "value": null,
+    "type": "SET_HEADER_SCRIPT"
+  },
+  {
+    "id": "0",
+    "value": "STRING",
+    "type": "SET_HEADER_TYPE"
+  },
+  {
+    "id": "0",
+    "value": "M, S, L",
+    "type": "SET_VALUE_SET"
+  },
+  {
+    "id": null,
+    "value": null,
+    "type": "ADD_HEADER_OUT"
+  },
+  {
+    "id": "1",
+    "value": "decimalValue",
+    "type": "SET_HEADER_REF"
+  },
+  {
+    "id": "1",
+    "value": null,
+    "type": "SET_HEADER_SCRIPT"
+  },
+  {
+    "id": "1",
+    "value": "DECIMAL",
+    "type": "SET_HEADER_TYPE"
+  },
+  {
+    "id": "1",
+    "value": "",
+    "type": "SET_VALUE_SET"
+  },
+  {
+    "id": null,
+    "value": null,
+    "type": "ADD_ROW"
+  },
+  {
+    "id": "3",
+    "value": "[\"M\"]",
+    "type": "SET_CELL_VALUE"
+  },
+  {
+    "id": "4",
+    "value": "0.5",
+    "type": "SET_CELL_VALUE"
+  },
+  {
+    "id": null,
+    "value": null,
+    "type": "ADD_ROW"
+  },
+  {
+    "id": "6",
+    "value": "[\"S\"]",
+    "type": "SET_CELL_VALUE"
+  },
+  {
+    "id": "7",
+    "value": "0.7",
+    "type": "SET_CELL_VALUE"
+  },
+  {
+    "id": null,
+    "value": null,
+    "type": "ADD_ROW"
+  },
+  {
+    "id": "9",
+    "value": "[\"L\"]",
+    "type": "SET_CELL_VALUE"
+  },
+  {
+    "id": "10",
+    "value": "1",
+    "type": "SET_CELL_VALUE"
+  },
+  {
+    "id": null,
+    "value": "FIRST",
+    "type": "SET_HIT_POLICY"
+  },
+  {
+    "id": null,
+    "value": "decimalTest",
+    "type": "SET_NAME"
+  },
+  {
+    "id": null,
+    "value": null,
+    "type": "SET_DESCRIPTION"
+  }
+]

@@ -119,10 +119,8 @@
     <module>bom</module>
     <module>build-parent</module>
     <module>thena-parent</module>
-    <module>hdes-parent</module>
-    <module>stencil-parent</module>
     <module>eveli-parent</module>
-    <module>dialob-parent</module>
+    <module>limaone-parent</module>
     <module>tagomi-parent</module>
     <module>lp-parent</module>
   </modules>

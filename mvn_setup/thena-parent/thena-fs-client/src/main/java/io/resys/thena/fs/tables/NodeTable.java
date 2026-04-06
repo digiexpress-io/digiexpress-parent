@@ -1,7 +1,5 @@
 package io.resys.thena.fs.tables;
 
-import java.util.List;
-
 /*-
  * #%L
  * thena-fs-client
@@ -23,19 +21,10 @@ import java.util.List;
  */
 
 import java.util.Optional;
-import java.util.function.Function;
 
 import io.resys.thena.api.annotations.TenantSql;
-import io.resys.thena.fs.entities.Blob;
 import io.resys.thena.fs.entities.ImmutableNode;
-import io.resys.thena.fs.entities.ImmutableNodeTransitives;
 import io.resys.thena.fs.entities.Node;
-import io.resys.thena.fs.entities.Props;
-import io.resys.thena.fs.tables.BlobTable.BlobMapper;
-import io.resys.thena.fs.tables.ObjectIndexTable.ObjectIndexMapper;
-import io.resys.thena.fs.tables.PropsTable.PropsMapper;
-import io.resys.thena.support.RepoAssert;
-import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -43,16 +32,17 @@ import io.vertx.mutiny.sqlclient.Row;
   order = 100,
   ddl = """
     CREATE DOMAIN {node}_required_text AS TEXT NOT NULL;
+    CREATE DOMAIN {node}_required_uuid AS UUID NOT NULL;
     
     CREATE TYPE {node} AS (
-      node_id {node}_required_text,
+      node_id {node}_required_uuid,
       
       object_id {node}_required_text, -- technical id of the object (user api generated)
       node_path TEXT,
       node_name {node}_required_text,
 
-      blob_id TEXT,
-      props_id TEXT
+      blob_id UUID,
+      props_id UUID
     );
     
     CREATE DOMAIN {node}_strict AS {node}
@@ -138,16 +128,6 @@ import io.vertx.mutiny.sqlclient.Row;
         IF missing_count > 0 THEN
             RAISE EXCEPTION 'Node(code 008) validation failed: % props_id references do not exist', missing_count;
         END IF;
-        
-        
-        -- Validate object index
-        -- SELECT count(*) INTO missing_count
-        -- FROM unnest(NEW.tree_nodes) nodes
-        -- RIGHT JOIN {object_index} p ON p.object_id = nodes.object_id;
-
-        -- IF missing_count <> 1 THEN
-        --     RAISE EXCEPTION 'Node(code 009) validation failed: % object_id references do not exist', missing_count;
-        -- END IF;
 
         RETURN NEW;
     END;
@@ -159,119 +139,6 @@ import io.vertx.mutiny.sqlclient.Row;
   """
 )
 public interface NodeTable {
-
-  public static final String BASELINE = 
-"""
-  SELECT json_agg(
-    json_build_object(
-      'node_id', nodes.node_id,
-      'object_id', nodes.object_id,
-      'node_path', nodes.node_path,
-      'node_name', nodes.node_name,
-      
-      'created_at', idx.created_at,
-      'updated_at', idx.updated_at,
-      'created_by', idx.created_by,
-      'updated_by', idx.updated_by,
-                              
-      'blob_id', nodes.blob_id,
-      'blob_type', blobs.blob_type,
-      'blob_class', blobs.blob_class,
-      'blob_value', null, --HYDRATE BLOB VALUE
-
-      'props_id', nodes.props_id,
-      'props_labels', props.props_labels, 
-      'props_flags', props.props_flags,
-      'props_comments', props.props_comments,
-      'props_permissions', props.props_permissions
-    )
-  ) 
-
-  FROM unnest(tree.tree_nodes) AS nodes
-  LEFT JOIN (
-    SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
-           created_commit.commit_created_at as created_at,
-           updated_commit.commit_created_at as updated_at
-    FROM {object_index} as object_index
-    LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.commit_id
-    LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.commit_id
-  ) as idx ON idx.object_id = nodes.object_id
-
-  LEFT JOIN {props} as props 
-    ON props.props_id = nodes.props_id 
-    AND nodes.props_id IS NOT NULL
-        
-  LEFT JOIN {blob} as blobs 
-    ON blobs.blob_id = nodes.blob_id
-    AND nodes.blob_id IS NOT NULL
-""";
-      ; 
-
-  public static Builder sql() {
-    return new Builder();
-  }
-
-  public static class Builder {
-    private Function<Object, Integer> sqlProps;
-    private boolean includeBlobs = false;
-    private Optional<List<String>> objectId = Optional.empty();
-
-    public Builder includeBlobs(boolean includeBlobs) {
-      this.includeBlobs = includeBlobs;
-      return this;
-    }
-    
-    public Builder objectId(List<String> objectIdOrFullPath) {
-      this.objectId = Optional.ofNullable(objectIdOrFullPath);
-      return this;
-    }
-    
-    /**
-     * @return baseline sql with placeholders
-     */
-    private String baseline() {
-      return BASELINE;
-
-    }
-
-    /**
-     * @return extra constraint for join to select only asked blobs and props
-     */
-    private String hydrateBlobValue() {
-      if(this.objectId.isPresent()) {
-        final var object_id_arr = "$" + this.sqlProps.apply(objectId.map(e -> e.toArray(new String[] {})).get());
-        return 
-"""
-CASE 
-        WHEN (
-          nodes.object_id = ANY({object_id_arr}) 
-          OR CONCAT_WS('/', NULLIF(nodes.node_path, ''), nodes.node_name) = ANY({object_id_arr})
-        ) THEN blobs.blob_value 
-        ELSE NULL 
-      END,
-""".replace("{object_id_arr}", object_id_arr);
-      } else if(this.includeBlobs) {
-        return "blobs.blob_value,";
-      } else {
-        return "NULL,";
-      }
-    }
-    
-    public String build() {
-      return build((_ignore) -> { return 0; });
-    }
-
-    public String build(Function<Object, Integer> sqlProps) {
-      RepoAssert.notNull(sqlProps, () -> "sqlProps must be defined!");
-      this.sqlProps = sqlProps;
-      
-      final var baseline = baseline();
-      final var hydrateBlobValue = hydrateBlobValue();
-      final var statement = baseline.replace("null, --HYDRATE BLOB VALUE", hydrateBlobValue);
-      final var sql = "({statement}) as nodes_json".replace("{statement}", statement);
-      return sql;
-    }
-  }
   
   class NodeMapper implements TenantSql.RowMapper<Node> {
     @Override
@@ -280,38 +147,13 @@ CASE
     }
     public static Node fromRow(Row row) {
       return ImmutableNode.builder()
-          .id(row.getString("node_id"))
+          .id(row.getUUID("node_id"))
           .objectId(row.getString("object_id"))
           .nodePath(row.getString("node_path"))
           .nodeName(row.getString("node_name"))
-          .blobId(Optional.ofNullable(row.getString("blob_id")))
-          .propsId(Optional.ofNullable(row.getString("props_id")))
+          .blobId(Optional.ofNullable(row.getUUID("blob_id")))
+          .propsId(Optional.ofNullable(row.getUUID("props_id")))
           .build();
     }
-    
-    public static Node fromJson(JsonObject node_json) {
-      final var createtAt = Optional.ofNullable(node_json.getString("created_at"));
-      
-      final var index = createtAt.map(ignore -> ObjectIndexMapper.fromJson(node_json));
-      final var blobId = Optional.ofNullable(node_json.getString("blob_id"));
-      final var propsId = Optional.ofNullable(node_json.getString("props_id"));
-      
-      final Optional<Blob> blob = blobId.map(ignore -> node_json).map(BlobMapper::fromJson);
-      final Optional<Props> props = propsId.map(ignore -> node_json).map(PropsMapper::fromJson);
-      
-      return ImmutableNode.builder()
-          .id(node_json.getString("node_id"))
-          .objectId(node_json.getString("object_id"))
-          .nodePath(Optional.ofNullable(node_json.getString("node_path")))
-          .nodeName(node_json.getString("node_name"))
-          .blobId(blobId)
-          .propsId(propsId)
-          .transitives(ImmutableNodeTransitives.builder()
-              .objectIndex(index.orElse(null))
-              .blob(blob.orElse(null))
-              .props(props.orElse(null))
-              .build())
-          .build();
-    } 
   }
 }

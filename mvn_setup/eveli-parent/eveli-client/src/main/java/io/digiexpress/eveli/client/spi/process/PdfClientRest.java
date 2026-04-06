@@ -42,7 +42,7 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
-import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.resys.limaone.spi.dialob.FormDb;
 import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.Data;
@@ -55,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PdfClientRest implements PdfClient {
 
   private final TaskClient client;  
-  private final DialobClient dialob;
+  private final FormDb dialob;
   private final RestTemplate restTemplate;
   private final String serviceUrl;
   private final ObjectMapper om;
@@ -78,14 +78,15 @@ public class PdfClientRest implements PdfClient {
     public byte[] build() {
       try {
         initObjects();
-        final var questionnaire = dialob.getQuestionnaireById(process.getQuestionnaireId());
-        final var form = dialob.getFormById(questionnaire.getMetadata().getFormId());
+        final var questionnaire = dialob.withTenant().formInstanceQuery()
+            .includeForm(true)
+            .getOneSync(process.getQuestionnaireId());
         
         
         final PrintoutInput input = PrintoutInput.builder()
-            .form(form)
-            .session(questionnaire)
-            .lang(questionnaire.getMetadata().getLanguage())
+            .form(questionnaire.getForm().get())
+            .session(questionnaire.getQuestionnaire())
+            .lang(questionnaire.metadata().getLanguage())
             .referenceId(task.getTaskRef())
             
             .customerName(requestedFields.contains(PdfRequestFields.CUSTOMER_NAME) ? task.getClientIdentificator() : null)

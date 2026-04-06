@@ -12,6 +12,7 @@ import io.digiexpress.eveli.mig.v6.assets.AssetEvent.ObjectType;
 import io.digiexpress.eveli.mig.v6.assets.CommitNode.NodeOperation;
 import io.digiexpress.eveli.mig.v6.baseline.OldEnvir;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit;
+import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -88,17 +89,14 @@ public class AssetMerger {
   
   
   private void createCommit(CommitNode node) {
-
-    
     final var commit = ImmutableAssetEvent.builder()
-        .sourceType(node.getType())
-        .createdAt(node.getCommit().getDatetime().atOffset(ZoneOffset.of("+2")))
-        .operations(node.getNodeOperations().stream().map(object -> {
-          final var operation = mapToObjectOperation(node, object);
-          return operation;
-        })
-            
-        .toList()).build();
+      .sourceType(node.getType())
+      .createdAt(node.getCommit().getDatetime().atOffset(ZoneOffset.of("+2")))
+      .operations(node.getNodeOperations().stream().map(object -> {
+        final var operation = mapToObjectOperation(node, object);
+        return operation;
+      })
+      .toList()).build();
     
     log.info("{}, {} file(s), at: {}", node.getType().name(), commit.getOperations().size(), node.getCommit().getDatetime());    
     this.merged.add(commit);
@@ -161,7 +159,7 @@ public class AssetMerger {
         .createdAt(commit.getCreatedAt())
         .startsAt(doc.getDocStartsAt().get())
         .description(doc.getDocDescription().orElse(""))
-        .errors(doc.getDocMeta().orElse(null))
+        .errors(doc.getDocMeta().orElse(new JsonObject()))
         .sources(src.getValue())
         .sourceTree(envir)
         .originalCommitId(commit.getId())

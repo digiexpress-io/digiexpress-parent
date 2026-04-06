@@ -138,9 +138,8 @@ const ServiceItem: React.FC<{ serviceId: HdesApi.ServiceId }> = ({ serviceId }) 
   const serviceName = service.ast ? service.ast.name : service.id;
   const lastUpdated = session.getLastUpdated(serviceId);
 
-
   const decisions: RefDecision[] = service.associations
-    .filter(a => a.refType === "DT")
+    .filter(a => a.refType === "DECISION_TABLE")
     .map(a => ({ entity: session.getDecision(a.ref), ref: a }));
   const flows: RefFlow[] = service.associations
     .filter(a => a.refType === "FLOW")
@@ -181,13 +180,12 @@ const ServiceItem: React.FC<{ serviceId: HdesApi.ServiceId }> = ({ serviceId }) 
               return service.status;
           }
         })()}
-        labelInfo={`${service.errors.length + service.warnings.length}`}
+        labelInfo={`${service.errors.length}`}
         labelcolor={theme.palette.primary.dark}
-        interactive={(service.errors.length + service.warnings.length) > 0}
+        interactive={(service.errors.length) > 0}
       >
 
         {service.errors.map((view, index) => (<ErrorItem key={index} msg={view} nodeId={`${view.id}-error-${index}`} />))}
-        {service.warnings.map((view, index) => (<WarningItem key={index} msg={view} nodeId={`${view.id}-warning-${index}`} />))}
       </TreeItem>
 
 

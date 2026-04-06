@@ -7,6 +7,11 @@ import { useVariantOverride } from '@dxs-ts/gamut-api';
 
 export const MUI_NAME = 'GInputInt';
 
+interface OwnerState {
+  variant: string;
+  disabled: boolean;
+  readOnly?: boolean;
+}
 
 export const useUtilityClasses = (itemId: string, variant: string | undefined) => {
   const slots = {
@@ -28,7 +33,7 @@ export const GInputIntRoot = styled('div', {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
+})<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
 
   if (ownerState.disabled) {
     return {
@@ -38,6 +43,18 @@ export const GInputIntRoot = styled('div', {
       '& .MuiOutlinedInput-root.Mui-disabled': {
         backgroundColor: theme.palette.background.paper,
       }
+    }
+  }
+
+  if (ownerState.readOnly) {
+    return {
+      '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+      '& .MuiOutlinedInput-root': { backgroundColor: 'transparent' },
+      '& .MuiInputBase-input': {
+        cursor: 'not-allowed',
+        color: theme.palette.text.primary,
+        ...theme.typography.body1,
+      },
     }
   }
 });

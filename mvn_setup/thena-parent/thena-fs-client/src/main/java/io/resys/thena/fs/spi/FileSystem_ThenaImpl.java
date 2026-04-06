@@ -59,6 +59,7 @@ import lombok.RequiredArgsConstructor;
 public class FileSystem_ThenaImpl implements FileSystem {
 
   private final FsDb startingState;
+  private final FileSystemConfig config;
   
   @Override
   public TenantActions tenants() {
@@ -77,6 +78,14 @@ public class FileSystem_ThenaImpl implements FileSystem {
     return this.withTenant(repo.getId());
   }
   @Override
+  public Uni<FileSystem> withDefaultTenant(Optional<String> tenantIdOrName) {
+    if(tenantIdOrName.isEmpty()) {
+      return Uni.createFrom().item(this);
+    }
+    return startingState.withTenant(tenantIdOrName.get())
+        .onItem().transform(impl -> new FileSystem_ThenaImpl(impl, config));
+  }
+  @Override
   public FileSystemTenant withTenant(String tenantId) {
     RepoAssert.notEmpty(tenantId, () -> "tenantId can't be empty!");
     
@@ -86,9 +95,9 @@ public class FileSystem_ThenaImpl implements FileSystem {
       @Override public String getTenantId() { return tenantId; }
       
       @Override public CommitQuery commitQuery() { return new CommitQueryImpl(start, tenantId); }
-      @Override public CommitBuilder commitBuilder() { return new CommitBuilderImpl(start, tenantId); }
+      @Override public CommitBuilder commitBuilder() { return new CommitBuilderImpl(start, tenantId, config); }
       
-      @Override public BranchQuery branchQuery() { return new BranchQueryImpl(start); }
+      @Override public BranchQuery branchQuery() { return new BranchQueryImpl(start, tenantId, config); }
       @Override public CreateBranch createBranch() { return new CreateBranchImpl(start, tenantId); }
       
       @Override public CreateTag createTag() { return new CreateTagImpl(start, tenantId); }
@@ -145,11 +154,18 @@ public class FileSystem_ThenaImpl implements FileSystem {
     
     public FileSystem_ThenaImpl build() {
       final var state = new FsDbImpl(datasource());
-      return new FileSystem_ThenaImpl(state);
+      final var cache = new FileSystemCache_Caffeine();
+      final var config = ImmutableFileSystemConfig.builder().cache(cache).build();
+      return new FileSystem_ThenaImpl(state, config);
     }
   }
 
   public FsDb getStartingState() {
     return startingState;
   }
+  
+  public String getTenantName() {
+    return startingState.getDataSource().getTenant().getName();
+  }
+
 }

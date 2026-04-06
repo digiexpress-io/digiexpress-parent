@@ -1,27 +1,50 @@
-import { FsNode, useFs } from "@dxs-ts/fs-api";
+import { Fs, FsTab, useFsNav, useFsDirent } from "@dxs-ts/fs-api";
 import { FsBreadcrumbProps } from "./FsBreadcrumbProps";
 
 
 export interface OwnerState {
   isDarkMode: boolean;
-  assetName: string | undefined; 
+  assetName: string | undefined;
   assetPath: string | undefined;
-  assetNode: FsNode | undefined;
+  assetDirent: Fs.DirentBase | undefined;
   isError: boolean | undefined;
 }
 
-export function useOwnerState(_props: FsBreadcrumbProps): OwnerState {
-  const { isDarkMode, activeTabPath, activeNode } = useFs();
+function getAssetName(activeTab: FsTab | undefined): string | undefined {
+  if (!activeTab) {
+    return undefined;
+  }
+  if (activeTab.type === 'create') {
+    return activeTab.direntType;
+  }
+  return activeTab.dirent.name;
+}
 
-  const pathParts = activeTabPath.split(' / ');
-  const assetName = pathParts[pathParts.length - 1];
-  const assetPath = pathParts.slice(0, -1).join(' / ');
+function getAssetPath(activeTab: FsTab | undefined): string | undefined {
+  if (!activeTab) {
+    return undefined;
+  }
+  if (activeTab.type === 'create') {
+    return activeTab.pathToTopParent;
+  }
+  return activeTab.pathToTopParent.split(' / ').slice(0, -1).join(' / ');
+}
+
+export function useOwnerState(_props: FsBreadcrumbProps): OwnerState {
+  const { isDarkMode, openTabs, activeTabIndex, activeDirent } = useFsNav();
+  const { getDirent } = useFsDirent();
+
+  const activeTab = openTabs[activeTabIndex];
+  const assetName = getAssetName(activeTab);
+  const assetPath = getAssetPath(activeTab);
+  const activeDirentEntry = activeDirent ? getDirent(activeDirent.id) : undefined;
+  const isError = (activeDirentEntry?.errors.length ?? 0) > 0;
 
   return {
-    assetNode: activeNode,
+    assetDirent: activeDirent,
     assetName,
     assetPath,
-    isError: activeNode?.error,
+    isError,
     isDarkMode
   }
 }

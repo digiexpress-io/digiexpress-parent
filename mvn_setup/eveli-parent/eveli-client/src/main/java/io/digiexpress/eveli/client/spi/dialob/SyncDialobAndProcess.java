@@ -21,7 +21,6 @@ package io.digiexpress.eveli.client.spi.dialob;
  */
 
 import java.io.Serializable;
-import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Optional;
@@ -36,15 +35,12 @@ import io.digiexpress.eveli.client.api.TaskClient.MergeProcess;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
-import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
+import io.resys.limaone.program.FlowProgram.FlowResult;
+import io.resys.limaone.program.ImmutableParticipantForm;
+import io.resys.limaone.spi.program.input.DefaultProgramInput;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
-import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,8 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SyncDialobAndProcess {
 
   private final TaskClient taskClient;
-  private final EveliEnvirClient envir;
-  private final DialobClient dialobClient;
+  private final io.resys.limaone.program.Runtime envir;
   private final ObjectMapper objectMapper;
   
   
@@ -85,11 +80,11 @@ public class SyncDialobAndProcess {
   
 
   private Uni<ProcessInstance> executeCustomerAssignment(ProcessInstance init, Uni<Questionnaire> questionnaireUni) {
-    return Uni.combine().all().unis(getRuntime(init), questionnaireUni, getTask(init))
+    return Uni.combine().all().unis(questionnaireUni, getTask(init))
       .asTuple()
       .onItem().transformToUni(tuple -> {
       
-        final var task = tuple.getItem3().orElseThrow(() -> new SyncDialobAndProcessException("Skipping execution: '" + init.getId() + "' because task MUST be defined for objective!"));
+        final var task = tuple.getItem2().orElseThrow(() -> new SyncDialobAndProcessException("Skipping execution: '" + init.getId() + "' because task MUST be defined for objective!"));
         final var questionnaire = tuple.getItem2();
         
         return taskClient.modifyProcess()
@@ -129,18 +124,13 @@ public class SyncDialobAndProcess {
   }
   
   private Uni<ProcessInstance> executeUserTask(ProcessInstance init, Uni<Questionnaire> questionnaireUni) {
-    return Uni.combine().all().unis(getRuntime(init), questionnaireUni)
-      .asTuple()
-      .onItem().transformToUni(tuple -> {
-        
-        final var questionnaire = tuple.getItem2();
-        final var runtime = tuple.getItem1();
-      
+    return questionnaireUni.onItem().transformToUni(questionnaire -> {
+        final var runtime = getRuntime(init);
         return taskClient.modifyProcess()
           .commitAuthor(SyncDialobAndProcess.class.getSimpleName())
           .commitMessage("Sync Form and Eveli")
           .id(init.getId().toString())
-          .onAnyUni((merger) -> executeWorkflow(questionnaire, merger, runtime)
+          .onAnyUni((merger) -> Uni.createFrom().item(executeWorkflow(questionnaire, merger, runtime))
               .onItem().invoke(flow -> merger
                 .flowBody(flow.map(this::toJsonString).orElse("{}"))
                 .formBody(toJsonString(questionnaire))
@@ -160,25 +150,24 @@ public class SyncDialobAndProcess {
   }
   
   private Uni<Questionnaire> getQuestionnaire(ProcessInstance init) {
-    return Uni.createFrom().item(() -> dialobClient.getQuestionnaireAndMetaById(init.getQuestionnaireId()))
+    
+    return envir.getProperties().getFormDb().withTenant().formInstanceQuery().findOne(init.getQuestionnaireId())
       .onItem().transform(questionnaire -> {
         
-        if(questionnaire.getMetadata().getStatus() != Status.COMPLETED) {
+        if(questionnaire.get().metadata().getStatus() != Status.COMPLETED) {
           log.debug("Skipping execution because questionnaire: {} state is not completed!", init.getQuestionnaireId());
           throw new SyncDialobAndProcessException(
               "Can't transfer questionnaire to flow, " + 
               "expected status: 'COMPLETED' " + 
-              "but was: '" + questionnaire.getMetadata().getStatus() + "'"
+              "but was: '" + questionnaire.get().metadata().getStatus() + "'"
           );
         }
-        return questionnaire;
+        return questionnaire.get().getQuestionnaire();
       });
   }
   
-  private Uni<EveliRuntime> getRuntime(ProcessInstance init) {
-    return envir
-        .withCockpitIdSupplier(() -> Uni.createFrom().item(Optional.ofNullable(init.getCockpitId())))
-        .runtimeQuery().getOne();
+  private io.resys.limaone.program.Runtime getRuntime(ProcessInstance init) {
+    return envir.withTenant(Optional.ofNullable(init.getCockpitId()));
   }
   
   private String toJsonString(Object object) {
@@ -189,43 +178,29 @@ public class SyncDialobAndProcess {
     }
   }
   
-  private Uni<Optional<FlowResult>> executeWorkflow(Questionnaire questionnaire, MergeProcess merger, EveliRuntime runtime) {
+  private Optional<FlowResult> executeWorkflow(Questionnaire questionnaire, MergeProcess merger, io.resys.limaone.program.Runtime runtime) {
     
     final var instance = merger.getCurrentState();
     
     if(instance.getTaskId() != null) {
       log.debug("Skipping execution: {} because task is already created, process status handling is probably wrong!", instance.getId());
       merger.skip();
-      return Uni.createFrom().item(Optional::empty);
+      return Optional.empty();
     }
     
-    return Uni.createFrom().item(() -> {
-      final var flowInput = new HashMap<String, Serializable>();
-      flowInput.put("processId", instance.getId());
-      flowInput.put("questionnaireId", instance.getQuestionnaireId());
-      flowInput.put("workflowName", instance.getWorkflowName());
-      
-      
-      final var flowName = Optional.ofNullable(instance.getFlowName()).orElseGet(() -> {
-        return runtime.getStencil(OffsetDateTime.now())
-          .getSites().values().stream().flatMap(e -> e.getLinks().values().stream())
-          .filter(topic -> Boolean.TRUE.equals(topic.getWorkflow()))
-          .filter(topic -> topic.getValue().equals(instance.getWorkflowName()))
-          .map(e -> e.getFlowName())
-          .findFirst().orElse(null);
-      });
-      
-      RepoAssert.notEmpty(flowName, () -> "Can't identify stencil workflow for name: " + instance.getWorkflowName() + "!");
-      
-      
-      final FlowResult run = runtime.getWrench()
-          .inputMap(flowInput)
-          .flow(flowName)
-          .andGetBody();
-      
-      return Optional.of(run);
-    })
-    .runSubscriptionOn(Infrastructure.getDefaultWorkerPool());
+    final var flowInput = new HashMap<String, Serializable>();
+    flowInput.put("processId", instance.getId());
+    
+    final var wk = runtime.getBundle().queryWorkflows()
+      .name(instance.getWorkflowName())
+      .findOne()
+      .get();
+    
+    return wk.runFlow(
+      ImmutableParticipantForm.builder().questionnaireId(instance.getQuestionnaireId()).build(), 
+      DefaultProgramInput.of(flowInput)
+    )
+    .getFlow();
   }
   
   private static class SyncDialobAndProcessException extends RuntimeException {

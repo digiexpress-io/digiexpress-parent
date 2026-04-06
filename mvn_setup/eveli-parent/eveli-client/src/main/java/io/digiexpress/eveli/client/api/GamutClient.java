@@ -31,10 +31,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
-import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerRoles;
+import io.resys.limaone.program.ProgramInput.Participant;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.Data;
@@ -52,33 +51,15 @@ public interface GamutClient {
   AttachmentDownloadQuery attachmentDownloadQuery();
   CancelUserActionBuilder cancelUserActionBuilder();
   UserActionFillEventBuilder fillEvent();
-  UserActionMetaQuery userActionMetaQuery();
   UserActionViewBuilder userActionViewBuilder();
   
-  ProcessAuthorizationQuery queryAuthorization();
-
-  
-  interface ProcessAuthorizationQuery {
-    ProcessAuthorizationQuery cockpitId(@Nullable String cockpitId);
-    ProcessAuthorizationQuery userRoles(List<String> userRoles);
-    Uni<ProcessAuthorization> getOne();
-  }
-  
-
-  
   interface UserActionViewBuilder {
-    UserActionViewBuilder customer(Customer customer, CustomerRoles customerRoles);
+    UserActionViewBuilder customer(Participant customer);
     UserActionViewBuilder actionId(String actionId);
     Uni<Void> create();
 
   }
-  
-  interface UserActionMetaQuery {
-    UserActionMetaQuery locale(String locale);
-    UserActionMetaQuery actionId(String actionId);
-    UserActionMetaQuery cockpitId(String cockpitId);
-    Uni<UserActionMeta> getOne();
-  }
+
   
   interface UserActionFillEventBuilder {
     UserActionFillEventBuilder sessionId(String sessionId);
@@ -88,7 +69,7 @@ public interface GamutClient {
   }
   
   interface CancelUserActionBuilder {
-    CancelUserActionBuilder customer(Customer customer);
+    CancelUserActionBuilder customer(Participant customer);
     CancelUserActionBuilder actionId(String id);
     Uni<UserAction> cancelOne();
   }
@@ -103,7 +84,7 @@ public interface GamutClient {
   interface ReplyToBuilder {
     ReplyToBuilder actionId(String actionId);
     ReplyToBuilder from(ReplayToInit init);
-    ReplyToBuilder customer(Customer customer);
+    ReplyToBuilder customer(Participant customer);
     Uni<UserMessage> createOne();
   }
   
@@ -116,13 +97,13 @@ public interface GamutClient {
   }
   
   interface UserMessagesQuery {
-    Multi<UserMessage> findAllByActionId(Customer customer, String actionId);
-    Multi<UserMessage> findAllByUserId(Customer customer);
+    Multi<UserMessage> findAllByActionId(Participant customer, String actionId);
+    Multi<UserMessage> findAllByUserId(Participant customer);
   }
   
   interface UserActionQuery {
     UserActionQuery cockpitId(String cockpitId);
-    UserActionQuery customer(Customer customer, CustomerRoles customerRoles);
+    UserActionQuery customer(Participant participant);
     
     Multi<UserAction> findAll();
     Uni<Optional<UserAction>> findOneById(String id);
@@ -130,12 +111,10 @@ public interface GamutClient {
   }
   
   interface UserActionBuilder {
-    UserActionBuilder customer(Customer customer);
-    UserActionBuilder customerRoles(CustomerRoles customerRoles);
+    UserActionBuilder participant(Participant customer);
     UserActionBuilder actionId(String actionId);
     UserActionBuilder taskId(@Nullable String taskId);
     UserActionBuilder cockpitId(@Nullable String cockpitId);
-    UserActionBuilder anon(boolean anon);
     UserActionBuilder clientLocale(String clientLocale); 
     UserActionBuilder inputContextId(String inputContextId);
     UserActionBuilder inputParentContextId(String inputParentContextId);
@@ -143,14 +122,6 @@ public interface GamutClient {
     Uni<UserAction> createOne();
   }
   
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableUserActionMeta.class)
-  @JsonDeserialize(as = ImmutableUserActionMeta.class)
-  interface UserActionMeta {
-    String getActionId();
-    TopicLink getTopicLink();
-    @Nullable Long getExpiresInSeconds();
-  }
 
   @Value.Immutable
   @JsonSerialize(as = ImmutableUserAttachmentUploadInit.class)

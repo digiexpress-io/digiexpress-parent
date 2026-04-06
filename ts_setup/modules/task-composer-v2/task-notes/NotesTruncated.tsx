@@ -58,7 +58,7 @@ export const NotesTruncated: React.FC<NotesTruncatedTruncatedProps> = ({ task, s
 
           <Box display='flex' alignItems='center' justifyContent='flex-end'>
             <Typography component='div' sx={{ ...style?.bodyTypographySmall }} className={classes.noteAuthor}>
-              {`${comment.userName}` + " noted on " + `${formatAnyDateShort(comment.created)}`}
+              {`${comment.userName}` + " " + `${formatAnyDateShort(comment.created)}`}
             </Typography>
           </Box>
           </Box>

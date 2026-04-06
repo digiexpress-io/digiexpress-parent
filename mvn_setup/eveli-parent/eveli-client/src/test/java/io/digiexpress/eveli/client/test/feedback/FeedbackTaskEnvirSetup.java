@@ -121,7 +121,7 @@ public class FeedbackTaskEnvirSetup {
         .await().atMost(Duration.ofMinutes(1));
     log.info("Repo created: " + repo);
     
-    return new TaskClientImpl(null, null, null, store);
+    return new TaskClientImpl(null, null, store, null);
   }
   
 }

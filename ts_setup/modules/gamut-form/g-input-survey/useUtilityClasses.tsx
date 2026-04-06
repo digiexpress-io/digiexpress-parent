@@ -50,6 +50,11 @@ export const GInputSurveyRoot = styled('div', {
       }
     } : {},
 
+    ...(ownerState.readOnly) ? {
+
+    } : {},
+
+
     '& .GInputSurvey-body': {
       display: 'grid',
       alignItems: 'center',

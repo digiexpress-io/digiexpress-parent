@@ -20,7 +20,6 @@ package io.digiexpress.eveli.client.spi.gamut;
  * #L%
  */
 
-import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
 import io.digiexpress.eveli.client.api.GamutClient.ReplyToBuilder;
@@ -30,6 +29,7 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
+import io.resys.limaone.program.ProgramInput.Participant;
 import io.smallrye.mutiny.Uni;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public class ReplyToBuilderImpl implements ReplyToBuilder {
   private final MqEventPublisher mqEventPublisher;
   private String actionId;
   private ReplayToInit from;
-  private Customer customer;
+  private Participant customer;
 
   @Override
   public Uni<UserMessage> createOne() throws ProcessNotFoundException {
@@ -54,7 +54,7 @@ public class ReplyToBuilderImpl implements ReplyToBuilder {
     return taskClient.queryTaskProcesess().findOneById(actionId)
       .onItem().transformToUni(found -> {
         final var process = found.orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
-        final var customer = this.customer.getPrincipal();    
+    
         final var taskId = process.getTaskId();
         
         return taskClient.taskBuilder()

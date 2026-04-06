@@ -77,7 +77,7 @@ export const bs = {
   'gamut.forms.messages': 'Poruke',
   'gamut.forms.page.subtitle': 'Sljedeće:{nextPageTitle}',
   'gamut.forms.page.subtitle.complete': 'Sljedeće: Završi',
-  'gamut.forms.page.stepper': '{start] od {end}',
+  'gamut.forms.page.stepper': '{start} od {end}',
   'gamut.forms.page.selection.key': 'Korak {stepNumber} od {totalSteps}',
   'gamut.forms.page.next': 'Sledeći',
   'gamut.forms.page.complete': 'Završi',

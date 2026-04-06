@@ -1,7 +1,5 @@
 package io.digiexpress.eveli.client.config;
 
-import java.util.Optional;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 
@@ -48,11 +46,7 @@ import io.digiexpress.eveli.client.web.resources.worker.SchedulerApiCotroller;
 import io.digiexpress.eveli.client.web.resources.worker.TaskApiController;
 import io.digiexpress.eveli.client.web.resources.worker.UserProfileController;
 import io.digiexpress.eveli.client.web.resources.worker.WorkerIamController;
-import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.eveli.dialob.api.DialobReviewClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
-import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
 
 
 
@@ -81,14 +75,13 @@ public class EveliAutoConfigWorker {
       FeedbackClient feedback,
       WorkerAuthClient security, 
       TaskClient taskclient, 
-      DialobClient dialobClient,
-      DialobReviewClient dialobReviewClient,
+      io.resys.limaone.program.Runtime runtime,
       MqEventPublisher mqEventPublisher,
       TaskViewerPublisher viewerEventPublisher,
       TaskAuditClient taskAuditClient,
       DialobCreateEventPublisher dialobCreateEventPublisher) {
     
-    return new TaskApiController(dialobCreateEventPublisher, security, taskclient, dialobClient, dialobReviewClient, mqEventPublisher, viewerEventPublisher, taskAuditClient);
+    return new TaskApiController(dialobCreateEventPublisher, security, taskclient, mqEventPublisher, viewerEventPublisher, taskAuditClient, runtime);
   }
   @Bean 
   public ProcessApiController processApiController(TaskClient taskClient) {
@@ -118,21 +111,16 @@ public class EveliAutoConfigWorker {
   public DialobCreateEventPublisher dialobCreateEventPublisher(
       ApplicationEventPublisher publisher,
       TaskClient taskClient,
-      DialobClient dialobClient,
-      EveliEnvirClient envir,
       MqEventPublisher mqEventPublisher,
-      ApplicationContext context
-  ) {
-    final var cockpitProvider = Optional.ofNullable(context.getBeanProvider(CockpitAwareProvider.class).getIfAvailable());
-    return new DialobCreateEventPublisher(publisher, taskClient, dialobClient, envir, mqEventPublisher, cockpitProvider);
+      ApplicationContext context,
+      io.resys.limaone.program.Runtime envirClient) {
+    
+    return new DialobCreateEventPublisher(publisher, taskClient, envirClient, mqEventPublisher);
   }
-  
-  
   @Bean
   public TaskViewerPublisher viewerEventPublisher(ApplicationEventPublisher publisher, TaskClient client) {
     return new TaskViewerPublisher(publisher, client);
   }
-  
   @Bean
   public SchedulerApiCotroller schedulerApiCotroller(DialobScheduler dialob) {
     return new SchedulerApiCotroller(dialob);

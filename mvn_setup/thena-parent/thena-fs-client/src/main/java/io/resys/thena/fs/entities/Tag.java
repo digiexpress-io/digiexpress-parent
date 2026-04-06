@@ -22,6 +22,7 @@ package io.resys.thena.fs.entities;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.immutables.value.Value;
 
@@ -36,10 +37,10 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableTag.class)
 public interface Tag extends Entity {
   
-  String getId();
-  Optional<String> getRefId();
+  UUID getId();
+  Optional<UUID> getRefId();
   Optional<String> getExternalId();
-  String getCommitId();
+  UUID getCommitId();
 
   OffsetDateTime getTagCreatedAt();
   Optional<OffsetDateTime> getTagStartsAt();

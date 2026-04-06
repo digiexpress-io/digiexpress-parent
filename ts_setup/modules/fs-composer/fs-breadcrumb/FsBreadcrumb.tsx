@@ -1,6 +1,7 @@
 import React from 'react';
-import { Typography, Tooltip } from '@mui/material';
-import { FsColors, FsIcons } from '../fs-theme';
+import { Typography } from '@mui/material';
+import { useIntl } from 'react-intl';
+import { FsColors, FsIcons, FsIcon } from '../fs-theme';
 import { useOwnerState } from './useOwnerState';
 import { FsBreadcrumbRoot, useUtilityClasses } from './useUtilityClasses';
 import { FsBreadcrumbProps } from './FsBreadcrumbProps';
@@ -8,15 +9,16 @@ import { FsBreadcrumbProps } from './FsBreadcrumbProps';
 
 
 export const FsBreadcrumb: React.FC<FsBreadcrumbProps> = (props) => {
+  const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
 
   return (
     <FsBreadcrumbRoot ownerState={ownerState}>
       {ownerState.isError && (
-        <Tooltip title={<>An issue with this asset needs attention.</>}>
-          <FsIcons.Error fontSize="small" sx={{ color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight }} />
-        </Tooltip>
+        <FsIcon small icon={FsIcons.Error} tooltip={intl.formatMessage({ id: 'fs.breadcrumb.tooltip.error' })}
+          color={ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight}
+        />
       )}
 
       {ownerState.assetPath && (
@@ -30,4 +32,5 @@ export const FsBreadcrumb: React.FC<FsBreadcrumbProps> = (props) => {
     </FsBreadcrumbRoot>
   );
 };
+
 

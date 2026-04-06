@@ -23,8 +23,6 @@ export interface NewReleaseProps {
 
 export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open, setOpen }) => {
   const intl = useIntl();
-  const { wrenchTags } = useFetch('worker/rest/api/assets/any-tags/wrench-tags.GET', {});
-  const { contentTags } = useFetch('worker/rest/api/assets/any-tags/stencil-tags.GET', {});
   const { savePublication } = useFetch('worker/rest/api/assets/publications.POST', {});
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
 
@@ -148,9 +146,6 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
             sx={{ minHeight: '72px' }}
             onChange={e => setForm(prev => ({ ...prev, description: e.target.value }))}
           />
-
-          <TagComponent name='stencilTag' labelId='publications.contentTag' newTag={form.name} tags={contentTags} />
-          <TagComponent name='wrenchTag' labelId='publications.wrenchTag' newTag={form.name} tags={wrenchTags} />
         </Stack>
       </DialogContent>
 

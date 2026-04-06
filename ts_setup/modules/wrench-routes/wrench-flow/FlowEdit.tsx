@@ -41,15 +41,13 @@ const FlowEdit: React.FC<{ flow: HdesApi.Entity<HdesApi.AstFlow> }> = ({ flow })
   const [ast, setAst] = React.useState<HdesApi.AstFlow | undefined>(flow.ast);
   
   const [showGraph, setShowGraph] = React.useState<boolean>(true);
-  const commands = React.useMemo(() => update ? update.value : flow.source.commands, [flow, update]);
-  const flowId = flow.id;
-  
+  const commands: string = React.useMemo(() => update ? update.value : flow.ast?.parseTree?.value ?? '', [flow, update]) as string;
   const astReqSeq = React.useRef(0);
+  const flowId = flow.id;
 
   React.useEffect(() => {
     const reqId = ++astReqSeq.current;
-  
-    service.ast(flowId, commands)
+    service.ast(flowId, 'FLOW', commands)
       .then(data => {
         if (reqId === astReqSeq.current) {
           setAst(data.ast);
@@ -62,10 +60,10 @@ const FlowEdit: React.FC<{ flow: HdesApi.Entity<HdesApi.AstFlow> }> = ({ flow })
   }, [commands, flowId, service]);
 
 
-  const originalState = flow.ast?.src.value;
-  const updatedContent = update?.value[0].value;
+  const originalState = flow.ast?.parseTree?.value;
+  const updatedContent: string = update?.value as string;
   const src = updatedContent ?? originalState;
-  const lintingMessages = ast?.messages ?? [];
+  const lintingMessages = ast?.errors ?? [];  
 
   return (<Box sx={{ height: 1, display: 'flex' }}>
     <Tooltip title={<FormattedMessage id={showGraph ? 'flows.graph.hide' : 'flows.graph.show'} />} placement="left">
@@ -77,7 +75,7 @@ const FlowEdit: React.FC<{ flow: HdesApi.Entity<HdesApi.AstFlow> }> = ({ flow })
       <FlowCodeEditor id={flow.id} src={src ? src : "#--failed-to-parse"}
         ast={ast}
         flow={flow}
-        onChange={(value) => actions.handlePageUpdate(flow.id, [{ type: "SET_BODY", value }])}
+        onChange={(value) => actions.handlePageUpdate(flow.id, value)}
         messages={lintingMessages} />
       </Box>
       <Divider orientation='vertical' />

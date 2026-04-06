@@ -15,7 +15,7 @@ const ArticleLinksComposer: React.FC<{ articleId: StencilApi.ArticleId }> = (pro
   const { onTabCurrentClose } = useStencilNav();
   const view = session.getArticleView(props.articleId);
 
-  const links: StencilApi.Link[] = Object.values(site.links)
+  const links: StencilApi.Link[] = Object.values(site.articleLinks)
     .map((w) => ({ w, name: session.getLinkName(w.id)?.name }))
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((w) => w.w);
@@ -49,10 +49,10 @@ const ArticleLinksComposer: React.FC<{ articleId: StencilApi.ArticleId }> = (pro
         headers={["link.value", "link.type"]}
         rows={links.map(row => row.id)}
         filterRow={(row, search) => {
-          const link = site.links[row];
+          const link = site.articleLinks[row];
           return link.body.value.toLowerCase().indexOf(search) > -1;
         }}
-        renderCells={(row) => [session.getLinkName(site.links[row].id)?.name, site.links[row].body.contentType]}
+        renderCells={(row) => [session.getLinkName(site.articleLinks[row].id)?.name, site.articleLinks[row].body.contentType]}
         selected={view.links.map(l => l.link.id)}
         cancel={{
           label: 'button.cancel',

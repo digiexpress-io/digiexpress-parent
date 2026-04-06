@@ -20,14 +20,13 @@ package io.resys.thena.fs.entities;
  * #L%
  */
 
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.hash.Hashing;
 
 import io.resys.thena.support.RepoAssert;
 import jakarta.annotation.Nullable;
@@ -38,7 +37,7 @@ import jakarta.annotation.Nullable;
 public interface Node extends Entity {
   
   // the actual hash calculated based on the contents
-  String getId();
+  UUID getId();
   
   // convenience junk data, the json content object id thats connected to json in the blob
   String getObjectId();
@@ -50,10 +49,10 @@ public interface Node extends Entity {
   String getNodeName();
   
   // for directorys this is not present, for actual files its always present, part of has calculation
-  Optional<String> getBlobId();
+  Optional<UUID> getBlobId();
   
   // extra comments, permissions, docs for everything in file or directory... meta content, part of has calculation
-  Optional<String> getPropsId();
+  Optional<UUID> getPropsId();
 
   @Value.Auxiliary
   @Nullable 
@@ -126,18 +125,18 @@ public interface Node extends Entity {
   public static ImmutableNode.Builder newInstance(
       Optional<String> path, 
       String objectId, String name,
-      Optional<String> blobId, Optional<String> propsId) {
+      Optional<UUID> blobId, 
+      Optional<UUID> propsId) {
     
-    final var content = new StringBuilder();
+    final var content = Entity.uuid();
     content.append(path.orElse(""));
     content.append(name);
     content.append(objectId);
-    content.append(blobId.orElse(""));
-    content.append(propsId.orElse(""));
+    content.append(blobId);
+    content.append(propsId);
     
-    final var hash = Hashing.murmur3_128().hashString(content.toString(), StandardCharsets.UTF_8).toString();
     return ImmutableNode.builder()
-        .id(hash)
+        .id(content.build())
         .objectId(objectId)
         .nodePath(path)
         .nodeName(name)

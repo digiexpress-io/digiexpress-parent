@@ -25,6 +25,7 @@ export interface GInputIntProps {
   labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
   required: boolean;
+  readOnly?: boolean;
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
@@ -61,7 +62,7 @@ export const GInputInt: React.FC<GInputIntProps> = (initProps) => {
     slots: {
       error: GInputError,
       label: GInputLabel,
-      input: IntInput,
+      input: props.readOnly ? ReadOnlyIntInput : IntInput,
       adornment: GInputAdornment
     },
     slotProps: {
@@ -85,6 +86,10 @@ const DEFAULT_FORMAT: numbro.Format = {
 }
 
 
+
+const ReadOnlyIntInput: React.FC<GInputBaseAnyProps & GInputIntProps> = (props) => {
+  return <TextField value={props.value ?? '--'} slotProps={{ input: { readOnly: true } }} />;
+}
 
 const IntInput: React.FC<GInputBaseAnyProps & GInputIntProps> = (props) => {
 
@@ -118,7 +123,8 @@ const IntInput: React.FC<GInputBaseAnyProps & GInputIntProps> = (props) => {
 
   return (<>
     <InputHidden id={props.id} value={value} format={finalFormat} onChange={props.onChange}/>
-    <TextField disabled={props.disabled} value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0} />
+    <TextField disabled={props.disabled} value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0}
+    />
     </>
   )
 }

@@ -25,8 +25,8 @@ export declare namespace WrenchComposerApi {
   interface PageUpdate {
     saved: boolean;
     origin: HdesApi.Entity<any>;
-    value: HdesApi.AstCommand[];
-    withValue(value: HdesApi.AstCommand[]): PageUpdate;
+    value: HdesApi.AstCommand[] | string;
+    withValue(value: HdesApi.AstCommand[] | string): PageUpdate;
   }
 
 
@@ -43,7 +43,7 @@ export declare namespace WrenchComposerApi {
 
     withDebug(page: DebugSession): Session;
     withPage(page: HdesApi.EntityId): Session;
-    withPageValue(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): Session;
+    withPageValue(page: HdesApi.EntityId, value: HdesApi.AstCommand[] | string): Session;
     withoutPages(pages: HdesApi.EntityId[]): Session;
     withSite(site: HdesApi.Site): Session;
     withCommitlogs(commitlogs: HdesApi.CommitLog[]): Session;
@@ -54,7 +54,7 @@ export declare namespace WrenchComposerApi {
     handleLoadSite(site?: HdesApi.Site): Promise<void>;
     handleDebugUpdate(debug: DebugSession): void;
     handleBranchUpdate(branchName: string | undefined): void
-    handlePageUpdate(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): void;
+    handlePageUpdate(page: HdesApi.EntityId, value: HdesApi.AstCommand[] | string): void;
     handlePageUpdateRemove(pages: HdesApi.EntityId[]): void;
   }
 
@@ -152,7 +152,7 @@ export namespace WrenchComposerApi {
       function handleDebugUpdate(debug: WrenchComposerApi.DebugSession): void {
         dispatch((prev) => prev.withDebug(debug)) 
       }
-      function handlePageUpdate(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): void {
+      function handlePageUpdate(page: HdesApi.EntityId, value: HdesApi.AstCommand[] | string): void {
         dispatch((prev) => prev.withPageValue(page, value)) 
       }
       function handlePageUpdateRemove(pages: HdesApi.EntityId[]): void {

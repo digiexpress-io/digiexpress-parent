@@ -33,7 +33,6 @@ import io.resys.thena.fs.entities.ImmutableTag;
 import io.resys.thena.fs.entities.ImmutableTagTransitives;
 import io.resys.thena.fs.entities.Tag;
 import io.resys.thena.fs.tables.filters.TagTableFilter;
-import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -61,8 +60,8 @@ import io.vertx.mutiny.sqlclient.Row;
       
       external_id TEXT,
       
-      ref_id TEXT, --soft link
-      commit_id TEXT NOT NULL REFERENCES {commit}(commit_id)      
+      ref_id UUID, --soft link
+      commit_id UUID NOT NULL REFERENCES {commit}(commit_id)      
     );
     
     CREATE INDEX {tag}_name_idx ON {tag}(tag_name);
@@ -98,9 +97,11 @@ public interface TagTable {
   @TenantSql.FindAll(
     sql = """
       SELECT tag.*,
-             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
+             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message,
+             cardinality(tree.tree_nodes) as commit_nodes_count
       FROM {tag} as tag
       LEFT JOIN {commit} as commit ON tag.commit_id = commit.commit_id
+      JOIN {tree} as tree ON tree.tree_id = commit.tree_id
     """,
     rowMapper = TagMapper.class
   )
@@ -110,9 +111,11 @@ public interface TagTable {
     optional = false,
     sql = """
       SELECT tag.*,
-             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
+             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message,
+             cardinality(tree.tree_nodes) as commit_nodes_count
       FROM {tag} as tag
       LEFT JOIN {commit} as commit ON tag.commit_id = commit.commit_id
+      JOIN {tree} as tree ON tree.tree_id = commit.tree_id
       WHERE tag.id = $1
     """,
     rowMapper = TagMapper.class
@@ -123,9 +126,11 @@ public interface TagTable {
     optional = true,
     sql = """
       SELECT tag.*,
-             commit.commit_created_at, commit.commit_author, commit.commit_message
+             commit.commit_created_at, commit.commit_author, commit.commit_message,
+             cardinality(tree.tree_nodes) as commit_nodes_count
       FROM {tag} as tag
       LEFT JOIN {commit} as commit ON tag.commit_id = commit.commit_id
+      JOIN {tree} as tree ON tree.tree_id = commit.tree_id
       WHERE tag.tag_name = $1 OR tag.tag_id::text = $1
     """,
     rowMapper = TagMapper.class
@@ -148,9 +153,11 @@ public interface TagTable {
   @TenantSql.FindAll(
     sql = """
       SELECT tag.*,
-             commit.commit_created_at, commit.commit_author, commit.commit_message
+             commit.commit_created_at, commit.commit_author, commit.commit_message,
+             cardinality(tree.tree_nodes) as commit_nodes_count
       FROM {tag} as tag
       LEFT JOIN {commit} as commit ON tag.commit_id = commit.commit_id
+      JOIN {tree} as tree ON tree.tree_id = commit.tree_id
       WHERE tag.commit_id = $1
     """,
     rowMapper = TagMapper.class
@@ -200,12 +207,12 @@ public interface TagTable {
       
 
       return ImmutableTag.builder()
-          .id(TableUtils.toStringUUID(row, "tag_id"))
-          .refId(Optional.ofNullable(row.getString("ref_id")))
+          .id(row.getUUID("tag_id"))
+          .refId(Optional.ofNullable(row.getUUID("ref_id")))
           
           .tagName(row.getString("tag_name"))
           .tagDescription(Optional.ofNullable(tagDescription))
-          .commitId(row.getString("commit_id"))
+          .commitId(row.getUUID("commit_id"))
           .tagCreatedAt(row.getOffsetDateTime("tag_created_at"))
           .tagAuthor(row.getString("tag_author"))
           .tagExtension(Optional.ofNullable(row.getJsonObject("tag_extension")))
@@ -228,7 +235,7 @@ public interface TagTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Tag tag) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        TableUtils.toUuid(tag.getId()),
+        tag.getId(),
         tag.getTagName(),
         tag.getTagDescription().orElse(null),
         tag.getCommitId(),
@@ -267,7 +274,7 @@ public interface TagTable {
         tag.getTagLifecycle().orElse(null),
         tag.getTagHealth().orElse(null),
         
-        TableUtils.toUuid(tag.getId())
+        tag.getId()
       });
     }
   }
@@ -276,7 +283,7 @@ public interface TagTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Tag tag) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        TableUtils.toUuid(tag.getId())
+        tag.getId()
       });
     }
   }

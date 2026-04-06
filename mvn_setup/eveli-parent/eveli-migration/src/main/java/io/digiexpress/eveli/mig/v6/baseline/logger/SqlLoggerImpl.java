@@ -3,7 +3,6 @@ package io.digiexpress.eveli.mig.v6.baseline.logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -124,16 +123,14 @@ abstract class SqlLoggerImpl<T> implements SqlLogger<T> {
       return this;
     }
     final var json = JsonObject.mapFrom(entity);
-    final var taskId = Optional
-      .ofNullable(json.getLong("task_id"))
-      .orElse(json.getLong("id"));
+    final var taskId = json.getString("id");
     
     messages.add(LogEvent.builder()
         .level(LogEventLevel.DEBUG)
         .props(Map.of(
             "text", "succefully converted entry",
             "conversion type", type.getSimpleName(),
-            "task id", String.valueOf(taskId) 
+            "target id", String.valueOf(taskId) 
         ))
         .build());
     return this;
@@ -142,27 +139,19 @@ abstract class SqlLoggerImpl<T> implements SqlLogger<T> {
   @Override
   public SqlLogger<T> mappingFail(Row task, Exception e) {
   
-    Long taskId = null;      
-    try {
-      taskId = task.getLong("task_id");
-    } catch(Exception ex) {}
+    String taskId = task.getString("id");
 
-    try {
-      if(taskId == null) {
-        taskId = task.getLong("id");
-      }
-    } catch(Exception ex) {}
-    
-    messages.add(LogEvent.builder()
+    final var msg = LogEvent.builder()
         .level(LogEventLevel.ERROR)
         .props(Map.of(
             "text", "failed to convert entry",
             "conversion type", type.getSimpleName(),
-            "task id", String.valueOf(taskId),
+            "target id", String.valueOf(taskId),
             "error", e.getMessage(),
             "stack", ExceptionUtils.getStackTrace(e)
         ))
-        .build());
+        .build();
+    messages.add(msg);
     return this;
   }
   @SuppressWarnings("rawtypes")

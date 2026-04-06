@@ -28,29 +28,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import io.resys.thena.fs.entities.Commit;
+import io.resys.thena.fs.entities.Entity;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Ref;
 import io.smallrye.mutiny.tuples.Tuple3;
 
 public class CommitTreeBuilder {
-  private static final String FIRST_COMMIT = "FIRST_COMMIT";
-  private final Set<String> blobIds = new HashSet<>();
-  private final Set<String> propIds = new HashSet<>();
+  private static final UUID FIRST_COMMIT = Entity.EMPTY_UUID;
+  private final Set<UUID> blobIds = new HashSet<>();
+  private final Set<UUID> propIds = new HashSet<>();
 
-  private final Map<String, Commit> commits = new HashMap<>();
-  private final Map<String, Node> nodes = new HashMap<>();
-  private final Map<String, Ref> refs = new HashMap<>();
+  private final Map<UUID, Commit> commits = new HashMap<>();
+  private final Map<UUID, Node> nodes = new HashMap<>();
+  private final Map<UUID, Ref> refs = new HashMap<>();
   
   // parent id - (1..n) child commits
-  private final Map<String, Map<String, Commit>> commitsByParent = new HashMap<>();
+  private final Map<UUID, Map<UUID, Commit>> commitsByParent = new HashMap<>();
   
   // commit id - (1..n) ref id
-  private final Map<String, Collection<String>> commitRefs = new HashMap<>();
+  private final Map<UUID, Collection<UUID>> commitRefs = new HashMap<>();
   
   // commit id - (1..n) node
-  private final Map<String, Map<String, Node>> commitNodes = new HashMap<>();
+  private final Map<UUID, Map<UUID, Node>> commitNodes = new HashMap<>();
   
   public CommitTreeBuilder(List<Tuple3<Commit, Ref, Node>> rows) {
     // populate caches
@@ -83,7 +85,7 @@ public class CommitTreeBuilder {
       // commit by parent id
       final var parentId = commit.getParentId().orElse(FIRST_COMMIT);
       if(!commitsByParent.containsKey(parentId)) {
-        commitsByParent.put(parentId, new HashMap<String, Commit>());
+        commitsByParent.put(parentId, new HashMap<UUID, Commit>());
       } 
       commitsByParent.get(parentId).put(commit.getId(), commit);
     }

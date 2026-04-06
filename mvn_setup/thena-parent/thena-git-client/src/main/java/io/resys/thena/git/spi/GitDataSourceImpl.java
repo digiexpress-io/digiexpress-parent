@@ -34,6 +34,8 @@ import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
 import io.resys.thena.git.api.GitClient;
 import io.resys.thena.git.api.GitDataSource;
 import io.resys.thena.git.spi.support.RepoException;
+import io.resys.thena.spi.InternalAliasQueryImpl;
+import io.resys.thena.spi.InternalMemberQueryImpl;
 import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -72,7 +74,14 @@ public class GitDataSourceImpl implements GitDataSource {
   public <R> Uni<R> withGitTransaction(TxScope scope, TransactionFunction<R> callback) {
     return toGitState(scope.getTenantId()).onItem().transformToUni(state -> state.withTransaction(callback));
   }
-
+  @Override
+  public InternalAliasQuery alias() {
+    return new InternalAliasQueryImpl(dataSource);
+  }
+  @Override
+  public InternalMemberQuery member() {
+    return new InternalMemberQueryImpl(dataSource);
+  }
   private <T> Uni<T> tenantNotFound(String tenantId) {
     return tenant().findAll().collect().asList().onItem().transform(repos -> {
       final var ex = RepoException.builder().notRepoWithName(tenantId, repos);

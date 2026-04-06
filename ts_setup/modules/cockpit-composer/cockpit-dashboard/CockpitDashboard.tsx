@@ -10,15 +10,17 @@ import { CockpitCardFactory, COCKPIT_CARD_IDS } from '../cockpit-card-factory';
 import { CockpitStatusBadge } from './CockpitStatusBadge';
 
 const CockpitDashboardInternal: React.FC = () => {
-  const { cockpitContainer, activity } = useCockpit();
+  const { cockpitContainer } = useCockpit();
   const { cardOrder } = useCockpitCardConfig();
 
-  const isActive = activity.activeCockpitId === cockpitContainer.config.id;
+
+  
+  const isActive = !!cockpitContainer.member?.aliasStatus;
   return (
     <Grid2 container spacing={2} m={1}>
       <Grid2 size={12}>
         <Box display='flex' alignItems='center' justifyContent='space-between' gap={1}>
-          <Typography variant='h1'>{cockpitContainer.config.cockpitConfigName}</Typography>
+          <Typography variant='h1'>{cockpitContainer.alias.aliasName}</Typography>
           <CockpitStatusBadge isActive={isActive} />
         </Box>
       </Grid2>

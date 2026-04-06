@@ -1,8 +1,10 @@
 import React from 'react';
-import { Box, Typography, List, IconButton, Badge, Tooltip } from '@mui/material';
-import { FsIcons } from '../fs-theme';
-import { FsExplorerNode } from '../fs-explorer-node';
-import { FsNodeMenu } from '../fs-node-menu';
+import { Box, Typography, List, IconButton, Badge } from '@mui/material';
+import { useIntl } from 'react-intl';
+import { FsIcons, FsIcon } from '../fs-theme';
+import { useFsNav } from '@dxs-ts/fs-api';
+import { FsDirent } from '../fs-dirent';
+import { FsDirentMenu } from '../fs-dirent-menu';
 import { FsSearch } from '../fs-search';
 import { FsExplorerNoSearchResults } from './FsExplorerNoSearchResults';
 import { FsExplorerProps } from './FsExplorerProps';
@@ -10,101 +12,88 @@ import { useOwnerState } from './useOwnerState';
 import { useUtilityClasses, FsExplorerRoot } from './useUtilityClasses';
 
 export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
+  const intl = useIntl();
   const classes = useUtilityClasses();
   const ownerState = useOwnerState(props);
+  const { openCreateTab } = useFsNav();
 
 
   return (
     <FsExplorerRoot className={classes.root} isDarkTheme={ownerState.isDarkMode}>
       <Box className={classes.title}>
-        <Typography className={classes.titleText} mr={3}>File System Composer</Typography>
+        <Typography className={classes.titleText} mr={3}>{intl.formatMessage({ id: 'fs.explorer.title' })}</Typography>
         <Box flexGrow={1} />
-        <Tooltip title='Toggle search' arrow enterDelay={1000}>
-          {ownerState.isDarkMode ? (
-            <IconButton className={classes.iconDark} onClick={() => ownerState.setSearchExpanded(!ownerState.isSearchExpanded)}>
-              <Badge
-                className={classes.badgeDark}
-                badgeContent={ownerState.isSearchExpanded ? <FsIcons.Close sx={{ fontSize: '8px' }} /> : undefined}
+        {ownerState.isDarkMode ? (
+          <IconButton className={classes.iconDark} onClick={() => ownerState.setSearchExpanded(!ownerState.isSearchExpanded)}>
+            <Badge className={classes.badgeDark}
+              badgeContent={ownerState.isSearchExpanded ? <FsIcon icon={FsIcons.Close} xsmall /> : undefined}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            >
+              <FsIcon icon={FsIcons.Search} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.toggleSearch' })} />
+            </Badge>
+          </IconButton>
+        ) : (
+          <IconButton className={classes.iconLight} onClick={() => ownerState.setSearchExpanded(!ownerState.isSearchExpanded)}>
+              <Badge className={classes.badgeLight}
+                badgeContent={ownerState.isSearchExpanded ? <FsIcon icon={FsIcons.Close} xsmall /> : undefined}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               >
-                <FsIcons.Search sx={{ fontSize: '15px', transform: 'scaleX(-1)' }} />
-              </Badge>
-            </IconButton>
-          ) : (
-              <IconButton className={classes.iconLight} onClick={() => ownerState.setSearchExpanded(!ownerState.isSearchExpanded)}>
-                <Badge
-                  className={classes.badgeLight}
-                  badgeContent={ownerState.isSearchExpanded ? <FsIcons.Close sx={{ fontSize: '8px' }} /> : undefined}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              >
-                <FsIcons.Search sx={{ fontSize: '15px', transform: 'rotate(90deg)' }} />
-                </Badge>
-              </IconButton>
-          )}
-        </Tooltip>
-        <Tooltip title='New file' arrow enterDelay={1000}>
-          {ownerState.isDarkMode ? (
-            <IconButton className={classes.iconDark}>
-              <Badge className={classes.badgeDark} badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <FsIcons.File sx={{ fontSize: '15px' }} />
-              </Badge>
-            </IconButton>
-          ) : (
-              <IconButton className={classes.iconLight}>
-                <Badge className={classes.badgeLight} badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <FsIcons.File sx={{ fontSize: '15px' }} />
-                </Badge>
-              </IconButton>
-          )}
-        </Tooltip>
-        <Tooltip title='New folder' arrow enterDelay={1000}>
-          {ownerState.isDarkMode ? (
-            <IconButton className={classes.iconDark}>
-              <Badge className={classes.badgeDark} badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <FsIcons.Folder sx={{ fontSize: '15px' }} />
-              </Badge>
-            </IconButton>
-          ) : (
-              <IconButton className={classes.iconLight}>
-                <Badge className={classes.badgeLight} badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <FsIcons.Folder sx={{ fontSize: '15px' }} />
-                </Badge>
-              </IconButton>
-          )}
+              <FsIcon icon={FsIcons.Search} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.toggleSearch' })} />
+            </Badge>
+          </IconButton>
+        )}
+        {ownerState.isDarkMode ? (
+          <IconButton className={classes.iconDark}>
+            <Badge className={classes.badgeDark} badgeContent={<FsIcon icon={FsIcons.Add} xsmall />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+              <FsIcon icon={FsIcons.File} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.newFile' })} />
+            </Badge>
+          </IconButton>
+        ) : (
+          <IconButton className={classes.iconLight}>
+            <Badge className={classes.badgeLight} badgeContent={<FsIcon icon={FsIcons.Add} xsmall />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+              <FsIcon icon={FsIcons.File} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.newFile' })} />
+            </Badge>
+          </IconButton>
+        )}
+        {ownerState.isDarkMode ? (
+          <IconButton className={classes.iconDark} onClick={() => openCreateTab('folder', undefined)}>
+            <Badge className={classes.badgeDark} badgeContent={<FsIcon icon={FsIcons.Add} xsmall />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+              <FsIcon icon={FsIcons.Folder} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.newFolder' })} />
+            </Badge>
+          </IconButton>
+        ) : (
+          <IconButton className={classes.iconLight} onClick={() => openCreateTab('folder', undefined)}>
+            <Badge className={classes.badgeLight} badgeContent={<FsIcon icon={FsIcons.Add} xsmall />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+              <FsIcon icon={FsIcons.Folder} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.newFolder' })} />
+            </Badge>
+          </IconButton>
+        )}
 
-        </Tooltip>
-
-        <Tooltip title='Collapse all' arrow enterDelay={1000}>
-          {ownerState.isDarkMode ? (
-            <IconButton
-              className={classes.iconDark}
-              onClick={() => ownerState.collapseAll(ownerState.fsData, ownerState.setFsData)}
-              disabled={!ownerState.isAnyNodeExpanded}
+        {ownerState.isDarkMode ? (
+          <IconButton className={classes.iconDark}
+            onClick={() => ownerState.collapseAll()}
+            disabled={!ownerState.isAnyDirentExpanded}
+          >
+            <FsIcon icon={FsIcons.CollapseAll} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.collapseAll' })} />
+          </IconButton>
+        ) : (
+            <IconButton className={classes.iconLight}
+              onClick={() => ownerState.collapseAll()}
+              disabled={!ownerState.isAnyDirentExpanded}
             >
-              <FsIcons.CollapseAll sx={{ fontSize: '15px' }} />
-            </IconButton>
-          ) : (
-              <IconButton
-                className={classes.iconLight}
-              onClick={() => ownerState.collapseAll(ownerState.fsData, ownerState.setFsData)}
-              disabled={!ownerState.isAnyNodeExpanded}
-            >
-              <FsIcons.CollapseAll sx={{ fontSize: '15px' }} />
-              </IconButton>
-          )}
-        </Tooltip>
+            <FsIcon icon={FsIcons.CollapseAll} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.collapseAll' })} />
+          </IconButton>
+        )}
 
-        <Tooltip title='Toggle light/dark mode' arrow enterDelay={1000}>
-          {ownerState.isDarkMode ? (
-            <IconButton className={classes.iconDark} onClick={() => ownerState.setIsDarkMode(!ownerState.isDarkMode)}>
-              <FsIcons.LightMode sx={{ fontSize: '15px' }} />
-            </IconButton>
-          ) : (
-              <IconButton className={classes.iconLight} onClick={() => ownerState.setIsDarkMode(!ownerState.isDarkMode)}>
-              <FsIcons.DarkMode sx={{ fontSize: '15px' }} />
-              </IconButton>
-          )}
-        </Tooltip>
+        {ownerState.isDarkMode ? (
+          <IconButton className={classes.iconDark} onClick={() => ownerState.setIsDarkMode(!ownerState.isDarkMode)}>
+            <FsIcon icon={FsIcons.LightMode} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.toggleTheme' })} />
+          </IconButton>
+        ) : (
+          <IconButton className={classes.iconLight} onClick={() => ownerState.setIsDarkMode(!ownerState.isDarkMode)}>
+            <FsIcon icon={FsIcons.LightMode} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.toggleTheme' })} />
+          </IconButton>
+        )}
       </Box>
       <FsSearch
         searchTerm={ownerState.searchTerm}
@@ -112,24 +101,25 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
         open={ownerState.isSearchExpanded}
         visibleFilters={ownerState.filters}
         onFiltersChange={ownerState.setFilters}
+
       />
 
       {ownerState.filteredTreeData.length === 0 ? <FsExplorerNoSearchResults /> :
         <List component='nav' disablePadding>
-          {ownerState.filteredTreeData.map((node) => (
-            <FsExplorerNode
-              key={node.id}
-              node={node}
+          {ownerState.filteredTreeData.map((dirent) => (
+            <FsDirent
+              key={dirent.id}
+              dirent={dirent}
               level={0}
-              onToggle={(nodeId) => ownerState.toggleNode(nodeId, ownerState.fsData, ownerState.setFsData)}
-              onContextMenu={(event, node) => ownerState.onContextMenu(event, node, ownerState.setContextMenuData, ownerState.setContextMenuOpen)}
+              onToggle={(direntId) => ownerState.toggleDirent(direntId)}
+              onContextMenu={(event, dirent) => ownerState.onContextMenu(event, dirent, ownerState.setContextMenuData, ownerState.setContextMenuOpen)}
               searchTerm={ownerState.searchTerm}
             />
           ))}
         </List>
       }
-      <FsNodeMenu
-        node={ownerState.contextMenuData?.node || undefined}
+      <FsDirentMenu
+        dirent={ownerState.contextMenuData?.dirent || undefined}
         anchorPosition={ownerState.contextMenuData?.anchorPosition || undefined}
         open={ownerState.isContextMenuOpen}
         onClose={ownerState.onContextMenuClose}

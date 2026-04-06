@@ -21,14 +21,14 @@ package io.digiexpress.eveli.client.spi.batch.reject_stale_forms;
  */
 
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
 import io.digiexpress.thena.batch.client.api.ImmutableBatchDefinition;
 import io.digiexpress.thena.batch.client.api.ImmutableBatchStepDefinition;
+import io.resys.limaone.spi.dialob.FormDb;
 
 public class BatchJob_RejectStaleForms_Definition {
 
-  public static BatchDefinition create(TaskClient taskClient, DialobClient dialobClient) {
+  public static BatchDefinition create(TaskClient taskClient, FormDb dialobClient) {
     return ImmutableBatchDefinition.builder()
         .batchName("stale-data-clean-up")
         .comment("Cleanes up data oleder then 6 months")

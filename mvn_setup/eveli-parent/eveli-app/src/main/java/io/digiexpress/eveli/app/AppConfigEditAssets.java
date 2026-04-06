@@ -25,12 +25,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
-import io.digiexpress.eveli.client.config.EveliProps;
 import io.digiexpress.eveli.client.config.EveliPropsAssets;
+import io.resys.limaone.program.Runtime.EnvironmentProperties;
 
 
 @Profile("!prod")
@@ -41,13 +39,13 @@ public class AppConfigEditAssets {
   // Bean controlling that stencil/wrench assets can be edited
   @Bean(name = EveliAutoConfigAssets.BEAN_NAME)
   public EveliEditEnvir eveliEditEnvir(
-      EveliProps eveliProps, 
       EveliPropsAssets assetProps,
-      ObjectMapper objectMapper,
       ApplicationContext context,
-      io.vertx.mutiny.sqlclient.Pool pgPool) {
+      io.vertx.mutiny.sqlclient.Pool pgPool,
+      EnvironmentProperties envir,
+      io.resys.limaone.program.Runtime runtime) {
     
-    final var dev = EveliAutoConfigAssets.eveliEditEnvir(eveliProps, assetProps, objectMapper, context, pgPool);
+    final var dev = EveliAutoConfigAssets.eveliEditEnvir(context, pgPool, envir, runtime, assetProps);
     return dev;
   }
 }

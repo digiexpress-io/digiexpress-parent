@@ -106,7 +106,7 @@ public class DbTestTemplate {
     
     final var names = FsTableNames.defaults().toRepo(repo);
     
-    datasource.getClient().query("delete from " + names.getObjectIndex())
+    datasource.getClient().query("delete from " + names.getTreeIndex())
       .execute().await().atMost(Duration.ofMillis(100));
     
     datasource.getClient().query("delete from " + names.getTag())

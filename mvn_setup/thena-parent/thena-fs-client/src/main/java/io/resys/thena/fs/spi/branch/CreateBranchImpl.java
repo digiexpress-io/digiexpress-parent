@@ -21,6 +21,7 @@ package io.resys.thena.fs.spi.branch;
  */
 
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -33,11 +34,13 @@ import io.resys.thena.fs.api.branches.BranchResult;
 import io.resys.thena.fs.api.branches.CreateBranch;
 import io.resys.thena.fs.api.branches.ImmutableBranchResult;
 import io.resys.thena.fs.entities.Commit;
+import io.resys.thena.fs.entities.Entity;
 import io.resys.thena.fs.entities.ImmutableRefTransitives;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tree;
 import io.resys.thena.fs.spi.commit.CommitBuilderException;
 import io.resys.thena.fs.spi.commit.CommitBuilderImpl;
+import io.resys.thena.fs.tables.CommitTable.NodesAndBlobsFilter;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.FsDbBuilder.FsBuilderException;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
@@ -108,7 +111,7 @@ public class CreateBranchImpl implements CreateBranch {
   }
 
   private Uni<BranchResult> visitTransaction(FsDb tx) {
-    return tx.query().queryCommit().findByCommitIdOrRef(commitIdOrBranchName)
+    return tx.query().queryCommit().findByCommitIdOrRef(Entity.toUuidOrNull(commitIdOrBranchName), commitIdOrBranchName)
         .map(found -> {
           if(found.isEmpty()) {
             throw new BranchCreationException("Can't find commit or branch by given id", JsonObject.of("id", commitIdOrBranchName));
@@ -117,9 +120,9 @@ public class CreateBranchImpl implements CreateBranch {
         })
         .onItem().transformToUni(found -> {
           if(beforeBranchCompletion != null) {
-            return tx.query().queryCommit().getByIdWithNodesAndBlobs(found.getItem1().getId())
+            return tx.query().queryCommit().getByIdWithNodesAndBlobs(new NodesAndBlobsFilter(found.getItem1().getId(), Collections.emptyList()))
               .map(tuple -> tuple.getItem2())
-              .onItem().transform(tree -> new BranchRequest(found.getItem1(), Optional.ofNullable(tree), found.getItem2()));  
+              .onItem().transform(tree -> new BranchRequest(found.getItem1(), tree, found.getItem2()));  
           }
           return Uni.createFrom().item(new BranchRequest(found.getItem1(), Optional.empty(), found.getItem2()));
         })

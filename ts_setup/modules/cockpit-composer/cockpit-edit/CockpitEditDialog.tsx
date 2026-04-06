@@ -6,7 +6,7 @@ import {
 import { useIntl } from 'react-intl';
 
 import { useCockpit, useCockpitsBackend } from '@dxs-ts/cockpit-api';
-import { useUtilityClasses, StyledCockpitEditDialog, StyledTextField, StyledEllipsisTypography, StyledConfigBox } from './useUtilityClasses';
+import { useUtilityClasses, StyledCockpitEditDialog, StyledTextField } from './useUtilityClasses';
 
 
 export interface CockpitEditDialogProps {
@@ -17,12 +17,12 @@ export interface CockpitEditDialogProps {
 export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onClose }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
-  const { cockpitContainer, tenants, activity, refresh } = useCockpit();
-  const { config } = cockpitContainer;
+  const { cockpitContainer, refresh } = useCockpit();
+
   const backend = useCockpitsBackend();
 
   const [isActive, setIsActive] = React.useState<string>(
-    activity.activeCockpitId === config.id ? 'active' : 'inactive'
+    cockpitContainer.member?.aliasStatus ? 'active' : 'inactive'
   );
 
   function handleActiveChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -31,7 +31,13 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
 
   async function handleSave() {
     try {
-      const activeId = isActive === 'active' ? config.id : undefined;
+      const aliasStatus = isActive === 'active';
+      if(aliasStatus === cockpitContainer.member?.aliasStatus) {
+        onClose();
+        return;
+      }
+
+      const activeId = cockpitContainer.alias.id;
       await backend.persistence.changeActiveCockpit({ activeId });
       await refresh();
       onClose();
@@ -49,7 +55,7 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
       slots={{ transition: Zoom }}
     >
       <DialogTitle>
-        {intl.formatMessage({ id: 'cockpit.edit' })}{": "}{config.cockpitConfigName}
+        {intl.formatMessage({ id: 'cockpit.edit' })}{": "}{cockpitContainer.alias.aliasName}
       </DialogTitle>
 
       <DialogContent>
@@ -58,14 +64,14 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
             <Typography fontWeight={500}> {intl.formatMessage({ id: 'cockpit.name' })}</Typography>
           </Grid2>
           <Grid2 size={{ md: 9, lg: 9, xl: 9 }}>
-            <StyledTextField value={config.cockpitConfigName} disabled />
+            <StyledTextField value={cockpitContainer.alias.aliasName} disabled />
           </Grid2>
 
           <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
             <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.description' })}</Typography>
           </Grid2>
           <Grid2 size={{ md: 9, lg: 9, xl: 9 }}>
-            <StyledTextField value={config.cockpitConfigDesc} disabled />
+            <StyledTextField value={cockpitContainer.alias.aliasDesc} disabled />
           </Grid2>
 
           <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
@@ -86,62 +92,6 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
                 />
               </RadioGroup>
             </FormControl>
-          </Grid2>
-
-          <Grid2 size={12}>
-            <Typography variant='h6' fontWeight={600} mb={1}>
-              {intl.formatMessage({ id: 'cockpit.wrenchConfig' })}
-            </Typography>
-            <StyledConfigBox>
-              <Grid2 container spacing={2}>
-                <Grid2 size={6}>
-                  <Typography fontWeight={500} variant='body2' color='text.secondary'>
-                    {intl.formatMessage({ id: 'cockpit.config.name' })}
-                  </Typography>
-                  <Typography>{tenants.wrench?.externalId ?? '-'}</Typography>
-                </Grid2>
-                <Grid2 size={6}>
-                  <Typography fontWeight={500} variant='body2' color='text.secondary'>
-                    {intl.formatMessage({ id: 'cockpit.tenantDescription' })}
-                  </Typography>
-                  {tenants.wrench?.cockpitConfigTenantDesc ? (
-                    <Tooltip title={tenants.wrench.cockpitConfigTenantDesc} arrow>
-                      <StyledEllipsisTypography>{tenants.wrench.cockpitConfigTenantDesc}</StyledEllipsisTypography>
-                    </Tooltip>
-                  ) : (
-                    <Typography>--</Typography>
-                  )}
-                </Grid2>
-              </Grid2>
-            </StyledConfigBox>
-          </Grid2>
-
-          <Grid2 size={12}>
-            <Typography variant='h6' fontWeight={600} mb={1}>
-              {intl.formatMessage({ id: 'cockpit.stencilConfig' })}
-            </Typography>
-            <StyledConfigBox>
-              <Grid2 container spacing={2}>
-                <Grid2 size={6}>
-                  <Typography fontWeight={500} variant='body2' color='text.secondary'>
-                    {intl.formatMessage({ id: 'cockpit.config.name' })}
-                  </Typography>
-                  <Typography>{tenants.stencil?.externalId ?? '-'}</Typography>
-                </Grid2>
-                <Grid2 size={6}>
-                  <Typography fontWeight={500} variant='body2' color='text.secondary'>
-                    {intl.formatMessage({ id: 'cockpit.tenantDescription' })}
-                  </Typography>
-                  {tenants.stencil?.cockpitConfigTenantDesc ? (
-                    <Tooltip title={tenants.stencil.cockpitConfigTenantDesc} arrow>
-                      <StyledEllipsisTypography>{tenants.stencil.cockpitConfigTenantDesc}</StyledEllipsisTypography>
-                    </Tooltip>
-                  ) : (
-                    <Typography>--</Typography>
-                  )}
-                </Grid2>
-              </Grid2>
-            </StyledConfigBox>
           </Grid2>
         </Grid2>
       </DialogContent>

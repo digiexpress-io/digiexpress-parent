@@ -21,7 +21,6 @@ package io.resys.thena.fs.tables;
  */
 
 import java.util.List;
-import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
@@ -29,7 +28,6 @@ import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.Blob;
 import io.resys.thena.fs.entities.ImmutableBlob;
-import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -37,7 +35,7 @@ import io.vertx.mutiny.sqlclient.Row;
   order = 200,
   ddl = """
     CREATE TABLE {blob} (
-      blob_id TEXT PRIMARY KEY,
+      blob_id UUID PRIMARY KEY,
       blob_type TEXT NOT NULL,
       blob_class TEXT,
       blob_value JSONB NOT NULL
@@ -96,20 +94,11 @@ public interface BlobTable {
     @Override
     public Blob apply(Row row) {
       return ImmutableBlob.builder()
-          .id(row.getString("blob_id"))
+          .id(row.getUUID("blob_id"))
           .blobType(row.getString("blob_type"))
           .blobValue(row.getJsonObject("blob_value"))
           .build();
     }
-
-    public static Blob fromJson(JsonObject json) {
-      return ImmutableBlob.builder()
-          .id(json.getString("blob_id"))
-          .blobType(json.getString("blob_type"))
-          .blobClass(Optional.ofNullable(json.getString("blob_class")))
-          .blobValue(json.getJsonObject("blob_value"))
-          .build();
-    } 
   }
   
 

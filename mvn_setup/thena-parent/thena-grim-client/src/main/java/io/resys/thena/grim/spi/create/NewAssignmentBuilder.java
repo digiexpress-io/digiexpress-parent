@@ -75,8 +75,12 @@ public class NewAssignmentBuilder implements ThenaGrimNewObject.NewAssignment {
   public void build() {
     this.built = true;
   }
-
+  
   public ImmutableGrimAssignment close() {
+    return close(true);
+  }
+  
+  public ImmutableGrimAssignment close(boolean isLogged) {
     RepoAssert.isTrue(built, () -> "you must call AssignmentChanges.build() to finalize mission CREATE or UPDATE!");
     
     final var built = next.missionId(missionId).relation(relation).build();
@@ -93,8 +97,9 @@ public class NewAssignmentBuilder implements ThenaGrimNewObject.NewAssignment {
         )
         .count() == 0
         , () -> "can't have duplicate assignments!");
-
-    this.logger.add(built);
+    if (isLogged) {
+      this.logger.add(built);
+    }
     return built;
   }
 }

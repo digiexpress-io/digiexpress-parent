@@ -1,6 +1,6 @@
 import React from 'react';
 import { GFormBaseElementProps } from '../g-form-base-element';
-import { GInputSurveyQuestion } from './GInputSurveyQuestion';
+import { GInputSurveyQuestion, ReadOnlyGInputSurveyQuestion } from './GInputSurveyQuestion';
 
 
 export const GInputSurveyQuestionDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store, navRef, navRefId }) => {
@@ -17,9 +17,10 @@ export const GInputSurveyQuestionDialob: React.FC<GFormBaseElementProps> = ({ di
   }
   const errors = store.form.toErrors(element.id);
 
-  return (
+  const Component = element.readOnly ? ReadOnlyGInputSurveyQuestion : GInputSurveyQuestion;
 
-    <GInputSurveyQuestion
+  return (
+    <Component
       id={element.id}
       disabled={disabled}
       label={store.form.toLabel(element.id)}
@@ -32,6 +33,7 @@ export const GInputSurveyQuestionDialob: React.FC<GFormBaseElementProps> = ({ di
       onChange={onChange}
       navref={navRef}
       navrefid={navRefId}
+      readOnly={element.readOnly}
     />
   )
 }

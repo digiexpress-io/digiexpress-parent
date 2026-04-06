@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.client.spi.dialob;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /*-
@@ -31,6 +32,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 
+import com.google.common.hash.Hashing;
+
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.ImmutableAddFormToCustomerAssignmentCommand;
 import io.digiexpress.eveli.client.api.TaskClient;
@@ -39,13 +42,10 @@ import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCustomerAssignment;
-import io.digiexpress.eveli.client.spi.gamut.ImmutableInitUserAction;
 import io.digiexpress.eveli.client.spi.gamut.UserActionsBuilderImpl;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
-import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
-import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
+import io.resys.limaone.program.ImmutableParticipant;
+import io.resys.limaone.program.ImmutableParticipantId;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
@@ -59,10 +59,8 @@ import lombok.extern.slf4j.Slf4j;
 public class DialobCreateEventPublisher {
   private final ApplicationEventPublisher publisher;
   private final TaskClient taskClient;
-  private final DialobClient dialobClient;
-  private final EveliEnvirClient envir;
+  private final io.resys.limaone.program.Runtime envirClient;
   private final MqEventPublisher mqEventPublisher;
-  private final Optional<CockpitAwareProvider> cockpitAwareProvider;
   
   
   @Data
@@ -172,15 +170,21 @@ public class DialobCreateEventPublisher {
 
     
     final var requests = new ArrayList<>(assignments.stream().map(assignment -> 
-        new UserActionsBuilderImpl(dialobClient, envir.withCockpitIdSupplier(getCockpitIdForFrontoffice(task)), taskClient)
+        new UserActionsBuilderImpl(envirClient, taskClient)
           .inputContextId("_")
           .inputParentContextId("_")
           .customerAssignment(true)
-          .externalUserActionInit(ImmutableInitUserAction.builder()
+          .participant(ImmutableParticipant.builder()
               .identity(ssn)
-              .workflowName(assignment.getServiceName())
+              .username("")
+              .partId(ImmutableParticipantId.builder()
+                  .realId(ssn)
+                  .hashId(Hashing.murmur3_128().hashString(ssn, StandardCharsets.UTF_8).toString())
+                  .build())
               .protectionOrder(false)
+              .anon(false)
               .build())
+          .cockpitId(task.getItem2().get().getCockpitId())
           .actionId(assignment.getExternalId())
           .taskId(task.getItem1().getId())
           .clientLocale(assignment.getLocale())
@@ -188,33 +192,31 @@ public class DialobCreateEventPublisher {
     ).toList());
     
     if(!isMainCreated) {
-   
-      
-      final var mainRequest = getCockpitIdForBackoffice().apply()
-          .onItem().transformToUni((cockpitId) -> taskClient.createProcess()
-            .anon(false)
-            .taskId(task.getItem1().getId())
-            .userId(ssn)
-            .cockpitId(cockpitId.orElse(null))
-            .anon(false)
-            .customerAssignment(false)
-            
-            .workflowName("_")
-            .articleName("_")
-            .parentArticleName("_")
-  
-            .expiresInSeconds(null)
-            .expiresAt(null)
-            
-            .flowName(null)
-            .formName(null)
-            
-            .formTagName(null)
-            .stencilTagName(null)
-            .wrenchTagName(null)
-            .commitAuthor(DialobCreateEventPublisher.class.getSimpleName())
-            .commitMessage("creating main proc")
-            .build())
+
+      final var mainRequest = taskClient.createProcess()
+          .cockpitId(envirClient.getProperties().getTenantDb().getCurrentUserTenant())
+          .anon(false)
+          .taskId(task.getItem1().getId())
+          .userId(ssn)
+          .anon(false)
+          .customerAssignment(false)
+          
+          .workflowName("_")
+          .articleName("_")
+          .parentArticleName("_")
+
+          .expiresInSeconds(null)
+          .expiresAt(null)
+          
+          .flowName(null)
+          .formName(null)
+          
+          .formTagName(null)
+          .stencilTagName(null)
+          .wrenchTagName(null)
+          .commitAuthor(DialobCreateEventPublisher.class.getSimpleName())
+          .commitMessage("creating main proc")
+          .build()
           .onItem().transform(UserActionsBuilderImpl::map)
           .onItem().transform(action -> Tuple2.of(Optional.<TaskCustomerAssignment>empty(), action));
   
@@ -230,20 +232,5 @@ public class DialobCreateEventPublisher {
     private final TaskClient.Task task;
     private final Optional<ProcessInstance> process;
     private final List<Tuple2<Optional<TaskCustomerAssignment>, UserAction>> values;
-  }
-
-  
-  private CockpitIdSupplier getCockpitIdForFrontoffice(Tuple2<TaskClient.Task, Optional<ProcessInstance>> task) {
-    return () -> Uni.createFrom().item(task.getItem2().map(p -> p.getCockpitId()));
-  }
-  
-  private CockpitIdSupplier getCockpitIdForBackoffice() {
-    if(cockpitAwareProvider.isEmpty()) {
-      return () -> Uni.createFrom().item(Optional.empty());
-    }
-    final CockpitAwareProvider provider = cockpitAwareProvider.get();
-    final Uni<Optional<String>> cockpitId = provider.get()
-        .onItem().transform(container -> container.map(e -> e.getConfig().getId()));
-    return () -> cockpitId;
   }
 }

@@ -18,7 +18,7 @@ const LocaleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const locales: StencilApi.Locale[] = Object.values(site.locales).map(l => l.body.value);
 
   const handleCreate = () => {
-    const entity: StencilApi.CreateLocale = { locale };
+    const entity: StencilApi.CreateLocale = { locale: locale.trim() };
     console.log("entity", entity)
     service.create().locale(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
@@ -40,7 +40,7 @@ const LocaleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       </DialogContent>
       <DialogActions>
         <CancelButton onClick={onClose} />
-        <Button onClick={handleCreate} disabled={!locale || locales.includes(locale) || locale.length !== 2 }>
+        <Button onClick={handleCreate} disabled={!locale.trim() || locales.includes(locale) || locale.trim().length !== 2}>
           <FormattedMessage id='button.create'/>
         </Button>
       </DialogActions>

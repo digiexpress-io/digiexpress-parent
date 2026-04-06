@@ -12,7 +12,7 @@ import { GInputBase, GInputBaseProps } from '../g-input-base'
 
 import { MUI_NAME, GInputAddressRoot, useUtilityClasses } from './useUtilityClasses'
 import { useIntl } from 'react-intl'
-import { InputAddress } from './InputAddress'
+import { InputAddress, ReadOnlyInputAddress } from './InputAddress'
 import { InputMap } from './InputMap'
 import { InputProvider } from './InputProvider'
 
@@ -34,6 +34,8 @@ export interface GInputAddressProps {
     defaultCountryCodes?: string | undefined;
     mapHeight?: string | undefined;
   };
+
+  readOnly?: boolean;
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
@@ -88,7 +90,7 @@ export const GInputAddress: React.FC<GInputAddressProps> = (initProps) => {
       error: GInputError,
       label: GInputLabel,
       adornment: GInputAdornment,
-      input: InputAddress,
+      input: props.readOnly ? ReadOnlyInputAddress : InputAddress,
       secondary: InputMap
     },
     slotProps: {

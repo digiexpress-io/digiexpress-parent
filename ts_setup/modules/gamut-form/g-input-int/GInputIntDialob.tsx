@@ -29,6 +29,7 @@ export const GInputIntDialob: React.FC<GFormBaseElementProps> = ({ disabled, act
         variant='int'
         onChange={onChange}
         labelPosition={labelPosition}
+        readOnly={element.readOnly}
       />
     </>
   );

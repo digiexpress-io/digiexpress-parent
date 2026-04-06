@@ -39,7 +39,7 @@ function _useCockpitNavigate(): CockpitsBackendProviderProps['navigate'] {
 }
 
 function _useCockpitPersistence(): CockpitsBackendProviderProps['persistence'] {
-  const { findAllCockpits, findActivity } = useFetch('worker/rest/api/cockpits.GET', []);
+  const { findAllCockpits } = useFetch('worker/rest/api/cockpits.GET', []);
   const { createCockpit } = useFetch('worker/rest/api/cockpits.POST', {});
   const { getOneCockpit } = useFetch('worker/rest/api/cockpits/$cockpitId.GET', {});
   const { createCockpitTenant } = useFetch('worker/rest/api/cockpits/$cockpitId/tenants.POST', {});
@@ -50,7 +50,6 @@ function _useCockpitPersistence(): CockpitsBackendProviderProps['persistence'] {
     createOneCockpit: createCockpit,
     getOneCockpit: getOneCockpit,
     createOneCockpitTenant: createCockpitTenant,
-    findActivity,
     changeActiveCockpit: changeActivity
   }
 

@@ -22,6 +22,7 @@ package io.digiexpress.eveli.client.web.resources.gamut;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 import org.springframework.http.HttpStatus;
@@ -51,7 +52,7 @@ import io.digiexpress.eveli.client.api.GamutClient.UserActionAttachment;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
-import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.resys.limaone.spi.program.input.DefaultAuthProgramInput;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -66,7 +67,7 @@ public class GamutUserActionsController {
   private final DialobFillEventPublisher publisher;
   private final GamutClient gamutClient;
   private final GamutAuthClient authClient;
-  private final DialobClient dialob;
+  private final io.resys.limaone.program.Runtime runtime;
   private final FeedbackClient feedback;
   
   @Value.Immutable
@@ -76,38 +77,41 @@ public class GamutUserActionsController {
     List<String> getUserRoles();
     List<String> getAllowedProcessNames();
   }
+  
   @GetMapping(value="/fill/{sessionId}")
-  public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
-    ResponseEntity<String> responseEntity = dialob.createProxyClient().sessionGet(sessionId);
-    return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
+  public Uni<?> fillProxyGet(@PathVariable("sessionId") String sessionId) {
+    return runtime.getProperties().getFormDb().withTenant().createFormFill().formInstanceId(sessionId).build()
+        .onItem().transform(questionnaire -> questionnaire.unwrap());
   }
   
   @PostMapping(value="/fill/{sessionId}")
-  public Uni<ResponseEntity<String>> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
-    final var resp = dialob.createProxyClient().sessionPost(sessionId, body);
-    
-    if(resp.getStatusCode().is2xxSuccessful()) {
-      return gamutClient.fillEvent()
-        .requestBody(body)
-        .responseBody(resp.getBody())
-        .sessionId(sessionId)
-        .create()
-        .onItem().invoke(event -> publisher.publishEvent(event))
-        .map(ignore -> ResponseEntity.status(resp.getStatusCode()).body(resp.getBody()));
-    }
-    return Uni.createFrom().item(() -> ResponseEntity.status(resp.getStatusCode()).body(resp.getBody())); 
+  public Uni<?> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
+    return runtime.getProperties().getFormDb().withTenant().createFormFill().formInstanceId(sessionId).actions(body)
+        .onCompletion(completion -> {
+          return gamutClient.fillEvent()
+              .requestBody(body)
+              .responseBody(completion)
+              .sessionId(sessionId)
+              .create()
+              .onItem().invoke(event -> publisher.publishEvent(event));
+        })
+        .build()
+        .onItem().transform(questionnaire -> questionnaire.unwrap());
   }
   
   @GetMapping(value="/review/{sessionId}")
-  public ResponseEntity<?> reviewProxyGet(@PathVariable("sessionId") String sessionId) {
-    final var session = dialob.getQuestionnaireById(sessionId);
-    final var form = dialob.getFormById(session.getMetadata().getFormId());
-    return ResponseEntity.ok(Map.of("session", session, "form", form));
+  public Uni<Map<String, Object>> reviewProxyGet(@PathVariable("sessionId") String sessionId) {
+    return runtime.getProperties().getFormDb().withTenant()
+        .formInstanceQuery().includeForm(true)
+        .getOne(sessionId)
+        .onItem()
+        .transform(prop -> Map.of("session", prop.getQuestionnaire(), "form", prop.getForm().get()));
+    
   }
 
   @GetMapping(value="/messages")
   public Multi<UserMessage> getMessages() {
-    final var customer = authClient.getCustomer();
+    final var customer = authClient.getParticipant();
     return gamutClient.userMessagesQuery().findAllByUserId(customer);
   }
   
@@ -128,21 +132,21 @@ public class GamutUserActionsController {
   
   @GetMapping(value="{actionId}/messages")
   public Multi<UserMessage> getMessages(@PathVariable("actionId") String actionId) {
-    final var customer = authClient.getCustomer();
+    final var customer = authClient.getParticipant();
     return gamutClient.userMessagesQuery().findAllByActionId(customer, actionId);
   }
   
   @PutMapping(value="{actionId}/views")
   public Uni<ResponseEntity<?>> markUserActionViewed(@PathVariable("actionId") String actionId) {
-    final var customer = authClient.getCustomer();
+    final var customer = authClient.getParticipant();
     return gamutClient.userActionViewBuilder()
-        .actionId(actionId).customer(customer, authClient.getCustomerRoles()).create()
+        .actionId(actionId).customer(customer).create()
         .onItem().transform(junk -> ResponseEntity.ok().build());
   }
   
   @PostMapping(value="{actionId}/messages")
   public Uni<ResponseEntity<UserMessage>> createMessage(@PathVariable("actionId") String actionId, @RequestBody ReplayToInit raw) {
-    final var customer = authClient.getCustomer();
+    final var customer = authClient.getParticipant();
     return gamutClient.replyToBuilder().actionId(actionId).customer(customer).from(raw).createOne()
         .map(msg -> ResponseEntity.ok(msg))
         .onFailure().recoverWithItem(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -172,7 +176,7 @@ public class GamutUserActionsController {
   
   @DeleteMapping(value="/{actionId}")
   public Uni<ResponseEntity<UserAction>> cancelAction(@PathVariable("actionId") String actionId) {
-    final var customer = authClient.getCustomer();
+    final var customer = authClient.getParticipant();
     
     return gamutClient.cancelUserActionBuilder()
         .actionId(actionId).customer(customer).cancelOne().map(body -> new ResponseEntity<>(body, HttpStatus.OK))
@@ -180,25 +184,32 @@ public class GamutUserActionsController {
   }
 
   @GetMapping(value="/authorizations")
-  public Uni<ResponseEntity<AuthorizationAction>> getAuthorizations(
+  public ResponseEntity<AuthorizationAction> getAuthorizations(
       @RequestParam(name = "cockpitId", required = false) String cockpitId
   ) {
     
     final var customer = authClient.getCustomer().getPrincipal();
-    
     final var person = customer.getRepresentedPerson();
     final var company = customer.getRepresentedCompany();
     if(person == null && company == null) {
-      return Uni.createFrom().item(ResponseEntity.ok(null)); // Nobody is represented
+      return ResponseEntity.ok(null); // Nobody is represented
     }
-    final var roles = authClient.getCustomerRoles().getRoles();
-    return gamutClient.queryAuthorization()
-        .cockpitId(cockpitId)
-        .userRoles(roles)
-        .getOne().onItem().transform(allowed -> ResponseEntity.ok(ImmutableAuthorizationAction.builder()
-            .addAllUserRoles(roles)
-            .allowedProcessNames(allowed.getAllowedProcessNames())
-            .build()));
+    
+    final var user = this.authClient.getParticipant();
+    final var runtime = this.runtime.withTenant(Optional.ofNullable(cockpitId));
+    final var locale = user.getLanguage();
+    final var article = runtime.getBundle().queryArticles().findOne().orElse(null);
+    if(article == null) {
+      return ResponseEntity.ok(null); // Nobody is represented
+    }
+    
+    final var input = DefaultAuthProgramInput.builder().runtime(runtime).user(user).locale(locale).build();
+    final var result = article.run(input);
+    
+    return ResponseEntity.ok(ImmutableAuthorizationAction.builder()
+        .addAllUserRoles(result.getRoles())
+        .allowedProcessNames(result.getAllowed())
+        .build());
   }
 
   @GetMapping
@@ -212,7 +223,7 @@ public class GamutUserActionsController {
     
     if(actionId == null) {
       return gamutClient.userActionQuery()
-          .customer(authClient.getCustomer(), authClient.getCustomerRoles())
+          .customer(authClient.getParticipant())
           .cockpitId(cockpitId)
           .findAll().collect().asList().map(ResponseEntity::ok);
     }
@@ -223,8 +234,7 @@ public class GamutUserActionsController {
         .clientLocale(actionLocale)
         .inputContextId(inputContextId)
         .inputParentContextId(inputParentContextId)
-        .customer(authClient.getCustomer())
-        .customerRoles(authClient.getCustomerRoles())
+        .participant(authClient.getParticipant())
         .createOne().map(ResponseEntity::ok)
         .onFailure().recoverWithItem(() -> ResponseEntity.notFound().build())
         // make the type as "<?>"

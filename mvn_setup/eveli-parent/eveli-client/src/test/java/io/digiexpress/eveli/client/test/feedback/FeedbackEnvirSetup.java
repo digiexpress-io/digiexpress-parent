@@ -53,7 +53,6 @@ import io.digiexpress.eveli.client.spi.feedback.FeedbackCategoriesReaderImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.test.BaseEnvir;
-import io.digiexpress.eveli.dialob.spi.DialobClientImpl;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.vertx.core.json.JsonObject;
 import jakarta.persistence.EntityManager;
@@ -119,7 +118,6 @@ public abstract class FeedbackEnvirSetup {
     @Bean
     public FeedbackClient feedbackClient(TaskClient taskClient, FeedbackCategoriesReader feedbackCategoriesReader) {
       final var feedbackWithHistory = new FeedbackWithHistory(tx, jdbcTemplate, objectMapper);
-      final var dialobClient = new DialobClientImpl(objectMapper, null);
       final var configProps = new EveliPropsFeedback();
 
       configProps.setForms("palautteet");
@@ -131,7 +129,7 @@ public abstract class FeedbackEnvirSetup {
       configProps.setUsername("FirstNames, LastName");
       configProps.setUsernameAllowed("publicAnswerAllowed");
       
-      return new FeedbackClientImpl(taskClient, dialobClient, jdbcTemplate, feedbackWithHistory, configProps, objectMapper, feedbackCategoriesReader);
+      return new FeedbackClientImpl(taskClient, jdbcTemplate, feedbackWithHistory, configProps, objectMapper, feedbackCategoriesReader);
 
     }
   }
