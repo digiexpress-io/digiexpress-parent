@@ -1,5 +1,7 @@
 package io.resys.limaone.spi.groovy;
 
+import java.lang.reflect.Modifier;
+
 /*-
  * #%L
  * limaone-compiler
@@ -25,6 +27,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.codehaus.groovy.ast.ClassNode;
+
 import lombok.Data;
 
 @Data
@@ -33,6 +37,28 @@ public class JavaClassMeta {
   private final List<String> imports;
   private final String className;
   private final String body;
+  
+  
+  public static org.codehaus.groovy.ast.MethodNode findExecuteMethod(ClassNode classNode) {
+    for(org.codehaus.groovy.ast.MethodNode method : classNode.getMethods()) {
+      final var isMods = Modifier.isPublic(method.getModifiers()) && !Modifier.isVolatile(method.getModifiers());
+      final var isName = method.getName().equals("execute");
+      if(!isMods || !isName) {
+        continue;
+      }
+      if(method.getParameters().length > 2) {
+        continue;
+      }
+      
+      if(method.getReturnType() == null) {
+        continue;
+      }
+      
+      return method;
+    }
+    
+    return null;
+  }
   
   public static JavaClassMeta parse(String javaSyntax) {
     String packageName = null;
