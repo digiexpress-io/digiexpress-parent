@@ -42,14 +42,14 @@ import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType0;
 import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType1;
 import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType2;
 
-public class GroovyCompilationCustomizer extends CompilationCustomizer {
+public class Add_Executor extends CompilationCustomizer {
   private final ClassNode type0Node = ClassHelper.make(ServiceExecutorType0.class);
   private final ClassNode type1Node = ClassHelper.make(ServiceExecutorType1.class);
   private final ClassNode type2Node = ClassHelper.make(ServiceExecutorType2.class);
   private final ClassNode annotationNode = ClassHelper.make(ServiceRef.class);
   private final ClassNode bodyTypeNode = ClassHelper.make(Model.BodyType.class);
   
-  public GroovyCompilationCustomizer() {
+  public Add_Executor() {
     super(CompilePhase.CONVERSION);
  }
   
