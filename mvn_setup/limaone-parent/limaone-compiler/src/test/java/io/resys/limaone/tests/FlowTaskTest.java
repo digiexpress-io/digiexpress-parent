@@ -59,6 +59,25 @@ public class FlowTaskTest {
     final var result = envir.run(Map.of("a", 5, "b", 10)).andGetBody();
     Assertions.assertEquals("{\"sum\":15}", JsonObject.mapFrom(result.getValue()).encode());
   }
+  
+  
+  @Test
+  public void type2Partial() throws IOException {
+    final var envir = TestTemplate.compileOneFlowTask("flow-task/Type2ServicePartial.txt");
+
+    // map conversion
+    final var result = envir.run(Map.of("a", 5, "b", 10)).andGetBody();
+    Assertions.assertEquals("{\"sum\":15}", JsonObject.mapFrom(result.getValue()).encode());
+  }
+  
+  @Test
+  public void type2Partial_vol_2_groovy_cache_hickups() throws IOException {
+    final var envir = TestTemplate.compileOneFlowTask("flow-task/Type2ServicePartial2.txt");
+
+    // map conversion
+    final var result = envir.run(Map.of("a", 5, "b", 10)).andGetBody();
+    Assertions.assertEquals("{\"sum\":15}", JsonObject.mapFrom(result.getValue()).encode());
+  }
 
   @ServiceData
   @Value.Immutable

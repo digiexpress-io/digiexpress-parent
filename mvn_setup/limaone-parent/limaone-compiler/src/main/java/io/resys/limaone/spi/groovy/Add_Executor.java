@@ -1,5 +1,7 @@
 package io.resys.limaone.spi.groovy;
 
+import java.io.Serializable;
+
 /*-
  * #%L
  * limaone-compiler
@@ -23,6 +25,7 @@ package io.resys.limaone.spi.groovy;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.GenericsType;
+import org.codehaus.groovy.ast.InnerClassNode;
 import org.codehaus.groovy.ast.tools.GenericsUtils;
 import org.codehaus.groovy.classgen.GeneratorContext;
 import org.codehaus.groovy.control.CompilationFailedException;
@@ -30,6 +33,7 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.customizers.CompilationCustomizer;
 
+import io.resys.limaone.model.FlowTask.ServiceData;
 import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType0;
 import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType1;
 import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType2;
@@ -37,6 +41,7 @@ import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType2;
 
 
 public class Add_Executor extends CompilationCustomizer {
+  private final ClassNode serializableNode = ClassHelper.make(Serializable.class);
   private final ClassNode type0Node = ClassHelper.make(ServiceExecutorType0.class);
   private final ClassNode type1Node = ClassHelper.make(ServiceExecutorType1.class);
   private final ClassNode type2Node = ClassHelper.make(ServiceExecutorType2.class);
@@ -89,11 +94,42 @@ public class Add_Executor extends CompilationCustomizer {
       };
     }
 
+    classNode.getInnerClasses().forEachRemaining(this::enrichPojos);
+    
     //script16332575927621894006461.groovy: 24: A transform used a generics containing ClassNode io.resys.hdes.client.api.execution.Service$ServiceExecutorType0 <Integer> 
     //for the super class io.resys.wrench.assets.bundle.groovy.businesslogic.RuleGroup2 directly. 
     //You are not supposed to do this. Please create a new ClassNode referring to the old ClassNode and use the new ClassNode instead of the old one. 
     //Otherwise the compiler will create wrong descriptors and a potential NullPointerException in TypeResolver in the OpenJDK. 
     //If this is not your own doing, please report this bug to the writer of the transform.    
     classNode.addInterface(GenericsUtils.makeClassSafeWithGenerics(type, types));
+  }
+
+    
+  private void enrichPojos(InnerClassNode source) {
+    if(!(source.getNameWithoutPackage().endsWith("$Input") || source.getNameWithoutPackage().endsWith("$Output"))) {
+      return;
+    }
+
+    addSerializable(source);
+    addServiceData(source);
+  }
+  
+  private void addServiceData(InnerClassNode source) {
+    for(final var junk : source.getAnnotations()) {
+      if(junk.getClassNode().getName().equals(ServiceData.class.getSimpleName())) {
+        return;
+      }
+    }
+    
+    final var uncachedtype = ClassHelper.make(io.resys.limaone.model.FlowTask.ServiceData.class.getCanonicalName());
+    source.addAnnotation(uncachedtype);
+  }
+  private void addSerializable(InnerClassNode source) {
+    for(final var junk : source.getInterfaces()) {
+      if(junk.getNameWithoutPackage().equals(Serializable.class.getSimpleName())) {
+        return;
+      }
+    }
+    source.addInterface(serializableNode);
   }
 }

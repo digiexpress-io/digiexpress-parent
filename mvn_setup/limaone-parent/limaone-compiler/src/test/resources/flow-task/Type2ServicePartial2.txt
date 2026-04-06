@@ -1,0 +1,22 @@
+
+
+public class Type2ServicePartial2 {
+
+  public Output execute(Input input, Runtime ctx) {
+    Objects.requireNonNull(ctx, () -> "ctx can't be null");
+    Output output = new Output();
+    output.sum = input.a + input.b;
+    
+    
+    return output;
+  }
+  
+  public static class Input {
+    Integer a;
+    Integer b;
+  }
+  
+  public static class Output {
+    Integer sum;
+  }
+}
