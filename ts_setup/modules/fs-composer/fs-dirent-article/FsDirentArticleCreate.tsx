@@ -33,15 +33,13 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = (prop
               <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.parentArticleField.label' })}</Typography>
               <FsIcon icon={FsIcons.Info} small tooltip={intl.formatMessage({ id: 'fs.dirent.article.parentArticleField.desc' })} />
             </Box>
-            <FsDirentTextField
-              value={ownerState.parentArticlePath}
-              disabled
-            />
+            <FsDirentTextField value={ownerState.parentArticlePath} disabled />
           </>
         )}
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.nameField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })} />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
+        />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.label' })}</Typography>
         <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.placeholder' })} />
