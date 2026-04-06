@@ -263,17 +263,12 @@ export declare namespace HdesApi {
   // flow
   export interface AstFlow extends AstBody {
     parseTree: AstFlowRoot;
-    messages: FlowAstCommandMessage[];
+    errors: FlowAstCommandMessage[];
   }
   export interface FlowAstCommandMessage {
     line: number;
-    value: string;
-    type: FlowCommandMessageType;
-    range?: FlowAstCommandRange;
-  }
-  export interface FlowAstCommandRange {
-    start: number;
-    end: number;
+    column: number | undefined;
+    msg: string;
   }
   export interface AstFlowInputType {
     name: string;

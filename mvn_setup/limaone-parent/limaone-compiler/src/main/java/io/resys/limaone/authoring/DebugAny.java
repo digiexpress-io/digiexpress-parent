@@ -59,11 +59,4 @@ public interface DebugAny {
     @Nullable ProgramResult getBody();
     @Nullable String getBodyCsv();
   }
-  
-  /**
-    return getComposer()
-        .onItem().transform(composer -> composer.withBranch(branchName).getClient())
-        .onItem().transformToUni(client -> client.store().query().get().onItem().transform(state -> Tuple2.of(client, state)))
-        .onItem().transform(tuple -> new DebugVisitor(tuple.getItem1()).visit(debug, tuple.getItem2()));
-   */
 }

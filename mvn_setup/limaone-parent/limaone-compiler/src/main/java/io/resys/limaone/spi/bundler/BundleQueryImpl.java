@@ -84,7 +84,8 @@ public class BundleQueryImpl<T extends Program> implements BundleQuery<T> {
       return result;
     }
     
-    return programs.findOne();
+    
+    return Optional.empty();
   }
   @Override
   public T getOne() {

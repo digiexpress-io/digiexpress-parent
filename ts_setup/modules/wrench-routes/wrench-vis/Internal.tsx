@@ -4,7 +4,6 @@ import {
   useReactFlow,
   useNodesState,
   useEdgesState,
-  OnNodesChange,
   Node,
   Edge
 } from '@xyflow/react';
@@ -16,6 +15,7 @@ import { VisProps } from './vis-types';
 import { DecisionNode } from './DecisionNode';
 import { SwitchNode } from './SwitchNode';
 import { ServiceNode } from './ServiceNode';
+import { ReturnsNode } from './ReturnsNode';
 
 
 export const Internal: React.FC<VisProps> = (init) => {
@@ -68,6 +68,7 @@ export const Internal: React.FC<VisProps> = (init) => {
         'switch':  SwitchNode,
         service: ServiceNode,
         flow: ServiceNode,
+        returns: ReturnsNode
       }}
     />);
 }

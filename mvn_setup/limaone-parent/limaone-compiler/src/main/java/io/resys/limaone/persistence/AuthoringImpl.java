@@ -110,7 +110,7 @@ public class AuthoringImpl implements Authoring {
   @Override
   public DebugModel debugModel() {
     return new DebugModel() {
-      @Override public DebugAny debugAny() { return null; }
+      @Override public DebugAny debugAny() { return new DebugAnyImpl(config); }
     };
   }
   @Override

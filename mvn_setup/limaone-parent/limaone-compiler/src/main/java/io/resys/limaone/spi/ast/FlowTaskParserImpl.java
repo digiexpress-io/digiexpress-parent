@@ -78,11 +78,13 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
     java.time.format.DateTimeFormatter.class.getCanonicalName(),
     java.time.DayOfWeek.class.getCanonicalName(),
     java.time.Duration.class.getCanonicalName(),
+    java.util.Collections.class.getCanonicalName(),
     java.util.ArrayList.class.getCanonicalName(),
     java.util.Arrays.class.getCanonicalName(),
     java.util.List.class.getCanonicalName(),
     java.util.Optional.class.getCanonicalName(),
     java.util.Objects.class.getCanonicalName(),
+    java.io.Serializable.class.getCanonicalName(),
     
     io.smallrye.mutiny.Uni.class.getCanonicalName(),
     io.smallrye.mutiny.Multi.class.getCanonicalName(),

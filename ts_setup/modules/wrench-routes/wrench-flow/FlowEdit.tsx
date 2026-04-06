@@ -63,7 +63,7 @@ const FlowEdit: React.FC<{ flow: HdesApi.Entity<HdesApi.AstFlow> }> = ({ flow })
   const originalState = flow.ast?.parseTree?.value;
   const updatedContent: string = update?.value as string;
   const src = updatedContent ?? originalState;
-  const lintingMessages = ast?.messages ?? [];
+  const lintingMessages = ast?.errors ?? [];  
 
   return (<Box sx={{ height: 1, display: 'flex' }}>
     <Tooltip title={<FormattedMessage id={showGraph ? 'flows.graph.hide' : 'flows.graph.show'} />} placement="left">
