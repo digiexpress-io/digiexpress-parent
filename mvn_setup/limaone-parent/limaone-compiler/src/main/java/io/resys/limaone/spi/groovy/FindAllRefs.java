@@ -39,16 +39,16 @@ import io.resys.limaone.ast.FlowTask_AST.ServiceRef;
 import io.resys.limaone.ast.ImmutableServiceRef;
 import io.resys.limaone.model.Model;
 
-public class RefsParser {
+public class FindAllRefs {
   private final ClassNode classNode;
   private final List<ServiceRef> refs = new ArrayList<>();
 
-  public RefsParser(ClassNode classNode) {
+  public FindAllRefs(ClassNode classNode) {
     super();
     this.classNode = classNode;
   }
 
-  public List<ServiceRef> visit() {
+  public List<ServiceRef> accept() {
     for (org.codehaus.groovy.ast.MethodNode method : classNode.getMethods()) {
       final var code = method.getCode();
       visitStatement(code);

@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import groovy.lang.GroovyClassLoader;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.spi.groovy.Add_Executor;
+import io.resys.limaone.spi.groovy.Add_Ref;
 import io.resys.limaone.yaml.YamlMapper;
 import lombok.RequiredArgsConstructor;
 
@@ -90,6 +91,7 @@ public class AST_ParserImpl implements AST_Parser {
       final CompilerConfiguration groovyConfig = new CompilerConfiguration();
       groovyConfig.setTargetBytecode(CompilerConfiguration.JDK21);
       groovyConfig.addCompilationCustomizers(new Add_Executor());
+      groovyConfig.addCompilationCustomizers(new Add_Ref());
       groovyConfig.addCompilationCustomizers(new ASTTransformationCustomizer(groovy.transform.CompileStatic.class));
       final var groovy = new GroovyClassLoader(Thread.currentThread().getContextClassLoader(), groovyConfig);
       return ImmutableAST_ParserProps.builder()
