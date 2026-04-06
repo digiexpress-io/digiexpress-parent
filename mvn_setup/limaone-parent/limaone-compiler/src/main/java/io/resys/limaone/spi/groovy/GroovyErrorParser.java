@@ -88,6 +88,11 @@ public class GroovyErrorParser {
         errors.add(createMessage(new GroovyError(fileName, lineNumber, columnNumber, message, codeSnippet), origin));
       }
     }
+    
+    if(errors.isEmpty()) {
+      errors.add(createMessage(new GroovyError("", 1, 1, errorOutput, ""), origin));
+    }
+    
     return errors;
   }
   
