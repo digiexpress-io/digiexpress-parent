@@ -79,8 +79,6 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   public Uni<UserAction> createOne() throws UserActionNotAllowedException, WorkflowNotFoundException {
     TaskAssert.notNull(actionId, () -> "actionId can't be null!");
     TaskAssert.notNull(clientLocale, () -> "clientLocale can't be null!");
-    TaskAssert.notNull(inputContextId, () -> "inputContextId can't be null!");
-    TaskAssert.notNull(inputParentContextId, () -> "inputParentContextId can't be null!");
     TaskAssert.notNull(customer, () -> "customer can't be null!");
 
     final var props = ImmutableWorkflowDefaultProps.builder()
@@ -89,7 +87,10 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         .build();    
     final var wk = runtime.withTenant(Optional.ofNullable(cockpitId))
         .getBundle()
-        .queryWorkflows().name(actionId).locale(clientLocale).findOne();
+        .queryWorkflows()
+        .externalId(actionId)
+        .name(actionId.length() > 3 ? actionId.substring(0, actionId.length() - 3) : null)
+        .locale(clientLocale).findOne();
     
     if(wk.isEmpty()) {
       throw new WorkflowNotFoundException(new StringBuilder()
