@@ -167,6 +167,7 @@ export declare namespace HdesApi {
   export interface ProgramMessage {
     id: string;
     msg: string;
+    line: number | undefined
     exception?: { column?: number, row?: number }
   }
   export interface AstCommand {

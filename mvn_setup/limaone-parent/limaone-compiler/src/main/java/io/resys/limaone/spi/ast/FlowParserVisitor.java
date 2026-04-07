@@ -1,5 +1,7 @@
 package io.resys.limaone.spi.ast;
 
+import java.io.Serializable;
+
 /*-
  * #%L
  * limaone-compiler
@@ -29,7 +31,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import com.google.common.hash.Hashing;
+import com.ibm.icu.math.BigDecimal;
 
 import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.ast.Flow_AST;
@@ -41,6 +46,7 @@ import io.resys.limaone.ast.Flow_CST.YamlFlow;
 import io.resys.limaone.ast.Flow_CST.YamlInput;
 import io.resys.limaone.ast.Flow_CST.YamlSwitch;
 import io.resys.limaone.ast.Flow_CST.YamlTask;
+import io.resys.limaone.ast.Flow_CST.YamlTaskBody;
 import io.resys.limaone.ast.ImmutableDependency_AST;
 import io.resys.limaone.ast.ImmutableFlow_AST;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
@@ -193,39 +199,28 @@ public class FlowParserVisitor {
       return new ImmutableEmptyBodyStatement(taskId);
     }
     
-    final var collection = task.getReturns() != null ? YamlMapper.getBooleanValue(task.getReturns().getCollection()) : YamlMapper.getBooleanValue(task.getRef().getCollection());
-    final var ref =  task.getReturns() != null ? "" : YamlMapper.getStringValue(task.getRef().getRef());
+    final var collection = task.getReturns() != null ? 
+        YamlMapper.getBooleanValue(task.getReturns().getCollection()) : 
+        YamlMapper.getBooleanValue(task.getRef().getCollection());
     
-    final var inputs = new HashMap<String, String>();
-    final var deconstruct = new ArrayList<String>();
+    final var ref =  task.getReturns() != null ? 
+        "" : 
+        YamlMapper.getStringValue(task.getRef().getRef());
     
-    // use reference input
+
+    final ImmutableMappingStatement inputsStmnt;
     if(task.getRef() != null) {
-      if (task.getRef().getObjectInput() != null) {
-        deconstruct.add(task.getRef().getObjectInput());
-      }
-      for (Map.Entry<String, Yaml> entry : task.getRef().getInputs().entrySet()) {
-        if(entry.getKey().equals(task.getRef().getObjectInput())) {
-          continue;
-        }
-        inputs.put(entry.getKey(), YamlMapper.getStringValue(entry.getValue()));
-      }
+
+      // use reference input
+      inputsStmnt = visitStepInputs(task.getRef(), taskId);
+      
+
+    } else {
 
       // use returns input mapping
-    } else {
-      if (task.getReturns().getObjectInput() != null) {
-        deconstruct.add(task.getReturns().getObjectInput());        
-      }
-      
-      for (Map.Entry<String, Yaml> entry : task.getReturns().getInputs().entrySet()) {
-        if(entry.getKey().equals(task.getReturns().getObjectInput())) {
-          continue;
-        }
-        inputs.put(entry.getKey(), YamlMapper.getStringValue(entry.getValue()));
-      }
+      inputsStmnt = visitStepInputs(task.getReturns(), taskId);
     }
     
-    final var inputsStmnt = new ImmutableMappingStatement(inputs, deconstruct, taskId);
     if(task.getDecisionTable() != null) {
       
       dependencies.add(ImmutableDependency_AST.builder()
@@ -245,6 +240,62 @@ public class FlowParserVisitor {
     } else {
       return new ImmutableReturnsStatement(collection, inputsStmnt, taskId);
     }
+  }
+  
+  private ImmutableMappingStatement visitStepInputs(YamlTaskBody yaml, String taskId) {
+    final var inputs = new HashMap<String, String>();
+    final var literals = new HashMap<String, Serializable>();
+    final var deconstruct = new ArrayList<String>();
+    
+    if (yaml.getObjectInput() != null) {
+      deconstruct.add(yaml.getObjectInput());        
+    }
+    
+    for (Map.Entry<String, Yaml> entry : yaml.getInputs().entrySet()) {
+      if(entry.getKey().equals(yaml.getObjectInput())) {
+        continue;
+      }
+      
+      try {
+        final var syntax = entry.getValue().getSyntax().trim();
+        final var keyword = entry.getKey();
+        final var fragment = syntax
+            .substring(syntax.indexOf(keyword) + keyword.length()+1)
+            .trim();
+        
+       // string literal
+        if(fragment.startsWith("\"") && fragment.endsWith("\"")) {
+          literals.put(entry.getKey(), YamlMapper.getStringValue(entry.getValue()));
+          inputs.put(entry.getKey(), ImmutableMappingStatement.VALUE_IS_LITERAL);
+          continue;
+          
+        // boolean literal
+        } else if(fragment.toLowerCase().equals("true") || fragment.toLowerCase().equals("false")) {
+          literals.put(entry.getKey(), Boolean.parseBoolean(fragment.toLowerCase()));
+          inputs.put(entry.getKey(), ImmutableMappingStatement.VALUE_IS_LITERAL);
+          continue;
+          
+        // integer literal
+        } else if(NumberUtils.isDigits(fragment)) {
+          literals.put(entry.getKey(), Integer.parseInt(fragment));
+          inputs.put(entry.getKey(), ImmutableMappingStatement.VALUE_IS_LITERAL);
+          continue;
+        
+        // big decimal literal
+        } else if(NumberUtils.isParsable(fragment)) {
+          literals.put(entry.getKey(), new BigDecimal(fragment));
+          inputs.put(entry.getKey(), ImmutableMappingStatement.VALUE_IS_LITERAL);
+          continue;
+        }
+      } catch(Exception e) {
+        log.trace("Failed to parse mapping props for: {}", entry.getValue());
+      }
+
+      inputs.put(entry.getKey(), YamlMapper.getStringValue(entry.getValue()));
+    }
+    
+    final var inputsStmnt = new ImmutableMappingStatement(inputs, deconstruct, taskId, literals);
+    return inputsStmnt;
   }
 
   private NextStatement visitStepPointer(YamlTask task) {
@@ -273,7 +324,7 @@ public class FlowParserVisitor {
       }).toList();
     
     final var taskId = YamlMapper.getStringValue(task.getId());
-    return new ImmutableSwitchStatement(cases, new ImmutableMappingStatement(inputMappings, Collections.emptyList(), taskId));
+    return new ImmutableSwitchStatement(cases, new ImmutableMappingStatement(inputMappings, Collections.emptyList(), taskId, null));
   }
   
 

@@ -33,6 +33,7 @@ import io.resys.limaone.ast.Flow_AST.InputsStatement;
 import io.resys.limaone.ast.Flow_AST.ManyTasksStatement;
 import io.resys.limaone.ast.Flow_AST.MappingStatement;
 import io.resys.limaone.program.ProgramInput;
+import io.resys.limaone.spi.ast.FlowStatementFactory.ImmutableMappingStatement;
 import io.resys.limaone.spi.program.stack.StackFrame;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -103,7 +104,12 @@ public class AssignmentContext {
         
         try {
           // Flat mapping
-          final Serializable value = findParameter(entry.getValue());
+          final Serializable value;
+          if(ImmutableMappingStatement.VALUE_IS_LITERAL.equals(entry.getValue())) {
+            value = statement.getLiteralValue().get(entry.getKey());
+          } else {
+            value = findParameter(entry.getValue());
+          }
           
           if(value != null) {
             result.put(nameOnService, value);
