@@ -23,6 +23,7 @@ export const FsDirentServiceCreate: React.FC<FsDirentServiceCreateProps> = (prop
   const articles = selectOptions.articles;
   const configOptions = getConfigOptionsForType('service');
 
+  const [serviceName, setServiceName] = React.useState('');
   const [selectedDialobForm, setSelectedDialobForm] = React.useState<string>('');
   const [selectedDialobTag, setSelectedDialobTag] = React.useState<string>('');
   const dialobTags = selectOptions.collectDialobTags(selectedDialobForm);
@@ -37,7 +38,7 @@ export const FsDirentServiceCreate: React.FC<FsDirentServiceCreateProps> = (prop
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.nameField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })} />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })} required value={serviceName} onChange={setServiceName} />
 
         <Divider />
 
