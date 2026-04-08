@@ -353,6 +353,8 @@ public class Flow_6_Test {
           "deconstructors" : [ "fundAnswers" ],
           "deconstructing" : true,
           "taskId" : "fundEval",
+          "literalValue" : { },
+          "literal" : true,
           "type" : "MAPPING"
         },
         "flowTaskName" : "FundEvalService",
@@ -401,6 +403,8 @@ public class Flow_6_Test {
           "deconstructors" : [ "fundAnswers" ],
           "deconstructing" : true,
           "taskId" : "fundEval",
+          "literalValue" : { },
+          "literal" : true,
           "type" : "MAPPING"
         },
         "flowTaskName" : "FundEvalService",
@@ -446,6 +450,8 @@ public class Flow_6_Test {
           "deconstructors" : [ "fundAnswers" ],
           "deconstructing" : true,
           "taskId" : "fundEval",
+          "literalValue" : { },
+          "literal" : true,
           "type" : "MAPPING"
         },
         "flowTaskName" : "FundEvalService",
@@ -490,6 +496,8 @@ public class Flow_6_Test {
           "deconstructors" : [ "fundAnswers" ],
           "deconstructing" : true,
           "taskId" : "fundEval",
+          "literalValue" : { },
+          "literal" : true,
           "type" : "MAPPING"
         },
         "flowTaskName" : "FundEvalService",
@@ -533,6 +541,8 @@ public class Flow_6_Test {
           "deconstructors" : [ "fundAnswers" ],
           "deconstructing" : true,
           "taskId" : "fundEval",
+          "literalValue" : { },
+          "literal" : true,
           "type" : "MAPPING"
         },
         "flowTaskName" : "FundEvalService",
