@@ -31,7 +31,7 @@ export function mapToOfferData(data: LegacyProcessApi.Process[], site: SiteApi.S
     } else if (offer.otherLocales.length > 0) {
       // OK
     } else {
-      //console.error('Form not available! ', offer);
+      console.error('Form not available! ', offer);
       continue;
     }
 
@@ -64,10 +64,12 @@ export function mapToOffer(data: LegacyProcessApi.Process, site: SiteApi.Site | 
 
   if(site) {
     try {
+      
       const page = Object.values(site.topics).find(topic => topic.id.substring(4) === data.inputContextId);
       const parentPage = Object.values(site.topics).find(topic => topic.id.substring(4) === data.inputParentContextId);
 
       const productInCurrentLocale = page ? Object.values(site.links)
+        .map(link => { console.log(link.name, link.type); return link;})
         .filter(link => link.type === 'workflow')
         .find(link => link.value === data.name) : null;
 

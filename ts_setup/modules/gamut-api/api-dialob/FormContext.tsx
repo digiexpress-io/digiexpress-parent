@@ -32,10 +32,10 @@ export const FormProvider: React.FC<FormProviderProps> = (props) => {
       setOffer(offer);
     }
   }, [props.executionId, authType, offers]);
-
+  
   const formId = props.debugFormId ?? offer?.formId;
-
   if (!offer || !formId) {
+    console.error("Can't find form by exection id", props);
     return <>Failed to load form...</>;
   }
   return (<WithFormProvider {...props} id={formId}>{props.children}</WithFormProvider>);

@@ -32,6 +32,7 @@ import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.program.ArticleProgram.LocalizedSite;
+import io.resys.limaone.program.ImmutableLocalizedSite;
 import io.resys.limaone.program.Program.ProgramAssociation;
 import io.resys.limaone.spi.compiler.article.ArticleProgramImpl;
 import io.resys.limaone.spi.compiler.article.Deltas.TopicData;
@@ -83,9 +84,21 @@ public class Compiler_Article implements CompilableUnit {
     }
     
     // built result
-    final var sites = localeTopicData.keySet().stream().sorted()
+    final var sites_stage_1 = localeTopicData.keySet().stream().sorted()
       .map(locale -> visitLocale(locale, localeTopicData.get(locale), pathLinkData, resolution))
       .collect(Collectors.toList());
+    
+    final var allWkLinks = sites_stage_1.stream()
+        .collect(Collectors.toMap(site -> site.getLocale(), site -> site.getLinks().values().stream()
+            .filter(e -> Boolean.TRUE.equals(e.getWorkflow()))
+            .toList()));
+    
+    final var site_stage_2 = sites_stage_1.stream().map(e -> e.withWorkflowsInOtherLocales(allWkLinks))
+        .map(e -> {
+          final LocalizedSite casting = e;
+          return casting;
+        })
+        .toList();
     
     artifact.build();
     
@@ -101,14 +114,14 @@ public class Compiler_Article implements CompilableUnit {
         return (runtime) -> {
           final List<ModelError> errors = artifact.getErrors();
           final List<ProgramAssociation> assocs = artifact.getAssociations();
-          final var program = new ArticleProgramImpl(runtime, world.getName(), articleAST, artifact.getProgramStatus(), errors, assocs, sites);
+          final var program = new ArticleProgramImpl(runtime, world.getName(), articleAST, artifact.getProgramStatus(), errors, assocs, site_stage_2);
           return program;
         };
       }
     };
   }
 
-  private LocalizedSite visitLocale(String locale, List<TopicData> localeTopics, Map<String, List<Link>> pathLinkData, NewArtifact resolution) {
+  private ImmutableLocalizedSite visitLocale(String locale, List<TopicData> localeTopics, Map<String, List<Link>> pathLinkData, NewArtifact resolution) {
     final var builder = new LocalizedSiteBuilder(locale, pathLinkData, resolution);
     localeTopics.sort((e1, e2) -> e1.getFullPath().compareTo(e2.getFullPath()));
     localeTopics.forEach(builder::addTopic);

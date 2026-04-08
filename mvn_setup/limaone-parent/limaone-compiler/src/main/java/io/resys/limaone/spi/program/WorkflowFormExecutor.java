@@ -223,19 +223,28 @@ public class WorkflowFormExecutor {
       ctx.put("RepresentativeEnabled", false);
     }
     
+    final String selectedLocale;
     if(programInput instanceof WorkflowDefaultProps) {
+      
       final var defaultProps = (WorkflowDefaultProps) programInput;
+      selectedLocale = defaultProps.getLocale();
       if (defaultProps.getArticleName() != null) {
         ctx.put("inputContextId", defaultProps.getArticleName());
       }
       if (defaultProps.getParentArticleName() != null) {
         ctx.put("inputParentContextId", defaultProps.getParentArticleName());
       }      
+    } else {
+      selectedLocale = null;
     }
+    
+    final var lang = Optional
+        .ofNullable(identity.getLanguage())
+        .orElseGet(() -> selectedLocale);
 
     final var dialob = runtime.getBundle().queryDialobs()
         .name(statement.getDependencyId())
-        .getOne().run(new CreateFormInstanceInput(identity.getLanguage(), Collections.unmodifiableMap(ctx)));
+        .getOne().run(new CreateFormInstanceInput(lang, Collections.unmodifiableMap(ctx)));
     
     result
       .tagName(runtime.getBundle().getName())

@@ -84,6 +84,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     final var props = ImmutableWorkflowDefaultProps.builder()
         .parentArticleName(inputParentContextId)
         .articleName(inputContextId)
+        .locale(clientLocale)
         .build();    
     final var wk = runtime.withTenant(Optional.ofNullable(cockpitId))
         .getBundle()
