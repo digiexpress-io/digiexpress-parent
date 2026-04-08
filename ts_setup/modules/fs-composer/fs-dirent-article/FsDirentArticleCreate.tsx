@@ -19,8 +19,11 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = (prop
   const classes = useUtilityClasses();
   const { getConfigOptionsForType, selectOptions } = useFsDirent();
   const configOptions = getConfigOptionsForType('article');
+
+  const [name, setName] = React.useState('');
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
   const [labels, setLabels] = React.useState<string[]>([]);
+  const [orderNumber, setOrderNumber] = React.useState('');
 
   return (
     <FsDirentArticleRoot className={classes.root} ownerState={ownerState}>
@@ -39,10 +42,14 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = (prop
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.nameField.label' })}</Typography>
         <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
+          required value={name} onChange={setName}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.placeholder' })} />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.placeholder' })}
+          required
+          value={orderNumber}
+          onChange={(value) => setOrderNumber(value)} />
 
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
           {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.article.expandToggle.hide' : 'fs.dirent.article.expandToggle.show' })}

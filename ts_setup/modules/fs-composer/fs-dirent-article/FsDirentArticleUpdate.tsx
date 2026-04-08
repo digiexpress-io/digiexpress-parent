@@ -20,13 +20,15 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
   const { getConfigOptionsForType, selectOptions } = useFsDirent();
   const configOptions = getConfigOptionsForType('article');
 
+
   return (
     <FsDirentArticleRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.article.sectionTitle.edit' })}</Typography>
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.nameField.label' })}</Typography>
-        <FsDirentTextField
+        <FsDirentTextField 
+          required
           value={ownerState.name}
           placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
           onChange={ownerState.onChangeName}
@@ -34,6 +36,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.label' })}</Typography>
         <FsDirentTextField
+          required
           value={ownerState.orderNumber}
           placeholder={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.placeholder' })}
           onChange={ownerState.onChangeOrderNumber}

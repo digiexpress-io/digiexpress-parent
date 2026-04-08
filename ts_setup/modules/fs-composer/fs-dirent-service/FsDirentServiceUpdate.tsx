@@ -30,7 +30,7 @@ export const FsDirentServiceUpdate: React.FC<FsDirentServiceUpdateProps> = (prop
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.nameField.label' })}</Typography>
-        <FsDirentTextField
+        <FsDirentTextField required
           value={ownerState.name}
           placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })}
           onChange={ownerState.onChangeName}
