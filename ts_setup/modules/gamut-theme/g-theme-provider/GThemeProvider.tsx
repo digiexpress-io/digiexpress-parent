@@ -64,7 +64,7 @@ function _getSecondaryInitOptions(props: GThemeProviderProps): SecondaryOptions 
 
   return {
     reload: false, 
-    value: cockpit ? secondary[cockpit?.cockpitConfigName] : undefined
+    value: cockpit ? secondary[cockpit?.aliasName] : undefined
   }
 }
 

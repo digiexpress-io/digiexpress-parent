@@ -32,6 +32,7 @@ import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
 import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.digiexpress.eveli.client.spi.dialob.SyncDialobAndProcess;
 import io.digiexpress.eveli.client.spi.gamut.GamutClientImpl;
@@ -40,7 +41,6 @@ import io.digiexpress.eveli.client.web.resources.gamut.GamutFeedbackController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutIamController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutSiteController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutUserActionsController;
-import io.resys.limaone.authoring.Authoring;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -85,8 +85,8 @@ public class EveliAutoConfigGamut {
   public GamutSiteController gamutSiteController(
       io.resys.limaone.program.Runtime envir, 
       FeedbackClient feedback, GamutAuthClient auth, 
-      Optional<Authoring> cockpitClient) {
-    return new GamutSiteController(envir, cockpitClient, feedback, auth);
+      Optional<EveliEditEnvir> cockpitClient) {
+    return new GamutSiteController(envir, cockpitClient.map(e -> e.getAuthoring()), feedback, auth);
   }
 
   @Bean

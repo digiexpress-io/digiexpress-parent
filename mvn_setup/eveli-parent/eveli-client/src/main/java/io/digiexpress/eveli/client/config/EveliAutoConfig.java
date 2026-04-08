@@ -205,6 +205,7 @@ public class EveliAutoConfig {
         .formDb(formDb)
         .dbConfig(modelDb)
         .di(new DI_Impl(context))
+        .tid(tid)
         .currentUser(new CurrentUserSupplier(workerAuth))
         .tid(tid)
         .build();
