@@ -40,7 +40,6 @@ import io.resys.thena.api.actions.TenantActions.TenantAware;
 import io.resys.thena.api.actions.TenantActions.TenantDb;
 import io.resys.thena.fs.spi.FileSystem_ThenaImpl;
 import io.resys.thena.storesql.PgErrors;
-import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.vertx.mutiny.sqlclient.Pool;
 import lombok.Getter;
@@ -203,7 +202,7 @@ public class DefaultEnvironmentProperties implements EnvironmentProperties {
           developmentMode, defaultTenantName, 
           formDb, di, tid, modelWorldDb,
           astParser, 
-          () -> Uni.createFrom().item(() -> currentUser.get()).runSubscriptionOn(workerPool).await().atMost(workerPoolMaxTimeout)
+          currentUser
       );
     }    
   }

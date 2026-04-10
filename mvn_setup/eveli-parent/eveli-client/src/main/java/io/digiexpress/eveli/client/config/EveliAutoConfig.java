@@ -90,6 +90,7 @@ import io.resys.thena.jackson.JsonArrayDeserializer;
 import io.resys.thena.jackson.JsonObjectDeserializer;
 import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.RepoAssert;
+import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.VertxModule;
@@ -139,9 +140,14 @@ public class EveliAutoConfig {
     
     private final WorkerAuthClient workerAuth;
     
+    
     @Override
     public CurrentUser get() {
-      if(!workerAuth.getUser().isAuthenticated()) {
+      final var user = workerAuth.getUserAsync()
+          .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
+          .await().atMost(Duration.ofMinutes(1));
+      
+      if(!user.isAuthenticated()) {
         return ImmutableCurrentUser.builder()
             .userId("")
             .userName("")
@@ -149,8 +155,8 @@ public class EveliAutoConfig {
       }
       
       return ImmutableCurrentUser.builder()
-          .userId(workerAuth.getUser().getPrincipal().getSub())
-          .userName(workerAuth.getUser().getPrincipal().getUsername())
+          .userId(user.getPrincipal().getSub())
+          .userName(user.getPrincipal().getUsername())
           .build();
     }
     

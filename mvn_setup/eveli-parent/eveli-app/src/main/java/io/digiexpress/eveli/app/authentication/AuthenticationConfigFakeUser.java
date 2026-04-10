@@ -53,6 +53,7 @@ import io.digiexpress.eveli.client.api.ImmutableUser;
 import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.WorkerAuthClient.Liveness;
+import io.smallrye.mutiny.Uni;
 
 
 
@@ -167,6 +168,10 @@ public class AuthenticationConfigFakeUser  {
             .issuedAtTime(System.currentTimeMillis())
             .expiresIn(1000)
             .build();
+      }
+      @Override
+      public Uni<User> getUserAsync() {
+        return Uni.createFrom().item(getUser());
       }
     };
   }
