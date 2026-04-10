@@ -53,7 +53,9 @@ public class FormDbCacheImpl implements FormDbCache {
   
   @Override
   public void putForm(String formId, Form form) {
-    formCache.put(formId, form);
+    if(form != null && formId != null) {
+      formCache.put(formId, form);
+    }
   }
   
   @Override

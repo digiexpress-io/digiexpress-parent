@@ -137,11 +137,11 @@ public class EveliAutoConfig {
   @RequiredArgsConstructor
   public static class CurrentUserSupplier implements Supplier<CurrentUser> {
     
-    private final Optional<WorkerAuthClient> workerAuth;
+    private final WorkerAuthClient workerAuth;
     
     @Override
     public CurrentUser get() {
-      if(workerAuth.isEmpty() || !workerAuth.get().getUser().isAuthenticated()) {
+      if(!workerAuth.getUser().isAuthenticated()) {
         return ImmutableCurrentUser.builder()
             .userId("")
             .userName("")
@@ -149,8 +149,8 @@ public class EveliAutoConfig {
       }
       
       return ImmutableCurrentUser.builder()
-          .userId(workerAuth.get().getUser().getPrincipal().getSub())
-          .userName(workerAuth.get().getUser().getPrincipal().getUsername())
+          .userId(workerAuth.getUser().getPrincipal().getSub())
+          .userName(workerAuth.getUser().getPrincipal().getUsername())
           .build();
     }
     
@@ -170,7 +170,7 @@ public class EveliAutoConfig {
       ApplicationContext context,
       io.vertx.mutiny.sqlclient.Pool sqlDb, 
       Optional<WSP> wsp, 
-      Optional<WorkerAuthClient> workerAuth,
+      WorkerAuthClient workerAuth,
       FormDb formDb, 
       EveliPropsAssets assetConfig,
       EveliPropsCockpit cockpitConfig) {
