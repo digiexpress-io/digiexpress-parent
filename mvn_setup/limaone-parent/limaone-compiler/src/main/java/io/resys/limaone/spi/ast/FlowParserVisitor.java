@@ -302,7 +302,10 @@ public class FlowParserVisitor {
     if(task.getSwitch().isEmpty()) {
       final var thenId = YamlMapper.getStringValue(task.getThen());
       if(thenId != null && !thenId.equalsIgnoreCase(MutableYamlFlow.VALUE_END)) {
-        return new ImmutablePointerStatement(visitTask(tasksById.get(thenId))); 
+        final YamlTask nextTask = tasksById.get(thenId);
+        if (nextTask != null) {
+          return new ImmutablePointerStatement(visitTask(nextTask)); 
+        }
       }
       return ImmutableEndStatement.getInstance();
 
