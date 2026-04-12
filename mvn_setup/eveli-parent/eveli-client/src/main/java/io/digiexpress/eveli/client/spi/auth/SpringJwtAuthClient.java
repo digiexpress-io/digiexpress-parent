@@ -28,7 +28,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -37,8 +36,6 @@ import io.digiexpress.eveli.client.api.ImmutableLiveness;
 import io.digiexpress.eveli.client.api.ImmutableUser;
 import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
-import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.converters.uni.UniReactorConverters;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -46,15 +43,6 @@ public class SpringJwtAuthClient implements WorkerAuthClient {
   private final List<String> adminRoles;
   private final Boolean everybodyIsAdmin;
 
-  @Override
-  public Uni<User> getUserAsync() {
-    return Uni.createFrom().converter(
-        UniReactorConverters.fromMono(),
-        ReactiveSecurityContextHolder.getContext()
-      )
-      .onItem().transform(security -> getUser(security))
-    ;
-  }
   
   @Override
   public User getUser() {

@@ -35,8 +35,6 @@ import io.smallrye.mutiny.Uni;
 public interface WorkerAuthClient {
   Liveness getLiveness();
   User getUser();
-  
-  Uni<User> getUserAsync();
 
   
   @Value.Immutable @JsonSerialize(as = ImmutableUser.class) @JsonDeserialize(as = ImmutableUser.class)

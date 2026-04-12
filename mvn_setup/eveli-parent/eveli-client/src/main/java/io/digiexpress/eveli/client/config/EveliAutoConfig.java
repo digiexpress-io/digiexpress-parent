@@ -80,17 +80,16 @@ import io.resys.limaone.program.Runtime.EnvironmentProperties;
 import io.resys.limaone.spi.compiler.CompilerImpl;
 import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties;
-import io.resys.limaone.spi.runtime.DefaultRuntime;
 import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties.DI;
 import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties.ModelDbConfig;
 import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties.WSP;
+import io.resys.limaone.spi.runtime.DefaultRuntime;
 import io.resys.thena.fs.spi.FileSystem_ThenaImpl;
 import io.resys.thena.grim.spi.GrimClientImpl;
 import io.resys.thena.jackson.JsonArrayDeserializer;
 import io.resys.thena.jackson.JsonObjectDeserializer;
 import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.RepoAssert;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.VertxModule;
@@ -140,12 +139,9 @@ public class EveliAutoConfig {
     
     private final WorkerAuthClient workerAuth;
     
-    
     @Override
     public CurrentUser get() {
-      final var user = workerAuth.getUserAsync()
-          .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
-          .await().atMost(Duration.ofMinutes(1));
+      final var user = workerAuth.getUser();
       
       if(!user.isAuthenticated()) {
         return ImmutableCurrentUser.builder()
