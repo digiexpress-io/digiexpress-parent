@@ -16,17 +16,18 @@ use typst_kit::fonts::{Fonts};
 use typst_pdf::PdfOptions;
 
 use crate::pdf_compiler::{map_to_lib, Pdf, PdfCompiler, TypstWorld};
+use crate::pdf_compiler::package_resolver::PackageResolver;
 
 pub struct PdfCompilerImpl {
     main_template_id: Option<String>,
     templates: HashMap<FileId, Source>,
     modules: Vec<super::PdfDataModule>,
-    // leaks - explicit memory leak handling
     leaks: Vec<Box<str>>,
     now: Datetime,
     start_time: Instant,
     fonts_path: PathBuf,
     use_system_fonts: bool,
+    packages_path: PathBuf,
 }
 
 impl PdfCompilerImpl {
@@ -41,16 +42,13 @@ impl PdfCompilerImpl {
             start_time: Instant::now(),
             fonts_path: PathBuf::from("./assets/fonts"),
             use_system_fonts: true,
+            packages_path: PathBuf::from("./assets/packages"),
         }
     }
 }
 
-// Clean up resources
 impl Drop for PdfCompilerImpl {
     fn drop(&mut self) {
-        // No need to do anything here!
-        // The Vec<Box<str>> and Vec<Box<[u8]>> will be dropped automatically,
-        // freeing the memory.
     }
 }
 
@@ -86,8 +84,11 @@ impl PdfCompiler for PdfCompilerImpl {
         self.use_system_fonts = use_system_fonts;
         self
     }
+    fn packages_config(mut self, packages_path: PathBuf) -> Self {
+        self.packages_path = packages_path;
+        self
+    }
     fn compile(mut self) -> Result<super::Pdf, super::PdfCompilerError> {
-        // to the basic data validation
         let main_template = self.main_template_id.as_ref().ok_or_else(|| {
             super::PdfCompilerError::Unspecified(
                 "No main template provided. Call main_template() before compile().".into(),
@@ -101,27 +102,20 @@ impl PdfCompiler for PdfCompilerImpl {
             )
         })?;
 
-
-
-
         let library = map_to_lib(&self.modules, &mut self.leaks);
         
-        // Load fonts based on configuration
         let fonts = if self.use_system_fonts {
-            // Custom fonts + system fonts
             debug!("Loading fonts from {} and system fonts", self.fonts_path.display());
             Fonts::searcher()
                 .include_system_fonts(true)
                 .search_with([self.fonts_path.as_path()])
         } else {
-            // Custom fonts only
             debug!("Loading fonts from {} only", self.fonts_path.display());
             Fonts::searcher()
                 .include_system_fonts(false)
                 .search_with([self.fonts_path.as_path()])
         };
 
-        // Debug loaded fonts
         debug!("Total fonts loaded: {}", fonts.fonts.len());
         for (i, font) in fonts.fonts.iter().enumerate() {
             match font.path() {
@@ -130,7 +124,9 @@ impl PdfCompiler for PdfCompilerImpl {
             }
         }
 
-        // Create PDF world
+        let package_resolver = PackageResolver::new(self.packages_path.clone());
+        debug!("Package resolver: path={}", self.packages_path.display());
+
         let world_state = TypstWorld {
             library: LazyHash::new(library),
             book: LazyHash::new(fonts.book),
@@ -138,6 +134,7 @@ impl PdfCompiler for PdfCompilerImpl {
             source: self.templates.clone(),
             now: self.now,
             main: main.id(),
+            package_resolver,
         };
 
         let warned = compile(&world_state);

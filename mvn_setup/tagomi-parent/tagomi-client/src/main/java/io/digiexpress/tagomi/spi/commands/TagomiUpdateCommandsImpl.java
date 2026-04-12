@@ -154,12 +154,14 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
     }
     List<String> templateDependencies = start.getTemplateIds();
     if(changes.getTemplateIds() != null) {
-      for(final var depTemplateId : changes.getTemplateIds()) {
-        if(!site.getTemplates().containsKey(depTemplateId)) {
-          throw new ConstraintException(start, "Template: '" + depTemplateId + "' does not exist!");
+      templateDependencies = new ArrayList<>();
+      for(final var depTemplateRef : changes.getTemplateIds()) {
+        final var resolvedId = TagomiCreateCommandsImpl.resolveTemplateIdOrName(depTemplateRef, site);
+        if(resolvedId == null) {
+          throw new ConstraintException(start, "Template with id or name: '" + depTemplateRef + "' does not exist!");
         }
-      }      
-      templateDependencies = new ArrayList<>(changes.getTemplateIds());
+        templateDependencies.add(resolvedId);
+      }
     }
     
     final var updated = ImmutableTemplate.builder()
@@ -319,12 +321,14 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
           
           List<String> templateDependencies = start.getTemplateIds();
           if(mutator.getTemplateIds() != null) {
-            for(final var depTemplateId : mutator.getTemplateIds()) {
-              if(!state.getTemplates().containsKey(depTemplateId)) {
-                throw new ConstraintException(start, "Template: '" + depTemplateId + "' does not exist!");
+            templateDependencies = new ArrayList<>();
+            for(final var depTemplateRef : mutator.getTemplateIds()) {
+              final var resolvedId = TagomiCreateCommandsImpl.resolveTemplateIdOrName(depTemplateRef, state);
+              if(resolvedId == null) {
+                throw new ConstraintException(start, "Template with id or name: '" + depTemplateRef + "' does not exist!");
               }
-            }     
-            templateDependencies = new ArrayList<>(mutator.getTemplateIds());
+              templateDependencies.add(resolvedId);
+            }
           }
 
           final var end = ImmutableTemplate.builder()

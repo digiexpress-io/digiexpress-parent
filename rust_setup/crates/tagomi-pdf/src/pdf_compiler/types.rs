@@ -47,6 +47,7 @@ pub trait PdfCompiler {
     fn add_templates<T: Into<PdfTemplate>>(self, template: Vec<T>) -> Self;
     fn add_modules<T: Into<PdfDataModule>>(self, data: Vec<T>) -> Self;
     fn fonts_config(self, fonts_path: PathBuf, use_system_fonts: bool) -> Self;
+    fn packages_config(self, packages_path: PathBuf) -> Self;
     fn compile(self) -> Result<Pdf, PdfCompilerError>;
 }
 

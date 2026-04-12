@@ -103,8 +103,11 @@ public class TagomiWorldImpl implements TagomiWorld {
         for (final var depTemplateId : template.getTemplateIds()) {
           final var depTemplate = container.getTemplates().get(depTemplateId);
           if (depTemplate != null) {
+            final var depService = container.getServices().get(depTemplate.getServiceId());
+            final var depLocale = container.getLocales().get(depTemplate.getLocaleId());
+            final var depName = resolveTemplateName(depService, depLocale);
             templates.add(PdfTemplate.builder()
-                .id(depTemplateId)
+                .id(depName)
                 .value(depTemplate.getContent())
                 .build());
           }
@@ -186,5 +189,12 @@ public class TagomiWorldImpl implements TagomiWorld {
 
       }
     };
+  }
+  private static String resolveTemplateName(TagomiContainer.Service service, TagomiContainer.Locale locale) {
+    final var serviceName = service != null ? service.getServiceName() : "unknown";
+    if (locale != null) {
+      return serviceName + " - " + locale.getLocaleCode();
+    }
+    return serviceName;
   }
 }

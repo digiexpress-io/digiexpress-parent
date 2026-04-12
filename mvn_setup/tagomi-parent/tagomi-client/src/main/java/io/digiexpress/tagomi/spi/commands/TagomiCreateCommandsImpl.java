@@ -113,12 +113,13 @@ public class TagomiCreateCommandsImpl implements TagomiCreateCommands {
 
       final var templateIds = new ArrayList<String>();
       if(init.getTemplateIds() != null) {
-        for(final var depTemplateId : init.getTemplateIds()) {
-          if(!state.getTemplates().containsKey(depTemplateId)) {
+        for(final var depTemplateRef : init.getTemplateIds()) {
+          final var resolvedId = resolveTemplateIdOrName(depTemplateRef, state);
+          if(resolvedId == null) {
             throw new ConstraintException(
-                "Template with id: '" + depTemplateId + "' does not exist in: '" + String.join(",", state.getTemplates().keySet()) + "'!");
+                "Template with id or name: '" + depTemplateRef + "' does not exist!");
           }
-          templateIds.add(depTemplateId);
+          templateIds.add(resolvedId);
         }
       }
 
@@ -277,6 +278,25 @@ public class TagomiCreateCommandsImpl implements TagomiCreateCommands {
         Optional.of(state.getLocales().get(localeRef)) : 
         state.getLocales().values().stream().filter(l -> l.getLocaleCode().equalsIgnoreCase(localeRef)).findFirst();
      return locale;
+  }
+  
+  public static String resolveTemplateIdOrName(String idOrName, TagomiContainer state) {
+    if(state.getTemplates().containsKey(idOrName)) {
+      return idOrName;
+    }
+    
+    for(final var template : state.getTemplates().values()) {
+      final var service = state.getServices().get(template.getServiceId());
+      final var locale = state.getLocales().get(template.getLocaleId());
+      if(service == null || locale == null) {
+        continue;
+      }
+      final var templateName = service.getServiceName() + " - " + locale.getLocaleCode();
+      if(templateName.equals(idOrName)) {
+        return template.getId();
+      }
+    }
+    return null;
   }
   
   private static <T extends TagomiContainer.IsTagomiObject> T assertUniqueId(T entity, TagomiContainer state) {

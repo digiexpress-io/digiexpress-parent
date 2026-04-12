@@ -7,6 +7,7 @@ import { useIntl } from 'react-intl';
 
 import { TagomiComposerApi } from '@dxs-ts/tagomi-api';
 import { DebugPdfViewer, DebugForm, useFlowInput } from '../tagomi-debug';
+import { TagomiCompletionBuilder } from './autocomplete';
 
 
 interface Message {
@@ -75,6 +76,21 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
     composer.actions.handleTemplateUpdate(templateId, content);
   }
 
+  const beforeMount: BeforeMount = React.useCallback((editor) => {
+    editor.languages.registerCompletionItemProvider('plaintext', {
+      triggerCharacters: ['#'],
+      provideCompletionItems(model, position) {
+        const suggestions = new TagomiCompletionBuilder()
+          .withSite(composer.site)
+          .withTemplateId(templateId)
+          .withModel(model)
+          .withPosition(position)
+          .build();
+        return { suggestions };
+      }
+    });
+  }, [composer.site, templateId]);
+
   return (
     <Box height="calc(100vh - 64px)">
       <Box p={2}>
@@ -111,9 +127,10 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
       <Box height={'100%'} width={'100%'} display='flex'>
         <Box height={'100%'} width={'50%'}>
           <MonacoReact
+            beforeMount={beforeMount}
             onChange={handleChange}
             value={src}
-            defaultLanguage='yaml'
+            defaultLanguage='plaintext'
             options={{
               wordBasedSuggestions: 'off',
               minimap: { enabled: false }
