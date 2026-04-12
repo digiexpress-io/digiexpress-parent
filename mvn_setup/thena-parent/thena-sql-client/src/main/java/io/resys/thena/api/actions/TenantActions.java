@@ -62,6 +62,7 @@ public interface TenantActions {
     MemberQuery refTenant(@Nullable String refTenant);
     MemberQuery aliasId(@Nullable UUID aliasId);
     Multi<Member> findAll();
+    List<Member> findAllSync();
   }
   
   interface CreateOneMember {

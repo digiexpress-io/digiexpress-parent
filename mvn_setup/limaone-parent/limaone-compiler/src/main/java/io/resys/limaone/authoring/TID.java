@@ -69,6 +69,7 @@ public interface TID {
     UpsertMember aliasStatus(boolean aliasStatus);
     
     Uni<Member> build();
+    Member buildSync();
   }
 
   

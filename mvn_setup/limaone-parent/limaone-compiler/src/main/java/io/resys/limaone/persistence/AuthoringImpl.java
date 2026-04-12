@@ -1,5 +1,8 @@
 package io.resys.limaone.persistence;
 
+import java.util.Collections;
+import java.util.List;
+
 /*-
  * #%L
  * limaone-compiler
@@ -232,6 +235,10 @@ public class AuthoringImpl implements Authoring {
         @Override
         public MemberQuery aliasId(UUID aliasId) {
           return this;
+        }
+        @Override
+        public List<Member> findAllSync() {
+          return Collections.emptyList();
         }
       };
     }

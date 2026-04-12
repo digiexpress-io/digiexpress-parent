@@ -1,5 +1,7 @@
 package io.resys.limaone.persistence.world;
 
+import java.util.List;
+
 /*-
  * #%L
  * limaone-compiler
@@ -92,6 +94,12 @@ public class TID_FS implements TID {
       @Override
       public Multi<Member> findAll() {
         return delegate.findAll();
+      }
+      @Override
+      public List<Member> findAllSync() {
+        return findAll().collect().asList()
+          .runSubscriptionOn(config.getEnvir().getWorkerPool())
+          .await().atMost(config.getEnvir().getWorkerPoolMaxTimeout());
       }
       
     };

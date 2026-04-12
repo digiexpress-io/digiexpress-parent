@@ -1,5 +1,8 @@
 package io.resys.thena.spi;
 
+import java.time.Duration;
+import java.util.List;
+
 /*-
  * #%L
  * thena-sql-client
@@ -25,6 +28,7 @@ import java.util.UUID;
 import io.resys.thena.api.actions.TenantActions.MemberQuery;
 import io.resys.thena.api.entities.Member;
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.infrastructure.Infrastructure;
 import lombok.RequiredArgsConstructor;
 
 
@@ -56,5 +60,11 @@ public class MemberQueryImpl implements MemberQuery {
   @Override
   public Multi<Member> findAll() {
     return state.member().findByExtIdAndAliasIdAndRef(externalId, aliasId, refTenant);
+  }
+  @Override
+  public List<Member> findAllSync() {
+    return findAll().collect().asList()
+        .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
+        .await().atMost(Duration.ofSeconds(15));
   }
 }
