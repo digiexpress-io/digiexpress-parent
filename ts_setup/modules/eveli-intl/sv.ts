@@ -157,6 +157,7 @@ export const sv = {
   'button.cancel': 'Avboka',
   'button.archive': 'Arkiv',
   'button.confirmDelete': 'Ta bort',
+  'button.delete': 'Ta bort',
   'button.delete.feedback': 'Ta bort denna feedback',
   'button.delete.template': 'Ta bort denna mall',
   'button.delete.link': 'Avlägsna denna länk',
@@ -1256,5 +1257,7 @@ export const sv = {
   'task.audit.ai.similar.unavailable': 'Ingen liknande feedback tillgänglig',
   'taskcard.body.customerName.none': 'Ej angiven',
   'taskcard.body.form.canPublishFeedback.yes': 'Ja',
-  'taskcard.body.form.representative.placeholder': 'Representantens namn'
+  'taskcard.body.form.representative.placeholder': 'Representantens namn',
+  'fs.dirent.deleteConfirmDialog.title': 'Ta bort resurs',
+  'fs.dirent.deleteConfirmDialog.content': 'Är du säker på att du vill ta bort den här resursen? Det går inte att ångra den här åtgärden.'
 }

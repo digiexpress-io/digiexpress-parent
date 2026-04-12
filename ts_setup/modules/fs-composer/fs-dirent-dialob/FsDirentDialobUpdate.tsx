@@ -5,6 +5,7 @@ import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { useUtilityClasses, FsDirentDialobRoot } from './useUtilityClasses';
@@ -63,6 +64,7 @@ export const FsDirentDialobUpdate: React.FC<FsDirentDialobUpdateProps> = (props)
         </Collapse>
 
         <div className={classes.buttonContainer}>
+          <FsDirentButtonDelete assetId={props.direntId} />
           <FsDirentButtonCancel />
           <FsDirentButtonCreate />
         </div>

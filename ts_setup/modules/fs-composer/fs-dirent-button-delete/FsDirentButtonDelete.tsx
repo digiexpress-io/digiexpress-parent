@@ -1,0 +1,29 @@
+import React, { useState } from 'react';
+import { useIntl } from 'react-intl';
+import { FsDirentButtonDeleteProps } from './FsDirentButtonDeleteProps';
+import { useUtilityClasses, FsDirentButtonDeleteRoot } from './useUtilityClasses';
+import { useOwnerState } from './useOwnerState';
+import { FsDirentButtonDeleteDialog } from './FsDirentButtonDeleteDialog';
+
+export const FsDirentButtonDelete: React.FC<FsDirentButtonDeleteProps> = (props) => {
+  const intl = useIntl();
+  const ownerState = useOwnerState(props);
+  const classes = useUtilityClasses();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleClick = () => setDialogOpen(true);
+  const handleClose = () => setDialogOpen(false);
+  const handleConfirm = () => {
+    setDialogOpen(false);
+    props.onDelete?.();
+  };
+
+  return (
+    <>
+      <FsDirentButtonDeleteRoot className={classes.root} ownerState={ownerState} onClick={handleClick}>
+        {intl.formatMessage({ id: 'button.delete' })}
+      </FsDirentButtonDeleteRoot>
+      <FsDirentButtonDeleteDialog open={dialogOpen} onClose={handleClose} onConfirm={handleConfirm} assetId={props.assetId}/>
+    </>
+  );
+};

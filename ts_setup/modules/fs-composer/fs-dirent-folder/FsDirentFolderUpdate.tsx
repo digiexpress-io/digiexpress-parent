@@ -3,6 +3,7 @@ import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentFolderRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
@@ -30,6 +31,7 @@ export const FsDirentFolderUpdate: React.FC<FsDirentFolderUpdateProps> = (props)
         />
 
         <div className={classes.buttonContainer}>
+          <FsDirentButtonDelete assetId={props.direntId} />
           <FsDirentButtonCancel />
           <FsDirentButtonCreate />
         </div>

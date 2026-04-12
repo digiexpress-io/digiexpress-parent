@@ -5,6 +5,7 @@ import MonacoReact from '@monaco-editor/react';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { useUtilityClasses, FsDirentTemplateRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentTemplateUpdateProps } from './FsDirentTemplateProps';
@@ -41,6 +42,7 @@ export const FsDirentTemplateUpdate: React.FC<FsDirentTemplateUpdateProps> = (pr
         </div>
 
         <div className={classes.buttonContainer}>
+          <FsDirentButtonDelete assetId={props.direntId} />
           <FsDirentButtonCancel />
           <FsDirentButtonCreate />
         </div>

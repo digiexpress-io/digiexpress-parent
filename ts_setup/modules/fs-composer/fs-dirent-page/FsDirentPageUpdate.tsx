@@ -7,6 +7,7 @@ import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentPageRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
@@ -46,6 +47,7 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
         <FsDirentSelectMulti options={ownerState.availableConfigOptions} value={ownerState.configOptions as string[]} onChange={ownerState.onChangeConfigOptions} />
 
         <div className={classes.buttonContainer}>
+          <FsDirentButtonDelete assetId={props.direntId} />
           <FsDirentButtonCancel />
           <FsDirentButtonCreate />
         </div>
