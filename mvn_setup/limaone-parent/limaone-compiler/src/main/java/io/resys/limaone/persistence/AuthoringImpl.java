@@ -111,6 +111,10 @@ public class AuthoringImpl implements Authoring {
     return new WorldImportImpl(config);
   }
   @Override
+  public WorldRefQuery worldRefQuery() {
+    return config.getPersistence().worldRefQuery();
+  }
+  @Override
   public DebugModel debugModel() {
     return new DebugModel() {
       @Override public DebugAny debugAny() { return new DebugAnyImpl(config); }

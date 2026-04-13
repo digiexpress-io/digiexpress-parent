@@ -24,6 +24,8 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.immutables.value.Value;
+
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
@@ -45,6 +47,7 @@ public interface Authoring {
   WorldDiffQuery worldDiffQuery();
   WorldSummaryQuery worldSummaryQuery();
   WorldImport worldImport();
+  WorldRefQuery worldRefQuery();
   
   TID tid();
   
@@ -65,6 +68,11 @@ public interface Authoring {
     WorldImport source(ModelWorld source);
     Uni<ModelWorld> build();
     ModelWorld buildSync();
+  }
+  
+  interface WorldRefQuery {
+    Uni<Optional<WorldRef>> findOne();
+    Optional<WorldRef> findOneSync();
   }
   
   interface WorldQuery {
@@ -150,5 +158,13 @@ public interface Authoring {
   // marker interface
   interface AuthoringModelProps {
  
+  }
+  
+  @Value.Immutable
+  interface WorldRef {
+    String getTenantName();
+    String getBranchName();
+    UUID getCommitId();
+    String getHash();
   }
 }

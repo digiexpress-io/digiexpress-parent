@@ -27,6 +27,7 @@ import java.util.function.Function;
 
 import io.resys.limaone.authoring.Authoring.WorldIndexQuery;
 import io.resys.limaone.authoring.Authoring.WorldQuery;
+import io.resys.limaone.authoring.Authoring.WorldRefQuery;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
@@ -35,6 +36,8 @@ import io.smallrye.mutiny.Uni;
 public interface ModelWorldDb {
   ModelWorldDb withBranchName(Optional<String> branchName);
   ModelWorldDb withTenant(Optional<String> tenantName);
+  
+  WorldRefQuery worldRefQuery();
   WorldQuery worldQuery();
   WorldBuilder worldBuilder();
   WorldIndexQuery worldIndexQuery();

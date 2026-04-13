@@ -25,6 +25,8 @@ import java.util.UUID;
 
 import io.resys.limaone.authoring.Authoring.WorldIndexQuery;
 import io.resys.limaone.authoring.Authoring.WorldQuery;
+import io.resys.limaone.authoring.Authoring.WorldRef;
+import io.resys.limaone.authoring.Authoring.WorldRefQuery;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
@@ -101,6 +103,19 @@ public class ModelWorldDb_File implements ModelWorldDb {
   @Override
   public CreateModelWorldDb createModelWorldDb() {
     throw new UnsupportedOperationException("Read only env. can't build new worlds!");
+  }
+  @Override
+  public WorldRefQuery worldRefQuery() {
+    return new WorldRefQuery() {
+      @Override
+      public Optional<WorldRef> findOneSync() {
+        return Optional.empty();
+      }
+      @Override
+      public Uni<Optional<WorldRef>> findOne() {
+        return Uni.createFrom().item(Optional.empty());
+      }
+    };
   }
 
 }

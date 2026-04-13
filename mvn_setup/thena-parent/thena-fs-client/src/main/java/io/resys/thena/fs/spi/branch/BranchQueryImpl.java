@@ -220,4 +220,17 @@ public class BranchQueryImpl implements BranchQuery {
     }
     return Optional.empty();
   }
+  @Override
+  public Uni<Optional<Ref>> findRefOnly() {
+    RepoAssert.isTrue(branchId != null || nameExpr != null, () -> "branchId can't be empty!");
+
+    final var filter = ImmutableRefTableNameFilter.builder()
+      .nameExpr(nameExpr)
+      .branchId(branchId)
+      .build();
+    
+    return db_uni.onItem().transformToMulti(db -> db.query().queryRef().findAllByName(filter))
+      .collect().asList()
+      .onItem().transform(branches -> branches.stream().findFirst());
+  }
 }
