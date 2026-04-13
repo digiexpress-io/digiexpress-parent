@@ -67,6 +67,7 @@ public class WorldFactory {
   private final List<Tag> tags = new ArrayList<>();
   private final ImmutableModelWorld.Builder builder = ImmutableModelWorld.builder();
   private final List<FormToFind> formsToFind = new ArrayList<>();
+  private final List<String> visitedForms = new ArrayList<>();
   
   record FormToFind(String formName, String tagName) {}
   
@@ -130,6 +131,13 @@ public class WorldFactory {
       }
       
       final var form = raw.get().getItem1();
+      final String formId = form.getId();
+      
+      if(this.visitedForms.contains(formId)) {
+        continue;
+      }
+
+      this.visitedForms.add(formId);      
       final var tag = raw.get().getItem2();
       
       final var body = ImmutableDialobForm.builder()
