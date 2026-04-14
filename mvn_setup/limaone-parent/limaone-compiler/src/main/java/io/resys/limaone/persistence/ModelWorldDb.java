@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
+import io.resys.limaone.authoring.Authoring.WorldFsQuery;
 import io.resys.limaone.authoring.Authoring.WorldIndexQuery;
 import io.resys.limaone.authoring.Authoring.WorldQuery;
 import io.resys.limaone.authoring.Authoring.WorldRefQuery;
@@ -37,6 +38,7 @@ public interface ModelWorldDb {
   ModelWorldDb withBranchName(Optional<String> branchName);
   ModelWorldDb withTenant(Optional<String> tenantName);
   
+  WorldFsQuery worldFsQuery();
   WorldRefQuery worldRefQuery();
   WorldQuery worldQuery();
   WorldBuilder worldBuilder();

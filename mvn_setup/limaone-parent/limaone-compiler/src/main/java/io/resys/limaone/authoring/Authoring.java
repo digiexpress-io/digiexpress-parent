@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import org.immutables.value.Value;
 
+import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
@@ -42,6 +43,8 @@ public interface Authoring {
   Authoring withDefaultTenant(Optional<String> tenant);
   Authoring withBranchName(Optional<String> branchName);
   
+  
+  WorldFsQuery worldFsQuery();
   WorldIndexQuery worldIndexQuery();
   WorldQuery worldQuery();
   WorldDiffQuery worldDiffQuery();
@@ -58,7 +61,11 @@ public interface Authoring {
   
   CopyAsModel copyAsModel();
   DebugModel debugModel();
-  
+
+  interface WorldFsQuery {
+    Uni<WorldFs> findAll();
+    WorldFs findAllSync();
+  }
 
   interface WorldIndexQuery {
     Multi<ModelWorldIndex> findAll();
