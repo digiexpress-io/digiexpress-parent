@@ -167,8 +167,9 @@ export declare namespace HdesApi {
   export interface ProgramMessage {
     id: string;
     msg: string;
-    line: number | undefined
-    exception?: { column?: number, row?: number }
+    column: number | undefined;
+    line: number | undefined;
+    exception?: { column?: number, row?: number };
   }
   export interface AstCommand {
     id?: string;
@@ -267,7 +268,7 @@ export declare namespace HdesApi {
     errors: FlowAstCommandMessage[];
   }
   export interface FlowAstCommandMessage {
-    line: number;
+    line: number | undefined;
     column: number | undefined;
     msg: string;
   }

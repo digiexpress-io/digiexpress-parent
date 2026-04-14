@@ -11,6 +11,62 @@ import { CompletionBuilder, EXTERNAL_DIALOG, CompletionDialogProps } from './aut
 import { SelectOrCreateAsset } from './SelectOrCreateAsset';
 
 
+
+function _getErrorLine(model: monaco_editor.editor.ITextModel, reference: HdesApi.FlowAstCommandMessage): number {
+  
+  if(reference.line !== undefined && reference.line !== null) {
+    return reference.line;
+  }
+
+  const text = reference.msg;
+  const errorWithoutAst = text.indexOf("Task: '");
+
+  if(errorWithoutAst === -1) {
+    return 1;
+  }
+
+  const taskRefDirty = text.substring(7);
+  const taskRef = taskRefDirty.substring(0, taskRefDirty.indexOf("'"));
+  const length = model.getLineCount();
+  
+  let taskLine: number = -1;
+  for(let lineNumber = 1; lineNumber < length; lineNumber++) {
+    
+    const lineContent = model.getLineContent(lineNumber)
+      .replace("'", "")
+      .replace('"', "")
+    const isTaskFound = lineContent.indexOf("id: " + taskRef) > -1;
+    
+    if(isTaskFound) {
+      taskLine = lineNumber;
+      break;
+    }
+  }
+
+  const paramRef = text.indexOf('@from:')
+  if(paramRef > -1 && taskLine > -1) {
+
+    const paramName = text.substring(paramRef + 7).trim();
+    for(let lineNumber = taskLine; lineNumber < length; lineNumber++) {
+      
+      const lineContent = model.getLineContent(lineNumber)
+      const isParamFound = lineContent.indexOf(paramName) > -1;
+      
+      if(isParamFound) {
+        taskLine = lineNumber;
+        break;
+      }
+    }
+  }
+
+  if(taskLine > -1) {
+    return taskLine;
+  }
+
+  return 1;
+}
+
+
 export const FlowCodeEditor: React.FC<{
   id: string;
   src: string;
@@ -38,17 +94,19 @@ export const FlowCodeEditor: React.FC<{
     const lineCount = model.getLineCount();
   
     const markers = messages
-      .map(msg => {
-        const lineNumber = msg.line;
-  
+      .map(reference => {
+        
+        const text = reference.msg;
+        const lineNumber = _getErrorLine(model, reference);
+        console.error(reference);
+
         if (lineNumber < 1 || lineNumber > lineCount) {
           return null;
         }
-        console.error(msg)
-
+  
         const content = model.getLineContent(lineNumber);
         return {
-          message: msg.msg,
+          message: text,
           severity: monaco.MarkerSeverity.Error,
           startLineNumber: lineNumber,
           endLineNumber: lineNumber,

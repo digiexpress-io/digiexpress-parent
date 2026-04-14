@@ -58,11 +58,12 @@ public class Compiler_Flow implements CompilableUnit {
       public RuntimeLink accept(Artifact artifact) {
         return (runtime) -> {
           final var extraErrors = new Compiler_FlowDepsValidator(artifact, ast).walk();
+          final var allErrors = Stream.concat(artifact.getErrors().stream(), extraErrors.stream()).toList();
           return new FlowProgramImpl(
               runtime,
               flow.getId(), ast, 
-              artifact.getErrors().isEmpty() ? artifact.getProgramStatus() : ProgramStatus.ERROR, 
-              Stream.concat(artifact.getErrors().stream(), extraErrors.stream()).toList(), 
+              allErrors.isEmpty() ? artifact.getProgramStatus() : ProgramStatus.ERROR, 
+              allErrors, 
               artifact.getAssociations());
         };
       }
