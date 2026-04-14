@@ -160,5 +160,10 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-test-client</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
