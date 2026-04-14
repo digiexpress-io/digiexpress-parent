@@ -220,6 +220,9 @@ export declare namespace HdesApi {
     commitId: string;
     createdAt: string;
     createdBy: string;
+
+    updatedAt: string;
+    updatedBy: string;
   }
 
   export interface Site {

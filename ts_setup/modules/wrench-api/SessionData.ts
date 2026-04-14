@@ -117,7 +117,7 @@ export class SessionData implements WrenchComposerApi.Session {
   getLastUpdated(entityId: HdesApi.EntityId): string | null {
     try {
       const lastUpdated = this._commitlogs[entityId];
-      return lastUpdated?.[0]?.createdAt ?? null;
+      return lastUpdated?.[0]?.updatedAt ?? lastUpdated?.[0]?.createdAt ?? null;
     } catch (e) {
       console.error(e);
       return null;
