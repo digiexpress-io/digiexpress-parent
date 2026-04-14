@@ -27,8 +27,6 @@ export const OfferProvider: React.FC<{
       return sortOrder === 'ASC' ? dateA - dateB : dateB - dateA;
     });
 
-
-
   function toggleOfferSortOrder() {
     setSortOrder((prev) => (prev === 'ASC' ? 'DESC' : 'ASC'));
   };
@@ -39,7 +37,13 @@ export const OfferProvider: React.FC<{
       offers: sortedByDate,
       isPending: data.isPending,
       
-      getOffer: (id) => data.offers.find((offer) => offer.id === id),
+      getOffer: (id) => {
+        const found = data.offers.find((offer) => offer.id === id);
+        if(!found) {
+          console.error('Can\'t find offer by id', { id, fromData: data.offers });
+        }
+        return found;
+      },
       refresh: data.refresh,
       createOffer: data.createOffer,
       cancelOffer: data.cancelOffer,
@@ -48,6 +52,10 @@ export const OfferProvider: React.FC<{
       sortOrder,
       toggleOfferSortOrder
     };
+
+    if(data.isPending) {
+      return (<></>);
+    }
 
     return (<OfferContext.Provider value={contextValue}>{props.children}</OfferContext.Provider>);
   }, [data, props]);

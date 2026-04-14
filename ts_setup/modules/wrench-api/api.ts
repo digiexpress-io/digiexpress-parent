@@ -167,7 +167,9 @@ export declare namespace HdesApi {
   export interface ProgramMessage {
     id: string;
     msg: string;
-    exception?: { column?: number, row?: number }
+    column: number | undefined;
+    line: number | undefined;
+    exception?: { column?: number, row?: number };
   }
   export interface AstCommand {
     id?: string;
@@ -218,6 +220,9 @@ export declare namespace HdesApi {
     commitId: string;
     createdAt: string;
     createdBy: string;
+
+    updatedAt: string;
+    updatedBy: string;
   }
 
   export interface Site {
@@ -266,7 +271,7 @@ export declare namespace HdesApi {
     errors: FlowAstCommandMessage[];
   }
   export interface FlowAstCommandMessage {
-    line: number;
+    line: number | undefined;
     column: number | undefined;
     msg: string;
   }

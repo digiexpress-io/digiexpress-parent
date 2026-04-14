@@ -80,10 +80,10 @@ import io.resys.limaone.program.Runtime.EnvironmentProperties;
 import io.resys.limaone.spi.compiler.CompilerImpl;
 import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties;
-import io.resys.limaone.spi.runtime.DefaultRuntime;
 import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties.DI;
 import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties.ModelDbConfig;
 import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties.WSP;
+import io.resys.limaone.spi.runtime.DefaultRuntime;
 import io.resys.thena.fs.spi.FileSystem_ThenaImpl;
 import io.resys.thena.grim.spi.GrimClientImpl;
 import io.resys.thena.jackson.JsonArrayDeserializer;
@@ -137,11 +137,13 @@ public class EveliAutoConfig {
   @RequiredArgsConstructor
   public static class CurrentUserSupplier implements Supplier<CurrentUser> {
     
-    private final Optional<WorkerAuthClient> workerAuth;
+    private final WorkerAuthClient workerAuth;
     
     @Override
     public CurrentUser get() {
-      if(workerAuth.isEmpty() || !workerAuth.get().getUser().isAuthenticated()) {
+      final var user = workerAuth.getUser();
+      
+      if(!user.isAuthenticated()) {
         return ImmutableCurrentUser.builder()
             .userId("")
             .userName("")
@@ -149,8 +151,8 @@ public class EveliAutoConfig {
       }
       
       return ImmutableCurrentUser.builder()
-          .userId(workerAuth.get().getUser().getPrincipal().getSub())
-          .userName(workerAuth.get().getUser().getPrincipal().getUsername())
+          .userId(user.getPrincipal().getSub())
+          .userName(user.getPrincipal().getUsername())
           .build();
     }
     
@@ -170,7 +172,7 @@ public class EveliAutoConfig {
       ApplicationContext context,
       io.vertx.mutiny.sqlclient.Pool sqlDb, 
       Optional<WSP> wsp, 
-      Optional<WorkerAuthClient> workerAuth,
+      WorkerAuthClient workerAuth,
       FormDb formDb, 
       EveliPropsAssets assetConfig,
       EveliPropsCockpit cockpitConfig) {
@@ -205,6 +207,7 @@ public class EveliAutoConfig {
         .formDb(formDb)
         .dbConfig(modelDb)
         .di(new DI_Impl(context))
+        .tid(tid)
         .currentUser(new CurrentUserSupplier(workerAuth))
         .tid(tid)
         .build();

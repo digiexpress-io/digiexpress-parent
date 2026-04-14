@@ -13,6 +13,7 @@ export const FsDirentPrintoutCreate: React.FC<FsDirentPrintoutCreateProps> = (pr
   const intl = useIntl();
   const ownerState = useCreateOwnerState(props);
   const classes = useUtilityClasses();
+  const [name, setName] = React.useState('');
 
   return (
     <FsDirentPrintoutRoot className={classes.root} ownerState={ownerState}>
@@ -20,7 +21,7 @@ export const FsDirentPrintoutCreate: React.FC<FsDirentPrintoutCreateProps> = (pr
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.nameField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.printout.nameField.placeholder' })} required />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.printout.nameField.placeholder' })} required value={name} onChange={setName} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.printoutServiceNameField.label' })}</Typography>
         <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.printout.printoutServiceNameField.placeholder' })} />

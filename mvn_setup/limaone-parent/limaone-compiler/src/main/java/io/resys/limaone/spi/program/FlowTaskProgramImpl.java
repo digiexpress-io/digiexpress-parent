@@ -38,6 +38,7 @@ import io.resys.limaone.program.ImmutableFlowTaskResult;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.spi.program.input.DefaultProgramInput;
 import io.resys.limaone.spi.program.input.RuntimeProgramInput;
+import io.smallrye.mutiny.Uni;
 
 
 public class FlowTaskProgramImpl implements FlowTaskProgram {
@@ -158,7 +159,12 @@ public class FlowTaskProgramImpl implements FlowTaskProgram {
         final var param1 = input.getValue(ast.getTypeDef0());
         final var param2 = input.getValue(ast.getTypeDef1());
         final var exec = (ServiceExecutorType2) executable;
-        final var value = exec.execute(param1, param2);
+        
+        final var value = Uni.createFrom()
+            .item(() -> exec.execute(param1, param2))
+            .runSubscriptionOn(runtime.getProperties().getWorkerPool())
+            .await().atMost(runtime.getProperties().getWorkerPoolMaxTimeout());
+        
         return ImmutableFlowTaskResult.builder().value(value).build();
       }
       default: throw new ProgramException("Can't find/call execute method!");

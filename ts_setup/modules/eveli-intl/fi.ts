@@ -157,6 +157,7 @@ export const fi = {
   'button.cancel': 'Peruuta',
   'button.archive': 'Arkisto',
   'button.confirmDelete': 'Poista',
+  'button.delete': 'Poista',
   'button.delete.feedback': 'Poista tämä palaute',
   'button.delete.template': 'Poista tämä valmispohja',
   'button.delete.link': 'Poista tämä linkki',
@@ -1257,5 +1258,7 @@ export const fi = {
   'taskcard.body.customerName.none': 'Ei määritelty',
   'taskcard.body.form.canPublishFeedback.yes': 'Kyllä',
   'taskcard.body.form.representative.placeholder': 'Edustajan nimi',
-  'fs.dirent.language.localeCodeField.placeholder': 'fi'
+  'fs.dirent.language.localeCodeField.placeholder': 'fi',
+  'fs.dirent.deleteConfirmDialog.title': 'Poista resurssi',
+  'fs.dirent.deleteConfirmDialog.content': 'Haluatko varmasti poistaa tämän resurssin? Tätä toimintoa ei voi kumota.'
 }

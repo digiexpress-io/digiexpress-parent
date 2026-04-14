@@ -1,8 +1,8 @@
 package io.resys.limaone.spi.dialob.builders;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /*-
  * #%L
@@ -75,14 +75,21 @@ public class FormTagQueryImpl implements FormTagQuery {
   public Multi<FormAndTag> flatAll() {
     
     return Uni.combine().all().unis(
-        new FormQueryImpl(db).findAll().collect().asList(),
+        new FormMetaQueryImpl(db).findAll().collect().asList(),
         findAll().collect().asList()
     ).asTuple().onItem().transformToMulti(tuple -> {
 
-      final Map<String, @NotNull String> formLabels = tuple.getItem1().stream()
-          .collect(Collectors.toMap(
-              val -> val.getId(), 
-              val -> val.getMetadata().getLabel()));
+      final Map<String, @NotNull String> formLabels = new HashMap<>(); 
+      
+      for(final var item : tuple.getItem1()) {
+        if(item.getId() == null) {
+          continue;
+        }
+        formLabels.put(item.getId(), item.getMetadata().getLabel());
+      }
+
+      
+      
       final var tags = new ArrayList<FormAndTag>();
       for (var formTag : tuple.getItem2()) {
         tags.add(ImmutableFormAndTag.builder()

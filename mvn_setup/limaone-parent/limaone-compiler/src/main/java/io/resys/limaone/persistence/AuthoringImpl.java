@@ -1,5 +1,8 @@
 package io.resys.limaone.persistence;
 
+import java.util.Collections;
+import java.util.List;
+
 /*-
  * #%L
  * limaone-compiler
@@ -79,6 +82,10 @@ public class AuthoringImpl implements Authoring {
   }
 
   @Override
+  public WorldFsQuery worldFsQuery() {
+    return config.getPersistence().worldFsQuery();
+  }
+  @Override
   public TID tid() {
     final var modelDb = config.getEnvir().getModelDb();
     final var isTenantAware = modelDb instanceof TenantAware;
@@ -106,6 +113,10 @@ public class AuthoringImpl implements Authoring {
   @Override
   public WorldImport worldImport() {
     return new WorldImportImpl(config);
+  }
+  @Override
+  public WorldRefQuery worldRefQuery() {
+    return config.getPersistence().worldRefQuery();
   }
   @Override
   public DebugModel debugModel() {
@@ -232,6 +243,10 @@ public class AuthoringImpl implements Authoring {
         @Override
         public MemberQuery aliasId(UUID aliasId) {
           return this;
+        }
+        @Override
+        public List<Member> findAllSync() {
+          return Collections.emptyList();
         }
       };
     }

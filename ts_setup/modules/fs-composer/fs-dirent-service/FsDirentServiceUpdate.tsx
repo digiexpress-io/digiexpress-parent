@@ -5,6 +5,7 @@ import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
@@ -30,7 +31,7 @@ export const FsDirentServiceUpdate: React.FC<FsDirentServiceUpdateProps> = (prop
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.nameField.label' })}</Typography>
-        <FsDirentTextField
+        <FsDirentTextField required
           value={ownerState.name}
           placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })}
           onChange={ownerState.onChangeName}
@@ -94,6 +95,7 @@ export const FsDirentServiceUpdate: React.FC<FsDirentServiceUpdateProps> = (prop
         </Collapse>
 
         <div className={classes.buttonContainer}>
+          <FsDirentButtonDelete assetId={props.direntId} />
           <FsDirentButtonCancel />
           <FsDirentButtonCreate />
         </div>

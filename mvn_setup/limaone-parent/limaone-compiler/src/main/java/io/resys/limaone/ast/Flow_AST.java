@@ -131,6 +131,10 @@ public interface Flow_AST extends Simple_AST, Serializable {
     //  to------from
     Map<String, String> getAssignments();
     
+    boolean isLiteral();
+    
+    // literal values for mappings
+    Map<String, Serializable> getLiteralValue();
     
     // inputs not defined... just assume that mapping is default de-constructing
     boolean isDeconstructing(); 

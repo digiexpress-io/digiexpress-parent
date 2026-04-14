@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import io.resys.limaone.ast.Flow_CST.YamlFlow;
 import io.resys.limaone.ast.Flow_CST.YamlInput;
@@ -138,11 +139,27 @@ public class CST_YamlFlowValidator {
         result.put(entry.getKey(), new PseudoParam(node, input.getDataType(), mapTo));
         
       } else {
-        error(taskModel,
-            node.getStart(),
-            node.getSyntax().length(),
-            "Task: " + taskId + ", has unknown input: '" + entry.getKey() + "'!");
+        // check for literals
+        final var syntax = node.getSyntax().trim();
+        final var fragment = syntax
+            .substring(syntax.indexOf(mapTo) + mapTo.length()+1)
+            .trim();
         
+        // string literal
+        if(fragment.startsWith("\"") && fragment.endsWith("\"")) {
+          result.put(entry.getKey(), new PseudoParam(node, ValueType.STRING, mapTo));
+        } else if(fragment.toLowerCase().equals("true") || fragment.toLowerCase().equals("false")) {
+          result.put(entry.getKey(), new PseudoParam(node, ValueType.BOOLEAN, mapTo));
+        } else if(NumberUtils.isDigits(fragment)) {
+          result.put(entry.getKey(), new PseudoParam(node, ValueType.INTEGER, mapTo));
+        } else if(NumberUtils.isParsable(fragment)) {
+          result.put(entry.getKey(), new PseudoParam(node, ValueType.DECIMAL, mapTo));
+        } else {        
+          error(taskModel,
+              node.getStart(),
+              node.getSyntax().length(),
+              "Task: " + taskId + ", has unknown input: '" + entry.getKey() + "'!");
+        }
       }
     }
     return result;

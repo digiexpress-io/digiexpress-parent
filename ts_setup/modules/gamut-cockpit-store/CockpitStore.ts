@@ -3,8 +3,8 @@ const STORAGE_KEY = 'gamut_cockpit';
 
 export interface Cockpit {
   id: string;
-  cockpitConfigName: string;
-  cockpitConfigDescription: string;
+  aliasName: string;
+  aliasDesc: string;
 }
 
 export class CockpitStore {

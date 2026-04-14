@@ -74,6 +74,11 @@ import io.vertx.mutiny.sqlclient.Row;
                 OR
                 _hydrate_ids @> jsonb_build_array(CONCAT_WS('/', NULLIF(nodes.node_path, ''), nodes.node_name))
             ) THEN blobs.blob_value
+            
+            WHEN jsonb_array_length(_hydrate_types) > 0 AND (
+                _hydrate_types @> jsonb_build_array(blobs.blob_type)
+            ) THEN blobs.blob_value
+             
             WHEN _hydrate_all THEN blobs.blob_value
             ELSE NULL 
           END,

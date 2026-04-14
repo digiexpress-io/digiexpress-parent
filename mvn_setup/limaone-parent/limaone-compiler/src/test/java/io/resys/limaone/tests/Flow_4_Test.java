@@ -25,14 +25,48 @@ import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.ibm.icu.math.BigDecimal;
+
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
 import io.resys.limaone.tests.support.TestTemplate;
 import io.resys.limaone.tests.support.TestTemplate.Deps;
 
 
 public class Flow_4_Test {
+  
   @Test
-  public void runAll() {
+  public void literalMappingTest() {
+    
+    final var envir = TestTemplate.compileOneFlow(
+"""
+id: literal-mapping
+inputs:
+
+tasks:
+  - format data:
+      id: "format_result"
+      then: "end"
+      returns:
+        collection: false
+        inputs:
+          desc: "printout the text"
+          classifier: 1
+          isSuccess: true
+          value: 1.90
+""");
+  
+
+    final var result = envir.run(Map.of()).andGetBody();
+    Assertions.assertEquals(result.getStatus(), FlowExecutionStatus.COMPLETED);
+    Assertions.assertEquals("printout the text", result.getReturns().get("desc"));
+    Assertions.assertEquals(1, result.getReturns().get("classifier"));
+    Assertions.assertEquals(true, result.getReturns().get("isSuccess"));
+    Assertions.assertEquals(new BigDecimal("1.90"), result.getReturns().get("value"));
+
+  }
+  
+  @Test
+  public void twoCasesSwitchTests() {
     
     final var envir = TestTemplate.compileOneFlow(
 """
@@ -69,19 +103,21 @@ tasks:
         collection: false
         inputs:
           event: say_hello.text
+          desc: "printout the text"
 """, Deps.ftx(service()));
     
-    
-    {
-      final var result = envir.run(Map.of("isHello", false )).andGetBody();
-      Assertions.assertEquals(result.getStatus(), FlowExecutionStatus.COMPLETED);
-      Assertions.assertEquals(null, result.getReturns().get("event"));
-    }
     
     {
       final var result = envir.run(Map.of("isHello", true )).andGetBody();
       Assertions.assertEquals(result.getStatus(), FlowExecutionStatus.COMPLETED);
       Assertions.assertEquals("Hello world", result.getReturns().get("event"));
+      Assertions.assertEquals("printout the text", result.getReturns().get("desc"));
+    }
+    
+    {
+      final var result = envir.run(Map.of("isHello", false )).andGetBody();
+      Assertions.assertEquals(result.getStatus(), FlowExecutionStatus.COMPLETED);
+      Assertions.assertEquals(null, result.getReturns().get("event"));
     }
   }
   

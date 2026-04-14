@@ -131,7 +131,10 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
         .map(label -> label.getLocale())
         .collect(Collectors.toList());
 
-    if(this.enablesLocales.values().stream().filter(l -> usedLocales.contains(l.getId())).findFirst().isEmpty()) {
+    if( this.enablesLocales.values().stream()
+        .filter(l -> usedLocales.contains(l.getId()))
+        .findFirst().isEmpty() ) {
+      
       return result;
     }
     
@@ -150,16 +153,21 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
             .desc(label.getLabelValue())
             .path("_") // reserve empty path
             .value(link.getBody().getValue())
-            .startDate(link.getBody().getStartDate())
+            
             .endDate(link.getBody().getEndDate())
+            .startDate(link.getBody().getStartDate())
             .anon(Boolean.TRUE.equals(link.getBody().getAnon()))
-            .workflow(true)
+
             .global(false)
+            .workflow(true)
             .assignable(true)
+            
             .flowName(link.getBody().getFlowName())
             .formName(link.getBody().getFormName())
+            
             .formTag(link.getBody().getFormTag())
             .formId(link.getBody().getFormId())
+            
             .type(LINK_TYPE_WORKFLOW)
             .build();
         result.add(resource);

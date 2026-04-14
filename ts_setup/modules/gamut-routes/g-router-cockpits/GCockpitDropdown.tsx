@@ -29,7 +29,7 @@ export const GCockpitDropdown: React.FC<{}> = (props) => {
     cockpits.setActive(found);
     await iam.reload();
     // switch the theme if possible
-    gTheme.setThemeOptions(found?.cockpitConfigName);
+    gTheme.setThemeOptions(found?.aliasName);
     nav({ to: '/public/$locale', params: { locale: 'en' } })
   }
 
@@ -49,13 +49,13 @@ export const GCockpitDropdown: React.FC<{}> = (props) => {
 
       {/** All selection from data source */}
       {datasource.map((option) => {
-        const { id, cockpitConfigName, cockpitConfigDescription } = option;
+        const { id, aliasName, aliasDesc } = option;
         const selected = id === selectedValue?.id;
         const prefix = selected ? <CheckIcon /> : null;
 
         return (<GInputSelectOption key={id} value={id} className={classes.option}>
-          {<div className={classes.optionKey}>{cockpitConfigName}</div>}
-          <div className={classes.optionValue}>{cockpitConfigDescription}</div>
+          {<div className={classes.optionKey}>{aliasName}</div>}
+          <div className={classes.optionValue}>{aliasDesc}</div>
           <div className={classes.optionChecked}>{prefix}</div>
         </GInputSelectOption>);
       })}
@@ -75,8 +75,8 @@ const Collapsed: React.FC<{
   if (selectedItem) {
     return (
       <div className={className}>
-        <div>{selectedItem.cockpitConfigName}</div>
-        <div>{selectedItem.cockpitConfigDescription}</div>
+        <div>{selectedItem.aliasName}</div>
+        <div>{selectedItem.aliasDesc}</div>
       </div>
     );
   }

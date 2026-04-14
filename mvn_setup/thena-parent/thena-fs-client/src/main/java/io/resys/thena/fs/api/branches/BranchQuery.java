@@ -122,4 +122,14 @@ public interface BranchQuery {
    * @return reactive stream containing the single matching branch index
    */
   Multi<Index> findIndexOnly();
+  
+  /**
+   * Executes query that may return zero or one branch result.
+   * Safe when unsure if any branches match the specified criteria.
+   * 
+   * WARNINING: this will ignore all nodes and blobs, query will return strictly REF entity without loading any relations.
+   * 
+   * @return reactive stream containing optional branch result
+   */
+  Uni<Optional<Ref>> findRefOnly();
 }

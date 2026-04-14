@@ -24,8 +24,10 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
 
+import io.resys.limaone.authoring.Authoring.WorldFsQuery;
 import io.resys.limaone.authoring.Authoring.WorldIndexQuery;
 import io.resys.limaone.authoring.Authoring.WorldQuery;
+import io.resys.limaone.authoring.Authoring.WorldRefQuery;
 import io.resys.limaone.model.ImmutableModelWorldIndex;
 import io.resys.limaone.model.Model.ModelWorldIndex;
 import io.resys.limaone.persistence.ModelWorldDb;
@@ -70,6 +72,15 @@ public class ModelWorldDb_FS implements ModelWorldDb, TenantAware<ModelWorldDb_F
             .onItem().transformToUni(ignore -> Uni.createFrom().voidItem());
       }
     };
+  }
+
+  @Override
+  public WorldFsQuery worldFsQuery() {
+    return new WorldFsQueryImpl(getUserFileSystem(), workerPool, workerTimeout, branchName);
+  }
+  @Override
+  public WorldRefQuery worldRefQuery() {
+    return new WorldRefQueryImpl(getUserFileSystem(), workerPool, workerTimeout, branchName);
   }
   @Override
   public TenantActions getActions() {

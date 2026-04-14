@@ -151,7 +151,7 @@ public class LocalizedSiteBuilder {
     hashBuilder.append("|");
     
     // Calculate final hash
-    String calculatedId = Hashing.murmur3_128()
+    final var calculatedId = Hashing.murmur3_128()
         .hashString(hashBuilder.toString(), StandardCharsets.UTF_8)
         .toString();
     

@@ -25,15 +25,15 @@ export const FsDirentButtonCancelRoot = styled('button', {
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
   
-  backgroundColor: alpha(ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.1),
-  color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
-  border: `1px solid ${alpha(ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.3)}`,
+  backgroundColor: 'transparent',
+  color: ownerState.isDarkMode ? FsColors.light.background : FsColors.light.text,
+  border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.dark.textSecondary}`,
   borderRadius: theme.spacing(0.5),
   minWidth: '13ch',
   padding: theme.spacing(0.5),
   ...theme.typography.subtitle2,
   cursor: 'pointer',
   '&:hover': {
-    backgroundColor: alpha(ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.2),
+    backgroundColor: alpha(ownerState.isDarkMode ? FsColors.light.background : FsColors.light.text, 0.05),
   },
 }));

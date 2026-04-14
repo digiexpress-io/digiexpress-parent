@@ -17,6 +17,7 @@ export const FsDirentLanguageCreate: React.FC<FsDirentLanguageCreateProps> = (pr
   const classes = useUtilityClasses();
   const { getConfigOptionsForType } = useFsDirent();
   const configOptions = getConfigOptionsForType('language');
+  const [localeCode, setLocaleCode] = React.useState('');
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
 
   return (
@@ -25,7 +26,7 @@ export const FsDirentLanguageCreate: React.FC<FsDirentLanguageCreateProps> = (pr
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.placeholder' })} required/>
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.placeholder' })} required value={localeCode} onChange={setLocaleCode} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.language.descriptionField.label' })}</Typography>
         <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.language.descriptionField.placeholder' })}

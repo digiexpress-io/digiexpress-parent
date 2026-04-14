@@ -15,11 +15,14 @@ import { GRouterProductProps, useGRouterProducState } from './g-router-product-t
 import { GRouterProductBreadcrumbs } from './GRouterProductBreadcrumbs';
 import { GRouterProductContent } from './GRouterProductContent';
 import { GRouterProductActions } from './GRouterProductActions';
+import { useSite } from '@dxs-ts/gamut-api';
 
 
 
 export const GRouterProduct: React.FC<GRouterProductProps> = (props) => {
-  const { ownerState } = useGRouterProducState(props);
+  
+  const site = useSite();
+  const isProductLoaded = Object.keys(site.views).length > 0;
 
   return (
     <GShell drawerOpen={false}>
@@ -32,13 +35,7 @@ export const GRouterProduct: React.FC<GRouterProductProps> = (props) => {
       <main role='main'>
         <Container>
           <GRouterProductRoot>
-            <GLayout variant='fill-session-start-end'
-              slots={{
-                breadcrumbs: () => (<GRouterProductBreadcrumbs ownerState={ownerState} />),
-                topTitle: () => <GRouterProductContent ownerState={ownerState} />,
-                center: () => <GRouterProductActions ownerState={ownerState} />
-              }}>
-            </GLayout>
+            { isProductLoaded && <ProductLayout {...props}/> }
           </GRouterProductRoot>
         </Container>
       </main>
@@ -50,3 +47,14 @@ export const GRouterProduct: React.FC<GRouterProductProps> = (props) => {
   );
 }
 
+const ProductLayout: React.FC<GRouterProductProps> = (props) => {
+  const { ownerState } = useGRouterProducState(props);
+  return (
+    <GLayout variant='fill-session-start-end'
+      slots={{
+        breadcrumbs: () => (<GRouterProductBreadcrumbs ownerState={ownerState} />),
+        topTitle: () => <GRouterProductContent ownerState={ownerState} />,
+        center: () => <GRouterProductActions ownerState={ownerState} />
+      }}>
+    </GLayout>);
+}

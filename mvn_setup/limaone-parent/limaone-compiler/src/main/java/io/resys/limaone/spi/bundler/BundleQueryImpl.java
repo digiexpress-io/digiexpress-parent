@@ -62,6 +62,11 @@ public class BundleQueryImpl<T extends Program> implements BundleQuery<T> {
   }
   @Override
   public Optional<T> findOne() {
+    if(id == null && name == null && externalId == null) {
+      return programs.findOne();
+    }
+    
+    
     Optional<T> result = Optional.empty();
     if(id != null) {
       result = programs.findOne(id);
@@ -69,14 +74,12 @@ public class BundleQueryImpl<T extends Program> implements BundleQuery<T> {
     if(result.isPresent()) {
       return result;
     }
-    
     if(name != null) {
       result = programs.findOne(name);
     }
     if(result.isPresent()) {
       return result;
     }
-    
     if(externalId != null) {
       result = programs.findOne(externalId);
     }

@@ -99,23 +99,24 @@ public class CockpitApiController {
   
   @PostMapping("/activity/current-state")
   public Uni<AliasAndMember> changeActivity(@RequestBody CockpitActivityChangeActiveId change) {
-    return authoring.tid().memberQuery().findAll().collect().asList()
-      .onItem().transformToUni(item -> {
-        final var member = item.stream().findFirst();
-        final var aliasStatus = member
-          .map(m -> {
-            if(m.getAliasId().toString().equals(change.getActiveId())) {
-              return !Boolean.TRUE.equals(m.getAliasStatus());
-            }
-            return true;
-          })
-          .orElse(true);
-        return authoring.tid().upsertMember()
-          .aliasId(UUID.fromString(change.getActiveId()))
-          .aliasStatus(aliasStatus)
-          .build();
+    final var members = authoring.tid().memberQuery().findAllSync();
+    
+    final var member = members.stream().findFirst();
+    final var aliasStatus = member
+      .map(m -> {
+        if(m.getAliasId().toString().equals(change.getActiveId())) {
+          return !Boolean.TRUE.equals(m.getAliasStatus());
+        }
+        return true;
       })
-      .onItem().transformToUni(ignore -> getOneCockpit(change.getActiveId()));
+      .orElse(true);
+    
+    final var upserted = authoring.tid().upsertMember()
+      .aliasId(UUID.fromString(change.getActiveId()))
+      .aliasStatus(aliasStatus)
+      .buildSync();
+    
+    return getOneCockpit(change.getActiveId());
   }
   
   

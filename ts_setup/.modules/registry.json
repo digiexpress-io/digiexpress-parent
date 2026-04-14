@@ -127,10 +127,10 @@
         "@mui/icons-material",
         "@mui/utils",
         "react-intl",
-        "luxon",
         "@dxs-ts/cockpit-api",
         "@tanstack/react-query",
         "@tanstack/react-table",
+        "luxon",
         "@dxs-ts/xui-table"
       ],
       "actualExternalDependencies": [
@@ -139,9 +139,9 @@
         "@mui/icons-material",
         "@mui/utils",
         "react-intl",
-        "luxon",
         "@tanstack/react-query",
-        "@tanstack/react-table"
+        "@tanstack/react-table",
+        "luxon"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/cockpit-api",
@@ -1422,9 +1422,12 @@
         },
         "peerDependencies": {
           "react": "*",
+          "react-intl": "*",
+          "@monaco-editor/react": "*",
           "@mui/material": "*",
           "@mui/icons-material": "*",
-          "@mui/utils": "*"
+          "@mui/utils": "*",
+          "@uiw/react-md-editor": "*"
         },
         "keywords": [
           "filesystem",
@@ -1438,22 +1441,31 @@
         "@dxs-ts/fs-api",
         "react-markdown",
         "react",
+        "react-intl",
+        "@monaco-editor/react",
         "@mui/material",
         "@mui/icons-material",
-        "@mui/utils"
+        "@mui/utils",
+        "@uiw/react-md-editor"
       ],
       "peerDependencies": [
         "react",
+        "react-intl",
+        "@monaco-editor/react",
         "@mui/material",
         "@mui/icons-material",
-        "@mui/utils"
+        "@mui/utils",
+        "@uiw/react-md-editor"
       ],
       "externalDependencies": [
         "react-markdown",
         "react",
+        "react-intl",
+        "@monaco-editor/react",
         "@mui/material",
         "@mui/icons-material",
-        "@mui/utils"
+        "@mui/utils",
+        "@uiw/react-md-editor"
       ],
       "internalDependencies": [
         "@dxs-ts/eveli-primitives",
@@ -1483,11 +1495,7 @@
       "actualInternalDependencies": [
         "@dxs-ts/fs-api"
       ],
-      "missingDependencies": [
-        "react-intl",
-        "@monaco-editor/react",
-        "@uiw/react-md-editor"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": [
         "@dxs-ts/eveli-primitives"
       ]
@@ -4628,6 +4636,6 @@
       ]
     }
   },
-  "checksum": "f5f2220d93af7ea75531391617d86a02038a6adf183f8e70c993d9251d496ff3",
-  "generatedAt": "2026-04-01T06:59:54.048Z"
+  "checksum": "f7bb63ca97f11627221646af4e9737dc2beb020cc996cf8e104e31a47b0a63c7",
+  "generatedAt": "2026-04-10T10:44:22.799Z"
 }

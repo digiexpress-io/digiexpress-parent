@@ -56,7 +56,7 @@ public class DialobFormParserImpl implements DialobFormParser {
   public DialobForm_AST parse() {
     Objects.requireNonNull(model, () -> "workflow must be defined");
 
-    final var hash = model.getBodyHash();
+    final var hash = model.getBodyHash() + "/" + model.getId();
     final var cacheKey = new DialobForm_AST_CacheKey(hash);
     
     final Function<DialobForm_AST_CacheKey, DialobForm_AST> mappingFunction = (k) -> createAst(model);

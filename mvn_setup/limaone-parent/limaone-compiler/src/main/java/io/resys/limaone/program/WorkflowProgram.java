@@ -101,6 +101,7 @@ public interface WorkflowProgram extends Program {
   @Value.Immutable @JsonSerialize(as = ImmutableWorkflowDefaultProps.class) @JsonDeserialize(as = ImmutableWorkflowDefaultProps.class)
   interface WorkflowDefaultProps extends WorkflowProps {
     @Nullable String getArticleName();
+    @Nullable String getLocale();
     @Nullable String getParentArticleName();
   }
   

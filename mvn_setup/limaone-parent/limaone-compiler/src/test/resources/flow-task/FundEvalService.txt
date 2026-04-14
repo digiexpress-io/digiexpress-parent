@@ -1,0 +1,38 @@
+
+
+public class FundEvalService {
+
+  public Output execute(Input input, Runtime ctx) {
+    Objects.requireNonNull(ctx, () -> "ctx can't be null");
+    Output output = new Output();
+
+    String fundAnswerA = input.fundQuestionA;
+    String fundAnswerB = input.fundQuestionB;
+
+    final var selectionBCD = List.of("selectionB", "selectionC", "selectionD");
+
+    if ("selectionA".equals(fundAnswerA) && "selectionA".equals(fundAnswerB)) {
+      output.result = 1;
+    } else if (selectionBCD.contains(fundAnswerA)) {
+      output.result = 0;
+    } else if (selectionBCD.contains(fundAnswerB)) {
+      output.result = 0;
+    } else {
+      output.result = -1;
+    }
+
+    return output;
+  }
+
+
+  @ServiceData
+  public static class Input implements Serializable {
+    String fundQuestionA;
+    String fundQuestionB;
+  }
+
+  @ServiceData
+  public static class Output implements Serializable {
+    Integer result;
+  }
+}

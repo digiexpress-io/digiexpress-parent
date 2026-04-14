@@ -1,5 +1,7 @@
 package io.resys.limaone.spi.ast;
 
+import java.io.Serializable;
+
 /*-
  * #%L
  * limaone-compiler
@@ -211,13 +213,24 @@ public class FlowStatementFactory {
     private final List<String> deconstructors; 
     private final boolean deconstructing;
     private final String taskId;
+    private final Map<String, Serializable> literalValue;
+    public static final String VALUE_IS_LITERAL = "__get_from_literal"; 
     
-    public ImmutableMappingStatement(Map<String, String> assignments, List<String> deconstructors, String taskId) {
+    public ImmutableMappingStatement(
+        Map<String, String> assignments, 
+        List<String> deconstructors, 
+        String taskId,
+        Map<String, Serializable> literalValue) {
       super();
       this.assignments = Collections.unmodifiableMap(assignments);
       this.deconstructing = !deconstructors.isEmpty();
       this.deconstructors = deconstructors;
       this.taskId = taskId;
+      this.literalValue = literalValue == null ? Collections.emptyMap() : Collections.unmodifiableMap(literalValue);
+    }
+    @Override
+    public boolean isLiteral() {
+      return literalValue.isEmpty();
     }
   }
 

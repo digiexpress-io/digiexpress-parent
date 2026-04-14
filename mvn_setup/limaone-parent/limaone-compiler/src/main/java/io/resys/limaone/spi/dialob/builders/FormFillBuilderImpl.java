@@ -64,6 +64,13 @@ public class FormFillBuilderImpl implements FormFillBuilder {
     if(isInvalidId(formInstanceId)) {
       return Uni.createFrom().item(new RawResponseImpl(ResponseEntity.status(HttpStatus.BAD_REQUEST).build()));
     }
+    if(body == null) {
+      return db.getQuestionnaireHttp().httpQuery()
+          .uri(uri -> uri.append(formInstanceId).build())
+          .method(String.class)
+          .getOneAsRaw()
+          .call(this::determineCallback);
+    }
     
     return db.getQuestionnaireHttp().httpQuery()
       .uri(uri -> uri.append(formInstanceId).build())

@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import io.dialob.api.form.Form;
 import io.dialob.api.form.FormTag;
+import io.resys.limaone.spi.dialob.FormDb.FormMetadata;
 import io.resys.limaone.spi.dialob.FormDb.FormQuery;
 import io.resys.limaone.spi.dialob.FormDbImpl.FormDbProps;
 import io.resys.limaone.spi.http.HttpClient.AnyProxy;
@@ -120,15 +121,32 @@ public class FormQueryImpl implements FormQuery {
     return db.getFormHttp()
         .httpQuery()
         .uri(uri -> uri.append("forms").build())
-        .method(Form.class)
+        .method(FormMetadata.class)
         .findAllObjects()
-        .onItem().invoke(formOpt -> {
-          db.getCache().putForm(formOpt.getId(), formOpt);
-        });
+        .onItem().transformToUni(item -> {
+        
+          return db.getFormHttp()
+              .httpQuery()
+              .uri(uri -> uri.append("forms").append(item.getId()).build())
+              .method(Form.class)
+              .findOneObject();
+        })
+        .merge(10).collect()
+        .asList().onItem().transformToMulti(e -> {
+          final var formStream = e.stream()
+              .filter(optional -> optional.isPresent())
+              .map(optional -> optional.get());
+          return Multi.createFrom().items(formStream);
+        })
+        .onItem().invoke(formOpt -> 
+          db.getCache().putForm(formOpt.getId(), formOpt)
+        );
   }
 
   @Override
   public AnyProxy proxyAnything() {
     return db.getFormHttp().anyProxy();
   }
+  
+
 }

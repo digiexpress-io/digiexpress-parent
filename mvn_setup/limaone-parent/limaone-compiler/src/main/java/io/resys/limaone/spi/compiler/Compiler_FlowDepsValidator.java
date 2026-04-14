@@ -48,6 +48,7 @@ import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;
+import io.resys.limaone.spi.ast.FlowStatementFactory.ImmutableMappingStatement;
 import io.resys.limaone.spi.compiler.CompilableUnit.Artifact;
 import io.resys.limaone.spi.parameter.Parameter_Factory;
 import lombok.RequiredArgsConstructor;
@@ -244,6 +245,10 @@ public class Compiler_FlowDepsValidator {
   public ValidatorResult visitDepToValidate(DepToValidate depToValidate) {
     final var statement = depToValidate.getStatement();
     for(final var mapping : statement.getAssignments().entrySet()) {
+      if(ImmutableMappingStatement.VALUE_IS_LITERAL.equals(mapping.getValue())) {
+        continue;
+      }
+      
       final var fromPath = mapping.getValue().split("\\.");
       final var to = mapping.getKey();
       final var fromTask = fromPath[0];

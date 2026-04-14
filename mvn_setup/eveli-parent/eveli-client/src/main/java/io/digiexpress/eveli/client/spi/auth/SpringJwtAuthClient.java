@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
@@ -42,9 +43,30 @@ public class SpringJwtAuthClient implements WorkerAuthClient {
   private final List<String> adminRoles;
   private final Boolean everybodyIsAdmin;
 
+  
   @Override
   public User getUser() {
+    return getUser(SecurityContextHolder.getContext());
+  }
+
+  @Override
+  public Liveness getLiveness() {
     final var authentication = SecurityContextHolder.getContext().getAuthentication();
+    final Jwt token = (Jwt) authentication.getPrincipal();
+    
+    final var now = LocalDateTime.now();
+    final var then = LocalDateTime.ofInstant(token.getExpiresAt(), ZoneId.systemDefault());
+    return ImmutableLiveness.builder()
+        .issuedAtTime(token.getIssuedAt().toEpochMilli())
+        .expiresIn(Duration.between(now, then).toSeconds())
+        .build();
+  
+  }
+  
+  
+
+  private User getUser(SecurityContext context) {
+    final var authentication = context.getAuthentication();
     if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
       return ImmutableUser.builder()
           .isAuthenticated(false)
@@ -72,20 +94,6 @@ public class SpringJwtAuthClient implements WorkerAuthClient {
             .build())
         .build();
   }
-
-  @Override
-  public Liveness getLiveness() {
-    final var authentication = SecurityContextHolder.getContext().getAuthentication();
-    final Jwt token = (Jwt) authentication.getPrincipal();
-    
-    final var now = LocalDateTime.now();
-    final var then = LocalDateTime.ofInstant(token.getExpiresAt(), ZoneId.systemDefault());
-    return ImmutableLiveness.builder()
-        .issuedAtTime(token.getIssuedAt().toEpochMilli())
-        .expiresIn(Duration.between(now, then).toSeconds())
-        .build();
-  
-  }
   
   private String getEmail(Jwt principal) {
     String email = "";
@@ -111,5 +119,7 @@ public class SpringJwtAuthClient implements WorkerAuthClient {
     }
     return sub;
   }
+
+
 
 }

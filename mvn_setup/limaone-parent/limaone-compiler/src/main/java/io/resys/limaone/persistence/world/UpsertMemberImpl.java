@@ -100,4 +100,10 @@ public class UpsertMemberImpl implements UpsertMember {
       .externalId(externalId)
       .build();
   }
+  @Override
+  public Member buildSync() {
+    return build()
+    .runSubscriptionOn(config.getEnvir().getWorkerPool())
+    .await().atMost(config.getEnvir().getWorkerPoolMaxTimeout());
+  }
 }
