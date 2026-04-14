@@ -38,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDialobController;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsFsController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsPublicationController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsStencilController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsTagomiController;
@@ -142,7 +143,10 @@ public class EveliAutoConfigAssets {
   public AssetsStencilController assetsStencilController(EveliEditEnvir context) {
     return new AssetsStencilController(context.getAuthoring());
   }
-
+  @Bean
+  public AssetsFsController assetsFsController(EveliEditEnvir context) {
+    return new AssetsFsController(context.getAuthoring());
+  }
   /**
    * Create this bean for edit envir
    */
