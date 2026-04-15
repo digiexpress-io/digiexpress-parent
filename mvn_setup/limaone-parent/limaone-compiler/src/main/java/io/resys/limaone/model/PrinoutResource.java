@@ -1,4 +1,4 @@
-package io.resys.limaone.fs;
+package io.resys.limaone.model;
 
 /*-
  * #%L
@@ -20,9 +20,27 @@ package io.resys.limaone.fs;
  * #L%
  */
 
+import java.util.List;
+
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import io.resys.limaone.model.Model.Body;
+import io.resys.limaone.model.Model.BodyType;
+import jakarta.annotation.Nullable;
+
 @Value.Immutable
-public interface WorldFs {
+@JsonSerialize(as = ImmutablePrinoutResource.class)
+@JsonDeserialize(as = ImmutablePrinoutResource.class)
+public interface PrinoutResource extends Body {
+  String getExternalLocation();
+  String getResourceName();
+  String getContentType();
+  List<String> getTemplateIds();
+  @Nullable String getContent();
+  
+  default BodyType getBodyType() { return BodyType.PRINTOUT_RESOURCE; };
 
 }

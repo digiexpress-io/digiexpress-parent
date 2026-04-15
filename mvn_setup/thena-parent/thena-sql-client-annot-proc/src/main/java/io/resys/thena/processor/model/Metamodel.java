@@ -34,6 +34,7 @@ import javax.lang.model.element.TypeElement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import io.resys.thena.api.annotations.TenantSql;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.processor.support.NamingUtils;
 import lombok.Value;
 
@@ -174,6 +175,7 @@ public class Metamodel {
       
       return RegistryMetamodel.builder()
         .name(domainName)
+        .isTenantDisabled(annotation.tenantType() == StructureType.unknown)
         .tenantType(annotation.tenantType().name())
         .tableClassName(domainName + "TableNames")
         .registryClassName(domainName + "Registry")

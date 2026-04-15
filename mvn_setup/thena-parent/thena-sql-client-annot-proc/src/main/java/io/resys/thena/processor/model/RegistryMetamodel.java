@@ -40,6 +40,7 @@ public class RegistryMetamodel {
   String transactionSaveClassName;
   String worldName;
   String tenantType;
+  boolean isTenantDisabled;
   @Builder.Default
   List<String> nonTenantTables = List.of();  // ["process", "process_id_seq"]
   

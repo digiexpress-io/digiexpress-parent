@@ -35,6 +35,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+
 import io.resys.limaone.model.Model.Body;
 import jakarta.annotation.Nullable;
 
@@ -73,11 +74,13 @@ public interface Model<T extends Body>  extends Serializable {
     
     DIALOB_FORM,
     
-    PRINTOUT,
-    PRINTOUT_PAGE,
-    PRINTOUT_SCRIPT,
-    PRINTOUT_RESOURCE,
+    PRINTOUT,       // final product, that links article for syntax and data for input, main grouping for locale based templates
+    PRINTOUT_PAGE,  // holds markup for pdf in specific locale
+    PRINTOUT_RESOURCE, // some static asset like image to be embedded in printout
+
+    // PRINTOUT_SCRIPT,
     
+
     DEPLOYMENT,
     UNKNOWN;
     
@@ -108,6 +111,10 @@ public interface Model<T extends Body>  extends Serializable {
     Map<String, Model<FlowTask>> getFlowTasks();
     Map<String, Model<Locale>> getLocales();
     Map<String, Model<DialobForm>> getForms();
+    
+    Map<String, Model<PrintoutPage>> getPrintoutPages();
+    Map<String, Model<PrinoutResource>> getPrintoutResources();
+    Map<String, Model<Printout>> getPrintouts();
     
     
     
@@ -144,6 +151,16 @@ public interface Model<T extends Body>  extends Serializable {
       }
       if (getForms().containsKey(id)) {
         return Optional.ofNullable(getForms().get(id));
+      }
+      
+      if (getPrintoutPages().containsKey(id)) {
+        return Optional.ofNullable(getPrintoutPages().get(id));
+      }
+      if (getPrintoutResources().containsKey(id)) {
+        return Optional.ofNullable(getPrintoutResources().get(id));
+      }
+      if (getPrintouts().containsKey(id)) {
+        return Optional.ofNullable(getPrintouts().get(id));
       }
       return Optional.empty();
     }
@@ -225,7 +242,25 @@ public interface Model<T extends Body>  extends Serializable {
           map.put(id, Model.of(current, body));
           builder.forms(map);
         }
-        case PRINTOUT, PRINTOUT_PAGE, PRINTOUT_SCRIPT, PRINTOUT_RESOURCE, UNKNOWN -> 
+        
+        // printout related
+        case PRINTOUT -> {
+          final var map = new HashMap<>(this.getPrintouts());
+          map.put(id, Model.of(current, body));
+          builder.printouts(map);
+        }
+        case PRINTOUT_PAGE -> {
+          final var map = new HashMap<>(this.getPrintoutPages());
+          map.put(id, Model.of(current, body));
+          builder.printoutPages(map);
+        }
+        case PRINTOUT_RESOURCE -> {
+          final var map = new HashMap<>(this.getPrintoutResources());
+          map.put(id, Model.of(current, body));
+          builder.printoutResources(map);
+        }
+        
+        case UNKNOWN -> 
         throw new UnsupportedOperationException("PRINTOUT types not mapped to ModelWorld: " + body.getBodyType());
       } 
       return builder.build();

@@ -92,29 +92,31 @@ public class Gen_Registry_DatabaseInterface implements RegistryCodeGenerator {
       .addModifiers(Modifier.PUBLIC)
       .addSuperinterface(ClassName.get(TenantDataSource.class));
     
-    // Add withTenant methods
-    interfaceBuilder.addMethod(MethodSpec.methodBuilder("withTenant")
-      .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-      .returns(ParameterizedTypeName.get(
-        ClassName.get("io.smallrye.mutiny", "Uni"),
-        ClassName.get(registry.getPackageName(), className)
-      ))
-      .build());
-    
-    interfaceBuilder.addMethod(MethodSpec.methodBuilder("withTenant")
-      .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-      .addParameter(String.class, "tenantId")
-      .returns(ParameterizedTypeName.get(
-        ClassName.get("io.smallrye.mutiny", "Uni"),
-        ClassName.get(registry.getPackageName(), className)
-      ))
-      .build());
-    
-    interfaceBuilder.addMethod(MethodSpec.methodBuilder("withTenant")
-      .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-      .addParameter(ClassName.get(Tenant.class), "tenant")
-      .returns(ClassName.get(registry.getPackageName(), className))
-      .build());
+    if(!registry.isTenantDisabled()) {
+      // Add withTenant methods
+      interfaceBuilder.addMethod(MethodSpec.methodBuilder("withTenant")
+        .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+        .returns(ParameterizedTypeName.get(
+          ClassName.get("io.smallrye.mutiny", "Uni"),
+          ClassName.get(registry.getPackageName(), className)
+        ))
+        .build());
+      
+      interfaceBuilder.addMethod(MethodSpec.methodBuilder("withTenant")
+        .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+        .addParameter(String.class, "tenantId")
+        .returns(ParameterizedTypeName.get(
+          ClassName.get("io.smallrye.mutiny", "Uni"),
+          ClassName.get(registry.getPackageName(), className)
+        ))
+        .build());
+      
+      interfaceBuilder.addMethod(MethodSpec.methodBuilder("withTenant")
+        .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+        .addParameter(ClassName.get(Tenant.class), "tenant")
+        .returns(ClassName.get(registry.getPackageName(), className))
+        .build());
+    }
     
     // Add query method
     interfaceBuilder.addMethod(MethodSpec.methodBuilder("query")

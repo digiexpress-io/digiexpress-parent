@@ -1,4 +1,4 @@
-package io.resys.limaone.fs;
+package io.resys.limaone.model;
 
 /*-
  * #%L
@@ -22,7 +22,20 @@ package io.resys.limaone.fs;
 
 import org.immutables.value.Value;
 
-@Value.Immutable
-public interface WorldFs {
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.model.Model.Body;
+import io.resys.limaone.model.Model.BodyType;
+
+@Value.Immutable
+@JsonSerialize(as = ImmutablePrintoutPage.class)
+@JsonDeserialize(as = ImmutablePrintoutPage.class)
+public interface PrintoutPage extends Body {
+  String getContent(); // the markdown definition
+  
+  String getLocaleId();
+  String getServiceId();
+  
+  default BodyType getBodyType() { return BodyType.ARTICLE_PAGE; };
 }
