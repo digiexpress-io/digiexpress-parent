@@ -70,6 +70,7 @@ public class FlowProgramExecutor {
   private final FlowStack stack = new FlowStack();
   private final ExecutorResult REACHED_END = new ExecutorResult() {};
   private final ExecutorProps NO_PROPS = new ExecutorProps() {};
+  private Flow_AST root;
 
   
   public FlowProgramExecutor(Runtime runtime, ProgramInput input) {
@@ -101,6 +102,7 @@ public class FlowProgramExecutor {
    * Walk the entire Flow AST starting from the root statement
    */
   public FlowResult walk(Flow_AST flow, ExecutorProps ExecutorProps) {
+    this.root = flow;
     FlowExecutionStatus status = FlowExecutionStatus.COMPLETED;
     try {
       visit(flow.getStatement(), NO_PROPS);
@@ -194,10 +196,15 @@ public class FlowProgramExecutor {
     final var sets = visitMappingStatement(statement.getMapping(), NO_PROPS).getValues();
     for(final var inputs : sets) {
       try {
-        final LocalDateTime start = LocalDateTime.now();
+        final var frameStart = LocalDateTime.now();
+        final var start = System.currentTimeMillis();
+        log.debug("executing/{}/flow/{}/task/{}/start", start, root.getName(), statement.getFlowTaskName());
         final var result = ft.run(assignment.withInputs(inputs)).andGetBody();
         
-        final var newFrame = stack.newFrame(statement, inputs, result, start);
+        final var end = System.currentTimeMillis();
+        log.debug("executing/{}/flow/{}/task/{}/cost/{}/end", start, root.getName(), statement.getFlowTaskName(), end-start);
+        
+        final var newFrame = stack.newFrame(statement, inputs, result, frameStart);
         assignment.assignFromTask(newFrame);
         
       } catch(Exception e) {
