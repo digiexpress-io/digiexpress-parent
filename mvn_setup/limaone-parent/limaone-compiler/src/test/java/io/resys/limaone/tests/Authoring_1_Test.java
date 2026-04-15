@@ -32,10 +32,10 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class AuthoringTest extends DbSupport {
+public class Authoring_1_Test extends DbSupport {
 
   @Test
-  public void createTest() {
+  public void stencilAssetTest() {
     final var authoring = new AuthoringImpl(createConfig());
     
     final var template1 = authoring.newModel()

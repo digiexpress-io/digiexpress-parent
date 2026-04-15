@@ -367,7 +367,7 @@ public class WorldImportImpl implements WorldImport {
       case FLOW_TASK -> mergeFlowTask((Model<FlowTask>) target, nextWorld, ctx);
       case LOCALE -> mergeLocale((Model<Locale>) target, nextWorld, ctx);
       case DIALOB_FORM -> { /** Do nothing different merge mech */  }
-      case PRINTOUT, PRINTOUT_PAGE, PRINTOUT_SCRIPT, PRINTOUT_RESOURCE, UNKNOWN -> 
+      case PRINTOUT, PRINTOUT_PAGE, PRINTOUT_RESOURCE, UNKNOWN -> 
         log.error("Printout types not supported for merge: {}", target.getBodyType());
     }
   }

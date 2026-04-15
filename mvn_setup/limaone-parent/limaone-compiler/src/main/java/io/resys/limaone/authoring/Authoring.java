@@ -133,7 +133,9 @@ public interface Authoring {
     NewArticlePage newArticlePage();    
     NewArticleLink newArticleLink();
     NewArticleWorkflow newArticleWorkflow();  
-    NewArticleTemplate newArticleTemplate();  
+    NewArticleTemplate newArticleTemplate();
+    
+    NewPrintout newPrintout();
   }
   
 

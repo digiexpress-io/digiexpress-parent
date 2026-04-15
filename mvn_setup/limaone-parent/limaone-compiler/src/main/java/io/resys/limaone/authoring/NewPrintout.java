@@ -1,4 +1,6 @@
-package io.resys.limaone.model;
+package io.resys.limaone.authoring;
+
+import java.util.List;
 
 /*-
  * #%L
@@ -20,22 +22,33 @@ package io.resys.limaone.model;
  * #L%
  */
 
+import java.util.function.Consumer;
+
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.limaone.model.Model.Body;
-import io.resys.limaone.model.Model.BodyType;
+import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
+import io.resys.limaone.model.LocaleLabel;
+import io.resys.limaone.model.Model;
+import io.resys.limaone.model.Printout;
+import io.smallrye.mutiny.Uni;
 
-@Value.Immutable
-@JsonSerialize(as = ImmutablePrintoutPage.class)
-@JsonDeserialize(as = ImmutablePrintoutPage.class)
-public interface PrintoutPage extends Body {
-  String getContent(); // the markdown definition
+public interface NewPrintout {
+
+  NewPrintout props(NewPrintoutProps props);
+  NewPrintout props(Consumer<ImmutableNewPrintoutProps.Builder> props);
   
-  String getLocaleId();
-  String getServiceId();
+  Uni<Model<Printout>> build();
+  Model<Printout> buildSync();
   
-  default BodyType getBodyType() { return BodyType.ARTICLE_PAGE; };
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableNewPrintoutProps.class) @JsonDeserialize(as = ImmutableNewPrintoutProps.class)
+  interface NewPrintoutProps extends AuthoringModelProps {
+    List<LocaleLabel> getLabels();
+    
+    String getServiceName();
+    String getOrchestratorName();
+  }
 }
