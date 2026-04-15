@@ -1,5 +1,7 @@
 package io.resys.thena.api.entities;
 
+import java.nio.charset.StandardCharsets;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -22,6 +24,8 @@ package io.resys.thena.api.entities;
 
 import org.immutables.value.Value;
 
+import com.google.common.hash.Hashing;
+
 import jakarta.annotation.Nullable;
 
 
@@ -37,4 +41,16 @@ public interface Tenant extends AnyTenantEntity {
   StructureType getType();
   
   enum StructureType { doc, git, org, grim, fs, batch, contract, ledger, unknown }
+  
+  
+  static Tenant unknown() {
+    final var hash = Hashing.murmur3_128().hashString("", StandardCharsets.UTF_8).toString();
+    return ImmutableTenant.builder()
+        .id(hash)
+        .rev(hash)
+        .prefix("")
+        .name("")
+        .type(StructureType.unknown)
+        .build();
+  }
 }

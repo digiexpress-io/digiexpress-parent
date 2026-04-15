@@ -78,21 +78,31 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       ).build());
     
     classBuilder.addMethod(generateGetDataSource());
+    
     classBuilder.addMethod(generateTenant(registry));
     classBuilder.addMethod(generateAlias(registry));
     classBuilder.addMethod(generateMember(registry));
-    classBuilder.addMethod(generateWithTenantString(registry, interfaceName));
-    classBuilder.addMethod(generateWithTenantObject(registry, className, interfaceName));
-    classBuilder.addMethod(generateWithTenantDefault(registry, interfaceName));
+    
+    if(registry.isTenantDisabled()) {
+      // do nothing
+      
+    } else {
+      classBuilder.addMethod(generateWithTenantString(registry, interfaceName));
+      classBuilder.addMethod(generateWithTenantObject(registry, className, interfaceName));
+      classBuilder.addMethod(generateWithTenantDefault(registry, interfaceName));
+      classBuilder.addMethod(generateTenantNotFound());
+      classBuilder.addMethod(generateCreateIfNot(registry, interfaceName));      
+    }
+    
+
     classBuilder.addMethod(generateWithTransaction(registry, className, interfaceName));
     classBuilder.addMethod(generateQuery(registry));
     classBuilder.addMethod(generateBuilder(registry));
-    classBuilder.addMethod(generateCreateIfNot(registry, interfaceName));
-    classBuilder.addMethod(generateTenantNotFound());
+    
     
     classBuilder.addMethod(generateStaticCreateWithParams(className));
     classBuilder.addMethod(generateStaticCreate());
-    classBuilder.addType(generateBuilderClass(className));
+    classBuilder.addType(generateBuilderClass(className, registry));
     
     return JavaFile.builder(packageName, classBuilder.build())
       .indent("  ")
@@ -109,30 +119,47 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
   }
   
   private MethodSpec generateTenant(RegistryMetamodel registry) {
-    return MethodSpec.methodBuilder("tenant")
+    final var method = MethodSpec.methodBuilder("tenant")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
-      .returns(ClassName.get(InternalTenantQuery.class))
-      .addStatement("return new $T(dataSource)", ClassName.bestGuess(registry.getInternalTenantQueryClassName()))
-      .build();
+      .returns(ClassName.get(InternalTenantQuery.class));
+      
+    if(registry.isTenantDisabled()) {
+      method.addStatement("throw new $T(\"Tenant is disabled\")", RuntimeException.class);
+    } else {
+      method.addStatement("return new $T(dataSource)", ClassName.bestGuess(registry.getInternalTenantQueryClassName()));
+    }
+    
+    return method.build();
   }
   
   private MethodSpec generateAlias(RegistryMetamodel registry) {
-    return MethodSpec.methodBuilder("alias")
+    final var method = MethodSpec.methodBuilder("alias")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
-      .returns(ClassName.get(InternalAliasQuery.class))
-      .addStatement("return new $T(dataSource)", InternalAliasQueryImpl.class)
-      .build();
+      .returns(ClassName.get(InternalAliasQuery.class));
+    
+    if(registry.isTenantDisabled()) {
+      method.addStatement("throw new $T(\"Tenant is disabled\")", RuntimeException.class);
+    } else {
+      method.addStatement("return new $T(dataSource)", InternalAliasQueryImpl.class);
+    }
+    
+    return method.build();
   }
   
   private MethodSpec generateMember(RegistryMetamodel registry) {
-    return MethodSpec.methodBuilder("member")
+    final var method = MethodSpec.methodBuilder("member")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
-      .returns(ClassName.get(InternalMemberQuery.class))
-      .addStatement("return new $T(dataSource)", InternalMemberQueryImpl.class)
-      .build();
+      .returns(ClassName.get(InternalMemberQuery.class));
+
+    if(registry.isTenantDisabled()) {
+      method.addStatement("throw new $T(\"Tenant is disabled\")", RuntimeException.class);
+    } else {
+      method.addStatement("return new $T(dataSource)", InternalMemberQueryImpl.class);
+    }
+    return method.build();
   }
   private MethodSpec generateWithTenantString(RegistryMetamodel registry, String interfaceName) {
     return MethodSpec.methodBuilder("withTenant")
@@ -191,8 +218,27 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       RegistryMetamodel registry, String className, String interfaceName
   ) {
     
-    final var typeVarR = TypeVariableName.get("R");
     
+    final CodeBlock main;
+    
+    if(registry.isTenantDisabled()) {
+      main = CodeBlock.builder()
+          .add("final var source = this.dataSource;\n")
+          .add("return source.getPool().withTransaction(conn -> callback.apply(new $T(source.withTx(conn))));\n", ClassName.bestGuess(className))
+          .build();     
+    } else {
+      main = CodeBlock.builder()
+        .add("return withTenant(scope.getTenantId()).onItem().transformToUni(state -> {\n")
+        .indent()
+        .add("final var source = ($T) state.getDataSource();\n", ClassName.get(ThenaSqlDataSource.class))
+        .add("return source.getPool().withTransaction(conn -> callback.apply(new $T(source.withTx(conn))));\n", ClassName.bestGuess(className))
+        .unindent()
+        .add("});\n")
+        .build();      
+    }
+    
+    
+    final var typeVarR = TypeVariableName.get("R");
     return MethodSpec.methodBuilder("withTransaction")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
@@ -206,14 +252,7 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
         ClassName.get(Uni.class),
         typeVarR
       ))
-      .addCode(CodeBlock.builder()
-        .add("return withTenant(scope.getTenantId()).onItem().transformToUni(state -> {\n")
-        .indent()
-        .add("final var source = ($T) state.getDataSource();\n", ClassName.get(ThenaSqlDataSource.class))
-        .add("return source.getPool().withTransaction(conn -> callback.apply(new $T(source.withTx(conn))));\n", ClassName.bestGuess(className))
-        .unindent()
-        .add("});\n")
-        .build())
+      .addCode(main)
       .build();
   }
   
@@ -338,12 +377,15 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .build();
   }
   
-  private TypeSpec generateBuilderClass(String className) {
+  private TypeSpec generateBuilderClass(String className, RegistryMetamodel registry) {
     final var builder = TypeSpec.classBuilder("Builder")
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
     
     builder.addField(ClassName.get("io.vertx.mutiny.sqlclient", "Pool"), "client", Modifier.PRIVATE);
-    builder.addField(String.class, "db", Modifier.PRIVATE);
+    
+    if(!registry.isTenantDisabled()) {
+      builder.addField(String.class, "db", Modifier.PRIVATE);
+    }
     builder.addField(ClassName.get(ThenaSqlDataSourceErrorHandler.class), "errorHandler", Modifier.PRIVATE);
     builder.addField(ClassName.get(TenantCache.class), "tenantCache", Modifier.PRIVATE);
     
@@ -355,14 +397,15 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .addStatement("return this")
       .build());
     
-    builder.addMethod(MethodSpec.methodBuilder("tenant")
-      .addModifiers(Modifier.PUBLIC)
-      .addParameter(String.class, "db")
-      .returns(ClassName.bestGuess("Builder"))
-      .addStatement("this.db = db")
-      .addStatement("return this")
-      .build());
-    
+    if(!registry.isTenantDisabled()) {
+      builder.addMethod(MethodSpec.methodBuilder("tenant")
+        .addModifiers(Modifier.PUBLIC)
+        .addParameter(String.class, "db")
+        .returns(ClassName.bestGuess("Builder"))
+        .addStatement("this.db = db")
+        .addStatement("return this")
+        .build());
+    }
     builder.addMethod(MethodSpec.methodBuilder("tenantCache")
       .addModifiers(Modifier.PUBLIC)
       .addParameter(ClassName.get(TenantCache.class), "tenantCache")
@@ -379,28 +422,42 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .addStatement("return this")
       .build());
     
-    builder.addMethod(MethodSpec.methodBuilder("build")
+    // main build method
+    final var buildMethod = MethodSpec.methodBuilder("build")
       .addModifiers(Modifier.PUBLIC)
       .returns(ClassName.bestGuess(className))
       .addStatement("$T.notNull(client, () -> \"client must be defined!\")", ClassName.get(RepoAssert.class))
-      .addStatement("$T.notNull(db, () -> \"db must be defined!\")", ClassName.get(RepoAssert.class))
       .addStatement("$T.notNull(errorHandler, () -> \"errorHandler must be defined!\")", ClassName.get(RepoAssert.class))
       .addCode("\n")
       .addStatement("final var tenantCache = this.tenantCache == null ? new $T() : this.tenantCache", ClassName.get(TenantCacheImpl.class))
-      .addStatement("final var ctx = $T.defaults(db)", ClassName.get(TenantContext.class))
       .addStatement("final var pool = new $T(client)", ClassName.get(ThenaSqlPoolVertx.class))
-      .addCode("\n")
-      .addCode(CodeBlock.builder()
-        .add("final var dataSource = new $T(\n", ClassName.get(ThenaSqlDataSourceImpl.class))
-        .indent()
-        .add("db, ctx, pool, errorHandler,\n")
-        .add("$T.empty(),\n", Optional.class)
-        .add("tenantCache\n")
-        .unindent()
-        .add(");\n")
-        .build())
-      .addStatement("return new $T(dataSource)", ClassName.bestGuess(className))
-      .build());
+      .addCode("\n");
+    
+    
+    if(registry.isTenantDisabled() ) {
+      buildMethod
+        .addStatement("final var db = $T.unknown()", ClassName.get(Tenant.class))
+        .addStatement("final var ctx = $T.defaults(\"\")", ClassName.get(TenantContext.class));
+    } else {
+      buildMethod
+        .addStatement("$T.notNull(db, () -> \"db must be defined!\")", ClassName.get(RepoAssert.class))
+        .addStatement("final var ctx = $T.defaults(db)", ClassName.get(TenantContext.class));      
+    }
+    
+    
+    buildMethod
+        .addCode(CodeBlock.builder()
+          .add("final var dataSource = new $T(\n", ClassName.get(ThenaSqlDataSourceImpl.class))
+          .indent()
+          .add("db, ctx, pool, errorHandler,\n")
+          .add("$T.empty(),\n", Optional.class)
+          .add("tenantCache\n")
+          .unindent()
+          .add(");\n")
+          .build())
+        .addStatement("return new $T(dataSource)", ClassName.bestGuess(className));
+    
+    builder.addMethod(buildMethod.build());
     
     return builder.build();
   }
