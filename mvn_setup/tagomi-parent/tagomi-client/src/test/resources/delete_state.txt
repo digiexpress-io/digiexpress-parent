@@ -221,12 +221,12 @@ Blobs
   - 4: {"id":"40","name":"v2.4","note":"new content","docType":"TAG","commitId":"52"}
   - 5: {"id":"41","default":false,"docType":"LOCALE","enabled":true,"localeCode":"en"}
   - 6: {"id":"42","default":false,"docType":"LOCALE","enabled":true,"localeCode":"fi"}
-  - 7: {"id":"43","content":"# English content","docType":"TEMPLATE","localeId":"41","serviceId":"37"}
-  - 8: {"id":"44","content":"# Finnish content","docType":"TEMPLATE","localeId":"42","serviceId":"37"}
+  - 7: {"id":"43","content":"# English content","docType":"TEMPLATE","localeId":"41","serviceId":"37","templateIds":[]}
+  - 8: {"id":"44","content":"# Finnish content","docType":"TEMPLATE","localeId":"42","serviceId":"37","templateIds":[]}
   - 9: {"id":"45","content":"","docType":"RESOURCE","contentType":"image/*","templateIds":[],"resourceName":"super_image_1","externalLocation":"1234"}
   - 10: {"id":"46","content":"# Test script content","docType":"RESOURCE","contentType":"text/*","templateIds":[],"resourceName":"super_script_1","externalLocation":""}
-  - 11: {"id":"43","content":"cool content","docType":"TEMPLATE","localeId":"41","serviceId":"37"}
+  - 11: {"id":"43","content":"cool content","docType":"TEMPLATE","localeId":"41","serviceId":"37","templateIds":[]}
   - 12: {"id":"41","default":false,"docType":"LOCALE","enabled":false,"localeCode":"gb"}
-  - 13: {"id":"43","content":"new content for page1","docType":"TEMPLATE","localeId":"41","serviceId":"37"}
+  - 13: {"id":"43","content":"new content for page1","docType":"TEMPLATE","localeId":"41","serviceId":"37","templateIds":[]}
   - 14: {"id":"45","content":"","docType":"RESOURCE","contentType":"image/*","templateIds":["43"],"resourceName":"better_image_name","externalLocation":"1234"}
   - 15: {"id":"46","content":"# Test script content","docType":"RESOURCE","contentType":"text/*","templateIds":["43"],"resourceName":"better_image_name_2","externalLocation":""}
