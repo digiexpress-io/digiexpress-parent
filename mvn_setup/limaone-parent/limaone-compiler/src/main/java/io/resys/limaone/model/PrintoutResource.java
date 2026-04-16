@@ -32,9 +32,9 @@ import io.resys.limaone.model.Model.BodyType;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
-@JsonSerialize(as = ImmutablePrinoutResource.class)
-@JsonDeserialize(as = ImmutablePrinoutResource.class)
-public interface PrinoutResource extends Body {
+@JsonSerialize(as = ImmutablePrintoutResource.class)
+@JsonDeserialize(as = ImmutablePrintoutResource.class)
+public interface PrintoutResource extends Body {
   String getExternalLocation();
   String getResourceName();
   String getContentType();
