@@ -34,8 +34,11 @@ import io.dialob.api.form.Form;
 import io.dialob.api.form.Form.Metadata;
 import io.dialob.api.form.FormTag;
 import io.resys.limaone.authoring.Authoring.WorldImport;
+import io.resys.limaone.model.Printout;
 import io.resys.limaone.model.Article;
 import io.resys.limaone.model.ArticleLink;
+import io.resys.limaone.model.PrintoutPage;
+import io.resys.limaone.model.PrintoutResource;
 import io.resys.limaone.model.ArticlePage;
 import io.resys.limaone.model.ArticleTemplate;
 import io.resys.limaone.model.ArticleWorkflow;
@@ -350,9 +353,57 @@ public class WorldImportImpl implements WorldImport {
     }
     ctx.addNewId(target.getId(), next.getId());
   }
-
-
   
+  /**
+   * Printout import
+   */
+  private void mergePrintout(Model<Printout> target, NextWorld nextWorld, ImportContext ctx) {
+    final ModelWorld existing = nextWorld.getCurrentWorld();
+    
+    final var prev = existing.getPrintouts().values()
+        .stream()
+        .filter(d -> d.getId().equals(target.getId()) || d.getBody().getServiceName().equalsIgnoreCase(target.getBody().getServiceName()))
+        .findFirst();
+
+    final Model<Printout> next;
+    if(prev.isPresent()) {
+      next = nextWorld.mergeModel(target.getId(), target.getBody().getServiceName(), target.getBody());
+    } else {
+      next = nextWorld.newModel(target.getBody().getServiceName(), target.getBody());
+    }
+  }
+
+  /**
+   * Printout page import
+   */
+  private void mergePrintoutPage(Model<PrintoutPage> target, NextWorld nextWorld, ImportContext ctx) {
+    final ModelWorld existing = nextWorld.getCurrentWorld();
+    
+    final var prev = existing.getPrintoutPages().values()
+        .stream()
+        .filter(d -> d.getId().equals(target.getId()) || d.getBody().getServiceId().equalsIgnoreCase(target.getBody().getServiceId()))
+        .findFirst();
+
+    final Model<PrintoutPage> next;
+    if(prev.isPresent()) {
+      next = nextWorld.mergeModel(target.getId(), target.getBody().getServiceId(), target.getBody());
+    } else {
+      next = nextWorld.newModel(target.getBody().getServiceId(), target.getBody());
+    }
+  }
+
+  /**
+   * Printout resource import
+   */
+  private void mergePrintoutResource(Model<PrintoutResource> target, NextWorld nextWorld, ImportContext ctx) {
+    final ModelWorld existing = nextWorld.getCurrentWorld();
+    
+    final var prev = existing.getPrintoutResources().values()
+        .stream()
+        .filter(d -> d.getId().equals(target.getId()) || d.getBody().getResourceName().equalsIgnoreCase(target.getBody().getResourceName()))
+        .findFirst();
+  }
+
   @SuppressWarnings("unchecked")
   private void merge(Model<?> target, NextWorld nextWorld, ImportContext ctx) {
     switch (target.getBodyType()) {
@@ -367,8 +418,11 @@ public class WorldImportImpl implements WorldImport {
       case FLOW_TASK -> mergeFlowTask((Model<FlowTask>) target, nextWorld, ctx);
       case LOCALE -> mergeLocale((Model<Locale>) target, nextWorld, ctx);
       case DIALOB_FORM -> { /** Do nothing different merge mech */  }
-      case PRINTOUT, PRINTOUT_PAGE, PRINTOUT_RESOURCE, UNKNOWN -> 
-        log.error("Printout types not supported for merge: {}", target.getBodyType());
+      case PRINTOUT -> mergePrintout((Model<Printout>) target, nextWorld, ctx);
+      case PRINTOUT_PAGE -> mergePrintoutPage((Model<PrintoutPage>) target, nextWorld, ctx);
+      case PRINTOUT_RESOURCE -> mergePrintoutResource((Model<PrintoutResource>) target, nextWorld, ctx);
+      case UNKNOWN -> 
+        log.error("Unknown body type not supported for merge: {}", target.getBodyType());
     }
   }
   

@@ -16,6 +16,9 @@ services:
       # Font Configuration
       - FONTS_PATH=/app/assets/fonts
       - USE_SYSTEM_FONTS=true
+
+      # Package Configuration
+      - PACKAGES_PATH=/app/assets/packages
       - RUST_LOG=info
     volumes:
       # Mount TLS certificates

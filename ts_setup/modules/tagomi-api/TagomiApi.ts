@@ -122,6 +122,7 @@ export declare namespace TagomiApi {
     content: string;
     localeId: string;
     serviceId: string;
+    templateIds: string[];
   }
 
   export interface Resource { // aka image to include in content
@@ -169,6 +170,7 @@ export declare namespace TagomiApi {
     serviceId: string;
     locale: string;
     content?: string;
+    templateIds?: string[];
   }
 
   export interface CreateResource {
@@ -208,6 +210,7 @@ export declare namespace TagomiApi {
     content: string;
     locale?: string;
     resourceIds?: string[];
+    templateIds?: string[];
   }
 
   export interface ResourceMutator {

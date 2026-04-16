@@ -64,6 +64,7 @@ impl TagomiPdfClient for TagomiPdfClientImpl {
             .add_templates(payload.templates)
             .add_modules(payload.data_modules)
             .fonts_config(self.config.fonts_path.clone(), self.config.use_system_fonts)
+            .packages_config(self.config.packages_path.clone())
             .compile();
 
         match result {

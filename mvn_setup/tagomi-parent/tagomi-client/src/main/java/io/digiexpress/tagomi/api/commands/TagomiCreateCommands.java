@@ -61,6 +61,7 @@ public interface TagomiCreateCommands {
     String getServiceId();
     String getLocale();
     @Nullable String getContent();
+    @Nullable List<String> getTemplateIds();
   }
   
   @Value.Immutable

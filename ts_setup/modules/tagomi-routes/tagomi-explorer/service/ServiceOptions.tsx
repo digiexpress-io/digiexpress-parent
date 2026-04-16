@@ -10,7 +10,7 @@ import * as Burger from '@dxs-ts/eveli-primitives';
 import { TagomiComposerApi as Composer, TagomiApi } from '@dxs-ts/tagomi-api';
 import { ServiceEdit, ServiceDelete } from '../../tagomi-service';
 import { NewTemplate, TemplateDelete, TemplateLocaleEdit } from '../../tagomi-template';
-import { TemplateDependenciesAdd, TemplateDependenciesEdit } from '../../tagomi-dependencies';
+import { TemplateDependenciesEdit } from '../../tagomi-dependencies';
 import { DebugLocale } from '../../tagomi-debug';
 
 
@@ -31,7 +31,8 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
   const canChangeTemplateLocale = hasTemplates && selectableLocaleIds.length > 0;
   
   const dependencyTemplates = Object.values(site.templates).filter(t => t.serviceId !== service.id);
-  const hasAddableDependencies = dependencyTemplates.length > 0;
+  const availableResources = Object.values(site.resources);
+  const hasAddableDependencies = dependencyTemplates.length > 0 || availableResources.length > 0;
 
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 
     'ServiceEdit' | 
@@ -40,7 +41,6 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
     'TemplateDelete' | 
     'ServiceDelete' |
     'DebugLocale' |
-    'DependenciesAdd' |
     'DependenciesEdit'
   >(undefined);
 
@@ -54,7 +54,6 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
       {dialogOpen === 'TemplateEdit' ? <TemplateLocaleEdit serviceId={service.id} onClose={handleDialogClose} /> : null}
       {dialogOpen === 'TemplateDelete' ? <TemplateDelete serviceId={service.id} onClose={handleDialogClose} /> : null}
       {dialogOpen === 'DebugLocale' ? <DebugLocale serviceId={service.id} onClose={handleDialogClose} /> : null}
-      {dialogOpen === 'DependenciesAdd' ? <TemplateDependenciesAdd serviceId={service.id} onClose={handleDialogClose} /> : null}
       {dialogOpen === 'DependenciesEdit' ? <TemplateDependenciesEdit serviceId={service.id} onClose={handleDialogClose} /> : null}
 
 
@@ -88,14 +87,6 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
         disabled={!canChangeTemplateLocale}
         onClick={() => setDialogOpen('TemplateEdit')}
         labelText={intl.formatMessage({ id: 'tagomi.service.options.template.changeLocale' })}>
-      </Burger.TreeItemOption>
-
-      <Burger.TreeItemOption nodeId={service.id + 'dependencies.add'}
-        color='page'
-        icon={EditIcon}
-        disabled={!hasTemplates || !hasAddableDependencies}
-        onClick={() => setDialogOpen('DependenciesAdd')}
-        labelText={intl.formatMessage({ id: 'tagomi.service.options.template.addDependencies' })}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={service.id + 'dependencies.edit'}

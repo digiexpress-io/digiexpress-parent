@@ -152,10 +152,22 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
         }
       }
     }
+    List<String> templateDependencies = start.getTemplateIds();
+    if(changes.getTemplateIds() != null) {
+      templateDependencies = new ArrayList<>();
+      for(final var depTemplateRef : changes.getTemplateIds()) {
+        final var resolvedId = TagomiCreateCommandsImpl.resolveTemplateIdOrName(depTemplateRef, site);
+        if(resolvedId == null) {
+          throw new ConstraintException(start, "Template with id or name: '" + depTemplateRef + "' does not exist!");
+        }
+        templateDependencies.add(resolvedId);
+      }
+    }
     
     final var updated = ImmutableTemplate.builder()
       .from(start)
       .content(changes.getContent())
+      .templateIds(templateDependencies)
       .build();
     
     allChanges.add(updated);
@@ -267,6 +279,7 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
     }
     
     return client.stateQuery().getState().onItem().transformToUni(state -> {
+      final List<IsTagomiObject> allChanges = new ArrayList<>();
       final var toBeSaved = mutators.stream()
         .map(mutator -> {
           
@@ -282,18 +295,55 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
             throw new ConstraintException(start, "Template, locale: '" + mutator.getLocale() + "' does not exist!");
           }
           
+          if(mutator.getResourceIds() != null) {
+            for(final var link : state.getResources().values()) {
+              final var isArticleInLink = link.getTemplateIds().contains(mutator.getTemplateId());
+              final var isLinkInChanges = mutator.getResourceIds().contains(link.getId());
+              
+              if(isArticleInLink && isLinkInChanges) {
+                continue;
+              }
+              if(isLinkInChanges && !isArticleInLink) {
+                allChanges.add(ImmutableResource.builder()
+                    .from(link)
+                    .addTemplateIds(mutator.getTemplateId())
+                    .build());
+              }
+              if(isArticleInLink && !isLinkInChanges) {
+                final var articles = new ArrayList<>(link.getTemplateIds());
+                articles.remove(mutator.getTemplateId());
+                allChanges.add(ImmutableResource.builder().from(link)
+                    .templateIds(articles)
+                    .build());
+              }
+            }
+          }
+          
+          List<String> templateDependencies = start.getTemplateIds();
+          if(mutator.getTemplateIds() != null) {
+            templateDependencies = new ArrayList<>();
+            for(final var depTemplateRef : mutator.getTemplateIds()) {
+              final var resolvedId = TagomiCreateCommandsImpl.resolveTemplateIdOrName(depTemplateRef, state);
+              if(resolvedId == null) {
+                throw new ConstraintException(start, "Template with id or name: '" + depTemplateRef + "' does not exist!");
+              }
+              templateDependencies.add(resolvedId);
+            }
+          }
 
           final var end = ImmutableTemplate.builder()
               .from(start)
               // only content change
-              .localeId(mutator.getLocale())
+              .localeId(locale.get().getId())
               .content(mutator.getContent())
+              .templateIds(templateDependencies)
               .build();
           return end;
         }).collect(Collectors.toList());
 
+      allChanges.addAll(toBeSaved);
       return client.upsertBuilder()
-          .saveAll(new ArrayList<>(toBeSaved))
+          .saveAll(allChanges)
           .onItem().transform(e -> new ArrayList<>(toBeSaved));
     });
   }

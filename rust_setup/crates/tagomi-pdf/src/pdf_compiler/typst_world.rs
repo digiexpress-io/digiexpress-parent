@@ -1,14 +1,16 @@
 use std::collections::HashMap;
 use tracing::debug;
-use anyhow::{Result};
 
-use typst::{diag::{FileError}};
-use typst::{utils::LazyHash, Library};
+use typst::diag::FileError;
+use typst::utils::LazyHash;
+use typst::Library;
 use typst::foundations::{Bytes, Datetime};
-use typst::syntax::{Source,FileId};
-use typst::{World};
+use typst::syntax::{Source, FileId};
+use typst::World;
 use typst::text::{Font, FontBook};
-use typst_kit::fonts::{FontSlot};
+use typst_kit::fonts::FontSlot;
+
+use super::package_resolver::PackageResolver;
 
 
 pub struct TypstWorld {
@@ -18,6 +20,7 @@ pub struct TypstWorld {
     pub main: FileId,
     pub source: HashMap<FileId, Source>,
     pub now: Datetime,
+    pub package_resolver: PackageResolver,
 }
 
 impl World for TypstWorld {
@@ -34,25 +37,51 @@ impl World for TypstWorld {
     }
 
     fn source(&self, id: FileId) -> Result<Source, FileError> {
-        let target = self.source.get(&id);
-        match target {
-            Some(value) => {
-                debug!("Found source: {:?}", id);
-                Ok(value.clone())
-            },
-            None => {
-                // target doesn't exist
-                debug!("Can't find source: {:?}", id);
-                Err(FileError::NotFound(
-                    id.vpath().as_rootless_path().to_path_buf(),
-                ))
+        if let Some(value) = self.source.get(&id) {
+            debug!("Found virtual source: {:?}", id);
+            return Ok(value.clone());
+        }
+
+        if let Some(spec) = id.package() {
+            let vpath = id.vpath().as_rootless_path();
+            match self.package_resolver.resolve_file(spec, vpath) {
+                Ok(path) => {
+                    debug!("Found package source: {:?} -> {}", id, path.display());
+                    let content = std::fs::read_to_string(&path)
+                        .map_err(|_| FileError::NotFound(path))?;
+                    return Ok(Source::new(id, content));
+                }
+                Err(e) => {
+                    debug!("Package source resolution failed: {}", e);
+                }
             }
         }
 
+        debug!("Source not found: {:?}", id);
+        Err(FileError::NotFound(
+            id.vpath().as_rootless_path().to_path_buf(),
+        ))
     }
 
-    fn file(&self, _id: FileId) -> Result<Bytes, FileError> {
-        Err(FileError::NotFound(std::path::PathBuf::new()))
+    fn file(&self, id: FileId) -> Result<Bytes, FileError> {
+        if let Some(spec) = id.package() {
+            let vpath = id.vpath().as_rootless_path();
+            match self.package_resolver.resolve_file(spec, vpath) {
+                Ok(path) => {
+                    debug!("Found package file: {:?} -> {}", id, path.display());
+                    let content = std::fs::read(&path)
+                        .map_err(|_| FileError::NotFound(path))?;
+                    return Ok(Bytes::new(content));
+                }
+                Err(e) => {
+                    debug!("Package file resolution failed: {}", e);
+                }
+            }
+        }
+
+        Err(FileError::NotFound(
+            id.vpath().as_rootless_path().to_path_buf(),
+        ))
     }
 
     fn font(&self, index: usize) -> Option<Font> {

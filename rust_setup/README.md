@@ -141,7 +141,7 @@ curl -s -X POST http://localhost:8085/compile \
     "templates": [
       {
         "id": "greeting_with_image",
-        "value": "#set page(width: 400pt, height: 600pt, margin: 20pt)\n#set text(size: 14pt)\n\n= Hello from Typst with Image!\n\nWelcome *#sys.inputs.data.user.name*!\n\nYou have #sys.inputs.data.user.points points.\n\n#if sys.inputs.data.user.premium [\n  _Thank you for being a premium member!_\n] else [\n  _Upgrade to premium for more features._\n]\n\n== Your Profile Picture\n\n#image.decode(sys.inputs.images.profile_picture, width: 200pt)\n\n_Image embedded successfully!_"
+        "value": "#set page(width: 400pt, height: 600pt, margin: 20pt)\n#set text(size: 14pt)\n\n= Hello from Typst with Image!\n\nWelcome *#sys.inputs.data.user.name*!\n\nYou have #sys.inputs.data.user.points points.\n\n#if sys.inputs.data.user.premium [\n  _Thank you for being a premium member!_\n] else [\n  _Upgrade to premium for more features._\n]\n\n== Your Profile Picture\n\n#image(sys.inputs.images.profile_picture, width: 200pt)\n\n_Image embedded successfully!_"
       }
     ],
     "data_modules": [

@@ -17,6 +17,8 @@ pub struct Config {
     pub fonts_path: PathBuf,
     /// Include system fonts in addition to custom fonts (env: USE_SYSTEM_FONTS, default: true)
     pub use_system_fonts: bool,
+    /// Path to Typst packages directory (env: PACKAGES_PATH, default: ./assets/packages)
+    pub packages_path: PathBuf,
 }
 
 fn env_or_default<T: FromStr>(key: &str, default: T) -> T {
@@ -41,7 +43,9 @@ impl Config {
         let fonts_path = env_path("FONTS_PATH", "./assets/fonts");
         let use_system_fonts = env_or_default("USE_SYSTEM_FONTS", true);
 
-        Self { https, port, cert, key, fonts_path, use_system_fonts }
+        let packages_path = env_path("PACKAGES_PATH", "./assets/packages");
+
+        Self { https, port, cert, key, fonts_path, use_system_fonts, packages_path }
     }
 }
 
