@@ -137,6 +137,7 @@ public interface Authoring {
     
     NewPrintout newPrintout();
     NewPrintoutPage newPrintoutPage();
+    NewPrintoutResource newPrintoutResource();
   }
   
 
