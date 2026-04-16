@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.resys.limaone.authoring.Authoring;
+import io.resys.limaone.fs.WorldFs;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,12 +36,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AssetsFsController {
   
-  private final Authoring composer; 
+  private final Authoring authoring; 
 
   
-  @GetMapping("/")
-  public Uni<String> hello() {
-    return Uni.createFrom().item("Hello world");
+  @GetMapping("dirents")
+  public Uni<WorldFs> dirents() {
+    return authoring.worldFsQuery().findAll();
   }
   
 
