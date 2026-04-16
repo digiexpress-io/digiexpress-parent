@@ -105,7 +105,10 @@ public class WorldImportImpl implements WorldImport {
         source.getFlows().values().forEach(e -> merge(e, nextWorld, ctx));
         source.getFlowTasks().values().forEach(e -> merge(e, nextWorld, ctx));
         source.getDecisionTables().values().forEach(e -> merge(e, nextWorld, ctx));
-        
+        source.getPrintouts().values().forEach(e -> merge(e, nextWorld, ctx));
+        source.getPrintoutPages().values().forEach(e -> merge(e, nextWorld, ctx));
+        source.getPrintoutResources().values().forEach(e -> merge(e, nextWorld, ctx));
+
         return nextWorld.getCurrentWorld();
       })
       .onItem().transformToUni(oldWorld -> {
@@ -397,11 +400,18 @@ public class WorldImportImpl implements WorldImport {
    */
   private void mergePrintoutResource(Model<PrintoutResource> target, NextWorld nextWorld, ImportContext ctx) {
     final ModelWorld existing = nextWorld.getCurrentWorld();
-    
+
     final var prev = existing.getPrintoutResources().values()
         .stream()
         .filter(d -> d.getId().equals(target.getId()) || d.getBody().getResourceName().equalsIgnoreCase(target.getBody().getResourceName()))
         .findFirst();
+
+    final Model<PrintoutResource> next;
+    if(prev.isPresent()) {
+      next = nextWorld.mergeModel(target.getId(), target.getBody().getResourceName(), target.getBody());
+    } else {
+      next = nextWorld.newModel(target.getBody().getResourceName(), target.getBody());
+    }
   }
 
   @SuppressWarnings("unchecked")
