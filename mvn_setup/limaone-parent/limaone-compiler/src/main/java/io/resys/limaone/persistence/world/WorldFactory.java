@@ -46,6 +46,7 @@ import io.resys.limaone.model.Model.Body;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.model.Printout;
+import io.resys.limaone.model.PrintoutPage;
 import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.thena.fs.entities.Blob;
 import io.resys.thena.fs.entities.Node;
@@ -237,11 +238,11 @@ public class WorldFactory {
           builder.putPrintouts(p.getId(), p);
           return this;
         }
-//        case PRINTOUT_PAGE: {
-//          final var p = node.mapTo(PrintoutPage.class);
-//          builder.putPrintoutPages(p.getId(), p);
-//          return;
-//        }
+       case PRINTOUT_PAGE: {
+         final var p = node.mapTo(PrintoutPage.class);
+         builder.putPrintoutPages(p.getId(), p);
+         return this;
+       }
 //        case PRINTOUT_SCRIPT: {
 //          final var p = node.mapTo(PrintoutScript.class);
 //          builder.putPrintoutScripts(p.getId(), p);

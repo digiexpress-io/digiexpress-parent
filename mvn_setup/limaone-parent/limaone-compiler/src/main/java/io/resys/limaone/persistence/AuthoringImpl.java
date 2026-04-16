@@ -55,6 +55,7 @@ import io.resys.limaone.authoring.NewFlow;
 import io.resys.limaone.authoring.NewFlowTask;
 import io.resys.limaone.authoring.NewLocale;
 import io.resys.limaone.authoring.NewPrintout;
+import io.resys.limaone.authoring.NewPrintoutPage;
 import io.resys.limaone.authoring.TID;
 import io.resys.limaone.persistence.world.TID_FS;
 import io.resys.limaone.persistence.world.WorldDiffQueryImpl;
@@ -170,6 +171,7 @@ public class AuthoringImpl implements Authoring {
       @Override public NewArticle newArticle() { return new NewArticleImpl(config); }
       @Override public NewDeployment newDeployment() { return new NewDeploymentImpl(config); }
       @Override public NewPrintout newPrintout() { return new NewPrintoutImpl(config); }
+      @Override public NewPrintoutPage newPrintoutPage() { return new NewPrintoutPageImpl(config); }
     };
   }
 

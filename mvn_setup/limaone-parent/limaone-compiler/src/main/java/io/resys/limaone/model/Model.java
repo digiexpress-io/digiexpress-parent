@@ -113,7 +113,7 @@ public interface Model<T extends Body>  extends Serializable {
     Map<String, Model<DialobForm>> getForms();
     
     Map<String, Model<PrintoutPage>> getPrintoutPages();
-    Map<String, Model<PrinoutResource>> getPrintoutResources();
+    Map<String, Model<PrintoutResource>> getPrintoutResources();
     Map<String, Model<Printout>> getPrintouts();
     
     

@@ -136,6 +136,7 @@ public interface Authoring {
     NewArticleTemplate newArticleTemplate();
     
     NewPrintout newPrintout();
+    NewPrintoutPage newPrintoutPage();
   }
   
 

@@ -20,6 +20,8 @@ package io.resys.limaone.model;
  * #L%
  */
 
+import java.util.List;
+
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -33,9 +35,10 @@ import io.resys.limaone.model.Model.BodyType;
 @JsonDeserialize(as = ImmutablePrintoutPage.class)
 public interface PrintoutPage extends Body {
   String getContent(); // the markdown definition
-  
+
   String getLocaleId();
   String getServiceId();
-  
-  default BodyType getBodyType() { return BodyType.ARTICLE_PAGE; };
+  List<String> getTemplateIds();
+
+  default BodyType getBodyType() { return BodyType.PRINTOUT_PAGE; };
 }
