@@ -24,8 +24,10 @@ import java.time.Duration;
 import java.util.concurrent.ScheduledExecutorService;
 
 import io.resys.limaone.authoring.Authoring.WorldFsQuery;
+import io.resys.limaone.fs.ImmutableDirentBase;
 import io.resys.limaone.fs.ImmutableWorldFs;
 import io.resys.limaone.fs.WorldFs;
+import io.resys.limaone.model.Model.BodyType;
 import io.resys.thena.fs.api.FileSystem;
 import io.resys.thena.fs.entities.Ref;
 import io.smallrye.mutiny.Uni;
@@ -59,6 +61,21 @@ public class WorldFsQueryImpl implements WorldFsQuery {
   }
   
   private WorldFs mapToWorld(Ref ref) {
-   return ImmutableWorldFs.builder().build();
+    final var world = ImmutableWorldFs.builder();
+    final var nodes = ref.getTransitives().getTree().getTreeNodes();
+    
+    for(final var node : nodes){
+      final var dirent = ImmutableDirentBase.builder()
+        .id(node.getObjectId())
+        .fullPath(node.getFullPath())
+        .name(node.getNodeName())
+        .type(BodyType.ARTICLE)
+        .build();
+      
+      world.addDirents(dirent);
+    }
+    
+    
+   return world.build();
   }
 }

@@ -26,12 +26,13 @@ import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.model.ImmutableLocaleLabel;
 import io.resys.limaone.persistence.AuthoringImpl;
 import io.resys.limaone.tests.support.DbSupport;
+import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
 
 @Slf4j
-public class WorldFs_1_Test  extends DbSupport {
+public class WorldFs_1_Test extends DbSupport {
 
   @Test
   public void createSimpleFileSystem() {
@@ -40,7 +41,7 @@ public class WorldFs_1_Test  extends DbSupport {
     
     
     final var fileSystem = authoring.worldFsQuery().findAllSync();
-    log.debug("Current FS: {}", fileSystem);
+    log.debug("Current FS: {}", JsonObject.mapFrom(fileSystem).encodePrettily());
   }
   
   
@@ -56,10 +57,14 @@ public class WorldFs_1_Test  extends DbSupport {
         .props(props -> props.locale("fi"))
         .buildSync();
     
-    
     final var article1 = authoring.newModel()
         .newArticle()
         .props(builder -> builder.name("My first article").order(100))
+        .buildSync();
+    
+    final var article2 = authoring.newModel()
+        .newArticle()
+        .props(builder -> builder.name("My second article").order(100).parentId(article1.getId()))
         .buildSync();
     
     final var page1 = authoring.newModel()

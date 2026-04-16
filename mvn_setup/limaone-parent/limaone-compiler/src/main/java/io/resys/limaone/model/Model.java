@@ -35,7 +35,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-
 import io.resys.limaone.model.Model.Body;
 import jakarta.annotation.Nullable;
 
@@ -77,11 +76,13 @@ public interface Model<T extends Body>  extends Serializable {
     PRINTOUT,       // final product, that links article for syntax and data for input, main grouping for locale based templates
     PRINTOUT_PAGE,  // holds markup for pdf in specific locale
     PRINTOUT_RESOURCE, // some static asset like image to be embedded in printout
-
-    // PRINTOUT_SCRIPT,
+    //PRINTOUT_SCRIPT,
     
 
     DEPLOYMENT,
+    
+    FOLDER,
+    
     UNKNOWN;
     
     public static BodyType[] without(BodyType ...without) {
@@ -242,7 +243,6 @@ public interface Model<T extends Body>  extends Serializable {
           map.put(id, Model.of(current, body));
           builder.forms(map);
         }
-        
         // printout related
         case PRINTOUT -> {
           final var map = new HashMap<>(this.getPrintouts());
@@ -259,8 +259,9 @@ public interface Model<T extends Body>  extends Serializable {
           map.put(id, Model.of(current, body));
           builder.printoutResources(map);
         }
-        
-        case UNKNOWN -> 
+
+        case UNKNOWN, FOLDER -> 
+
         throw new UnsupportedOperationException("PRINTOUT types not mapped to ModelWorld: " + body.getBodyType());
       } 
       return builder.build();
