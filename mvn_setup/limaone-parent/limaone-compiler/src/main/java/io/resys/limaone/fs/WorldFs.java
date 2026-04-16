@@ -20,200 +20,32 @@ package io.resys.limaone.fs;
  * #L%
  */
 
+<<<<<<< HEAD
 
 import java.time.OffsetDateTime;
+=======
+>>>>>>> 5aa2645eb (#672 AssetsFsController)
 import java.util.List;
-import java.util.Map;
 
 import org.immutables.value.Value;
 
-import jakarta.annotation.Nullable;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import io.resys.limaone.model.Model.BodyType;
 
 @Value.Immutable
+@JsonSerialize(as = ImmutableWorldFs.class) @JsonDeserialize(as = ImmutableWorldFs.class)
 public interface WorldFs {
   List<DirentBase> getDirents();
   
-  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableDirentBase.class) @JsonDeserialize(as = ImmutableDirentBase.class)
   interface DirentBase {
     String getId();
     String getName();
-    FsType getType();
+    String getFullPath();
+    BodyType getType();
     List<DirentBase> getChildren();
   }
-  
-  
-  interface PropsBase {
-    String getId();
-    Boolean getExpanded();
-    Boolean getReference();
-    Boolean getLocked();
-    
-    @Nullable
-    String getDescription();
-    
-    List<ConfigOption> getConfigOptions();
-    List<Comment> getComments();
-    List<Change> getChanges();
-    List<Permission> getPermissions();
-    
-    List<Label> getLabels();
-    List<Error> getErrors();
-  }
-  
-  interface FolderProps extends PropsBase {
-    FsType getType();
-  }
-
-  interface ArticleProps extends PropsBase {
-    FsType getType();
-    Integer getOrderNumber();
-  }
-
-  interface ServiceProps extends PropsBase {
-    FsType getType();
-    String getServiceName();
-    String getDialobFormName();
-    String getDialobFormTag();
-    String getFlowName();
-    
-    @Nullable 
-    String getValidityStart();
-    @Nullable 
-    String getValidityEnd();
-    
-    List<String> getArticles();
-    List<ConfigOption> getConfigOptions();
-    Map<String, String> getIntlValues();
-  }
-
-  interface DialobProps extends PropsBase {
-    FsType getType();
-    String getFormName();
-    String getFormTechnicalId();
-    
-    @Nullable 
-    List<String> getVersionTags();
-  }
-
-  interface FlowProps extends PropsBase {
-    FsType getType();
-    String getName();
-    
-    @Nullable 
-    String getContent();
-  }
-
-  interface LanguageProps extends PropsBase {
-    FsType getType();
-    String getLocaleCode();
-  }
-
-  interface PageProps extends PropsBase {
-    FsType getType();
-    String getLocaleCode();
-    String getArticleId();
-    
-    @Nullable 
-    String getContent();
-  }
-
-  interface PrintoutProps extends PropsBase {
-    FsType getType();
-    String getPrintoutServiceName();
-    String getOrchestratorName();
-    Map<String, String> getIntlValues();
-  }
-
-  interface ImageProps extends PropsBase {
-    FsType getType();
-  }
-
-  interface TemplateProps extends PropsBase {
-    FsType getType();
-    String getPrintoutServiceId();
-    String getLocaleId();
-    
-    @Nullable 
-    String getContent();
-  }
-
-  interface LinkProps extends PropsBase {
-    FsType getType();
-    String getUrlValue();
-    Map<String, String> getIntlValues();
-  }
-
-  interface PhoneProps extends PropsBase {
-    FsType getType();
-    String getPhoneValue();
-    Map<String, String> getIntlValues();
-  }
-
-  interface AssetError {
-    String getCode();
-    ErrorSeverityType getSeverity();
-    String getMessage();
-  }
-  
-  interface Change {
-    ChangeType getChangeType();
-    OffsetDateTime getChangeDate();;
-    User getChangedBy();
-  }
-  
-  public interface User {
-    String getUserName();
-    String getEmail();
-    List<PermissionType> getPermissions();
-  }
-  
-  public interface Permission {
-    String getName();
-    List<PermissionType> getTypes();
-  }
-  
-  public interface Comment {
-    String getComment();
-    String getAuthor();
-    OffsetDateTime getCreated();
-  }
-
-  public interface Label {
-    String getId();
-    String getValue();
-  }
-  
-  public enum ChangeType { 
-    UPDATE, 
-    CREATE, 
-    DELETE 
-  }
-  
-  public enum FsType {
-    ARTICLE,
-    FOLDER,
-    LINK,
-    PHONE,
-    SERVICE
-  }
-  
-  public enum PermissionType {
-    READ,
-    WRITE,
-    VIEW,
-    NONE
-  }
-
-  public enum ConfigOption {
-    DEV_MODE,
-    ASSIGNABLE_MODE,
-    DISABLED_MODE,
-    ANONYMOUS_MODE
-  } 
-  
-  public enum ErrorSeverityType {
-    CRITICAL,
-    WARNING
-  }
- 
 }

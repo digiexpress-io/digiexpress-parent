@@ -82,6 +82,9 @@ public interface Model<T extends Body>  extends Serializable {
     
 
     DEPLOYMENT,
+    
+    FOLDER,
+    
     UNKNOWN;
     
     public static BodyType[] without(BodyType ...without) {
@@ -242,6 +245,7 @@ public interface Model<T extends Body>  extends Serializable {
           map.put(id, Model.of(current, body));
           builder.forms(map);
         }
+<<<<<<< HEAD
         
         // printout related
         case PRINTOUT -> {
@@ -261,6 +265,9 @@ public interface Model<T extends Body>  extends Serializable {
         }
         
         case UNKNOWN -> 
+=======
+        case PRINTOUT, PRINTOUT_PAGE, PRINTOUT_SCRIPT, PRINTOUT_RESOURCE, UNKNOWN, FOLDER -> 
+>>>>>>> 5aa2645eb (#672 AssetsFsController)
         throw new UnsupportedOperationException("PRINTOUT types not mapped to ModelWorld: " + body.getBodyType());
       } 
       return builder.build();
