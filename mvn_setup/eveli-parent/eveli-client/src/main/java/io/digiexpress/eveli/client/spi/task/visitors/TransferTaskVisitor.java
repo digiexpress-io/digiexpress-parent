@@ -32,7 +32,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
-import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TransferTaskCommand;
 import io.digiexpress.eveli.client.api.TaskFileClient;
 import io.digiexpress.eveli.client.api.TaskFileClient.TaskFile;
@@ -88,7 +87,7 @@ public class TransferTaskVisitor {
   
   
   private Uni<DocContainerEnvelope> createDocContainer(Task task, Map<String, String> props, List<TaskFile> files) {
-    final var container = docContainerClient.containerBuilder();
+    final var container = docContainerClient.createDoc().task(task);
     
     for(final var file : files) {
       container.addDocument(ImmutableDoc.builder()
@@ -145,41 +144,13 @@ public class TransferTaskVisitor {
       Map<String, String> props, 
       List<TaskFile> files, 
       Task previousVerison) {
-    final var docContainerId = env.getObjects().getId();
+    
     final var config = ctx.getConfig();
     final var tenant = config.getClient().grim(ctx.getConfig().getTenantName());
     
-    return tenant.commit().modifyOneMission().missionId(taskId).modifyMission(merge -> {
-        
-        final var linkBody = JsonObject.mapFrom(props);
-        linkBody.put("files", files.stream().map(e -> e.getName()).toList());
-        
-        
-        final var previousTransfer = merge.getCurrentState().getLinks().values().stream()
-          .filter(e -> TaskMapper.LINK_TYPE_TRANSFERRED_ID.equals(e.getLinkType()))
-          .findFirst();
-        
-        if(previousTransfer.isEmpty()) {
-          merge.addLink(newLink -> newLink
-            .linkType(TaskMapper.LINK_TYPE_TRANSFERRED_ID)
-            .linkValue(docContainerId)
-            .linkBody(linkBody)
-            .build());
-        } else {
-          merge.modifyLink(previousTransfer.get().getId(), modLink -> {
-            modLink
-              .linkType(TaskMapper.LINK_TYPE_TRANSFERRED_ID)
-              .linkValue(docContainerId)
-              .linkBody(linkBody)
-              .build();
-          });
-        }
-        
-        merge.status(TaskStatus.TRANSFERRED.name())
-        // change is viewed by worker who created it
-        .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).currentTxCommit().build())
-        .build();
-        
+    return tenant.commit().modifyOneMission().missionId(taskId)
+      .modifyMission(merge -> {        
+        docContainerClient.updateTask().doc(env.getObjects()).userId(userId).task(merge).build();
       })
       .commitAuthor(userId)
       .commitMessage("Adding task viewer by: " + TransferTaskVisitor.class.getSimpleName())

@@ -23,21 +23,33 @@ package io.digiexpress.eveli.client.spi.dms;
 import java.io.InputStream;
 import java.util.Map;
 
+import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.spi.dms.DocContainer.Doc;
+import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
 import io.smallrye.mutiny.Uni;
 
 public interface DocContainerClient {
-  DocContainerBuilder containerBuilder();
+  CreateDoc createDoc();
+  DocContainerTasUpdater updateTask();
   
-  interface DocContainerBuilder {
-    DocContainerBuilder externalId(String externalId);
+  interface DocContainerTasUpdater {
+    DocContainerTasUpdater userId(String userId);
+    DocContainerTasUpdater doc(DocContainer doc);
+    DocContainerTasUpdater task(MergeMission task);
+    void build();
+  }
+  
+  
+  interface CreateDoc {
+    CreateDoc externalId(String externalId);
+    CreateDoc task(Task task);
+    CreateDoc createdBy(String createdBy);
+    CreateDoc draftedBy(String draftedBy);
+    CreateDoc decidedBy(String decidedBy);
+    CreateDoc title(String userGivenId);
+    CreateDoc props(Map<String, String> props);
+    CreateDoc addDocument(Doc newDocument);
     
-    DocContainerBuilder createdBy(String createdBy);
-    DocContainerBuilder draftedBy(String draftedBy);
-    DocContainerBuilder decidedBy(String decidedBy);
-    DocContainerBuilder title(String userGivenId);
-    DocContainerBuilder props(Map<String, String> props);
-    DocContainerBuilder addDocument(Doc newDocument);
     Uni<DocContainerEnvelope> build();
   }
   
