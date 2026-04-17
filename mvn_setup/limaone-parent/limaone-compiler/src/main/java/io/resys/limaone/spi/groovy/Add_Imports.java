@@ -68,7 +68,9 @@ public class Add_Imports extends CompilationCustomizer {
       ClassHelper.make(io.resys.limaone.program.Runtime.class),
       ClassHelper.make(io.resys.limaone.program.ProgramInput.class),
   
-      ClassHelper.make(io.resys.limaone.model.FlowTask.class)
+      ClassHelper.make(io.resys.limaone.model.FlowTask.class),
+
+      ClassHelper.make(io.resys.limaone.spi.dialob.FormDb.FormInstance.class.getCanonicalName())
     );
     
     final var ast = source.getAST();

@@ -95,6 +95,31 @@ public class CST_YamlFlowValidator {
   }
   private Map<String, PseudoParam> validateInputs(String taskId, YamlTask taskModel) {    
     final var result = new HashMap<String, PseudoParam>();
+    
+    if(taskModel.getForm() != null) {
+      final var formRef = taskModel.getForm().getRef();
+      if(formRef != null) {
+        final var refInputName = YamlMapper.getStringValue(formRef);
+        if(refInputName != null) {
+          final var rootName = refInputName.split("\\.")[0];
+          if(!this.inputs.containsKey(rootName) && !this.tasks.containsKey(rootName)) {
+            error(taskModel,
+                formRef.getStart(),
+                formRef.getSyntax().length(),
+                "Task: " + taskId + ", form ref: '" + refInputName + "' references unknown input or task!");
+          }
+        }
+      }
+      final var returnsCode = taskModel.getForm().getReturnsCode();
+      if(returnsCode == null || returnsCode.isBlank()) {
+        error(taskModel,
+            taskModel.getForm().getStart(),
+            taskModel.getForm().getSyntax().length(),
+            "Task: " + taskId + ", form step must have a non-empty 'returns' block!");
+      }
+      return result;
+    }
+    
     if(taskModel.getRef() == null) {
       return result;
     }
