@@ -83,6 +83,7 @@ public class WorldFs_1_Test extends DbSupport {
         .addLabels(ImmutableLocaleLabel.builder()
             .locale(locale1.getId()).labelValue("click me")
             .build())
+        .addArticles(article1.getId())
       ).buildSync();
     
     final var workflow1 = authoring.newModel()

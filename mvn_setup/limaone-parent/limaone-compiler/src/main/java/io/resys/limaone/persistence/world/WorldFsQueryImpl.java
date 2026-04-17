@@ -48,7 +48,8 @@ public class WorldFsQueryImpl implements WorldFsQuery {
       .branchName(name -> name.equals(branchName))
       .blobTypes(
           BodyType.ARTICLE.name(), 
-          BodyType.LOCALE.name()
+          BodyType.LOCALE.name(),
+          BodyType.ARTICLE_LINK.name()
       )
       .getOne()
       .onItem().transform(ref -> new WorldFsFactory(ref).create());

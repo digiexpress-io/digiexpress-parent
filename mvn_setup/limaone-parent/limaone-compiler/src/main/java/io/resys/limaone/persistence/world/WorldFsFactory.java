@@ -10,6 +10,7 @@ import io.resys.limaone.fs.ImmutableDirentBase;
 import io.resys.limaone.fs.ImmutableWorldFs;
 import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.model.Article;
+import io.resys.limaone.model.ArticleLink;
 import io.resys.limaone.model.ArticlePage;
 import io.resys.limaone.model.Locale;
 import io.resys.limaone.model.Model.BodyType;
@@ -27,7 +28,7 @@ public class WorldFsFactory {
   private final List<Node> parseLater = new ArrayList<>();
   private final Map<String, Article> article_cache = new HashMap<>();
   private final Map<String, Locale> locale_cache = new HashMap<>();
-  
+  private final Map<String, ArticleLink> link_cache = new HashMap<>();
   
   public WorldFs create() {
     final var nodes = ref.getTransitives().getTree().getTreeNodes();
@@ -54,24 +55,27 @@ public class WorldFsFactory {
     return world.build();
   }
   
-  private ImmutableDirentBase visitSecondLoadNode(Node node, BodyType bodyType) {
-
-    switch (bodyType) {
-    case ARTICLE_PAGE: return createArticlePageDirent(node, bodyType);
-    default: throw new IllegalArgumentException(bodyType + " is not recognized as valid node in second load!");
-    }
-  }
-  
   private Optional<ImmutableDirentBase> visitFirstLoadNode(Node node, BodyType bodyType) {
 
     switch (bodyType) {
-    case LOCALE: return Optional.of(createLocaleDirent(node, bodyType));
-    case ARTICLE: return Optional.of(createArticleDirent(node, bodyType));
-    case ARTICLE_PAGE: return Optional.empty();
-    default: return Optional.of(createAnyDirent(node, bodyType));
+      case LOCALE: return Optional.of(createLocaleDirent(node, bodyType));
+      case ARTICLE: return Optional.of(createArticleDirent(node, bodyType));
+      case ARTICLE_PAGE: return Optional.empty();
+      case ARTICLE_LINK: return Optional.empty();
+      default: return Optional.of(createAnyDirent(node, bodyType));
     }
   }
   
+  private ImmutableDirentBase visitSecondLoadNode(Node node, BodyType bodyType) {
+
+    switch (bodyType) {
+      case ARTICLE_PAGE: return createArticlePageDirent(node, bodyType);
+      case ARTICLE_LINK: return createArticleLinkDirent(node, bodyType);
+      default: throw new IllegalArgumentException(bodyType + " is not recognized as valid node in second load!");
+    }
+  }
+  
+
   
   private ImmutableDirentBase createArticlePageDirent(Node node, BodyType bodyType) {
     final var blob = node.getTransitives().getBlob();
@@ -122,6 +126,23 @@ public class WorldFsFactory {
     return dirent;
   }
   
+  private ImmutableDirentBase createArticleLinkDirent(Node node, BodyType bodyType) {
+    final var blob = node.getTransitives().getBlob();
+    final var link = blob.getBlobValue().mapTo(ArticleLink.class);
+    final var name = link.getValue();
+    link_cache.put(node.getObjectId(), link);
+    
+    final var path = node.getNodePath().orElse("links");
+    final var dirent = ImmutableDirentBase.builder()
+      .id(node.getObjectId())
+      .fullPath(path + "/" + name)
+      .name(name)
+      .type(bodyType)
+      .build();
+    
+    return dirent;
+  }
+  
   
   private ImmutableDirentBase createAnyDirent(Node node, BodyType bodyType) {
     final var dirent = ImmutableDirentBase.builder()
@@ -159,4 +180,6 @@ public class WorldFsFactory {
   private Locale getLocale(String localeId) {
     return locale_cache.get(localeId); 
   }
+  
+  
 }
