@@ -1,5 +1,25 @@
 package io.resys.limaone.persistence.world;
 
+/*-
+ * #%L
+ * limaone-compiler
+ * %%
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +32,11 @@ import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.model.Article;
 import io.resys.limaone.model.ArticleLink;
 import io.resys.limaone.model.ArticlePage;
+import io.resys.limaone.model.ArticleTemplate;
+import io.resys.limaone.model.ArticleWorkflow;
 import io.resys.limaone.model.Locale;
 import io.resys.limaone.model.Model.BodyType;
+import io.resys.limaone.model.Printout;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Ref;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +52,10 @@ public class WorldFsFactory {
   private final Map<String, Article> article_cache = new HashMap<>();
   private final Map<String, Locale> locale_cache = new HashMap<>();
   private final Map<String, ArticleLink> link_cache = new HashMap<>();
+  private final Map<String, ArticleTemplate> template_cache = new HashMap<>();
+  private final Map<String, ArticleWorkflow> workflow_cache = new HashMap<>();
+  private final Map<String, Printout> printout_cache = new HashMap<>();
+
   
   public WorldFs create() {
     final var nodes = ref.getTransitives().getTree().getTreeNodes();
@@ -62,6 +89,9 @@ public class WorldFsFactory {
       case ARTICLE: return Optional.of(createArticleDirent(node, bodyType));
       case ARTICLE_PAGE: return Optional.empty();
       case ARTICLE_LINK: return Optional.empty();
+      case ARTICLE_TEMPLATE: return Optional.empty();
+      case ARTICLE_WORKFLOW: return Optional.empty();
+      case PRINTOUT: return Optional.empty();
       default: return Optional.of(createAnyDirent(node, bodyType));
     }
   }
@@ -71,11 +101,78 @@ public class WorldFsFactory {
     switch (bodyType) {
       case ARTICLE_PAGE: return createArticlePageDirent(node, bodyType);
       case ARTICLE_LINK: return createArticleLinkDirent(node, bodyType);
+      case ARTICLE_WORKFLOW: return createArticleWorkflowDirent(node, bodyType);
+      case ARTICLE_TEMPLATE: return createArticleTemplateDirent(node, bodyType);
+      case PRINTOUT: return createPrintoutDirent(node, bodyType);
       default: throw new IllegalArgumentException(bodyType + " is not recognized as valid node in second load!");
     }
   }
   
 
+  private ImmutableDirentBase createPrintoutDirent(Node node, BodyType bodyType) {
+    final var blob = node.getTransitives().getBlob();
+    final var printout = blob.getBlobValue().mapTo(Printout.class);
+    final var path = node.getNodePath().orElse("printouts");
+    printout_cache.put(node.getObjectId(), printout);
+    
+    final var name = printout.getServiceName();
+    final var dirent = ImmutableDirentBase.builder()
+        .id(node.getObjectId())
+        .fullPath(path + "/" + name)
+        .name(name)
+        .type(bodyType)
+        .build();
+      return dirent;
+  }
+  
+  private ImmutableDirentBase createArticleWorkflowDirent(Node node, BodyType bodyType) {
+    final var blob = node.getTransitives().getBlob();
+    final var workflow = blob.getBlobValue().mapTo(ArticleWorkflow.class);
+    final var path = node.getNodePath().orElse("workflows");
+    workflow_cache.put(node.getObjectId(), workflow);
+    
+    final var name = workflow.getValue();
+    final var dirent = ImmutableDirentBase.builder()
+        .id(node.getObjectId())
+        .fullPath(path + "/" + name)
+        .name(name)
+        .type(bodyType)
+        .build();
+      return dirent;
+  }
+  
+  private ImmutableDirentBase createArticleTemplateDirent(Node node, BodyType bodyType) {
+    final var blob = node.getTransitives().getBlob();
+    final var template = blob.getBlobValue().mapTo(ArticleTemplate.class);
+    final var path = node.getNodePath().orElse("templates");
+    template_cache.put(node.getObjectId(), template);
+    
+    final var name = template.getName();
+    final var dirent = ImmutableDirentBase.builder()
+        .id(node.getObjectId())
+        .fullPath(path + "/" + name)
+        .name(name)
+        .type(bodyType)
+        .build();
+      return dirent;
+  }
+  
+  private ImmutableDirentBase createArticleLinkDirent(Node node, BodyType bodyType) {
+    final var blob = node.getTransitives().getBlob();
+    final var link = blob.getBlobValue().mapTo(ArticleLink.class);
+    final var name = link.getValue();
+    link_cache.put(node.getObjectId(), link);
+    
+    final var path = node.getNodePath().orElse("links");
+    final var dirent = ImmutableDirentBase.builder()
+      .id(node.getObjectId())
+      .fullPath(path + "/" + name)
+      .name(name)
+      .type(bodyType)
+      .build();
+    
+    return dirent;
+  }
   
   private ImmutableDirentBase createArticlePageDirent(Node node, BodyType bodyType) {
     final var blob = node.getTransitives().getBlob();
@@ -125,24 +222,6 @@ public class WorldFsFactory {
     article_cache.put(node.getObjectId(), article);
     return dirent;
   }
-  
-  private ImmutableDirentBase createArticleLinkDirent(Node node, BodyType bodyType) {
-    final var blob = node.getTransitives().getBlob();
-    final var link = blob.getBlobValue().mapTo(ArticleLink.class);
-    final var name = link.getValue();
-    link_cache.put(node.getObjectId(), link);
-    
-    final var path = node.getNodePath().orElse("links");
-    final var dirent = ImmutableDirentBase.builder()
-      .id(node.getObjectId())
-      .fullPath(path + "/" + name)
-      .name(name)
-      .type(bodyType)
-      .build();
-    
-    return dirent;
-  }
-  
   
   private ImmutableDirentBase createAnyDirent(Node node, BodyType bodyType) {
     final var dirent = ImmutableDirentBase.builder()

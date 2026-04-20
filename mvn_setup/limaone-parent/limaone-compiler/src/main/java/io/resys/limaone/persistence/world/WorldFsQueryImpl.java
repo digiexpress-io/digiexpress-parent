@@ -49,7 +49,10 @@ public class WorldFsQueryImpl implements WorldFsQuery {
       .blobTypes(
           BodyType.ARTICLE.name(), 
           BodyType.LOCALE.name(),
-          BodyType.ARTICLE_LINK.name()
+          BodyType.ARTICLE_LINK.name(),
+          BodyType.ARTICLE_WORKFLOW.name(),
+          BodyType.ARTICLE_TEMPLATE.name(),
+          BodyType.PRINTOUT.name()
       )
       .getOne()
       .onItem().transform(ref -> new WorldFsFactory(ref).create());
