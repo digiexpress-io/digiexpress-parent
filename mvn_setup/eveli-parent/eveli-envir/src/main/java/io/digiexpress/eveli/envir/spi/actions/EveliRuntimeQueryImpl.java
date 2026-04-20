@@ -87,7 +87,7 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
         cachedEnvir.get().getDeploymentId().equals(deployment.getId()) &&
         
         // same tenant requested
-        Objects.equal(cachedEnvir.get().getCockpitId(), deployment.getCockpitId())
+        Objects.equal(cachedEnvir.get().getCockpitId().orElse(null), deployment.getCockpitId())
     ) {
       
       
