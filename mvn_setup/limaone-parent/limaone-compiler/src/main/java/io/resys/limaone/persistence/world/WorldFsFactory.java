@@ -21,6 +21,7 @@ package io.resys.limaone.persistence.world;
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +56,8 @@ public class WorldFsFactory {
   private final Map<String, ArticleTemplate> template_cache = new HashMap<>();
   private final Map<String, ArticleWorkflow> workflow_cache = new HashMap<>();
   private final Map<String, Printout> printout_cache = new HashMap<>();
-
+  private final Map<String, ImmutableDirentBase> dirent_cache = new HashMap<>();
+  private final Map<String, List<ImmutableDirentBase>> dirents_grouped_by_path = new HashMap<>();
   
   public WorldFs create() {
     final var nodes = ref.getTransitives().getTree().getTreeNodes();
@@ -67,26 +69,56 @@ public class WorldFsFactory {
       
       final var dirent = visitFirstLoadNode(node, bodyType.get());
       if(dirent.isPresent()) {
-        world.addDirents(dirent.get());
+        addDirent(dirent.get(), node, bodyType.get());
       } else {
         parseLater.add(node);
       }
     }
-    
+     
     for(final var later : parseLater) {
       final var bodyType = getBodyType(later).orElseThrow();
       final var dirent = visitSecondLoadNode(later, bodyType);
-      world.addDirents(dirent);
+      addDirent(dirent, later, bodyType);
+    }
+    
+    return world.addAllDirents(dirent_cache.values()).build();
+  }
+  
+  private void addDirent(ImmutableDirentBase dirent, Node node, BodyType bodyType) {
+    final var path = getPath(node, bodyType);
+    
+    if(!dirents_grouped_by_path.containsKey(path)) {
+      dirents_grouped_by_path.put(path, new ArrayList<>());
+    }
+    
+    dirents_grouped_by_path.get(path).add(dirent);
+    dirent_cache.put(dirent.getFullPath(), dirent);
+  }
+  
+  private String getPath(Node node, BodyType bodyType) {
+    final var path = node.getNodePath().orElse(null);
+    if(path != null) {
+      return path;
+    }
+    
+    switch (bodyType) {
+    case ARTICLE: {
+      final var parents = getArticleHierarchy(getArticle(node.getObjectId()))
+          .stream().map(e -> e.getName())
+          .toList();
       
-    }    
-    return world.build();
+      final var articles = String.join("/", parents);
+      return "articles/" + articles;
+    }
+    default: return "/";
+    }
   }
   
   private Optional<ImmutableDirentBase> visitFirstLoadNode(Node node, BodyType bodyType) {
 
     switch (bodyType) {
       case LOCALE: return Optional.of(createLocaleDirent(node, bodyType));
-      case ARTICLE: return Optional.of(createArticleDirent(node, bodyType));
+      case ARTICLE: return createArticleDirent(node, bodyType);
       case ARTICLE_PAGE: return Optional.empty();
       case ARTICLE_LINK: return Optional.empty();
       case ARTICLE_TEMPLATE: return Optional.empty();
@@ -99,6 +131,7 @@ public class WorldFsFactory {
   private ImmutableDirentBase visitSecondLoadNode(Node node, BodyType bodyType) {
 
     switch (bodyType) {
+      case ARTICLE: return createChildArticleDirent(node, bodyType);
       case ARTICLE_PAGE: return createArticlePageDirent(node, bodyType);
       case ARTICLE_LINK: return createArticleLinkDirent(node, bodyType);
       case ARTICLE_WORKFLOW: return createArticleWorkflowDirent(node, bodyType);
@@ -170,7 +203,6 @@ public class WorldFsFactory {
       .name(name)
       .type(bodyType)
       .build();
-    
     return dirent;
   }
   
@@ -181,8 +213,7 @@ public class WorldFsFactory {
     final var localeId = page.getLocale();
     final var article = getArticle(articleId);
     final var locale = getLocale(localeId);
-
-    
+ 
     final var name = locale.getValue();
     final var dirent = ImmutableDirentBase.builder()
         .id(node.getObjectId())
@@ -194,7 +225,6 @@ public class WorldFsFactory {
   }
   
   private ImmutableDirentBase createLocaleDirent(Node node, BodyType bodyType) {
-    
     final var name = node.getNodeName();
     final var dirent = ImmutableDirentBase.builder()
         .id(node.getObjectId())
@@ -209,17 +239,37 @@ public class WorldFsFactory {
     return dirent;
   }
   
-  private ImmutableDirentBase createArticleDirent(Node node, BodyType bodyType) {
+  private Optional<ImmutableDirentBase> createArticleDirent(Node node, BodyType bodyType) {
     final var blob = node.getTransitives().getBlob();
+    final var article = blob.getBlobValue().mapTo(Article.class);
+    article_cache.put(node.getObjectId(), article);
+    
+    if(article.getParentId() != null) {
+      return Optional.empty();
+    }
+    
     final var dirent = ImmutableDirentBase.builder()
       .id(node.getObjectId())
-      .fullPath(node.getFullPath())
+      .fullPath(getPath(node, bodyType) + "/" + article.getName())
       .name(node.getNodeName())
       .type(bodyType)
       .build();
+    return Optional.ofNullable(dirent);
+  }
+  
+  private ImmutableDirentBase createChildArticleDirent(Node node, BodyType bodyType) {
+    final var article = article_cache.get(node.getObjectId());
     
-    final var article = blob.getBlobValue().mapTo(Article.class);
-    article_cache.put(node.getObjectId(), article);
+    if(article.getParentId() == null) {
+      throw new IllegalArgumentException("Can only load child articles!");
+    }
+    
+    final var dirent = ImmutableDirentBase.builder()
+      .id(node.getObjectId())
+      .fullPath(getPath(node, bodyType) + "/" + article.getName())
+      .name(node.getNodeName())
+      .type(bodyType)
+      .build();
     return dirent;
   }
   
@@ -260,5 +310,20 @@ public class WorldFsFactory {
     return locale_cache.get(localeId); 
   }
   
-  
+  private List<Article> getArticleHierarchy(Article article) {
+    if(article.getParentId() == null) {
+      return Collections.emptyList();
+    }
+    final List<Article> result = new ArrayList<>(); 
+    
+    while(article != null) {
+      if(article.getParentId() == null) {
+        break;
+      }
+      article = getArticle(article.getParentId());
+      result.add(article);
+    }
+    
+    return result.reversed();
+  }
 }

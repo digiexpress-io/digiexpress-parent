@@ -42,6 +42,13 @@ public class WorldFs_1_Test extends DbSupport {
     
     final var fileSystem = authoring.worldFsQuery().findAllSync();
     log.debug("Current FS: {}", JsonObject.mapFrom(fileSystem).encodePrettily());
+    
+    log.debug("Current FS as paths:\n{}", String
+        .join("\n", fileSystem.getDirents()
+        .stream()
+        .map(e -> " - " + e.getFullPath())
+        .sorted((a, b) -> a.toLowerCase().compareTo(b.toLowerCase()))
+        .toList()));
   }
   
   
@@ -77,6 +84,12 @@ public class WorldFs_1_Test extends DbSupport {
       .props(props -> props.articleId(article1.getId()).locale(locale2.getId()).content("# Finnish content"))
       .buildSync();
     
+    final var page3 = authoring.newModel()
+        .newArticlePage()
+        .props(props -> props.articleId(article2.getId()).locale(locale2.getId()).content("# Finnish content"))
+        .buildSync();
+      
+    
     final var template1 = authoring.newModel()
       .newArticleTemplate()
       .props(props -> props.name("Template1").content("#Heading1").description("Very good template1").type("type"))
@@ -88,7 +101,7 @@ public class WorldFs_1_Test extends DbSupport {
         .buildSync();
       
     final var link1 = authoring.newModel()
-        .newArticleLink().props(props -> props.type("internal").value("www.example.com")
+        .newArticleLink().props(props -> props.type("internal").value("www.link1.com")
         .addLabels(ImmutableLocaleLabel.builder()
             .locale(locale1.getId()).labelValue("click me")
             .build())
