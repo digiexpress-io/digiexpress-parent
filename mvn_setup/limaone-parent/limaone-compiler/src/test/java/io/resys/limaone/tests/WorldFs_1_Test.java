@@ -89,11 +89,16 @@ public class WorldFs_1_Test extends DbSupport {
         .props(props -> props.articleId(article2.getId()).locale(locale2.getId()).content("# Finnish content"))
         .buildSync();
       
-    
     final var template1 = authoring.newModel()
       .newArticleTemplate()
       .props(props -> props.name("Template1").content("#Heading1").description("Very good template1").type("type"))
       .buildSync();
+    
+    final var template2 = authoring.newModel()
+        .newArticleTemplate()
+        .props(props -> props.name("Template2").content("#Heading1").description("Excellent template2").type("type"))
+        .buildSync();
+      
     
     final var printout1 = authoring.newModel()
         .newPrintout()

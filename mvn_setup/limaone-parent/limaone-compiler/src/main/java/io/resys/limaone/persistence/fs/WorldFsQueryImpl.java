@@ -1,4 +1,4 @@
-package io.resys.limaone.persistence.world;
+package io.resys.limaone.persistence.fs;
 
 /*-
  * #%L

@@ -37,6 +37,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.Body;
 import jakarta.annotation.Nullable;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 
 @Value.Immutable
@@ -58,33 +60,36 @@ public interface Model<T extends Body>  extends Serializable {
     BodyType getBodyType();
   }
     
+  @RequiredArgsConstructor @Getter
   enum BodyType {
-    LOCALE,
+    LOCALE(Locale.class),
     
-    ARTICLE_LINK,
-    ARTICLE,
-    ARTICLE_WORKFLOW,
-    ARTICLE_PAGE,
-    ARTICLE_TEMPLATE,
+    ARTICLE_LINK(ArticleLink.class),
+    ARTICLE(Article.class),
+    ARTICLE_WORKFLOW(ArticleWorkflow.class),
+    ARTICLE_PAGE(ArticlePage.class),
+    ARTICLE_TEMPLATE(ArticleTemplate.class),
     
-    FLOW, 
-    FLOW_TASK, 
-    DECISION_TABLE,
+    FLOW(Flow.class), 
+    FLOW_TASK(FlowTask.class), 
+    DECISION_TABLE(DecisionTable.class),
     
-    DIALOB_FORM,
+    DIALOB_FORM(DialobForm.class),
     
-    PRINTOUT,       // final product, that links article for syntax and data for input, main grouping for locale based templates
-    PRINTOUT_PAGE,  // holds markup for pdf in specific locale
-    PRINTOUT_RESOURCE, // some static asset like image to be embedded in printout
+    PRINTOUT(Printout.class),       // final product, that links article for syntax and data for input, main grouping for locale based templates
+    PRINTOUT_PAGE(PrintoutPage.class),  // holds markup for pdf in specific locale
+    PRINTOUT_RESOURCE(PrintoutResource.class), // some static asset like image to be embedded in printout
     //PRINTOUT_SCRIPT,
     
 
-    DEPLOYMENT,
+    DEPLOYMENT(Deployment.class),
     
-    FOLDER,
+    FOLDER(Body.class),
+    UNKNOWN(Body.class);
     
-    UNKNOWN;
+    private final Class<? extends Body> bodyClass;
     
+
     public static BodyType[] without(BodyType ...without) {
       final var filter = Arrays.asList(without);
       return Arrays.asList(BodyType.values()).stream()
