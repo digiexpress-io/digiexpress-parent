@@ -73,6 +73,7 @@ public interface Compiler {
     BundleQuery<FlowTaskProgram> queryFlowTasks();
     BundleQuery<FlowProgram> queryFlows();
     BundleQuery<DecisionProgram> queryDecisions();
+    BundleQuery<TagomiProgram> queryTagomis();
     
     
     default Optional<? extends Program> findAnyProgram(String id) {
@@ -95,6 +96,10 @@ public interface Compiler {
       final var w = queryWorkflows().id(id).findOne();
       if(w.isPresent()) {
         return w;
+      }
+      final var t = queryTagomis().id(id).findOne();
+      if(t.isPresent()) {
+        return t;
       }
       return Optional.empty();
     }

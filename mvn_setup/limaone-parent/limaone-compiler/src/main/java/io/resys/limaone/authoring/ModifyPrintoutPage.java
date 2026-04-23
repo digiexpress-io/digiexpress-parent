@@ -49,6 +49,6 @@ public interface ModifyPrintoutPage {
     @Nullable String getContent();
     @Nullable String getLocaleId();
     @Nullable List<String> getResourceIds();
-    @Nullable List<String> getTemplateIds();
+    @Nullable List<String> getPrintoutPageIds();
   }
 }

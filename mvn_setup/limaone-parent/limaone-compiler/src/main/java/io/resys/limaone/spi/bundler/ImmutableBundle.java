@@ -32,6 +32,7 @@ import io.resys.limaone.program.DialobProgram;
 import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.FlowTaskProgram;
 import io.resys.limaone.program.Program;
+import io.resys.limaone.program.TagomiProgram;
 import io.resys.limaone.program.WorkflowProgram;
 import lombok.Getter;
 
@@ -51,6 +52,7 @@ public class ImmutableBundle implements Bundle {
   private final BundleGroup<DecisionProgram> decisions;
   private final BundleGroup<WorkflowProgram> workflows;
   private final BundleGroup<DialobProgram> dialobs;
+  private final BundleGroup<TagomiProgram> tagomis;
   
   
   public ImmutableBundle(
@@ -75,7 +77,8 @@ public class ImmutableBundle implements Bundle {
     final var decisions = new BundleGroup<DecisionProgram>(BodyType.DECISION_TABLE);
     final var workflows = new BundleGroup<WorkflowProgram>(BodyType.ARTICLE_WORKFLOW);
     final var dialobs = new BundleGroup<DialobProgram>(BodyType.DIALOB_FORM);
-    
+    final var tagomis = new BundleGroup<TagomiProgram>(BodyType.PRINTOUT);
+
     programs.stream().forEach(program -> {
       articles.accept(program);
       flows.accept(program);
@@ -83,14 +86,16 @@ public class ImmutableBundle implements Bundle {
       decisions.accept(program);
       workflows.accept(program);
       dialobs.accept(program);
+      tagomis.accept(program);
     });
-    
+
     this.articles = articles.close();
     this.flows = flows.close();
     this.flowTasks = flowTasks.close();
     this.decisions = decisions.close();
     this.workflows = workflows.close();
     this.dialobs = dialobs.close();
+    this.tagomis = tagomis.close();
   }
 
   @Override
@@ -116,5 +121,9 @@ public class ImmutableBundle implements Bundle {
   @Override
   public BundleQuery<DialobProgram> queryDialobs() {
     return new BundleQueryImpl<>(dialobs);
+  }
+  @Override
+  public BundleQuery<TagomiProgram> queryTagomis() {
+    return new BundleQueryImpl<>(tagomis);
   }
 }

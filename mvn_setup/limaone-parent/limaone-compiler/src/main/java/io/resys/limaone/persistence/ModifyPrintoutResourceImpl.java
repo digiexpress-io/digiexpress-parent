@@ -120,11 +120,11 @@ public class ModifyPrintoutResourceImpl extends AuthoringTemplate<ModifyPrintout
       throw new AuthoringException(props, "Can't find printout resource: '" + props.getResourceId() + "' to update!");
     }
 
-    if(props.getTemplateIds() != null) {
-      for(final var templateId : props.getTemplateIds()) {
-        if(!world.getPrintoutPages().containsKey(templateId)) {
+    if(props.getPrintoutPageIds() != null) {
+      for(final var printoutPageId : props.getPrintoutPageIds()) {
+        if(!world.getPrintoutPages().containsKey(printoutPageId)) {
           throw new AuthoringException(props,
-              "PrintoutResource templateId: '" + templateId + "' does not exist in: '" + String.join(",", world.getPrintoutPages().keySet()) + "'!");
+              "PrintoutResource printoutPageId: '" + printoutPageId + "' does not exist in: '" + String.join(",", world.getPrintoutPages().keySet()) + "'!");
         }
       }
     }
@@ -146,7 +146,7 @@ public class ModifyPrintoutResourceImpl extends AuthoringTemplate<ModifyPrintout
         .resourceName(props.getResourceName() == null ? start.getBody().getResourceName() : props.getResourceName())
         .externalLocation(imageExternalLocation == null ? start.getBody().getExternalLocation() : imageExternalLocation)
         .content(props.getUploadBody() == null ? start.getBody().getContent() : props.getUploadBody())
-        .templateIds(props.getTemplateIds() == null ? start.getBody().getTemplateIds() : props.getTemplateIds())
+        .printoutPageIds(props.getPrintoutPageIds() == null ? start.getBody().getPrintoutPageIds() : props.getPrintoutPageIds())
         .build();
   }
 }

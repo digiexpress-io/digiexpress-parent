@@ -73,7 +73,7 @@ public class Authoring_4_Test extends DbSupport {
             .resourceName("header-script.typ")
             .contentType("text/*")
             .uploadBody("#let header = () => [== Header]")
-            .templateIds(List.of(printoutPage1.getId()))
+            .printoutPageIds(List.of(printoutPage1.getId()))
         )
         .buildSync();
     log.info("resource1: id={}, body={}", resource1.getId(), resource1.getBody());
@@ -86,7 +86,7 @@ public class Authoring_4_Test extends DbSupport {
             .resourceName("footer-script.typ")
             .contentType("text/*")
             .uploadBody("#let footer = () => [== Footer]")
-            .templateIds(List.of())
+            .printoutPageIds(List.of())
         )
         .buildSync();
     log.info("resource2: id={}, body={}", resource2.getId(), resource2.getBody());
@@ -102,7 +102,7 @@ public class Authoring_4_Test extends DbSupport {
       Assertions.assertEquals("header-script.typ", r1.getBody().getResourceName());
       Assertions.assertEquals("text/*", r1.getBody().getContentType());
       Assertions.assertEquals("#let header = () => [== Header]", r1.getBody().getContent());
-      Assertions.assertEquals(List.of(printoutPage1.getId()), r1.getBody().getTemplateIds());
+      Assertions.assertEquals(List.of(printoutPage1.getId()), r1.getBody().getPrintoutPageIds());
 
       final var r2 = worldState.getPrintoutResources().get(resource2.getId());
       Assertions.assertNotNull(r2);
@@ -117,7 +117,7 @@ public class Authoring_4_Test extends DbSupport {
               .resourceName("header-script.typ")
               .contentType("text/*")
               .uploadBody("some content")
-              .templateIds(List.of())
+              .printoutPageIds(List.of())
           )
           .buildSync();
     });
@@ -130,7 +130,7 @@ public class Authoring_4_Test extends DbSupport {
               .resourceName("invalid-template-resource.typ")
               .contentType("text/*")
               .uploadBody("some content")
-              .templateIds(List.of("non-existent-template-id"))
+              .printoutPageIds(List.of("non-existent-template-id"))
           )
           .buildSync();
     });

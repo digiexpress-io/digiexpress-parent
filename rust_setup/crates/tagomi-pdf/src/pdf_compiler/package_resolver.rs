@@ -25,6 +25,11 @@ impl PackageResolver {
             debug!("Package @{}/{}:{} found at {}", spec.namespace, spec.name, spec.version, dir.display());
             return Ok(dir);
         }
+
+        Err(format!(
+            "Package @{}/{}:{} not found at {}",
+            spec.namespace, spec.name, spec.version, dir.display()
+        ))
     }
 
     pub fn resolve_file(&self, spec: &PackageSpec, vpath: &Path) -> Result<PathBuf, String> {

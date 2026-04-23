@@ -38,7 +38,7 @@ public interface PrintoutResource extends Body {
   String getExternalLocation();
   String getResourceName();
   String getContentType();
-  List<String> getTemplateIds();
+  List<String> getPrintoutPageIds();
   @Nullable String getContent();
   
   default BodyType getBodyType() { return BodyType.PRINTOUT_RESOURCE; };

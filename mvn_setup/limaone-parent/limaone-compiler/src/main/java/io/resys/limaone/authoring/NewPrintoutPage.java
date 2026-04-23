@@ -50,6 +50,6 @@ public interface NewPrintoutPage {
     String getServiceId();
     String getLocaleId();
     @Nullable String getContent();
-    @Nullable List<String> getTemplateIds();
+    @Nullable List<String> getPrintoutPageIds();
   }
 }

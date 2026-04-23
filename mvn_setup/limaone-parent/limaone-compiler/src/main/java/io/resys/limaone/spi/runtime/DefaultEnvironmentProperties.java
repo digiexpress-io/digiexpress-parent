@@ -21,6 +21,7 @@ package io.resys.limaone.spi.runtime;
  */
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
@@ -32,12 +33,17 @@ import io.resys.limaone.persistence.ModelWorldDb;
 import io.resys.limaone.persistence.world.ModelWorldDb_FS;
 import io.resys.limaone.persistence.world.WorldBuilderImpl;
 import io.resys.limaone.program.ImmutableCurrentUser;
+import io.resys.limaone.program.Runtime;
 import io.resys.limaone.program.Runtime.CurrentUser;
 import io.resys.limaone.program.Runtime.EnvironmentProperties;
+import io.resys.limaone.program.Runtime.TagomiPdfRenderer;
+import io.resys.limaone.program.TagomiProgram;
 import io.resys.limaone.spi.ast.AST_ParserImpl;
 import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.thena.api.actions.TenantActions.TenantAware;
 import io.resys.thena.api.actions.TenantActions.TenantDb;
+import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import io.resys.thena.fs.spi.FileSystem_ThenaImpl;
 import io.resys.thena.storesql.PgErrors;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
@@ -61,16 +67,18 @@ public class DefaultEnvironmentProperties implements EnvironmentProperties {
   private final ModelWorldDb modelDb;
   private final Supplier<CurrentUser> currentUser;
   private final AST_Parser astParser;
-  
+  private final TagomiPdfRenderer tagomiPdfRenderer;
+
   public DefaultEnvironmentProperties(
-      ScheduledExecutorService workerPool, Duration workerPoolMaxTimeout, 
-      Boolean isDev, 
+      ScheduledExecutorService workerPool, Duration workerPoolMaxTimeout,
+      Boolean isDev,
       String defaultTenantName,
       FormDb formDb,
       DI di, boolean tid,
       ModelWorldDb modelDb,
       AST_Parser ast,
-      Supplier<CurrentUser> currentUser) {
+      Supplier<CurrentUser> currentUser,
+      TagomiPdfRenderer tagomiPdfRenderer) {
     super();
     this.workerPool = Objects.requireNonNull(workerPool, () -> "workerPool can't be null");;
     this.workerPoolMaxTimeout = Objects.requireNonNull(workerPoolMaxTimeout, () -> "workerPoolMaxTimeout can't be null");;
@@ -82,7 +90,7 @@ public class DefaultEnvironmentProperties implements EnvironmentProperties {
 
     this.currentUser = Objects.requireNonNull(currentUser, () -> "currentUser can't be null");
     this.astParser = Objects.requireNonNull(ast, () -> "ast can't be null");
-    
+    this.tagomiPdfRenderer = Objects.requireNonNull(tagomiPdfRenderer, () -> "tagomiPdfRenderer can't be null");
 
     if(modelDb instanceof TenantAware && tid) {
       this.tenantDb = new TID_Resolver(this, (TenantAware<?>) modelDb); 
@@ -114,7 +122,17 @@ public class DefaultEnvironmentProperties implements EnvironmentProperties {
     @Override
     public <T> T getBean(Class<T> type) {
       throw new UnsupportedOperationException("DI is not enabled in this envir!");
-    }    
+    }
+  }
+
+  private static class TagomiPdfRenderer_NotSupported implements TagomiPdfRenderer {
+    @Override
+    public Uni<TagomiProgram.PdfResult> render(
+        List<TagomiProgram.LocalizedPrintout> localizedPrintouts,
+        String serviceName, String orchestratorName,
+        Runtime runtime, String locale, JsonObject props) {
+      throw new UnsupportedOperationException("TagomiPdfRenderer is not configured!");
+    }
   }
 
   @RequiredArgsConstructor
@@ -161,8 +179,8 @@ public class DefaultEnvironmentProperties implements EnvironmentProperties {
     private ModelDbConfig dbConfig;
     private Supplier<CurrentUser> currentUser;
     private AST_Parser ast;
+    private TagomiPdfRenderer tagomiPdfRenderer;
 
-    
     public DefaultEnvironmentProperties build() {
       final var workerPool = this.workerPool == null ? Infrastructure.getDefaultWorkerPool() : this.workerPool;
       final var workerPoolMaxTimeout = this.workerPoolMaxTimeout == null ? Duration.ofMinutes(1) : this.workerPoolMaxTimeout;
@@ -197,12 +215,15 @@ public class DefaultEnvironmentProperties implements EnvironmentProperties {
         currentUser = () -> ImmutableCurrentUser.builder().userId("not-used").userName("not used").build();  
       }
       
+      final var tagomiPdfRenderer = this.tagomiPdfRenderer == null ? new TagomiPdfRenderer_NotSupported() : this.tagomiPdfRenderer;
+
       return new DefaultEnvironmentProperties(
-          workerPool, workerPoolMaxTimeout, 
-          developmentMode, defaultTenantName, 
+          workerPool, workerPoolMaxTimeout,
+          developmentMode, defaultTenantName,
           formDb, di, tid, modelWorldDb,
-          astParser, 
-          currentUser
+          astParser,
+          currentUser,
+          tagomiPdfRenderer
       );
     }    
   }

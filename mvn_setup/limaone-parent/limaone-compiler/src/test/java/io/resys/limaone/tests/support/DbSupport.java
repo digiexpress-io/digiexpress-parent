@@ -35,6 +35,7 @@ import org.junit.jupiter.api.BeforeEach;
 import io.resys.limaone.persistence.AuthoringImpl;
 import io.resys.limaone.persistence.ImmutableAuthoringConfig;
 import io.resys.limaone.persistence.world.WorldBuilderImpl;
+import io.resys.limaone.program.Runtime.TagomiPdfRenderer;
 import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties;
 import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties.ModelDbConfig;
@@ -227,12 +228,18 @@ public class DbSupport {
 
   
   public AuthoringImpl.AuthoringConfig createConfig(@Nullable FormDb formDb) {
-    final var envir = DefaultEnvironmentProperties.builder()
+    return createConfig(formDb, null);
+  }
+
+  public AuthoringImpl.AuthoringConfig createConfig(@Nullable FormDb formDb, @Nullable TagomiPdfRenderer tagomiPdfRenderer) {
+    final var builder = DefaultEnvironmentProperties.builder()
       .formDb(formDb)
       .dbConfig(ModelDbConfig.filesystem(client))
-      .defaultTenantName(client.getTenantName())
-      .build();
-      
+      .defaultTenantName(client.getTenantName());
+    if (tagomiPdfRenderer != null) {
+      builder.tagomiPdfRenderer(tagomiPdfRenderer);
+    }
+    final var envir = builder.build();
     return ImmutableAuthoringConfig.builder().envir(envir)
         .persistence(envir.getModelDb().withBranchName(Optional.of(WorldBuilderImpl.branchName)))
         .build();
