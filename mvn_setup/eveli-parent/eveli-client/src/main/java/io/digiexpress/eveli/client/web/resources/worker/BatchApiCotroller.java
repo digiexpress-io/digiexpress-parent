@@ -140,7 +140,7 @@ public class BatchApiCotroller {
   }
   
   @RequiredArgsConstructor @Data
-  public class RuntimeInstanceCreatedEvent {
+  public static class RuntimeInstanceCreatedEvent {
     private final RuntimeInstance instance;
   }
   
