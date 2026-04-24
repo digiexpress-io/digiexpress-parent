@@ -6,7 +6,7 @@ import { FsPanelOverviewProps } from './FsPanelOverviewProps';
 export interface OverviewRow {
   id: string;
   name: string;
-  type: Fs.Type;
+  type: Fs.BodyType;
   configOptions: Fs.ConfigOption[];
   lastDate: string;
   isChild: boolean;
@@ -17,7 +17,7 @@ export interface OwnerState {
   rows: OverviewRow[];
 }
 
-function getLastDate(changes: Fs.DirentAsset['changes']): string {
+function getLastDate(changes: Fs.PropsBase['changes']): string {
   if (changes.length === 0) {
     return '—';
   }
@@ -41,8 +41,8 @@ export const useOwnerState = (_props: FsPanelOverviewProps): OwnerState => {
         id: dirent.id,
         name: dirent.name,
         type: dirent.type,
-        configOptions: asset ? (asset.configOptions as Fs.ConfigOption[]) : [],
-        lastDate: asset ? getLastDate(asset.changes) : '—',
+        configOptions: asset ? (asset.props?.configOptions as Fs.ConfigOption[]) : [],
+        lastDate: asset?.props ? getLastDate(asset.props.changes) : '—',
         isChild: false,
       });
       dirent.children.forEach(child => {
@@ -51,8 +51,8 @@ export const useOwnerState = (_props: FsPanelOverviewProps): OwnerState => {
           id: child.id,
           name: child.name,
           type: child.type,
-          configOptions: childAsset ? (childAsset.configOptions as Fs.ConfigOption[]) : [],
-          lastDate: childAsset ? getLastDate(childAsset.changes) : '—',
+          configOptions: childAsset ? (childAsset.props?.configOptions as Fs.ConfigOption[]) : [],
+          lastDate: childAsset?.props ? getLastDate(childAsset.props.changes) : '—',
           isChild: true,
         });
       });

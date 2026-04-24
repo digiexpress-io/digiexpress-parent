@@ -22,7 +22,7 @@ export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undef
   const { isDarkMode } = useFsNav();
   const [isExpanded, setIsExpanded] = React.useState(false);
 
-  const parentArticle = props.parentFolder?.type === 'article' ? props.parentFolder : undefined;
+  const parentArticle = props.parentFolder?.type === 'ARTICLE' ? props.parentFolder : undefined;
   const parentArticlePath = parentArticle ? getParentArticlePath(props.pathToTopParent, parentArticle) : undefined;
 
   function onToggleExpanded() {

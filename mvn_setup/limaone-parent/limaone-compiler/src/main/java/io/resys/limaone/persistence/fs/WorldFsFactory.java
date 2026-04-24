@@ -38,6 +38,7 @@ import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.Locale;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Printout;
+import io.resys.limaone.model.PrintoutPage;
 import io.resys.limaone.model.PrintoutResource;
 import io.resys.thena.fs.entities.Entity;
 import io.resys.thena.fs.entities.Node;
@@ -157,61 +158,80 @@ public class WorldFsFactory {
       final var articleNode = worldState.getNodeAndBody(page.getArticle());
       final var articlePath = getPathAndName(articleNode);
 
+      worldState.putProps(node, n -> Props_ArticlePageBuilder.of(worldState, n));
       return NodePathAndName.of(articlePath.getPath() + "/" + articlePath.getName() + "/pages", name);
     }
+    
     case ARTICLE_LINK: {
       final ArticleLink link = worldState.getBodyOfType(node);
       final var name = link.getValue();
+      worldState.putProps(node, n -> Props_LinkBuilder.of(worldState, n));
       return NodePathAndName.of(path.orElse("links"), name);
     }
+    
+    case ARTICLE_WORKFLOW: {
+      final ArticleWorkflow workflow = worldState.getBodyOfType(node);
+      final var name = workflow.getValue();
+      worldState.putProps(node, n -> Props_ArticleWorkflowBuilder.of(worldState, n));
+      return NodePathAndName.of(path.orElse("workflows"), name);
+    }
+    
     case ARTICLE_TEMPLATE: {
       final ArticleTemplate template = worldState.getBodyOfType(node);
       final var name = template.getName();
       return NodePathAndName.of(path.orElse("templates"), name);
     }
-    case ARTICLE_WORKFLOW: {
-      final ArticleWorkflow workflow = worldState.getBodyOfType(node);
-      final var name = workflow.getValue();
-      return NodePathAndName.of(path.orElse("workflows"), name);
-    }
+    
     case LOCALE: {
       final Locale locale = worldState.getBodyOfType(node);
       final var name = locale.getValue();
+      worldState.putProps(node, n -> Props_LocaleBuilder.of(worldState, n));
       return NodePathAndName.of(path.orElse("locales"), name);
     }
+    
     case PRINTOUT: {
       final Printout printout = worldState.getBodyOfType(node);
       final var name = printout.getServiceName();
+      worldState.putProps(node, n -> Props_PrintoutBuilder.of(worldState, n));
       return NodePathAndName.of(path.orElse("printouts"), name);
     }
+    
     case PRINTOUT_PAGE: {
-      final Printout printout = worldState.getBodyOfType(node);
-      final var name = printout.getServiceName();
+      final PrintoutPage printout = worldState.getBodyOfType(node);
+      final var name = printout.getLocaleId();
+      worldState.putProps(node, n -> Props_PrintoutPageBuilder.of(worldState, n));
       return NodePathAndName.of(path.orElse("printout-templates"), name);
     }
-    case DECISION_TABLE: {
-      final DecisionTable decisionTable = worldState.getBodyOfType(node);    
-      final var name = decisionTable.getName();
-      return NodePathAndName.of(path.orElse("decision-table"), name);
-    }
-    case FLOW_TASK: {
-      final FlowTask flowTask = worldState.getBodyOfType(node); 
-      final var name = flowTask.getTaskName();
-      return NodePathAndName.of(path.orElse("flow-tasks"), name);
-    }
-    case FLOW: {
-      final Flow flow = worldState.getBodyOfType(node);
-      final var name = flow.getFlowName();
-      return NodePathAndName.of(path.orElse("flows"), name);
-    }
+    
     case PRINTOUT_RESOURCE: {
       final PrintoutResource printoutResource = worldState.getBodyOfType(node);
       final var name = printoutResource.getResourceName();
       return NodePathAndName.of(path.orElse("printout-resources"), name);
     }
+    
+    case DECISION_TABLE: {
+      final DecisionTable decisionTable = worldState.getBodyOfType(node);    
+      final var name = decisionTable.getName();
+      return NodePathAndName.of(path.orElse("decision-table"), name);
+    }
+    
+    case FLOW_TASK: {
+      final FlowTask flowTask = worldState.getBodyOfType(node); 
+      final var name = flowTask.getTaskName();
+      return NodePathAndName.of(path.orElse("flow-tasks"), name);
+    }
+    
+    case FLOW: {
+      final Flow flow = worldState.getBodyOfType(node);
+      final var name = flow.getFlowName();
+      worldState.putProps(node, n -> Props_FlowBuilder.of(worldState, n));
+      return NodePathAndName.of(path.orElse("flows"), name);
+    }
+
     case FOLDER: {
       return NodePathAndName.of(path.orElse(""), node.getValue().getNodeName());
     }
+    
     default: throw new IllegalArgumentException("Not implemented: " + node);
     }
   }

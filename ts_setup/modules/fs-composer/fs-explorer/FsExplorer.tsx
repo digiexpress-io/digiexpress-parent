@@ -55,13 +55,13 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
           </IconButton>
         )}
         {ownerState.isDarkMode ? (
-          <IconButton className={classes.iconDark} onClick={() => openCreateTab('folder', undefined)}>
+          <IconButton className={classes.iconDark} onClick={() => openCreateTab('FOLDER', undefined)}>
             <Badge className={classes.badgeDark} badgeContent={<FsIcon icon={FsIcons.Add} xsmall />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
               <FsIcon icon={FsIcons.Folder} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.newFolder' })} />
             </Badge>
           </IconButton>
         ) : (
-          <IconButton className={classes.iconLight} onClick={() => openCreateTab('folder', undefined)}>
+            <IconButton className={classes.iconLight} onClick={() => openCreateTab('FOLDER', undefined)}>
             <Badge className={classes.badgeLight} badgeContent={<FsIcon icon={FsIcons.Add} xsmall />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
               <FsIcon icon={FsIcons.Folder} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.newFolder' })} />
             </Badge>

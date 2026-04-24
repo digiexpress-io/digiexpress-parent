@@ -46,7 +46,7 @@ export const FsPanelOverview: React.FC<FsPanelOverviewProps> = (props) => {
               {ownerState.rows.map((row) => (
                 <div key={row.id} className={row.isChild ? classes.childRow : classes.row}>
                   {row.isChild && <FsIcon icon={FsIcons.ChildItem} className={classes.childIcon} small/>}
-                  {row.type === 'folder' && <FsIcon icon={FsIcons.Folder} className={classes.typeIcon} small/>}
+                  {row.type === 'FOLDER' && <FsIcon icon={FsIcons.Folder} className={classes.typeIcon} small />}
                   <Typography className={row.isChild ? classes.name : classes.parentName}>{row.name}</Typography>
                   <div className={classes.configOptionsCell}>
                     {row.configOptions.map((opt) => (

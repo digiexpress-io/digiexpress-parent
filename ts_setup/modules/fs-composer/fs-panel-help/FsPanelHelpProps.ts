@@ -3,7 +3,7 @@ import { Components } from "react-markdown";
 
 
 export interface FsPanelHelpProps {
-  dirent: Fs.DirentAsset | undefined;
+  dirent: Fs.DirentBase | undefined;
   remarkPlugins?: any[] | undefined;
   overrides?: Components;
 }

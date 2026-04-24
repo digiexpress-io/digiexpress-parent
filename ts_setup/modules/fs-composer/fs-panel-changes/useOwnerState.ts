@@ -19,9 +19,9 @@ export const useOwnerState = (_props: FsPanelChangesProps): OwnerState => {
 
   const changes = dirents
     .map(dirent => getDirent(dirent.id))
-    .filter(dirent => dirent && dirent.changes.length > 0)
+    .filter(dirent => dirent && dirent.props && dirent.props?.changes.length > 0)
     .map(dirent => {
-      const latest = dirent!.changes[dirent!.changes.length - 1];
+      const latest = dirent!.props!.changes[dirent!.props!.changes!.length - 1];
       return { id: dirent!.id, name: dirent!.id, status: latest.changeType };
     });
 

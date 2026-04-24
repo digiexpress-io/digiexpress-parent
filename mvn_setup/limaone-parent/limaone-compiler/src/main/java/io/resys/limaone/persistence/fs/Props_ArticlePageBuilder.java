@@ -20,30 +20,31 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
-import io.resys.limaone.fs.ImmutableArticleProps;
-import io.resys.limaone.fs.WorldFsProps.ArticleProps;
-import io.resys.limaone.model.Article;
+import io.resys.limaone.fs.ImmutableArticlePageProps;
+import io.resys.limaone.fs.WorldFsProps.ArticlePageProps;
+import io.resys.limaone.model.ArticlePage;
 import lombok.RequiredArgsConstructor;
 
-
-
 @RequiredArgsConstructor
-public class Props_ArticleBuilder {
+public class Props_ArticlePageBuilder {
+  
   private final WorldFsState currentState;
   private final NodeAndBody node;
   
-  
-  public ArticleProps build() {
-    final Article article = currentState.getBodyOfType(node);
-    return ImmutableArticleProps.builder()
+  public ArticlePageProps build() {
+    final ArticlePage articlePage = currentState.getBodyOfType(node);
+    
+    return ImmutableArticlePageProps.builder()
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)
-        .orderNumber(article.getOrder())
+        .articleId(articlePage.getArticle())
+        .localeCode(articlePage.getLocale())
         .build();
   }
   
-  public static ArticleProps of(WorldFsState currentState, NodeAndBody node) {
-    return new Props_ArticleBuilder(currentState, node).build();
+  public static ArticlePageProps of(WorldFsState curreState, NodeAndBody node) {
+    return new Props_ArticlePageBuilder(curreState, node).build();
   }
+
 }

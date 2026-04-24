@@ -34,7 +34,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
   const { dirent, level, parentPath, onToggle, onContextMenu, searchTerm } = props;
   const { isDarkMode, openAsset, registerDirentPath, activeDirent } = useFsNav();
   const { isChildError, getDirent, creatableTypes } = useFsDirent();
-  const direntProps = getDirent(dirent.id);
+  const direntProps = getDirent(dirent.id)?.props;
 
   const isChildren = !!(dirent.children && dirent.children.length > 0);
   const configOptions = (direntProps?.configOptions.length ?? 0) > 0;
@@ -72,7 +72,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
 
 
 
-function _sortChildren(children: Fs.DirentBase[], order: Fs.Type[]) {
+function _sortChildren(children: Fs.DirentBase[], order: Fs.BodyType[]) {
   return children.sort((a, b) => {
     const aIndex = order.indexOf(a.type);
     const bIndex = order.indexOf(b.type);
@@ -83,18 +83,18 @@ function _sortChildren(children: Fs.DirentBase[], order: Fs.Type[]) {
 
 function _getIconClassName(dirent: Fs.DirentBase): keyof FsDirentClasses {
   switch (dirent.type) {
-    case 'folder': return 'iconFolder';
-    case 'article': return 'iconArticle';
-    case 'service': return 'iconService';
-    case 'dialob': return 'iconDialob';
-    case 'flow': return 'iconFlow';
-    case 'link': return 'iconLink';
-    case 'language': return 'iconLanguage';
-    case 'printout': return 'iconPrintout';
-    case 'image': return 'iconImage';
-    case 'template': return 'iconTemplate';
-    case 'phone': return 'iconPhone';
-    case 'page': return 'iconPage';
+    case 'FOLDER': return 'iconFolder';
+    case 'ARTICLE': return 'iconArticle';
+    case 'ARTICLE_WORKFLOW': return 'iconService';
+    case 'DIALOB_FORM': return 'iconDialob';
+    case 'FLOW': return 'iconFlow';
+    case 'ARTICLE_LINK': return 'iconLink';
+    case 'LOCALE': return 'iconLanguage';
+    case 'PRINTOUT': return 'iconPrintout';
+    case 'PRINTOUT_PAGE': return 'iconImage';
+    case 'ARTICLE_TEMPLATE': return 'iconTemplate';
+    //case 'ARTICLE_PAGE': return 'iconPhone';
+    case 'ARTICLE_PAGE': return 'iconPage';
     default: return 'iconFolder';
   }
 }

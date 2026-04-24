@@ -18,16 +18,16 @@ import { FsPropertiesTemplate } from './FsPropertiesTemplate';
 
 
 
-function renderTypeSpecificRows(direntProps: Fs.DirentAsset): React.ReactNode {
+function renderTypeSpecificRows(direntProps: Fs.DirentBase): React.ReactNode {
   switch (direntProps.type) {
-    case 'article': return null;
-    case 'service': return <FsPropertiesService direntProps={direntProps} />;
-    case 'dialob': return <FsPropertiesDialob direntProps={direntProps} />;
-    case 'language': return <FsPropertiesLanguage direntProps={direntProps} />;
-    case 'printout': return null;
-    case 'link': return <FsPropertiesLink direntProps={direntProps} />;
-    case 'phone': return <FsPropertiesPhone direntProps={direntProps} />;
-    case 'template': return <FsPropertiesTemplate direntProps={direntProps} />;
+    case 'ARTICLE': return null;
+    //case 'ARTICLE_WORKFLOW': return <FsPropertiesService direntProps={direntProps} />;
+    case 'DIALOB_FORM': return <FsPropertiesDialob direntProps={direntProps} />;
+    case 'LOCALE': return <FsPropertiesLanguage direntProps={direntProps} />;
+    case 'PRINTOUT': return null;
+    case 'ARTICLE_LINK': return <FsPropertiesLink direntProps={direntProps as Fs.LinkProps} />;
+    // case 'ARTICLE_LINK': return <FsPropertiesPhone direntProps={direntProps} />;
+    case 'ARTICLE_TEMPLATE': return <FsPropertiesTemplate direntProps={direntProps} />;
     default: return null;
   }
 }
@@ -101,11 +101,11 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
 
         {renderTypeSpecificRows(direntProps)}
 
-        {direntProps.type === 'article' && (
+        {direntProps.type === 'ARTICLE' && (
           <FsPropertiesArticle direntProps={direntProps} children={direntProps.children} />
         )}
 
-        {direntProps.type === 'printout' && (
+        {direntProps.type === 'PRINTOUT' && (
           <FsPropertiesPrintout direntProps={direntProps} children={direntProps.children} />
         )}
 

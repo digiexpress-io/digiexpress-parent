@@ -20,30 +20,29 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
-import io.resys.limaone.fs.ImmutableArticleProps;
-import io.resys.limaone.fs.WorldFsProps.ArticleProps;
-import io.resys.limaone.model.Article;
+import io.resys.limaone.fs.ImmutableFlowProps;
+import io.resys.limaone.fs.WorldFsProps.FlowProps;
+import io.resys.limaone.model.Flow;
 import lombok.RequiredArgsConstructor;
 
-
-
 @RequiredArgsConstructor
-public class Props_ArticleBuilder {
+public class Props_FlowBuilder {
   private final WorldFsState currentState;
   private final NodeAndBody node;
   
-  
-  public ArticleProps build() {
-    final Article article = currentState.getBodyOfType(node);
-    return ImmutableArticleProps.builder()
+  public FlowProps build() {
+    final Flow flow = currentState.getBodyOfType(node);
+    
+    return ImmutableFlowProps.builder()
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)
-        .orderNumber(article.getOrder())
+        .name(flow.getFlowName())
         .build();
   }
   
-  public static ArticleProps of(WorldFsState currentState, NodeAndBody node) {
-    return new Props_ArticleBuilder(currentState, node).build();
+  public static FlowProps of(WorldFsState currentState,NodeAndBody node) {
+    return new Props_FlowBuilder(currentState, node).build();
   }
+
 }

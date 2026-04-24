@@ -38,7 +38,7 @@ export function useOwnerState(_props: FsTabProps): OwnerState {
     isActive: activeTabIndex === index,
     isFirst: index === 0,
     isLast: index === openTabs.length - 1,
-    isError: tab.type === 'edit' ? (getDirent(tab.dirent.id)?.errors.length ?? 0) > 0 : false,
+    isError: tab.type === 'edit' ? (getDirent(tab.dirent.id)?.props?.errors.length ?? 0) > 0 : false,
   }));
 
 

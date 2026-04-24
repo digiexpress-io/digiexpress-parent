@@ -3,7 +3,7 @@ import { Fs } from "@dxs-ts/fs-api";
 
 
 export interface FsPanelPropertiesProps {
-  dirent: Fs.DirentAsset | undefined;
+  dirent: Fs.DirentBase | undefined;
 }
 
 

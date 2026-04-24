@@ -46,14 +46,14 @@ export const DirentDecorator = (props: { dirent: Fs.DirentBase, children: React.
   const { dirent, children } = props;
   const direntEntry = getDirent(dirent.id);
 
-  if ((direntEntry?.errors.length ?? 0) > 0) {
+  if ((direntEntry?.props?.errors.length ?? 0) > 0) {
     return (
       <Box display='flex' alignItems='center' sx={{ color: isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight }}>
         {children}
       </Box>
     );
   }
-  if (direntEntry?.reference) {
+  if (direntEntry?.props?.reference) {
     return (
       <Badge variant="dot"
         anchorOrigin={{
@@ -79,32 +79,32 @@ export const DirentDecorator = (props: { dirent: Fs.DirentBase, children: React.
 
 export const DirentIcon = (props: { dirent: Fs.DirentBase }) => {
   const { dirent } = props;
-  const { getDirent } = useFsDirent();
-  const expanded = getDirent(dirent.id)?.expanded;
+  const { isExpanded } = useFsNav();
+  const expanded = isExpanded(dirent.id);
   switch (dirent.type) {
-    case 'folder':
+    case 'FOLDER':
       return expanded ? <FsIcons.FolderOpen /> : <FsIcons.FolderClosed />;
-    case 'article':
+    case 'ARTICLE':
       return <FsIcons.Article />;
-    case 'service':
+    case 'ARTICLE_WORKFLOW':
       return expanded ? <FsIcons.SettingsOutlined /> : <FsIcons.Settings />;
-    case 'dialob':
+    case 'DIALOB_FORM':
       return <FsIcons.Form />;
-    case 'flow':
+    case 'FLOW':
       return <FsIcons.Flow />;
-    case 'link':
+    case 'ARTICLE_LINK':
       return <FsIcons.Link />;
-    case 'language':
+    case 'LOCALE':
       return <FsIcons.Language />;
-    case 'printout':
+    case 'PRINTOUT':
       return <FsIcons.Print />;
-    case 'image':
+    case 'PRINTOUT_RESOURCE':
       return <FsIcons.Image />;
-    case 'template':
+    case 'PRINTOUT_PAGE':
       return <FsIcons.Pdf />;
-    case 'phone':
+    case 'UNKNOWN':
       return <FsIcons.Phone />;
-    case 'page':
+    case 'ARTICLE_PAGE':
       return <FsIcons.Page />;
     default:
       return <FsIcons.Article />;
@@ -121,7 +121,7 @@ interface FsDirentNameProps {
 export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   const { getDirent } = useFsDirent();
   const classes = useUtilityClasses(props.isDarkTheme);
-  const description = getDirent(props.dirent.id)?.description;
+  const description = getDirent(props.dirent.id)?.props?.description;
   return (
     <ListItemText className={classes.direntName} primary={<Typography variant='subtitle2'
       sx={{

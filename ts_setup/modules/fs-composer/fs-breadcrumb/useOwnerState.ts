@@ -38,7 +38,7 @@ export function useOwnerState(_props: FsBreadcrumbProps): OwnerState {
   const assetName = getAssetName(activeTab);
   const assetPath = getAssetPath(activeTab);
   const activeDirentEntry = activeDirent ? getDirent(activeDirent.id) : undefined;
-  const isError = (activeDirentEntry?.errors.length ?? 0) > 0;
+  const isError = (activeDirentEntry?.props?.errors.length ?? 0) > 0;
 
   return {
     assetDirent: activeDirent,

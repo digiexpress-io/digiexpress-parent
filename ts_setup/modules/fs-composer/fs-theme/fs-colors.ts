@@ -78,33 +78,34 @@ export const FsColors = {
 // =============================================================================
 
 
-export function getDirentColor(direntType: Fs.Type, isDarkTheme: boolean) {
+export function getDirentColor(direntType: Fs.BodyType, isDarkTheme: boolean) {
   const colors = isDarkTheme ? FsColors.direntTypes.dark : FsColors.direntTypes.light;
 
   switch (direntType) {
-    case 'folder':
+    case 'FOLDER':
       return colors.folder;
-    case 'article':
+    case 'ARTICLE':
       return colors.content;
-    case 'service':
+    case 'ARTICLE_WORKFLOW':
       return colors.service;
-    case 'dialob':
+    case 'DIALOB_FORM':
       return colors.form;
-    case 'flow':
+    case 'FLOW':
       return colors.flow;
-    case 'link':
+    case 'ARTICLE_LINK':
       return colors.link;
-    case 'phone':
+    /* case 'UNKNOWN':
       return colors.phone;
-    case 'page':
+    */
+    case 'ARTICLE_PAGE':
       return colors.page;
-    case 'language':
+    case 'LOCALE':
       return colors.language;
-    case 'printout':
+    case 'PRINTOUT':
       return colors.printout;
-    case 'template':
+    case 'ARTICLE_TEMPLATE':
       return colors.document;
-    case 'image':
+    case 'UNKNOWN':
       return colors.asset;
     default:
       return isDarkTheme ? FsColors.dark.text : FsColors.light.text;

@@ -45,7 +45,8 @@ export interface OwnerState {
 
 export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   const { isDarkMode, setIsDarkMode, openAsset } = useFsNav();
-  const { getDirent, dirents, collapseAll, setExpanded, setExpandedBatch } = useFsDirent();
+  const { getDirent, dirents } = useFsDirent();
+  const { collapseAll, setExpanded, setExpandedBatch, isExpanded } = useFsNav();
   const { search } = useFsSearch();
   const debounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -96,8 +97,8 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   }
 
   const isAnyDirentExpanded = dirents.some(dirent =>
-    getDirent(dirent.id)?.expanded ||
-    (dirent.children && dirent.children.some(child => getDirent(child.id)?.expanded))
+    isExpanded(dirent.id) ||
+    (dirent.children && dirent.children.some(child => isExpanded(child.id)))
   );
 
   return {
@@ -127,7 +128,7 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     collapseAll,
     toggleDirent: (direntId: string) => {
 
-      const current = getDirent(direntId)!.expanded;
+      const current = isExpanded(direntId);
       setExpanded(direntId, !current);
     },
   }

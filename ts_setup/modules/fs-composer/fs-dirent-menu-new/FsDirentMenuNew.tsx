@@ -7,19 +7,25 @@ import { useOwnerState } from './useOwnerState';
 import { useUtilityClasses, FsDirentMenuNewRoot } from './useUtilityClasses';
 import { FsIcon, FsIcons } from '../fs-theme';
 
-const DIRENT_TYPE_ICONS: Record<Fs.Type, React.ElementType<SvgIconProps>> = {
-  folder: FsIcons.FolderClosed,
-  article: FsIcons.Article,
-  service: FsIcons.Settings,
-  dialob: FsIcons.Form,
-  flow: FsIcons.Flow,
-  link: FsIcons.Link,
-  language: FsIcons.Language,
-  printout: FsIcons.Print,
-  image: FsIcons.Image,
-  template: FsIcons.Pdf,
-  phone: FsIcons.Phone,
-  page: FsIcons.Form
+const DIRENT_TYPE_ICONS: Record<Fs.BodyType, React.ElementType<SvgIconProps>> = {
+  FOLDER: FsIcons.FolderClosed,
+  ARTICLE: FsIcons.Article,
+  ARTICLE_WORKFLOW: FsIcons.Settings,
+  DIALOB_FORM: FsIcons.Form,
+  FLOW: FsIcons.Flow,
+  ARTICLE_LINK: FsIcons.Link,
+  LOCALE: FsIcons.Language,
+  PRINTOUT: FsIcons.Print,
+  PRINTOUT_RESOURCE: FsIcons.Image,
+  ARTICLE_TEMPLATE: FsIcons.Pdf,
+  //: FsIcons.Phone,
+  ARTICLE_PAGE: FsIcons.Form,
+
+  FLOW_TASK: 'symbol',
+  DECISION_TABLE: 'symbol',
+  PRINTOUT_PAGE: 'symbol',
+  DEPLOYMENT: 'symbol',
+  UNKNOWN: 'symbol'
 };
 
 export const FsDirentMenuNew: React.FC<FsDirentMenuNewProps> = (props) => {
@@ -29,7 +35,7 @@ export const FsDirentMenuNew: React.FC<FsDirentMenuNewProps> = (props) => {
   const { openCreateTab } = useFsNav();
   const { creatableTypes } = useFsDirent();
 
-  function handleTypeClick(type: Fs.Type) {
+  function handleTypeClick(type: Fs.BodyType) {
     openCreateTab(type, props.dirent);
     props.onClose();
   }

@@ -36,7 +36,7 @@ export const FsPanelReferences: React.FC<FsPanelReferencesProps> = (props) => {
           <Box key={child.id}>
             <Typography variant="body2">{child.name}</Typography>
             <Typography variant="caption">
-              {intl.formatMessage({ id: 'fs.references.label.type' }, { childType: child.type })}{childProps?.reference && ` ${intl.formatMessage({ id: 'fs.references.label.refMarker' })}`}
+              {intl.formatMessage({ id: 'fs.references.label.type' }, { childType: child.type })}{childProps?.props?.reference && ` ${intl.formatMessage({ id: 'fs.references.label.refMarker' })}`}
             </Typography>
           </Box>
         );

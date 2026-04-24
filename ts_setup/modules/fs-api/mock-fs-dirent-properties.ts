@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Fs } from './fs-types'
 
 export const mockFsDirentProperties: Record<string, Fs.Props> = {

@@ -20,30 +20,39 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
-import io.resys.limaone.fs.ImmutableArticleProps;
-import io.resys.limaone.fs.WorldFsProps.ArticleProps;
-import io.resys.limaone.model.Article;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import io.resys.limaone.fs.ImmutableLinkProps;
+import io.resys.limaone.fs.WorldFsProps.LinkProps;
+import io.resys.limaone.model.ArticleLink;
+import io.resys.limaone.model.LocaleLabel;
 import lombok.RequiredArgsConstructor;
 
-
-
 @RequiredArgsConstructor
-public class Props_ArticleBuilder {
+public class Props_LinkBuilder {
   private final WorldFsState currentState;
   private final NodeAndBody node;
   
-  
-  public ArticleProps build() {
-    final Article article = currentState.getBodyOfType(node);
-    return ImmutableArticleProps.builder()
+  public LinkProps build() {
+    final ArticleLink link = currentState.getBodyOfType(node);
+    final List<LocaleLabel> labels = link.getLabels();
+    
+    return ImmutableLinkProps.builder()
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)
-        .orderNumber(article.getOrder())
+        .intlValues(labels.stream()
+            .collect(Collectors.toMap(
+                l -> l.getLocale(), 
+                l -> l.getLabelValue()
+              )))
+        .urlValue(link.getValue())
         .build();
   }
   
-  public static ArticleProps of(WorldFsState currentState, NodeAndBody node) {
-    return new Props_ArticleBuilder(currentState, node).build();
+  public static LinkProps of(WorldFsState currentState, NodeAndBody node) {
+    return new Props_LinkBuilder(currentState, node).build();
   }
+  
 }

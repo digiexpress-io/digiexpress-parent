@@ -10,7 +10,7 @@ function getFolderLocationPath(pathToTopParent: string | undefined, parentFolder
   if (!parentFolder) {
     return '';
   }
-  if (parentFolder.type === 'folder') {
+  if (parentFolder.type === 'FOLDER') {
     return pathToTopParent || parentFolder.name;
   }
   // parentFolder is a non-folder dirent — strip its name from the path to get the containing folder

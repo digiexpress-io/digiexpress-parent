@@ -1,6 +1,6 @@
 import { Fs } from "@dxs-ts/fs-api";
 
 export interface FsDirentMenuNewProps {
-  dirent: Fs.DirentAsset | undefined;
+  dirent: Fs.DirentBase | undefined;
   onClose: () => void;
 }

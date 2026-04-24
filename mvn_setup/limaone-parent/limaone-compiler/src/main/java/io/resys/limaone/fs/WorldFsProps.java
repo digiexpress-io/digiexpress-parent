@@ -34,8 +34,6 @@ import jakarta.annotation.Nullable;
 public interface WorldFsProps {
   String getId();
   BodyType getType();
-  Boolean getExpanded();
-  Boolean getReference();
   Boolean getLocked();
   
   @Nullable
@@ -56,10 +54,33 @@ public interface WorldFsProps {
 
   @Value.Immutable
   interface ArticleProps extends WorldFsProps {
-
     Integer getOrderNumber();
   }
+  
+  @Value.Immutable
+  interface ArticlePageProps extends WorldFsProps {
+    String getLocaleCode();
+    String getArticleId();
+    
+    @Nullable 
+    String getContent();
+  }
 
+  @Value.Immutable
+  interface LinkProps extends WorldFsProps {
+    String getUrlValue();
+    Map<String, String> getIntlValues();
+  }
+  
+  interface TemplateProps extends WorldFsProps {
+    String getPrintoutServiceId();
+    String getLocaleId();
+    
+    @Nullable 
+    String getContent();
+  }
+  
+  @Value.Immutable
   interface ServiceProps extends WorldFsProps {
 
     String getServiceName();
@@ -85,6 +106,7 @@ public interface WorldFsProps {
     List<String> getVersionTags();
   }
 
+  @Value.Immutable
   interface FlowProps extends WorldFsProps {
     String getName();
     
@@ -92,39 +114,30 @@ public interface WorldFsProps {
     String getContent();
   }
 
+  @Value.Immutable
   interface LanguageProps extends WorldFsProps {
     String getLocaleCode();
   }
-
-  interface PageProps extends WorldFsProps {
-    String getLocaleCode();
-    String getArticleId();
-    
-    @Nullable 
-    String getContent();
-  }
-
+  
+  @Value.Immutable
   interface PrintoutProps extends WorldFsProps {
     String getPrintoutServiceName();
     String getOrchestratorName();
     Map<String, String> getIntlValues();
   }
+  
+  @Value.Immutable
+  interface PrintoutPageProps extends WorldFsProps {
+    String getContent(); // the markdown definition
+
+    String getLocaleId();
+    String getServiceId();
+    List<String> getTemplateIds();
+  }
+  
 
   interface ImageProps extends WorldFsProps {
 
-  }
-
-  interface TemplateProps extends WorldFsProps {
-    String getPrintoutServiceId();
-    String getLocaleId();
-    
-    @Nullable 
-    String getContent();
-  }
-
-  interface LinkProps extends WorldFsProps {
-    String getUrlValue();
-    Map<String, String> getIntlValues();
   }
 
   interface PhoneProps extends WorldFsProps {

@@ -9,6 +9,7 @@ export declare namespace Fs {
     type: BodyType;
     fullPath: string;
     children: DirentBase[];
+    props: PropsBase | undefined;
   }
 
   export interface PropsBase {
@@ -40,14 +41,13 @@ export declare namespace Fs {
     phone: PhoneProps;
   }
 
-
   export type BodyType =
     | 'LOCALE'
     | 'ARTICLE_LINK'
     | 'ARTICLE'
     | 'ARTICLE_WORKFLOW'
     | 'ARTICLE_PAGE'
-    | 'ARTICLE_TEMPLATE'
+    | 'ARTICLE_TEMPLATE' // confusion with PRINTOUT_TEMPLATE
     | 'FLOW'
     | 'FLOW_TASK'
     | 'DECISION_TABLE'
@@ -58,9 +58,10 @@ export declare namespace Fs {
     | 'DEPLOYMENT'
     | 'FOLDER'
     | 'UNKNOWN';
+
   export type Type = keyof PropsMap;
   export type Props = PropsMap[Type];
-  export type DirentAsset = DirentBase & Props;
+
 
   export type Folder = DirentBase & FolderProps;
   export type Article = DirentBase & ArticleProps;
@@ -85,7 +86,7 @@ export declare namespace Fs {
   }
 
   export interface ServiceProps extends PropsBase {
-    type: 'SERVICE';
+    type: 'ARTICLE_WORKFLOW';
     serviceName: string;
     dialobFormName: string;
     dialobFormTag: string;
@@ -147,7 +148,7 @@ export declare namespace Fs {
   }
 
   export interface PhoneProps extends PropsBase {
-    type: 'phone';
+    type: 'ARTICLE_LINK';
     phoneValue: string;
     intlValues: Record<string, string>;
   }

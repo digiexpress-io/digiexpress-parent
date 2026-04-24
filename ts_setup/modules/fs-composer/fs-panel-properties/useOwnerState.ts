@@ -4,7 +4,7 @@ import { FsPanelPropertiesProps } from './FsPanelPropertiesProps';
 
 export interface OwnerState {
   isDarkMode: boolean;
-  direntProps: Fs.DirentAsset | undefined;
+  direntProps: Fs.DirentBase | undefined;
 }
 
 export const useOwnerState = (props: FsPanelPropertiesProps): OwnerState => {

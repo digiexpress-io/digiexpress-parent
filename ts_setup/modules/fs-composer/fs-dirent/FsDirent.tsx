@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Collapse, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
 
-import { useFsDirent } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-api';
 import { useUtilityClasses, FsDirentRoot } from './useUtilityClasses';
 import { FsIcons, FsIcon } from '../fs-theme';
 import { FsDirentProps } from './FsDirentProps';
@@ -13,8 +13,9 @@ import { ConfigOptionIcons, FsDirentName, DirentDecorator, DirentIcon } from './
 export const FsDirent: React.FC<FsDirentProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(ownerState.isDarkMode);
-  const { getDirent } = useFsDirent();
-  const expanded = getDirent(props.dirent.id)?.expanded ?? false;
+
+  const { isExpanded } = useFsNav();
+  const expanded = isExpanded(props.dirent.id) ?? false;
   const clickTimerRef = React.useRef<number | undefined>(undefined);
 
   function handleClick() {

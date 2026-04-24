@@ -75,7 +75,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconFolder`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getDirentColor('folder', isDarkTheme),
+      color: getDirentColor('FOLDER', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -84,7 +84,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconArticle`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getDirentColor('article', isDarkTheme),
+      color: getDirentColor('ARTICLE', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -93,7 +93,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconService`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getDirentColor('service', isDarkTheme),
+      color: getDirentColor('ARTICLE_WORKFLOW', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -102,7 +102,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconDialob`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getDirentColor('dialob', isDarkTheme),
+      color: getDirentColor('DIALOB_FORM', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -111,7 +111,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconFlow`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getDirentColor('flow', isDarkTheme),
+      color: getDirentColor('FLOW', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -120,7 +120,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconLink`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getDirentColor('link', isDarkTheme),
+      color: getDirentColor('ARTICLE_LINK', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -129,7 +129,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconLanguage`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getDirentColor('language', isDarkTheme),
+      color: getDirentColor('LOCALE', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -138,7 +138,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconPrintout`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getDirentColor('printout', isDarkTheme),
+      color: getDirentColor('PRINTOUT', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -147,7 +147,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconImage`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getDirentColor('image', isDarkTheme),
+      color: getDirentColor('PRINTOUT_RESOURCE', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -156,7 +156,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconTemplate`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getDirentColor('template', isDarkTheme),
+      color: getDirentColor('ARTICLE_TEMPLATE', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -165,7 +165,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconPhone`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getDirentColor('phone', isDarkTheme),
+      color: getDirentColor('UNKNOWN', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -174,7 +174,7 @@ export const FsDirentRoot = styled('div', {
     [`& .${MUI_NAME}-iconPage`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getDirentColor('page', isDarkTheme),
+      color: getDirentColor('ARTICLE_PAGE', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },

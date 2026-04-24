@@ -2,7 +2,7 @@ import { Fs } from "@dxs-ts/fs-api";
 
 
 export interface FsPanelErrorsProps {
-  dirent: Fs.DirentAsset | undefined;
+  dirent: Fs.DirentBase | undefined;
 }
 
 

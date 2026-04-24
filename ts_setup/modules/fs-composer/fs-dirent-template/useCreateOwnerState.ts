@@ -10,7 +10,7 @@ export interface CreateOwnerState {
 export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
   const { isDarkMode } = useFsNav();
 
-  const printoutServiceId = props.parentFolder?.type === 'printout' ? props.parentFolder.id : '';
+  const printoutServiceId = props.parentFolder?.type === 'ARTICLE_TEMPLATE' ? props.parentFolder.id : '';
 
   return ({ isDarkMode, parentFolder: props.parentFolder, printoutServiceId });
 };

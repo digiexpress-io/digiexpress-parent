@@ -20,30 +20,28 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
-import io.resys.limaone.fs.ImmutableArticleProps;
-import io.resys.limaone.fs.WorldFsProps.ArticleProps;
-import io.resys.limaone.model.Article;
+import io.resys.limaone.fs.ImmutableLanguageProps;
+import io.resys.limaone.fs.WorldFsProps.LanguageProps;
+import io.resys.limaone.model.Locale;
 import lombok.RequiredArgsConstructor;
 
-
-
 @RequiredArgsConstructor
-public class Props_ArticleBuilder {
+public class Props_LocaleBuilder {
   private final WorldFsState currentState;
   private final NodeAndBody node;
   
-  
-  public ArticleProps build() {
-    final Article article = currentState.getBodyOfType(node);
-    return ImmutableArticleProps.builder()
+  public LanguageProps build() {
+    final Locale locale = currentState.getBodyOfType(node);
+    return ImmutableLanguageProps.builder()
+        .localeCode(locale.getValue())
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)
-        .orderNumber(article.getOrder())
         .build();
   }
   
-  public static ArticleProps of(WorldFsState currentState, NodeAndBody node) {
-    return new Props_ArticleBuilder(currentState, node).build();
+  public static LanguageProps of(WorldFsState currentState, NodeAndBody node) {
+    return new Props_LocaleBuilder(currentState, node).build();
   }
+
 }

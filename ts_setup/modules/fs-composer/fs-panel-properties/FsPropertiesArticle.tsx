@@ -7,20 +7,21 @@ import { FsIcon, FsIcons } from '../fs-theme';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
-function getTypeIcon(type: Fs.Type): React.ElementType<SvgIconProps> {
+function getTypeIcon(type: Fs.BodyType): React.ElementType<SvgIconProps> {
   switch (type) {
-    case 'folder': return FsIcons.FolderClosed;
-    case 'article': return FsIcons.Article;
-    case 'service': return FsIcons.Settings;
-    case 'dialob': return FsIcons.Form;
-    case 'flow': return FsIcons.Flow;
-    case 'link': return FsIcons.Link;
-    case 'language': return FsIcons.Language;
-    case 'printout': return FsIcons.Print;
-    case 'image': return FsIcons.Image;
-    case 'template': return FsIcons.Pdf;
-    case 'phone': return FsIcons.Phone;
-    case 'page': return FsIcons.Page;
+    case 'FOLDER': return FsIcons.FolderClosed;
+    case 'DIALOB_FORM': return FsIcons.Form;
+    case 'FLOW': return FsIcons.Flow;
+    case 'ARTICLE_LINK': return FsIcons.Link;
+    case 'LOCALE': return FsIcons.Language;
+    case 'PRINTOUT': return FsIcons.Print;
+    case 'UNKNOWN': return FsIcons.Image;
+    case 'ARTICLE_TEMPLATE': return FsIcons.Pdf;
+    case 'ARTICLE_PAGE': return FsIcons.Page;
+    case 'ARTICLE': return FsIcons.Article;
+    case 'ARTICLE_WORKFLOW': return FsIcons.Settings;
+
+    //case '': return FsIcons.Phone;
     default: return FsIcons.Article;
   }
 }

@@ -37,7 +37,7 @@ public class WorldFs_1_Test extends DbSupport {
   public WorldFs_1_Test() {
     super();
     this.tenantName = "assets";
-    this.createInit = true;
+    this.createInit = false;
   }
 
   @Test

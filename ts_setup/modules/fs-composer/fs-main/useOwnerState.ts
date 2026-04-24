@@ -18,7 +18,7 @@ export interface PanelButton {
 
 export interface OwnerState {
   isDarkMode: boolean;
-  activeDirent: Fs.DirentAsset | undefined;
+  activeDirent: Fs.DirentBase | undefined;
   isRightPanelOpen: boolean;
   selectedView: Fs.SecondaryView | undefined;
   activeTabIndex: number;
@@ -43,7 +43,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
 
   React.useEffect(() => {
     if (activeDirent) {
-      setSelectedView(activeDirent.type === 'page' || activeDirent.type === 'flow' || activeDirent.type === 'template' ? 'preview' : 'properties');
+      setSelectedView(activeDirent.type === 'ARTICLE_PAGE' || activeDirent.type === 'FLOW' || activeDirent.type === 'ARTICLE_TEMPLATE' ? 'preview' : 'properties');
     }
   }, [activeDirent?.id]);
 
