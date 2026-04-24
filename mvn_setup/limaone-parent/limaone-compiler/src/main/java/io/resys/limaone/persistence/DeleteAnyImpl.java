@@ -68,6 +68,9 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
       case FLOW_TASK -> new BodyType[] { BodyType.FLOW_TASK };
       case DECISION_TABLE -> new BodyType[] { BodyType.DECISION_TABLE };
       case DEPLOYMENT -> new BodyType[] { BodyType.DEPLOYMENT };
+      case PRINTOUT -> new BodyType[] { BodyType.PRINTOUT, BodyType.PRINTOUT_PAGE };
+      case PRINTOUT_PAGE -> new BodyType[] { BodyType.PRINTOUT_PAGE, BodyType.PRINTOUT_RESOURCE };
+      case PRINTOUT_RESOURCE -> new BodyType[] { BodyType.PRINTOUT_RESOURCE };
       default -> new BodyType[] { };
     };
     
@@ -158,6 +161,29 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
         }
         yield model.getBody();
       }
+      case PRINTOUT -> {
+        final var model = world.getPrintouts().get(props.getId());
+        if(model == null) {
+          throw new AuthoringException(props, "Printout with id: '" + props.getId() + "' not found!");
+        }
+        sanitizePrintout(world, props.getId());
+        yield model.getBody();
+      }
+      case PRINTOUT_PAGE -> {
+        final var model = world.getPrintoutPages().get(props.getId());
+        if(model == null) {
+          throw new AuthoringException(props, "PrintoutPage with id: '" + props.getId() + "' not found!");
+        }
+        sanitizePrintoutPage(world, props.getId());
+        yield model.getBody();
+      }
+      case PRINTOUT_RESOURCE -> {
+        final var model = world.getPrintoutResources().get(props.getId());
+        if(model == null) {
+          throw new AuthoringException(props, "PrintoutResource with id: '" + props.getId() + "' not found!");
+        }
+        yield model.getBody();
+      }
       default -> throw new AuthoringException(props, "Unexpected value: " + props.getBodyType());
     };
   }
@@ -190,6 +216,24 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
     }
   }
   
+  private void sanitizePrintout(ModelWorld world, String printoutId) {
+    final var usedInPages = world.getPrintoutPages().values().stream()
+        .filter(page -> page.getBody().getServiceId().equals(printoutId))
+        .findFirst();
+    if(usedInPages.isPresent()) {
+      throw new AuthoringException(props, "Printout '" + printoutId + "' has printout page: '" + usedInPages.get().getId() + "'!");
+    }
+  }
+
+  private void sanitizePrintoutPage(ModelWorld world, String pageId) {
+    final var usedInResources = world.getPrintoutResources().values().stream()
+        .filter(resource -> resource.getBody().getTemplateIds().contains(pageId))
+        .findFirst();
+    if(usedInResources.isPresent()) {
+      throw new AuthoringException(props, "PrintoutPage '" + pageId + "' is referenced in printout resource: '" + usedInResources.get().getId() + "'!");
+    }
+  }
+
   private void sanitizeArticle(ModelWorld world, String articleId) {
     // Check if article has pages
     final var usedInPages = world.getArticlePages().values().stream()

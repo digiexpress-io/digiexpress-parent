@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -99,6 +100,14 @@ public interface Flow_AST extends Simple_AST, Serializable {
     MappingStatement getMapping();
     default StatementType getType() { return StatementType.BODY_RETURNS; }
   }
+  interface FormStatement extends BodyStatement {
+    String getFormRefInputName();
+    String getReturnsCode();
+    @JsonIgnore Class<?> getCompiledClass();
+    Map<String, String> getOutputFields();
+    default StatementType getType() { return StatementType.BODY_FORM; }
+    default boolean isCollection() { return false; }
+  }
   interface SwitchStatement extends NextStatement, BodyStatement {
     List<CaseStatement> getCases();
     MappingStatement getMapping();
@@ -159,6 +168,7 @@ public interface Flow_AST extends Simple_AST, Serializable {
     BODY_SWITCH,
     BODY_SWITCH_CASE,
     BODY_RETURNS,
+    BODY_FORM,
 
     MAPPING,
 

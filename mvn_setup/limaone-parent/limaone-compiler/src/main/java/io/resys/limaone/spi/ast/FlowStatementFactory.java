@@ -32,6 +32,7 @@ import io.resys.limaone.ast.Flow_AST.DecisionTableStatement;
 import io.resys.limaone.ast.Flow_AST.EmptyBodyStatement;
 import io.resys.limaone.ast.Flow_AST.EndStatement;
 import io.resys.limaone.ast.Flow_AST.FlowTaskStatement;
+import io.resys.limaone.ast.Flow_AST.FormStatement;
 import io.resys.limaone.ast.Flow_AST.InputsStatement;
 import io.resys.limaone.ast.Flow_AST.ManyTasksStatement;
 import io.resys.limaone.ast.Flow_AST.MappingStatement;
@@ -174,6 +175,25 @@ public class FlowStatementFactory {
       super();
       this.parameters = Collections.unmodifiableList(parameters);
       this.next = next;
+    }
+  }
+
+  @Getter
+  public static class ImmutableFormStatement implements FormStatement {
+    private static final long serialVersionUID = 4827361509283746150L;
+    private final String formRefInputName;
+    private final String returnsCode;
+    private final Class<?> compiledClass;
+    private final Map<String, String> outputFields;
+    private final String taskId;
+    
+    public ImmutableFormStatement(String formRefInputName, String returnsCode, Class<?> compiledClass, Map<String, String> outputFields, String taskId) {
+      super();
+      this.formRefInputName = formRefInputName;
+      this.returnsCode = returnsCode;
+      this.compiledClass = compiledClass;
+      this.outputFields = Collections.unmodifiableMap(outputFields);
+      this.taskId = taskId;
     }
   }
 

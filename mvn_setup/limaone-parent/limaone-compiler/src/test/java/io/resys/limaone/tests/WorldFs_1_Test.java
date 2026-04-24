@@ -77,16 +77,26 @@ public class WorldFs_1_Test extends DbSupport {
       .props(props -> props.articleId(article1.getId()).locale(locale2.getId()).content("# Finnish content"))
       .buildSync();
     
+    final var template1 = authoring.newModel()
+      .newArticleTemplate()
+      .props(props -> props.name("Template1").content("#Heading1").description("Very good template1").type("type"))
+      .buildSync();
     
+    final var printout1 = authoring.newModel()
+        .newPrintout()
+        .props(props -> props.serviceName("Printout1").orchestratorName("PrintoutFlow"))
+        .buildSync();
+      
     final var link1 = authoring.newModel()
         .newArticleLink().props(props -> props.type("internal").value("www.example.com")
         .addLabels(ImmutableLocaleLabel.builder()
             .locale(locale1.getId()).labelValue("click me")
             .build())
+        .addArticles(article1.getId())
       ).buildSync();
     
     final var workflow1 = authoring.newModel()
-        .newArticleWorkflow().props(props -> props.value("Form1")
+        .newArticleWorkflow().props(props -> props.value("Workflow1")
           .formName("form1").formTag("v1").flowName("flow1").formId("external-form-id")
           .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("firstForm").build())
           .build()

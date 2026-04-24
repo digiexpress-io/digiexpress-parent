@@ -115,8 +115,12 @@ public interface Authoring {
     ModifyLocale modifyLocale();
     ModifyArticlePage modifyArticlePage();
     ModifyArticleLink modifyArticleLink();
-    ModifyArticleWorkflow modifyArticleWorkflow();  
-    ModifyArticleTemplate modifyArticleTemplate();  
+    ModifyArticleWorkflow modifyArticleWorkflow();
+    ModifyArticleTemplate modifyArticleTemplate();
+
+    ModifyPrintout modifyPrintout();
+    ModifyPrintoutPage modifyPrintoutPage();
+    ModifyPrintoutResource modifyPrintoutResource();
   }
   
   interface NewModel {

@@ -45,7 +45,14 @@ public interface Flow_CST extends Serializable {
     @Nullable YamlTaskBody getDecisionTable();
     @Nullable YamlTaskBody getService();
     @Nullable YamlTaskBody getReturns();
+    @Nullable YamlFormBody getForm();
     Map<String, YamlSwitch> getSwitch();
+  }
+
+  interface YamlFormBody extends Yaml {
+    Yaml getRef();
+    String getReturnsCode();
+    int getReturnsStartLine();
   }
   
   interface YamlTaskBody extends Yaml {

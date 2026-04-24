@@ -35,6 +35,7 @@ import io.resys.limaone.ast.Flow_AST.DecisionTableStatement;
 import io.resys.limaone.ast.Flow_AST.EmptyBodyStatement;
 import io.resys.limaone.ast.Flow_AST.EndStatement;
 import io.resys.limaone.ast.Flow_AST.FlowTaskStatement;
+import io.resys.limaone.ast.Flow_AST.FormStatement;
 import io.resys.limaone.ast.Flow_AST.InputsStatement;
 import io.resys.limaone.ast.Flow_AST.ManyTasksStatement;
 import io.resys.limaone.ast.Flow_AST.MappingStatement;
@@ -44,6 +45,8 @@ import io.resys.limaone.ast.Flow_AST.ReturnsStatement;
 import io.resys.limaone.ast.Flow_AST.StartStatement;
 import io.resys.limaone.ast.Flow_AST.StatementType;
 import io.resys.limaone.ast.Flow_AST.SwitchStatement;
+import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType1;
+import io.resys.limaone.program.ImmutableFlowTaskResult;
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
 import io.resys.limaone.program.FlowProgram.FlowResult;
 import io.resys.limaone.program.FlowProgram.FlowResultLog;
@@ -231,6 +234,38 @@ public class FlowProgramExecutor {
     }
     return REACHED_END;
   }
+
+  @SuppressWarnings("unchecked")
+  public ExecutorResult visitFormStatement(FormStatement statement, ExecutorProps ExecutorProps) {
+    final LocalDateTime start = LocalDateTime.now();
+    try {
+      final var refName = statement.getFormRefInputName();
+      final var resolved = assignment.resolveParameter(refName);
+      if(resolved == null) {
+        throw new StatementException(
+            "Form step '" + statement.getTaskId() + "': ref '" + refName + "' could not be resolved from inputs or prior task outputs",
+            statement);
+      }
+      final var questionnaireId = (String) resolved;
+      final var formInstance = runtime.getProperties().getFormDb()
+          .withTenant().formInstanceQuery().getOneSync(questionnaireId);
+
+      final var instance = statement.getCompiledClass().getConstructors()[0].newInstance();
+      final var executor = (ServiceExecutorType1<Object, Serializable>) instance;
+      final var result = executor.execute(formInstance);
+
+      final var inputs = Collections.<String, Serializable>singletonMap(
+          statement.getFormRefInputName(), questionnaireId);
+      final var flowTaskResult = ImmutableFlowTaskResult.builder().value(result).build();
+      final var newFrame = stack.newFrame(statement, inputs, flowTaskResult, start);
+      assignment.assignFromTask(newFrame);
+    } catch(Exception e) {
+      throw new StatementException(
+          "Form step '" + statement.getTaskId() + "' failed: " + e.getMessage(),
+          statement, e);
+    }
+    return REACHED_END;
+  }
   
 
   public ExecutorResult visitSwitchStatement(SwitchStatement statement, ExecutorProps ExecutorProps) {
@@ -321,6 +356,8 @@ public class FlowProgramExecutor {
         return visitFlowTaskStatement((FlowTaskStatement) statement, props);
       case BODY_RETURNS:
         return visitReturnsStatement((ReturnsStatement) statement, props);
+      case BODY_FORM:
+        return visitFormStatement((FormStatement) statement, props);
       case BODY_SWITCH:
         return visitSwitchStatement((SwitchStatement) statement, props);
       case BODY_SWITCH_CASE:

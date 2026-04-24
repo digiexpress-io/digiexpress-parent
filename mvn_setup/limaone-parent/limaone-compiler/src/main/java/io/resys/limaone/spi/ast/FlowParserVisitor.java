@@ -64,6 +64,7 @@ import io.resys.limaone.spi.ast.FlowStatementFactory.ImmutableDecisionTableState
 import io.resys.limaone.spi.ast.FlowStatementFactory.ImmutableEmptyBodyStatement;
 import io.resys.limaone.spi.ast.FlowStatementFactory.ImmutableEndStatement;
 import io.resys.limaone.spi.ast.FlowStatementFactory.ImmutableFlowTaskStatement;
+import io.resys.limaone.spi.ast.FlowStatementFactory.ImmutableFormStatement;
 import io.resys.limaone.spi.ast.FlowStatementFactory.ImmutableInputsStatement;
 import io.resys.limaone.spi.ast.FlowStatementFactory.ImmutableManyTasksStatement;
 import io.resys.limaone.spi.ast.FlowStatementFactory.ImmutableMappingStatement;
@@ -195,8 +196,17 @@ public class FlowParserVisitor {
 
   private BodyStatement visitStepBody(YamlTask task) {
     final var taskId = YamlMapper.getStringValue(task.getId());
-    if(task.getDecisionTable() == null && task.getService() == null && task.getReturns() == null) {
+    if(task.getDecisionTable() == null && task.getService() == null && task.getReturns() == null && task.getForm() == null) {
       return new ImmutableEmptyBodyStatement(taskId);
+    }
+    
+    if(task.getForm() != null) {
+      final var formBody = task.getForm();
+      final var refInputName = YamlMapper.getStringValue(formBody.getRef());
+      final var returnsCode = formBody.getReturnsCode();
+      final var result = FormStepCompiler.compile(props.getGroovy(), taskId, returnsCode, formBody.getReturnsStartLine());
+      this.errors.addAll(result.getErrors());
+      return new ImmutableFormStatement(refInputName, returnsCode, result.getCompiledClass(), result.getOutputFields(), taskId);
     }
     
     final var collection = task.getReturns() != null ? 

@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.resys.limaone.ast.Flow_CST.YamlFormBody;
 import io.resys.limaone.ast.Flow_CST.YamlTaskBody;
 import io.resys.limaone.ast.Flow_CST.YamlInput;
 import io.resys.limaone.ast.Flow_CST.YamlFlow;
@@ -51,6 +52,7 @@ public class MutableYamlFlow extends MutableYaml implements YamlFlow {
   public static final String KEY_REF = "ref";
   public static final String KEY_COLLECTION = "collection";
   public static final String KEY_SERVICE = "service";
+  public static final String KEY_FORM = "form";
   
   public static final String VALUE_NEXT = "next";
   public static final String VALUE_END = "end";
@@ -219,6 +221,7 @@ public class MutableYamlFlow extends MutableYaml implements YamlFlow {
     private MutableYamlTaskBody userTask;
     private MutableYamlTaskBody service;
     private MutableYamlTaskBody returns;
+    private MutableYamlFormBody form;
     private MutableYamlCases cases;
 
     public MutableYamlTask(NodeSource source, int order, int indent, String keyword, String value, MutableYaml parent) {
@@ -258,6 +261,12 @@ public class MutableYamlFlow extends MutableYaml implements YamlFlow {
           addChild(returns);
         }
         return returns;
+      } else if(KEY_FORM.equals(keyword)) {
+        if(form == null) {
+          form = new MutableYamlFormBody(source, indent, keyword, value, this);
+          addChild(form);
+        }
+        return form;
       } else if(KEY_ID.equals(keyword)) {
         if(VALUE_END.equalsIgnoreCase(value) || VALUE_NEXT.equalsIgnoreCase(value) ) {
           throw new AST_Exception(String.format("Value: %s is reserved and can't be used!", value));
@@ -292,6 +301,10 @@ public class MutableYamlFlow extends MutableYaml implements YamlFlow {
     @Override
     public YamlTaskBody getReturns() {
       return returns;
+    }
+    @Override
+    public YamlFormBody getForm() {
+      return form;
     }
     @Override
     public YamlTaskBody getRef() {
@@ -350,6 +363,55 @@ public class MutableYamlFlow extends MutableYaml implements YamlFlow {
     @Override
     public Yaml getInputsNode() {
       return get(KEY_INPUTS);
+    }
+  }
+
+  private static class MutableYamlFormBody extends MutableYaml implements YamlFormBody {
+    private static final long serialVersionUID = 7293847561029384756L;
+    private MutableYamlFormReturns returnsNode;
+
+    public MutableYamlFormBody(NodeSource source, int indent, String keyword, String value, MutableYaml parent) {
+      super(source, indent, keyword, value, parent);
+    }
+    @Override
+    public Yaml getRef() {
+      return get(KEY_REF);
+    }
+    @Override
+    public String getReturnsCode() {
+      return returnsNode == null ? "" : returnsNode.getCode();
+    }
+    @Override
+    public int getReturnsStartLine() {
+      return returnsNode == null ? getStart() : returnsNode.getStart();
+    }
+    @Override
+    public MutableYaml addChild(NodeSource source, int indent, String keyword, String value) {
+      if(KEY_RETURNS.equals(keyword)) {
+        if(returnsNode == null) {
+          returnsNode = new MutableYamlFormReturns(source, indent, keyword, value, this);
+          addChild(returnsNode);
+        }
+        return returnsNode;
+      }
+      return super.addChild(source, indent, keyword, value);
+    }
+  }
+
+  private static class MutableYamlFormReturns extends MutableYaml {
+    private static final long serialVersionUID = 3948271650384927165L;
+    private final StringBuilder code = new StringBuilder();
+
+    public MutableYamlFormReturns(NodeSource source, int indent, String keyword, String value, MutableYaml parent) {
+      super(source, indent, keyword, value, parent);
+    }
+    @Override
+    public MutableYaml addMultiline(String content) {
+      code.append(content).append("\n");
+      return this;
+    }
+    public String getCode() {
+      return code.toString().trim();
     }
   }
 }

@@ -34,6 +34,7 @@ import io.resys.limaone.ast.Flow_AST.DecisionTableStatement;
 import io.resys.limaone.ast.Flow_AST.EmptyBodyStatement;
 import io.resys.limaone.ast.Flow_AST.EndStatement;
 import io.resys.limaone.ast.Flow_AST.FlowTaskStatement;
+import io.resys.limaone.ast.Flow_AST.FormStatement;
 import io.resys.limaone.ast.Flow_AST.InputsStatement;
 import io.resys.limaone.ast.Flow_AST.ManyTasksStatement;
 import io.resys.limaone.ast.Flow_AST.MappingStatement;
@@ -150,6 +151,10 @@ public class Compiler_FlowDepsValidator {
         Optional.empty(),
         StatementType.BODY_RETURNS
     ));
+    return REACHED_END;
+  }
+
+  public ValidatorResult visitFormStatement(FormStatement statement, ValidatorProps ValidatorProps) {
     return REACHED_END;
   }
   
@@ -332,6 +337,8 @@ public class Compiler_FlowDepsValidator {
         return visitFlowTaskStatement((FlowTaskStatement) statement, props);
       case BODY_RETURNS:
         return visitReturnsStatement((ReturnsStatement) statement, props);
+      case BODY_FORM:
+        return visitFormStatement((FormStatement) statement, props);
       case BODY_SWITCH:
         return visitSwitchStatement((SwitchStatement) statement, props);
       case BODY_SWITCH_CASE:

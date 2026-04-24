@@ -131,6 +131,10 @@ public class AssignmentContext {
     return Collections.unmodifiableList(exploded);
   }
   
+  public Serializable resolveParameter(String name) {
+    return findParameter(name);
+  }
+
   @SuppressWarnings("unchecked")
   private Serializable findParameter(String name) {
     final var paths = name.split("\\.");
