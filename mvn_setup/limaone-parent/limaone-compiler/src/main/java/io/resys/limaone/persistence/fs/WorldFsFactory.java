@@ -114,17 +114,14 @@ public class WorldFsFactory {
         .type(BodyType.FOLDER)
         .build();
       
-      
       worldState.putDirent(pathAndName.getPath(), dirent);
       
     }
   }
-
   
   private NodePathAndName getPathAndName(NodeAndBody node) {
     return worldState.getPathAndName(node, this::parsePathAndName);
   }
-
 
   private NodePathAndName parsePathAndName(NodeAndBody node) {
     final var path = node.getValue().getNodePath();
@@ -145,6 +142,8 @@ public class WorldFsFactory {
       
       final var articlePath = articleHierarchy.get(0).getValue().getNodePath().orElse("articles");
       final var name = node.getBodyOfType(Article.class).getName();
+      
+      worldState.putProps(node, n -> Props_ArticleBuilder.of(worldState, n));
       return NodePathAndName.of(articlePath + articleHierarchyPath, name);
     }
     
@@ -159,8 +158,6 @@ public class WorldFsFactory {
       final var articlePath = getPathAndName(articleNode);
 
       return NodePathAndName.of(articlePath.getPath() + "/" + articlePath.getName() + "/pages", name);
-
-      //return "articles/" + article.getName() + "/pages";
     }
     case ARTICLE_LINK: {
       final ArticleLink link = worldState.getBodyOfType(node);
@@ -218,6 +215,8 @@ public class WorldFsFactory {
     default: throw new IllegalArgumentException("Not implemented: " + node);
     }
   }
+  
+  
   private ImmutableDirentBase createAnyDirent(NodeAndBody node) {
     final NodePathAndName pathAndName = getPathAndName(node);
     
@@ -226,6 +225,7 @@ public class WorldFsFactory {
       .fullPath(pathAndName.getPath() + "/" + pathAndName.getName())
       .name(pathAndName.getName())
       .type(node.getBodyType())
+      .props(worldState.getProps(node.getObjectId()))
       .build();
 
     worldState.putDirent(pathAndName.getPath(), dirent);

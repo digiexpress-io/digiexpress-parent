@@ -24,6 +24,8 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
+import org.immutables.value.Value;
+
 import io.resys.limaone.model.Model.BodyType;
 import jakarta.annotation.Nullable;
 
@@ -31,6 +33,7 @@ import jakarta.annotation.Nullable;
 
 public interface WorldFsProps {
   String getId();
+  BodyType getType();
   Boolean getExpanded();
   Boolean getReference();
   Boolean getLocked();
@@ -48,16 +51,17 @@ public interface WorldFsProps {
   
   
   interface FolderProps extends WorldFsProps {
-    BodyType getType();
+
   }
 
+  @Value.Immutable
   interface ArticleProps extends WorldFsProps {
-    BodyType getType();
+
     Integer getOrderNumber();
   }
 
   interface ServiceProps extends WorldFsProps {
-    BodyType getType();
+
     String getServiceName();
     String getDialobFormName();
     String getDialobFormTag();
@@ -74,7 +78,6 @@ public interface WorldFsProps {
   }
 
   interface DialobProps extends WorldFsProps {
-    BodyType getType();
     String getFormName();
     String getFormTechnicalId();
     
@@ -83,7 +86,6 @@ public interface WorldFsProps {
   }
 
   interface FlowProps extends WorldFsProps {
-    BodyType getType();
     String getName();
     
     @Nullable 
@@ -91,12 +93,10 @@ public interface WorldFsProps {
   }
 
   interface LanguageProps extends WorldFsProps {
-    BodyType getType();
     String getLocaleCode();
   }
 
   interface PageProps extends WorldFsProps {
-    BodyType getType();
     String getLocaleCode();
     String getArticleId();
     
@@ -105,18 +105,16 @@ public interface WorldFsProps {
   }
 
   interface PrintoutProps extends WorldFsProps {
-    BodyType getType();
     String getPrintoutServiceName();
     String getOrchestratorName();
     Map<String, String> getIntlValues();
   }
 
   interface ImageProps extends WorldFsProps {
-    BodyType getType();
+
   }
 
   interface TemplateProps extends WorldFsProps {
-    BodyType getType();
     String getPrintoutServiceId();
     String getLocaleId();
     
@@ -125,13 +123,12 @@ public interface WorldFsProps {
   }
 
   interface LinkProps extends WorldFsProps {
-    BodyType getType();
     String getUrlValue();
     Map<String, String> getIntlValues();
   }
 
   interface PhoneProps extends WorldFsProps {
-    BodyType getType();
+
     String getPhoneValue();
     Map<String, String> getIntlValues();
   }

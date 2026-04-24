@@ -62,5 +62,5 @@ public class NodePathAndName {
     } while(!next.isEmpty());
     
     return Collections.unmodifiableList(result);
-  } 
+  }
 }

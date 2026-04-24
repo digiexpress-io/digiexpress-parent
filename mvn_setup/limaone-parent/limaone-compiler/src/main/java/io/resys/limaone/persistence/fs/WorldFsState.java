@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import io.resys.limaone.fs.ImmutableDirentBase;
+import io.resys.limaone.fs.WorldFsProps;
 import io.resys.limaone.model.Article;
 import io.resys.limaone.model.Locale;
 import io.resys.limaone.model.Model.Body;
@@ -19,6 +20,7 @@ import io.resys.thena.support.RepoAssert;
 public class WorldFsState {
   private final Map<String, NodePathAndName> nodePathAndName_by_object_id = new HashMap<>();
   private final Map<String, NodeAndBody> nodes_by_object_id = new HashMap<>();
+  private final Map<String, WorldFsProps> props_by_object_id = new HashMap<>();
   private final Map<String, ImmutableDirentBase> dirents_by_fullpath = new HashMap<>();
   
   // parent path -> fullpath : dirent
@@ -30,6 +32,18 @@ public class WorldFsState {
    */
   public Collection<String> getFolderNames() {
     return dirents_grouped_by_path.keySet().stream().toList();
+  }
+  
+  public WorldFsProps getProps(String objectId) {
+    return props_by_object_id.get(objectId);
+  }
+  
+  public WorldFsProps putProps(NodeAndBody nodeAndBody, Function<NodeAndBody, WorldFsProps> createProps) {
+    final var objectId = nodeAndBody.getObjectId();
+    if(!props_by_object_id.containsKey(objectId)) {
+      props_by_object_id.put(objectId, createProps.apply(nodeAndBody));      
+    }
+    return props_by_object_id.get(objectId);
   }
 
   public NodeAndBody putNodeAndBody(NodeAndBody nodeAndBody) {
