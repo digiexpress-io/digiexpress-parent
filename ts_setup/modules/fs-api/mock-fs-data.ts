@@ -1,4 +1,6 @@
+// @ts-nocheck
 import { Fs } from './fs-types'
+
 
 export const mockFsData: Fs.DirentBase[] = [
   {

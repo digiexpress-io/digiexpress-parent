@@ -4,11 +4,11 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
 
   'content': {
     id: 'content',
-    type: 'folder',
+    type: 'FOLDER',
     expanded: true,
     reference: false,
     locked: false,
-    description: 'Root content folder for all municipal services.',
+    description: 'Root content FOLDER for all municipal services.',
     configOptions: [],
     comments: [],
     changes: [
@@ -24,7 +24,7 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
 
   'shared': {
     id: 'shared',
-    type: 'folder',
+    type: 'FOLDER',
     expanded: false,
     reference: false,
     locked: false,
@@ -41,7 +41,7 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
 
   'printouts': {
     id: 'printouts',
-    type: 'folder',
+    type: 'FOLDER',
     expanded: false,
     reference: false,
     locked: false,
@@ -56,9 +56,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     errors: [],
   },
 
-  'languages': {
-    id: 'languages',
-    type: 'folder',
+  'LOCALEs': {
+    id: 'LOCALEs',
+    type: 'FOLDER',
     expanded: false,
     reference: false,
     locked: false,
@@ -73,9 +73,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     errors: [],
   },
 
-  'fi.language': {
-    id: 'fi.language',
-    type: 'language',
+  'fi.LOCALE': {
+    id: 'fi.LOCALE',
+    type: 'LOCALE',
     expanded: false,
     reference: false,
     locked: false,
@@ -91,9 +91,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     localeCode: 'fi',
   },
 
-  'sv.language': {
-    id: 'sv.language',
-    type: 'language',
+  'sv.LOCALE': {
+    id: 'sv.LOCALE',
+    type: 'LOCALE',
     expanded: false,
     reference: false,
     locked: false,
@@ -109,9 +109,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     localeCode: 'sv',
   },
 
-  'en.language': {
-    id: 'en.language',
-    type: 'language',
+  'en.LOCALE': {
+    id: 'en.LOCALE',
+    type: 'LOCALE',
     expanded: false,
     reference: false,
     locked: false,
@@ -127,17 +127,17 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     localeCode: 'en',
   },
 
-  'index.article': {
-    id: 'index.article',
-    type: 'article',
+  'index.ARTICLE': {
+    id: 'index.ARTICLE',
+    type: 'ARTICLE',
     expanded: false,
     reference: false,
     locked: false,
     orderNumber: 0,
-    description: 'Main landing article for the municipal services portal.',
+    description: 'Main landing ARTICLE for the municipal services portal.',
     configOptions: [],
     comments: [
-      { comment: 'This article needs updated localization for the 2025 service period.', author: 'Anna Virtanen', created: '07.01.2025' },
+      { comment: 'This ARTICLE needs updated localization for the 2025 service period.', author: 'Anna Virtanen', created: '07.01.2025' },
       { comment: 'Images are missing from the Swedish version.', author: 'Mikael Berg', created: '15.02.2025' }
     ],
     changes: [
@@ -154,9 +154,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     ],
   },
 
-  'gdpr.article': {
-    id: 'gdpr.article',
-    type: 'article',
+  'gdpr.ARTICLE': {
+    id: 'gdpr.ARTICLE',
+    type: 'ARTICLE',
     expanded: false,
     reference: false,
     locked: false,
@@ -175,9 +175,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     errors: [],
   },
 
-  'gdpr-child.article': {
-    id: 'gdpr-child.article',
-    type: 'article',
+  'gdpr-child.ARTICLE': {
+    id: 'gdpr-child.ARTICLE',
+    type: 'ARTICLE',
     expanded: false,
     reference: false,
     locked: false,
@@ -193,9 +193,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     errors: [],
   },
 
-  'democracy.article': {
-    id: 'democracy.article',
-    type: 'article',
+  'democracy.ARTICLE': {
+    id: 'democracy.ARTICLE',
+    type: 'ARTICLE',
     expanded: false,
     reference: false,
     locked: false,
@@ -214,9 +214,9 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     errors: [],
   },
 
-  'city-living.article': {
-    id: 'city-living.article',
-    type: 'article',
+  'city-living.ARTICLE': {
+    id: 'city-living.ARTICLE',
+    type: 'ARTICLE',
     expanded: false,
     reference: false,
     locked: false,
@@ -236,7 +236,7 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
 
   'fi-index': {
     id: 'fi-index',
-    type: 'page',
+    type: 'ARTICLE_PAGE',
     expanded: false,
     reference: false,
     locked: false,
@@ -251,7 +251,7 @@ export const mockFsDirentProperties: Record<string, Fs.Props> = {
     labels: [],
     errors: [],
     localeCode: 'fi',
-    articleId: 'index.article',
+    articleId: 'index.ARTICLE',
     content: `# This is markdown content
 
 * bullet 1
@@ -270,7 +270,7 @@ Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saep
 
   'sv-index': {
     id: 'sv-index',
-    type: 'page',
+    type: 'ARTICLE_PAGE',
     expanded: false,
     reference: false,
     locked: false,
@@ -284,12 +284,12 @@ Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saep
     labels: [],
     errors: [],
     localeCode: 'sv',
-    articleId: 'index.article',
+    articleId: 'index.ARTICLE',
   },
 
   'en-index': {
     id: 'en-index',
-    type: 'page',
+    type: 'ARTICLE_PAGE',
     expanded: false,
     reference: false,
     locked: false,
@@ -304,7 +304,7 @@ Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saep
     labels: [],
     errors: [],
     localeCode: 'en',
-    articleId: 'index.article',
+    articleId: 'index.ARTICLE',
     content: `# Welcome to the Service Portal
 
 This portal gives you access to municipal services, allowing you to submit applications, track the status of your cases, and communicate with the relevant departments.
@@ -334,7 +334,7 @@ The service centre is open Monday to Friday, **08:00–16:30**.
 
   'fi-gdpr': {
     id: 'fi-gdpr',
-    type: 'page',
+    type: 'ARTICLE_PAGE',
     expanded: false,
     reference: false,
     locked: false,
@@ -349,12 +349,12 @@ The service centre is open Monday to Friday, **08:00–16:30**.
     labels: [],
     errors: [],
     localeCode: 'fi',
-    articleId: 'gdpr.article',
+    articleId: 'gdpr.ARTICLE',
   },
 
   'sv-gdpr': {
     id: 'sv-gdpr',
-    type: 'page',
+    type: 'ARTICLE_PAGE',
     expanded: false,
     reference: false,
     locked: false,
@@ -369,7 +369,7 @@ The service centre is open Monday to Friday, **08:00–16:30**.
     labels: [],
     errors: [],
     localeCode: 'sv',
-    articleId: 'gdpr.article',
+    articleId: 'gdpr.ARTICLE',
     content: `# Privacy Notice
 
 This notice explains how we collect, use, and protect your personal data in accordance with the General Data Protection Regulation (GDPR).
@@ -408,7 +408,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'fi-gdpr-child': {
     id: 'fi-gdpr-child',
-    type: 'page',
+    type: 'ARTICLE_PAGE',
     expanded: false,
     reference: false,
     locked: false,
@@ -422,12 +422,12 @@ For questions regarding your personal data, contact our Data Protection Officer 
     labels: [],
     errors: [],
     localeCode: 'fi',
-    articleId: 'gdpr-child.article',
+    articleId: 'gdpr-child.ARTICLE',
   },
 
   'sv-gdpr-child': {
     id: 'sv-gdpr-child',
-    type: 'page',
+    type: 'ARTICLE_PAGE',
     expanded: false,
     reference: false,
     locked: false,
@@ -441,12 +441,12 @@ For questions regarding your personal data, contact our Data Protection Officer 
     labels: [],
     errors: [],
     localeCode: 'sv',
-    articleId: 'gdpr-child.article',
+    articleId: 'gdpr-child.ARTICLE',
   },
 
   'fi-democracy': {
     id: 'fi-democracy',
-    type: 'page',
+    type: 'ARTICLE_PAGE',
     expanded: false,
     reference: false,
     locked: false,
@@ -461,12 +461,12 @@ For questions regarding your personal data, contact our Data Protection Officer 
     labels: [],
     errors: [],
     localeCode: 'fi',
-    articleId: 'democracy.article',
+    articleId: 'democracy.ARTICLE',
   },
 
   'sv-democracy': {
     id: 'sv-democracy',
-    type: 'page',
+    type: 'ARTICLE_PAGE',
     expanded: false,
     reference: false,
     locked: false,
@@ -480,12 +480,12 @@ For questions regarding your personal data, contact our Data Protection Officer 
     labels: [],
     errors: [],
     localeCode: 'sv',
-    articleId: 'democracy.article',
+    articleId: 'democracy.ARTICLE',
   },
 
   'en-democracy': {
     id: 'en-democracy',
-    type: 'page',
+    type: 'ARTICLE_PAGE',
     expanded: false,
     reference: false,
     locked: false,
@@ -499,12 +499,12 @@ For questions regarding your personal data, contact our Data Protection Officer 
     labels: [],
     errors: [],
     localeCode: 'en',
-    articleId: 'democracy.article',
+    articleId: 'democracy.ARTICLE',
   },
 
   'fi-city-living': {
     id: 'fi-city-living',
-    type: 'page',
+    type: 'ARTICLE_PAGE',
     expanded: false,
     reference: false,
     locked: false,
@@ -518,12 +518,12 @@ For questions regarding your personal data, contact our Data Protection Officer 
     labels: [],
     errors: [],
     localeCode: 'fi',
-    articleId: 'city-living.article',
+    articleId: 'city-living.ARTICLE',
   },
 
   'sv-city-living': {
     id: 'sv-city-living',
-    type: 'page',
+    type: 'ARTICLE_PAGE',
     expanded: false,
     reference: false,
     locked: false,
@@ -537,12 +537,12 @@ For questions regarding your personal data, contact our Data Protection Officer 
     labels: [],
     errors: [],
     localeCode: 'sv',
-    articleId: 'city-living.article',
+    articleId: 'city-living.ARTICLE',
   },
 
   'general-message.service': {
     id: 'general-message.service',
-    type: 'service',
+    type: 'SERVICE',
     expanded: false,
     reference: false,
     locked: false,
@@ -567,13 +567,13 @@ For questions regarding your personal data, contact our Data Protection Officer 
     flowName: 'taskMsgFlow.flow',
     validityStart: '01.01.2025',
     validityEnd: undefined,
-    articles: ['index.article'],
+    articles: ['index.ARTICLE'],
     intlValues: { en: 'General message', fi: 'Yleinen viesti', sv: 'Allmänt meddelande' },
   },
 
   'public-inforeq.service': {
     id: 'public-inforeq.service',
-    type: 'service',
+    type: 'SERVICE',
     expanded: false,
     reference: false,
     locked: true,
@@ -596,13 +596,13 @@ For questions regarding your personal data, contact our Data Protection Officer 
     flowName: 'taskGenericFlow.flow',
     validityStart: '01.03.2024',
     validityEnd: undefined,
-    articles: ['gdpr.article'],
+    articles: ['gdpr.ARTICLE'],
     intlValues: { en: 'Public information request', fi: 'Julkinen tietopyyntö', sv: 'Offentlig informationsbegäran' },
   },
 
   'wilma-preschool.service': {
     id: 'wilma-preschool.service',
-    type: 'service',
+    type: 'SERVICE',
     expanded: false,
     reference: false,
     locked: false,
@@ -626,13 +626,13 @@ For questions regarding your personal data, contact our Data Protection Officer 
     flowName: 'taskGenericFlow.flow',
     validityStart: '01.08.2024',
     validityEnd: undefined,
-    articles: ['index.article', 'gdpr.article'],
+    articles: ['index.ARTICLE', 'gdpr.ARTICLE'],
     intlValues: { en: 'Preschool application', fi: 'Varhaiskasvatushakemus', sv: 'Ansökan om förskola' },
   },
 
   'general-message.dialob': {
     id: 'general-message.dialob',
-    type: 'dialob',
+    type: 'DIALOB_FORM',
     expanded: false,
     reference: false,
     locked: false,
@@ -652,7 +652,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'public-inforeq.dialob': {
     id: 'public-inforeq.dialob',
-    type: 'dialob',
+    type: 'DIALOB_FORM',
     expanded: false,
     reference: false,
     locked: false,
@@ -675,7 +675,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'wilma-preschool.dialob': {
     id: 'wilma-preschool.dialob',
-    type: 'dialob',
+    type: 'DIALOB_FORM',
     expanded: false,
     reference: false,
     locked: false,
@@ -696,7 +696,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'taskMsgFlow.flow': {
     id: 'taskMsgFlow.flow',
-    type: 'flow',
+    type: 'FLOW',
     name: 'taskMessagingFlow',
     expanded: false,
     reference: false,
@@ -715,7 +715,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'taskGenericFlow.flow': {
     id: 'taskGenericFlow.flow',
-    type: 'flow',
+    type: 'FLOW',
     name: 'taskGenericFlow',
     expanded: false,
     reference: false,
@@ -735,7 +735,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'taskSplitFlow.flow': {
     id: 'taskSplitFlow.flow',
-    type: 'flow',
+    type: 'FLOW',
     name: 'taskSplitFlow',
     expanded: false,
     reference: false,
@@ -812,7 +812,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'sipoo-main-site.link': {
     id: 'sipoo-main-site.link',
-    type: 'link',
+    type: 'ARTICLE_LINK',
     expanded: false,
     reference: false,
     locked: false,
@@ -832,7 +832,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'wilma-info.link': {
     id: 'wilma-info.link',
-    type: 'link',
+    type: 'ARTICLE_LINK',
     expanded: false,
     reference: false,
     locked: false,
@@ -851,7 +851,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'lupapiste.link': {
     id: 'lupapiste.link',
-    type: 'link',
+    type: 'ARTICLE_LINK',
     expanded: false,
     reference: false,
     locked: false,
@@ -922,7 +922,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'new-construction-permit.printout': {
     id: 'new-construction-permit.printout',
-    type: 'printout',
+    type: 'PRINTOUT',
     expanded: false,
     reference: false,
     locked: false,
@@ -948,7 +948,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'municipal-services-guide.printout': {
     id: 'municipal-services-guide.printout',
-    type: 'printout',
+    type: 'PRINTOUT',
     expanded: false,
     reference: false,
     locked: false,
@@ -969,7 +969,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'waste-management-info.printout': {
     id: 'waste-management-info.printout',
-    type: 'printout',
+    type: 'PRINTOUT',
     expanded: false,
     reference: false,
     locked: false,
@@ -991,7 +991,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'fi-construction-permit': {
     id: 'fi-construction-permit',
-    type: 'template',
+    type: 'ARTICLE_TEMPLATE',
     expanded: false,
     reference: false,
     locked: false,
@@ -1015,7 +1015,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'sv-construction-permit': {
     id: 'sv-construction-permit',
-    type: 'template',
+    type: 'ARTICLE_TEMPLATE',
     expanded: false,
     reference: false,
     locked: false,
@@ -1035,7 +1035,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'en-construction-permit': {
     id: 'en-construction-permit',
-    type: 'template',
+    type: 'ARTICLE_TEMPLATE',
     expanded: false,
     reference: false,
     locked: false,
@@ -1055,7 +1055,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'fi-municipal-services-guide': {
     id: 'fi-municipal-services-guide',
-    type: 'template',
+    type: 'ARTICLE_TEMPLATE',
     expanded: false,
     reference: false,
     locked: false,
@@ -1077,7 +1077,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'en-municipal-services-guide': {
     id: 'en-municipal-services-guide',
-    type: 'template',
+    type: 'ARTICLE_TEMPLATE',
     expanded: false,
     reference: false,
     locked: false,
@@ -1100,7 +1100,7 @@ For questions regarding your personal data, contact our Data Protection Officer 
 
   'fi-waste-management-info': {
     id: 'fi-waste-management-info',
-    type: 'template',
+    type: 'ARTICLE_TEMPLATE',
     expanded: false,
     reference: false,
     locked: false,

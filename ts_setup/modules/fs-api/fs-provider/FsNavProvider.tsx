@@ -78,7 +78,7 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
   const openCreateTab = React.useCallback((direntType: Fs.Type, parentFolder: Fs.DirentBase | undefined) => {
     const registeredPath = parentFolder ? (direntPathsRef.current[parentFolder.id] ?? parentFolder.name) : '';
 
-    const pathToTopParent = parentFolder?.type === 'folder' ? registeredPath : registeredPath
+    const pathToTopParent = parentFolder?.type === 'FOLDER' ? registeredPath : registeredPath
       .split(' / ')
       .slice(0, -1)
       .join(' / ');

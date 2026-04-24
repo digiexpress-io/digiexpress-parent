@@ -1,8 +1,7 @@
 import React from 'react';
 import { Fs } from '../fs-types';
 import { mockFsDirentProperties } from '../mock-fs-dirent-properties';
-import { mockFsData } from '../mock-fs-data';
-import { ALL_DIRENTS, ALL_TYPES, collectArticles, collectDialobs, collectFlows, collectLanguages, collectLabels, getConfigOptionsForType } from './helpers';
+import { ALL_TYPES, flattenDirents, collectArticles, collectDialobs, collectFlows, collectLanguages, collectLabels, getConfigOptionsForType } from './helpers';
 
 
 export interface ItemReferencesEntry {
@@ -28,40 +27,58 @@ export interface FsDirentContextType {
 const FsDirentContext = React.createContext<FsDirentContextType | undefined>(undefined);
 
 export interface FsDirentProviderProps {
+  persistenceUnit: {
+    fetchDirents: () => Promise<Fs.DirentBase[]>;
+  }
   children: React.ReactNode;
 }
 
 export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
+  const [dirents, setDirents] = React.useState<Fs.DirentBase[]>([]);
+  const [allDirents, setAllDirents] = React.useState<Record<string, Fs.DirentBase>>({});
   const [propsMap, setPropsMap] = React.useState<Record<string, Fs.Props>>({});
   const [direntPropsLoading, setDirentPropsLoading] = React.useState(true);
+
+
 
   React.useEffect(() => {
     Promise.resolve(mockFsDirentProperties).then((data) => {
       setPropsMap(data);
       setDirentPropsLoading(false);
     });
+
+    props.persistenceUnit.fetchDirents()
+      .then(data => {
+        setDirents(data);
+        setAllDirents(flattenDirents(data));
+      })
+    console.log("dirents", dirents)
   }, []);
 
+
   const getDirent = React.useCallback(<T extends Fs.DirentAsset>(id: string): T | undefined => {
-    const dirent = ALL_DIRENTS[id];
+
+    const dirent = allDirents[id];
     const direntProps = propsMap[id];
     if (!dirent || !direntProps) {
       return undefined;
     }
     return { ...dirent, ...direntProps } as unknown as T;
-  }, [propsMap]);
+  }, [propsMap, dirents]);
 
   const selectOptions = React.useMemo((): Fs.SelectOptions => ({
-    articles: collectArticles(mockFsData),
-    flows: collectFlows(mockFsData),
-    dialobs: collectDialobs(mockFsData),
-    languages: collectLanguages(mockFsData),
+    articles: collectArticles(dirents),
+    flows: collectFlows(dirents),
+    dialobs: collectDialobs(dirents),
+    languages: collectLanguages(dirents),
     labels: collectLabels(propsMap),
     direntProps: propsMap,
     collectDialobTags: (dialobId: string): Fs.SelectOption[] => {
       const entry = propsMap[dialobId];
-      if (!entry || entry.type !== 'dialob') { return []; }
+      if (!entry || entry.type !== 'DIALOB_FORM') { return []; }
+
       const tags = (entry as Fs.DialobProps).versionTags;
+
       if (!tags || tags.length === 0) { return []; }
       return tags.map(tag => ({ value: tag, label: tag }));
     },
@@ -70,7 +87,7 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       if (!tags || tags.length === 0) { return 'LATEST'; }
       return tags[tags.length - 1];
     },
-  }), [propsMap]);
+  }), [propsMap, dirents]);
 
   const isChildError = React.useCallback((dirent: Fs.DirentBase): boolean => {
     const direntProps = propsMap[dirent.id];
@@ -81,7 +98,7 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       return dirent.children.some(child => isChildError(child));
     }
     return false;
-  }, [propsMap]);
+  }, [propsMap, dirents]);
 
   const findReferencesToDirent = React.useCallback((targetDirent: Fs.DirentBase): ItemReferencesEntry[] => {
     const references: ItemReferencesEntry[] = [];
@@ -102,10 +119,10 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       }
     }
 
-    mockFsData.forEach(rootDirent => searchInDirent(rootDirent));
+    dirents.forEach(rootDirent => searchInDirent(rootDirent));
 
     return references;
-  }, [propsMap]);
+  }, [propsMap, dirents]);
 
   const updateDirent = React.useCallback((id: string, updated: Partial<Fs.Props>) => {
     setPropsMap(prev => {
@@ -148,7 +165,7 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
   const contextValue: FsDirentContextType = React.useMemo(() => {
     return {
       direntPropsLoading,
-      dirents: mockFsData,
+      dirents: dirents,
       creatableTypes: ALL_TYPES,
       selectOptions,
       getConfigOptionsForType,
@@ -160,7 +177,7 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       setExpandedBatch,
       collapseAll,
     };
-  }, [direntPropsLoading, selectOptions, getDirent, isChildError, findReferencesToDirent, updateDirent, setExpanded, setExpandedBatch, collapseAll]);
+  }, [direntPropsLoading, selectOptions, dirents, getDirent, isChildError, findReferencesToDirent, updateDirent, setExpanded, setExpandedBatch, collapseAll]);
 
   return (
     <FsDirentContext.Provider value={contextValue}>

@@ -21,6 +21,7 @@ package io.resys.limaone.persistence.fs;
  */
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.concurrent.ScheduledExecutorService;
 
 import io.resys.limaone.authoring.Authoring.WorldFsQuery;
@@ -47,13 +48,9 @@ public class WorldFsQueryImpl implements WorldFsQuery {
       .branchQuery()
       .branchName(name -> name.equals(branchName))
       .blobTypes(
-          BodyType.ARTICLE.name(), 
-          BodyType.LOCALE.name(),
-          BodyType.ARTICLE_LINK.name(),
-          BodyType.ARTICLE_WORKFLOW.name(),
-          BodyType.ARTICLE_TEMPLATE.name(),
-          BodyType.PRINTOUT.name()
-      )
+          Arrays.asList(BodyType.without(BodyType.DEPLOYMENT))
+          .stream().map(e -> e.name())
+          .toList().toArray(new String[]{}))
       .getOne()
       .onItem().transform(ref -> new WorldFsFactory(ref).create());
   }

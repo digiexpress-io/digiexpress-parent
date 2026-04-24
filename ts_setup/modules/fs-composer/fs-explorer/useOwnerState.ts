@@ -126,7 +126,8 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
 
     collapseAll,
     toggleDirent: (direntId: string) => {
-      const current = getDirent(direntId)?.expanded;
+
+      const current = getDirent(direntId)!.expanded;
       setExpanded(direntId, !current);
     },
   }

@@ -71,7 +71,10 @@ public class DbSupport {
   private FileSystem_ThenaImpl client;
   protected io.vertx.mutiny.sqlclient.Pool pgPool;
   protected static Duration atMost = Duration.ofMinutes(1);
-
+  protected String tenantName = "junit";
+  protected boolean createInit = true;
+  
+  
   private String db;
   private Tenant repo;
   private final Map<String, String> replacements = new HashMap<>();
@@ -86,7 +89,7 @@ public class DbSupport {
     this.pgPool = pgPool;
     this.replacements.clear();
     this.client = FileSystem_ThenaImpl.createInstance()
-        .tenantName("junit")
+        .tenantName(tenantName)
         .client(pgPool)
         .errorHandler(new PgErrors())
         .build();
@@ -95,21 +98,22 @@ public class DbSupport {
         .name(this.client.getTenantName(), StructureType.fs)
         .buildOnlyIfNotCreated()
         .await().atMost(Duration.ofMinutes(1)).getItem2();
-    wipeRepo(repo.getRepo());
     
-    this.client.withTenant()
-      .commitBuilder()
-      .branchName("main")
-      .commitAuthor("john smith")
-      .commitMessage("create main branch with some content")
-      .newFile((newFile) -> newFile
-          .fileName("init.md")
-          .fileType("init_md")
-          .fileValue(new JsonObject())
-          .build())
-      .build()
-      .await().atMost(atMost);
-    
+    if(createInit) {
+      wipeRepo(repo.getRepo());
+      this.client.withTenant()
+        .commitBuilder()
+        .branchName("main")
+        .commitAuthor("john smith")
+        .commitMessage("create main branch with some content")
+        .newFile((newFile) -> newFile
+            .fileName("init.md")
+            .fileType("init_md")
+            .fileValue(new JsonObject())
+            .build())
+        .build()
+        .await().atMost(atMost);
+    }
     log.debug("created repo {}", repo);
     
     Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());

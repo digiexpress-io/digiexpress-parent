@@ -42,5 +42,9 @@ public interface WorldFs {
     String getFullPath();
     BodyType getType();
     List<DirentBase> getChildren();
+    
+    default boolean isDirectory() {
+      return this.getType() == BodyType.FOLDER;
+    }
   }
 }

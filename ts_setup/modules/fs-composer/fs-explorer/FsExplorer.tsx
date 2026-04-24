@@ -17,7 +17,6 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
   const ownerState = useOwnerState(props);
   const { openCreateTab } = useFsNav();
 
-
   return (
     <FsExplorerRoot className={classes.root} isDarkTheme={ownerState.isDarkMode}>
       <Box className={classes.title}>

@@ -6,7 +6,8 @@ export declare namespace Fs {
   export interface DirentBase {
     id: string;
     name: string;
-    type: Fs.Type;
+    type: BodyType;
+    fullPath: string;
     children: DirentBase[];
   }
 
@@ -39,6 +40,24 @@ export declare namespace Fs {
     phone: PhoneProps;
   }
 
+
+  export type BodyType =
+    | 'LOCALE'
+    | 'ARTICLE_LINK'
+    | 'ARTICLE'
+    | 'ARTICLE_WORKFLOW'
+    | 'ARTICLE_PAGE'
+    | 'ARTICLE_TEMPLATE'
+    | 'FLOW'
+    | 'FLOW_TASK'
+    | 'DECISION_TABLE'
+    | 'DIALOB_FORM'
+    | 'PRINTOUT'
+    | 'PRINTOUT_PAGE'
+    | 'PRINTOUT_RESOURCE'
+    | 'DEPLOYMENT'
+    | 'FOLDER'
+    | 'UNKNOWN';
   export type Type = keyof PropsMap;
   export type Props = PropsMap[Type];
   export type DirentAsset = DirentBase & Props;
@@ -57,16 +76,16 @@ export declare namespace Fs {
   export type Phone = DirentBase & PhoneProps;
 
   export interface FolderProps extends PropsBase {
-    type: 'folder';
+    type: 'FOLDER';
   }
 
   export interface ArticleProps extends PropsBase {
-    type: 'article';
+    type: 'ARTICLE';
     orderNumber: number;
   }
 
   export interface ServiceProps extends PropsBase {
-    type: 'service';
+    type: 'SERVICE';
     serviceName: string;
     dialobFormName: string;
     dialobFormTag: string;
@@ -79,32 +98,32 @@ export declare namespace Fs {
   }
 
   export interface DialobProps extends PropsBase {
-    type: 'dialob';
+    type: 'DIALOB_FORM';
     formName: string;
     formTechnicalId: string;
     versionTags?: string[];
   }
 
   export interface FlowProps extends PropsBase {
-    type: 'flow';
+    type: 'FLOW';
     name: string;
     content?: string;
   }
 
   export interface LanguageProps extends PropsBase {
-    type: 'language';
+    type: 'LOCALE';
     localeCode: string;
   }
 
   export interface PageProps extends PropsBase {
-    type: 'page';
+    type: 'ARTICLE_PAGE';
     localeCode: string;
     articleId: string;
     content?: string;
   }
 
   export interface PrintoutProps extends PropsBase {
-    type: 'printout';
+    type: 'PRINTOUT';
     printoutServiceName: string;
     orchestratorName: string;
     intlValues: Record<string, string>;
@@ -115,14 +134,14 @@ export declare namespace Fs {
   }
 
   export interface TemplateProps extends PropsBase {
-    type: 'template';
+    type: 'ARTICLE_TEMPLATE';
     printoutServiceId: string;
     localeId: string;
     content?: string;
   }
 
   export interface LinkProps extends PropsBase {
-    type: 'link';
+    type: 'ARTICLE_LINK';
     urlValue: string;
     intlValues: Record<string, string>;
   }

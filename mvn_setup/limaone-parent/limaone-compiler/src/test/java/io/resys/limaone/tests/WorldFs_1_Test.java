@@ -34,6 +34,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WorldFs_1_Test extends DbSupport {
 
+  public WorldFs_1_Test() {
+    super();
+    this.tenantName = "assets";
+    this.createInit = true;
+  }
+
   @Test
   public void createSimpleFileSystem() {
     final var authoring = new AuthoringImpl(createConfig());
@@ -53,7 +59,9 @@ public class WorldFs_1_Test extends DbSupport {
   
   
   private void createLocalesArticlesLinks(Authoring authoring) {
-    
+    if(!createInit) {
+      return;
+    }
     final var locale1 = authoring.newModel()
         .newLocale()
         .props(props -> props.locale("en"))
