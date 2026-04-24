@@ -51,13 +51,18 @@ public class OldEnvirQuery {
   private Uni<Tenant> findTenant(String tenanPrefix) {
     final var sql = "select * from tenants";
     return processAnyQuery(Tenant.class, sql, (row) -> {
-      
+      StructureType type = StructureType.unknown;
+      try {
+        type = StructureType.valueOf(row.getString("type"));
+      } catch(Exception e) {
+        
+      }
       final Tenant tenant = ImmutableTenant.builder()
         .id(row.getString("id"))
         .rev(row.getString("rev"))
         .prefix(row.getString("prefix"))
         .name(row.getString("name"))
-        .type(StructureType.valueOf(row.getString("type")))
+        .type(type)
         .build();
       
       return tenant;
