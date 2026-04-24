@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.BodyType;
+import jakarta.annotation.Nullable;
 
 @Value.Immutable
 @JsonSerialize(as = ImmutableWorldFs.class) @JsonDeserialize(as = ImmutableWorldFs.class)
@@ -42,6 +43,8 @@ public interface WorldFs {
     String getFullPath();
     BodyType getType();
     List<DirentBase> getChildren();
+    
+    @Nullable WorldFsProps getProps();
     
     default boolean isDirectory() {
       return this.getType() == BodyType.FOLDER;

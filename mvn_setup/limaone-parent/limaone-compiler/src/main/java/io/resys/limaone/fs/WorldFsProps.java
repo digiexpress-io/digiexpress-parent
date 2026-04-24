@@ -28,39 +28,35 @@ import io.resys.limaone.model.Model.BodyType;
 import jakarta.annotation.Nullable;
 
 
-// TODO
+
 public interface WorldFsProps {
-
+  String getId();
+  Boolean getExpanded();
+  Boolean getReference();
+  Boolean getLocked();
   
-
-  interface PropsBase {
-    String getId();
-    Boolean getExpanded();
-    Boolean getReference();
-    Boolean getLocked();
-    
-    @Nullable
-    String getDescription();
-    
-    List<ConfigOption> getConfigOptions();
-    List<Comment> getComments();
-    List<Change> getChanges();
-    List<Permission> getPermissions();
-    
-    List<Label> getLabels();
-    List<Error> getErrors();
-  }
+  @Nullable
+  String getDescription();
   
-  interface FolderProps extends PropsBase {
+  List<ConfigOption> getConfigOptions();
+  List<Comment> getComments();
+  List<Change> getChanges();
+  List<Permission> getPermissions();
+  
+  List<Label> getLabels();
+  List<Error> getErrors();
+  
+  
+  interface FolderProps extends WorldFsProps {
     BodyType getType();
   }
 
-  interface ArticleProps extends PropsBase {
+  interface ArticleProps extends WorldFsProps {
     BodyType getType();
     Integer getOrderNumber();
   }
 
-  interface ServiceProps extends PropsBase {
+  interface ServiceProps extends WorldFsProps {
     BodyType getType();
     String getServiceName();
     String getDialobFormName();
@@ -77,7 +73,7 @@ public interface WorldFsProps {
     Map<String, String> getIntlValues();
   }
 
-  interface DialobProps extends PropsBase {
+  interface DialobProps extends WorldFsProps {
     BodyType getType();
     String getFormName();
     String getFormTechnicalId();
@@ -86,7 +82,7 @@ public interface WorldFsProps {
     List<String> getVersionTags();
   }
 
-  interface FlowProps extends PropsBase {
+  interface FlowProps extends WorldFsProps {
     BodyType getType();
     String getName();
     
@@ -94,12 +90,12 @@ public interface WorldFsProps {
     String getContent();
   }
 
-  interface LanguageProps extends PropsBase {
+  interface LanguageProps extends WorldFsProps {
     BodyType getType();
     String getLocaleCode();
   }
 
-  interface PageProps extends PropsBase {
+  interface PageProps extends WorldFsProps {
     BodyType getType();
     String getLocaleCode();
     String getArticleId();
@@ -108,18 +104,18 @@ public interface WorldFsProps {
     String getContent();
   }
 
-  interface PrintoutProps extends PropsBase {
+  interface PrintoutProps extends WorldFsProps {
     BodyType getType();
     String getPrintoutServiceName();
     String getOrchestratorName();
     Map<String, String> getIntlValues();
   }
 
-  interface ImageProps extends PropsBase {
+  interface ImageProps extends WorldFsProps {
     BodyType getType();
   }
 
-  interface TemplateProps extends PropsBase {
+  interface TemplateProps extends WorldFsProps {
     BodyType getType();
     String getPrintoutServiceId();
     String getLocaleId();
@@ -128,13 +124,13 @@ public interface WorldFsProps {
     String getContent();
   }
 
-  interface LinkProps extends PropsBase {
+  interface LinkProps extends WorldFsProps {
     BodyType getType();
     String getUrlValue();
     Map<String, String> getIntlValues();
   }
 
-  interface PhoneProps extends PropsBase {
+  interface PhoneProps extends WorldFsProps {
     BodyType getType();
     String getPhoneValue();
     Map<String, String> getIntlValues();

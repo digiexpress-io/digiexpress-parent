@@ -37,20 +37,17 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
   const [dirents, setDirents] = React.useState<Fs.DirentBase[]>([]);
   const [allDirents, setAllDirents] = React.useState<Record<string, Fs.DirentBase>>({});
   const [propsMap, setPropsMap] = React.useState<Record<string, Fs.Props>>({});
-  const [direntPropsLoading, setDirentPropsLoading] = React.useState(true);
 
 
 
   React.useEffect(() => {
-    Promise.resolve(mockFsDirentProperties).then((data) => {
-      setPropsMap(data);
-      setDirentPropsLoading(false);
-    });
 
     props.persistenceUnit.fetchDirents()
       .then(data => {
         setDirents(data);
         setAllDirents(flattenDirents(data));
+
+        // setPropsMap(data);
       })
     console.log("dirents", dirents)
   }, []);
