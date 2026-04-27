@@ -46,7 +46,7 @@ export const FsDirentMenuNew: React.FC<FsDirentMenuNewProps> = (props) => {
       {creatableTypes.map((type) => (
         <div key={type} className={classes.listItem} onClick={() => handleTypeClick(type)}>
           <FsIcon icon={DIRENT_TYPE_ICONS[type]} small />
-          {intl.formatMessage({ id: `fs.direntNew.type.${type}` })}
+          {intl.formatMessage({ id: `fs.direntNew.type.${type.toLocaleLowerCase()}` })}
         </div>
       ))}
     </FsDirentMenuNewRoot>
