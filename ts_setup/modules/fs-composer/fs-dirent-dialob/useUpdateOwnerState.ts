@@ -4,7 +4,7 @@ import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Dialob | undefined;
+  dirent: Fs.Dirent | undefined;
   technicalName: string;
   formName: string;
   description: string;
@@ -19,10 +19,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent<Fs.Dialob>(props.direntId);
+  const dirent = getDirent(props.direntId);
+  const dialob = dirent?.type === 'DIALOB_FORM' ? dirent : undefined;
 
-  const [technicalName, setTechnicalName] = React.useState(dirent?.formTechnicalId ?? '');
-  const [formName, setFormName] = React.useState(dirent?.formName ?? '');
+  const [technicalName, setTechnicalName] = React.useState(dialob?.formTechnicalId ?? '');
+  const [formName, setFormName] = React.useState(dialob?.formName ?? '');
   const [description, setDescription] = React.useState(dirent?.description ?? '');
   const [isExpanded, setIsExpanded] = React.useState(false);
 

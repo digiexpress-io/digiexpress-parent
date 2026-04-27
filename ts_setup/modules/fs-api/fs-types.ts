@@ -14,6 +14,7 @@ export declare namespace Fs {
 
   export interface PropsBase {
     id: string;
+    bodyType: BodyType;
     expanded: boolean;
     reference: boolean;
     locked: boolean;
@@ -75,6 +76,9 @@ export declare namespace Fs {
   export type Template = DirentBase & TemplateProps;
   export type Link = DirentBase & LinkProps;
   export type Phone = DirentBase & PhoneProps;
+
+  export type Dirent = Folder | Article | Service | Dialob | Flow | Language
+    | Printout | Image | Page | Template | Link | Phone;
 
   export interface FolderProps extends PropsBase {
     type: 'FOLDER';

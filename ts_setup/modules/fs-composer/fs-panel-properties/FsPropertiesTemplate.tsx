@@ -6,23 +6,27 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesTemplateProps {
-  direntProps: Fs.TemplateProps;
+  dirent: Fs.Dirent;
 }
 
-export const FsPropertiesTemplate: React.FC<FsPropertiesTemplateProps> = ({ direntProps }) => {
+export const FsPropertiesTemplate: React.FC<FsPropertiesTemplateProps> = ({ dirent }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
+
+  if (dirent.type !== 'ARTICLE_TEMPLATE') {
+    return undefined;
+  }
 
   return (
     <>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.printoutServiceId' })}</Typography>
-        <Typography className={classes.propertyValue}>{direntProps.printoutServiceId}</Typography>
+        <Typography className={classes.propertyValue}>{dirent.printoutServiceId}</Typography>
       </div>
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.localeCode' })}</Typography>
-        <Typography className={classes.propertyValue}>{direntProps.localeId}</Typography>
+        <Typography className={classes.propertyValue}>{dirent.localeId}</Typography>
       </div>
     </>
   );

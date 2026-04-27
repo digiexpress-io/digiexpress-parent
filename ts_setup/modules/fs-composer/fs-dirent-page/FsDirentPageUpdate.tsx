@@ -27,7 +27,7 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}</Typography>
         <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
-          <MDEditor preview="edit" value={ownerState.dirent?.content ?? ''} onChange={(val) => updateDirent(props.direntId, { content: val ?? '' })} />
+          <MDEditor preview="edit" value={ownerState.content} onChange={(val) => updateDirent(props.direntId, { content: val ?? '' })} />
         </div>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.articleField.label' })}</Typography>

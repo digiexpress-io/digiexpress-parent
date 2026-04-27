@@ -4,9 +4,7 @@ import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Template | undefined;
-  printoutServiceId: string;
-  localeDisplay: string;
+  dirent: Fs.Dirent | undefined;
   content: string;
   onChangeContent: (value: string) => void;
 }
@@ -15,14 +13,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent<Fs.Template>(props.direntId);
-  const printout = dirent?.printoutServiceId ? getDirent<Fs.Printout>(dirent.printoutServiceId) : undefined;
+  const dirent = getDirent(props.direntId);
+  const articleTemplate = dirent?.type === 'ARTICLE_TEMPLATE' ? dirent : undefined;
 
-  const localeId = dirent?.localeId ?? '';
-  const intlLabel = printout?.intlValues?.[localeId];
-  const localeDisplay = intlLabel ? `${localeId} - ${intlLabel}` : localeId;
 
-  const [content, setContent] = React.useState(dirent?.content ?? '');
+  const [content, setContent] = React.useState(articleTemplate?.content ?? '');
 
   function onChangeContent(value: string) {
     setContent(value);
@@ -31,8 +26,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   return ({
     isDarkMode,
     dirent,
-    printoutServiceId: dirent?.printoutServiceId ?? '',
-    localeDisplay,
     content,
     onChangeContent,
   });

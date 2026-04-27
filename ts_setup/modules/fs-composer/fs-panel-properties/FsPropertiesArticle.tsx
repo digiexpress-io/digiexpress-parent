@@ -27,13 +27,17 @@ function getTypeIcon(type: Fs.BodyType): React.ElementType<SvgIconProps> {
 }
 
 export interface FsPropertiesArticleProps {
-  direntProps: Fs.ArticleProps;
+  dirent: Fs.Dirent;
   children: Fs.DirentBase[];
 }
 
-export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ children }) => {
+export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent, children }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
+
+  if (dirent.type !== 'ARTICLE') {
+    return undefined;
+  }
 
   return (
     <div className={classes.propertyRow}>

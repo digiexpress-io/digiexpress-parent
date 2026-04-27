@@ -13,6 +13,7 @@ export const FsPanelHistory: React.FC<FsPanelHistoryProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
 
+  /*
   if (!props.dirent) {
     return (
       <FsPanel title={intl.formatMessage({ id: 'fs.history.title' })}
@@ -52,4 +53,7 @@ export const FsPanelHistory: React.FC<FsPanelHistoryProps> = (props) => {
       </FsPanelHistoryRoot>
     </FsPanel>
   );
+  */
+
+  return <>history</>
 };

@@ -37,17 +37,16 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
   const tabKey = getTabKey(activeTab);
 
   switch (tabKey) {
-    case 'article': return (activeTab && (<div className={className}><FsDirentArticle tab={activeTab} /></div>));
-    case 'folder': return (activeTab && (<div className={className}><FsDirentFolder tab={activeTab} /></div>));
-    case 'link': return (activeTab && (<div className={className}><FsDirentLink tab={activeTab} /></div>));
-    case 'phone': return (activeTab && (<div className={className}><FsDirentPhone tab={activeTab} /></div>));
-    case 'service': return (activeTab && (<div className={className}><FsDirentService tab={activeTab} /></div>));
-    case 'flow': return (activeTab && (<div className={className}><FsDirentFlow tab={activeTab} /></div>));
-    case 'printout': return (activeTab && (<div className={className}><FsDirentPrintout tab={activeTab} /></div>));
-    case 'template': return (activeTab && (<div className={className}><FsDirentTemplate tab={activeTab} /></div>));
-    case 'dialob': return (activeTab && (<div className={className}><FsDirentDialob tab={activeTab} /></div>));
-    case 'language': return (activeTab && (<div className={className}><FsDirentLanguage tab={activeTab} /></div>));
-    case 'page': return (activeTab && (<div className={className}><FsDirentPage tab={activeTab} /></div>));
+    case 'ARTICLE': return (activeTab && (<div className={className}><FsDirentArticle tab={activeTab} /></div>));
+    case 'FOLDER': return (activeTab && (<div className={className}><FsDirentFolder tab={activeTab} /></div>));
+    case 'ARTICLE_LINK': return (activeTab && (<div className={className}><FsDirentLink tab={activeTab} /></div>));
+    case 'ARTICLE_WORKFLOW': return (activeTab && (<div className={className}><FsDirentService tab={activeTab} /></div>));
+    case 'FLOW': return (activeTab && (<div className={className}><FsDirentFlow tab={activeTab} /></div>));
+    case 'PRINTOUT': return (activeTab && (<div className={className}><FsDirentPrintout tab={activeTab} /></div>));
+    case 'ARTICLE_TEMPLATE': return (activeTab && (<div className={className}><FsDirentTemplate tab={activeTab} /></div>));
+    case 'DIALOB_FORM': return (activeTab && (<div className={className}><FsDirentDialob tab={activeTab} /></div>));
+    case 'LOCALE': return (activeTab && (<div className={className}><FsDirentLanguage tab={activeTab} /></div>));
+    case 'ARTICLE_PAGE': return (activeTab && (<div className={className}><FsDirentPage tab={activeTab} /></div>));
     default: return (<div className={className}>{intl.formatMessage({ id: 'fs.main.message.noAssetSelected' })}</div>);
   }
 };

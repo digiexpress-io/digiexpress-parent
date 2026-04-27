@@ -6,7 +6,7 @@ import {
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Link | undefined;
+  dirent: Fs.Dirent | undefined;
   locales: string[];
   urlValue: string;
   intlValues: Record<string, string>;
@@ -24,11 +24,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent, selectOptions } = useFsDirent();
 
-  const dirent = getDirent<Fs.Link>(props.direntId);
+  const dirent = getDirent(props.direntId);
+  const link = dirent?.type === 'ARTICLE_LINK' ? dirent : undefined;
   const locales = selectOptions.languages;
 
-  const [urlValue, setUrlValue] = React.useState(dirent?.urlValue ?? '');
-  const [intlValues, setIntlValues] = React.useState<Record<string, string>>(dirent?.intlValues ?? {});
+  const [urlValue, setUrlValue] = React.useState((link as Fs.Link | undefined)?.urlValue ?? '');
+  const [intlValues, setIntlValues] = React.useState<Record<string, string>>(link?.intlValues ?? {});
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.configOptions ?? []) as Fs.ConfigOption[]
   );

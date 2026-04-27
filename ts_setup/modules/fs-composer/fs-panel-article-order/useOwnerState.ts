@@ -12,7 +12,7 @@ export const useOwnerState = (_props: FsPanelArticleOrderProps): OwnerState => {
   const { getDirent, selectOptions } = useFsDirent();
 
   const articles = selectOptions.articles
-    .map(opt => getDirent<Fs.Article>(opt.value))
+    .map(opt => getDirent(opt.value))
     .filter((a): a is Fs.Article => a !== undefined)
     .sort((a, b) => a.orderNumber - b.orderNumber);
 

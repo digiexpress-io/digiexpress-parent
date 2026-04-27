@@ -3,7 +3,7 @@ import { useFsNav, useFsDirent, Fs } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Service | undefined;
+  dirent: Fs.Dirent | undefined;
   name: string;
   dialobFormName: string;
   dialobFormTag: string;
@@ -31,19 +31,20 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent, selectOptions } = useFsDirent();
 
-  const dirent = getDirent<Fs.Service>(props.direntId);
+  const dirent = getDirent(props.direntId);
+  const service = dirent?.type === 'ARTICLE_WORKFLOW' ? dirent : undefined;
 
   const [name, setName] = React.useState(dirent?.name ?? '');
-  const [dialobFormName, setDialobFormName] = React.useState(dirent?.dialobFormName ?? '');
-  const [dialobFormTag, setDialobFormTag] = React.useState(dirent?.dialobFormTag ?? '');
-  const [flowName, setFlowName] = React.useState(dirent?.flowName ?? '');
-  const [validityStart, setValidityStart] = React.useState(dirent?.validityStart ?? '');
-  const [validityEnd, setValidityEnd] = React.useState(dirent?.validityEnd ?? '');
-  const [articles, setArticles] = React.useState<string[]>((dirent?.articles ?? []) as string[]);
+  const [dialobFormName, setDialobFormName] = React.useState(service?.dialobFormName ?? '');
+  const [dialobFormTag, setDialobFormTag] = React.useState(service?.dialobFormTag ?? '');
+  const [flowName, setFlowName] = React.useState(service?.flowName ?? '');
+  const [validityStart, setValidityStart] = React.useState(service?.validityStart ?? '');
+  const [validityEnd, setValidityEnd] = React.useState(service?.validityEnd ?? '');
+  const [articles, setArticles] = React.useState<string[]>((service?.articles ?? []) as string[]);
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.configOptions ?? []) as Fs.ConfigOption[]
   );
-  const [intlValues, setIntlValues] = React.useState<Record<string, string>>(dirent?.intlValues ?? {});
+  const [intlValues, setIntlValues] = React.useState<Record<string, string>>(service?.intlValues ?? {});
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const locales = selectOptions.languages;

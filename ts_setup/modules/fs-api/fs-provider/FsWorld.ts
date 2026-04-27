@@ -1,41 +1,36 @@
 import { Fs } from "../fs-types";
 
 
-
 export interface ItemReferencesEntry {
   assetName: string;
   location: string;
 }
 export class FsWorld {
 
-  private _hi_dirents: Fs.DirentBase[];
-  private _flat_dirents: Record<string, Fs.DirentBase>;
-  private _selectOptions:  Fs.SelectOptions | undefined;
+  private _hi_dirents: Fs.Dirent[];
+  private _flat_dirents: Record<string, Fs.Dirent>;
+  private _selectOptions: Fs.SelectOptions | undefined;
 
   constructor(props: {
     dirents: Fs.DirentBase[];
   }) {
-    this._hi_dirents = props.dirents;
-    this._flat_dirents = _flattenDirents(props.dirents);
+    this._flat_dirents = _buildDirents(_flattenDirents(props.dirents));
+    this._hi_dirents = props.dirents.map(d => this._flat_dirents[d.id]).filter(Boolean) as Fs.Dirent[];
   }
-  public getDirent(id: string): Fs.DirentBase | undefined {
-    const dirent = this._flat_dirents[id];
-
-    if (!dirent) {
-      return undefined;
-    }
-    return dirent;
+  public getDirent(id: string): Fs.Dirent | undefined {
+    return this._flat_dirents[id];
   }
 
   public get dirents(): Fs.DirentBase[] {
-    return [...this._hi_dirents];
+    return this._hi_dirents;
   }
+
   public findAllDirents(): Fs.DirentBase[] {
     return Object.values(this._flat_dirents);
   }
 
   public get selectOptions(): Fs.SelectOptions {
-    if(this._selectOptions == undefined) {
+    if (this._selectOptions == undefined) {
       const dirents = Object.values(this._flat_dirents)
       const propsMap = dirents
         .filter(e => !!e.props)
@@ -56,9 +51,9 @@ export class FsWorld {
         collectDialobTags: (dialobId: string): Fs.SelectOption[] => {
           const entry = propsMap[dialobId];
           if (!entry || entry.type !== 'DIALOB_FORM') { return []; }
-    
+
           const tags = (entry as Fs.DialobProps).versionTags;
-    
+
           if (!tags || tags.length === 0) { return []; }
           return tags.map(tag => ({ value: tag, label: tag }));
         },
@@ -87,7 +82,7 @@ export class FsWorld {
 
   public findReferencesToDirent(targetDirent: Fs.DirentBase): ItemReferencesEntry[] {
     const references: ItemReferencesEntry[] = [];
-    for(const dirent of Object.values(this._flat_dirents)) {
+    for (const dirent of Object.values(this._flat_dirents)) {
       if (dirent.props?.reference && dirent.name === targetDirent.name && dirent.id !== targetDirent.id) {
         references.push({
           assetName: dirent.name,
@@ -111,6 +106,17 @@ function _collectDirents(result: Record<string, Fs.DirentBase>, node: Fs.DirentB
   node.children.forEach(child => _collectDirents(result, child));
 }
 
+function _buildDirents(flat: Record<string, Fs.DirentBase>): Record<string, Fs.Dirent> {
+  const result: Record<string, Fs.Dirent> = {};
+  Object.values(flat).forEach(dirent => {
+    if (dirent.props) {
+      result[dirent.id] = { ...dirent, ...dirent.props } as Fs.Dirent;
+    } else {
+      result[dirent.id] = dirent as unknown as Fs.Dirent;
+    }
+  });
+  return result;
+}
 function _collectArticles(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
   const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {

@@ -13,6 +13,7 @@ export const FsPanelErrors: React.FC<FsPanelErrorsProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
 
+  /*
   if (!props.dirent) {
     return (
       <FsPanel title={intl.formatMessage({ id: 'fs.errors.title' })} icon={<FsIcon icon={FsIcons.Error} large />} activeDirent={false} noDirentMessage={intl.formatMessage({ id: 'fs.errors.message.selectDirent' })} />
@@ -68,5 +69,8 @@ export const FsPanelErrors: React.FC<FsPanelErrorsProps> = (props) => {
       </FsPanelErrorsRoot>
     </FsPanel>
   );
+  */
+
+  return <>errors</>
 };
 

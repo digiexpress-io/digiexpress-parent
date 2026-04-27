@@ -93,7 +93,10 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   }
 
   function onDoubleClick(dirent: Fs.DirentBase, pathToTopParent: string) {
-    openAsset(dirent, pathToTopParent);
+    const fullDirent = getDirent(dirent.id);
+    if (fullDirent) {
+      openAsset(fullDirent, pathToTopParent);
+    }
   }
 
   const isAnyDirentExpanded = dirents.some(dirent =>

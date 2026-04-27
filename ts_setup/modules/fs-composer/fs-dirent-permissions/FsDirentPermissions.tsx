@@ -9,6 +9,8 @@ export const FsDirentPermissions: React.FC<FsDirentPermissionsProps> = (props) =
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
+
+  /*
   const permissions = props.dirent?.permissions ?? [];
 
   return (
@@ -31,4 +33,6 @@ export const FsDirentPermissions: React.FC<FsDirentPermissionsProps> = (props) =
       </div>
     </FsDirentPermissionsRoot>
   );
+  */
+  return <>permissions</>
 };

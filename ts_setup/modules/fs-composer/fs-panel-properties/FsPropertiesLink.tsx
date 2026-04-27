@@ -6,19 +6,24 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesLinkProps {
-  direntProps: Fs.LinkProps;
+  dirent: Fs.Dirent;
 }
 
-export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ direntProps }) => {
+export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ dirent }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const locales = Object.keys(direntProps.intlValues);
+
+  if (dirent.type !== 'ARTICLE_LINK') {
+    return undefined;
+  }
+
+  const locales = Object.keys(dirent.intlValues);
 
   return (
     <>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.urlValue' })}</Typography>
-        <Typography className={classes.propertyValue}>{direntProps.urlValue}</Typography>
+        {/* <Typography className={classes.propertyValue}>{dirent.urlValue}</Typography> */}
       </div>
 
       <div className={classes.propertyRow}>

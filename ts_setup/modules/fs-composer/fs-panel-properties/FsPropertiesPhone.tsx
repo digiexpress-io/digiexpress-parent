@@ -6,19 +6,24 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesPhoneProps {
-  direntProps: Fs.PhoneProps;
+  dirent: Fs.Dirent;
 }
 
-export const FsPropertiesPhone: React.FC<FsPropertiesPhoneProps> = ({ direntProps }) => {
+export const FsPropertiesPhone: React.FC<FsPropertiesPhoneProps> = ({ dirent }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const locales = Object.keys(direntProps.intlValues);
+
+  if (dirent.type !== 'ARTICLE_LINK') {
+    return undefined;
+  }
+
+  const locales = Object.keys(dirent.intlValues);
 
   return (
     <>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.phoneValue' })}</Typography>
-        <Typography className={classes.propertyValue}>{direntProps.phoneValue}</Typography>
+        {/*<Typography className={classes.propertyValue}>{dirent.phoneValue}</Typography> */}
       </div>
 
       <div className={classes.propertyRow}>

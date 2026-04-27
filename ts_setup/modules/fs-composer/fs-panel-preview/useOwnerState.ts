@@ -13,11 +13,14 @@ export const useOwnerState = (props: FsPanelPreviewProps): OwnerState => {
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
+  const dirent = props.dirent ? getDirent(props.dirent.id) : undefined;
+  const page = dirent?.type === 'ARTICLE_PAGE' ? dirent : undefined;
+  const flow = dirent?.type === 'FLOW' ? dirent : undefined;
+  const content = page?.content ?? flow?.content ?? '';
+
   const isPage = props.dirent?.type === 'ARTICLE_PAGE';
   const isFlow = props.dirent?.type === 'FLOW';
-  const page = isPage ? getDirent<Fs.Page>(props.dirent!.id) : undefined;
-  const flow = isFlow ? getDirent<Fs.Flow>(props.dirent!.id) : undefined;
-  const content = page?.content ?? flow?.content ?? '';
+
 
   return { isDarkMode, isPage, isFlow, content };
 }

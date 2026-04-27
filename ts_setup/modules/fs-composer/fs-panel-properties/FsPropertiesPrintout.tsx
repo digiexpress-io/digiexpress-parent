@@ -7,24 +7,28 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesPrintoutProps {
-  direntProps: Fs.PrintoutProps;
+  dirent: Fs.Dirent;
   children: Fs.DirentBase[];
 }
 
-export const FsPropertiesPrintout: React.FC<FsPropertiesPrintoutProps> = ({ direntProps, children }) => {
+export const FsPropertiesPrintout: React.FC<FsPropertiesPrintoutProps> = ({ dirent, children }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
+
+  if (dirent.type !== 'PRINTOUT') {
+    return undefined;
+  }
 
   return (
     <>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.printoutServiceName' })}</Typography>
-        <Typography className={classes.propertyValue}>{direntProps.printoutServiceName}</Typography>
+        <Typography className={classes.propertyValue}>{dirent.printoutServiceName}</Typography>
       </div>
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.orchestratorName' })}</Typography>
-        <Typography className={classes.propertyValue}>{direntProps.orchestratorName}</Typography>
+        <Typography className={classes.propertyValue}>{dirent.orchestratorName}</Typography>
       </div>
 
       <div className={classes.propertyRow}>

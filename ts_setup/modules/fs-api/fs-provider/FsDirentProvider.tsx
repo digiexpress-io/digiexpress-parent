@@ -10,7 +10,7 @@ export interface FsDirentContextType {
   creatableTypes: Fs.BodyType[];
   selectOptions: Fs.SelectOptions;
   getConfigOptionsForType: (type: Fs.Type) => Fs.SelectOption[];
-  getDirent: (id: string) => Fs.DirentBase | undefined;
+  getDirent: (id: string) => Fs.Dirent | undefined;
   isChildError: (dirent: Fs.DirentBase) => boolean;
   findReferencesToDirent: (dirent: Fs.DirentBase) => ItemReferencesEntry[];
   updateDirent: (id: string, updated: Partial<Fs.Props>) => void;

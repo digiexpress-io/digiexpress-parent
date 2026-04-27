@@ -5,7 +5,7 @@ import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Page | undefined;
+  dirent: Fs.Dirent | undefined;
   articleId: string;
   localeCode: string;
   description: string;
@@ -17,16 +17,19 @@ export interface UpdateOwnerState {
   onChangeLocaleCode: (value: string) => void;
   onChangeDescription: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
+  content: string;
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsNav();
   const { getDirent, selectOptions, getConfigOptionsForType } = useFsDirent();
 
-  const dirent = getDirent<Fs.Page>(props.direntId);
-
-  const [articleId, setArticleId] = React.useState(dirent?.articleId ?? '');
-  const [localeCode, setLocaleCode] = React.useState(dirent?.localeCode ?? '');
+  const dirent = getDirent(props.direntId);
+  const page = dirent?.type === 'ARTICLE_PAGE' ? dirent : undefined;
+  console.log('page dirent:', page);
+  const [content, setContent] = React.useState(page?.content ?? '');
+  const [articleId, setArticleId] = React.useState(page?.articleId ?? '');
+  const [localeCode, setLocaleCode] = React.useState(page?.localeCode ?? '');
   const [description, setDescription] = React.useState(dirent?.description ?? '');
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.configOptions ?? []) as Fs.ConfigOption[]
@@ -55,6 +58,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   return ({
     isDarkMode,
     dirent,
+    content,
     articleId,
     localeCode,
     description,

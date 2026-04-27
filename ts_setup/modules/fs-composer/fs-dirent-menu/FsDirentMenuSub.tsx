@@ -11,7 +11,7 @@ import { FsDirentComments } from '../fs-dirent-comments';
 import { FsDirentLabels } from '../fs-dirent-labels';
 
 export interface FsDirentMenuSubProps {
-  dirent: Fs.DirentBase | undefined;
+  dirent: Fs.Dirent | undefined;
   openSubmenu: string | undefined;
   onClose: () => void;
 }

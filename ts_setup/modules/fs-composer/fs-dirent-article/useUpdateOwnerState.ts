@@ -4,7 +4,7 @@ import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Article | undefined;
+  dirent: Fs.Dirent | undefined;
   name: string;
   orderNumber: string;
   description: string;
@@ -25,10 +25,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent<Fs.Article>(props.direntId);
+  const dirent = getDirent(props.direntId);
+  const article = dirent?.type === 'ARTICLE' ? dirent : undefined;
 
   const [name, setName] = React.useState(dirent?.name ?? '');
-  const [orderNumber, setOrderNumber] = React.useState(dirent?.orderNumber != null ? String(dirent.orderNumber) : '');
+  const [orderNumber, setOrderNumber] = React.useState(article?.orderNumber != undefined ? String(article.orderNumber) : '');
   const [description, setDescription] = React.useState(dirent?.description ?? '');
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.configOptions ?? []) as Fs.ConfigOption[]

@@ -7,7 +7,7 @@ import { FsIcon, FsIcons } from '../fs-theme';
 
 
 export interface FsDirentMenuMainProps {
-  dirent: Fs.DirentBase | undefined;
+  dirent: Fs.Dirent | undefined;
   openSubmenu: string | undefined;
   onSubmenuOpen: (submenuType: string) => void;
   onClose: () => void;
@@ -116,7 +116,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
 
       <Divider className={classes.divider} />
 
-      {dirent && dirent.configOptions.length > 0 && (
+      {dirent && (dirent.configOptions ?? []).length > 0 && (
         <MenuItem className={classes.menuItem}>
           <div>
             <div>{intl.formatMessage({ id: 'fs.direntMenu.menuItem.configOptions' })}</div>
@@ -137,7 +137,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
       <MenuItem className={props.openSubmenu === 'labels' ? classes.menuItemActive : classes.menuItem} onClick={() => handleSubmenuToggle('labels')}>
         <div>
           <div>{intl.formatMessage({ id: 'fs.direntMenu.menuItem.labels' })}</div>
-          {dirent && dirent.labels.length > 0 && (
+          {dirent && (dirent.labels ?? []).length > 0 && (
             <Box sx={{
               mt: 0.5,
               display: 'flex',
@@ -145,7 +145,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
               gap: 0.5,
               overflow: 'hidden'
             }}>
-              {dirent.labels.map(label => (
+              {(dirent.labels ?? []).map(label => (
                 <Chip key={label.id} label={label.value} size='small' className={classes.label} />
               ))}
             </Box>
@@ -161,7 +161,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         className={props.openSubmenu === 'comments' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('comments')}
       >
-        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.comments' }, { count: dirent?.comments.length ?? 0 })}
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.comments' }, { count: (dirent?.comments ?? []).length })}
         <Box flex={1} />
         <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>

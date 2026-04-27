@@ -4,7 +4,7 @@ import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Printout | undefined;
+  dirent: Fs.Dirent | undefined;
   locales: string[];
   name: string;
   printoutServiceName: string;
@@ -22,8 +22,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent<Fs.Printout>(props.direntId);
-  const printout = dirent as Fs.PrintoutProps | undefined;
+  const dirent = getDirent(props.direntId);
+  const printout = dirent?.type === 'PRINTOUT' ? dirent : undefined;
   const locales = Object.keys(printout?.intlValues ?? {});
 
   const [name, setName] = React.useState(dirent?.name ?? '');

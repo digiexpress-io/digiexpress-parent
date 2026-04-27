@@ -9,6 +9,9 @@ export const FsDirentHistory: React.FC<FsDirentHistoryProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
+
+
+ /*
   const changes = props.dirent?.changes ?? [];
 
   return (
@@ -31,4 +34,7 @@ export const FsDirentHistory: React.FC<FsDirentHistoryProps> = (props) => {
       </div>
     </FsDirentHistoryRoot>
   );
+  */
+
+  return <>changes</>
 };

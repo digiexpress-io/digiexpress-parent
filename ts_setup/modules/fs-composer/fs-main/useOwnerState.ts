@@ -18,7 +18,7 @@ export interface PanelButton {
 
 export interface OwnerState {
   isDarkMode: boolean;
-  activeDirent: Fs.DirentBase | undefined;
+  activeDirent: Fs.Dirent | undefined;
   isRightPanelOpen: boolean;
   selectedView: Fs.SecondaryView | undefined;
   activeTabIndex: number;

@@ -14,7 +14,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent<Fs.Folder>(props.direntId);
+  const dirent = getDirent(props.direntId);
+  const folder = dirent?.type === 'FOLDER' ? dirent : undefined;
 
   const [name, setName] = React.useState(dirent?.name ?? '');
 
@@ -24,7 +25,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   return ({
     isDarkMode,
-    dirent,
+    dirent: folder,
     location: dirent?.name ?? '',
     name,
     onChangeName,

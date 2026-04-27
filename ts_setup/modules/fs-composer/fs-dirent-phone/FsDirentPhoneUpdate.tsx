@@ -20,7 +20,7 @@ export const FsDirentPhoneUpdate: React.FC<FsDirentPhoneUpdateProps> = (props) =
   const { selectOptions, getConfigOptionsForType } = useFsDirent();
   const articles = selectOptions.articles;
   const configOptions = getConfigOptionsForType('phone');
-
+  //TODO phoneValue
   return (
     <FsDirentPhoneRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.phone.sectionTitle.edit' })}</Typography>
@@ -28,7 +28,7 @@ export const FsDirentPhoneUpdate: React.FC<FsDirentPhoneUpdateProps> = (props) =
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.phoneValueField.label' })}</Typography>
         <FsDirentTextField required
-          value={ownerState.phoneValue} placeholder={intl.formatMessage({ id: 'fs.dirent.phone.phoneValueField.placeholder' })}
+          value={/*ownerState.phoneValue*/ undefined} placeholder={intl.formatMessage({ id: 'fs.dirent.phone.phoneValueField.placeholder' })}
           onChange={ownerState.onChangePhoneValue}
         />
 

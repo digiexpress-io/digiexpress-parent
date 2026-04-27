@@ -6,17 +6,21 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesLanguageProps {
-  direntProps: Fs.LanguageProps;
+  dirent: Fs.Dirent;
 }
 
-export const FsPropertiesLanguage: React.FC<FsPropertiesLanguageProps> = ({ direntProps }) => {
+export const FsPropertiesLanguage: React.FC<FsPropertiesLanguageProps> = ({ dirent }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
+
+  if (dirent.type !== 'LOCALE') {
+    return undefined;
+  }
 
   return (
     <div className={classes.propertyRow}>
       <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.localeCode' })}</Typography>
-      <Typography className={classes.propertyValue}>{direntProps.localeCode}</Typography>
+      <Typography className={classes.propertyValue}>{dirent.localeCode}</Typography>
     </div>
   );
 };

@@ -18,16 +18,16 @@ import { FsPropertiesTemplate } from './FsPropertiesTemplate';
 
 
 
-function renderTypeSpecificRows(direntProps: Fs.DirentBase): React.ReactNode {
-  switch (direntProps.type) {
+function renderTypeSpecificRows(dirent: Fs.Dirent): React.ReactNode {
+  switch (dirent.type) {
     case 'ARTICLE': return null;
-    //case 'ARTICLE_WORKFLOW': return <FsPropertiesService direntProps={direntProps} />;
-    case 'DIALOB_FORM': return <FsPropertiesDialob direntProps={direntProps} />;
-    case 'LOCALE': return <FsPropertiesLanguage direntProps={direntProps} />;
+    case 'ARTICLE_WORKFLOW': return <FsPropertiesService dirent={dirent} />;
+    case 'DIALOB_FORM': return <FsPropertiesDialob dirent={dirent} />;
+    case 'LOCALE': return <FsPropertiesLanguage dirent={dirent} />;
     case 'PRINTOUT': return null;
-    case 'ARTICLE_LINK': return <FsPropertiesLink direntProps={direntProps as Fs.LinkProps} />;
-    // case 'ARTICLE_LINK': return <FsPropertiesPhone direntProps={direntProps} />;
-    case 'ARTICLE_TEMPLATE': return <FsPropertiesTemplate direntProps={direntProps} />;
+    case 'ARTICLE_LINK': return <FsPropertiesLink dirent={dirent} />;
+    // case 'ARTICLE_LINK': return <FsPropertiesPhone dirent={direntProps} />;
+    case 'ARTICLE_TEMPLATE': return <FsPropertiesTemplate dirent={dirent} />;
     default: return null;
   }
 }
@@ -36,10 +36,10 @@ function renderTypeSpecificRows(direntProps: Fs.DirentBase): React.ReactNode {
 export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
-  const { direntProps } = ownerState;
+  const { dirent } = ownerState;
   const classes = useUtilityClasses();
 
-  if (!direntProps) {
+  if (!dirent) {
     return (
       <FsPanel title={intl.formatMessage({ id: 'fs.properties.title' })} icon={<FsIcon icon={FsIcons.Settings} large />}
         activeDirent={false}
@@ -49,13 +49,13 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
     );
   }
 
-  const labels = direntProps.labels.map(l => l.value);
-  const configOptionsEnabled = direntProps.configOptions;
-  const comments = direntProps.comments;
-  const description = direntProps.description;
+  const labels = (dirent.labels ?? []).map(l => l.value);
+  const configOptionsEnabled = dirent.configOptions ?? [];
+  const comments = dirent.comments ?? [];
+  const description = dirent.description;
 
   return (
-    <FsPanel title={intl.formatMessage({ id: 'fs.properties.title.direntName' }, { direntName: direntProps.name })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={true}>
+    <FsPanel title={intl.formatMessage({ id: 'fs.properties.title.direntName' }, { direntName: dirent.name })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={true}>
       <FsPanelPropertiesRoot className={classes.root} ownerState={ownerState}>
 
 
@@ -99,14 +99,14 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
           </div>
         </div>
 
-        {renderTypeSpecificRows(direntProps)}
+        {renderTypeSpecificRows(dirent)}
 
-        {direntProps.type === 'ARTICLE' && (
-          <FsPropertiesArticle direntProps={direntProps} children={direntProps.children} />
+        {dirent.type === 'ARTICLE' && (
+          <FsPropertiesArticle dirent={dirent} children={dirent.children} />
         )}
 
-        {direntProps.type === 'PRINTOUT' && (
-          <FsPropertiesPrintout direntProps={direntProps} children={direntProps.children} />
+        {dirent.type === 'PRINTOUT' && (
+          <FsPropertiesPrintout dirent={dirent} children={dirent.children} />
         )}
 
       </FsPanelPropertiesRoot>

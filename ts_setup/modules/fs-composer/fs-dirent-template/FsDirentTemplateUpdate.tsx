@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MonacoReact from '@monaco-editor/react';
-import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
@@ -20,12 +19,6 @@ export const FsDirentTemplateUpdate: React.FC<FsDirentTemplateUpdateProps> = (pr
     <FsDirentTemplateRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.template.sectionTitle.edit' })}</Typography>
       <div className={classes.formContainer}>
-
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.template.printoutServiceIdField.label' })}</Typography>
-        <FsDirentTextField value={ownerState.printoutServiceId} disabled />
-
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.template.localeIdField.label' })}</Typography>
-        <FsDirentTextField value={ownerState.localeDisplay} disabled />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.template.contentField.label' })}</Typography>
         <div className={classes.editor}>

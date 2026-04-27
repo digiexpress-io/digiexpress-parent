@@ -83,7 +83,7 @@ export const FsDirentTextFieldRoot = styled('div', {
       },
 
       '&.Mui-disabled': {
-        '-webkit-text-fill-color': placeholderColor,
+        WebkitTextFillColor: placeholderColor,
       },
     },
 
