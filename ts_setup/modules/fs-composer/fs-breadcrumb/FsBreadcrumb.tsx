@@ -23,12 +23,9 @@ export const FsBreadcrumb: React.FC<FsBreadcrumbProps> = (props) => {
 
       {ownerState.assetPath && (
         <Typography className={classes.assetPath}>
-          {ownerState.assetPath} /&nbsp;
+          {ownerState.assetPath}
         </Typography>
       )}
-      <Typography className={classes.assetName}>
-        {ownerState.assetName}
-      </Typography>
     </FsBreadcrumbRoot>
   );
 };

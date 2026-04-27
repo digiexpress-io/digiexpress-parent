@@ -26,7 +26,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   return ({
     isDarkMode,
     dirent: folder,
-    location: dirent?.name ?? '',
+    location: dirent?.fullPath ?? '',
     name,
     onChangeName,
   });
