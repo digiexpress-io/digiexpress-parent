@@ -4,7 +4,7 @@ import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Dirent | undefined;
+  dirent: Fs.DirentBase | undefined;
   content: string;
   onChangeContent: (value: string) => void;
 }
@@ -14,10 +14,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { getDirent } = useFsDirent();
 
   const dirent = getDirent(props.direntId);
-  const articleTemplate = dirent?.type === 'ARTICLE_TEMPLATE' ? dirent : undefined;
+  const templateProps = dirent?.type === 'ARTICLE_TEMPLATE' ? dirent.props as Fs.TemplateProps : undefined;
 
-
-  const [content, setContent] = React.useState(articleTemplate?.content ?? '');
+  const [content, setContent] = React.useState(templateProps?.content ?? '');
 
   function onChangeContent(value: string) {
     setContent(value);

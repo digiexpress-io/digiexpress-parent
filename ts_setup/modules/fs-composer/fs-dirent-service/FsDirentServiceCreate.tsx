@@ -21,7 +21,7 @@ export const FsDirentServiceCreate: React.FC<FsDirentServiceCreateProps> = (prop
   const dialobForms = selectOptions.dialobs;
   const flows = selectOptions.flows;
   const articles = selectOptions.articles;
-  const configOptions = getConfigOptionsForType('service');
+  const configOptions = getConfigOptionsForType('ARTICLE_WORKFLOW');
 
   const [serviceName, setServiceName] = React.useState('');
   const [selectedDialobForm, setSelectedDialobForm] = React.useState<string>('');

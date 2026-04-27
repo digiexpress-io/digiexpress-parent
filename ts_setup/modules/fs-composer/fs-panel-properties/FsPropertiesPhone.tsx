@@ -6,7 +6,7 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesPhoneProps {
-  dirent: Fs.Dirent;
+  dirent: Fs.DirentBase;
 }
 
 export const FsPropertiesPhone: React.FC<FsPropertiesPhoneProps> = ({ dirent }) => {
@@ -17,7 +17,7 @@ export const FsPropertiesPhone: React.FC<FsPropertiesPhoneProps> = ({ dirent }) 
     return undefined;
   }
 
-  const locales = Object.keys(dirent.intlValues);
+  const locales = Object.keys((dirent.props as Fs.PhoneProps)?.intlValues ?? {});
 
   return (
     <>

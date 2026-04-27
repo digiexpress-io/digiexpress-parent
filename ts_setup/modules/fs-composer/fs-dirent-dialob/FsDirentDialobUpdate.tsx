@@ -17,7 +17,7 @@ export const FsDirentDialobUpdate: React.FC<FsDirentDialobUpdateProps> = (props)
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
   const { selectOptions } = useFsDirent();
-  const [labels, setLabels] = React.useState<string[]>((ownerState.dirent?.labels ?? []).map(l => l.value));
+  const [labels, setLabels] = React.useState<string[]>((ownerState.dirent?.props?.labels ?? []).map(l => l.value));
 
   return (
     <FsDirentDialobRoot className={classes.root} ownerState={ownerState}>

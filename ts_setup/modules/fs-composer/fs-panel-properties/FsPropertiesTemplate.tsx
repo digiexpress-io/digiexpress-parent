@@ -6,7 +6,7 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesTemplateProps {
-  dirent: Fs.Dirent;
+  dirent: Fs.DirentBase;
 }
 
 export const FsPropertiesTemplate: React.FC<FsPropertiesTemplateProps> = ({ dirent }) => {
@@ -21,12 +21,12 @@ export const FsPropertiesTemplate: React.FC<FsPropertiesTemplateProps> = ({ dire
     <>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.printoutServiceId' })}</Typography>
-        <Typography className={classes.propertyValue}>{dirent.printoutServiceId}</Typography>
+        <Typography className={classes.propertyValue}>{(dirent.props as Fs.TemplateProps)?.printoutServiceId}</Typography>
       </div>
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.localeCode' })}</Typography>
-        <Typography className={classes.propertyValue}>{dirent.localeId}</Typography>
+        <Typography className={classes.propertyValue}>{(dirent.props as Fs.TemplateProps)?.localeId}</Typography>
       </div>
     </>
   );

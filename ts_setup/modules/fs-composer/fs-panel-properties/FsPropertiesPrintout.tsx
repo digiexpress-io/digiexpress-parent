@@ -7,7 +7,7 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesPrintoutProps {
-  dirent: Fs.Dirent;
+  dirent: Fs.DirentBase;
   children: Fs.DirentBase[];
 }
 
@@ -23,12 +23,12 @@ export const FsPropertiesPrintout: React.FC<FsPropertiesPrintoutProps> = ({ dire
     <>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.printoutServiceName' })}</Typography>
-        <Typography className={classes.propertyValue}>{dirent.printoutServiceName}</Typography>
+        <Typography className={classes.propertyValue}>{(dirent.props as Fs.PrintoutProps)?.printoutServiceName}</Typography>
       </div>
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.orchestratorName' })}</Typography>
-        <Typography className={classes.propertyValue}>{dirent.orchestratorName}</Typography>
+        <Typography className={classes.propertyValue}>{(dirent.props as Fs.PrintoutProps)?.orchestratorName}</Typography>
       </div>
 
       <div className={classes.propertyRow}>

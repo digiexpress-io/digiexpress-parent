@@ -4,7 +4,7 @@ import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Dirent | undefined;
+  dirent: Fs.DirentBase | undefined;
   name: string;
   onChangeName: (value: string) => void;
   content: string;
@@ -16,10 +16,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { getDirent } = useFsDirent();
 
   const dirent = getDirent(props.direntId);
-  const flow = dirent?.type === 'FLOW' ? dirent : undefined;
+  const flowProps = dirent?.type === 'FLOW' ? dirent.props as Fs.FlowProps : undefined;
 
   const [name, setName] = React.useState(dirent?.name ?? '');
-  const [content, setContent] = React.useState(flow?.content ?? '');
+  const [content, setContent] = React.useState(flowProps?.content ?? '');
 
   function onChangeName(value: string) {
     setName(value);

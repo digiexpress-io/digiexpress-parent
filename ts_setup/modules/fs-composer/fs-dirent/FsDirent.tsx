@@ -27,7 +27,7 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
     }
     clickTimerRef.current = window.setTimeout(() => {
       ownerState.onToggle(ownerState.dirent.id);
-    }, 250);
+    }, 100); //TODO
   }
 
   function handleDoubleClick() {

@@ -18,7 +18,7 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
   const classes = useUtilityClasses();
   const { selectOptions, getConfigOptionsForType } = useFsDirent();
   const articles = selectOptions.articles;
-  const configOptions = getConfigOptionsForType('link');
+  const configOptions = getConfigOptionsForType('ARTICLE_LINK');
 
   return (
     <FsDirentLinkRoot className={classes.root} ownerState={ownerState}>

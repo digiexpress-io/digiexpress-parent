@@ -6,7 +6,7 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesDialobProps {
-  dirent: Fs.Dirent;
+  dirent: Fs.DirentBase;
 }
 
 export const FsPropertiesDialob: React.FC<FsPropertiesDialobProps> = ({ dirent }) => {
@@ -18,18 +18,19 @@ export const FsPropertiesDialob: React.FC<FsPropertiesDialobProps> = ({ dirent }
     return undefined;
   }
 
-  const activeDialobTag = selectOptions.getActiveDialobTag(dirent);
+  const dialobProps = dirent.props as Fs.DialobProps | undefined;
+  const activeDialobTag = dialobProps ? selectOptions.getActiveDialobTag(dialobProps) : undefined;
 
   return (
     <>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.formName' })}</Typography>
-        <Typography className={classes.propertyValue}>{dirent.formName}</Typography>
+        <Typography className={classes.propertyValue}>{dialobProps?.formName}</Typography>
       </div>
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.formTechnicalId' })}</Typography>
-        <Typography className={classes.propertyValue}>{dirent.formTechnicalId}</Typography>
+        <Typography className={classes.propertyValue}>{dialobProps?.formTechnicalId}</Typography>
       </div>
 
       <div className={classes.propertyRow}>

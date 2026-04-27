@@ -4,7 +4,7 @@ import { FsPanelArticleOrderProps } from './FsPanelArticleOrderProps';
 
 export interface OwnerState {
   isDarkMode: boolean;
-  articles: Fs.Article[];
+  articles: Fs.DirentBase[];
 }
 
 export const useOwnerState = (_props: FsPanelArticleOrderProps): OwnerState => {
@@ -13,8 +13,12 @@ export const useOwnerState = (_props: FsPanelArticleOrderProps): OwnerState => {
 
   const articles = selectOptions.articles
     .map(opt => getDirent(opt.value))
-    .filter((a): a is Fs.Article => a !== undefined)
-    .sort((a, b) => a.orderNumber - b.orderNumber);
+    .filter((a): a is Fs.DirentBase => a !== undefined)
+    .sort((a, b) => {
+      const aOrder = (a.props as Fs.ArticleProps)?.orderNumber ?? 0;
+      const bOrder = (b.props as Fs.ArticleProps)?.orderNumber ?? 0;
+      return aOrder - bOrder;
+    });
 
   return { isDarkMode, articles };
 };

@@ -6,7 +6,7 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesServiceProps {
-  dirent: Fs.Dirent;
+  dirent: Fs.DirentBase;
 }
 
 export const FsPropertiesService: React.FC<FsPropertiesServiceProps> = ({ dirent }) => {
@@ -16,13 +16,14 @@ export const FsPropertiesService: React.FC<FsPropertiesServiceProps> = ({ dirent
   if (dirent.type !== 'ARTICLE_WORKFLOW') {
     return undefined;
   }
-  const locales = Object.keys(dirent.intlValues ?? {});
+  const serviceProps = dirent.props as Fs.ServiceProps | undefined;
+  const locales = Object.keys(serviceProps?.intlValues ?? {});
 
   return (
     <>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.serviceName' })}</Typography>
-        <Typography className={classes.propertyValue}>{dirent.serviceName}</Typography>
+        <Typography className={classes.propertyValue}>{serviceProps?.serviceName}</Typography>
       </div>
 
       <div className={classes.propertyRow}>
@@ -34,33 +35,33 @@ export const FsPropertiesService: React.FC<FsPropertiesServiceProps> = ({ dirent
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.serviceValidityStart' })}</Typography>
-        <Typography className={classes.propertyValue}>{dirent.validityStart}</Typography>
+        <Typography className={classes.propertyValue}>{serviceProps?.validityStart}</Typography>
       </div>
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.serviceValidityEnd' })}</Typography>
-        <Typography className={classes.propertyValue}>{dirent.validityEnd}</Typography>
+        <Typography className={classes.propertyValue}>{serviceProps?.validityEnd}</Typography>
       </div>
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.dialobFormName' })}</Typography>
-        <Typography className={classes.propertyValue}>{dirent.dialobFormName}</Typography>
+        <Typography className={classes.propertyValue}>{serviceProps?.dialobFormName}</Typography>
       </div>
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.dialobFormTag' })}</Typography>
-        <Typography className={classes.propertyValue}>{dirent.dialobFormTag}</Typography>
+        <Typography className={classes.propertyValue}>{serviceProps?.dialobFormTag}</Typography>
       </div>
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.flowName' })}</Typography>
-        <Typography className={classes.propertyValue}>{dirent.flowName}</Typography>
+        <Typography className={classes.propertyValue}>{serviceProps?.flowName}</Typography>
       </div>
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.selectedArticles' })}</Typography>
         <div className={classes.propertyList}>
-          {dirent.articles.map((article, index) => <Box key={index} className={classes.propertyListItem}>{article}</Box>)}
+          {(serviceProps?.articles ?? []).map((article, index) => <Box key={index} className={classes.propertyListItem}>{article}</Box>)}
         </div>
       </div>
     </>

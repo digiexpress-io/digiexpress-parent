@@ -14,9 +14,9 @@ function hook(props: {}) {
       return params
         .fetch(url({}) + '/dirents', { method })
         .then(resp => resp.json())
-        .then((data: any) => data.dirents
-        );
-
+        .then((data: any) => {
+          return (data.dirents ?? []) as Fs.DirentBase[];
+        });
     }
 
   }

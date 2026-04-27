@@ -27,21 +27,6 @@ export declare namespace Fs {
     errors: AssetError[];
   }
 
-  export interface PropsMap {
-    folder: FolderProps;
-    article: ArticleProps;
-    service: ServiceProps;
-    dialob: DialobProps;
-    flow: FlowProps;
-    language: LanguageProps;
-    printout: PrintoutProps;
-    image: ImageProps;
-    page: PageProps;
-    template: TemplateProps;
-    link: LinkProps;
-    phone: PhoneProps;
-  }
-
   export type BodyType =
     | 'LOCALE'
     | 'ARTICLE_LINK'
@@ -60,25 +45,19 @@ export declare namespace Fs {
     | 'FOLDER'
     | 'UNKNOWN';
 
-  export type Type = keyof PropsMap;
-  export type Props = PropsMap[Type];
-
-
-  export type Folder = DirentBase & FolderProps;
-  export type Article = DirentBase & ArticleProps;
-  export type Service = DirentBase & ServiceProps;
-  export type Dialob = DirentBase & DialobProps;
-  export type Flow = DirentBase & FlowProps;
-  export type Language = DirentBase & LanguageProps;
-  export type Printout = DirentBase & PrintoutProps;
-  export type Image = DirentBase & ImageProps;
-  export type Page = DirentBase & PageProps;
-  export type Template = DirentBase & TemplateProps;
-  export type Link = DirentBase & LinkProps;
-  export type Phone = DirentBase & PhoneProps;
-
-  export type Dirent = Folder | Article | Service | Dialob | Flow | Language
-    | Printout | Image | Page | Template | Link | Phone;
+  export type Props =
+    | FolderProps
+    | ArticleProps
+    | ServiceProps
+    | DialobProps
+    | FlowProps
+    | LanguageProps
+    | PrintoutProps
+    | ImageProps
+    | PageProps
+    | TemplateProps
+    | LinkProps
+    | PhoneProps;
 
   export interface FolderProps extends PropsBase {
     type: 'FOLDER';

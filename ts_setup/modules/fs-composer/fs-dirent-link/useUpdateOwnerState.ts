@@ -6,7 +6,7 @@ import {
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Dirent | undefined;
+  dirent: Fs.DirentBase | undefined;
   locales: string[];
   urlValue: string;
   intlValues: Record<string, string>;
@@ -25,15 +25,15 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { getDirent, selectOptions } = useFsDirent();
 
   const dirent = getDirent(props.direntId);
-  const link = dirent?.type === 'ARTICLE_LINK' ? dirent : undefined;
+  const linkProps = dirent?.type === 'ARTICLE_LINK' ? dirent.props as Fs.LinkProps : undefined;
   const locales = selectOptions.languages;
 
-  const [urlValue, setUrlValue] = React.useState((link as Fs.Link | undefined)?.urlValue ?? '');
-  const [intlValues, setIntlValues] = React.useState<Record<string, string>>(link?.intlValues ?? {});
+  const [urlValue, setUrlValue] = React.useState(linkProps?.urlValue ?? '');
+  const [intlValues, setIntlValues] = React.useState<Record<string, string>>(linkProps?.intlValues ?? {});
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
-    (dirent?.configOptions ?? []) as Fs.ConfigOption[]
+    (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
   );
-  const [description, setDescription] = React.useState(dirent?.description ?? '');
+  const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   function onChangeUrlValue(value: string) {

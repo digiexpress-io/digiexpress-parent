@@ -7,17 +7,18 @@ export interface ItemReferencesEntry {
 }
 export class FsWorld {
 
-  private _hi_dirents: Fs.Dirent[];
-  private _flat_dirents: Record<string, Fs.Dirent>;
+  private _hi_dirents: Fs.DirentBase[];
+  private _flat_dirents: Record<string, Fs.DirentBase>;
   private _selectOptions: Fs.SelectOptions | undefined;
 
   constructor(props: {
     dirents: Fs.DirentBase[];
   }) {
-    this._flat_dirents = _buildDirents(_flattenDirents(props.dirents));
-    this._hi_dirents = props.dirents.map(d => this._flat_dirents[d.id]).filter(Boolean) as Fs.Dirent[];
+    this._flat_dirents = _flattenDirents(props.dirents);
+    this._hi_dirents = props.dirents;
   }
-  public getDirent(id: string): Fs.Dirent | undefined {
+
+  public getDirent(id: string): Fs.DirentBase | undefined {
     return this._flat_dirents[id];
   }
 
@@ -31,7 +32,7 @@ export class FsWorld {
 
   public get selectOptions(): Fs.SelectOptions {
     if (this._selectOptions == undefined) {
-      const dirents = Object.values(this._flat_dirents)
+      const dirents = Object.values(this._flat_dirents);
       const propsMap = dirents
         .filter(e => !!e.props)
         .reduce((acc, e) => {
@@ -45,32 +46,35 @@ export class FsWorld {
         flows: _collectFlows(dirents),
         dialobs: _collectDialobs(dirents),
         languages: _collectLanguages(dirents),
-        labels: _collectLabels(Object.values(propsMap)),
+        labels: _collectLabels(dirents),
         direntProps: propsMap,
 
         collectDialobTags: (dialobId: string): Fs.SelectOption[] => {
           const entry = propsMap[dialobId];
-          if (!entry || entry.type !== 'DIALOB_FORM') { return []; }
-
+          if (!entry || entry.type !== 'DIALOB_FORM') {
+            return [];
+          }
           const tags = (entry as Fs.DialobProps).versionTags;
-
-          if (!tags || tags.length === 0) { return []; }
+          if (!tags || tags.length === 0) {
+            return [];
+          }
           return tags.map(tag => ({ value: tag, label: tag }));
         },
         getActiveDialobTag: (props: Fs.DialobProps): string => {
           const tags = props.versionTags;
-          if (!tags || tags.length === 0) { return 'LATEST'; }
+          if (!tags || tags.length === 0) {
+            return 'LATEST';
+          }
           return tags[tags.length - 1];
         }
-      }
+      };
     }
 
     return this._selectOptions;
   }
 
   public isChildError(dirent: Fs.DirentBase): boolean {
-    const direntProps = dirent.props;
-    if (direntProps?.errors && direntProps.errors.length > 0) {
+    if (dirent.props?.errors && dirent.props.errors.length > 0) {
       return true;
     }
     if (dirent.children) {
@@ -90,7 +94,6 @@ export class FsWorld {
         });
       }
     }
-
     return references;
   };
 }
@@ -98,30 +101,22 @@ export class FsWorld {
 
 function _flattenDirents(nodes: Fs.DirentBase[]): Record<string, Fs.DirentBase> {
   const result: Record<string, Fs.DirentBase> = {};
-  nodes.forEach(node => _collectDirents(result, node));
+  function collect(items: Fs.DirentBase[]): void {
+    items.forEach(node => {
+      result[node.id] = node;
+      if (node.children && node.children.length > 0) {
+        collect(node.children);
+      }
+    });
+  }
+  collect(nodes);
   return result;
-}
-function _collectDirents(result: Record<string, Fs.DirentBase>, node: Fs.DirentBase): void {
-  result[node.id] = node;
-  node.children.forEach(child => _collectDirents(result, child));
 }
 
-function _buildDirents(flat: Record<string, Fs.DirentBase>): Record<string, Fs.Dirent> {
-  const result: Record<string, Fs.Dirent> = {};
-  Object.values(flat).forEach(dirent => {
-    if (dirent.props) {
-      result[dirent.id] = { ...dirent, ...dirent.props } as Fs.Dirent;
-    } else {
-      result[dirent.id] = dirent as unknown as Fs.Dirent;
-    }
-  });
-  return result;
-}
 function _collectArticles(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
   const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {
     if (node.type === 'ARTICLE') { result.push({ value: node.id, label: node.name }); }
-    if (node.children && node.children.length > 0) { result.push(..._collectArticles(node.children)); }
   });
   return result;
 }
@@ -130,7 +125,6 @@ function _collectFlows(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
   const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {
     if (node.type === 'FLOW') { result.push({ value: node.name, label: node.name }); }
-    if (node.children && node.children.length > 0) { result.push(..._collectFlows(node.children)); }
   });
   return result;
 }
@@ -139,24 +133,22 @@ function _collectDialobs(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
   const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {
     if (node.type === 'DIALOB_FORM') { result.push({ value: node.id, label: node.name }); }
-    if (node.children && node.children.length > 0) { result.push(..._collectDialobs(node.children)); }
   });
   return result;
 }
 
 function _collectLanguages(nodes: Fs.DirentBase[]): string[] {
-  const result: string[] = [];
+  const result = new Set<string>();
   nodes.forEach(node => {
-    if (node.type === 'LOCALE') { result.push(node.name.replace('.language', '')); }
-    if (node.children && node.children.length > 0) { result.push(..._collectLanguages(node.children)); }
+    if (node.type === 'LOCALE') { result.add(node.name.replace('.language', '')); }
   });
-  return result;
+  return Array.from(result);
 }
 
-function _collectLabels(propsMap: Fs.PropsBase[]): string[] {
+function _collectLabels(nodes: Fs.DirentBase[]): string[] {
   const labelSet = new Set<string>();
-  propsMap.forEach(entry => {
-    entry.labels.forEach(l => labelSet.add(l.value));
+  nodes.forEach(d => {
+    (d.props?.labels ?? []).forEach(l => labelSet.add(l.value));
   });
   return Array.from(labelSet).sort();
 }

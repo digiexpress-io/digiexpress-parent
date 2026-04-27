@@ -5,7 +5,7 @@ import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Dirent | undefined;
+  dirent: Fs.DirentBase | undefined;
   articleId: string;
   localeCode: string;
   description: string;
@@ -25,19 +25,19 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { getDirent, selectOptions, getConfigOptionsForType } = useFsDirent();
 
   const dirent = getDirent(props.direntId);
-  const page = dirent?.type === 'ARTICLE_PAGE' ? dirent : undefined;
-  console.log('page dirent:', page);
-  const [content, setContent] = React.useState(page?.content ?? '');
-  const [articleId, setArticleId] = React.useState(page?.articleId ?? '');
-  const [localeCode, setLocaleCode] = React.useState(page?.localeCode ?? '');
-  const [description, setDescription] = React.useState(dirent?.description ?? '');
+  const pageProps = dirent?.type === 'ARTICLE_PAGE' ? dirent.props as Fs.PageProps : undefined;
+  console.log('page dirent:', dirent);
+  const [content, setContent] = React.useState(pageProps?.content ?? '');
+  const [articleId, setArticleId] = React.useState(pageProps?.articleId ?? '');
+  const [localeCode, setLocaleCode] = React.useState(pageProps?.localeCode ?? '');
+  const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
-    (dirent?.configOptions ?? []) as Fs.ConfigOption[]
+    (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
   );
 
   const articleOptions: FsDirentSelectSingleOption[] = selectOptions.articles;
   const localeOptions: FsDirentSelectSingleOption[] = selectOptions.languages.map(lang => ({ value: lang, label: lang }));
-  const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('page');
+  const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('ARTICLE_PAGE');
 
   function onChangeArticleId(value: string) {
     setArticleId(value);

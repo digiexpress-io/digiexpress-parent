@@ -6,7 +6,7 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesLanguageProps {
-  dirent: Fs.Dirent;
+  dirent: Fs.DirentBase;
 }
 
 export const FsPropertiesLanguage: React.FC<FsPropertiesLanguageProps> = ({ dirent }) => {
@@ -20,7 +20,7 @@ export const FsPropertiesLanguage: React.FC<FsPropertiesLanguageProps> = ({ dire
   return (
     <div className={classes.propertyRow}>
       <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.localeCode' })}</Typography>
-      <Typography className={classes.propertyValue}>{dirent.localeCode}</Typography>
+      <Typography className={classes.propertyValue}>{(dirent.props as Fs.LanguageProps)?.localeCode}</Typography>
     </div>
   );
 };

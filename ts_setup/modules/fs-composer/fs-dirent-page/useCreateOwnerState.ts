@@ -30,7 +30,7 @@ export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undef
 
   const articleOptions: FsDirentSelectSingleOption[] = selectOptions.articles;
   const localeOptions: FsDirentSelectSingleOption[] = selectOptions.languages.map(lang => ({ value: lang, label: lang }));
-  const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('page');
+  const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('ARTICLE_PAGE');
 
   function onChangeArticleId(value: string) {
     setArticleId(value);

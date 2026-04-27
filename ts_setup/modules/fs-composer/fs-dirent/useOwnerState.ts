@@ -8,16 +8,16 @@ export interface OwnerState {
   onToggle: (direntId: string) => void;
   onContextMenu: (event: React.MouseEvent, dirent: Fs.DirentBase) => void;
 
-  isChildError: (dirent: Fs.Dirent) => boolean;
-  openAsset: (asset: Fs.Dirent, pathToTopParent: string) => void;
+  isChildError: (dirent: Fs.DirentBase) => boolean;
+  openAsset: (asset: Fs.DirentBase, pathToTopParent: string) => void;
 
-  dirent: Fs.Dirent;
+  dirent: Fs.DirentBase;
   direntIconClassName: keyof FsDirentClasses;
   level: number;
   parentPath?: string;
   fullPath: string;
   searchTerm: string;
-  children: Fs.Dirent[];
+  children: Fs.DirentBase[];
   options: Fs.ConfigOption[];
 
   isDarkMode: boolean;
@@ -34,15 +34,18 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
   const { isDarkMode, openAsset, registerDirentPath, activeDirent } = useFsNav();
   const { isChildError, getDirent, creatableTypes } = useFsDirent();
 
-  const dirent = getDirent(direntBase.id) as Fs.Dirent;
+  const dirent = getDirent(direntBase.id) ?? direntBase;
   const children = (direntBase.children ?? [])
     .map(c => getDirent(c.id))
-    .filter((c): c is Fs.Dirent => !!c);
+    .filter((c): c is Fs.DirentBase => !!c);
 
   const isChildren = children.length > 0;
-  const configOptions = ((dirent?.configOptions ?? []).length) > 0;
-  const childWithError = !!(isChildren && direntBase.children.some(child => isChildError(child)));
-  const showError = ((dirent?.errors ?? []).length) > 0 || childWithError;
+  const configOptions = ((dirent?.props?.configOptions ?? []).length) > 0;
+  const childWithError = !!(isChildren && direntBase.children.some(child => {
+    const d = getDirent(child.id);
+    return d ? isChildError(d) : false;
+  }));
+  const showError = ((dirent?.props?.errors ?? []).length) > 0 || childWithError;
   const fullPath = parentPath ? `${parentPath} / ${direntBase.name}` : direntBase.name;
 
   registerDirentPath(direntBase.id, fullPath);
@@ -63,7 +66,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
 
     isChildren,
     children: _sortChildren(children, creatableTypes),
-    options: dirent?.configOptions ?? [],
+    options: dirent?.props?.configOptions ?? [],
 
     onToggle,
     onContextMenu,
@@ -74,7 +77,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
 
 
 
-function _sortChildren(children: Fs.Dirent[], order: Fs.BodyType[]) {
+function _sortChildren(children: Fs.DirentBase[], order: Fs.BodyType[]) {
   return children.sort((a, b) => {
     const aIndex = order.indexOf(a.type);
     const bIndex = order.indexOf(b.type);

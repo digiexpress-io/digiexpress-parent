@@ -16,7 +16,7 @@ export const FsDirentLanguageCreate: React.FC<FsDirentLanguageCreateProps> = (pr
   const ownerState = useCreateOwnerState(props);
   const classes = useUtilityClasses();
   const { getConfigOptionsForType } = useFsDirent();
-  const configOptions = getConfigOptionsForType('language');
+  const configOptions = getConfigOptionsForType('LOCALE');
   const [localeCode, setLocaleCode] = React.useState('');
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
 

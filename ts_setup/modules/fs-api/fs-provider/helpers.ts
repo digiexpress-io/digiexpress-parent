@@ -1,14 +1,18 @@
 import { Fs } from "../fs-types";
 
 
-
-const PROPS_MAP_KEYS: Record<Fs.Type, true> = {
-  folder: true, article: true, service: true, dialob: true,
-  flow: true, language: true, printout: true, image: true,
-  page: true, template: true, link: true, phone: true,
-};
-
-export const ALL_TYPES = Object.keys(PROPS_MAP_KEYS) as unknown as Fs.BodyType[];
+export const ALL_TYPES: Fs.BodyType[] = [
+  'FOLDER',
+  'ARTICLE',
+  'ARTICLE_WORKFLOW',
+  'DIALOB_FORM',
+  'FLOW',
+  'LOCALE',
+  'PRINTOUT',
+  'ARTICLE_PAGE',
+  'ARTICLE_TEMPLATE',
+  'ARTICLE_LINK',
+];
 
 
 const ALL_CONFIG_OPTIONS: Fs.SelectOption[] = [
@@ -18,23 +22,22 @@ const ALL_CONFIG_OPTIONS: Fs.SelectOption[] = [
   { value: 'anonymousMode', label: 'Anonymous mode' },
 ];
 
-export function getConfigOptionsForType(type: Fs.Type): Fs.SelectOption[] {
+export function getConfigOptionsForType(type: Fs.BodyType): Fs.SelectOption[] {
   switch (type) {
-    case 'link':
-    case 'phone': {
+    case 'ARTICLE_LINK': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'devMode' || o.value === 'disabledMode');
     }
-    case 'service':
-    case 'article': {
+    case 'ARTICLE_WORKFLOW':
+    case 'ARTICLE': {
       return ALL_CONFIG_OPTIONS;
     }
-    case 'language': {
+    case 'LOCALE': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'disabledMode');
     }
-    case 'page': {
+    case 'ARTICLE_PAGE': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'disabledMode' || o.value === 'devMode');
     }
-    case 'printout': {
+    case 'PRINTOUT': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'devMode');
     }
     default: {

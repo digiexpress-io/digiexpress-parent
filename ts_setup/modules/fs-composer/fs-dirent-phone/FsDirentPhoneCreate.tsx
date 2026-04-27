@@ -18,7 +18,7 @@ export const FsDirentPhoneCreate: React.FC<FsDirentPhoneCreateProps> = (props) =
   const classes = useUtilityClasses();
   const { selectOptions, getConfigOptionsForType } = useFsDirent();
   const articles = selectOptions.articles;
-  const configOptions = getConfigOptionsForType('phone');
+  const configOptions = getConfigOptionsForType('ARTICLE_LINK');
   const [phoneValue, setPhoneValue] = React.useState('');
   const [selectedArticles, setSelectedArticles] = React.useState<string[]>([]);
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);

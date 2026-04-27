@@ -12,7 +12,7 @@ export interface OwnerState {
 export function useOwnerState(props: FsPanelConfigOptionsProps): OwnerState {
   const intl = useIntl();
   const { isDarkMode } = useFsNav();
-  const configOptions = props.dirent?.configOptions ?? [];
+  const configOptions = props.dirent?.props?.configOptions ?? [];
 
   function isConfigOptionEnabled(optionKey: Fs.ConfigOption): boolean {
     return configOptions.includes(optionKey);

@@ -3,14 +3,14 @@ import { Fs } from '../fs-types';
 
 export interface FsEditTab {
   type: 'edit';
-  dirent: Fs.Dirent;
+  dirent: Fs.DirentBase;
   pathToTopParent: string;
 }
 
 export interface FsCreateTab {
   type: 'create';
   direntType: Fs.BodyType;
-  parentFolder: Fs.Dirent | undefined;
+  parentFolder: Fs.DirentBase | undefined;
   pathToTopParent: string;
 }
 
@@ -21,11 +21,11 @@ export interface FsNavContextType {
   openTabs: FsTab[];
   activeTabIndex: number;
   activeTabPath: string;
-  activeDirent: Fs.Dirent | undefined;
+  activeDirent: Fs.DirentBase | undefined;
   expandedIds: string[];
   isExpanded: (id: string) => boolean;
-  openAsset: (asset: Fs.Dirent, pathToTopParent: string) => void;
-  openCreateTab: (direntType: Fs.BodyType, parentFolder: Fs.Dirent | undefined) => void;
+  openAsset: (asset: Fs.DirentBase, pathToTopParent: string) => void;
+  openCreateTab: (direntType: Fs.BodyType, parentFolder: Fs.DirentBase | undefined) => void;
   registerDirentPath: (id: string, path: string) => void;
   closeTab: (index: number) => void;
   closeAllTabs: () => void;
@@ -80,7 +80,7 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
     setExpandedIds([]);
   }, []);
 
-  const openAsset = React.useCallback((asset: Fs.Dirent, pathToTopParent: string) => {
+  const openAsset = React.useCallback((asset: Fs.DirentBase, pathToTopParent: string) => {
     const resolvedPath = direntPathsRef.current[asset.id] ?? pathToTopParent;
     setActiveTabPath(resolvedPath);
 
@@ -103,7 +103,7 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
     });
   }, []);
 
-  const openCreateTab = React.useCallback((direntType: Fs.BodyType, parentFolder: Fs.Dirent | undefined) => {
+  const openCreateTab = React.useCallback((direntType: Fs.BodyType, parentFolder: Fs.DirentBase | undefined) => {
     const registeredPath = parentFolder ? (direntPathsRef.current[parentFolder.id] ?? parentFolder.name) : '';
 
     const pathToTopParent = parentFolder?.type === 'FOLDER' ? registeredPath : registeredPath

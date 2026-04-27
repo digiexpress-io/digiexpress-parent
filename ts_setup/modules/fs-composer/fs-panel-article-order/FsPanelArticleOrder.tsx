@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { Fs } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
 import { FsPanelArticleOrderProps } from './FsPanelArticleOrderProps';
@@ -29,11 +30,11 @@ export const FsPanelArticleOrder: React.FC<FsPanelArticleOrderProps> = (props) =
           {ownerState.articles.map((entry) => (
             <div key={entry.id} className={classes.row}>
               <Typography className={classes.orderNumber}>
-                {String(entry.orderNumber).padStart(3, '0')}
+                {String((entry.props as Fs.ArticleProps)?.orderNumber ?? 0).padStart(3, '0')}
               </Typography>
               <Typography className={classes.name}>{entry.name}</Typography>
-              {entry.description && (
-                <Typography className={classes.description}>{entry.description}</Typography>
+              {entry.props?.description && (
+                <Typography className={classes.description}>{entry.props?.description}</Typography>
               )}
             </div>
           ))}

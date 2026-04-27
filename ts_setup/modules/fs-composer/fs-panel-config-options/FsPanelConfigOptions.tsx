@@ -13,7 +13,7 @@ export const FsPanelConfigOptions: React.FC<FsPanelConfigOptionsProps> = (props)
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
   const { getConfigOptionsForType } = useFsDirent();
-  const availableOptions: Fs.ConfigOption[] = props.dirent ? getConfigOptionsForType(props.dirent.type as Fs.Type).map(o => o.value as Fs.ConfigOption) : [];
+  const availableOptions: Fs.ConfigOption[] = props.dirent ? getConfigOptionsForType(props.dirent.type).map(o => o.value as Fs.ConfigOption) : [];
 
   const direntName = props.dirent ? props.dirent.name : 'no name';
 

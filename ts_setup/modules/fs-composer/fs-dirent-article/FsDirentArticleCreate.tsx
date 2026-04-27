@@ -18,7 +18,7 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = (prop
   const ownerState = useCreateOwnerState(props);
   const classes = useUtilityClasses();
   const { getConfigOptionsForType, selectOptions } = useFsDirent();
-  const configOptions = getConfigOptionsForType('article');
+  const configOptions = getConfigOptionsForType('ARTICLE');
 
   const [name, setName] = React.useState('');
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);

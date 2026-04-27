@@ -17,7 +17,7 @@ export const FsDirentLanguageUpdate: React.FC<FsDirentLanguageUpdateProps> = (pr
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
   const { getConfigOptionsForType } = useFsDirent();
-  const configOptions = getConfigOptionsForType('language');
+  const configOptions = getConfigOptionsForType('LOCALE');
 
   return (
     <FsDirentLanguageRoot className={classes.root} ownerState={ownerState}>
@@ -26,7 +26,7 @@ export const FsDirentLanguageUpdate: React.FC<FsDirentLanguageUpdateProps> = (pr
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.label' })}</Typography>
         <FsDirentTextField
-          value={ownerState.localeCode}
+          value={ownerState.name}
           placeholder={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.placeholder' })}
           onChange={ownerState.onChangeLocaleCode}
           disabled

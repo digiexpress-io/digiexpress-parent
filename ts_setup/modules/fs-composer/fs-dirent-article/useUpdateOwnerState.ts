@@ -4,7 +4,7 @@ import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Dirent | undefined;
+  dirent: Fs.DirentBase | undefined;
   name: string;
   orderNumber: string;
   description: string;
@@ -26,19 +26,19 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { getDirent } = useFsDirent();
 
   const dirent = getDirent(props.direntId);
-  const article = dirent?.type === 'ARTICLE' ? dirent : undefined;
+  const articleProps = dirent?.type === 'ARTICLE' ? dirent.props as Fs.ArticleProps : undefined;
 
   const [name, setName] = React.useState(dirent?.name ?? '');
-  const [orderNumber, setOrderNumber] = React.useState(article?.orderNumber != undefined ? String(article.orderNumber) : '');
-  const [description, setDescription] = React.useState(dirent?.description ?? '');
+  const [orderNumber, setOrderNumber] = React.useState(articleProps?.orderNumber != undefined ? String(articleProps.orderNumber) : '');
+  const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
-    (dirent?.configOptions ?? []) as Fs.ConfigOption[]
+    (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
   );
   const [labels, setLabels] = React.useState<string[]>(
-    (dirent?.labels ?? []).map(l => l.value)
+    (dirent?.props?.labels ?? []).map(l => l.value)
   );
   const [comments, setComments] = React.useState(
-    (dirent?.comments ?? []).map(c => c.comment).join('\n')
+    (dirent?.props?.comments ?? []).map(c => c.comment).join('\n')
   );
   const [isExpanded, setIsExpanded] = React.useState(false);
 

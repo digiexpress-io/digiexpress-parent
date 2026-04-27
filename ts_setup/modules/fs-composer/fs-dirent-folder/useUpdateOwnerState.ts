@@ -4,7 +4,7 @@ import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Folder | undefined;
+  dirent: Fs.DirentBase | undefined;
   location: string;
   name: string;
   onChangeName: (value: string) => void;

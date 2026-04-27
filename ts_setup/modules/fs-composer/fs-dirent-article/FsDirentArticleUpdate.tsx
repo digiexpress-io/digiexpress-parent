@@ -19,7 +19,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
   const { getConfigOptionsForType, selectOptions } = useFsDirent();
-  const configOptions = getConfigOptionsForType('article');
+  const configOptions = getConfigOptionsForType('ARTICLE');
 
 
   return (

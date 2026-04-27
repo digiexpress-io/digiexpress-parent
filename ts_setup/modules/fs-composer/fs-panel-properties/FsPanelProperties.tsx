@@ -18,7 +18,7 @@ import { FsPropertiesTemplate } from './FsPropertiesTemplate';
 
 
 
-function renderTypeSpecificRows(dirent: Fs.Dirent): React.ReactNode {
+function renderTypeSpecificRows(dirent: Fs.DirentBase): React.ReactNode {
   switch (dirent.type) {
     case 'ARTICLE': return null;
     case 'ARTICLE_WORKFLOW': return <FsPropertiesService dirent={dirent} />;
@@ -49,10 +49,10 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
     );
   }
 
-  const labels = (dirent.labels ?? []).map(l => l.value);
-  const configOptionsEnabled = dirent.configOptions ?? [];
-  const comments = dirent.comments ?? [];
-  const description = dirent.description;
+  const labels = (dirent.props?.labels ?? []).map(l => l.value);
+  const configOptionsEnabled = dirent.props?.configOptions ?? [];
+  const comments = dirent.props?.comments ?? [];
+  const description = dirent.props?.description;
 
   return (
     <FsPanel title={intl.formatMessage({ id: 'fs.properties.title.direntName' }, { direntName: dirent.name })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={true}>

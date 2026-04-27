@@ -19,7 +19,7 @@ export const FsDirentPhoneUpdate: React.FC<FsDirentPhoneUpdateProps> = (props) =
   const classes = useUtilityClasses();
   const { selectOptions, getConfigOptionsForType } = useFsDirent();
   const articles = selectOptions.articles;
-  const configOptions = getConfigOptionsForType('phone');
+  const configOptions = getConfigOptionsForType('ARTICLE_LINK');
   //TODO phoneValue
   return (
     <FsDirentPhoneRoot className={classes.root} ownerState={ownerState}>

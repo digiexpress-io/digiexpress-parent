@@ -17,7 +17,7 @@ export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = (props) => 
   const classes = useUtilityClasses();
   const { selectOptions, getConfigOptionsForType } = useFsDirent();
   const articles = selectOptions.articles;
-  const configOptions = getConfigOptionsForType('link');
+  const configOptions = getConfigOptionsForType('ARTICLE_LINK');
 
   const [selectedArticles, setSelectedArticles] = React.useState<string[]>([]);
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);

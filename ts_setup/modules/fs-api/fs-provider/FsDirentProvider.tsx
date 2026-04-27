@@ -9,11 +9,11 @@ export interface FsDirentContextType {
   dirents: Fs.DirentBase[];
   creatableTypes: Fs.BodyType[];
   selectOptions: Fs.SelectOptions;
-  getConfigOptionsForType: (type: Fs.Type) => Fs.SelectOption[];
-  getDirent: (id: string) => Fs.Dirent | undefined;
+  getConfigOptionsForType: (type: Fs.BodyType) => Fs.SelectOption[];
+  getDirent: (id: string) => Fs.DirentBase | undefined;
   isChildError: (dirent: Fs.DirentBase) => boolean;
   findReferencesToDirent: (dirent: Fs.DirentBase) => ItemReferencesEntry[];
-  updateDirent: (id: string, updated: Partial<Fs.Props>) => void;
+  updateDirent: (id: string, updated: Partial<Fs.DirentBase>) => void;
 }
 
 const FsDirentContext = React.createContext<FsDirentContextType | undefined>(undefined);
@@ -32,23 +32,15 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
   React.useEffect(() => {
     props.persistenceUnit.fetchDirents()
       .then(dirents => {
-        console.log("dirents", dirents)
+        console.log('dirents', dirents);
         return new FsWorld({ dirents })
       })
       .then(setDirents)
 
   }, []);
 
-  const updateDirent = React.useCallback((id: string, updated: Partial<Fs.Props>) => {
-
-    /*
-    setPropsMap(prev => {
-      if (!prev[id]) {
-        return prev;
-      }
-      return { ...prev, [id]: { ...prev[id], ...updated } as Fs.Props };
-    });
-    */
+  const updateDirent = React.useCallback((_id: string, _updated: Partial<Fs.DirentBase>) => {
+    // TODO: implement
   }, []);
 
 
@@ -83,8 +75,7 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
 export function useFsDirent(): FsDirentContextType {
   const result = React.useContext(FsDirentContext);
   if (!result) {
-    throw new Error('FsDirentPropsContext is not created!');
+    throw new Error('FsDirentPropsContext is not created!')
   }
   return result;
 }
-

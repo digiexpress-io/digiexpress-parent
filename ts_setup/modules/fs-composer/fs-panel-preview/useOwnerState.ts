@@ -14,9 +14,9 @@ export const useOwnerState = (props: FsPanelPreviewProps): OwnerState => {
   const { getDirent } = useFsDirent();
 
   const dirent = props.dirent ? getDirent(props.dirent.id) : undefined;
-  const page = dirent?.type === 'ARTICLE_PAGE' ? dirent : undefined;
-  const flow = dirent?.type === 'FLOW' ? dirent : undefined;
-  const content = page?.content ?? flow?.content ?? '';
+  const pageProps = dirent?.type === 'ARTICLE_PAGE' ? dirent.props as Fs.PageProps : undefined;
+  const flowProps = dirent?.type === 'FLOW' ? dirent.props as Fs.FlowProps : undefined;
+  const content = pageProps?.content ?? flowProps?.content ?? '';
 
   const isPage = props.dirent?.type === 'ARTICLE_PAGE';
   const isFlow = props.dirent?.type === 'FLOW';

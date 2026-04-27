@@ -6,7 +6,7 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesLinkProps {
-  dirent: Fs.Dirent;
+  dirent: Fs.DirentBase;
 }
 
 export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ dirent }) => {
@@ -17,13 +17,13 @@ export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ dirent }) =>
     return undefined;
   }
 
-  const locales = Object.keys(dirent.intlValues);
+  const locales = Object.keys((dirent.props as Fs.LinkProps)?.intlValues ?? {});
 
   return (
     <>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.urlValue' })}</Typography>
-        {/* <Typography className={classes.propertyValue}>{dirent.urlValue}</Typography> */}
+        <Typography className={classes.propertyValue}>{dirent.name}</Typography>
       </div>
 
       <div className={classes.propertyRow}>

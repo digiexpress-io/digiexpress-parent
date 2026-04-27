@@ -4,7 +4,7 @@ import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.Dirent | undefined;
+  dirent: Fs.DirentBase | undefined;
   locales: string[];
   name: string;
   printoutServiceName: string;
@@ -23,14 +23,14 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { getDirent } = useFsDirent();
 
   const dirent = getDirent(props.direntId);
-  const printout = dirent?.type === 'PRINTOUT' ? dirent : undefined;
-  const locales = Object.keys(printout?.intlValues ?? {});
+  const printoutProps = dirent?.type === 'PRINTOUT' ? dirent.props as Fs.PrintoutProps : undefined;
+  const locales = Object.keys(printoutProps?.intlValues ?? {});
 
   const [name, setName] = React.useState(dirent?.name ?? '');
-  const [printoutServiceName, setPrintoutServiceName] = React.useState(printout?.printoutServiceName ?? '');
-  const [orchestratorName, setOrchestratorName] = React.useState(printout?.orchestratorName ?? '');
-  const [description, setDescription] = React.useState(dirent?.description ?? '');
-  const [intlValues, setIntlValues] = React.useState<Record<string, string>>(printout?.intlValues ?? {});
+  const [printoutServiceName, setPrintoutServiceName] = React.useState(printoutProps?.printoutServiceName ?? '');
+  const [orchestratorName, setOrchestratorName] = React.useState(printoutProps?.orchestratorName ?? '');
+  const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
+  const [intlValues, setIntlValues] = React.useState<Record<string, string>>(printoutProps?.intlValues ?? {});
 
   function onChangeName(value: string) {
     setName(value);

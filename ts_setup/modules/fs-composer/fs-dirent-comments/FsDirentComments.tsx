@@ -11,7 +11,7 @@ export const FsDirentComments: React.FC<FsDirentCommentsProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
-  const comments = props.dirent?.comments ?? [];
+  const comments = props.dirent?.props?.comments ?? [];
   const [newComment, setNewComment] = React.useState('');
 
   return (

@@ -22,7 +22,7 @@ export const FsDirentServiceUpdate: React.FC<FsDirentServiceUpdateProps> = (prop
   const dialobForms = selectOptions.dialobs;
   const flows = selectOptions.flows;
   const articles = selectOptions.articles;
-  const configOptions = getConfigOptionsForType('service');
+  const configOptions = getConfigOptionsForType('ARTICLE_WORKFLOW');
   const dialobTags = selectOptions.collectDialobTags(ownerState.dialobFormName);
 
   return (
