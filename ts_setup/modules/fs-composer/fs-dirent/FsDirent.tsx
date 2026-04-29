@@ -16,33 +16,22 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
 
   const { isExpanded } = useFsNav();
   const expanded = isExpanded(props.dirent.id) ?? false;
-  const clickTimerRef = React.useRef<number | undefined>(undefined);
+
 
   function handleClick() {
-    if (!ownerState.isChildren) {
-      return;
-    }
-    if (clickTimerRef.current) {
-      clearTimeout(clickTimerRef.current);
-    }
-    clickTimerRef.current = window.setTimeout(() => {
+    if (ownerState.dirent.type === 'FOLDER') {
       ownerState.onToggle(ownerState.dirent.id);
-    }, 100); //TODO
+    } else {
+      ownerState.openAsset(ownerState.dirent, ownerState.fullPath);
+    }
   }
 
-  function handleDoubleClick() {
-    if (clickTimerRef.current) {
-      clearTimeout(clickTimerRef.current);
-    }
-    ownerState.openAsset(ownerState.dirent, ownerState.fullPath);
-  }
 
   return (
     <FsDirentRoot className={classes.root} ownerState={ownerState}>
       <ListItem
         className={`${classes.explorerDirent} ${ownerState.showError ? 'error' : ''} ${ownerState.isActive ? 'active' : ''}`}
         onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
         onContextMenu={(event) => ownerState.onContextMenu(event, ownerState.dirent)}
       >
         <Box className={classes.explorerDirentContent}>
@@ -54,10 +43,10 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
             </IconButton>
           ) : (<Box sx={{ width: 21, mr: 0.5 }} />)
           }
-          
+
           <ListItemIcon className={classes[ownerState.direntIconClassName]}>
             <DirentDecorator dirent={ownerState.dirent}>
-              <DirentIcon dirent={ownerState.dirent}/>
+              <DirentIcon dirent={ownerState.dirent} />
             </DirentDecorator>
           </ListItemIcon>
 

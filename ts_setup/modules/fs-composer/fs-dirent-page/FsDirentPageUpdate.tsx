@@ -22,7 +22,7 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
 
   return (
     <FsDirentPageRoot className={classes.root} ownerState={ownerState}>
-      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.page.sectionTitle.edit' })}</Typography>
+      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.page.sectionTitle.edit' })}{": "}{ownerState.dirent?.name}</Typography>
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}</Typography>
