@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
 
+import io.resys.limaone.authoring.Authoring.WorldFsBodyQuery;
 import io.resys.limaone.authoring.Authoring.WorldFsQuery;
 import io.resys.limaone.authoring.Authoring.WorldIndexQuery;
 import io.resys.limaone.authoring.Authoring.WorldQuery;
@@ -31,6 +32,7 @@ import io.resys.limaone.authoring.Authoring.WorldRefQuery;
 import io.resys.limaone.model.ImmutableModelWorldIndex;
 import io.resys.limaone.model.Model.ModelWorldIndex;
 import io.resys.limaone.persistence.ModelWorldDb;
+import io.resys.limaone.persistence.fs.WorldFsBodyQueryImpl;
 import io.resys.limaone.persistence.fs.WorldFsQueryImpl;
 import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.thena.api.actions.TenantActions;
@@ -78,6 +80,10 @@ public class ModelWorldDb_FS implements ModelWorldDb, TenantAware<ModelWorldDb_F
   @Override
   public WorldFsQuery worldFsQuery() {
     return new WorldFsQueryImpl(getUserFileSystem(), workerPool, workerTimeout, branchName);
+  }
+  @Override
+  public WorldFsBodyQuery worldFsBodyQuery() {
+    return new WorldFsBodyQueryImpl(getUserFileSystem(), workerPool, workerTimeout, branchName);
   }
   @Override
   public WorldRefQuery worldRefQuery() {
@@ -149,4 +155,6 @@ public class ModelWorldDb_FS implements ModelWorldDb, TenantAware<ModelWorldDb_F
   public static class WorldLockException extends RuntimeException {
     private static final long serialVersionUID = -1868980098559928896L;
   }
+
+
 }

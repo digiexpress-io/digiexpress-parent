@@ -23,6 +23,7 @@ package io.resys.limaone.spi.runtime;
 import java.util.Optional;
 import java.util.UUID;
 
+import io.resys.limaone.authoring.Authoring.WorldFsBodyQuery;
 import io.resys.limaone.authoring.Authoring.WorldFsQuery;
 import io.resys.limaone.authoring.Authoring.WorldIndexQuery;
 import io.resys.limaone.authoring.Authoring.WorldQuery;
@@ -120,6 +121,10 @@ public class ModelWorldDb_File implements ModelWorldDb {
   }
   @Override
   public WorldFsQuery worldFsQuery() {
+    throw new UnsupportedOperationException("Read only env. can't build new worlds!");
+  }
+  @Override
+  public WorldFsBodyQuery worldFsBodyQuery() {
     throw new UnsupportedOperationException("Read only env. can't build new worlds!");
   }
 

@@ -21,11 +21,14 @@ package io.digiexpress.eveli.client.web.resources.assets;
  */
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.fs.WorldFs;
+import io.resys.limaone.fs.WorldFsBody;
+import io.resys.limaone.model.Model.BodyType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,9 +43,16 @@ public class AssetsFsController {
 
   
   @GetMapping("dirents")
-  public Uni<WorldFs> dirents() {
+  public Uni<WorldFs> findAllDirents() {
     return authoring.worldFsQuery().findAll();
   }
   
+  @GetMapping("dirents/{id}/bodies/{bodyType}")
+  public Uni<WorldFsBody> getDirentBody(
+      @PathVariable("id") String id, 
+      @PathVariable("bodyType") BodyType bodyType) {
+    
+    return authoring.worldFsBodyQuery().id(id).bodyType(bodyType).getOne();
+  }
 
 }

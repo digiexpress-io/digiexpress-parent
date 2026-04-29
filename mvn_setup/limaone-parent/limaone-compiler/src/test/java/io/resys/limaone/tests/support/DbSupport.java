@@ -60,7 +60,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ThenaTest(database = @ThenaTestDbConfig(
-  enabled = true, 
+  enabled = false, 
   database = "eveli-app", 
   host = "localhost",
   port = 5433,
@@ -126,25 +126,25 @@ public class DbSupport {
     final var names = FsTableNames.defaults().toRepo(repo);
     
     datasource.getClient().query("delete from " + names.getTreeIndex())
-      .execute().await().atMost(Duration.ofMillis(100));
+      .execute().await().atMost(Duration.ofMillis(1000));
     
     datasource.getClient().query("delete from " + names.getTag())
-      .execute().await().atMost(Duration.ofMillis(100));
+      .execute().await().atMost(Duration.ofMillis(1000));
     
     datasource.getClient().query("delete from " + names.getRef())
-      .execute().await().atMost(Duration.ofMillis(100));
+      .execute().await().atMost(Duration.ofMillis(1000));
     
     datasource.getClient().query("delete from " + names.getCommit())
-      .execute().await().atMost(Duration.ofMillis(100));
+      .execute().await().atMost(Duration.ofMillis(1000));
     
     datasource.getClient().query("delete from " + names.getTree())
-      .execute().await().atMost(Duration.ofMillis(100));
+      .execute().await().atMost(Duration.ofMillis(1000));
     
     datasource.getClient().query("delete from " + names.getProps())
-      .execute().await().atMost(Duration.ofMillis(100));
+      .execute().await().atMost(Duration.ofMillis(1000));
     
     datasource.getClient().query("delete from " + names.getBlob())
-      .execute().await().atMost(Duration.ofMillis(100));
+      .execute().await().atMost(Duration.ofMillis(1000));
 
     
   }

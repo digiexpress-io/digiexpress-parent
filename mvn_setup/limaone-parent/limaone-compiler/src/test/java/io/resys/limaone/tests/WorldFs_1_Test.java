@@ -23,7 +23,9 @@ package io.resys.limaone.tests;
 import org.junit.jupiter.api.Test;
 
 import io.resys.limaone.authoring.Authoring;
+import io.resys.limaone.fs.WorldFsBody.ArticlePageBody;
 import io.resys.limaone.model.ImmutableLocaleLabel;
+import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.persistence.AuthoringImpl;
 import io.resys.limaone.tests.support.DbSupport;
 import io.vertx.core.json.JsonObject;
@@ -34,10 +36,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WorldFs_1_Test extends DbSupport {
 
+  private String page1_id;
+  
   public WorldFs_1_Test() {
     super();
     this.tenantName = "assets";
-    this.createInit = false;
+    this.createInit = true;
   }
 
   @Test
@@ -55,6 +59,14 @@ public class WorldFs_1_Test extends DbSupport {
         .map(e -> " - " + e.getFullPath())
         .sorted((a, b) -> a.toLowerCase().compareTo(b.toLowerCase()))
         .toList()));
+    
+    final var pageBody = (ArticlePageBody) authoring.worldFsBodyQuery()
+      .bodyType(BodyType.ARTICLE_PAGE)
+      .id(page1_id)
+      .getOneSync();
+    
+    
+    log.debug("Current page body:\n{}", pageBody.getContent());
   }
   
   
@@ -86,6 +98,8 @@ public class WorldFs_1_Test extends DbSupport {
         .newArticlePage()
         .props(props -> props.articleId(article1.getId()).locale(locale1.getId()).content("# English content"))
         .buildSync();
+    page1_id = page1.getId();
+    
     
     final var page2 = authoring.newModel()
       .newArticlePage()

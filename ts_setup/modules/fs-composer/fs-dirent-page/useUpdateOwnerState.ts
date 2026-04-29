@@ -24,13 +24,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent, selectOptions, getConfigOptionsForType } = useFsDirent();
 
-  const dirent = getDirent(props.direntId);
-  const pageProps = dirent?.type === 'ARTICLE_PAGE' ? dirent.props as Fs.PageProps : undefined;
-  console.log('page dirent:', dirent);
-  const [content, setContent] = React.useState(pageProps?.content ?? '');
-  const [articleId, setArticleId] = React.useState(pageProps?.articleId ?? '');
-  const [localeCode, setLocaleCode] = React.useState(pageProps?.localeCode ?? '');
-  const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
+  const dirent = getDirent(props.direntId)!;
+  const pageProps = dirent.props as Fs.PageProps;
+  const [content, setContent] = React.useState(pageProps.content!);
+  const [articleId, setArticleId] = React.useState(pageProps.articleId);
+  const [localeCode, setLocaleCode] = React.useState(pageProps.localeCode);
+  const [description, setDescription] = React.useState(pageProps.description ?? '');
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
   );

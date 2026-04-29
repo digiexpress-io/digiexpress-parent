@@ -68,6 +68,10 @@ export declare namespace Fs {
     orderNumber: number;
   }
 
+  export interface ArticlePageBody {
+    content: string
+  }
+
   export interface ServiceProps extends PropsBase {
     type: 'ARTICLE_WORKFLOW';
     serviceName: string;

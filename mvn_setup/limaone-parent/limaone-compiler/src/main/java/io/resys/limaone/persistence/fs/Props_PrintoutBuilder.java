@@ -36,6 +36,9 @@ public class Props_PrintoutBuilder {
     final Printout printout = currentState.getBodyOfType(node);
     
     return ImmutablePrintoutProps.builder()
+        .id(node.getObjectId())
+        .type(node.getBodyType())
+        .locked(false)
         .printoutServiceName(printout.getServiceName())
         .orchestratorName(printout.getOrchestratorName())
         .intlValues(printout.getLabels()

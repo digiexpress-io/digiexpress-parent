@@ -5,10 +5,12 @@ import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
+
   name: string;
   localeCode: string;
   description: string;
   configOptions: Fs.ConfigOption[];
+
   onChangeName: (value: string) => void;
   onChangeLocaleCode: (value: string) => void;
   onChangeDescription: (value: string) => void;
@@ -19,11 +21,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsNav();
   const { getDirent } = useFsDirent();
 
-  const dirent = getDirent(props.direntId);
-  const languageProps = dirent?.type === 'LOCALE' ? dirent.props as Fs.LanguageProps : undefined;
+  const dirent = getDirent(props.direntId)!;
+  const languageProps = dirent.props as Fs.LanguageProps;
 
-  const [name, setName] = React.useState(dirent?.name ?? '');
-  const [localeCode, setLocaleCode] = React.useState(languageProps?.localeCode ?? '');
+  const [name, setName] = React.useState(dirent.name);
+  const [localeCode, setLocaleCode] = React.useState(languageProps.localeCode);
   const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]

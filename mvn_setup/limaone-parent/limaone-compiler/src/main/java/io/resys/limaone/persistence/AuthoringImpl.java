@@ -92,6 +92,10 @@ public class AuthoringImpl implements Authoring {
     return config.getPersistence().worldFsQuery();
   }
   @Override
+  public WorldFsBodyQuery worldFsBodyQuery() {
+    return config.getPersistence().worldFsBodyQuery();
+  }
+  @Override
   public TID tid() {
     final var modelDb = config.getEnvir().getModelDb();
     final var isTenantAware = modelDb instanceof TenantAware;
@@ -264,4 +268,5 @@ public class AuthoringImpl implements Authoring {
     }
     
   }
+
 }
