@@ -19,7 +19,7 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
 
 
   function handleClick() {
-    if (ownerState.dirent.type === 'FOLDER') {
+    if (ownerState.isChildren) {
       ownerState.onToggle(ownerState.dirent.id);
     } else {
       ownerState.openAsset(ownerState.dirent, ownerState.fullPath);

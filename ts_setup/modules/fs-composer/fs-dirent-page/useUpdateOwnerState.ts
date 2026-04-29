@@ -6,14 +6,12 @@ import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
-  articleId: string;
+  articleName: string;
   localeCode: string;
   description: string;
   configOptions: Fs.ConfigOption[];
   availableConfigOptions: Fs.SelectOption[];
-  articleOptions: FsDirentSelectSingleOption[];
   localeOptions: FsDirentSelectSingleOption[];
-  onChangeArticleId: (value: string) => void;
   onChangeLocaleCode: (value: string) => void;
   onChangeDescription: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
@@ -26,16 +24,15 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const dirent = getDirent(props.direntId)!;
   const pageProps = dirent.props as Fs.PageProps;
-  const [content, setContent] = React.useState(pageProps.content!);
-  const [articleId, setArticleId] = React.useState(pageProps.articleId);
+  const [content, setContent] = React.useState(pageProps.content ?? '');
   const [localeCode, setLocaleCode] = React.useState(pageProps.localeCode);
   const [description, setDescription] = React.useState(pageProps.description ?? '');
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
   );
 
-  const articleOptions: FsDirentSelectSingleOption[] = selectOptions.articles;
-  const localeOptions: FsDirentSelectSingleOption[] = selectOptions.languages.map(lang => ({ value: lang, label: lang }));
+  const articleName = selectOptions.articles.find(o => o.value === pageProps.articleId)?.label ?? '';
+  const localeOptions: FsDirentSelectSingleOption[] = selectOptions.languages;
   const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('ARTICLE_PAGE');
 
 
@@ -44,9 +41,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
       .then(body => setContent((body as Fs.ArticlePageBody).content));
   }, [props.direntId])
 
-  function onChangeArticleId(value: string) {
-    setArticleId(value);
-  }
+
 
   function onChangeLocaleCode(value: string) {
     setLocaleCode(value);
@@ -64,14 +59,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isDarkMode,
     dirent,
     content,
-    articleId,
     localeCode,
     description,
+    articleName,
     configOptions,
     availableConfigOptions,
-    articleOptions,
     localeOptions,
-    onChangeArticleId,
     onChangeLocaleCode,
     onChangeDescription,
     onChangeConfigOptions,

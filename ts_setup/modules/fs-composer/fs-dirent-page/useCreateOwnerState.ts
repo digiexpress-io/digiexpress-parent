@@ -29,7 +29,7 @@ export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undef
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>([]);
 
   const articleOptions: FsDirentSelectSingleOption[] = selectOptions.articles;
-  const localeOptions: FsDirentSelectSingleOption[] = selectOptions.languages.map(lang => ({ value: lang, label: lang }));
+  const localeOptions: FsDirentSelectSingleOption[] = selectOptions.languages;
   const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('ARTICLE_PAGE');
 
   function onChangeArticleId(value: string) {

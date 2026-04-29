@@ -13,7 +13,7 @@ export interface UpdateOwnerState {
   articles: string[];
   configOptions: Fs.ConfigOption[];
   intlValues: Record<string, string>;
-  locales: string[];
+  locales: Fs.SelectOption[];
   isExpanded: boolean;
   onChangeName: (value: string) => void;
   onChangeDialobFormName: (value: string) => void;

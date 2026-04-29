@@ -4,7 +4,7 @@ import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
-  locales: string[];
+  locales: Fs.SelectOption[];
   //phoneValue: string;
   intlValues: Record<string, string>;
   configOptions: Fs.ConfigOption[];

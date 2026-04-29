@@ -55,12 +55,12 @@ export const FsDirentServiceUpdate: React.FC<FsDirentServiceUpdateProps> = (prop
         <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createLocaleLabels' })}</Typography>
 
         {ownerState.locales.map((locale) => (
-          <div key={locale} className={classes.localeRow}>
+          <div key={locale.label} className={classes.localeRow}>
             <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.service.labelField.${locale}.label` })}</Typography>
             <FsDirentTextField
-              value={ownerState.intlValues[locale] ?? ''}
+              value={ownerState.intlValues[locale.label] ?? ''}
               placeholder={intl.formatMessage({ id: 'fs.dirent.service.labelField.placeholder' })}
-              onChange={(value) => ownerState.onChangeIntlValues(locale, value)}
+              onChange={(value) => ownerState.onChangeIntlValues(locale.label, value)}
             />
           </div>
         ))}

@@ -34,8 +34,6 @@ import io.resys.limaone.fs.WorldFsProps;
 import io.resys.limaone.model.Article;
 import io.resys.limaone.model.Locale;
 import io.resys.limaone.model.Model.Body;
-import io.resys.limaone.model.Model.BodyType;
-import io.resys.thena.support.RepoAssert;
 
 public class WorldFsState {
   private final Map<String, NodePathAndName> nodePathAndName_by_object_id = new HashMap<>();
@@ -45,7 +43,7 @@ public class WorldFsState {
   
   // parent path -> fullpath : dirent
   private final Map<String, Map<String, ImmutableDirentBase>> dirents_grouped_by_path = new HashMap<>();
-  
+  private final DirentComparator comparator = new DirentComparator();
   
   /**
    * @return folder names that are refered in the state. Does not mean that they actually exist.
@@ -75,13 +73,13 @@ public class WorldFsState {
     return nodes_by_object_id.get(id);
   }
   
-  public boolean isFolderDirentCreated(String folderName) {
+  public boolean containsDirent(String folderName) {
     return dirents_by_fullpath.containsKey(folderName);
   }
   
   public ImmutableDirentBase getFolderDirent(String folderName) {
     final var dirent = dirents_by_fullpath.get(folderName);
-    RepoAssert.isTrue(dirent.getType() == BodyType.FOLDER, () -> "Dirent must be a folder but was: " + dirent.getType());
+    //RepoAssert.isTrue(dirent.getType() == BodyType.FOLDER, () -> "Dirent must be a folder but was: " + dirent.getType());
     return dirent;
   }
   
@@ -89,7 +87,10 @@ public class WorldFsState {
   public Collection<ImmutableDirentBase> getChildDirents(String folderName) {
     final var children = Optional.ofNullable(dirents_grouped_by_path.get(folderName))
         .map(e -> e.values())
-        .orElse(Collections.emptyList());
+        .orElse(Collections.emptyList())
+        .stream()
+        .sorted(comparator)
+        .toList();
     return children;
   }
   

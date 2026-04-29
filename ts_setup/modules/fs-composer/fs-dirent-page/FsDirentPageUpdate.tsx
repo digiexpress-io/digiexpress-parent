@@ -31,13 +31,15 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
         </div>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.articleField.label' })}</Typography>
-        <FsDirentSelectSingle options={ownerState.articleOptions} value={ownerState.articleId} onChange={ownerState.onChangeArticleId} />
+        <FsDirentTextField disabled value={ownerState.articleName} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.localeField.label' })}</Typography>
         <FsDirentSelectSingle options={ownerState.localeOptions} value={ownerState.localeCode} onChange={ownerState.onChangeLocaleCode} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.descriptionField.label' })}</Typography>
-        <FsDirentTextField value={ownerState.description} placeholder={intl.formatMessage({ id: 'fs.dirent.page.descriptionField.placeholder' })}
+        <FsDirentTextField
+          value={ownerState.description}
+          placeholder={intl.formatMessage({ id: 'fs.dirent.page.descriptionField.placeholder' })}
           onChange={ownerState.onChangeDescription}
           multiline
           minRows={2} maxRows={4}

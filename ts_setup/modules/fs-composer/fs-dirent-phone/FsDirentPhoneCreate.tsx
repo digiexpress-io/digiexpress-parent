@@ -17,8 +17,10 @@ export const FsDirentPhoneCreate: React.FC<FsDirentPhoneCreateProps> = (props) =
   const ownerState = useCreateOwnerState(props);
   const classes = useUtilityClasses();
   const { selectOptions, getConfigOptionsForType } = useFsDirent();
+
   const articles = selectOptions.articles;
   const configOptions = getConfigOptionsForType('ARTICLE_LINK');
+
   const [phoneValue, setPhoneValue] = React.useState('');
   const [selectedArticles, setSelectedArticles] = React.useState<string[]>([]);
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
@@ -32,7 +34,7 @@ export const FsDirentPhoneCreate: React.FC<FsDirentPhoneCreateProps> = (props) =
         <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.phone.phoneValueField.placeholder' })} required value={phoneValue} onChange={setPhoneValue} />
 
         {ownerState.locales.map((locale) => (
-          <div key={locale} className={classes.localeRow}>
+          <div key={locale.label} className={classes.localeRow}>
             <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.phone.labelField.${locale}.label` })}</Typography>
             <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.phone.labelField.placeholder' })} />
           </div>

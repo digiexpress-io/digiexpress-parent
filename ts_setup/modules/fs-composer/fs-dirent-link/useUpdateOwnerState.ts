@@ -7,7 +7,7 @@ import {
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
-  locales: string[];
+  locales: Fs.SelectOption[];
   urlValue: string;
   intlValues: Record<string, string>;
   configOptions: Fs.ConfigOption[];

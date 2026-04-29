@@ -78,7 +78,7 @@ public class WorldFsFactory {
     
     // create folders ...
     for(final var folderName : worldState.getFolderNames()) {
-      if(worldState.isFolderDirentCreated(folderName)) {
+      if(worldState.containsDirent(folderName)) {
         continue;
       } else {
         createMissingFolders(folderName);  
@@ -106,8 +106,13 @@ public class WorldFsFactory {
 
   private void createMissingFolders(String missing) {
     for(final var pathAndName : NodePathAndName.explode(missing)) {
-      
       final var fullPath = pathAndName.getFullPath();
+     
+      if(worldState.containsDirent(fullPath)) {
+        continue;
+      }
+      
+      //final var fullPath = pathAndName.getFullPath();
       final var dirent = ImmutableDirentBase.builder()
         .id(Entity.uuid().append(fullPath).build().toString())
         .fullPath(fullPath)
@@ -143,9 +148,10 @@ public class WorldFsFactory {
       
       final var articlePath = articleHierarchy.get(0).getValue().getNodePath().orElse("articles");
       final var name = node.getBodyOfType(Article.class).getName();
+      final var namePath = "/" + name;
       
       worldState.putProps(node, n -> Props_ArticleBuilder.of(worldState, n));
-      return NodePathAndName.of(articlePath + articleHierarchyPath, name);
+      return NodePathAndName.of(articlePath + articleHierarchyPath + namePath, "article");
     }
     
     case ARTICLE_PAGE: {
@@ -159,7 +165,7 @@ public class WorldFsFactory {
       final var articlePath = getPathAndName(articleNode);
 
       worldState.putProps(node, n -> Props_ArticlePageBuilder.of(worldState, n));
-      return NodePathAndName.of(articlePath.getPath() + "/" + articlePath.getName() + "/pages", name);
+      return NodePathAndName.of(articlePath.getPath() + "/pages", name);
     }
     
     case ARTICLE_LINK: {

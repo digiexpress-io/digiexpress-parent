@@ -5,7 +5,7 @@ import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 export interface CreateOwnerState {
   isDarkMode: boolean;
   parentFolder: Fs.DirentBase | undefined;
-  locales: string[];
+  locales: Fs.SelectOption[];
   isExpanded: boolean;
   onToggleExpanded: () => void;
 }

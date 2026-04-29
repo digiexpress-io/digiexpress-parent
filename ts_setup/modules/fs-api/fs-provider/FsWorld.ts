@@ -33,6 +33,7 @@ export class FsWorld {
   public get selectOptions(): Fs.SelectOptions {
     if (this._selectOptions == undefined) {
       const dirents = Object.values(this._flat_dirents);
+      console.log('types', [...new Set(dirents.map(d => d.type))]);
       const propsMap = dirents
         .filter(e => !!e.props)
         .reduce((acc, e) => {
@@ -116,7 +117,9 @@ function _flattenDirents(nodes: Fs.DirentBase[]): Record<string, Fs.DirentBase> 
 function _collectArticles(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
   const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {
-    if (node.type === 'ARTICLE') { result.push({ value: node.id, label: node.name }); }
+    if (node.type === 'ARTICLE') {
+      result.push({ value: node.id, label: node.name });
+    }
   });
   return result;
 }
@@ -137,10 +140,12 @@ function _collectDialobs(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
   return result;
 }
 
-function _collectLanguages(nodes: Fs.DirentBase[]): string[] {
-  const result = new Set<string>();
+function _collectLanguages(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
+  const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {
-    if (node.type === 'LOCALE') { result.add(node.name.replace('.language', '')); }
+    if (node.type === 'LOCALE') {
+      result.push({ value: node.id, label: node.name })
+    }
   });
   return Array.from(result);
 }

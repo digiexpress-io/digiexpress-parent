@@ -33,12 +33,12 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
         />
 
         {ownerState.locales.map((locale) => (
-          <div key={locale} className={classes.localeRow}>
+          <div key={locale.label} className={classes.localeRow}>
             <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.link.labelField.${locale}.label` })}</Typography>
             <FsDirentTextField
-              value={ownerState.intlValues[locale] ?? ''}
+              value={ownerState.intlValues[locale.label] ?? ''}
               placeholder={intl.formatMessage({ id: 'fs.dirent.link.labelField.placeholder' })}
-              onChange={(value) => ownerState.onChangeIntlValue(locale, value)}
+              onChange={(value) => ownerState.onChangeIntlValue(locale.label, value)}
             />
           </div>
         ))}

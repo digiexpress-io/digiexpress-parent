@@ -122,6 +122,7 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   const { getDirent } = useFsDirent();
   const classes = useUtilityClasses(props.isDarkTheme);
   const description = getDirent(props.dirent.id)?.props?.description;
+
   return (
     <ListItemText className={classes.direntName} primary={<Typography variant='subtitle2'
       sx={{

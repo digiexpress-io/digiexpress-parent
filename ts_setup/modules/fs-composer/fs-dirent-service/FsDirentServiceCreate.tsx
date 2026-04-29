@@ -58,7 +58,7 @@ export const FsDirentServiceCreate: React.FC<FsDirentServiceCreateProps> = (prop
         <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createLocaleLabels' })}</Typography>
 
         {ownerState.locales.map((locale) => (
-          <div key={locale} className={classes.localeRow}>
+          <div key={locale.value} className={classes.localeRow}>
             <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.service.labelField.${locale}.label` })}</Typography>
             <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.service.labelField.placeholder' })} />
           </div>
