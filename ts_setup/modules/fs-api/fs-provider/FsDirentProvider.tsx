@@ -14,6 +14,7 @@ export interface FsDirentContextType {
   isChildError: (dirent: Fs.DirentBase) => boolean;
   findReferencesToDirent: (dirent: Fs.DirentBase) => ItemReferencesEntry[];
   updateDirent: (id: string, updated: Partial<Fs.DirentBase>) => void;
+  fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
 }
 
 const FsDirentContext = React.createContext<FsDirentContextType | undefined>(undefined);
@@ -21,6 +22,7 @@ const FsDirentContext = React.createContext<FsDirentContextType | undefined>(und
 export interface FsDirentProviderProps {
   persistenceUnit: {
     fetchDirents: () => Promise<Fs.DirentBase[]>;
+    fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>
   }
   children: React.ReactNode;
 }
@@ -61,7 +63,8 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       },
 
       getConfigOptionsForType,
-      updateDirent
+      updateDirent,
+      fetchDirentBody: props.persistenceUnit.fetchDirentBody
     };
   }, [dirents, updateDirent]);
 

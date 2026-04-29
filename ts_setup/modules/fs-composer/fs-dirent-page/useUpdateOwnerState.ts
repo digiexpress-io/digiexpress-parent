@@ -22,7 +22,7 @@ export interface UpdateOwnerState {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const { getDirent, selectOptions, getConfigOptionsForType } = useFsDirent();
+  const { getDirent, selectOptions, getConfigOptionsForType, fetchDirentBody } = useFsDirent();
 
   const dirent = getDirent(props.direntId)!;
   const pageProps = dirent.props as Fs.PageProps;
@@ -37,6 +37,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const articleOptions: FsDirentSelectSingleOption[] = selectOptions.articles;
   const localeOptions: FsDirentSelectSingleOption[] = selectOptions.languages.map(lang => ({ value: lang, label: lang }));
   const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('ARTICLE_PAGE');
+
+
+  React.useEffect(() => {
+    fetchDirentBody(props.direntId, 'ARTICLE_PAGE')
+      .then(body => setContent((body as Fs.ArticlePageBody).content));
+  }, [props.direntId])
 
   function onChangeArticleId(value: string) {
     setArticleId(value);

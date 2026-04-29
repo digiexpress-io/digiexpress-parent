@@ -59,6 +59,8 @@ export declare namespace Fs {
     | LinkProps
     | PhoneProps;
 
+  export type WorldFsBody = ArticlePageBody;
+
   export interface FolderProps extends PropsBase {
     type: 'FOLDER';
   }

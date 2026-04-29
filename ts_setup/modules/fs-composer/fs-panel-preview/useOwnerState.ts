@@ -1,3 +1,4 @@
+import React from 'react';
 import { Fs, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
 import { FsPanelPreviewProps } from './FsPanelPreviewProps';
 
@@ -6,21 +7,40 @@ export interface OwnerState {
   isDarkMode: boolean;
   isPage: boolean;
   isFlow: boolean;
-  content: string;
+  content: {
+    pageContent: string;
+    flowContent: string;
+  };
 }
 
 export const useOwnerState = (props: FsPanelPreviewProps): OwnerState => {
-  const { isDarkMode } = useFsNav();
-  const { getDirent } = useFsDirent();
+  const { isDarkMode, activeDirent } = useFsNav();
+  const { getDirent, fetchDirentBody } = useFsDirent();
 
-  const dirent = props.dirent ? getDirent(props.dirent.id) : undefined;
-  const pageProps = dirent?.type === 'ARTICLE_PAGE' ? dirent.props as Fs.PageProps : undefined;
+  const dirent = activeDirent ? getDirent(activeDirent.id) : undefined;
   const flowProps = dirent?.type === 'FLOW' ? dirent.props as Fs.FlowProps : undefined;
-  const content = pageProps?.content ?? flowProps?.content ?? '';
+  const pageProps = dirent?.type === 'ARTICLE_PAGE' ? dirent.props as Fs.PageProps : undefined;
 
-  const isPage = props.dirent?.type === 'ARTICLE_PAGE';
-  const isFlow = props.dirent?.type === 'FLOW';
+  const isPage = dirent?.type === 'ARTICLE_PAGE';
+  const isFlow = dirent?.type === 'FLOW';
+
+  const [pageContent, setPageContent] = React.useState('');
+
+  React.useEffect(() => {
+    if (isPage && dirent) {
+      fetchDirentBody(dirent.id, 'ARTICLE_PAGE')
+        .then(body => setPageContent((body as Fs.ArticlePageBody).content));
+    } else {
+      setPageContent(pageProps?.content ?? '');
+    }
+  }, [activeDirent?.id]);
 
 
-  return { isDarkMode, isPage, isFlow, content };
+  return {
+    isDarkMode, isPage, isFlow,
+    content: {
+      pageContent,
+      flowContent: flowProps?.content ?? ''
+    }
+  };
 }

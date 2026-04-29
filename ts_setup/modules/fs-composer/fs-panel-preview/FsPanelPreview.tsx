@@ -47,7 +47,7 @@ export const FsPanelPreview: React.FC<FsPanelPreviewProps> = (props) => {
     <FsPanel title={intl.formatMessage({ id: 'fs.panelPreview.title' })} icon={<FsIcon icon={FsIcons.Preview} large />} activeDirent={true}>
       <FsPanelPreviewRoot className={classes.root} ownerState={ownerState}>
         <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
-          <MDEditor.Markdown source={ownerState.content} />
+          <MDEditor.Markdown source={ownerState.content.pageContent} />
         </div>
       </FsPanelPreviewRoot>
     </FsPanel>
