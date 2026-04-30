@@ -27,54 +27,53 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
   }
 
 
-  return (
-    <FsDirentRoot className={classes.root} ownerState={ownerState}>
-      <ListItem
-        className={`${classes.explorerDirent} ${ownerState.showError ? 'error' : ''} ${ownerState.isActive ? 'active' : ''}`}
-        onClick={handleClick}
-        onContextMenu={(event) => ownerState.onContextMenu(event, ownerState.dirent)}
+  return (<>
+    <FsDirentRoot className={classes.root + `${ownerState.showError ? 'error' : ''} ${ownerState.isActive ? 'active' : ''}`} ownerState={ownerState}
+      onClick={handleClick}
+      onContextMenu={(event) => ownerState.onContextMenu(event, ownerState.dirent)}
       >
-        <Box className={classes.explorerDirentContent}>
-          {ownerState.isChildren ? (
-            <IconButton size='small'>
-              {expanded ?
-                <FsIcon small icon={FsIcons.ExpandMore} className={classes.iconExpand} /> :
-                <FsIcon small icon={FsIcons.ChevronRight} className={classes.iconExpand} />}
-            </IconButton>
-          ) : (<Box sx={{ width: 21, mr: 0.5 }} />)
-          }
+      <Box className={classes.explorerDirentContent}>
+        {ownerState.isChildren ? (
+          <IconButton size='small'>
+            {expanded ?
+              <FsIcon small icon={FsIcons.ExpandMore} className={classes.iconExpand} /> :
+              <FsIcon small icon={FsIcons.ChevronRight} className={classes.iconExpand} />}
+          </IconButton>
+        ) : (<Box sx={{ paddingLeft: 2 }} />)
+        }
 
-          <ListItemIcon className={classes[ownerState.direntIconClassName]}>
-            <DirentDecorator dirent={ownerState.dirent}>
-              <DirentIcon dirent={ownerState.dirent} />
-            </DirentDecorator>
-          </ListItemIcon>
+        <ListItemIcon className={classes[ownerState.direntIconClassName]}>
+          <DirentDecorator dirent={ownerState.dirent}>
+            <DirentIcon dirent={ownerState.dirent} />
+          </DirentDecorator>
+        </ListItemIcon>
 
-          <FsDirentName dirent={ownerState.dirent}
-            isDarkTheme={ownerState.isDarkMode}
-            error={ownerState.showError ? true : false}
-            searchTerm={ownerState.searchTerm}
-          />
-          <ConfigOptionIcons ownerState={ownerState} />
-        </Box>
-      </ListItem>
-      {ownerState.isChildren && (
-        <Collapse in={expanded} timeout={0}>
-          <List component='div' disablePadding>
-            {ownerState.children.map((child) => (
-              <FsDirent
-                key={child.id}
-                dirent={child}
-                level={ownerState.level + 1}
-                parentPath={ownerState.fullPath}
-                onToggle={ownerState.onToggle}
-                onContextMenu={ownerState.onContextMenu}
-                searchTerm={ownerState.searchTerm}
-              />
-            ))}
-          </List>
-        </Collapse>
-      )}
+        <FsDirentName dirent={ownerState.dirent}
+          isDarkTheme={ownerState.isDarkMode}
+          error={ownerState.showError ? true : false}
+          searchTerm={ownerState.searchTerm}
+        />
+        <ConfigOptionIcons ownerState={ownerState} />
+      </Box>
     </FsDirentRoot>
+
+    {ownerState.isChildren && (
+      <Collapse in={expanded} timeout={0}>
+        <List disablePadding>
+          {ownerState.children.map((child) => (
+            <FsDirent
+              key={child.id}
+              dirent={child}
+              level={ownerState.level + 1}
+              parentPath={ownerState.fullPath}
+              onToggle={ownerState.onToggle}
+              onContextMenu={ownerState.onContextMenu}
+              searchTerm={ownerState.searchTerm}
+            />
+          ))}
+        </List>
+      </Collapse>
+    )}
+  </>
   );
 };

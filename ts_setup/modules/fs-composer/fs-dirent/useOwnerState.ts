@@ -50,6 +50,7 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
 
   registerDirentPath(direntBase.id, fullPath);
 
+
   return {
     dirent,
     direntIconClassName: _getIconClassName(direntBase),

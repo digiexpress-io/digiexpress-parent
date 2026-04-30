@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { Fs } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
@@ -12,12 +12,17 @@ export interface FsPropertiesLinkProps {
 export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ dirent }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
+  const { selectOptions } = useFsDirent();
 
   if (dirent.type !== 'ARTICLE_LINK') {
     return undefined;
   }
 
-  const locales = Object.keys((dirent.props as Fs.LinkProps)?.intlValues ?? {});
+  const intlValues = (dirent.props as Fs.LinkProps).intlValues;
+  const locales = Object.keys(intlValues).map((localeId) => {
+    const lang = selectOptions.languages.find((l) => l.value === localeId);
+    return lang?.label ?? localeId;
+  })
 
   return (
     <>
@@ -35,3 +40,5 @@ export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ dirent }) =>
     </>
   );
 };
+
+

@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled, alpha } from '@mui/material';
+import { generateUtilityClass, styled, alpha, ListItem } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors, getDirentColor } from '../fs-theme';
 
@@ -57,14 +57,34 @@ export const useUtilityClasses = (_isDarkTheme: boolean) => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsDirentRoot = styled('div', {
+export const FsDirentRoot = styled(ListItem, {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState'
 })<{ ownerState: any }>(({ theme, ownerState }) => {
   const isDarkTheme = ownerState.isDarkMode;
 
+  //  className = {`${classes.explorerDirent} ${ownerState.showError ? 'error' : ''} ${ownerState.isActive ? 'active' : ''}`
+
   return {
+
+    //[`& .${MUI_NAME}-explorerDirent`]: {
+    paddingLeft: theme.spacing(ownerState.level * 1.2),
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: isDarkTheme ? FsColors.dark.surface : FsColors.light.surface,
+    },
+    '&.active': {
+      backgroundColor: isDarkTheme ? alpha(FsColors.semantic.primary, 0.15) : alpha(FsColors.semantic.primary, 0.1),
+      outline: `1px solid ${isDarkTheme ? alpha(FsColors.semantic.primary, 0.6) : alpha(FsColors.semantic.primary, 0.5)}`,
+    },
+    '&.error': {
+      backgroundColor: alpha(isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.1),
+      '&:hover': {
+        backgroundColor: isDarkTheme ? alpha(FsColors.semantic.dangerDark, 0.3) : alpha(FsColors.semantic.dangerLight, 0.2),
+      },
+    },
+    //},
 
     [`& .${MUI_NAME}-icon`]: {
       minWidth: 10,
@@ -190,23 +210,7 @@ export const FsDirentRoot = styled('div', {
       color: isDarkTheme ? FsColors.dark.text : FsColors.light.text,
     },
 
-    [`& .${MUI_NAME}-explorerDirent`]: {
-      paddingLeft: theme.spacing(ownerState.level * 1.2),
-      cursor: 'pointer',
-      '&:hover': {
-        backgroundColor: isDarkTheme ? FsColors.dark.surface : FsColors.light.surface,
-      },
-      '&.active': {
-        backgroundColor: isDarkTheme ? alpha(FsColors.semantic.primary, 0.15) : alpha(FsColors.semantic.primary, 0.1),
-        outline: `1px solid ${isDarkTheme ? alpha(FsColors.semantic.primary, 0.6) : alpha(FsColors.semantic.primary, 0.5)}`,
-      },
-      '&.error': {
-        backgroundColor: alpha(isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.1),
-        '&:hover': {
-          backgroundColor: isDarkTheme ? alpha(FsColors.semantic.dangerDark, 0.3) : alpha(FsColors.semantic.dangerLight, 0.2),
-        },
-      },
-    },
+
 
     [`& .${MUI_NAME}-explorerDirentContent`]: {
       display: 'flex',

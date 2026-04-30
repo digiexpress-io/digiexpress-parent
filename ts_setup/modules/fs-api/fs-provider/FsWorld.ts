@@ -33,7 +33,6 @@ export class FsWorld {
   public get selectOptions(): Fs.SelectOptions {
     if (this._selectOptions == undefined) {
       const dirents = Object.values(this._flat_dirents);
-      console.log('types', [...new Set(dirents.map(d => d.type))]);
       const propsMap = dirents
         .filter(e => !!e.props)
         .reduce((acc, e) => {
