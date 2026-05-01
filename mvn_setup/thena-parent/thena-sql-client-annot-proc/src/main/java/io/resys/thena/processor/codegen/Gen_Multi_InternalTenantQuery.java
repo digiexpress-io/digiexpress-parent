@@ -110,20 +110,28 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
     code.add("final var next = dataSource.withTenant(newRepo);\n");
     code.add("final var registry = new $T(names, next);\n", 
       ClassName.get(registry.getPackageName() + ".spi", registry.getRegistryClassName()));
-    code.add("final var sqlQuery = new $T(next.getTenantContext());\n", 
-      ClassName.get(TenantRegistrySqlImpl.class));
+    
     code.add("final var pool = next.getPool();\n\n");
     
     code.add("return pool.withTransaction(tx -> {\n");
     code.indent();
     
-    code.add("final var tenantInsert = sqlQuery.insertOne(newRepo);\n");
+    if(!registry.isTenantDisabled()) {
+      code.add("final var sqlQuery = new $T(next.getTenantContext());\n", 
+          ClassName.get(TenantRegistrySqlImpl.class));
+      code.add("final var tenantInsert = sqlQuery.insertOne(newRepo);\n");
+    }
+    
     code.add("final var tablesCreate = new $T();\n", StringBuilder.class);
-    code.add("$T.isTrue(newRepo.getType() == $T.$L, () -> \"Tenant type must be $L\");\n\n",
-      ClassName.get(RepoAssert.class),
-      ClassName.get(StructureType.class),
-      registry.getTenantType(),
-      registry.getTenantType());
+    
+    if(!registry.isTenantDisabled()) {
+    
+      code.add("$T.isTrue(newRepo.getType() == $T.$L, () -> \"Tenant type must be $L\");\n\n",
+        ClassName.get(RepoAssert.class),
+        ClassName.get(StructureType.class),
+        registry.getTenantType(),
+        registry.getTenantType());
+    }
     
     code.add("tablesCreate\n");
     code.indent();
@@ -157,24 +165,27 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
     code.unindent();
     code.add("}\n\n");
     
-    code.add("final $T<Void> create = getClient().query(sqlQuery.createTable().getValue()).execute()\n", 
-      ClassName.get(Uni.class));
-    code.indent();
-    code.add(".onItem().transformToUni(data -> $T.createFrom().voidItem())\n", 
-      ClassName.get(Uni.class));
-    code.add(".onFailure().invoke(e -> next.getErrorHandler().deadEnd(new $T(\"Can't create table 'TENANT'!\", sqlQuery.createTable(), e)));\n",
-      ClassName.get(SqlFailed.class));
-    code.unindent();
+    if(!registry.isTenantDisabled()) {
+      code.add("final $T<Void> create = getClient().query(sqlQuery.createTable().getValue()).execute()\n", 
+        ClassName.get(Uni.class));
+      code.indent();
+      code.add(".onItem().transformToUni(data -> $T.createFrom().voidItem())\n", 
+        ClassName.get(Uni.class));
+      code.add(".onFailure().invoke(e -> next.getErrorHandler().deadEnd(new $T(\"Can't create table 'TENANT'!\", sqlQuery.createTable(), e)));\n",
+        ClassName.get(SqlFailed.class));
+      code.unindent();
+      
+      code.add("\n");
     
-    code.add("\n");
-    code.add("final $T<Void> insert = tx.preparedQuery(tenantInsert.getValue()).execute(tenantInsert.getProps())\n",
-      ClassName.get(Uni.class));
-    code.indent();
-    code.add(".onItem().transformToUni(rowSet -> $T.createFrom().voidItem())\n",
-      ClassName.get(Uni.class));
-    code.add(".onFailure().invoke(e -> next.getErrorHandler().deadEnd(new $T(\"Can't insert into 'TENANT'!\", tenantInsert, e)));\n",
-      ClassName.get(SqlTupleFailed.class));
-    code.unindent();
+      code.add("final $T<Void> insert = tx.preparedQuery(tenantInsert.getValue()).execute(tenantInsert.getProps())\n",
+        ClassName.get(Uni.class));
+      code.indent();
+      code.add(".onItem().transformToUni(rowSet -> $T.createFrom().voidItem())\n",
+        ClassName.get(Uni.class));
+      code.add(".onFailure().invoke(e -> next.getErrorHandler().deadEnd(new $T(\"Can't insert into 'TENANT'!\", tenantInsert, e)));\n",
+        ClassName.get(SqlTupleFailed.class));
+      code.unindent();
+    }
     
     code.add("final $T<Void> nested = tx.query(tablesCreate.toString()).execute()\n",
       ClassName.get(Uni.class));
@@ -186,10 +197,17 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
     code.unindent();
     
     code.add("\n");
-    code.add("return create\n");
-    code.indent();
-    code.add(".onItem().transformToUni((junk) -> insert)\n");
-    code.add(".onItem().transformToUni((junk) -> nested)\n");
+    
+    if(registry.isTenantDisabled()) {
+      code.add("return nested\n");
+      code.indent();      
+    } else {
+      code.add("return create\n");
+      code.indent();
+      code.add(".onItem().transformToUni((junk) -> insert)\n");
+      code.add(".onItem().transformToUni((junk) -> nested)\n");
+
+    }
     code.add(".onItem().transform(junk -> newRepo)\n");
     code.add(".onItem().invoke(newTenant -> this.dataSource.getTenantCache().setTenant(newTenant));\n");
     code.unindent();
@@ -220,20 +238,23 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
     code.add("final var next = dataSource.withTenant(newRepo);\n");
     code.add("final var registry = new $T(names, next);\n", 
       ClassName.get(registry.getPackageName() + ".spi", registry.getRegistryClassName()));
-    code.add("final var sqlQuery = new $T(next.getTenantContext());\n", 
-      ClassName.get(TenantRegistrySqlImpl.class));
     code.add("final var pool = next.getPool();\n\n");
     
     code.add("return pool.withTransaction(tx -> {\n");
     code.indent();
     
-    code.add("final var tenantDelete = sqlQuery.deleteOne(newRepo);\n");
     code.add("final var tablesDrop = new $T();\n", StringBuilder.class);
-    code.add("$T.isTrue(newRepo.getType() == $T.$L, () -> \"Tenant type must be $L\");\n\n",
-      ClassName.get(RepoAssert.class),
-      ClassName.get(StructureType.class),
-      registry.getTenantType(),
-      registry.getTenantType());
+    
+    if(!registry.isTenantDisabled()) {
+      code.add("$T.isTrue(newRepo.getType() == $T.$L, () -> \"Tenant type must be $L\");\n\n",
+        ClassName.get(RepoAssert.class),
+        ClassName.get(StructureType.class),
+        registry.getTenantType(),
+        registry.getTenantType());
+      code.add("final var sqlQuery = new $T(next.getTenantContext());\n", 
+          ClassName.get(TenantRegistrySqlImpl.class));
+      code.add("final var tenantDelete = sqlQuery.deleteOne(newRepo);\n");
+    }
     
     code.add("tablesDrop\n");
     code.indent();
@@ -248,11 +269,15 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
     code.add("\n");
     code.add("if(log.isDebugEnabled()) {\n");
     code.indent();
-    code.add("log.debug(\"Delete tenant by name query, with props: {} \\r\\n{}\",\n");
-    code.indent();
-    code.add("tenantDelete.getProps().deepToString(),\n");
-    code.add("tenantDelete.getValue());\n");
-    code.unindent();
+    
+    if(!registry.isTenantDisabled()) {
+      code.add("log.debug(\"Delete tenant by name query, with props: {} \\r\\n{}\",\n");
+      code.indent();
+      code.add("tenantDelete.getProps().deepToString(),\n");
+      code.add("tenantDelete.getValue());\n");
+      code.unindent();
+    }
+    
     code.add("\n");
     code.add("log.debug(new $T(\"Drop schema: \")\n", StringBuilder.class);
     code.indent();
@@ -263,14 +288,17 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
     code.unindent();
     code.add("}\n\n");
     
-    code.add("final $T<Void> insert = tx.preparedQuery(tenantDelete.getValue()).execute(tenantDelete.getProps())\n",
-      ClassName.get(Uni.class));
-    code.indent();
-    code.add(".onItem().transformToUni(rowSet -> $T.createFrom().voidItem())\n",
-      ClassName.get(Uni.class));
-    code.add(".onFailure().invoke(e -> next.getErrorHandler().deadEnd(new $T(\"Can't delete from 'TENANT'!\", tenantDelete, e)));\n",
-      ClassName.get(SqlTupleFailed.class));
-    code.unindent();
+    
+    if(!registry.isTenantDisabled()) {
+      code.add("final $T<Void> insert = tx.preparedQuery(tenantDelete.getValue()).execute(tenantDelete.getProps())\n",
+        ClassName.get(Uni.class));
+      code.indent();
+      code.add(".onItem().transformToUni(rowSet -> $T.createFrom().voidItem())\n",
+        ClassName.get(Uni.class));
+      code.add(".onFailure().invoke(e -> next.getErrorHandler().deadEnd(new $T(\"Can't delete from 'TENANT'!\", tenantDelete, e)));\n",
+        ClassName.get(SqlTupleFailed.class));
+      code.unindent();
+    }
     
     code.add("final $T<Void> nested = tx.query(tablesDrop.toString()).execute()\n",
       ClassName.get(Uni.class));
@@ -282,9 +310,16 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
     code.unindent();
     
     code.add("\n");
-    code.add("return insert\n");
-    code.indent();
-    code.add(".onItem().transformToUni(junk -> nested)\n");
+    
+    if(registry.isTenantDisabled()) {
+      code.add("return nested\n");
+      code.indent();
+    } else {
+      code.add("return insert\n");
+      code.indent();
+      code.add(".onItem().transformToUni(junk -> nested)\n");      
+    }
+    
     code.add(".onItem().transform(junk -> newRepo)\n");
     code.add(".onItem().invoke(() -> this.dataSource.getTenantCache().invalidateAll());\n");
     code.unindent();
