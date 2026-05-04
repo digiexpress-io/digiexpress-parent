@@ -223,8 +223,9 @@ public class WorldFsFactory {
     }
     
     case FLOW_TASK: {
-      final FlowTask flowTask = worldState.getBodyOfType(node); 
+      final FlowTask flowTask = worldState.getBodyOfType(node);
       final var name = flowTask.getTaskName();
+      worldState.putProps(node, n -> Props_FlowTaskBuilder.of(worldState, n));
       return NodePathAndName.of(path.orElse("flow-tasks"), name);
     }
     

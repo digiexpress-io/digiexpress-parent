@@ -113,6 +113,12 @@ public interface WorldFsProps {
     @Nullable 
     String getContent();
   }
+  
+  @Value.Immutable
+  interface FlowTaskProps extends WorldFsProps {
+    String getTaskName();
+    String getTaskValue();
+  }
 
   @Value.Immutable
   interface LanguageProps extends WorldFsProps {

@@ -131,6 +131,11 @@ public class WorldFs_1_Test extends DbSupport {
         .newPrintout()
         .props(props -> props.serviceName("Printout1").orchestratorName("PrintoutFlow"))
         .buildSync();
+    
+    final var flowTask1 = authoring.newModel()
+        .newFlowTask()
+        .props(props -> props.name("FlowTask1").desc("FlowTaskDescription"))
+        .buildSync();
       
     final var link1 = authoring.newModel()
         .newArticleLink().props(props -> props.type("internal").value("www.link1.com")

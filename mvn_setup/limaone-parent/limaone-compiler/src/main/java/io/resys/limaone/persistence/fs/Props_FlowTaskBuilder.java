@@ -20,29 +20,29 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
-import io.resys.limaone.fs.ImmutableFlowProps;
-import io.resys.limaone.fs.WorldFsProps.FlowProps;
-import io.resys.limaone.model.Flow;
+import io.resys.limaone.fs.ImmutableFlowTaskProps;
+import io.resys.limaone.fs.WorldFsProps.FlowTaskProps;
+import io.resys.limaone.model.FlowTask;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class Props_FlowBuilder {
+public class Props_FlowTaskBuilder {
   private final WorldFsState currentState;
   private final NodeAndBody node;
   
-  public FlowProps build() {
-    final Flow flow = currentState.getBodyOfType(node);
+  public FlowTaskProps build() {
+    final FlowTask flowTask = currentState.getBodyOfType(node);
     
-    return ImmutableFlowProps.builder()
+    return ImmutableFlowTaskProps.builder()
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)
-        .name(flow.getFlowName())
+        .taskName(flowTask.getTaskName())
+        .taskValue(flowTask.getTaskValue())
         .build();
   }
   
-  public static FlowProps of(WorldFsState currentState, NodeAndBody node) {
-    return new Props_FlowBuilder(currentState, node).build();
+  public static FlowTaskProps of(WorldFsState currentState, NodeAndBody node) {
+    return new Props_FlowTaskBuilder(currentState, node).build();
   }
-
 }
