@@ -35,6 +35,7 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent
   const intl = useIntl();
   const classes = useUtilityClasses();
 
+
   if (dirent.type !== 'ARTICLE') {
     return undefined;
   }

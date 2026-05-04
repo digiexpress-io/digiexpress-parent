@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { Fs } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
 import { FsPanelPropertiesProps } from './FsPanelPropertiesProps';
@@ -36,8 +36,11 @@ function renderTypeSpecificRows(dirent: Fs.DirentBase): React.ReactNode {
 export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
-  const { dirent } = ownerState;
   const classes = useUtilityClasses();
+
+  const { dirent } = ownerState;
+  const { getArticleName } = useFsDirent();
+  const displayName = props.dirent ? getArticleName(props.dirent.id) : undefined;
 
   if (!dirent) {
     return (
@@ -55,7 +58,7 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
   const description = dirent.props?.description;
 
   return (
-    <FsPanel title={intl.formatMessage({ id: 'fs.properties.title.direntName' }, { direntName: dirent.name })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={true}>
+    <FsPanel title={intl.formatMessage({ id: 'fs.properties.title.direntName' }, { direntName: displayName })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={true}>
       <FsPanelPropertiesRoot className={classes.root} ownerState={ownerState}>
 
 

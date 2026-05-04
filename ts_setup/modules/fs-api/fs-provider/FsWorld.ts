@@ -10,12 +10,33 @@ export class FsWorld {
   private _hi_dirents: Fs.DirentBase[];
   private _flat_dirents: Record<string, Fs.DirentBase>;
   private _selectOptions: Fs.SelectOptions | undefined;
+  private _article_parents: Record<string, string>;
 
   constructor(props: {
     dirents: Fs.DirentBase[];
   }) {
     this._flat_dirents = _flattenDirents(props.dirents);
     this._hi_dirents = props.dirents;
+    this._article_parents = _buildArticleParents(props.dirents);
+  }
+
+  public getParentDirent(childId: string): Fs.DirentBase | undefined {
+    const parentId = this._article_parents[childId];
+    return parentId ? this._flat_dirents[parentId] : undefined;
+  }
+
+  public getArticleName(id: string): string | undefined {
+    const dirent = this._flat_dirents[id];
+    if (!dirent) {
+      return undefined;
+    }
+    if (dirent.type === 'FOLDER') {
+      return dirent.name;
+    }
+    if (dirent.type === 'ARTICLE') {
+      return this._flat_dirents[this._article_parents[id]]?.name;
+    }
+    return dirent.name;
   }
 
   public getDirent(id: string): Fs.DirentBase | undefined {
@@ -106,6 +127,22 @@ function _flattenDirents(nodes: Fs.DirentBase[]): Record<string, Fs.DirentBase> 
       result[node.id] = node;
       if (node.children && node.children.length > 0) {
         collect(node.children);
+      }
+    });
+  }
+  collect(nodes);
+  return result;
+}
+
+function _buildArticleParents(nodes: Fs.DirentBase[]): Record<string, string> {
+  const result: Record<string, string> = {};
+  function collect(items: Fs.DirentBase[], parentId?: string): void {
+    items.forEach(node => {
+      if (parentId) {
+        result[node.id] = parentId;
+      }
+      if (node.children && node.children.length > 0) {
+        collect(node.children, node.id);
       }
     });
   }

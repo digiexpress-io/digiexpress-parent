@@ -19,6 +19,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
 
   return (
     <FsExplorerRoot className={classes.root} isDarkTheme={ownerState.isDarkMode}>
+      <Box sx={{ position: 'sticky', top: 0, zIndex: 1 }}>
       <Box className={classes.title}>
         <Typography className={classes.titleText} mr={3}>{intl.formatMessage({ id: 'fs.explorer.title' })}</Typography>
         <Box flexGrow={1} />
@@ -100,8 +101,8 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
         open={ownerState.isSearchExpanded}
         visibleFilters={ownerState.filters}
         onFiltersChange={ownerState.setFilters}
-
       />
+      </Box>
 
       {ownerState.filteredTreeData.length === 0 ? <FsExplorerNoSearchResults /> :
         <List component='nav' disablePadding>

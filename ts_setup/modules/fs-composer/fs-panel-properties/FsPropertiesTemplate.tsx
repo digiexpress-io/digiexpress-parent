@@ -17,17 +17,5 @@ export const FsPropertiesTemplate: React.FC<FsPropertiesTemplateProps> = ({ dire
     return undefined;
   }
 
-  return (
-    <>
-      <div className={classes.propertyRow}>
-        <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.printoutServiceId' })}</Typography>
-        <Typography className={classes.propertyValue}>{(dirent.props as Fs.TemplateProps)?.printoutServiceId}</Typography>
-      </div>
-
-      <div className={classes.propertyRow}>
-        <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.localeCode' })}</Typography>
-        <Typography className={classes.propertyValue}>{(dirent.props as Fs.TemplateProps)?.localeId}</Typography>
-      </div>
-    </>
-  );
+  return undefined;
 };

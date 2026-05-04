@@ -21,12 +21,12 @@ function getAssetName(activeTab: FsTab | undefined): string | undefined {
 }
 
 export function useOwnerState(_props: FsBreadcrumbProps): OwnerState {
-  const { isDarkMode, openTabs, activeTabIndex, activeDirent } = useFsNav();
+  const { isDarkMode, openTabs, activeTabIndex, activeTabPath, activeDirent } = useFsNav();
   const { getDirent } = useFsDirent();
 
   const activeTab = openTabs[activeTabIndex];
   const assetName = getAssetName(activeTab);
-  const assetPath = activeTab?.type === 'create' ? activeTab.pathToTopParent : activeDirent?.fullPath;
+  const assetPath = activeTab?.type === 'create' ? activeTab.pathToTopParent : activeTabPath;
   const activeDirentEntry = activeDirent ? getDirent(activeDirent.id) : undefined;
   const isError = (activeDirentEntry?.props?.errors.length ?? 0) > 0;
 

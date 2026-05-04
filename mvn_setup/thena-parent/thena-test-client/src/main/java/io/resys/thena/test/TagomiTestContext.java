@@ -37,7 +37,8 @@ public class TagomiTestContext {
       return;
     }
 
-    tagomi = new GenericContainer<>("tagomi-pdf-tagomi-pdf:latest")
+    tagomi = new GenericContainer<>("docker.resys.io/digiexpress-io/tagomi-pdf:0.1.4")
+        .withCreateContainerCmdModifier(cmd -> cmd.withPlatform("linux/amd64"))
         .withExposedPorts(8085)
         .withEnv("HTTPS_ENABLED", "false")
         .withEnv("PORT", "8085")

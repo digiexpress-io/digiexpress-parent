@@ -22,6 +22,18 @@ const ALL_CONFIG_OPTIONS: Fs.SelectOption[] = [
   { value: 'anonymousMode', label: 'Anonymous mode' },
 ];
 
+export function getExtension(type: Fs.BodyType): string | undefined {
+  switch (type) {
+    case 'FOLDER': return undefined;
+    case 'ARTICLE_PAGE': return '.page';
+    case 'ARTICLE_WORKFLOW': return '.workflow';
+    case 'DECISION_TABLE': return '.dt';
+    case 'DIALOB_FORM': return '.dialob';
+    case 'ARTICLE_LINK': return '.link';
+    default: return '.' + type.toLowerCase().replaceAll('_', '');
+  }
+}
+
 export function getConfigOptionsForType(type: Fs.BodyType): Fs.SelectOption[] {
   switch (type) {
     case 'ARTICLE_LINK': {

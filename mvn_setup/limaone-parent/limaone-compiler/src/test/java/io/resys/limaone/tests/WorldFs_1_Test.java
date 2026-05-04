@@ -100,6 +100,11 @@ public class WorldFs_1_Test extends DbSupport {
         .buildSync();
     page1_id = page1.getId();
     
+    final var printoutResource1 = authoring.newModel()
+        .newPrintoutResource()
+        .props(props -> props.resourceName("printout_resource").contentType("text/*").uploadBody("upload body"))
+        .buildSync();
+    
     
     final var page2 = authoring.newModel()
       .newArticlePage()

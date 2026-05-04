@@ -818,7 +818,7 @@ public interface FormDb {
   
   interface AnswerAndFormItem {
     Answer getAnswer();
-    FormItem getFormItem();
+    @Nullable FormItem getFormItem(); //if not available
     Optional<String> getValueSetLabel();
     Optional<FormValueSetEntry> getValueSetEntry();
   }

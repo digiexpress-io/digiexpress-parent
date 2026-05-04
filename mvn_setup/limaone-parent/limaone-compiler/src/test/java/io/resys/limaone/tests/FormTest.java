@@ -146,15 +146,42 @@ public class FormTest {
         .await().atMost(Duration.ofMinutes(1));
         
       Assertions.assertTrue(formFilled.isOk(), "Expected Ok for filled session");
+    
+      // load all form data
+      {
+        final var completedSession = formDb.withTenant().formInstanceQuery().includeForm(true).getOneSync(sessionId.getId());
+        for(final var answer : completedSession.getQuestionnaire().getAnswers()) {
+          final var item = completedSession.getFormItem(answer);
+          Assertions.assertNotNull(item, () -> "can't find answer: " + answer.getId());
+          
+        }
+        
+        for(final var answer : completedSession.getAnswerAndFormItems()) {
+          if(answer.getAnswer().getId().equals("cityServiceMainList")) {
+            Assertions.assertEquals(answer.getValueSetLabel().get(), "locale value missing for: null");  
+          }
+        }
+        
+        Assertions.assertEquals(
+            Questionnaire.Metadata.Status.COMPLETED,
+            completedSession.getQuestionnaire().getMetadata().getStatus(), 
+            "Expected Ok for filled session");
+      } 
       
-      
-      final var completedSession = formDb.withTenant().formInstanceQuery().getOne(sessionId.getId())
-          .await().atMost(Duration.ofMinutes(1));
-      Assertions.assertEquals(
-          Questionnaire.Metadata.Status.COMPLETED,
-          completedSession.getQuestionnaire().getMetadata().getStatus(), 
-          "Expected Ok for filled session");
-    } 
+      // load partial form data
+      {
+        final var completedSession = formDb.withTenant().formInstanceQuery().includeForm(false).getOneSync(sessionId.getId());
+        for(final var answer : completedSession.getAnswerAndFormItems()) {
+          
+          Assertions.assertNotNull(answer, () -> "can't find answer: " + answer.getAnswer().getId());
+          Assertions.assertNull(answer.getFormItem(), () -> "Answer should not be loaded: " + answer.getFormItem());
+        }
+        Assertions.assertEquals(
+            Questionnaire.Metadata.Status.COMPLETED,
+            completedSession.getQuestionnaire().getMetadata().getStatus(), 
+            "Expected Ok for filled session");
+      } 
+    }
   }
 
   

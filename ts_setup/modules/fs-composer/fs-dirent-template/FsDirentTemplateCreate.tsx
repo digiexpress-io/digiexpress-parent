@@ -20,9 +20,6 @@ export const FsDirentTemplateCreate: React.FC<FsDirentTemplateCreateProps> = (pr
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.template.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.template.printoutServiceIdField.label' })}</Typography>
-        <FsDirentTextField value={ownerState.printoutServiceId} disabled />
-
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.template.contentField.label' })}</Typography>
         <div className={classes.editor}>
           <MonacoReact height="100%" defaultLanguage="html"
