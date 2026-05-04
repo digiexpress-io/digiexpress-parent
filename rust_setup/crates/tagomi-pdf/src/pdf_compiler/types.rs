@@ -3,7 +3,6 @@ use std::result::Result;
 use std::path::PathBuf;
 
 use typst::{diag::{FileError, HintedString, SourceDiagnostic }, foundations::Datetime};
-use typst::{foundations::{ Dict }};
 use typst::{syntax::FileId};
 use ecow::EcoVec;
 
