@@ -51,11 +51,11 @@ export declare namespace Fs {
     | ServiceProps
     | DialobProps
     | FlowProps
+    | FlowTaskProps
     | LanguageProps
     | PrintoutProps
     | PrintoutPageProps
     | PrintoutResourceProps
-    | ImageProps
     | PageProps
     | TemplateProps
     | LinkProps
@@ -102,6 +102,12 @@ export declare namespace Fs {
     content?: string;
   }
 
+  export interface FlowTaskProps extends PropsBase {
+    type: 'FLOW_TASK';
+    taskName: string;
+    taskValue: string;
+  }
+
   export interface LanguageProps extends PropsBase {
     type: 'LOCALE';
     localeCode: string;
@@ -136,10 +142,6 @@ export declare namespace Fs {
     contentType: string;
     templateIds: string[];
     content?: string;
-  }
-
-  export interface ImageProps extends PropsBase {
-    type: 'image';
   }
 
   export interface TemplateProps extends PropsBase {
