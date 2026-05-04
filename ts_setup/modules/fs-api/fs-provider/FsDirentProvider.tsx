@@ -10,6 +10,7 @@ export interface FsDirentContextType {
   creatableTypes: Fs.BodyType[];
   selectOptions: Fs.SelectOptions;
   getParentDirent(childId: string): Fs.DirentBase | undefined;
+  getArticleName: (id: string) => string | undefined;
   getConfigOptionsForType: (type: Fs.BodyType) => Fs.SelectOption[];
   getDirent: (id: string) => Fs.DirentBase | undefined;
   isChildError: (dirent: Fs.DirentBase) => boolean;
@@ -68,6 +69,7 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       getConfigOptionsForType,
       updateDirent,
       getParentDirent: (childId) => dirents.getParentDirent(childId),
+      getArticleName: (id) => dirents.getArticleName(id),
       fetchDirentBody: props.persistenceUnit.fetchDirentBody
     };
   }, [dirents, updateDirent]);

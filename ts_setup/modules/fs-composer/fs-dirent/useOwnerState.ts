@@ -46,7 +46,9 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
     return d ? isChildError(d) : false;
   }));
   const showError = ((dirent?.props?.errors ?? []).length) > 0 || childWithError;
-  const fullPath = parentPath ? `${parentPath} / ${direntBase.name}` : direntBase.name;
+  const fullPath = direntBase.type === 'ARTICLE'
+    ? (parentPath ?? direntBase.name)
+    : (parentPath ? `${parentPath} / ${direntBase.name}` : direntBase.name);
 
   registerDirentPath(direntBase.id, fullPath);
 

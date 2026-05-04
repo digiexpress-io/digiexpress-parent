@@ -23,17 +23,21 @@ export interface UpdateOwnerState {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const { getDirent } = useFsDirent();
+  const { getDirent, getArticleName } = useFsDirent();
 
   const dirent = getDirent(props.direntId);
+  const displayName = getArticleName(props.direntId);
   const articleProps = dirent?.type === 'ARTICLE' ? dirent.props as Fs.ArticleProps : undefined;
 
-  const [name, setName] = React.useState(dirent?.name ?? '');
+  const [name, setName] = React.useState(displayName ?? '');
   const [orderNumber, setOrderNumber] = React.useState(articleProps?.orderNumber != undefined ? String(articleProps.orderNumber) : '');
   const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
   );
+
+  console.log('article dirent:', dirent?.id, dirent?.type, dirent?.name);
+
   const [labels, setLabels] = React.useState<string[]>(
     (dirent?.props?.labels ?? []).map(l => l.value)
   );

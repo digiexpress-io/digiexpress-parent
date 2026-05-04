@@ -20,7 +20,7 @@ export interface UpdateOwnerState {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const { getDirent, selectOptions, getConfigOptionsForType, fetchDirentBody } = useFsDirent();
+  const { getDirent, getArticleName, selectOptions, getConfigOptionsForType, fetchDirentBody } = useFsDirent();
 
   const dirent = getDirent(props.direntId)!;
   const pageProps = dirent.props as Fs.PageProps;
@@ -31,7 +31,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
   );
 
-  const articleName = selectOptions.articles.find(o => o.value === pageProps.articleId)?.label ?? '';
+  const articleName = getArticleName(pageProps.articleId) ?? '';
   const localeOptions: FsDirentSelectSingleOption[] = selectOptions.languages;
   const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('ARTICLE_PAGE');
 

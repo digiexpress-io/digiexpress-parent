@@ -111,6 +111,18 @@ export const DirentIcon = (props: { dirent: Fs.DirentBase }) => {
   }
 }
 
+function getExtension(type: Fs.BodyType): string | undefined {
+  switch (type) {
+    case 'FOLDER': return undefined;
+    case 'ARTICLE_PAGE': return '.page';
+    case 'ARTICLE_WORKFLOW': return '.workflow';
+    case 'DECISION_TABLE': return '.dt';
+    case 'DIALOB_FORM': return '.dialob';
+    case 'ARTICLE_LINK': return '.link'
+    default: return '.' + type.toLowerCase().replaceAll('_', '');
+  }
+}
+
 interface FsDirentNameProps {
   dirent: Fs.DirentBase;
   isDarkTheme: boolean;
@@ -123,7 +135,8 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   const classes = useUtilityClasses(props.isDarkTheme);
   const description = getDirent(props.dirent.id)?.props?.description;
   const displayName = props.dirent.type === 'ARTICLE' ? (
-    getParentDirent(props.dirent.id)?.name ?? props.dirent.name) : props.dirent.name; 
+    getParentDirent(props.dirent.id)?.name ?? props.dirent.name) : props.dirent.name;
+  const extension = getExtension(props.dirent.type);
 
   return (
     <ListItemText className={classes.direntName} primary={<Typography variant='subtitle2'
@@ -135,6 +148,7 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
       }}
     >
       <SearchResultHighlight text={displayName} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />
+      {extension && <Typography component='span' variant='inherit'>{extension}</Typography>}
       {description && (
         <Typography component='span' variant='caption' sx={{ ml: 1, color: FsColors.dark.textMuted, fontStyle: 'italic' }}>
           - "<SearchResultHighlight text={description} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />"
@@ -145,3 +159,5 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
     />
   );
 }
+
+

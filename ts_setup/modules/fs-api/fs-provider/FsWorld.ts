@@ -25,6 +25,20 @@ export class FsWorld {
     return parentId ? this._flat_dirents[parentId] : undefined;
   }
 
+  public getArticleName(id: string): string | undefined {
+    const dirent = this._flat_dirents[id];
+    if (!dirent) {
+      return undefined;
+    }
+    if (dirent.type === 'FOLDER') {
+      return dirent.name;
+    }
+    if (dirent.type === 'ARTICLE') {
+      return this._flat_dirents[this._article_parents[id]]?.name;
+    }
+    return dirent.name;
+  }
+
   public getDirent(id: string): Fs.DirentBase | undefined {
     return this._flat_dirents[id];
   }

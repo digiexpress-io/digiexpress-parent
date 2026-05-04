@@ -20,7 +20,7 @@ export interface CreateOwnerState {
 
 export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const { selectOptions, getConfigOptionsForType } = useFsDirent();
+  const { selectOptions, getArticleName, getConfigOptionsForType } = useFsDirent();
 
   const pathToTopParent = props.pathToTopParent ?? '';
 
@@ -28,7 +28,10 @@ export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undef
   const [localeCode, setLocaleCode] = React.useState('');
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>([]);
 
-  const articleOptions: FsDirentSelectSingleOption[] = selectOptions.articles;
+  const articleOptions: FsDirentSelectSingleOption[] = selectOptions.articles.map(o => ({
+    value: o.value,
+    label: getArticleName(o.value) ?? o.label,
+  }));
   const localeOptions: FsDirentSelectSingleOption[] = selectOptions.languages;
   const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('ARTICLE_PAGE');
 
