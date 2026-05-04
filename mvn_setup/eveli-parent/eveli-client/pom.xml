@@ -47,10 +47,6 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-db-client</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.digiexpress</groupId>    
-      <artifactId>tagomi-client</artifactId>
-    </dependency>
 
     <dependency>
       <groupId>io.digiexpress</groupId>

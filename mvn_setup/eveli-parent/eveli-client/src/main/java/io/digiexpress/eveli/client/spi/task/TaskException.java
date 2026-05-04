@@ -29,8 +29,6 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelopePage;
-import io.resys.thena.git.api.GitPullActions;
-import io.resys.thena.git.api.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
 import io.resys.thena.grim.api.GrimCommitActions.ManyMissionsEnvelope;
 import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
@@ -69,30 +67,7 @@ public class TaskException extends RuntimeException {
 
   public String getCode() { return code; }
   public List<DocumentExceptionMsg> getMessages() { return messages; }
-  public JsonObject getTarget() { return target; }  
-  
- 
-  public static DocumentExceptionMsg convertMessages(CommitResultEnvelope commit) {
-    return ImmutableDocumentExceptionMsg.builder()
-        .id(commit.getGid())
-        .value("") //TODO
-        .addAllArgs(commit.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
-        .build();
-  }
-
-  public static DocumentExceptionMsg convertMessages1(QueryEnvelope<GitPullActions.PullObject> state) {
-    return ImmutableDocumentExceptionMsg.builder()
-        .id("STATE_FAIL")
-        .value("")
-        .addAllArgs(state.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
-        .build();
-  }
-  public static DocumentExceptionMsg convertMessages2(QueryEnvelope<GitPullActions.PullObjects> state) {
-    return ImmutableDocumentExceptionMsg.builder()
-        .addAllArgs(state.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
-        .build();
-  }
-
+  public JsonObject getTarget() { return target; }
   public static Builder builder(String msgId) {
     return new Builder(msgId);
   }

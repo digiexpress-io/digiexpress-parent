@@ -33,8 +33,6 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
 import io.resys.thena.datasource.TenantContext;
-import io.resys.thena.git.spi.GitDataSourceImpl;
-import io.resys.thena.git.spi.GitPrinter;
 import io.resys.thena.grim.api.GrimClient;
 import io.resys.thena.grim.spi.GrimClientImpl;
 import io.vertx.mutiny.sqlclient.Pool;
@@ -80,23 +78,6 @@ public class FeedbackTaskEnvirSetup {
 
   public GrimClient getDbState() {
     return dbState;
-  }
-  
-  public GitDataSourceImpl createState() {
-    final var ctx = TenantContext.defaults("junit");
-    return GitDataSourceImpl.create(ctx, pgPool, new TenantCacheImpl());
-  }
-  
-  public void printRepo(Tenant repo) {
-    final String result = new GitPrinter(createState()).print(repo);
-    log.debug(result);
-  }
-  
-  public void prettyPrint(String repoId) {
-    Tenant repo = getDbState().grim(repoId).tenants().get()
-        .await().atMost(Duration.ofMinutes(1)).getRepo();
-    
-    printRepo(repo);
   }
 
   public String toRepoExport(String repoId) {
