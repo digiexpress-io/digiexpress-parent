@@ -1,11 +1,43 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { Fs } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { SvgIconProps } from '@mui/material';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { useUtilityClasses } from './useUtilityClasses';
 
+
+export interface FsPropertiesArticleProps {
+  dirent: Fs.DirentBase;
+  children: Fs.DirentBase[];
+}
+
+export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent }) => {
+  const intl = useIntl();
+  const classes = useUtilityClasses();
+  const { getParentDirent, getArticleName } = useFsDirent();
+
+  if (dirent.type !== 'ARTICLE') {
+    return undefined;
+  }
+
+  const parentFolder = getParentDirent(dirent.id);
+  const descendants = collectDescendants(parentFolder?.children ?? [], dirent.id, 0);
+
+  return (
+    <div className={classes.propertyRow}>
+      <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
+      <div className={classes.commentList}>
+        {descendants.map(({ dirent: child, depth }) => (
+          <Box key={child.id} className={classes.childRow} sx={{ paddingLeft: `${(depth + 1) * 16}px` }}> {/* TODO -- remove sx from here */}
+            <FsIcon small icon={getTypeIcon(child.type)} />
+            <Typography className={classes.propertyValue}>{child.type === 'ARTICLE' ? getArticleName(child.id) : child.name}</Typography>
+          </Box>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 function getTypeIcon(type: Fs.BodyType): React.ElementType<SvgIconProps> {
   switch (type) {
@@ -26,39 +58,15 @@ function getTypeIcon(type: Fs.BodyType): React.ElementType<SvgIconProps> {
   }
 }
 
-export interface FsPropertiesArticleProps {
-  dirent: Fs.DirentBase;
-  children: Fs.DirentBase[];
+function collectDescendants(items: Fs.DirentBase[], excludeId: string, depth: number): Array<{ dirent: Fs.DirentBase; depth: number }> {
+  return items.flatMap(child => {
+    if (child.id === excludeId) {
+      return [];
+    }
+    if (child.type !== 'FOLDER') {
+      return [{ dirent: child, depth }];
+    }
+    const nextDepth = child.children.some(c => c.type === 'ARTICLE') ? depth + 1 : depth;
+    return [{ dirent: child, depth }, ...collectDescendants(child.children, excludeId, nextDepth)];
+  });
 }
-
-export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent, children }) => {
-  const intl = useIntl();
-  const classes = useUtilityClasses();
-
-
-  if (dirent.type !== 'ARTICLE') {
-    return undefined;
-  }
-
-  return (
-    <div className={classes.propertyRow}>
-      <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
-      <div className={classes.commentList}>
-        {children.map((child) => (
-          <React.Fragment key={child.id}>
-            <div className={classes.childRow}>
-              <FsIcon small icon={getTypeIcon(child.type)} />
-              <Typography className={classes.propertyValue}>{child.name}</Typography>
-            </div>
-            {child.children.map((grandchild) => (
-              <div key={grandchild.id} className={classes.childRowIndented}>
-                <FsIcon small icon={getTypeIcon(grandchild.type)} />
-                <Typography className={classes.propertyValue}>{grandchild.name}</Typography>
-              </div>
-            ))}
-          </React.Fragment>
-        ))}
-      </div>
-    </div>
-  );
-};
