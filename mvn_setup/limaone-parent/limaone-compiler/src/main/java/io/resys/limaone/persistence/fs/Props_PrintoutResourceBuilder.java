@@ -1,0 +1,51 @@
+package io.resys.limaone.persistence.fs;
+
+/*-
+ * #%L
+ * limaone-compiler
+ * %%
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import io.resys.limaone.fs.ImmutablePrintoutResourceProps;
+import io.resys.limaone.fs.WorldFsProps.PrintoutResourceProps;
+import io.resys.limaone.model.PrintoutResource;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class Props_PrintoutResourceBuilder {
+  private final WorldFsState currentState;
+  private final NodeAndBody node;
+  
+  public PrintoutResourceProps build() {
+    final PrintoutResource resource = currentState.getBodyOfType(node);
+    
+    return ImmutablePrintoutResourceProps.builder()
+      .id(node.getObjectId())
+      .type(node.getBodyType())
+      .locked(false)
+      .resourceName(resource.getResourceName())
+      .contentType(resource.getContentType())
+      .content(resource.getContent())
+      .templateIds(resource.getTemplateIds())
+      .externalLocation(resource.getExternalLocation())
+         .build();
+  }
+  
+  public static PrintoutResourceProps of(WorldFsState currentState, NodeAndBody node) {
+    return new Props_PrintoutResourceBuilder(currentState, node).build();
+  }
+}

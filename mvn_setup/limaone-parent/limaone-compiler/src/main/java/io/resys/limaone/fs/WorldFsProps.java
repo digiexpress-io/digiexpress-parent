@@ -129,12 +129,21 @@ public interface WorldFsProps {
   @Value.Immutable
   interface PrintoutPageProps extends WorldFsProps {
     String getContent(); // the markdown definition
-
     String getLocaleId();
     String getServiceId();
     List<String> getTemplateIds();
   }
   
+  
+  @Value.Immutable
+  interface PrintoutResourceProps extends WorldFsProps {
+    String getExternalLocation();
+    String getResourceName();
+    String getContentType();
+    List<String> getTemplateIds();
+    
+    @Nullable String getContent();
+  }
 
   interface ImageProps extends WorldFsProps {
 

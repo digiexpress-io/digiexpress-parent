@@ -212,6 +212,7 @@ public class WorldFsFactory {
     case PRINTOUT_RESOURCE: {
       final PrintoutResource printoutResource = worldState.getBodyOfType(node);
       final var name = printoutResource.getResourceName();
+      worldState.putProps(node, n -> Props_PrintoutResourceBuilder.of(worldState, n));
       return NodePathAndName.of(path.orElse("printout-resources"), name);
     }
     

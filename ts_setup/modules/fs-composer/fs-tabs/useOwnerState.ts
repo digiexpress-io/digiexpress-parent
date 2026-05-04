@@ -1,3 +1,4 @@
+import React from "react";
 import { useIntl } from "react-intl";
 import { useFsNav, useFsDirent } from "@dxs-ts/fs-api";
 import { FsTabProps } from "./FsTabProps";
@@ -21,7 +22,7 @@ export interface OwnerState {
 export function useOwnerState(_props: FsTabProps): OwnerState {
   const intl = useIntl();
   const { isDarkMode, openTabs, activeTabIndex, setActiveTab, closeTab } = useFsNav();
-  const { getDirent } = useFsDirent();
+  const { getDirent, getArticleName } = useFsDirent();
 
   const onTabClick = (index: number) => {
     setActiveTab(index);
@@ -34,7 +35,7 @@ export function useOwnerState(_props: FsTabProps): OwnerState {
 
   const tabs: OwnerState['tabs'] = openTabs.map((tab, index) => ({
     id: tab.type === 'edit' ? tab.dirent.id : `__create__${tab.direntType.toLocaleLowerCase()}`,
-    name: tab.type === 'edit' ? tab.dirent.name : intl.formatMessage({ id: `fs.tabs.new.${tab.direntType.toLocaleLowerCase()}` }),
+    name: tab.type === 'edit' ? (getArticleName(tab.dirent.id) ?? tab.dirent.name) : intl.formatMessage({ id: `fs.tabs.new.${tab.direntType.toLocaleLowerCase()}` }),
     isActive: activeTabIndex === index,
     isFirst: index === 0,
     isLast: index === openTabs.length - 1,
