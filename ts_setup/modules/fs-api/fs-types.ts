@@ -53,6 +53,8 @@ export declare namespace Fs {
     | FlowProps
     | LanguageProps
     | PrintoutProps
+    | PrintoutPageProps
+    | PrintoutResourceProps
     | ImageProps
     | PageProps
     | TemplateProps
@@ -119,14 +121,29 @@ export declare namespace Fs {
     intlValues: Record<string, string>;
   }
 
+  export interface PrintoutPageProps extends PropsBase {
+    type: 'PRINTOUT_PAGE';
+    content: string;
+    localeId: string;
+    serviceId: string;
+    templateIds: string[];
+  }
+
+  export interface PrintoutResourceProps extends PropsBase {
+    type: 'PRINTOUT_RESOURCE';
+    externalLocation: string;
+    resourceName: string;
+    contentType: string;
+    templateIds: string[];
+    content?: string;
+  }
+
   export interface ImageProps extends PropsBase {
     type: 'image';
   }
 
   export interface TemplateProps extends PropsBase {
     type: 'ARTICLE_TEMPLATE';
-    printoutServiceId: string;
-    localeId: string;
     content?: string;
   }
 

@@ -36,8 +36,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
   );
 
-  console.log('article dirent:', dirent?.id, dirent?.type, dirent?.name);
-
   const [labels, setLabels] = React.useState<string[]>(
     (dirent?.props?.labels ?? []).map(l => l.value)
   );
