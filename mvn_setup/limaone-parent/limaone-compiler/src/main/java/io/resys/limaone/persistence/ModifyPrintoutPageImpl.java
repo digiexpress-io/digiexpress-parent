@@ -91,7 +91,7 @@ public class ModifyPrintoutPageImpl extends AuthoringTemplate<ModifyPrintoutPage
     if(props.getResourceIds() != null) {
       for(final var resource : world.getPrintoutResources().values()) {
 
-        final var isPageInResource = resource.getBody().getTemplateIds().contains(props.getPageId());
+        final var isPageInResource = resource.getBody().getPrintoutPageIds().contains(props.getPageId());
         final var isResourceInChanges = props.getResourceIds().contains(resource.getId());
 
         if(isPageInResource && isResourceInChanges) {
@@ -101,40 +101,40 @@ public class ModifyPrintoutPageImpl extends AuthoringTemplate<ModifyPrintoutPage
         if(isResourceInChanges && !isPageInResource) {
           final var newResource = ImmutablePrintoutResource.builder()
               .from(resource.getBody())
-              .addTemplateIds(props.getPageId())
+              .addPrintoutPageIds(props.getPageId())
               .build();
           nextWorld.mergeModel(resource.getId(), newResource.getResourceName(), newResource);
         }
 
         if(isPageInResource && !isResourceInChanges) {
-          final var templateIds = new ArrayList<>(resource.getBody().getTemplateIds());
+          final var templateIds = new ArrayList<>(resource.getBody().getPrintoutPageIds());
           templateIds.remove(props.getPageId());
 
           final var newResource = ImmutablePrintoutResource.builder()
               .from(resource.getBody())
-              .templateIds(templateIds)
+              .printoutPageIds(templateIds)
               .build();
           nextWorld.mergeModel(resource.getId(), newResource.getResourceName(), newResource);
         }
       }
     }
 
-    var templateDependencies = start.getBody().getTemplateIds();
-    if(props.getTemplateIds() != null) {
+var templateDependencies = start.getBody().getPrintoutPageIds();
+    if(props.getPrintoutPageIds() != null) {
       templateDependencies = new ArrayList<>();
-      for(final var depTemplateRef : props.getTemplateIds()) {
-        if(!world.getPrintoutPages().containsKey(depTemplateRef)) {
-          throw new AuthoringException(props, "PrintoutPage template with id: '" + depTemplateRef + "' does not exist!");
+      for(final var depPrintoutPageId : props.getPrintoutPageIds()) {
+        if(!world.getPrintoutPages().containsKey(depPrintoutPageId)) {
+          throw new AuthoringException(props, "PrintoutPage template with id: '" + depPrintoutPageId + "' does not exist!");
         }
-        templateDependencies.add(depTemplateRef);
+        templateDependencies.add(depPrintoutPageId);
       }
     }
-
-    return ImmutablePrintoutPage.builder()
+return ImmutablePrintoutPage.builder()
         .from(start.getBody())
         .content(props.getContent() == null ? start.getBody().getContent() : props.getContent())
         .localeId(locale.get().getId())
-        .templateIds(templateDependencies)
+        .printoutPageIds(templateDependencies)
         .build();
+
   }
 }

@@ -22,7 +22,9 @@ package io.resys.limaone.model;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,6 +123,8 @@ public interface Model<T extends Body>  extends Serializable {
     Map<String, Model<PrintoutPage>> getPrintoutPages();
     Map<String, Model<PrintoutResource>> getPrintoutResources();
     Map<String, Model<Printout>> getPrintouts();
+
+
     
     
     
@@ -270,6 +274,21 @@ public interface Model<T extends Body>  extends Serializable {
         throw new UnsupportedOperationException("PRINTOUT types not mapped to ModelWorld: " + body.getBodyType());
       } 
       return builder.build();
+    }
+    @JsonIgnore
+    default Map<String, List<Model<PrintoutResource>>> getPrintoutResourceByTemplateId() {
+      final Map<String, List<Model<PrintoutResource>>> result = new HashMap<>();
+      for(final var resource : getPrintoutResources().values()) {
+        
+        for(final var pageId : resource.getBody().getPrintoutPageIds()) {
+          if(!result.containsKey(pageId)) {
+            result.put(pageId, new ArrayList<>());
+          }
+          result.get(pageId).add(resource);
+        }
+      }
+      
+      return Collections.unmodifiableMap(result);
     }
   }
   

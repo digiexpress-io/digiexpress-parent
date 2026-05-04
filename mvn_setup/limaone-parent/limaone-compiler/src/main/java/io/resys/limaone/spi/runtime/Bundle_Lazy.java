@@ -39,6 +39,7 @@ import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.FlowTaskProgram;
 import io.resys.limaone.program.Runtime;
 import io.resys.limaone.program.Runtime.EnvironmentProperties;
+import io.resys.limaone.program.TagomiProgram;
 import io.resys.limaone.program.WorkflowProgram;
 import io.resys.limaone.spi.compiler.CompilerImpl;
 
@@ -79,6 +80,7 @@ public class Bundle_Lazy implements Bundle {
   @Override public BundleQuery<FlowTaskProgram> queryFlowTasks() { return await().queryFlowTasks(); }
   @Override public BundleQuery<FlowProgram> queryFlows() { return await().queryFlows(); }
   @Override public BundleQuery<DecisionProgram> queryDecisions() { return await().queryDecisions(); }
+  @Override public BundleQuery<TagomiProgram> queryTagomis() { return await().queryTagomis(); }
   
   public Bundle await() {
     if(debounce.asMap().containsKey(getTid())) {

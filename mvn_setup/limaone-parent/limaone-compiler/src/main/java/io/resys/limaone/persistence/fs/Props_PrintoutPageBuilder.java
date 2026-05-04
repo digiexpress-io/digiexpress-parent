@@ -37,7 +37,7 @@ public class Props_PrintoutPageBuilder {
           .localeId(page.getLocaleId())
           .content(page.getContent())
           .serviceId(page.getServiceId())
-          .templateIds(page.getTemplateIds())
+          .templateIds(page.getPrintoutPageIds())
         .build();
   }
   

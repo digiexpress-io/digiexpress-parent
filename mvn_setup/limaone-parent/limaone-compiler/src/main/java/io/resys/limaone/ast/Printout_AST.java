@@ -1,4 +1,4 @@
-package io.resys.limaone.model;
+package io.resys.limaone.ast;
 
 /*-
  * #%L
@@ -9,9 +9,9 @@ package io.resys.limaone.model;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,21 +24,9 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import io.resys.limaone.model.Model.Body;
-import io.resys.limaone.model.Model.BodyType;
-
 @Value.Immutable
-@JsonSerialize(as = ImmutablePrintoutPage.class)
-@JsonDeserialize(as = ImmutablePrintoutPage.class)
-public interface PrintoutPage extends Body {
-  String getContent(); // the markdown definition
-
-  String getLocaleId();
-  String getServiceId();
-  List<String> getPrintoutPageIds();
-
-  default BodyType getBodyType() { return BodyType.PRINTOUT_PAGE; };
+public interface Printout_AST extends Simple_AST {
+  String getServiceName();
+  String getOrchestratorName();
+  List<String> getLocaleCodes();
 }

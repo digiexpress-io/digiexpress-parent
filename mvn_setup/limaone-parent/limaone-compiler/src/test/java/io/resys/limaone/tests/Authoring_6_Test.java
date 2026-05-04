@@ -69,7 +69,7 @@ public class Authoring_6_Test extends DbSupport {
             .resourceName("header.typ")
             .contentType("text/*")
             .uploadBody("#let header = () => [Header]")
-            .templateIds(List.of())
+            .printoutPageIds(List.of())
         )
         .buildSync();
     log.info("resource1: id={}, body={}", resource1.getId(), resource1.getBody());
@@ -152,7 +152,7 @@ public class Authoring_6_Test extends DbSupport {
             .resourceName("script.typ")
             .contentType("text/*")
             .uploadBody("#let h = () => []")
-            .templateIds(List.of(page1.getId()))
+            .printoutPageIds(List.of(page1.getId()))
         )
         .buildSync();
 
@@ -259,7 +259,7 @@ public class Authoring_6_Test extends DbSupport {
             .resourceName("header.typ")
             .contentType("text/*")
             .uploadBody("#let h = () => [Header]")
-            .templateIds(List.of(page1.getId()))
+            .printoutPageIds(List.of(page1.getId()))
         )
         .buildSync();
     log.info("resource1: id={}", resource1.getId());

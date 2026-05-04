@@ -80,9 +80,13 @@ public class CompilerImpl implements Compiler {
     // wrench dt
     final Stream<CompilableUnit> decisions = world.getDecisionTables().values().stream()
         .map(f -> new Compiler_DecisionTable(astParser, world, f));
-    
+
+    // tagomi printout
+    final Stream<CompilableUnit> tagomis = world.getPrintouts().values().stream()
+        .map(p -> new Compiler_Tagomi(astParser, world, p));
+
     // combine all to single stream
-    final Stream<CompilableUnit> itemsToCompile =  Stream.of(locales, forms, workflows, article, flows, flowTasks, decisions)
+    final Stream<CompilableUnit> itemsToCompile =  Stream.of(locales, forms, workflows, article, flows, flowTasks, decisions, tagomis)
         .flatMap(Function.identity());
     
     // bundle all 

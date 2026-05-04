@@ -50,6 +50,6 @@ public interface NewPrintoutResource {
     String getResourceName();
     String getContentType();
     @Nullable String getUploadBody();
-    List<String> getTemplateIds();
+    List<String> getPrintoutPageIds();
   }
 }

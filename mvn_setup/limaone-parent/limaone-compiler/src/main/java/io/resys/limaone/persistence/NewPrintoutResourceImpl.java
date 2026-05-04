@@ -125,7 +125,7 @@ public class NewPrintoutResourceImpl extends AuthoringTemplate<NewPrintoutResour
         .contentType(props.getContentType())
         .externalLocation("")
         .content(props.getUploadBody())
-        .templateIds(props.getTemplateIds());
+        .printoutPageIds(props.getPrintoutPageIds());
 
     return printoutResource.build();
   }
@@ -138,7 +138,7 @@ public class NewPrintoutResourceImpl extends AuthoringTemplate<NewPrintoutResour
         .contentType(props.getContentType())
         .externalLocation(externalLocation)
         .content(props.getUploadBody())
-        .templateIds(props.getTemplateIds());
+        .printoutPageIds(props.getPrintoutPageIds());
 
     return printoutResource.build();
   }
@@ -152,10 +152,10 @@ public class NewPrintoutResourceImpl extends AuthoringTemplate<NewPrintoutResour
       throw new AuthoringException(props, "PrintoutResource: '" + props.getResourceName() + "' already exists!");
     }
 
-    for(final var templateId : props.getTemplateIds()) {
-      if(!world.getPrintoutPages().containsKey(templateId)) {
+    for(final var printoutId : props.getPrintoutPageIds()) {
+      if(!world.getPrintoutPages().containsKey(printoutId)) {
         throw new AuthoringException(props,
-            "PrintoutResource templateId: '" + templateId + "' does not exist in: '" + String.join(",", world.getPrintoutPages().keySet()) + "'!");
+            "PrintoutResource printoutId: '" + printoutId + "' does not exist in: '" + String.join(",", world.getPrintoutPages().keySet()) + "'!");
       }
     }
   }

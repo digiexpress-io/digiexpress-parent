@@ -172,7 +172,7 @@ public class Authoring_5_Test extends DbSupport {
             .resourceName("original-script.typ")
             .contentType("text/*")
             .uploadBody("#let header = () => [Original]")
-            .templateIds(List.of(page1.getId()))
+            .printoutPageIds(List.of(page1.getId()))
         )
         .buildSync();
     log.info("resource1: id={}, body={}", resource1.getId(), resource1.getBody());
@@ -188,8 +188,8 @@ public class Authoring_5_Test extends DbSupport {
 
     Assertions.assertEquals("updated-script.typ", updated.getBody().getResourceName());
     Assertions.assertEquals("#let header = () => [Updated]", updated.getBody().getContent());
-    // templateIds preserved when not specified
-    Assertions.assertEquals(List.of(page1.getId()), updated.getBody().getTemplateIds());
+    // printoutPageIds preserved when not specified
+    Assertions.assertEquals(List.of(page1.getId()), updated.getBody().getPrintoutPageIds());
   }
 
   @Test
@@ -216,12 +216,12 @@ public class Authoring_5_Test extends DbSupport {
 
     final var resource1 = authoring.newModel()
         .newPrintoutResource()
-        .props(props -> props.resourceName("script-a.typ").contentType("text/*").uploadBody("body a").templateIds(List.of(page1.getId())))
+        .props(props -> props.resourceName("script-a.typ").contentType("text/*").uploadBody("body a").printoutPageIds(List.of(page1.getId())))
         .buildSync();
 
     authoring.newModel()
         .newPrintoutResource()
-        .props(props -> props.resourceName("script-b.typ").contentType("text/*").uploadBody("body b").templateIds(List.of()))
+        .props(props -> props.resourceName("script-b.typ").contentType("text/*").uploadBody("body b").printoutPageIds(List.of()))
         .buildSync();
 
     Assertions.assertThrows(Exception.class, () ->
@@ -256,13 +256,13 @@ public class Authoring_5_Test extends DbSupport {
 
     final var resource1 = authoring.newModel()
         .newPrintoutResource()
-        .props(props -> props.resourceName("script.typ").contentType("text/*").uploadBody("body").templateIds(List.of(page1.getId())))
+        .props(props -> props.resourceName("script.typ").contentType("text/*").uploadBody("body").printoutPageIds(List.of(page1.getId())))
         .buildSync();
 
     Assertions.assertThrows(Exception.class, () ->
       authoring.modifyModel()
           .modifyPrintoutResource()
-          .props(props -> props.resourceId(resource1.getId()).templateIds(List.of("non-existent-page-id")))
+          .props(props -> props.resourceId(resource1.getId()).printoutPageIds(List.of("non-existent-page-id")))
           .buildSync()
     );
   }
@@ -361,7 +361,7 @@ public class Authoring_5_Test extends DbSupport {
 
     final var resource1 = authoring.newModel()
         .newPrintoutResource()
-        .props(props -> props.resourceName("script.typ").contentType("text/*").uploadBody("body").templateIds(List.of()))
+        .props(props -> props.resourceName("script.typ").contentType("text/*").uploadBody("body").printoutPageIds(List.of()))
         .buildSync();
 
     // link resource to page via modifyPrintoutPage
@@ -373,8 +373,8 @@ public class Authoring_5_Test extends DbSupport {
     {
       final var world = authoring.worldQuery().docs(BodyType.values()).findAllSync();
       final var r = world.getPrintoutResources().get(resource1.getId());
-      Assertions.assertTrue(r.getBody().getTemplateIds().contains(page1.getId()),
-          "resource should have page1 in its templateIds after linking");
+      Assertions.assertTrue(r.getBody().getPrintoutPageIds().contains(page1.getId()),
+          "resource should have page1 in its printoutPageIds after linking");
     }
 
     // unlink resource from page
@@ -386,8 +386,8 @@ public class Authoring_5_Test extends DbSupport {
     {
       final var world = authoring.worldQuery().docs(BodyType.values()).findAllSync();
       final var r = world.getPrintoutResources().get(resource1.getId());
-      Assertions.assertFalse(r.getBody().getTemplateIds().contains(page1.getId()),
-          "resource should NOT have page1 in its templateIds after unlinking");
+      Assertions.assertFalse(r.getBody().getPrintoutPageIds().contains(page1.getId()),
+          "resource should NOT have page1 in its printoutPageIds after unlinking");
     }
   }
 
@@ -446,7 +446,7 @@ public class Authoring_5_Test extends DbSupport {
     Assertions.assertThrows(Exception.class, () ->
       authoring.modifyModel()
           .modifyPrintoutPage()
-          .props(props -> props.pageId(page1.getId()).templateIds(List.of("non-existent-page-id")))
+          .props(props -> props.pageId(page1.getId()).printoutPageIds(List.of("non-existent-page-id")))
           .buildSync()
     );
   }

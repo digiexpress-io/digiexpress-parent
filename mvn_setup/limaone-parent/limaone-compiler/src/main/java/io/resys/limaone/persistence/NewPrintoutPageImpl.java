@@ -84,13 +84,13 @@ public class NewPrintoutPageImpl extends AuthoringTemplate<NewPrintoutPageImpl, 
     final var localeRef = props.getLocaleId();
     final var locale = world.findOneLocale(localeRef);
 
-    final var templateIds = new ArrayList<String>();
-    if(props.getTemplateIds() != null) {
-      for(final var templateRef : props.getTemplateIds()) {
-        if(!world.getPrintoutPages().containsKey(templateRef)) {
-          throw new AuthoringException(props, "PrintoutPage template with id: '" + templateRef + "' does not exist!");
+    final var printoutIds = new ArrayList<String>();
+    if(props.getPrintoutPageIds() != null) {
+      for(final var printoutPageRef : props.getPrintoutPageIds()) {
+        if(!world.getPrintoutPages().containsKey(printoutPageRef)) {
+          throw new AuthoringException(props, "PrintoutPage template with id: '" + printoutPageRef + "' does not exist!");
         }
-        templateIds.add(templateRef);
+        printoutIds.add(printoutPageRef);
       }
     }
 
@@ -98,7 +98,7 @@ public class NewPrintoutPageImpl extends AuthoringTemplate<NewPrintoutPageImpl, 
         .content(Optional.ofNullable(props.getContent()).orElse(""))
         .localeId(locale.map(e -> e.getId()).orElse(localeRef))
         .serviceId(service.map(e -> e.getId()).orElse(serviceRef))
-        .templateIds(templateIds);
+        .printoutPageIds(printoutIds);
 
     if(locale.isEmpty()) {
       throw new AuthoringException(props,

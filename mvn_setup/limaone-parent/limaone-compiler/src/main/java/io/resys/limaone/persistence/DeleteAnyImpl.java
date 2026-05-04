@@ -227,7 +227,7 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
 
   private void sanitizePrintoutPage(ModelWorld world, String pageId) {
     final var usedInResources = world.getPrintoutResources().values().stream()
-        .filter(resource -> resource.getBody().getTemplateIds().contains(pageId))
+        .filter(resource -> resource.getBody().getPrintoutPageIds().contains(pageId))
         .findFirst();
     if(usedInResources.isPresent()) {
       throw new AuthoringException(props, "PrintoutPage '" + pageId + "' is referenced in printout resource: '" + usedInResources.get().getId() + "'!");

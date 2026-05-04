@@ -22,6 +22,7 @@ package io.resys.limaone.program;
 
 import java.io.Serializable;
 import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Supplier;
@@ -33,42 +34,63 @@ import io.resys.limaone.persistence.ModelWorldDb;
 import io.resys.limaone.program.Compiler.Bundle;
 import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.thena.api.actions.TenantActions.TenantDb;
+import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 
 public interface Runtime extends Serializable {
   Heap getHeap();
+
   EnvironmentProperties getProperties();
+
   Bundle getBundle();
-  
+
   /**
    * @param refId tenant id or lexical name or tenant member id(aka user)
    * @return
    */
   Runtime withTenant(Optional<String> tid);
-  
+
   // dump everything from runtime
-  interface Heap extends Serializable {}
-  
-  
+  interface Heap extends Serializable {
+  }
+
   interface EnvironmentProperties {
     ScheduledExecutorService getWorkerPool();
-    Duration getWorkerPoolMaxTimeout();
-    String getDefaultTenantName();
-    boolean isDev();
-    
-    AST_Parser getAstParser();
-    ModelWorldDb getModelDb();
-    FormDb getFormDb();
-    TenantDb getTenantDb();
 
-    <T> T getBean(Class<T> type); 
+    Duration getWorkerPoolMaxTimeout();
+
+    String getDefaultTenantName();
+
+    boolean isDev();
+
+    AST_Parser getAstParser();
+
+    ModelWorldDb getModelDb();
+
+    FormDb getFormDb();
+
+    TenantDb getTenantDb();
+    
+    TagomiPdfRenderer getTagomiPdfRenderer();
+
+    <T> T getBean(Class<T> type);
+
     Supplier<CurrentUser> getCurrentUser();
   }
-  
-  
+
+  @FunctionalInterface
+  public interface TagomiPdfRenderer {
+    Uni<TagomiProgram.PdfResult> render(
+      List<TagomiProgram.LocalizedPrintout> localizedPrintouts,
+      String serviceName,
+      String orchestratorName,
+      Runtime runtime, String locale, JsonObject props);
+  }
 
   @Value.Immutable
   interface CurrentUser {
     String getUserId();
+
     String getUserName();
   }
 }

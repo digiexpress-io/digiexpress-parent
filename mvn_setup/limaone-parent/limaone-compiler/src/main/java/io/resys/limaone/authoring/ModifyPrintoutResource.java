@@ -49,6 +49,6 @@ public interface ModifyPrintoutResource {
     @Nullable String getResourceName();
     @Nullable String getContentType();
     @Nullable String getUploadBody();
-    @Nullable List<String> getTemplateIds();
+    @Nullable List<String> getPrintoutPageIds();
   }
 }
