@@ -79,7 +79,9 @@ export const EveliShellRoot = styled('div', {
     '& .EveliShellLargeBar': {
       flex: 1,
       minWidth: 0,
-      overflow: 'hidden',
+      overflowX: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
     },
 
     '& .EveliShellMiniBar > div': {

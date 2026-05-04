@@ -40,10 +40,10 @@ export const FsExplorerRoot = styled('div', {
   const treeThemeColors = getThemeColors(isDarkTheme);
 
   return {
-    backgroundColor: treeThemeColors.background,
+    backgroundColor: isDarkTheme ? treeThemeColors.background : theme.palette.secondary.main,
     color: treeThemeColors.text,
-    height: '100%',
-    maxHeight: '100vh',
+    flex: 1,
+    minHeight: 0,
     fontSize: '13px',
     overflowY: 'auto',
     overflowX: 'hidden',
