@@ -5,11 +5,13 @@ import { FsPanelArticleOrderProps } from './FsPanelArticleOrderProps';
 export interface OwnerState {
   isDarkMode: boolean;
   articles: Fs.DirentBase[];
+  getArticleName: (id: string) => string | undefined;
 }
 
 export const useOwnerState = (_props: FsPanelArticleOrderProps): OwnerState => {
   const { isDarkMode } = useFsNav();
-  const { getDirent, selectOptions } = useFsDirent();
+  const { getDirent, selectOptions, getArticleName } = useFsDirent();
+
 
   const articles = selectOptions.articles
     .map(opt => getDirent(opt.value))
@@ -20,5 +22,5 @@ export const useOwnerState = (_props: FsPanelArticleOrderProps): OwnerState => {
       return aOrder - bOrder;
     });
 
-  return { isDarkMode, articles };
+  return { isDarkMode, articles, getArticleName };
 };
