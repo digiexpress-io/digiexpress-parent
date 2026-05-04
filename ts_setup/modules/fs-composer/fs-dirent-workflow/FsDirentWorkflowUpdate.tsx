@@ -5,62 +5,63 @@ import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentServiceCreateProps } from './FsDirentServiceProps';
-import { useUtilityClasses, FsDirentServiceRoot } from './useUtilityClasses';
-import { useCreateOwnerState } from './useCreateOwnerState';
+import { FsDirentWorkflowUpdateProps } from './FsDirentWorkflowProps';
+import { useUtilityClasses, FsDirentWorkflowRoot } from './useUtilityClasses';
+import { useUpdateOwnerState } from './useUpdateOwnerState';
 
 
-export const FsDirentServiceCreate: React.FC<FsDirentServiceCreateProps> = (props) => {
+export const FsDirentWorkflowUpdate: React.FC<FsDirentWorkflowUpdateProps> = (props) => {
   const intl = useIntl();
-  const ownerState = useCreateOwnerState(props);
+  const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
   const { selectOptions, getConfigOptionsForType } = useFsDirent();
   const dialobForms = selectOptions.dialobs;
   const flows = selectOptions.flows;
   const articles = selectOptions.articles;
   const configOptions = getConfigOptionsForType('ARTICLE_WORKFLOW');
-
-  const [serviceName, setServiceName] = React.useState('');
-  const [selectedDialobForm, setSelectedDialobForm] = React.useState<string>('');
-  const [selectedDialobTag, setSelectedDialobTag] = React.useState<string>('');
-  const dialobTags = selectOptions.collectDialobTags(selectedDialobForm);
-
-  const [selectedFlow, setSelectedFlow] = React.useState<string>('');
-  const [selectedArticles, setSelectedArticles] = React.useState<string[]>([]);
-  const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
+  const dialobTags = selectOptions.collectDialobTags(ownerState.dialobFormName);
 
   return (
-    <FsDirentServiceRoot className={classes.root} ownerState={ownerState}>
-      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createNew' })}</Typography>
+    <FsDirentWorkflowRoot className={classes.root} ownerState={ownerState}>
+      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.edit' })}</Typography>
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.nameField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })} required value={serviceName} onChange={setServiceName} />
+        <FsDirentTextField required
+          value={ownerState.name}
+          placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })}
+          onChange={ownerState.onChangeName}
+        />
 
         <Divider />
 
         <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.dialobForm' })}</Typography>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobFormField.label' })}</Typography>
-        <FsDirentSelectSingle options={dialobForms} value={selectedDialobForm} onChange={setSelectedDialobForm} />
+        <FsDirentSelectSingle options={dialobForms} value={ownerState.dialobFormName} onChange={ownerState.onChangeDialobFormName} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobTagField.label' })}</Typography>
-        <FsDirentSelectSingle options={dialobTags} value={selectedDialobTag} onChange={setSelectedDialobTag} />
+        <FsDirentSelectSingle options={dialobTags} value={ownerState.dialobFormTag} onChange={ownerState.onChangeDialobFormTag} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.flowField.label' })}</Typography>
-        <FsDirentSelectSingle options={flows} value={selectedFlow} onChange={setSelectedFlow} />
+        <FsDirentSelectSingle options={flows} value={ownerState.flowName} onChange={ownerState.onChangeFlowName} />
 
         <Divider />
 
         <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createLocaleLabels' })}</Typography>
 
         {ownerState.locales.map((locale) => (
-          <div key={locale.value} className={classes.localeRow}>
-            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.service.labelField.${locale}.label` })}</Typography>
-            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.service.labelField.placeholder' })} />
+          <div key={locale.label} className={classes.localeRow}>
+            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.service.labelField.${locale.label}.label` })}</Typography>
+            <FsDirentTextField
+              value={ownerState.intlValues[locale.label] ?? ''}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.service.labelField.placeholder' })}
+              onChange={(value) => ownerState.onChangeIntlValues(locale.label, value)}
+            />
           </div>
         ))}
 
@@ -72,25 +73,34 @@ export const FsDirentServiceCreate: React.FC<FsDirentServiceCreateProps> = (prop
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityStartField.label' })}</Typography>
-            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.service.validityStartField.placeholder' })} />
+            <FsDirentTextField
+              value={ownerState.validityStart}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.service.validityStartField.placeholder' })}
+              onChange={ownerState.onChangeValidityStart}
+            />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityEndField.label' })}</Typography>
-            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.service.validityEndField.placeholder' })} />
+            <FsDirentTextField
+              value={ownerState.validityEnd}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.service.validityEndField.placeholder' })}
+              onChange={ownerState.onChangeValidityEnd}
+            />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.articlesField.label' })}</Typography>
-            <FsDirentSelectMulti options={articles} value={selectedArticles} onChange={setSelectedArticles} />
+            <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.configOptionsField.label' })}</Typography>
-            <FsDirentSelectMulti options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
+            <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
           </div>
         </Collapse>
 
         <div className={classes.buttonContainer}>
+          <FsDirentButtonDelete assetId={props.direntId} />
           <FsDirentButtonCancel />
           <FsDirentButtonCreate />
         </div>
 
       </div>
-    </FsDirentServiceRoot>
+    </FsDirentWorkflowRoot>
   );
 };

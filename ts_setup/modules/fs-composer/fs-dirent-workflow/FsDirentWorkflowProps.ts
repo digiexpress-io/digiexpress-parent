@@ -1,15 +1,15 @@
 import { Fs, FsTab } from '@dxs-ts/fs-api';
 
 
-export interface FsDirentServiceCreateProps {
+export interface FsDirentWorkflowCreateProps {
   parentFolder: Fs.DirentBase | undefined;
   pathToTopParent: string | undefined;
 }
 
-export interface FsDirentServiceUpdateProps {
+export interface FsDirentWorkflowUpdateProps {
   direntId: string;
 }
 
-export interface FsDirentServiceProps {
+export interface FsDirentWorkflowProps {
   tab: FsTab;
 }

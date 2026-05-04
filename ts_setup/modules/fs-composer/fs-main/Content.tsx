@@ -6,7 +6,7 @@ import { FsDirentArticle } from '../fs-dirent-article';
 import { FsDirentFolder } from '../fs-dirent-folder';
 import { FsDirentLink } from '../fs-dirent-link';
 import { FsDirentPhone } from '../fs-dirent-phone';
-import { FsDirentService } from '../fs-dirent-service';
+import { FsDirentWorkflow } from '../fs-dirent-workflow';
 import { FsDirentLanguage } from '../fs-dirent-language';
 import { FsDirentPage } from '../fs-dirent-page';
 import { FsDirentFlow } from '../fs-dirent-flow';
@@ -50,7 +50,7 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
     case 'ARTICLE': return (activeTab && (<div key={tabId} className={className}><FsDirentArticle tab={activeTab} /></div>));
     case 'FOLDER': return (activeTab && (<div key={tabId} className={className}><FsDirentFolder tab={activeTab} /></div>));
     case 'ARTICLE_LINK': return (activeTab && (<div key={tabId} className={className}><FsDirentLink tab={activeTab} /></div>));
-    case 'ARTICLE_WORKFLOW': return (activeTab && (<div key={tabId} className={className}><FsDirentService tab={activeTab} /></div>));
+    case 'ARTICLE_WORKFLOW': return (activeTab && (<div key={tabId} className={className}><FsDirentWorkflow tab={activeTab} /></div>));
     case 'FLOW': return (activeTab && (<div key={tabId} className={className}><FsDirentFlow tab={activeTab} /></div>));
     case 'FLOW_TASK': return (activeTab && (<div key={tabId} className={className}><FsDirentFlowTask tab={activeTab} /></div>));
     case 'PRINTOUT': return (activeTab && (<div key={tabId} className={className}><FsDirentPrintout tab={activeTab} /></div>));
