@@ -105,7 +105,6 @@ public class WorldFs_1_Test extends DbSupport {
         .props(props -> props.resourceName("printout_resource").contentType("text/*").uploadBody("upload body"))
         .buildSync();
     
-    
     final var page2 = authoring.newModel()
       .newArticlePage()
       .props(props -> props.articleId(article1.getId()).locale(locale2.getId()).content("# Finnish content"))
@@ -126,7 +125,6 @@ public class WorldFs_1_Test extends DbSupport {
         .props(props -> props.name("Template2").content("#Heading1").description("Excellent template2").type("type"))
         .buildSync();
       
-    
     final var printout1 = authoring.newModel()
         .newPrintout()
         .props(props -> props.serviceName("Printout1").orchestratorName("PrintoutFlow"))
