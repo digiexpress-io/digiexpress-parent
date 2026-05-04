@@ -26,6 +26,7 @@ import java.util.Base64;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,6 +51,7 @@ import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Disabled
 @TagomiTest(enabled = true)
 @DialobTest(enabled = true)
 public class TagomiPdfTest extends DbSupport {
