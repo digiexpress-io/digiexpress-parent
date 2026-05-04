@@ -32,7 +32,14 @@ export const FsDirentFlowTaskCreate: React.FC<FsDirentFlowTaskCreateProps> = (pr
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.flow_task.taskValueField.label' })}</Typography>
         <div className={classes.editor}>
-          <MonacoReact defaultLanguage="yaml" />
+          <MonacoReact
+            height="100%"
+            defaultLanguage="yaml"
+            options={{
+              wordBasedSuggestions: 'off',
+              minimap: { enabled: false },
+            }}
+          />
         </div>
 
         <div className={classes.buttonContainer}>

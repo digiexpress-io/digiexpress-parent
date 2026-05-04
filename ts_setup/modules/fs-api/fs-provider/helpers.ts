@@ -7,6 +7,7 @@ export const ALL_TYPES: Fs.BodyType[] = [
   'ARTICLE_WORKFLOW',
   'DIALOB_FORM',
   'FLOW',
+  'FLOW_TASK',
   'LOCALE',
   'PRINTOUT',
   'ARTICLE_PAGE',

@@ -18,7 +18,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const dirent = getDirent(props.direntId);
   const flowTaskProps = dirent?.type === 'FLOW_TASK' ? dirent.props as Fs.FlowTaskProps : undefined;
 
-  const [taskName, setTaskName] = React.useState(flowTaskProps?.taskName ?? '');
+  const [taskName, setTaskName] = React.useState(flowTaskProps?.taskName ?? dirent?.name ?? '');
   const [taskValue, setTaskValue] = React.useState(flowTaskProps?.taskValue ?? '');
 
   function onChangeTaskName(value: string) {

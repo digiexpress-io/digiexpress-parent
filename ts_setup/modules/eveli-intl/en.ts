@@ -1559,6 +1559,7 @@ export const en = {
   'fs.direntNew.type.article_link': 'Link',
   'fs.direntNew.type.dialob_form': 'Dialob',
   'fs.direntNew.type.flow': 'Flow',
+  'fs.direntNew.type.flow_task': 'Flow task',
   'fs.direntNew.type.locale': 'Language',
   'fs.direntNew.type.printout': 'Printout',
   'fs.direntNew.type.image': 'Image',

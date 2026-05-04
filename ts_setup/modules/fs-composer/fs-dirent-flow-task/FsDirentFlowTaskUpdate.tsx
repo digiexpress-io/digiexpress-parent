@@ -32,9 +32,14 @@ export const FsDirentFlowTaskUpdate: React.FC<FsDirentFlowTaskUpdateProps> = (pr
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.flow_task.taskValueField.label' })}</Typography>
         <div className={classes.editor}>
           <MonacoReact
+            height="100%"
             defaultLanguage="yaml"
             value={ownerState.taskValue}
             onChange={(v) => ownerState.onChangeTaskValue(v ?? '')}
+            options={{
+              wordBasedSuggestions: 'off',
+              minimap: { enabled: false },
+            }}
           />
         </div>
 

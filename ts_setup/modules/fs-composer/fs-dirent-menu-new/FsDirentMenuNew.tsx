@@ -21,7 +21,7 @@ const DIRENT_TYPE_ICONS: Record<Fs.BodyType, React.ElementType<SvgIconProps>> = 
   //: FsIcons.Phone,
   ARTICLE_PAGE: FsIcons.Form,
 
-  FLOW_TASK: 'symbol',
+  FLOW_TASK: FsIcons.Assignment,
   DECISION_TABLE: 'symbol',
   PRINTOUT_PAGE: 'symbol',
   DEPLOYMENT: 'symbol',
