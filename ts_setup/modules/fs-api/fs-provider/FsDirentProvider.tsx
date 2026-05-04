@@ -1,6 +1,6 @@
 import React from 'react';
 import { Fs } from '../fs-types';
-import { ALL_TYPES, getConfigOptionsForType } from './helpers';
+import { ALL_TYPES, getConfigOptionsForType, getExtension } from './helpers';
 import { ItemReferencesEntry, FsWorld } from './FsWorld';
 
 export type { ItemReferencesEntry };
@@ -11,6 +11,7 @@ export interface FsDirentContextType {
   selectOptions: Fs.SelectOptions;
   getParentDirent(childId: string): Fs.DirentBase | undefined;
   getArticleName: (id: string) => string | undefined;
+  getExtension: (type: Fs.BodyType) => string | undefined;
   getConfigOptionsForType: (type: Fs.BodyType) => Fs.SelectOption[];
   getDirent: (id: string) => Fs.DirentBase | undefined;
   isChildError: (dirent: Fs.DirentBase) => boolean;
@@ -66,6 +67,7 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
         return dirents.isChildError(dirent);
       },
 
+      getExtension,
       getConfigOptionsForType,
       updateDirent,
       getParentDirent: (childId) => dirents.getParentDirent(childId),

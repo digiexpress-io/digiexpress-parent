@@ -111,18 +111,6 @@ export const DirentIcon = (props: { dirent: Fs.DirentBase }) => {
   }
 }
 
-function getExtension(type: Fs.BodyType): string | undefined {
-  switch (type) {
-    case 'FOLDER': return undefined;
-    case 'ARTICLE_PAGE': return '.page';
-    case 'ARTICLE_WORKFLOW': return '.workflow';
-    case 'DECISION_TABLE': return '.dt';
-    case 'DIALOB_FORM': return '.dialob';
-    case 'ARTICLE_LINK': return '.link'
-    default: return '.' + type.toLowerCase().replaceAll('_', '');
-  }
-}
-
 interface FsDirentNameProps {
   dirent: Fs.DirentBase;
   isDarkTheme: boolean;
@@ -131,7 +119,7 @@ interface FsDirentNameProps {
 }
 
 export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
-  const { getDirent, getParentDirent } = useFsDirent();
+  const { getDirent, getParentDirent, getExtension } = useFsDirent();
   const classes = useUtilityClasses(props.isDarkTheme);
   const description = getDirent(props.dirent.id)?.props?.description;
   const displayName = props.dirent.type === 'ARTICLE' ? (
@@ -148,7 +136,7 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
       }}
     >
       <SearchResultHighlight text={displayName} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />
-      {extension && <Typography component='span' variant='inherit'>{extension}</Typography>}
+      {extension && <Typography component='span' variant='inherit'><SearchResultHighlight text={extension} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} /></Typography>}
       {description && (
         <Typography component='span' variant='caption' sx={{ ml: 1, color: FsColors.dark.textMuted, fontStyle: 'italic' }}>
           - "<SearchResultHighlight text={description} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />"
