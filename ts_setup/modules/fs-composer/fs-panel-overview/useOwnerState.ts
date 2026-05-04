@@ -9,7 +9,7 @@ export interface OverviewRow {
   type: Fs.BodyType;
   configOptions: Fs.ConfigOption[];
   lastDate: string;
-  isChild: boolean;
+  depth: number;
 }
 
 export interface OwnerState {
@@ -29,36 +29,35 @@ function getLastDate(changes: Fs.PropsBase['changes']): string {
   return create ? create.changeDate : '—';
 }
 
+function collectRows(
+  items: Fs.DirentBase[],
+  getDirent: (id: string) => Fs.DirentBase | undefined,
+  getArticleName: (id: string) => string | undefined,
+  depth: number
+): OverviewRow[] {
+  return items.flatMap(dirent => {
+    const asset = getDirent(dirent.id);
+    const name = dirent.type === 'ARTICLE' ? (getArticleName(dirent.id) ?? dirent.name) : dirent.name;
+    const row: OverviewRow = {
+      id: dirent.id,
+      name,
+      type: dirent.type,
+      configOptions: asset ? (asset.props?.configOptions as Fs.ConfigOption[] ?? []) : [],
+      lastDate: asset?.props ? getLastDate(asset.props.changes) : '—',
+      depth,
+    };
+    return [row, ...collectRows(dirent.children, getDirent, getArticleName, depth + 1)];
+  });
+}
+
 export const useOwnerState = (_props: FsPanelOverviewProps): OwnerState => {
   const { isDarkMode } = useFsNav();
-  const { dirents, getDirent } = useFsDirent();
+  const { dirents, getDirent, getArticleName } = useFsDirent();
 
-  const rows = React.useMemo((): OverviewRow[] => {
-    const result: OverviewRow[] = [];
-    dirents.forEach(dirent => {
-      const asset = getDirent(dirent.id);
-      result.push({
-        id: dirent.id,
-        name: dirent.name,
-        type: dirent.type,
-        configOptions: asset ? (asset.props?.configOptions as Fs.ConfigOption[]) : [],
-        lastDate: asset?.props ? getLastDate(asset.props.changes) : '—',
-        isChild: false,
-      });
-      dirent.children.forEach(child => {
-        const childAsset = getDirent(child.id);
-        result.push({
-          id: child.id,
-          name: child.name,
-          type: child.type,
-          configOptions: childAsset ? (childAsset.props?.configOptions as Fs.ConfigOption[]) : [],
-          lastDate: childAsset?.props ? getLastDate(childAsset.props.changes) : '—',
-          isChild: true,
-        });
-      });
-    });
-    return result;
-  }, [dirents, getDirent]);
+  const rows = React.useMemo(
+    () => collectRows(dirents, getDirent, getArticleName, 0),
+    [dirents, getDirent, getArticleName]
+  );
 
   return { isDarkMode, rows };
 };

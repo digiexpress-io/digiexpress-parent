@@ -4,8 +4,8 @@ import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
 
 const MUI_NAME = 'FsPanelOverview';
-const CONFIG_COL_WIDTH = '68px';
-const UPDATED_COL_WIDTH = 'auto'
+const CONFIG_COL_WIDTH = '120px';
+const UPDATED_COL_WIDTH = '140px'
 
 export interface FsPanelOverviewClasses {
   root: string;
@@ -91,7 +91,8 @@ export const FsPanelOverviewRoot = styled('div', {
       fontWeight: 600,
       textTransform: 'uppercase',
       textAlign: 'right',
-      minWidth: UPDATED_COL_WIDTH,
+      width: UPDATED_COL_WIDTH,
+      flexShrink: 0,
     },
 
     [`& .${MUI_NAME}-container`]: {
@@ -106,10 +107,11 @@ export const FsPanelOverviewRoot = styled('div', {
 
     [`& .${MUI_NAME}-row`]: {
       display: 'flex',
+      overflow: 'hidden',
       padding: theme.spacing(1, 1.5),
       backgroundColor: bgColor,
       borderBottom: `1px solid ${borderColor}`,
-      
+
       '&:last-child': {
         borderBottom: 'none',
       },
@@ -117,6 +119,7 @@ export const FsPanelOverviewRoot = styled('div', {
 
     [`& .${MUI_NAME}-childRow`]: {
       display: 'flex',
+      overflow: 'hidden',
       padding: theme.spacing(1, 1.5, 1, 2.5),
       backgroundColor: bgColor,
       borderBottom: `1px solid ${borderColor}`,
@@ -157,6 +160,10 @@ export const FsPanelOverviewRoot = styled('div', {
       ...theme.typography.subtitle2,
       color: textColor,
       flex: 1,
+      minWidth: 0,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
     },
 
     [`& .${MUI_NAME}-parentName`]: {
@@ -164,13 +171,18 @@ export const FsPanelOverviewRoot = styled('div', {
       color: textColor,
       flex: 1,
       fontWeight: 600,
+      minWidth: 0,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
     },
 
     [`& .${MUI_NAME}-date`]: {
       ...theme.typography.subtitle2,
       color: textSecondaryColor,
       textAlign: 'right',
-      minWidth: UPDATED_COL_WIDTH,
+      width: UPDATED_COL_WIDTH,
+      flexShrink: 0,
     },
   };
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Typography, TableSortLabel } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
@@ -25,6 +25,11 @@ export const FsPanelOverview: React.FC<FsPanelOverviewProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
+  const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('desc');
+
+  function handleSortToggle() {
+    setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+  }
 
   return (
     <FsPanel
@@ -40,14 +45,21 @@ export const FsPanelOverview: React.FC<FsPanelOverviewProps> = (props) => {
             <div className={classes.header}>
               <Typography className={classes.headerName}>{intl.formatMessage({ id: 'fs.panelOverview.column.name' })}</Typography>
               <Typography className={classes.headerConfigOptions}>{intl.formatMessage({ id: 'fs.panelOverview.column.configOptions' })}</Typography>
-              <Typography className={classes.headerDate}>{intl.formatMessage({ id: 'fs.panelOverview.column.lastUpdated' })}</Typography>
+              <TableSortLabel
+                className={classes.headerDate}
+                active={true}
+                direction={sortDirection}
+                onClick={handleSortToggle}
+              >
+                {intl.formatMessage({ id: 'fs.panelOverview.column.lastUpdated' })}
+              </TableSortLabel>
             </div>
             <div className={classes.container}>
               {ownerState.rows.map((row) => (
-                <div key={row.id} className={row.isChild ? classes.childRow : classes.row}>
-                  {row.isChild && <FsIcon icon={FsIcons.ChildItem} className={classes.childIcon} small/>}
+                <div key={row.id} className={row.depth === 0 ? classes.row : classes.childRow} style={{ paddingLeft: `${row.depth * 16}px` }}>
+                  {row.depth > 0 && <FsIcon icon={FsIcons.ChildItem} className={classes.childIcon} small/>}
                   {row.type === 'FOLDER' && <FsIcon icon={FsIcons.Folder} className={classes.typeIcon} small />}
-                  <Typography className={row.isChild ? classes.name : classes.parentName}>{row.name}</Typography>
+                  <Typography className={row.depth === 0 ? classes.parentName : classes.name}>{row.name}</Typography>
                   <div className={classes.configOptionsCell}>
                     {row.configOptions.map((opt) => (
                       <ConfigIcon key={opt} type={opt} className={classes.configIcon} />
