@@ -80,10 +80,16 @@ public class FormInstanceImpl implements FormInstance {
   @Override
   public FormItem getFormItem(Answer answer) {
     try {
-      final var valueset = questionnaire.getValueSets().stream().filter(p -> p.getId().equals(FormInstanceQueryImpl.LOOKUP + answer.getId())).findFirst().get();
-      final var formItem = valueset.getEntries().iterator().next().getValue();
+      final var valueset = questionnaire.getValueSets().stream().filter(p -> p.getId().equals(FormInstanceQueryImpl.LOOKUP + answer.getId())).findFirst();
+      if(valueset.isPresent()) {
+        final var formItem = valueset.get().getEntries().iterator().next().getValue();
+        return new JsonObject(formItem).mapTo(FormItem.class);        
+      }
+      if(form.isEmpty()) {
+        return null;
+      }
       
-      return new JsonObject(formItem).mapTo(FormItem.class);
+      return form.get().getData().get(answer.getId());
     } catch(Exception e) {
       // ignore failure on purpose
       log.error("Failed to resolve form: {} item for answer: {}, error: {}", 
@@ -179,8 +185,8 @@ public class FormInstanceImpl implements FormInstance {
   
   private AnswerAndFormItem proxyAnswer(Answer answer) {
     final Questionnaire q = this.questionnaire;
-    final var formItem = getFormItem(answer);
-    final var valueSetLabel = Optional.ofNullable(formItem.getValueSetId())
+    final var formItem = Optional.ofNullable(getFormItem(answer));
+    final var valueSetLabel = formItem.map(i -> i.getValueSetId()) 
       .map(vsId -> {
         
         final var v = q.getValueSets().stream().filter(vs -> vs.getId().equals(vsId))
@@ -195,12 +201,13 @@ public class FormInstanceImpl implements FormInstance {
             .findFirst();
         
         if(entry.isEmpty()) {
-          final String anyValue = v.get().getEntries().stream()
+          final Optional<String> anyValue = v.get().getEntries().stream()
               .sorted(langComparator)
               .findFirst()
-              .map(e -> e.getValue())
+              .map(e -> e.getValue());
+          
+          return anyValue
               .orElse("locale value missing for: " + answer.getValue());
-          return anyValue;
         }
         
         return entry.get().getValue();
@@ -208,7 +215,7 @@ public class FormInstanceImpl implements FormInstance {
     
     return ImmutableAnswerAndFormItem.builder()
         .valueSetLabel(valueSetLabel)
-        .formItem(formItem)
+        .formItem(formItem.orElse(null))
         .answer(answer)
         .build();
   }
