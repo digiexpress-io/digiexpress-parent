@@ -33,12 +33,12 @@ export const FsDirentFlowTaskUpdate: React.FC<FsDirentFlowTaskUpdateProps> = (pr
         <div className={classes.editor}>
           <MonacoReact
             height="100%"
-            defaultLanguage="yaml"
+            defaultLanguage="java"
             value={ownerState.taskValue}
             onChange={(v) => ownerState.onChangeTaskValue(v ?? '')}
             options={{
               wordBasedSuggestions: 'off',
-              minimap: { enabled: false },
+              minimap: { enabled: true },
             }}
           />
         </div>
