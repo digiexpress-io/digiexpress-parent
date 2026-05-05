@@ -42,6 +42,7 @@ export const FsTabRoot = styled('div', {
     display: 'flex',
     borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
     width: '100%',
+    overflowX: 'auto',
 
     [`& .${MUI_NAME}-tabActive`]: {
       backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.background,

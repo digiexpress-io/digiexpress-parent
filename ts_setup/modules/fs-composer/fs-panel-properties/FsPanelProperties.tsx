@@ -8,7 +8,7 @@ import { FsPanelPropertiesProps } from './FsPanelPropertiesProps';
 import { useOwnerState } from './useOwnerState';
 import { FsPanelPropertiesRoot, useUtilityClasses } from './useUtilityClasses';
 import { FsPropertiesArticle } from './FsPropertiesArticle';
-import { FsPropertiesService } from './FsPropertiesService';
+import { FsPropertiesWorkflow } from './FsPropertiesWorkflow';
 import { FsPropertiesDialob } from './FsPropertiesDialob';
 import { FsPropertiesLanguage } from './FsPropertiesLanguage';
 import { FsPropertiesPrintout } from './FsPropertiesPrintout';
@@ -21,7 +21,7 @@ import { FsPropertiesTemplate } from './FsPropertiesTemplate';
 function renderTypeSpecificRows(dirent: Fs.DirentBase): React.ReactNode {
   switch (dirent.type) {
     case 'ARTICLE': return null;
-    case 'ARTICLE_WORKFLOW': return <FsPropertiesService dirent={dirent} />;
+    case 'ARTICLE_WORKFLOW': return <FsPropertiesWorkflow dirent={dirent} />;
     case 'DIALOB_FORM': return <FsPropertiesDialob dirent={dirent} />;
     case 'LOCALE': return <FsPropertiesLanguage dirent={dirent} />;
     case 'PRINTOUT': return null;
