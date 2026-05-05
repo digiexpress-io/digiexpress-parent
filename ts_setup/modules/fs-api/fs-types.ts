@@ -61,7 +61,39 @@ export declare namespace Fs {
     | LinkProps
     | PhoneProps;
 
-  export type WorldFsBody = ArticlePageBody;
+  export type WrenchProgramStatus = 'UP' | 'ERROR';
+
+  export interface WrenchModelError {
+    id?: string;
+    msg: string;
+    line?: number;
+    column?: number;
+  }
+
+  export interface WrenchProgramAssociation {
+    id?: string;
+    ref: string;
+    refType: BodyType;
+    refStatus: WrenchProgramStatus;
+    owner: boolean;
+  }
+
+  export interface WrenchAstBody {
+    id: string;
+    ast: unknown;
+    errors: WrenchModelError[];
+    associations: WrenchProgramAssociation[];
+    status: WrenchProgramStatus;
+    commands: unknown[];
+  }
+
+  export interface WrenchBody {
+    flows: Record<string, WrenchAstBody>;
+    services: Record<string, WrenchAstBody>;
+    decisions: Record<string, WrenchAstBody>;
+  }
+
+  export type WorldFsBody = ArticlePageBody | WrenchBody;
 
   export interface FolderProps extends PropsBase {
     type: 'FOLDER';

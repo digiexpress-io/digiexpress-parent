@@ -7,9 +7,9 @@ export interface OwnerState {
   isDarkMode: boolean;
   isPage: boolean;
   isFlow: boolean;
+  dirent: Fs.DirentBase | undefined;
   content: {
     pageContent: string;
-    flowContent: string;
   };
 }
 
@@ -18,7 +18,6 @@ export const useOwnerState = (props: FsPanelPreviewProps): OwnerState => {
   const { getDirent, fetchDirentBody } = useFsDirent();
 
   const dirent = activeDirent ? getDirent(activeDirent.id) : undefined;
-  const flowProps = dirent?.type === 'FLOW' ? dirent.props as Fs.FlowProps : undefined;
   const pageProps = dirent?.type === 'ARTICLE_PAGE' ? dirent.props as Fs.PageProps : undefined;
 
   const isPage = dirent?.type === 'ARTICLE_PAGE';
@@ -35,12 +34,11 @@ export const useOwnerState = (props: FsPanelPreviewProps): OwnerState => {
     }
   }, [activeDirent?.id]);
 
-
   return {
     isDarkMode, isPage, isFlow,
+    dirent,
     content: {
       pageContent,
-      flowContent: flowProps?.content ?? ''
     }
   };
 }

@@ -10,11 +10,11 @@ function hook(props: {}) {
   const { url, method } = params;
 
   return {
-    getDirentBody: (id: string, bodyType: Fs.BodyType): Promise<Fs.ArticlePageBody> => {
+    getDirentBody: (id: string, bodyType: Fs.BodyType): Promise<Fs.WorldFsBody> => {
       return params
         .fetch(url({ id, bodyType }))
         .then(resp => resp.json())
-        .then((data: any) => data as Fs.ArticlePageBody);
+        .then((data: any) => data as Fs.WorldFsBody);
     }
   }
 }

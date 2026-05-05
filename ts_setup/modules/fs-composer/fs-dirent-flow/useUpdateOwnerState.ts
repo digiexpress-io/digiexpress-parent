@@ -7,19 +7,29 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   name: string;
   content: string;
+  wrenchBody: Fs.WrenchBody | undefined;
   onChangeName: (value: string) => void;
   onChangeContent: (value: string) => void;
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const { getDirent } = useFsDirent();
+  const { getDirent, fetchDirentBody } = useFsDirent();
 
   const dirent = getDirent(props.direntId);
-  const flowProps = dirent?.type === 'FLOW' ? dirent.props as Fs.FlowProps : undefined;
 
   const [name, setName] = React.useState(dirent?.name ?? '');
-  const [content, setContent] = React.useState(flowProps?.content ?? '');
+  const [content, setContent] = React.useState('');
+  const [wrenchBody, setWrenchBody] = React.useState<Fs.WrenchBody | undefined>(undefined);
+
+  React.useEffect(() => {
+    fetchDirentBody(props.direntId, 'FLOW').then((body) => {
+      const wb = body as Fs.WrenchBody;
+      const yaml = (wb.flows[props.direntId] as any)?.ast?.parseTree?.value ?? '';
+      setWrenchBody(wb);
+      setContent(yaml);
+    });
+  }, [props.direntId]);
 
   function onChangeName(value: string) {
     setName(value);
@@ -35,6 +45,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     name,
     onChangeName,
     content,
+    wrenchBody,
     onChangeContent,
   });
 };

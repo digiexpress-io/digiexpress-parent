@@ -1427,7 +1427,9 @@
           "@mui/material": "*",
           "@mui/icons-material": "*",
           "@mui/utils": "*",
-          "@uiw/react-md-editor": "*"
+          "@uiw/react-md-editor": "*",
+          "@xyflow/react": "*",
+          "elkjs": "*"
         },
         "keywords": [
           "filesystem",
@@ -1446,7 +1448,9 @@
         "@mui/material",
         "@mui/icons-material",
         "@mui/utils",
-        "@uiw/react-md-editor"
+        "@uiw/react-md-editor",
+        "@xyflow/react",
+        "elkjs"
       ],
       "peerDependencies": [
         "react",
@@ -1455,7 +1459,9 @@
         "@mui/material",
         "@mui/icons-material",
         "@mui/utils",
-        "@uiw/react-md-editor"
+        "@uiw/react-md-editor",
+        "@xyflow/react",
+        "elkjs"
       ],
       "externalDependencies": [
         "react-markdown",
@@ -1465,7 +1471,9 @@
         "@mui/material",
         "@mui/icons-material",
         "@mui/utils",
-        "@uiw/react-md-editor"
+        "@uiw/react-md-editor",
+        "@xyflow/react",
+        "elkjs"
       ],
       "internalDependencies": [
         "@dxs-ts/eveli-primitives",
@@ -1480,7 +1488,9 @@
         "@monaco-editor/react",
         "@uiw/react-md-editor",
         "@mui/icons-material",
-        "react-markdown"
+        "react-markdown",
+        "@xyflow/react",
+        "elkjs"
       ],
       "actualExternalDependencies": [
         "react",
@@ -1490,7 +1500,9 @@
         "@monaco-editor/react",
         "@uiw/react-md-editor",
         "@mui/icons-material",
-        "react-markdown"
+        "react-markdown",
+        "@xyflow/react",
+        "elkjs"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/fs-api"
@@ -4636,6 +4648,6 @@
       ]
     }
   },
-  "checksum": "f7bb63ca97f11627221646af4e9737dc2beb020cc996cf8e104e31a47b0a63c7",
-  "generatedAt": "2026-04-10T10:44:22.799Z"
+  "checksum": "f250e8b5f14f50ea97dea0e9372773968f5287a7a740cac01aff8e6a183c17da",
+  "generatedAt": "2026-05-05T10:20:30.415Z"
 }

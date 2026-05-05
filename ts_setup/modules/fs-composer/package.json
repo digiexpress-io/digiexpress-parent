@@ -16,7 +16,9 @@
     "@mui/material": "*",
     "@mui/icons-material": "*",
     "@mui/utils": "*",
-    "@uiw/react-md-editor": "*"
+    "@uiw/react-md-editor": "*",
+    "@xyflow/react": "*",
+    "elkjs": "*"
   },
   "keywords": ["filesystem", "tree", "components"],
   "private": true
