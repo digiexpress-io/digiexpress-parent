@@ -76,14 +76,6 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       onClick: () => handleViewChange('properties'),
     },
     {
-      id: 'configuration',
-      type: 'view',
-      icon: FsIcons.Settings,
-      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.configuration' }),
-      isSelected: selectedView === 'configuration',
-      onClick: () => handleViewChange('configuration'),
-    },
-    {
       id: 'references',
       type: 'view',
       icon: FsIcons.Tree,

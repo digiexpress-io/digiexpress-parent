@@ -213,7 +213,7 @@ export declare namespace Fs {
     getActiveDialobTag: (props: DialobProps) => string;
   }
 
-  export type SecondaryView = 'references' | 'properties' | 'configuration' | 'debug' | 'preview' | 'history' | 'help' | 'errors' | 'changes' | 'article-order' | 'overview';
+  export type SecondaryView = 'references' | 'properties' | 'debug' | 'preview' | 'history' | 'help' | 'errors' | 'changes' | 'article-order' | 'overview';
   export type ChangeType = 'update' | 'create' | 'delete';
   export type PermissionType = 'read' | 'write' | 'view' | 'none';
   export type ErrorSeverityType = 'CRITICAL' | 'WARNING';

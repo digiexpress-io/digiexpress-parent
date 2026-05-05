@@ -5,7 +5,6 @@ import { FsPanel } from '../fs-panel';
 
 import { FsPanelArticleOrder } from '../fs-panel-article-order';
 import { FsPanelChanges } from '../fs-panel-changes';
-import { FsPanelConfigOptions } from '../fs-panel-config-options';
 import { FsPanelErrors } from '../fs-panel-errors';
 import { FsPanelHelp } from '../fs-panel-help';
 import { FsPanelHistory } from '../fs-panel-history';
@@ -45,8 +44,6 @@ export const ContentPanel: React.FC<ContentPanelProps> = ({ ownerState, classNam
               return <FsPanelHistory dirent={activeDirent} />;
           case 'help':
               return <FsPanelHelp dirent={activeDirent} />;
-          case 'configuration':
-              return <FsPanelConfigOptions dirent={activeDirent} />;
           case 'preview':
               return <FsPanelPreview dirent={activeDirent} />;
           case 'article-order':
