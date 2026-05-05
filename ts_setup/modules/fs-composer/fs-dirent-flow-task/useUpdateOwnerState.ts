@@ -13,13 +13,20 @@ export interface UpdateOwnerState {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const { getDirent } = useFsDirent();
+  const { getDirent, fetchDirentBody } = useFsDirent();
 
   const dirent = getDirent(props.direntId);
-  const flowTaskProps = dirent?.type === 'FLOW_TASK' ? dirent.props as Fs.FlowTaskProps : undefined;
 
-  const [taskName, setTaskName] = React.useState(flowTaskProps?.taskName ?? dirent?.name ?? '');
-  const [taskValue, setTaskValue] = React.useState(flowTaskProps?.taskValue ?? '');
+  const [taskName, setTaskName] = React.useState(dirent?.name ?? '');
+  const [taskValue, setTaskValue] = React.useState('');
+
+  React.useEffect(() => {
+    fetchDirentBody(props.direntId, 'FLOW_TASK').then((body) => {
+      const wb = body as Fs.WrenchBody;
+      const yaml = (wb.services[props.direntId] as any)?.ast?.value ?? '';
+      setTaskValue(yaml);
+    });
+  }, [props.direntId]);
 
   function onChangeTaskName(value: string) {
     setTaskName(value);
