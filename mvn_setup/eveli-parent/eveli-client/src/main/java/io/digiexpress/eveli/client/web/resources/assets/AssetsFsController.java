@@ -22,12 +22,15 @@ package io.digiexpress.eveli.client.web.resources.assets;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.fs.WorldFsBody;
+import io.resys.limaone.fs.WorldFsBody.WrenchAstBodyChange;
 import io.resys.limaone.model.Model.BodyType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -54,5 +57,19 @@ public class AssetsFsController {
     
     return authoring.worldFsBodyQuery().id(id).bodyType(bodyType).getOne();
   }
+  
+  
+  @PostMapping("dirents/{id}/bodies/{bodyType}/transient-changes")
+  public Uni<WorldFsBody> getDirentBody(
+      @RequestBody WrenchAstBodyChange transientChanges,
+      @PathVariable("id") String id, 
+      @PathVariable("bodyType") BodyType bodyType
+  ) {
+    
+    return authoring.worldFsBodyQuery().id(id).bodyType(bodyType).withTransientChanges(transientChanges).getOne();
+  }
+  
+  
+  
 
 }

@@ -1,5 +1,8 @@
 package io.resys.limaone.fs;
 
+import java.util.List;
+import java.util.Map;
+
 /*-
  * #%L
  * limaone-compiler
@@ -25,14 +28,57 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.ast.DecisionTable_AST;
+import io.resys.limaone.ast.FlowTask_AST;
+import io.resys.limaone.ast.Flow_AST;
+import io.resys.limaone.ast.Simple_AST;
+import io.resys.limaone.model.DecisionTable.DecisionStatement;
+import io.resys.limaone.model.Model;
+import io.resys.limaone.model.ModelError;
+import io.resys.limaone.program.Program.ProgramAssociation;
+import io.resys.limaone.program.Program.ProgramStatus;
+import jakarta.annotation.Nullable;
+
 
 public interface WorldFsBody {
   
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableArticlePageBody.class) @JsonDeserialize(as = ImmutableArticlePageBody.class)
+  @Value.Immutable @JsonSerialize(as = ImmutableArticlePageBody.class) @JsonDeserialize(as = ImmutableArticlePageBody.class)
   interface ArticlePageBody extends WorldFsBody {
     String getContent();
   }
   
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableWrenchBody.class) @JsonDeserialize(as = ImmutableWrenchBody.class)
+  interface WrenchBody extends WorldFsBody {
+    Map<String, WrenchAstBody<Flow_AST>> getFlows();
+    Map<String, WrenchAstBody<FlowTask_AST>> getServices();
+    Map<String, WrenchAstBody<DecisionTable_AST>> getDecisions();
+    
+    default WrenchAstBody<?> getEntity(String id) {
+      if(this.getDecisions().containsKey(id)) {
+        return this.getDecisions().get(id); 
+      } else if(this.getFlows().containsKey(id)) {
+        return this.getFlows().get(id); 
+      }
+      return this.getServices().get(id);
+    }
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableWrenchAstBody.class) @JsonDeserialize(as = ImmutableWrenchAstBody.class)
+  interface WrenchAstBody<A extends Simple_AST>  extends WorldFsBody {
+    String getId();
+    @Nullable A getAst();
+    List<DecisionStatement> getCommands();
+    List<ModelError> getErrors();
+    List<ProgramAssociation> getAssociations();
+    ProgramStatus getStatus();
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableWrenchAstBodyChange.class) @JsonDeserialize(as = ImmutableWrenchAstBodyChange.class)
+  interface WrenchAstBodyChange {
+    String getId();
+    Model.BodyType getBodyType();
+    @Nullable String getBodySyntax();
+    List<DecisionStatement> getBodyStatment();
+  }
 }
-

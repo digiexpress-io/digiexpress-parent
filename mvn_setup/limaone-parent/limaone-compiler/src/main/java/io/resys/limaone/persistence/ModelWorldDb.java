@@ -25,7 +25,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
-import io.resys.limaone.authoring.Authoring.WorldFsBodyQuery;
 import io.resys.limaone.authoring.Authoring.WorldFsQuery;
 import io.resys.limaone.authoring.Authoring.WorldIndexQuery;
 import io.resys.limaone.authoring.Authoring.WorldQuery;
@@ -33,13 +32,13 @@ import io.resys.limaone.authoring.Authoring.WorldRefQuery;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.thena.fs.api.FileSystem;
 import io.smallrye.mutiny.Uni;
 
 public interface ModelWorldDb {
   ModelWorldDb withBranchName(Optional<String> branchName);
   ModelWorldDb withTenant(Optional<String> tenantName);
-  
-  WorldFsBodyQuery worldFsBodyQuery(); 
+   
   WorldFsQuery worldFsQuery();
   WorldRefQuery worldRefQuery();
   WorldQuery worldQuery();
@@ -47,6 +46,8 @@ public interface ModelWorldDb {
   WorldIndexQuery worldIndexQuery();
   
   CreateModelWorldDb createModelWorldDb();
+  FileSystem getUserFileSystem();
+  String getBranchName();
   
   interface CreateModelWorldDb {
     Uni<Void> createDbIfNotPresent();

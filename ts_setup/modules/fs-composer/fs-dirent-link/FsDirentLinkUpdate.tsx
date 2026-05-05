@@ -16,8 +16,8 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { selectOptions, getConfigOptionsForType } = useFsDirent();
-  const articles = selectOptions.articles;
+  const { selectOptions, getConfigOptionsForType, getArticleName } = useFsDirent();
+  const articles = selectOptions.articles.map(item => ({ value: item.value, label: getArticleName(item.value) ?? item.label }));
   const configOptions = getConfigOptionsForType('ARTICLE_LINK');
 
   return (
@@ -59,7 +59,7 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
             />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.articlesField.label' })}</Typography>
-            <FsDirentSelectMulti options={articles} value={[]} onChange={(_value) => { }} />
+            <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />

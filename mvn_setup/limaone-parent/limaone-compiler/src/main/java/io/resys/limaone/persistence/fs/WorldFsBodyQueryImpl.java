@@ -1,7 +1,5 @@
 package io.resys.limaone.persistence.fs;
 
-import java.time.Duration;
-
 /*-
  * #%L
  * limaone-compiler
@@ -24,13 +22,27 @@ import java.time.Duration;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.Optional;
 
+import io.resys.limaone.ast.DecisionTable_AST;
+import io.resys.limaone.ast.FlowTask_AST;
+import io.resys.limaone.ast.Flow_AST;
+import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.authoring.Authoring.WorldFsBodyQuery;
 import io.resys.limaone.fs.ImmutableArticlePageBody;
+import io.resys.limaone.fs.ImmutableWrenchAstBody;
+import io.resys.limaone.fs.ImmutableWrenchBody;
 import io.resys.limaone.fs.WorldFsBody;
+import io.resys.limaone.fs.WorldFsBody.WrenchAstBody;
+import io.resys.limaone.fs.WorldFsBody.WrenchAstBodyChange;
+import io.resys.limaone.fs.WorldFsBody.WrenchBody;
 import io.resys.limaone.model.ArticlePage;
 import io.resys.limaone.model.Model.BodyType;
+import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.persistence.AuthoringImpl;
+import io.resys.limaone.persistence.ImmutableAuthoringConfig;
+import io.resys.limaone.program.Runtime.EnvironmentProperties;
+import io.resys.limaone.spi.compiler.CompilerImpl;
 import io.resys.thena.fs.api.FileSystem;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -41,9 +53,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WorldFsBodyQueryImpl implements WorldFsBodyQuery {
   private final FileSystem filesystem;
-  private final ScheduledExecutorService workerPool;
-  private final Duration workerTimeout;
   private final String branchName;
+  private final EnvironmentProperties envir;
+  
+  private WrenchAstBodyChange changes;
   private BodyType bodyType;
   private String id;
   
@@ -57,12 +70,29 @@ public class WorldFsBodyQueryImpl implements WorldFsBodyQuery {
     this.bodyType = bodyType;
     return this;
   }
-  
+  @Override
+  public WorldFsBodyQuery withTransientChanges(WrenchAstBodyChange changes) {
+    this.changes = changes;
+    return this;
+  }
   @Override
   public Uni<WorldFsBody> getOne() {
     Objects.requireNonNull(id, () -> "id must be defined");
     Objects.requireNonNull(bodyType, () -> "bodyType must be defined");
     
+    // handle wrench assets
+    if(bodyType == BodyType.FLOW || bodyType == BodyType.DECISION_TABLE || bodyType == BodyType.FLOW_TASK) {
+      return envir.getModelDb().worldQuery()
+          .docs(BodyType.FLOW_TASK, BodyType.FLOW, BodyType.DECISION_TABLE)
+          .findAll().onItem().transformToUni(modelWorld -> {
+            if(changes == null) {
+              return getWrenchBody(modelWorld);
+            }
+            return withWrenchBodyChange(changes);
+          });
+    }
+    
+    // stencil assets
     final var tenant = filesystem.withTenant();
     return tenant
       .branchQuery()
@@ -81,7 +111,7 @@ public class WorldFsBodyQueryImpl implements WorldFsBodyQuery {
           return ImmutableArticlePageBody.builder()
               .content(page.getContent())
               .build();
-         }
+        }
         default: throw new IllegalArgumentException("Unsupported body type: " + bodyType);
        }
       });
@@ -91,9 +121,71 @@ public class WorldFsBodyQueryImpl implements WorldFsBodyQuery {
   @Override
   public WorldFsBody getOneSync() {
     return getOne()
-        .runSubscriptionOn(workerPool)
-        .await().atMost(workerTimeout);
+        .runSubscriptionOn(envir.getWorkerPool())
+        .await().atMost(envir.getWorkerPoolMaxTimeout());
+  }
+  
+  private Uni<WrenchBody> getWrenchBody(ModelWorld world) {
+    final var state = ImmutableWrenchBody.builder();
+    final var bundle = new CompilerImpl(envir).compile(world).build().getBundle();
+    
+    bundle.queryFlows().forEach(program -> {
+      state.putFlows(program.getId(), ImmutableWrenchAstBody.<Flow_AST>builder()
+          .ast(program.getAst())
+          .errors(program.getErrors())
+          .associations(program.getAssociations())
+          .id(program.getId())
+          .status(program.getStatus())
+          .build());
+    });
+    
+    bundle.queryFlowTasks().forEach(program -> {
+      state.putServices(program.getId(), ImmutableWrenchAstBody.<FlowTask_AST>builder()
+          .ast(program.getAst())
+          .errors(program.getErrors())
+          .associations(program.getAssociations())
+          .id(program.getId())
+          .status(program.getStatus())
+          .build());
+    });
+    
+    
+    bundle.queryDecisions().forEach(program -> {
+      state.putDecisions(program.getId(), ImmutableWrenchAstBody.<DecisionTable_AST>builder()
+          .ast(program.getAst())
+          .errors(program.getErrors())
+          .associations(program.getAssociations())
+          .id(program.getId())
+          .status(program.getStatus())
+          .commands(world.getDecisionTables().get(program.getId()).getBody().getNodes())
+          .build());
+    });
+    
+    return Uni.createFrom().item(state.build());
   }
 
+  private Uni<WrenchAstBody<?>> withWrenchBodyChange(WrenchAstBodyChange entity) {
+    final Authoring authoring = new AuthoringImpl(ImmutableAuthoringConfig.builder()
+        .envir(envir)
+        .persistence(envir.getModelDb())
+        .build())
+        .withBranchName(Optional.ofNullable(branchName));
+    
+    if(entity.getBodyType() == BodyType.FLOW) {
+      return authoring
+        .modifyModel().modifyFlow().props(props -> props.flowId(entity.getId()).flowValue(entity.getBodySyntax())).buildTransientWorld()
+        .onItem().transformToUni(world -> getWrenchBody(world))
+        .map(world -> world.getEntity(entity.getId()));
+    } else if(entity.getBodyType() == BodyType.FLOW_TASK) {
+      return authoring
+        .modifyModel().modifyFlowTask().props(props -> props.flowTaskId(entity.getId()).flowTaskValue(entity.getBodySyntax())).buildTransientWorld()
+        .onItem().transformToUni(world -> getWrenchBody(world))
+        .map(world -> world.getEntity(entity.getId()));
+    }    
+    return authoring
+        .modifyModel().modifyDecisionTable().props(props -> props.decisionTableId(entity.getId()).nodes(entity.getBodyStatment())).buildTransientWorld()
+        .onItem().transformToUni(world -> getWrenchBody(world))
+        .map(world -> world.getEntity(entity.getId()));
+  }
 
 }

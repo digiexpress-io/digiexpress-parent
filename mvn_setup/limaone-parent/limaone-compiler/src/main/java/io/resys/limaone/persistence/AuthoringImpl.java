@@ -61,6 +61,7 @@ import io.resys.limaone.authoring.NewPrintout;
 import io.resys.limaone.authoring.NewPrintoutPage;
 import io.resys.limaone.authoring.NewPrintoutResource;
 import io.resys.limaone.authoring.TID;
+import io.resys.limaone.persistence.fs.WorldFsBodyQueryImpl;
 import io.resys.limaone.persistence.world.TID_FS;
 import io.resys.limaone.persistence.world.WorldDiffQueryImpl;
 import io.resys.limaone.persistence.world.WorldSummaryQueryImpl;
@@ -93,7 +94,11 @@ public class AuthoringImpl implements Authoring {
   }
   @Override
   public WorldFsBodyQuery worldFsBodyQuery() {
-    return config.getPersistence().worldFsBodyQuery();
+    
+    return new WorldFsBodyQueryImpl(
+        config.getPersistence().getUserFileSystem(), 
+        config.getPersistence().getBranchName(), 
+        config.getEnvir());
   }
   @Override
   public TID tid() {

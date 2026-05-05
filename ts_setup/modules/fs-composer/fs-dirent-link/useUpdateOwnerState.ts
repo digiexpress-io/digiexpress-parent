@@ -10,11 +10,13 @@ export interface UpdateOwnerState {
   locales: Fs.SelectOption[];
   urlValue: string;
   intlValues: Record<string, string>;
+  articles: string[];
   configOptions: Fs.ConfigOption[];
   description: string;
   isExpanded: boolean;
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
+  onChangeArticles: (value: string[]) => void;
   onChangeConfigOptions: (value: string[]) => void;
   onChangeDescription: (value: string) => void;
   onToggleExpanded: () => void;
@@ -33,6 +35,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
   );
+  const [articles, setArticles] = React.useState<string[]>([]);
   const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
   const [isExpanded, setIsExpanded] = React.useState(false);
 
@@ -42,6 +45,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   function onChangeIntlValue(locale: string, value: string) {
     setIntlValues(prev => ({ ...prev, [locale]: value }));
+  }
+
+  function onChangeArticles(value: string[]) {
+    setArticles(value);
   }
 
   function onChangeConfigOptions(value: string[]) {
@@ -62,11 +69,13 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     locales,
     urlValue,
     intlValues,
+    articles,
     configOptions,
     description,
     isExpanded,
     onChangeUrlValue,
     onChangeIntlValue,
+    onChangeArticles,
     onChangeConfigOptions,
     onChangeDescription,
     onToggleExpanded,

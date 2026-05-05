@@ -28,6 +28,7 @@ import org.immutables.value.Value;
 
 import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.fs.WorldFsBody;
+import io.resys.limaone.fs.WorldFsBody.WrenchAstBodyChange;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
@@ -66,6 +67,7 @@ public interface Authoring {
   interface WorldFsBodyQuery {
     WorldFsBodyQuery id(String id);
     WorldFsBodyQuery bodyType(BodyType bodyType);
+    WorldFsBodyQuery withTransientChanges(WrenchAstBodyChange changes); // transient, does not persist the changes
     Uni<WorldFsBody> getOne();
     WorldFsBody getOneSync();
   }
