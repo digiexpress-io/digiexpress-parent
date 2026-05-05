@@ -20,7 +20,7 @@ export const FsDirentFlowCreate: React.FC<FsDirentFlowCreateProps> = (_props) =>
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.flow.nameField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.flow.nameField.placeholder' })} />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.flow.nameField.placeholder' })} required />
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonCancel />

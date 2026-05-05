@@ -15,8 +15,8 @@ export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = () => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
-  const { selectOptions, getConfigOptionsForType } = useFsDirent();
-  const articles = selectOptions.articles;
+  const { selectOptions, getConfigOptionsForType, getArticleName } = useFsDirent();
+  const articles = selectOptions.articles.map(o => ({ value: o.value, label: getArticleName(o.value) ?? o.label }));
   const configOptions = getConfigOptionsForType('ARTICLE_LINK');
 
   const [selectedArticles, setSelectedArticles] = React.useState<string[]>([]);
@@ -32,7 +32,7 @@ export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = () => {
 
         {ownerState.locales.map((locale) => (
           <div key={locale.label} className={classes.localeRow}>
-            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.link.labelField.${locale}.label` })}</Typography>
+            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.link.labelField.${locale.label}.label` })}</Typography>
             <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.link.labelField.placeholder' })} />
           </div>
         ))}

@@ -24,10 +24,10 @@ export const FsDirentDialobCreate: React.FC<FsDirentDialobCreateProps> = (_props
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.dialob.technicalNameField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.dialob.technicalNameField.placeholder' })} />
+        <FsDirentTextField required placeholder={intl.formatMessage({ id: 'fs.dirent.dialob.technicalNameField.placeholder' })} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.dialob.formNameField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.dialob.formNameField.placeholder' })} />
+        <FsDirentTextField required placeholder={intl.formatMessage({ id: 'fs.dirent.dialob.formNameField.placeholder' })} />
 
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
           {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.dialob.expandToggle.hide' : 'fs.dirent.dialob.expandToggle.show' })}

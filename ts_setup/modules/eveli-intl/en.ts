@@ -1572,6 +1572,7 @@ export const en = {
   'fs.tabs.new.article_page': 'New article page',
   'fs.tabs.new.dialob_form': 'New dialob',
   'fs.tabs.new.flow': 'New flow',
+  'fs.tabs.new.flow_task': 'New flow task',
   'fs.tabs.new.locale': 'New language',
   'fs.tabs.new.printout': 'New printout',
   'fs.tabs.new.image': 'New image',

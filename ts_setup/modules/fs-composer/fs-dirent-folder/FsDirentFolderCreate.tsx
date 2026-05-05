@@ -23,7 +23,7 @@ export const FsDirentFolderCreate: React.FC<FsDirentFolderCreateProps> = (props)
         <FsDirentTextField value={`${ownerState.locationPath ? `${ownerState.locationPath} / ` : ''}${intl.formatMessage({ id: 'fs.dirent.folder.locationField.newFolder' })}`} disabled />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.folder.nameField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.folder.nameField.placeholder' })} />
+        <FsDirentTextField required placeholder={intl.formatMessage({ id: 'fs.dirent.folder.nameField.placeholder' })} />
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonCancel />
