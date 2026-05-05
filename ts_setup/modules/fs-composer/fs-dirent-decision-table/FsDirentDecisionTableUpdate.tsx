@@ -8,6 +8,7 @@ import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentDecisionTableRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentDecisionTableUpdateProps } from './FsDirentDecisionTableProps';
+import { DecisionTable, DecisionTableHeader, DecisionTableRow, DecisionTableCell } from './table';
 
 
 export const FsDirentDecisionTableUpdate: React.FC<FsDirentDecisionTableUpdateProps> = (props) => {
@@ -27,6 +28,23 @@ export const FsDirentDecisionTableUpdate: React.FC<FsDirentDecisionTableUpdatePr
           onChange={ownerState.onChangeName}
           required
         />
+
+        {ownerState.decision && (
+          <DecisionTable
+            ast={ownerState.decision}
+            renderHeader={({ ast, headers }) => (
+              <DecisionTableHeader ast={ast} headers={headers}>
+                <span />
+              </DecisionTableHeader>
+            )}
+            renderRow={({ row, headers, renderCell }) => (
+              <DecisionTableRow row={row} headers={headers} renderCell={renderCell} />
+            )}
+            renderCell={({ row, header, cell }) => (
+              <DecisionTableCell row={row} header={header} cell={cell} />
+            )}
+          />
+        )}
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />
