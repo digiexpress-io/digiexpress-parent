@@ -90,13 +90,6 @@ eveli.email.server-password:
 eveli.email.allowed-recipients: 
 eveli.email.enabled-domains:
 
-# Comms sms WSL - io.digiexpress.notification.client.SuomiFiWSLProperties
-eveli.suomifi.wsl.enabled: false
-eveli.suomifi.wsl.id: 
-eveli.suomifi.wsl.service-id: 
-eveli.suomifi.wsl.message-version: 
-eveli.suomifi.wsl.message-cert-c-name: 
-eveli.suomifi.wsl.organization-name: 
 
 # Comms sms REST - io.digiexpress.notification.client.SuomiFiRestProperties
 eveli.suomifi.rest.enabled: false  

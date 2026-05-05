@@ -40,7 +40,6 @@ import io.digiexpress.eveli.client.config.EveliPropsEmail;
 import io.digiexpress.eveli.client.config.EveliPropsOrg;
 import io.digiexpress.eveli.client.spi.mq.EveliAutoConfigMq;
 import io.digiexpress.notification.client.SuomiFiRestProperties;
-import io.digiexpress.notification.client.SuomiFiWSLProperties;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -64,7 +63,6 @@ import lombok.extern.slf4j.Slf4j;
 @EnableConfigurationProperties(value = {
     EveliPropsEmail.class,
     EveliPropsOrg.class,
-    SuomiFiWSLProperties.class,
     SuomiFiRestProperties.class,
     
 })

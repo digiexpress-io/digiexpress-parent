@@ -81,13 +81,7 @@
         <groupId>io.digiexpress</groupId>
         <artifactId>eveli-integration-suomifi-rest</artifactId>
         <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>eveli-integration-suomifi-wsl</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      
+      </dependency>    
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>eveli-integration-queue</artifactId>

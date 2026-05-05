@@ -22,7 +22,6 @@ package io.digiexpress.eveli.app;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.Storage;
-import fi.suomi.asiointitili.ObjectFactory;
 import io.digiexpress.eveli.app.config.AppProperties;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CommsClient;
@@ -63,26 +62,18 @@ public class AppConfig {
     return new AttachmentCommandsGoogle(properties.getDownloadBucket(), storage, resourceLoader);
   }
 
-  @Bean
-  public ObjectFactory objectFactory() {
-    return new ObjectFactory();
-  }
   
   @Bean
   public CommsClient commsClient(
       SuomiFiRestProperties restApi, 
-      SuomiFiWSLProperties wslApi, 
       EveliPropsEmail email,
-      ObjectMapper mapper,
-      ObjectFactory factory) {
+      ObjectMapper mapper) {
     
     final Supplier<CustomerMessageBuilder> createCustomerSms;  
     final Supplier<EmailBuilder> createEmail;
 
     if(restApi.isEnabled()) {
       createCustomerSms = () -> new CustomerSmsBuilderSuomifiRest(new NotificationRestServiceClient(restApi, mapper));
-    } else if(wslApi.isEnabled()) {
-      createCustomerSms =  () -> new CustomerSmsBuilderSuomifiWsl(new NotificationWebServiceClient(wslApi, factory));
     } else {
       createCustomerSms = () -> new CustomerSmsBuilderImpl();
     }
