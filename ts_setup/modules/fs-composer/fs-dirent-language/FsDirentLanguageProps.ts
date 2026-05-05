@@ -3,7 +3,6 @@ import { Fs, FsTab } from '@dxs-ts/fs-api';
 
 export interface FsDirentLanguageCreateProps {
   parentFolder: Fs.DirentBase | undefined;
-  pathToTopParent: string | undefined;
 }
 
 export interface FsDirentLanguageUpdateProps {

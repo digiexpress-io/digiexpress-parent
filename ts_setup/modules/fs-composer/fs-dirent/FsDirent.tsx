@@ -22,7 +22,7 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
     if (ownerState.isChildren) {
       ownerState.onToggle(ownerState.dirent.id);
     } else {
-      ownerState.openAsset(ownerState.dirent, ownerState.fullPath);
+      ownerState.openAsset(ownerState.dirent);
     }
   }
 
@@ -65,7 +65,6 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
               key={child.id}
               dirent={child}
               level={ownerState.level + 1}
-              parentPath={ownerState.fullPath}
               onToggle={ownerState.onToggle}
               onContextMenu={ownerState.onContextMenu}
               searchTerm={ownerState.searchTerm}

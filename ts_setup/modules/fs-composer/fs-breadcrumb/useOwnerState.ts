@@ -26,7 +26,7 @@ export function useOwnerState(_props: FsBreadcrumbProps): OwnerState {
 
   const activeTab = openTabs[activeTabIndex];
   const assetName = getAssetName(activeTab);
-  const assetPath = activeTab?.type === 'create' ? activeTab.pathToTopParent : activeTabPath;
+  const assetPath = activeTabPath;
   const activeDirentEntry = activeDirent ? getDirent(activeDirent.id) : undefined;
   const isError = (activeDirentEntry?.props?.errors.length ?? 0) > 0;
 

@@ -6,23 +6,18 @@ export interface CreateOwnerState {
   locationPath: string;
 }
 
-function getFolderLocationPath(pathToTopParent: string | undefined, parentFolder: Fs.DirentBase | undefined): string {
+function getLocationPath(parentFolder: Fs.DirentBase | undefined): string {
   if (!parentFolder) {
     return '';
   }
-  if (parentFolder.type === 'FOLDER') {
-    return pathToTopParent || parentFolder.name;
+  if (parentFolder.type !== 'FOLDER') {
+    return parentFolder.fullPath.split('/').slice(0, -1).join('/');
   }
-  // parentFolder is a non-folder dirent — strip its name from the path to get the containing folder
-  if (!pathToTopParent) {
-    return '';
-  }
-  const segments = pathToTopParent.split(' / ');
-  return segments.slice(0, -1).join(' / ');
+  return parentFolder.fullPath;
 }
 
-export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
+export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined }): CreateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const locationPath = getFolderLocationPath(props.pathToTopParent, props.parentFolder);
+  const locationPath = getLocationPath(props.parentFolder);
   return { isDarkMode, locationPath };
 };

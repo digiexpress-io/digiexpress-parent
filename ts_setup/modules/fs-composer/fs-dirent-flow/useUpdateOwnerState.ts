@@ -6,8 +6,8 @@ export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
   name: string;
-  onChangeName: (value: string) => void;
   content: string;
+  onChangeName: (value: string) => void;
   onChangeContent: (value: string) => void;
 }
 

@@ -7,7 +7,7 @@ export interface CreateOwnerState {
   locales: string[];
 }
 
-export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
+export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined }): CreateOwnerState => {
   const { isDarkMode } = useFsNav();
 
   return ({ isDarkMode, parentFolder: props.parentFolder, locales: [] });

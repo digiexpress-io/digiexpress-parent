@@ -8,5 +8,5 @@ export const FsDirentTemplate: React.FC<FsDirentTemplateProps> = ({ tab }) => {
   if (tab.type === 'edit') {
     return <FsDirentTemplateUpdate direntId={tab.dirent.id} />;
   }
-  return <FsDirentTemplateCreate parentFolder={tab.parentFolder} pathToTopParent={tab.pathToTopParent} />;
+  return <FsDirentTemplateCreate parentFolder={tab.parentFolder} />;
 };

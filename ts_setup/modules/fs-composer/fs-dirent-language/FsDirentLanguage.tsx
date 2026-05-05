@@ -7,5 +7,5 @@ export const FsDirentLanguage: React.FC<FsDirentLanguageProps> = ({ tab }) => {
   if (tab.type === 'edit') {
     return <FsDirentLanguageUpdate direntId={tab.dirent.id} />;
   }
-  return <FsDirentLanguageCreate parentFolder={tab.parentFolder} pathToTopParent={tab.pathToTopParent} />;
+  return <FsDirentLanguageCreate parentFolder={tab.parentFolder} />;
 };

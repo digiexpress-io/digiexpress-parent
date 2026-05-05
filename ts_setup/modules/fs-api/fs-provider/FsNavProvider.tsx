@@ -4,14 +4,12 @@ import { Fs } from '../fs-types';
 export interface FsEditTab {
   type: 'edit';
   dirent: Fs.DirentBase;
-  pathToTopParent: string;
 }
 
 export interface FsCreateTab {
   type: 'create';
   direntType: Fs.BodyType;
   parentFolder: Fs.DirentBase | undefined;
-  pathToTopParent: string;
 }
 
 export type FsTab = FsEditTab | FsCreateTab;
@@ -24,9 +22,8 @@ export interface FsNavContextType {
   activeDirent: Fs.DirentBase | undefined;
   expandedIds: string[];
   isExpanded: (id: string) => boolean;
-  openAsset: (asset: Fs.DirentBase, pathToTopParent: string) => void;
+  openAsset: (asset: Fs.DirentBase) => void;
   openCreateTab: (direntType: Fs.BodyType, parentFolder: Fs.DirentBase | undefined) => void;
-  registerDirentPath: (id: string, path: string) => void;
   closeTab: (index: number) => void;
   closeAllTabs: () => void;
   closeTabsToTheRight: (index: number) => void;
@@ -44,6 +41,16 @@ export interface FsNavProviderProps {
   children: React.ReactNode;
 }
 
+function getTabPath(tab: FsTab): string {
+  if (tab.type === 'create') {
+    return tab.parentFolder?.fullPath ?? '';
+  }
+  if (tab.dirent.type === 'ARTICLE') {
+    return tab.dirent.fullPath.split('/').slice(0, -1).join('/');
+  }
+  return tab.dirent.fullPath;
+}
+
 export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
   const [isDarkMode, setIsDarkMode] = React.useState(false);
   const [openTabs, setOpenTabs] = React.useState<FsTab[]>([]);
@@ -52,11 +59,6 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
   const [expandedIds, setExpandedIds] = React.useState<string[]>([]);
   const activeTab = openTabs[activeTabIndex];
   const activeDirent = activeTab?.type === 'edit' ? activeTab.dirent : undefined;
-  const direntPathsRef = React.useRef<Record<string, string>>({});
-
-  const registerDirentPath = React.useCallback((id: string, path: string) => {
-    direntPathsRef.current[id] = path;
-  }, []);
 
   const setExpanded = React.useCallback((id: string, isExpanded: boolean) => {
     setExpandedIds(prev => {
@@ -80,46 +82,34 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
     setExpandedIds([]);
   }, []);
 
-  const openAsset = React.useCallback((asset: Fs.DirentBase, pathToTopParent: string) => {
-    const resolvedPath = direntPathsRef.current[asset.id] ?? pathToTopParent;
-    setActiveTabPath(resolvedPath);
-
+  const openAsset = React.useCallback((asset: Fs.DirentBase) => {
     setOpenTabs(prevTabs => {
       const existingIndex = prevTabs.findIndex(tab => tab.type === 'edit' && tab.dirent.id === asset.id);
       if (existingIndex !== -1) {
         setActiveTabIndex(existingIndex);
-        setActiveTabPath(prevTabs[existingIndex].pathToTopParent);
+        setActiveTabPath(getTabPath(prevTabs[existingIndex]));
         return prevTabs;
       }
 
       const newTab: FsEditTab = {
         type: 'edit',
         dirent: asset,
-        pathToTopParent: resolvedPath,
       };
       const newTabs = [...prevTabs, newTab];
       setActiveTabIndex(newTabs.length - 1);
+      setActiveTabPath(getTabPath(newTab));
       return newTabs;
     });
   }, []);
 
   const openCreateTab = React.useCallback((direntType: Fs.BodyType, parentFolder: Fs.DirentBase | undefined) => {
-    const registeredPath = parentFolder ? (direntPathsRef.current[parentFolder.id] ?? parentFolder.name) : '';
-
-    const pathToTopParent = parentFolder?.type === 'FOLDER' ? registeredPath : registeredPath
-      .split(' / ')
-      .slice(0, -1)
-      .join(' / ');
-
-    setActiveTabPath(pathToTopParent);
-
+    const newTab: FsCreateTab = {
+      type: 'create',
+      direntType,
+      parentFolder,
+    };
+    setActiveTabPath(getTabPath(newTab));
     setOpenTabs(prevTabs => {
-      const newTab: FsCreateTab = {
-        type: 'create',
-        direntType,
-        parentFolder,
-        pathToTopParent,
-      };
       const newTabs = [...prevTabs, newTab];
       setActiveTabIndex(newTabs.length - 1);
       return newTabs;
@@ -157,7 +147,7 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
     setActiveTabIndex(index);
     setOpenTabs(currentTabs => {
       if (currentTabs[index]) {
-        setActiveTabPath(currentTabs[index].pathToTopParent);
+        setActiveTabPath(getTabPath(currentTabs[index]));
       }
       return currentTabs;
     });
@@ -175,7 +165,6 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
       activeDirent,
       openAsset,
       openCreateTab,
-      registerDirentPath,
       closeTab,
       closeAllTabs,
       closeTabsToTheRight,
@@ -184,7 +173,7 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
       setExpanded,
       setExpandedBatch
     };
-  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, expandedIds, setExpanded, collapseAll, setExpandedBatch, openAsset, openCreateTab, registerDirentPath, closeTab, closeAllTabs, closeTabsToTheRight, setActiveTab, activeDirent]);
+  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, expandedIds, setExpanded, collapseAll, setExpandedBatch, openAsset, openCreateTab, closeTab, closeAllTabs, closeTabsToTheRight, setActiveTab, activeDirent]);
 
   return (
     <FsNavContext.Provider value={contextValue}>

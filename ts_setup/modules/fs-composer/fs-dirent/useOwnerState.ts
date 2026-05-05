@@ -9,13 +9,11 @@ export interface OwnerState {
   onContextMenu: (event: React.MouseEvent, dirent: Fs.DirentBase) => void;
 
   isChildError: (dirent: Fs.DirentBase) => boolean;
-  openAsset: (asset: Fs.DirentBase, pathToTopParent: string) => void;
+  openAsset: (asset: Fs.DirentBase) => void;
 
   dirent: Fs.DirentBase;
   direntIconClassName: keyof FsDirentClasses;
   level: number;
-  parentPath?: string;
-  fullPath: string;
   searchTerm: string;
   children: Fs.DirentBase[];
   options: Fs.ConfigOption[];
@@ -30,8 +28,8 @@ export interface OwnerState {
 
 
 export const useOwnerState = (props: FsDirentProps): OwnerState => {
-  const { dirent: direntBase, level, parentPath, onToggle, onContextMenu, searchTerm } = props;
-  const { isDarkMode, openAsset, registerDirentPath, activeDirent } = useFsNav();
+  const { dirent: direntBase, level, onToggle, onContextMenu, searchTerm } = props;
+  const { isDarkMode, openAsset, activeDirent } = useFsNav();
   const { isChildError, getDirent } = useFsDirent();
 
   const dirent = getDirent(direntBase.id) ?? direntBase;
@@ -46,20 +44,11 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
     return d ? isChildError(d) : false;
   }));
   const showError = ((dirent?.props?.errors ?? []).length) > 0 || childWithError;
-  const fullPath = direntBase.type === 'ARTICLE'
-    ? (parentPath ?? direntBase.name)
-    : (parentPath ? `${parentPath} / ${direntBase.name}` : direntBase.name);
-
-  registerDirentPath(direntBase.id, fullPath);
-
-
   return {
     dirent,
     direntIconClassName: _getIconClassName(direntBase),
     level,
-    parentPath,
     searchTerm,
-    fullPath,
     configOptions,
 
     isDarkMode,

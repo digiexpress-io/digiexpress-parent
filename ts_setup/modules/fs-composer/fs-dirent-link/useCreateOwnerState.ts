@@ -10,7 +10,7 @@ export interface CreateOwnerState {
   onToggleExpanded: () => void;
 }
 
-export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
+export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined }): CreateOwnerState => {
   const { isDarkMode } = useFsNav();
   const { selectOptions } = useFsDirent();
   const locales = selectOptions.languages;

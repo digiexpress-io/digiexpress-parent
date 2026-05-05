@@ -11,19 +11,12 @@ export interface CreateOwnerState {
   onToggleExpanded: () => void;
 }
 
-function getParentArticlePath(pathToTopParent: string | undefined, parentArticle: Fs.DirentBase): string {
-  if (pathToTopParent) {
-    return `${pathToTopParent} / ${parentArticle.name}`;
-  }
-  return parentArticle.name;
-}
-
-export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
-  const { isDarkMode } = useFsNav();
+export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined }): CreateOwnerState => {
+  const { isDarkMode, activeTabPath } = useFsNav();
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const parentArticle = props.parentFolder?.type === 'ARTICLE' ? props.parentFolder : undefined;
-  const parentArticlePath = parentArticle ? getParentArticlePath(props.pathToTopParent, parentArticle) : undefined;
+  const parentArticlePath = parentArticle ? activeTabPath : undefined;
 
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);

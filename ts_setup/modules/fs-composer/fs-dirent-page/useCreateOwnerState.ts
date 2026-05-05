@@ -6,7 +6,7 @@ import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 export interface CreateOwnerState {
   isDarkMode: boolean;
   parentFolder: Fs.DirentBase | undefined;
-  pathToTopParent: string;
+  activeTabPath: string;  
   articleId: string;
   localeCode: string;
   configOptions: Fs.ConfigOption[];
@@ -18,11 +18,10 @@ export interface CreateOwnerState {
   onChangeConfigOptions: (value: string[]) => void;
 }
 
-export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined; pathToTopParent: string | undefined }): CreateOwnerState => {
-  const { isDarkMode } = useFsNav();
+export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined }): CreateOwnerState => {
+  const { isDarkMode, activeTabPath } = useFsNav();
   const { selectOptions, getArticleName, getConfigOptionsForType } = useFsDirent();
 
-  const pathToTopParent = props.pathToTopParent ?? '';
 
   const [articleId, setArticleId] = React.useState('');
   const [localeCode, setLocaleCode] = React.useState('');
@@ -50,7 +49,7 @@ export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undef
   return ({
     isDarkMode,
     parentFolder: props.parentFolder,
-    pathToTopParent,
+    activeTabPath,
     articleId,
     localeCode,
     configOptions,

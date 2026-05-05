@@ -8,5 +8,5 @@ export const FsDirentDialob: React.FC<FsDirentDialobProps> = ({ tab }) => {
   if (tab.type === 'edit') {
     return <FsDirentDialobUpdate direntId={tab.dirent.id} />;
   }
-  return <FsDirentDialobCreate parentFolder={tab.parentFolder} pathToTopParent={tab.pathToTopParent} />;
+  return <FsDirentDialobCreate parentFolder={tab.parentFolder} />;
 };

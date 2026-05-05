@@ -8,5 +8,5 @@ export const FsDirentArticle: React.FC<FsDirentArticleProps> = ({ tab }) => {
   if (tab.type === 'edit') {
     return <FsDirentArticleUpdate direntId={tab.dirent.id} />;
   }
-  return <FsDirentArticleCreate parentFolder={tab.parentFolder} pathToTopParent={tab.pathToTopParent} />;
+  return <FsDirentArticleCreate parentFolder={tab.parentFolder} />;
 };

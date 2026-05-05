@@ -8,5 +8,5 @@ export const FsDirentPhone: React.FC<FsDirentPhoneProps> = ({ tab }) => {
   if (tab.type === 'edit') {
     return <FsDirentPhoneUpdate direntId={tab.dirent.id} />;
   }
-  return <FsDirentPhoneCreate parentFolder={tab.parentFolder} pathToTopParent={tab.pathToTopParent} />;
+  return <FsDirentPhoneCreate parentFolder={tab.parentFolder} />;
 };

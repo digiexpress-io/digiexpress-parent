@@ -38,7 +38,7 @@ export interface OwnerState {
   setSearchExpanded: (expanded: boolean) => void;
   setSearchTerm: (term: string) => void;
   setFilters: (filters: FilterData[]) => void;
-  onDoubleClick: (dirent: Fs.DirentBase, pathToTopParent: string) => void;
+  onDoubleClick: (dirent: Fs.DirentBase) => void;
   collapseAll: () => void;
   toggleDirent: (direntId: string) => void;
 }
@@ -92,10 +92,10 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     setContextMenuOpen(false);
   }
 
-  function onDoubleClick(dirent: Fs.DirentBase, pathToTopParent: string) {
+  function onDoubleClick(dirent: Fs.DirentBase) {
     const fullDirent = getDirent(dirent.id);
     if (fullDirent) {
-      openAsset(fullDirent, pathToTopParent);
+      openAsset(fullDirent);
     }
   }
 

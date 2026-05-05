@@ -26,7 +26,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
 
   function handleEdit() {
     if (dirent) {
-      openAsset(dirent, dirent.name);
+      openAsset(dirent);
     }
     props.onClose();
   }
