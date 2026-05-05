@@ -26,10 +26,10 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent
 
   return (
     <div className={classes.propertyRow}>
-      <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
-      <div className={classes.commentList}>
+      <Typography className={classes.childPropertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
+      <div className={classes.childContainer}>
         {descendants.map(({ dirent: child, depth }) => (
-          <Box key={child.id} className={classes.childRow} sx={{ paddingLeft: `${(depth + 1) * 16}px` }}> {/* TODO -- remove sx from here */}
+          <Box key={child.id} className={classes.childRow} sx={{ paddingLeft: `${depth * 16}px` }}> {/* TODO remove sx */}
             <FsIcon small icon={getTypeIcon(child.type)} />
             <Typography className={classes.propertyValue}>{child.type === 'ARTICLE' ? getArticleName(child.id) : child.name}</Typography>
           </Box>

@@ -22,8 +22,9 @@ export interface FsPanelPropertiesClasses {
   commentMeta: string;
   commentAuthor: string;
   commentDate: string;
+  childPropertyLabel: string;
+  childContainer: string;
   childRow: string;
-  childRowIndented: string;
 }
 
 export type FsPanelPropertiesClassKey = keyof FsPanelPropertiesClasses;
@@ -44,8 +45,9 @@ export const useUtilityClasses = () => {
     commentMeta: ['commentMeta'],
     commentAuthor: ['commentAuthor'],
     commentDate: ['commentDate'],
+    childPropertyLabel: ['childPropertyLabel'],
+    childContainer: ['childContainer'],
     childRow: ['childRow'],
-    childRowIndented: ['childRowIndented'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -197,16 +199,25 @@ export const FsPanelPropertiesRoot = styled('div', {
     color: ownerState.isDarkMode ? FsColors.dark.textMuted : FsColors.light.textSecondary,
   },
 
+  [`& .${MUI_NAME}-childPropertyLabel`]: {
+    ...theme.typography.subtitle2,
+    alignSelf: 'flex-start',
+    fontWeight: 500,
+    textTransform: 'uppercase',
+    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    width: '120px',
+    flexShrink: 0,
+    paddingRight: theme.spacing(1.875),
+  },
+
+  [`& .${MUI_NAME}-childContainer`]: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+
   [`& .${MUI_NAME}-childRow`]: {
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.75),
-  },
-
-  [`& .${MUI_NAME}-childRowIndented`]: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(0.75),
-    paddingLeft: theme.spacing(3),
   },
 }));
