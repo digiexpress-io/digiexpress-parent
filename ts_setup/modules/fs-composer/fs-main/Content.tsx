@@ -14,6 +14,7 @@ import { FsDirentDialob } from '../fs-dirent-dialob';
 import { FsDirentPrintout } from '../fs-dirent-printout';
 import { FsDirentTemplate } from '../fs-dirent-template';
 import { FsDirentFlowTask } from '../fs-dirent-flow-task';
+import { FsDirentDecisionTable } from '../fs-dirent-decision-table';
 
 
 export interface ContentProps {
@@ -53,6 +54,7 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
     case 'ARTICLE_WORKFLOW': return (activeTab && (<div key={tabId} className={className}><FsDirentWorkflow tab={activeTab} /></div>));
     case 'FLOW': return (activeTab && (<div key={tabId} className={className}><FsDirentFlow tab={activeTab} /></div>));
     case 'FLOW_TASK': return (activeTab && (<div key={tabId} className={className}><FsDirentFlowTask tab={activeTab} /></div>));
+    case 'DECISION_TABLE': return (activeTab && (<div key={tabId} className={className}><FsDirentDecisionTable tab={activeTab} /></div>));
     case 'PRINTOUT': return (activeTab && (<div key={tabId} className={className}><FsDirentPrintout tab={activeTab} /></div>));
     case 'ARTICLE_TEMPLATE': return (activeTab && (<div key={tabId} className={className}><FsDirentTemplate tab={activeTab} /></div>));
     case 'DIALOB_FORM': return (activeTab && (<div key={tabId} className={className}><FsDirentDialob tab={activeTab} /></div>));

@@ -68,6 +68,7 @@ import {
   Feed,
   MenuBook,
   SubdirectoryArrowRight,
+  TableChart,
 } from '@mui/icons-material';
 import { SvgIconProps, Tooltip } from '@mui/material';
 
@@ -139,6 +140,7 @@ export const FsIcons = {
   ArticleOrder: FormatListNumbered,
   Page: Feed,
   ChildItem: SubdirectoryArrowRight,
+  DecisionTable: TableChart,
 };
 
 export interface FsIconProps {

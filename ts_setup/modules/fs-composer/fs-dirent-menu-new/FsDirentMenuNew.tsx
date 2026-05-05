@@ -22,7 +22,7 @@ const DIRENT_TYPE_ICONS: Record<Fs.BodyType, React.ElementType<SvgIconProps>> = 
   ARTICLE_PAGE: FsIcons.Form,
 
   FLOW_TASK: FsIcons.Assignment,
-  DECISION_TABLE: 'symbol',
+  DECISION_TABLE: FsIcons.DecisionTable,
   PRINTOUT_PAGE: 'symbol',
   DEPLOYMENT: 'symbol',
   UNKNOWN: 'symbol'
