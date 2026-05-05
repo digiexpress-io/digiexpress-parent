@@ -9,9 +9,9 @@ import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentPrintoutCreateProps } from './FsDirentPrintoutProps';
 
 
-export const FsDirentPrintoutCreate: React.FC<FsDirentPrintoutCreateProps> = (props) => {
+export const FsDirentPrintoutCreate: React.FC<FsDirentPrintoutCreateProps> = () => {
   const intl = useIntl();
-  const ownerState = useCreateOwnerState(props);
+  const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
   const [name, setName] = React.useState('');
 

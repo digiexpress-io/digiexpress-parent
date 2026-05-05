@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MonacoReact from '@monaco-editor/react';
-import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { useUtilityClasses, FsDirentTemplateRoot } from './useUtilityClasses';
@@ -10,9 +9,9 @@ import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentTemplateCreateProps } from './FsDirentTemplateProps';
 
 
-export const FsDirentTemplateCreate: React.FC<FsDirentTemplateCreateProps> = (props) => {
+export const FsDirentTemplateCreate: React.FC<FsDirentTemplateCreateProps> = () => {
   const intl = useIntl();
-  const ownerState = useCreateOwnerState(props);
+  const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
 
   return (

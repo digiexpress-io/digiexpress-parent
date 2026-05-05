@@ -11,9 +11,9 @@ import { useUtilityClasses, FsDirentLinkRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentLinkCreateProps } from './FsDirentLinkProps';
 
-export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = (props) => {
+export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = () => {
   const intl = useIntl();
-  const ownerState = useCreateOwnerState(props);
+  const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
   const { selectOptions, getConfigOptionsForType } = useFsDirent();
   const articles = selectOptions.articles;

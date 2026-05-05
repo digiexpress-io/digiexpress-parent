@@ -1,9 +1,7 @@
-import { Fs, FsTab } from '@dxs-ts/fs-api';
+import { FsTab } from '@dxs-ts/fs-api';
 
 
-export interface FsDirentPageCreateProps {
-  parentFolder: Fs.DirentBase | undefined;
-}
+export interface FsDirentPageCreateProps { }
 
 export interface FsDirentPageUpdateProps {
   direntId: string;

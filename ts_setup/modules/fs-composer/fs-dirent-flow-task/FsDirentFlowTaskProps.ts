@@ -1,9 +1,7 @@
-import { Fs, FsTab } from '@dxs-ts/fs-api';
+import { FsTab } from '@dxs-ts/fs-api';
 
 
-export interface FsDirentFlowTaskCreateProps {
-  parentFolder: Fs.DirentBase | undefined;
-}
+export interface FsDirentFlowTaskCreateProps { }
 
 export interface FsDirentFlowTaskUpdateProps {
   direntId: string;

@@ -10,9 +10,9 @@ import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentFlowTaskCreateProps } from './FsDirentFlowTaskProps';
 
 
-export const FsDirentFlowTaskCreate: React.FC<FsDirentFlowTaskCreateProps> = (props) => {
+export const FsDirentFlowTaskCreate: React.FC<FsDirentFlowTaskCreateProps> = () => {
   const intl = useIntl();
-  const ownerState = useCreateOwnerState(props);
+  const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
 
   const [taskName, setTaskName] = React.useState('');

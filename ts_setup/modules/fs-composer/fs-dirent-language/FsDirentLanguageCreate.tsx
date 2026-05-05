@@ -11,9 +11,9 @@ import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentLanguageCreateProps } from './FsDirentLanguageProps';
 
 
-export const FsDirentLanguageCreate: React.FC<FsDirentLanguageCreateProps> = (props) => {
+export const FsDirentLanguageCreate: React.FC<FsDirentLanguageCreateProps> = () => {
   const intl = useIntl();
-  const ownerState = useCreateOwnerState(props);
+  const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
   const { getConfigOptionsForType } = useFsDirent();
   const configOptions = getConfigOptionsForType('LOCALE');

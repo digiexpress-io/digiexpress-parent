@@ -13,9 +13,9 @@ import { useUtilityClasses, FsDirentWorkflowRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 
 
-export const FsDirentWorkflowCreate: React.FC<FsDirentWorkflowCreateProps> = (props) => {
+export const FsDirentWorkflowCreate: React.FC<FsDirentWorkflowCreateProps> = () => {
   const intl = useIntl();
-  const ownerState = useCreateOwnerState(props);
+  const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
   const { selectOptions, getConfigOptionsForType } = useFsDirent();
   const dialobForms = selectOptions.dialobs;

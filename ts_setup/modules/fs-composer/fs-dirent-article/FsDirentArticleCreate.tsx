@@ -13,9 +13,9 @@ import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentArticleCreateProps } from './FsDirentArticleProps';
 
 
-export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = (props) => {
+export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () => {
   const intl = useIntl();
-  const ownerState = useCreateOwnerState(props);
+  const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
   const { getConfigOptionsForType, selectOptions } = useFsDirent();
   const configOptions = getConfigOptionsForType('ARTICLE');

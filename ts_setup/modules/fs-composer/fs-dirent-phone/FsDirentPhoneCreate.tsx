@@ -14,7 +14,7 @@ import { FsDirentPhoneCreateProps } from './FsDirentPhoneProps';
 
 export const FsDirentPhoneCreate: React.FC<FsDirentPhoneCreateProps> = (props) => {
   const intl = useIntl();
-  const ownerState = useCreateOwnerState(props);
+  const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
   const { selectOptions, getConfigOptionsForType } = useFsDirent();
 

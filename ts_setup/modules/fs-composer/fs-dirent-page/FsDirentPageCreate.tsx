@@ -11,9 +11,9 @@ import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentPageCreateProps } from './FsDirentPageProps';
 
 
-export const FsDirentPageCreate: React.FC<FsDirentPageCreateProps> = (props) => {
+export const FsDirentPageCreate: React.FC<FsDirentPageCreateProps> = () => {
   const intl = useIntl();
-  const ownerState = useCreateOwnerState(props);
+  const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
 
   const [content, setContent] = React.useState('');
