@@ -17,7 +17,7 @@ export const FsPropertiesWorkflow: React.FC<FsPropertiesWorkflowProps> = ({ dire
   if (dirent.type !== 'ARTICLE_WORKFLOW') {
     return undefined;
   }
-  const workflowProps = dirent.props as Fs.ServiceProps | undefined;
+  const workflowProps = dirent.props as Fs.WorkflowProps | undefined;
   const locales = Object.keys(workflowProps?.intlValues ?? {}).map((localeId) => {
     const lang = selectOptions.languages.find((l) => l.value === localeId);
     return lang?.label ?? localeId;

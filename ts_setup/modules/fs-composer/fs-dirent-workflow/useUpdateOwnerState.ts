@@ -32,7 +32,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { getDirent, selectOptions } = useFsDirent();
 
   const dirent = getDirent(props.direntId);
-  const serviceProps = dirent?.type === 'ARTICLE_WORKFLOW' ? dirent.props as Fs.ServiceProps : undefined;
+  const serviceProps = dirent?.type === 'ARTICLE_WORKFLOW' ? dirent.props as Fs.WorkflowProps : undefined;
 
   const [name, setName] = React.useState(dirent?.name ?? '');
   const [dialobFormName, setDialobFormName] = React.useState(serviceProps?.dialobFormName ?? '');

@@ -48,7 +48,7 @@ export declare namespace Fs {
   export type Props =
     | FolderProps
     | ArticleProps
-    | ServiceProps
+    | WorkflowProps
     | DialobProps
     | FlowProps
     | FlowTaskProps
@@ -108,7 +108,7 @@ export declare namespace Fs {
     content: string
   }
 
-  export interface ServiceProps extends PropsBase {
+  export interface WorkflowProps extends PropsBase {
     type: 'ARTICLE_WORKFLOW';
     serviceName: string;
     dialobFormName: string;
@@ -253,7 +253,7 @@ export declare namespace Fs {
   export type FolderId = string;
   export type ArticleId = string;
   export type LanguageId = string;
-  export type ServiceId = string;
+  export type WorkflowId = string;
   export type DialobId = string;
   export type FlowId = string;
   export type LinkId = string;
