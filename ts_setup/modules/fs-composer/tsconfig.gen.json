@@ -10,6 +10,9 @@
       ],
       "@dxs-ts/fs-api": [
         "../fs-api/index.ts"
+      ],
+      "@dxs-ts/wrench-api": [
+        "../wrench-api/index.ts"
       ]
     }
   },
@@ -20,16 +23,19 @@
     },
     {
       "path": "../fs-api"
+    },
+    {
+      "path": "../wrench-api"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-02-17T09:56:55.036Z",
-    "forModule": "@dxs-ts/eveli-tree",
-    "fromRegistry": "dcc7f3b9e54b",
+    "at": "2026-05-06T10:21:11.714Z",
+    "forModule": "@dxs-ts/fs-composer",
+    "fromRegistry": "5f81df19c185",
     "alias": {
-      "@dxs-ts/eveli-tree": [
-        "../fs-api"
+      "@dxs-ts/fs-composer": [
+        "../wrench-api"
       ]
     }
   }

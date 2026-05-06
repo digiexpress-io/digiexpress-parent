@@ -7,6 +7,7 @@
   "dependencies": {
     "@dxs-ts/eveli-primitives": "*",
     "@dxs-ts/fs-api": "*",
+    "@dxs-ts/wrench-api": "*",
     "react-markdown": "*"
   },
   "peerDependencies": {
