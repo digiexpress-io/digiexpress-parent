@@ -25,7 +25,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   React.useEffect(() => {
     fetchDirentBody(props.direntId, 'FLOW').then((body) => {
       const wb = body as Fs.WrenchBody;
-      const yaml = (wb.flows[props.direntId] as any)?.ast?.parseTree?.value ?? '';
+      const yaml = wb.flows[props.direntId]?.ast?.parseTree?.value ?? '';
       setWrenchBody(wb);
       setContent(yaml);
     });

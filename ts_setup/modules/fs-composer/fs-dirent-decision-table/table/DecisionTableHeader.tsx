@@ -1,11 +1,12 @@
 import React from 'react';
 import { Box, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
+import { Fs } from '@dxs-ts/fs-api';
 
 
 const DecisionTableHeader: React.FC<{
-  ast: any;
-  headers: any[];
+  ast: Fs.DecisionAst;
+  headers: Fs.DecisionTypeDef[];
   children: React.ReactNode;
 }> = ({ ast, headers, children }) => {
   const totalCols = ast.headers.returnDefs.length + ast.headers.acceptDefs.length + 2;
@@ -42,7 +43,7 @@ const DecisionTableHeader: React.FC<{
       </TableRow>
       <TableRow>
         <TableCell align="left" sx={{ fontWeight: 'bold', width: '30px', backgroundColor: 'secondary.contrastText', color: 'primary.contrastText' }}>#</TableCell>
-        {headers.map((header: any) => (
+        {headers.map((header) => (
           <TableCell key={header.id} align="left" sx={{
             fontWeight: 'bold',
             minWidth: '50px',

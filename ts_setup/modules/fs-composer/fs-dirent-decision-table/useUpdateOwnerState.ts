@@ -7,7 +7,7 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   name: string;
   wrenchBody: Fs.WrenchBody | undefined;
-  decision: any;
+  decision: Fs.DecisionAst | undefined;
   onChangeName: (value: string) => void;
 }
 
@@ -19,14 +19,13 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [name, setName] = React.useState(dirent?.name ?? '');
   const [wrenchBody, setWrenchBody] = React.useState<Fs.WrenchBody | undefined>(undefined);
-  const [decision, setDecision] = React.useState<any>(undefined);
+  const [decision, setDecision] = React.useState<Fs.DecisionAst | undefined>(undefined);
 
   React.useEffect(() => {
     fetchDirentBody(props.direntId, 'DECISION_TABLE').then((body) => {
       const wb = body as Fs.WrenchBody;
-      const ast = (wb.decisions[props.direntId] as any)?.ast ?? undefined;
       setWrenchBody(wb);
-      setDecision(ast);
+      setDecision(wb.decisions[props.direntId]?.ast);
     });
   }, [props.direntId]);
 

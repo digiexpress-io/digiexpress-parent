@@ -23,7 +23,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   React.useEffect(() => {
     fetchDirentBody(props.direntId, 'FLOW_TASK').then((body) => {
       const wb = body as Fs.WrenchBody;
-      const yaml = (wb.services[props.direntId] as any)?.ast?.value ?? '';
+      const yaml = wb.services[props.direntId]?.ast?.value ?? '';
       setTaskValue(yaml);
     });
   }, [props.direntId]);

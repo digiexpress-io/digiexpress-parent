@@ -110,7 +110,7 @@ class ModelVisitor {
     }
   }
 
-  visitServiceAssoc(entity: Fs.WrenchAstBody, props: { parent: Node, index?: number }) {
+  visitServiceAssoc(entity: Fs.WrenchAstBody<unknown>, props: { parent: Node, index?: number }) {
     if(!entity.ast) {
       return;
     }
@@ -233,7 +233,7 @@ class ModelVisitor {
     return "service";
   }
 
-  visitRef(step: any): Fs.WrenchAstBody | undefined {
+  visitRef(step: any): Fs.WrenchAstBody<unknown> | undefined {
     const ref = step.ref?.ref?.value;
     if (!ref) {
       return undefined;
@@ -246,8 +246,8 @@ class ModelVisitor {
     return undefined;
   }
 
-  findRef(name: string, type: Fs.BodyType): Fs.WrenchAstBody | undefined {
-    const models: Fs.WrenchAstBody[] = [];
+  findRef(name: string, type: Fs.BodyType): Fs.WrenchAstBody<unknown> | undefined {
+    const models: Fs.WrenchAstBody<unknown>[] = [];
     if (type === "DECISION_TABLE") {
       models.push(...Object.values(this._models.decisions));
     } else if (type === "FLOW_TASK") {

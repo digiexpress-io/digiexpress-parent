@@ -33,7 +33,7 @@ export declare namespace Fs {
     | 'ARTICLE'
     | 'ARTICLE_WORKFLOW'
     | 'ARTICLE_PAGE'
-    | 'ARTICLE_TEMPLATE' // confusion with PRINTOUT_TEMPLATE
+    | 'ARTICLE_TEMPLATE' 
     | 'FLOW'
     | 'FLOW_TASK'
     | 'DECISION_TABLE'
@@ -61,6 +61,8 @@ export declare namespace Fs {
     | LinkProps
     | PhoneProps;
 
+  // ------------- START WRENCH --------------
+
   export type WrenchProgramStatus = 'UP' | 'ERROR';
 
   export interface WrenchModelError {
@@ -78,20 +80,65 @@ export declare namespace Fs {
     owner: boolean;
   }
 
-  export interface WrenchAstBody {
+  export interface WrenchAstBody<T> {
     id: string;
-    ast: unknown;
+    ast: T;
     errors: WrenchModelError[];
     associations: WrenchProgramAssociation[];
     status: WrenchProgramStatus;
-    commands: unknown[];
+    commands: string[];
+  }
+
+  export interface FlowAst {
+    parseTree?: {
+      value: string;
+    };
+  }
+
+  export interface FlowTaskAst {
+    value: string;
+  }
+
+  export interface DecisionTypeDef {
+    id: string;
+    name: string;
+    order: number;
+    direction: 'IN' | 'OUT';
+    valueType: string;
+    valueSet?: string[];
+    expression?: string;
+    script?: string;
+  }
+
+  export interface DecisionAstCell {
+    id: string;
+    header: string;
+    value?: string;
+  }
+
+  export interface DecisionAstRow {
+    id: string;
+    order: number;
+    cells: DecisionAstCell[];
+  }
+
+  export interface DecisionAst {
+    name: string;
+    description?: string;
+    hitPolicy: 'ALL' | 'FIRST';
+    headers: {
+      acceptDefs: DecisionTypeDef[];
+      returnDefs: DecisionTypeDef[];
+    };
+    rows: DecisionAstRow[];
   }
 
   export interface WrenchBody {
-    flows: Record<string, WrenchAstBody>;
-    services: Record<string, WrenchAstBody>;
-    decisions: Record<string, WrenchAstBody>;
+    flows: Record<string, WrenchAstBody<FlowAst>>;
+    services: Record<string, WrenchAstBody<FlowTaskAst>>;
+    decisions: Record<string, WrenchAstBody<DecisionAst>>;
   }
+  // ------------- END WRENCH --------------
 
   export type WorldFsBody = ArticlePageBody | WrenchBody;
 

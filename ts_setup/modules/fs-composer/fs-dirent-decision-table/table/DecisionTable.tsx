@@ -1,26 +1,27 @@
 import React from 'react';
 import { Table, TableBody, TableContainer, TablePagination } from '@mui/material';
+import { Fs } from '@dxs-ts/fs-api';
 
 
 interface RenderCellProps {
-  row: any;
-  header: any;
-  cell: any;
+  row: Fs.DecisionAstRow;
+  header: Fs.DecisionTypeDef;
+  cell: Fs.DecisionAstCell | undefined;
 }
 
 interface RenderRowProps {
-  headers: any[];
-  row: any;
+  headers: Fs.DecisionTypeDef[];
+  row: Fs.DecisionAstRow;
   renderCell: (props: RenderCellProps) => React.ReactNode;
 }
 
 interface RenderHeaderProps {
-  ast: any;
-  headers: any[];
+  ast: Fs.DecisionAst;
+  headers: Fs.DecisionTypeDef[];
 }
 
 const DecisionTable: React.FC<{
-  ast: any;
+  ast: Fs.DecisionAst;
   renderHeader: (props: RenderHeaderProps) => React.ReactNode;
   renderRow: (props: RenderRowProps) => React.ReactNode;
   renderCell: (props: RenderCellProps) => React.ReactNode;
@@ -35,10 +36,10 @@ const DecisionTable: React.FC<{
     setPage(0);
   };
 
-  const accepts: any[] = ast ? [...ast.headers.acceptDefs].sort((a: any, b: any) => a.order - b.order) : [];
-  const returns: any[] = ast ? [...ast.headers.returnDefs].sort((a: any, b: any) => a.order - b.order) : [];
-  const rows = React.useMemo(() => ast ? ast.rows.sort((a: any, b: any) => a.order - b.order) : [], [ast]);
-  const headers: any[] = [...accepts, ...returns];
+  const accepts = ast ? [...ast.headers.acceptDefs].sort((a, b) => a.order - b.order) : [];
+  const returns = ast ? [...ast.headers.returnDefs].sort((a, b) => a.order - b.order) : [];
+  const rows = React.useMemo(() => ast ? [...ast.rows].sort((a, b) => a.order - b.order) : [], [ast]);
+  const headers: Fs.DecisionTypeDef[] = [...accepts, ...returns];
 
   if (!ast) {
     return <span>syntax error</span>;
@@ -51,7 +52,7 @@ const DecisionTable: React.FC<{
         <TableBody>
           {rows
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((row: any) => (
+            .map((row) => (
               <React.Fragment key={row.id}>
                 {renderRow({ row, renderCell, headers })}
               </React.Fragment>

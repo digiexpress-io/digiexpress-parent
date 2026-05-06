@@ -1,11 +1,12 @@
 import React from 'react';
 import { Box, Button, ButtonGroup, TableCell, Tooltip, Typography, alpha, darken, lighten, useTheme } from '@mui/material';
+import { Fs } from '@dxs-ts/fs-api';
 
 
 const DecisionTableCell: React.FC<{
-  row: any;
-  header: any;
-  cell: any;
+  row: Fs.DecisionAstRow;
+  header: Fs.DecisionTypeDef;
+  cell: Fs.DecisionAstCell | undefined;
 }> = ({ header, cell }) => {
 
   const theme = useTheme();
@@ -27,7 +28,7 @@ const DecisionTableCell: React.FC<{
     return (
       <TableCell sx={{ borderRight: `1px ${borderColor} solid` }}>
         <ButtonGroup variant="text">
-          {(header.valueSet ?? []).map((locale: string) => (
+          {(header.valueSet ?? []).map((locale) => (
             <Tooltip key={locale} title={cell?.value ?? ''}>
               <Button>
                 <Typography textTransform="uppercase" fontWeight="bold">{locale}</Typography>

@@ -5,7 +5,7 @@ import { FsPanelPreviewWrenchProps } from './FsPanelPreviewWrenchProps';
 
 export interface OwnerState {
   isDarkMode: boolean;
-  flowAst: any;
+  flowAst: Fs.FlowAst | undefined;
   wrenchBody: Fs.WrenchBody | undefined;
 }
 
@@ -20,7 +20,7 @@ export const useOwnerState = (props: FsPanelPreviewWrenchProps): OwnerState => {
       .then(body => setWrenchBody(body as Fs.WrenchBody));
   }, [props.dirent.id]);
 
-  const flowAst = wrenchBody ? (wrenchBody.flows[props.dirent.id] as any)?.ast ?? undefined : undefined;
+  const flowAst = wrenchBody?.flows[props.dirent.id]?.ast;
 
   return { isDarkMode, flowAst, wrenchBody };
 };
