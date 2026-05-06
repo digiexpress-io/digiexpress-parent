@@ -31,9 +31,10 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
   const { input, setInput } = useFlowInput(service.orchestratorName);
 
   async function handleCompile() {
-    const pdf = await composer.backend.compileTemplate(serviceId, template.localeId, input);
+    const localeCode = composer.site.locales[template.localeId]?.localeCode ?? template.localeId;
+    const pdf = await composer.backend.compileTemplate(serviceId, localeCode, input);
     if (pdf.status === 'OK') {
-      setBase64(pdf.value?.bodyBase64);
+      setBase64(pdf.bodyBase64);
     } else {
       setBase64(undefined);
     }
@@ -77,7 +78,7 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
   }
 
   const beforeMount: BeforeMount = React.useCallback((editor) => {
-    editor.languages.registerCompletionItemProvider('plaintext', {
+    editor.languages.registerCompletionItemProvider('yaml', {
       triggerCharacters: ['#'],
       provideCompletionItems(model, position) {
         const suggestions = new TagomiCompletionBuilder()
@@ -130,7 +131,7 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
             beforeMount={beforeMount}
             onChange={handleChange}
             value={src}
-            defaultLanguage='plaintext'
+            defaultLanguage='yaml'
             options={{
               wordBasedSuggestions: 'off',
               minimap: { enabled: false }

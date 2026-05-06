@@ -20,16 +20,13 @@ package io.resys.limaone.persistence;
  * #L%
  */
 
-import java.util.Base64;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import io.resys.limaone.authoring.ImmutableNewPrintoutResourceProps;
 import io.resys.limaone.authoring.ImmutableNewPrintoutResourceProps.Builder;
 import io.resys.limaone.authoring.NewPrintoutResource;
-import io.resys.limaone.spi.printout.PrintoutImageStorage;
-import io.resys.limaone.spi.printout.PrintoutImageStorage.OperationStatus;
 import io.resys.limaone.model.ImmutablePrintoutResource;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
@@ -92,29 +89,15 @@ public class NewPrintoutResourceImpl extends AuthoringTemplate<NewPrintoutResour
   }
 
   private Uni<Model<PrintoutResource>> buildImageResource() {
-    final var imageStorage = config.getEnvir().getBean(PrintoutImageStorage.class);
-    final byte[] imageBytes = Base64.getDecoder().decode(props.getUploadBody());
-
-    return imageStorage.write(imageBytes)
-      .onItem().transform(envelope -> {
-        if(envelope.getOperationStatus() != OperationStatus.OK) {
-          final var errorMsg = envelope.getOperationLogs().stream()
-            .map(message -> message.getText())
-            .collect(Collectors.joining(", "));
-          throw new AuthoringException(props, "Failed to store image: " + errorMsg);
-        }
-        return envelope.getObject();
-      })
-      .onItem().transformToUni(image ->
-        config.getPersistence().worldBuilder()
-          .createdAt(getCreatedAt())
-          .author(getAuthor())
-          .docs(BodyType.PRINTOUT_RESOURCE)
-          .build(nextWorld -> {
-            final var body = internalBuildImage(nextWorld.getCurrentWorld(), image.getId());
-            return nextWorld.newModel(body.getResourceName(), body);
-          })
-      );
+    final var externalLocation = UUID.randomUUID().toString();
+    return config.getPersistence().worldBuilder()
+      .createdAt(getCreatedAt())
+      .author(getAuthor())
+      .docs(BodyType.PRINTOUT_RESOURCE)
+      .build(nextWorld -> {
+        final var body = internalBuildImage(nextWorld.getCurrentWorld(), externalLocation);
+        return nextWorld.newModel(body.getResourceName(), body);
+      });
   }
 
   private PrintoutResource internalBuildScript(ModelWorld world) {

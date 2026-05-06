@@ -101,7 +101,6 @@ export declare namespace TagomiApi {
     tagName: string;
     commitId?: string;
     commitAt?: string; // ISO 8601 datetime string
-    tags: Record<string, Tag>;
     locales: Record<string, Locale>;
     templates: Record<string, Template>;
     resources: Record<string, Resource>;
@@ -143,14 +142,6 @@ export declare namespace TagomiApi {
     default: boolean;
   }
 
-  export interface Tag {
-    id: string;
-    docType: 'TAG';
-    commitId: string;
-    name: string;
-    note: string;
-  }
-
   export interface LocaleAndLabel {
     locale: string;
     labelValue: string;
@@ -159,11 +150,6 @@ export declare namespace TagomiApi {
   // ============================================================================
   // Commands - Write Operations
   // ============================================================================
-
-  export interface CreateLocale {
-    id?: string;
-    localeCode: string;
-  }
 
   export interface CreateTemplate {
     id?: string;
@@ -188,23 +174,9 @@ export declare namespace TagomiApi {
     orchestratorName: string;
   }
 
-  export interface CreateTag {
-    id?: string;
-    tagName: string;
-    note: string;
-    commitId?: string;
-  }
-
   // ============================================================================
   // Mutators - Update Operations
   // ============================================================================
-
-  export interface LocaleMutator {
-    localeId: string;
-    value: string;
-    enabled: boolean;
-  }
-
   export interface TemplateMutator {
     templateId: string;
     content: string;
@@ -227,19 +199,14 @@ export declare namespace TagomiApi {
     orchestratorName: string;
     labels?: LocaleAndLabel[];
   }
-
-
-  export interface PdfEnvelope {
-    status: 'OK' | 'ERROR';
-    statusMessage: string | undefined;
-    value: Pdf | undefined;
-  }
   
-  export interface Pdf {
+  export interface PdfEnvelope {
     name: string;
     localisedName: string | undefined;
     locale: string;
     bodyBase64: string; 
+    status: 'OK' | 'ERROR';
+    statusMessage: string | undefined;
   }
 
 
@@ -260,22 +227,13 @@ export declare namespace TagomiApi {
     createService(body: CreateService): Promise<Service>;
     updateService(body: ServiceMutator): Promise<Service>;
     deleteService(serviceId: string): Promise<Service>;
-    
-    // Locale operations
-    createLocale(body: CreateLocale): Promise<Locale>;
-    updateLocale(body: LocaleMutator): Promise<Locale>;
-    deleteLocale(id: string): Promise<Locale>;
-    
+  
     // Template operations
     createTemplate(body: CreateTemplate): Promise<Template>;
     updateTemplate(body: TemplateMutator[]): Promise<Template[]>;
     deleteTemplate(id: string): Promise<Template>;
 
     compileTemplate(id: ServiceId, locale: LocaleId | string, props: object): Promise<PdfEnvelope>;
-    
-    // Tag operations
-    createTag(body: CreateTag): Promise<Tag>;
-    deleteTag(id: string): Promise<Tag>;
   }
   
   export interface ErrorMsg {
@@ -287,5 +245,48 @@ export declare namespace TagomiApi {
     text: string;
     status: number;
     errors: any[];
+  }
+  export namespace Wire {
+    export interface ModelEnvelope<B> {
+      id: string;
+      body: B;
+      bodyType: string;
+      bodyHash: string;
+    }
+
+    export interface LocaleBody {
+      value: string;
+      enabled: boolean;
+    }
+
+    export interface PrintoutPageBody {
+      content: string;
+      localeId: string;
+      serviceId: string;
+      printoutPageIds?: string[];
+    }
+
+    export interface PrintoutResourceBody {
+      externalLocation: string;
+      resourceName: string;
+      contentType: string;
+      printoutPageIds?: string[];
+      content?: string;
+    }
+
+    export interface PrintoutBody {
+      serviceName: string;
+      orchestratorName: string;
+      labels?: LocaleAndLabel[];
+    }
+
+    export interface ModelWorld {
+      name?: string;
+      commitId?: string;
+      locales?: Record<string, ModelEnvelope<LocaleBody>>;
+      printoutPages?: Record<string, ModelEnvelope<PrintoutPageBody>>;
+      printoutResources?: Record<string, ModelEnvelope<PrintoutResourceBody>>;
+      printouts?: Record<string, ModelEnvelope<PrintoutBody>>;
+    }
   }
 }

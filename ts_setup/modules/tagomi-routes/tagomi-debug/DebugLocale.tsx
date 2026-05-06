@@ -39,9 +39,10 @@ export const DebugLocale: React.FC<{
   }
 
   async function handleCompile() {
-    const pdf = await backend.compileTemplate(serviceId, locale, input);
+    const localeCode = site.locales[locale]?.localeCode ?? locale;
+    const pdf = await backend.compileTemplate(serviceId, localeCode, input);
     if(pdf.status === 'OK') {
-      setBase64(pdf.value?.bodyBase64);
+      setBase64(pdf.bodyBase64);
     } else {
       setBase64(undefined);
     }

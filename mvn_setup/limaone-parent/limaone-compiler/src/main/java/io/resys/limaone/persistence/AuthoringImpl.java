@@ -34,6 +34,8 @@ import io.resys.limaone.authoring.DebugAny;
 import io.resys.limaone.authoring.DeleteAny;
 import io.resys.limaone.authoring.DeleteArticleLink;
 import io.resys.limaone.authoring.DeleteArticleWorkflow;
+import io.resys.limaone.authoring.DeletePrintout;
+import io.resys.limaone.authoring.DeletePrintoutPage;
 import io.resys.limaone.authoring.ModifyArticle;
 import io.resys.limaone.authoring.ModifyArticleLink;
 import io.resys.limaone.authoring.ModifyArticlePage;
@@ -170,6 +172,8 @@ public class AuthoringImpl implements Authoring {
       @Override public DeleteArticleLink deleteArticleLink() { return new DeleteArticleLinkImpl(config); }
       @Override public DeleteArticleWorkflow deleteArticleWorkflow() { return new DeleteArticleWorkflowImpl(config); }
       @Override public DeleteAny deleteAny() { return new DeleteAnyImpl(config); }
+      @Override public DeletePrintout deletePrintout() { return new DeletePrintoutImpl(config); }
+      @Override public DeletePrintoutPage deletePrintoutPage() { return new DeletePrintoutPageImpl(config); }
     };
   }
   

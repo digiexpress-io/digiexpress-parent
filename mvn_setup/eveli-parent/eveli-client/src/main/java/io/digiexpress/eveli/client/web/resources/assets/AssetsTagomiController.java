@@ -104,9 +104,9 @@ public class AssetsTagomiController {
     return composer.modifyModel().modifyPrintout().props(body).build();
   }
   @DeleteMapping("/services/{id}")
-  public Uni<Model<?>> deleteService(@PathVariable("id") String id) {
-    return composer.deleteModel().deleteAny()
-        .props(props -> props.bodyType(BodyType.PRINTOUT).id(id)).build();
+  public Uni<Model<Printout>> deleteService(@PathVariable("id") String id) {
+    return composer.deleteModel().deletePrintout()
+        .props(props -> props.printoutId(id)).build();
   }
 
   @PostMapping("/services/{id}/pdf/{locale}")
@@ -141,8 +141,8 @@ public class AssetsTagomiController {
     return composer.modifyModel().modifyPrintoutPage().props(body).build();
   }
   @DeleteMapping("/templates/{id}")
-  public Uni<Model<?>> deleteTemplate(@PathVariable("id") String id) {
-    return composer.deleteModel().deleteAny()
-        .props(props -> props.bodyType(BodyType.PRINTOUT_PAGE).id(id)).build();
+  public Uni<Model<PrintoutPage>> deleteTemplate(@PathVariable("id") String id) {
+    return composer.deleteModel().deletePrintoutPage()
+        .props(props -> props.printoutPageId(id)).build();
   }
 }

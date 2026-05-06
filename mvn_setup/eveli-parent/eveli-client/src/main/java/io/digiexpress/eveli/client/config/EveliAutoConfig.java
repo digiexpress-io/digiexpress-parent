@@ -83,6 +83,7 @@ import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties;
 import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties.DI;
 import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties.ModelDbConfig;
 import io.resys.limaone.spi.runtime.DefaultEnvironmentProperties.WSP;
+import io.resys.limaone.spi.pdf.TagomiPdfRendererImpl;
 import io.resys.limaone.spi.runtime.DefaultRuntime;
 import io.resys.thena.fs.spi.FileSystem_ThenaImpl;
 import io.resys.thena.grim.spi.GrimClientImpl;
@@ -170,12 +171,14 @@ public class EveliAutoConfig {
   @Bean
   public EnvironmentProperties environmentProperties(
       ApplicationContext context,
-      io.vertx.mutiny.sqlclient.Pool sqlDb, 
-      Optional<WSP> wsp, 
+      io.vertx.mutiny.sqlclient.Pool sqlDb,
+      Optional<WSP> wsp,
       WorkerAuthClient workerAuth,
-      FormDb formDb, 
+      FormDb formDb,
       EveliPropsAssets assetConfig,
-      EveliPropsCockpit cockpitConfig) {
+      EveliPropsCockpit cockpitConfig,
+      EveliPropsTagomi tagomiConfig,
+      ObjectMapper objectMapper) {
     
     
     final var isDevMode = Boolean.TRUE.equals(assetConfig.getEnabled()) || assetConfig.getEnabled() == null;
@@ -201,7 +204,7 @@ public class EveliAutoConfig {
       tid = false;
     }
 
-    return DefaultEnvironmentProperties.builder()
+    final var builder = DefaultEnvironmentProperties.builder()
         .developmentMode(isDevMode)
         .defaultTenantName("assets")
         .formDb(formDb)
@@ -209,8 +212,16 @@ public class EveliAutoConfig {
         .di(new DI_Impl(context))
         .tid(tid)
         .currentUser(new CurrentUserSupplier(workerAuth))
-        .tid(tid)
-        .build();
+        .tid(tid);
+
+    final var tagomiServiceUrl = tagomiConfig == null ? null : tagomiConfig.getServiceUrl();
+    if(tagomiServiceUrl != null && !tagomiServiceUrl.isBlank()) {
+      builder.tagomiPdfRenderer(new TagomiPdfRendererImpl(objectMapper, tagomiServiceUrl));
+    } else {
+      log.warn("eveli.tagomi.service-url is not configured; PDF rendering will fail with 'TagomiPdfRenderer is not configured!'");
+    }
+
+    return builder.build();
   }
 
   @Bean

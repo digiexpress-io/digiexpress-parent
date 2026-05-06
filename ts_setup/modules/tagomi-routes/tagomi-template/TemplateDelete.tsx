@@ -31,18 +31,18 @@ export const TemplateDelete: React.FC<{ onClose: () => void, serviceId: TagomiAp
   }
 
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     const templateTab = findTab('SERVICE_TEMPLATES', serviceId);
-
     const entity: TagomiApi.TemplateId = pageId;
-    backend.deleteTemplate(entity).then(async _success => {
-      if (templateTab) {
-        onTabClose(templateTab);
-      }
-      await actions.handleLoadSite();
-      enqueueSnackbar(message, { variant: 'success' });
-      onClose();
-    })
+
+    await backend.deleteTemplate(entity);
+
+    if (templateTab) {
+      onTabClose(templateTab);
+    }
+    await actions.handleLoadSite();
+    enqueueSnackbar(message, { variant: 'success' });
+    onClose();
   }
 
 

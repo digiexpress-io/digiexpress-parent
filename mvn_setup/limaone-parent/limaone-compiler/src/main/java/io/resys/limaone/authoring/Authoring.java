@@ -160,6 +160,8 @@ public interface Authoring {
     DeleteAny deleteAny();
     DeleteArticleLink deleteArticleLink();
     DeleteArticleWorkflow deleteArticleWorkflow();
+    DeletePrintout deletePrintout();
+    DeletePrintoutPage deletePrintoutPage();
   }
   
   interface CopyAsModel {

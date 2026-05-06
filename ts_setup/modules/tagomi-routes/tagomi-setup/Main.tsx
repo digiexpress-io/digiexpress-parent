@@ -15,7 +15,7 @@ const Main: React.FC<{}> = () => {
   const { activeItem } = useTagomiNav();
 
   return React.useMemo(() => {
-    if (!site.commitAt) {
+    if (!site.commitId) {
       return (<Box><EveliSpinner message={'No commits found'} /></Box>);
     }
     if (!activeItem) {

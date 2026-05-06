@@ -95,7 +95,7 @@ class SessionData implements TagomiComposerApi.Session {
     templates?: Record<TagomiApi.TemplateId, TagomiComposerApi.TemplateUpdate>,
     cache?: SiteCache;
   }) {
-    this._site = props.site ? props.site : { tagName: "", locales: {}, resources: {}, services: {}, tags: {}, templates: {} };
+    this._site = props.site ? props.site : { tagName: "", locales: {}, resources: {}, services: {}, templates: {} };
     this._cache = props.cache ? props.cache : new SiteCache(this._site);
     this._templates = props.templates ?? {};
   }
