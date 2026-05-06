@@ -156,9 +156,16 @@ export declare namespace Fs {
     services: Record<string, WrenchAstBody<FlowTaskAst>>;
     decisions: Record<string, WrenchAstBody<DecisionAst>>;
   }
+
+  export interface WrenchAstBodyChange {
+    id: string;
+    bodyType: BodyType;
+    bodySyntax?: string;
+    bodyStatment: AstCommand[]; // typo matches backend field name
+  }
   // ------------- END WRENCH --------------
 
-  export type WorldFsBody = ArticlePageBody | WrenchBody;
+  export type WorldFsBody = ArticlePageBody | WrenchBody | WrenchAstBody<FlowAst | FlowTaskAst | DecisionAst>;
 
   export interface FolderProps extends PropsBase {
     type: 'FOLDER';

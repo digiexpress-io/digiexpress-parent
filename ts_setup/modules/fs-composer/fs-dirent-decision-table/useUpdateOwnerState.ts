@@ -5,40 +5,51 @@ import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
-  name: string;
   wrenchBody: Fs.WrenchBody | undefined;
   decision: Fs.DecisionAst | undefined;
-  onChangeName: (value: string) => void;
+  onChangeCommands: (commands: Fs.AstCommand[]) => void;
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const { getDirent, fetchDirentBody } = useFsDirent();
+  const { getDirent, fetchDirentBody, applyTransientChanges } = useFsDirent();
 
   const dirent = getDirent(props.direntId);
 
-  const [name, setName] = React.useState(dirent?.name ?? '');
   const [wrenchBody, setWrenchBody] = React.useState<Fs.WrenchBody | undefined>(undefined);
   const [decision, setDecision] = React.useState<Fs.DecisionAst | undefined>(undefined);
+  const [commands, setCommands] = React.useState<Fs.AstCommand[]>([]);
 
   React.useEffect(() => {
     fetchDirentBody(props.direntId, 'DECISION_TABLE').then((body) => {
       const wb = body as Fs.WrenchBody;
       setWrenchBody(wb);
       setDecision(wb.decisions[props.direntId]?.ast);
+      setCommands(wb.decisions[props.direntId]?.commands ?? []);
     });
   }, [props.direntId]);
 
-  function onChangeName(value: string) {
-    setName(value);
-  }
+  const onChangeCommands = React.useCallback((newCommands: Fs.AstCommand[]) => {
+    const allCommands = [...commands, ...newCommands];
+    setCommands(allCommands);
+    console.log("commands", commands, props.direntId)
+
+    applyTransientChanges({
+      id: props.direntId,
+      bodyType: 'DECISION_TABLE',
+      bodyStatment: allCommands,
+    }).then((body) => {
+      const wb = body as Fs.WrenchBody;
+      setDecision(wb.decisions[props.direntId]?.ast);
+    });
+  }, [commands, props.direntId, applyTransientChanges]);
+
 
   return ({
     isDarkMode,
     dirent,
-    name,
     wrenchBody,
     decision,
-    onChangeName,
+    onChangeCommands,
   });
 };

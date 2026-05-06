@@ -18,6 +18,7 @@ export interface FsDirentContextType {
   findReferencesToDirent: (dirent: Fs.DirentBase) => ItemReferencesEntry[];
   updateDirent: (id: string, updated: Partial<Fs.DirentBase>) => void;
   fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
+  applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
 }
 
 const FsDirentContext = React.createContext<FsDirentContextType | undefined>(undefined);
@@ -25,7 +26,8 @@ const FsDirentContext = React.createContext<FsDirentContextType | undefined>(und
 export interface FsDirentProviderProps {
   persistenceUnit: {
     fetchDirents: () => Promise<Fs.DirentBase[]>;
-    fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>
+    fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
+    applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
   }
   children: React.ReactNode;
 }
@@ -72,7 +74,8 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       updateDirent,
       getParentDirent: (childId) => dirents.getParentDirent(childId),
       getArticleName: (id) => dirents.getArticleName(id),
-      fetchDirentBody: props.persistenceUnit.fetchDirentBody
+      fetchDirentBody: props.persistenceUnit.fetchDirentBody,
+      applyTransientChanges: props.persistenceUnit.applyTransientChanges,
     };
   }, [dirents, updateDirent]);
 

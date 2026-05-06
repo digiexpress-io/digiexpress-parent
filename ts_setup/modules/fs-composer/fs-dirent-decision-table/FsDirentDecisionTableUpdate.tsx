@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Menu, MenuItem, ListItemIcon, ListItemText, Divider, SvgIconProps, Box, Stack, Typography } from '@mui/material';
+import { Button, Menu, MenuItem, Divider, SvgIconProps, Box, Stack, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcon, FsIcons } from '../fs-theme';
 
@@ -35,9 +35,7 @@ export const FsDirentDecisionTableUpdate: React.FC<FsDirentDecisionTableUpdatePr
   const classes = useUtilityClasses();
   const [edit, setEdit] = React.useState<EditMode | undefined>();
 
-  const onChange = (_commands: Fs.AstCommand[]) => {
-    // TODO: wire up command dispatch
-  };
+  const onChange = ownerState.onChangeCommands;
 
   return (
     <FsDirentDecisionTableRoot className={classes.root} ownerState={ownerState}>
