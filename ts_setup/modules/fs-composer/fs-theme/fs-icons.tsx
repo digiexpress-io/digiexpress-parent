@@ -69,6 +69,12 @@ import {
   MenuBook,
   SubdirectoryArrowRight,
   TableChart,
+
+  // Decision Table Toolbar Icons
+  DoubleArrowRounded,
+  CompareArrowsRounded,
+  FileDownloadDone,
+  Upload,
 } from '@mui/icons-material';
 import { SvgIconProps, Tooltip } from '@mui/material';
 
@@ -141,6 +147,14 @@ export const FsIcons = {
   Page: Feed,
   ChildItem: SubdirectoryArrowRight,
   DecisionTable: TableChart,
+
+  // Decision Table Toolbar
+  AddHeaderIn: DoubleArrowRounded,
+  AddHeaderOut: DoubleArrowRounded,
+  AddRow: DoubleArrowRounded,
+  Organize: CompareArrowsRounded,
+  CsvDownload: FileDownloadDone,
+  CsvUpload: Upload,
 };
 
 export interface FsIconProps {

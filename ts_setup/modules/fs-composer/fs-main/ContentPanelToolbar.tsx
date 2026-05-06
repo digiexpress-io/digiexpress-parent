@@ -19,10 +19,11 @@ export const ContentPanelToolbar: React.FC<ContentPanelToolbarProps> = ({ ownerS
     <div className={className}>
       {toolbar.buttons.map((button) => (
         <Tooltip key={button.id} title={button.tooltip} placement="left" arrow>
-          <div onClick={button.onClick}
+          <div onClick={button.isEnabled ? button.onClick : undefined}
             className={`
               ${button.type === 'save' ? 'FsMain-toolbarSaveButton' : 'FsMain-toolbarButton'}
               ${button.isSelected ? ' FsMain-toolbarButtonSelected' : ''}
+              ${!button.isEnabled ? ' FsMain-toolbarButtonDisabled' : ''}
             `}
           >
             {button.badge ? (

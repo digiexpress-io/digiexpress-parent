@@ -37,7 +37,6 @@ export const FsDirentDecisionTableRoot = styled('div', {
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.body1,
     fontWeight: 500,
-    marginBottom: theme.spacing(2),
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
   },
 
@@ -45,7 +44,6 @@ export const FsDirentDecisionTableRoot = styled('div', {
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1.5),
-    padding: '8px 0',
   },
 
   [`& .${MUI_NAME}-label`]: {
@@ -55,8 +53,7 @@ export const FsDirentDecisionTableRoot = styled('div', {
 
   [`& .${MUI_NAME}-buttonContainer`]: {
     display: 'flex',
-    gap: '12px',
-    marginTop: '16px',
+    gap: theme.spacing(1),
     justifyContent: 'flex-end',
   },
 }));

@@ -5,6 +5,25 @@ import { FsIcons } from '../fs-theme/fs-icons';
 import { FsMainProps } from './FsMainProps';
 
 type ToolbarButtonType = 'toggle' | 'view' | 'save';
+type ViewSupport = Partial<Record<Fs.BodyType, Fs.SecondaryView[]>>;
+
+const SUPPORTED_VIEWS: ViewSupport = {
+  FOLDER: ['properties', 'changes', 'overview', 'article-order'],
+  ARTICLE: ['properties', 'references', 'history', 'changes', 'article-order', 'overview'],
+  ARTICLE_PAGE: ['properties', 'preview', 'history', 'changes', 'article-order'],
+  ARTICLE_TEMPLATE: ['properties', 'preview', 'history', 'changes', 'article-order'],
+  ARTICLE_WORKFLOW: ['properties', 'references', 'history', 'changes', 'article-order'],
+  ARTICLE_LINK: ['properties', 'history', 'changes', 'article-order'],
+  FLOW: ['properties', 'references', 'debug', 'errors', 'preview', 'history', 'changes', 'article-order', 'debug'],
+  FLOW_TASK: ['properties', 'references', 'debug', 'errors', 'history', 'changes', 'article-order', 'debug'],
+  DECISION_TABLE: ['properties', 'references', 'errors', 'history', 'changes', 'article-order', 'debug'],
+  DIALOB_FORM: ['properties', 'history', 'changes', 'article-order'],
+  PRINTOUT: ['properties', 'references', 'history', 'changes', 'article-order'],
+  PRINTOUT_PAGE: ['properties', 'preview', 'history', 'changes', 'article-order'],
+  PRINTOUT_RESOURCE: ['properties', 'history', 'changes', 'article-order'],
+  LOCALE: ['properties', 'history', 'changes', 'article-order'],
+  DEPLOYMENT: ['properties', 'history', 'changes', 'article-order'],
+};
 
 export interface PanelButton {
   id: string;
@@ -12,6 +31,7 @@ export interface PanelButton {
   icon: React.ElementType;
   tooltip: string;
   isSelected: boolean;
+  isEnabled: boolean;
   badge?: number;
   onClick: () => void;
 }
@@ -58,6 +78,9 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
     }
   }, [isRightPanelOpen]);
 
+  const supportedViews = activeDirentEntry?.type ? (SUPPORTED_VIEWS[activeDirentEntry.type] ?? []) : [];
+  const isViewEnabled = (view: Fs.SecondaryView) => supportedViews.includes(view);
+
   const toolbarButtons = React.useMemo((): PanelButton[] => [
     {
       id: 'toggle-panel',
@@ -65,6 +88,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       icon: isRightPanelOpen ? FsIcons.CollapseAll : FsIcons.ExpandAll,
       tooltip: isRightPanelOpen ? intl.formatMessage({ id: 'fs.main.tooltip.togglePanelCollapse' }) : intl.formatMessage({ id: 'fs.main.tooltip.togglePanelExpand' }),
       isSelected: false,
+      isEnabled: true,
       onClick: toggleRightPanel,
     },
     {
@@ -73,6 +97,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       icon: FsIcons.Info,
       tooltip: intl.formatMessage({ id: 'fs.main.tooltip.properties' }),
       isSelected: selectedView === 'properties',
+      isEnabled: isViewEnabled('properties'),
       onClick: () => handleViewChange('properties'),
     },
     {
@@ -81,6 +106,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       icon: FsIcons.Tree,
       tooltip: intl.formatMessage({ id: 'fs.main.tooltip.references' }),
       isSelected: selectedView === 'references',
+      isEnabled: isViewEnabled('references'),
       onClick: () => handleViewChange('references'),
     },
     {
@@ -89,6 +115,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       icon: FsIcons.Debug,
       tooltip: intl.formatMessage({ id: 'fs.main.tooltip.debug' }),
       isSelected: selectedView === 'debug',
+      isEnabled: isViewEnabled('debug'),
       onClick: () => handleViewChange('debug'),
     },
     {
@@ -97,6 +124,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       icon: FsIcons.Error,
       tooltip: intl.formatMessage({ id: 'fs.main.tooltip.errors' }),
       isSelected: selectedView === 'errors',
+      isEnabled: isViewEnabled('errors'),
       onClick: () => handleViewChange('errors'),
     },
     {
@@ -105,6 +133,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       icon: FsIcons.Preview,
       tooltip: intl.formatMessage({ id: 'fs.main.tooltip.preview' }),
       isSelected: selectedView === 'preview',
+      isEnabled: isViewEnabled('preview'),
       onClick: () => handleViewChange('preview'),
     },
     {
@@ -113,6 +142,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       icon: FsIcons.History,
       tooltip: intl.formatMessage({ id: 'fs.main.tooltip.history' }),
       isSelected: selectedView === 'history',
+      isEnabled: isViewEnabled('history'),
       onClick: () => handleViewChange('history'),
     },
     {
@@ -121,6 +151,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       icon: FsIcons.Help,
       tooltip: intl.formatMessage({ id: 'fs.main.tooltip.help' }),
       isSelected: selectedView === 'help',
+      isEnabled: isViewEnabled('help'),
       onClick: () => handleViewChange('help'),
     },
     {
@@ -129,6 +160,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       icon: FsIcons.ArticleOrder,
       tooltip: intl.formatMessage({ id: 'fs.main.tooltip.articleOrder' }),
       isSelected: selectedView === 'article-order',
+      isEnabled: isViewEnabled('article-order'),
       onClick: () => handleViewChange('article-order'),
     },
     {
@@ -137,6 +169,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       icon: FsIcons.Tree,
       tooltip: intl.formatMessage({ id: 'fs.main.tooltip.overview' }),
       isSelected: selectedView === 'overview',
+      isEnabled: isViewEnabled('overview'),
       onClick: () => handleViewChange('overview'),
     },
     {
@@ -145,10 +178,11 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       icon: FsIcons.Save,
       tooltip: intl.formatMessage({ id: 'fs.main.tooltip.changes' }),
       isSelected: selectedView === 'changes',
+      isEnabled: true,
       badge: 7,
       onClick: () => handleViewChange('changes'),
     },
-  ], [isRightPanelOpen, selectedView, toggleRightPanel, handleViewChange]);
+  ], [isRightPanelOpen, selectedView, toggleRightPanel, handleViewChange, supportedViews]);
 
   return {
     isDarkMode,

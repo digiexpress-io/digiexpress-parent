@@ -1,5 +1,5 @@
 import composeClasses from '@mui/utils/composeClasses';
-import { generateUtilityClass, styled } from '@mui/material';
+import { darken, generateUtilityClass, styled } from '@mui/material';
 import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
 import { FsMainProps } from './FsMainProps';
@@ -17,6 +17,7 @@ export interface FsMainClasses {
   toolbar: string;
   toolbarButton: string;
   toolbarButtonSelected: string;
+  toolbarButtonDisabled: string;
   toolbarSaveButton: string;
 }
 
@@ -34,6 +35,7 @@ export const useUtilityClasses = (_props: FsMainProps) => {
     toolbar: ['toolbar'],
     toolbarButton: ['toolbarButton'],
     toolbarButtonSelected: ['toolbarButtonSelected'],
+    toolbarButtonDisabled: ['toolbarButtonDisabled'],
     toolbarSaveButton: ['toolbarSaveButton']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -111,19 +113,25 @@ export const FsMainRoot = styled('div', {
         color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
       },
       '&:hover': {
-        backgroundColor: ownerState.isDarkMode ? FsColors.dark.border + '20' : FsColors.light.surface
+        backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.surface
       },
     },
 
     [`& .${MUI_NAME}-toolbarButtonSelected`]: {
-      backgroundColor: ownerState.isDarkMode ? FsColors.semantic.primary + '26' : FsColors.semantic.warningLight + '26',
-      border: ownerState.isDarkMode ? `1px solid ${FsColors.semantic.primary}` : `1px solid ${FsColors.semantic.warningLight}`,
+      backgroundColor: theme.palette.primary.main,
+      border: `1px solid ${theme.palette.primary.main}`,
       '& .MuiSvgIcon-root': {
-        color: ownerState.isDarkMode ? FsColors.semantic.primary : FsColors.semantic.warningLight,
+        color: theme.palette.primary.contrastText,
       },
       '&:hover': {
-        backgroundColor: ownerState.isDarkMode ? FsColors.semantic.primary + '40' : FsColors.semantic.warningLight + '40',
+        backgroundColor: darken(theme.palette.primary.main, 0.6),
       },
+    },
+
+    [`& .${MUI_NAME}-toolbarButtonDisabled`]: {
+      opacity: 0.3,
+      cursor: 'default',
+      pointerEvents: 'none',
     },
 
     [`& .${MUI_NAME}-toolbarSaveButton`]: {

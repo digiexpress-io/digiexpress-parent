@@ -14,27 +14,19 @@ const DecisionTableHeader: React.FC<{
   return (
     <TableHead sx={{ position: 'sticky', top: 0 }}>
       <TableRow>
-        <TableCell align="left" colSpan={totalCols} sx={{ fontWeight: 'bold', borderBottom: 'unset', pl: 0 }}>
+        <TableCell align="left" colSpan={totalCols} sx={{ fontWeight: 'bold', borderBottom: 'unset', p: 0 }}>
           <Box display="flex" alignItems="center">
             {children}
           </Box>
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell
-          align="center"
-          colSpan={ast.headers.acceptDefs.length + 1}
-          sx={{ backgroundColor: 'secondary.contrastText', color: 'primary.contrastText' }}
-        >
+        <TableCell align="center" colSpan={ast.headers.acceptDefs.length + 1} sx={{ backgroundColor: 'secondary.contrastText', color: 'primary.contrastText' }}>
           <Typography display="inline-flex" fontWeight="bold">
             <FormattedMessage id="decisions.table.inputs.title" />
           </Typography>
         </TableCell>
-        <TableCell
-          align="center"
-          colSpan={ast.headers.returnDefs.length}
-          sx={{ backgroundColor: 'primary.main', color: 'primary.contrastText' }}
-        >
+        <TableCell align="center" colSpan={ast.headers.returnDefs.length} sx={{ backgroundColor: 'primary.main', color: 'primary.contrastText' }}>
           <Typography display="inline-flex" fontWeight="bold">
             <FormattedMessage id="decisions.table.outputs.title" />
           </Typography>
