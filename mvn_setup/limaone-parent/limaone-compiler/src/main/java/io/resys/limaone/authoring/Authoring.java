@@ -95,6 +95,7 @@ public interface Authoring {
   interface WorldQuery {
     WorldQuery docs(BodyType ... types); // narrow down some types... otherwise queries all
     WorldQuery commitId(UUID commitId);
+    WorldQuery addObjectId(String objectId);
     Uni<ModelWorld> findAll();
     Uni<Model<?>> getOneById(String objectId);
     ModelWorld findAllSync();

@@ -57,7 +57,11 @@ public class WorldQueryImpl implements WorldQuery {
     this.commitId = commitId;
     return this;
   }
-
+  @Override
+  public WorldQuery addObjectId(String objectId) {
+    this.objectIds.add(objectId);
+    return this;
+  }
   @Override
   public WorldQuery docs(BodyType... userTypes) {
     Objects.requireNonNull(userTypes, () -> "docTypes can't be null");
@@ -127,6 +131,5 @@ public class WorldQueryImpl implements WorldQuery {
       super(msg);
     }
   }
-
 
 }

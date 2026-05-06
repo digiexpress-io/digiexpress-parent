@@ -66,14 +66,30 @@ export declare namespace Fs {
   export type WrenchProgramStatus = 'UP' | 'ERROR';
 
   export type AstCommandValue =
-    | 'SET_NAME' | 'SET_DESCRIPTION' | 'SET_HIT_POLICY'
-    | 'ADD_HEADER_IN' | 'ADD_HEADER_OUT' | 'ADD_ROW'
-    | 'SET_HEADER_TYPE' | 'SET_HEADER_REF' | 'SET_HEADER_NAME'
-    | 'SET_HEADER_SCRIPT' | 'SET_HEADER_DIRECTION' | 'SET_HEADER_EXPRESSION'
-    | 'SET_CELL_VALUE' | 'DELETE_CELL' | 'DELETE_HEADER' | 'DELETE_ROW'
-    | 'MOVE_ROW' | 'MOVE_HEADER' | 'INSERT_ROW' | 'COPY_ROW'
-    | 'IMPORT_CSV' | 'IMPORT_ORDERED_CSV'
-    | 'SET_VALUE_SET' | 'ADD_LOG';
+    | 'SET_NAME'
+    | 'SET_DESCRIPTION'
+    | 'SET_HIT_POLICY'
+    | 'ADD_HEADER_IN'
+    | 'ADD_HEADER_OUT'
+    | 'ADD_ROW'
+    | 'SET_HEADER_TYPE'
+    | 'SET_HEADER_REF'
+    | 'SET_HEADER_NAME'
+    | 'SET_HEADER_SCRIPT'
+    | 'SET_HEADER_DIRECTION'
+    | 'SET_HEADER_EXPRESSION'
+    | 'SET_CELL_VALUE'
+    | 'DELETE_CELL'
+    | 'DELETE_HEADER'
+    | 'DELETE_ROW'
+    | 'MOVE_ROW'
+    | 'MOVE_HEADER'
+    | 'INSERT_ROW'
+    | 'COPY_ROW'
+    | 'IMPORT_CSV'
+    | 'IMPORT_ORDERED_CSV'
+    | 'SET_VALUE_SET'
+    | 'ADD_LOG';
 
   export interface AstCommand {
     id?: string;

@@ -29,6 +29,7 @@ import io.resys.limaone.ast.FlowTask_AST;
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.authoring.Authoring.WorldFsBodyQuery;
+import io.resys.limaone.authoring.Authoring.WorldQuery;
 import io.resys.limaone.fs.ImmutableArticlePageBody;
 import io.resys.limaone.fs.ImmutableWrenchAstBody;
 import io.resys.limaone.fs.ImmutableWrenchBody;
@@ -82,8 +83,8 @@ public class WorldFsBodyQueryImpl implements WorldFsBodyQuery {
     
     // handle wrench assets
     if(bodyType == BodyType.FLOW || bodyType == BodyType.DECISION_TABLE || bodyType == BodyType.FLOW_TASK) {
-      return envir.getModelDb().worldQuery()
-          .docs(BodyType.FLOW_TASK, BodyType.FLOW, BodyType.DECISION_TABLE)
+    
+      return getWrenchLoadingTypes()
           .findAll().onItem().transformToUni(modelWorld -> {
             if(changes == null) {
               return getWrenchBody(modelWorld);
@@ -188,4 +189,19 @@ public class WorldFsBodyQueryImpl implements WorldFsBodyQuery {
         .map(world -> world.getEntity(entity.getId()));
   }
 
+  
+  private WorldQuery getWrenchLoadingTypes() {
+    final var query = envir.getModelDb().worldQuery();
+    
+    if(bodyType == BodyType.DECISION_TABLE) {
+      return query.docs(BodyType.DECISION_TABLE).addObjectId(id);
+    }
+    if(bodyType == BodyType.FLOW_TASK) {
+      return query.docs(BodyType.FLOW_TASK).addObjectId(id);
+    }
+    if(bodyType == BodyType.FLOW) {
+      return query.docs(BodyType.FLOW_TASK, BodyType.FLOW, BodyType.DECISION_TABLE);
+    }
+    throw new IllegalArgumentException("Unsupported body type: " + bodyType);
+  }
 }

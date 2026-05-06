@@ -32,16 +32,16 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const onChangeCommands = React.useCallback((newCommands: Fs.AstCommand[]) => {
     const allCommands = [...commands, ...newCommands];
     setCommands(allCommands);
-    console.log("commands", commands, props.direntId)
 
     applyTransientChanges({
       id: props.direntId,
       bodyType: 'DECISION_TABLE',
       bodyStatment: allCommands,
     }).then((body) => {
-      const wb = body as Fs.WrenchBody;
-      setDecision(wb.decisions[props.direntId]?.ast);
+      const wb = body as Fs.WrenchAstBody<Fs.DecisionAst>;
+      setDecision(wb.ast);
     });
+    console.log("allCommands", allCommands)
   }, [commands, props.direntId, applyTransientChanges]);
 
 

@@ -85,6 +85,11 @@ public class ModelWorldDb_File implements ModelWorldDb {
       public WorldQuery commitId(UUID commitId) {
         return this;
       }
+
+      @Override
+      public WorldQuery addObjectId(String objectId) {
+        return this;
+      }
     };
   }
 
