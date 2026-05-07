@@ -114,7 +114,7 @@ public class AssetsTagomiController {
       @PathVariable("id") String id,
       @PathVariable("locale") String locale,
       @RequestBody JsonNode props) {
-    final TagomiProgram program = runtime.getBundle().queryTagomis().id(id).getOne();
+    final TagomiProgram program = runtime.getCachelessBundle().queryTagomis().id(id).getOne();
     return program.run(locale, new JsonObject(props.toString()));
   }
 

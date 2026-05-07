@@ -99,6 +99,11 @@ public class ImmutableBundle implements Bundle {
   }
 
   @Override
+  public Bundle withCacheless() {
+    return this;
+  }
+
+  @Override
   public BundleQuery<WorkflowProgram> queryWorkflows() {
     return new BundleQueryImpl<>(workflows);
   }

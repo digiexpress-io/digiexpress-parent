@@ -35,6 +35,7 @@ public class DefaultRuntime implements io.resys.limaone.program.Runtime {
   private static final long serialVersionUID = 119708670216052569L;
   private final EnvironmentProperties envir;
   private final Bundle bundle;
+  private Bundle cachelessBundle;
 
   public DefaultRuntime(EnvironmentProperties envir, BundleConstructor bundle) {
     super();
@@ -66,6 +67,13 @@ public class DefaultRuntime implements io.resys.limaone.program.Runtime {
   @Override
   public Bundle getBundle() {
     return bundle;
+  }
+  @Override
+  public Bundle getCachelessBundle() {
+    if (cachelessBundle == null) {
+      cachelessBundle = bundle.withCacheless();
+    }
+    return cachelessBundle;
   }
   public static DefaultRuntime of(EnvironmentProperties envir) {
     return new DefaultRuntime(envir, new BundleConstructor_Lazy(envir));

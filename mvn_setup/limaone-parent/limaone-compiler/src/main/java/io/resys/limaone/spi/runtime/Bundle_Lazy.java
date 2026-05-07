@@ -57,13 +57,16 @@ public class Bundle_Lazy implements Bundle {
   
   
   public Bundle_Lazy(EnvironmentProperties envir, String tid, Runtime runtime) {
+    this(envir, tid, runtime, 30);
+  }
+  public Bundle_Lazy(EnvironmentProperties envir, String tid, Runtime runtime, int seconds) {
     super();
     this.envir = envir;
     this.tid = tid;
     this.runtime = runtime;
     this.debounce = Caffeine.newBuilder()
-        .expireAfterWrite(Duration.ofSeconds(30))
-        .build();
+            .expireAfterWrite(Duration.ofSeconds(seconds))
+            .build();
   }
   
   // delegate-s
@@ -73,7 +76,7 @@ public class Bundle_Lazy implements Bundle {
   @Override public OffsetDateTime getCreated() { return await().getCreated(); }
   @Override public OffsetDateTime getStartDate() { return await().getStartDate(); }
   @Override public OffsetDateTime getEndDate() { return await().getEndDate(); }
-  
+  @Override public Bundle withCacheless() { return new Bundle_Lazy(envir, tid, runtime, 5); }
   @Override public BundleQuery<DialobProgram> queryDialobs() { return await().queryDialobs(); }
   @Override public BundleQuery<WorkflowProgram> queryWorkflows() { return await().queryWorkflows(); }
   @Override public BundleQuery<ArticleProgram> queryArticles() { return await().queryArticles(); }

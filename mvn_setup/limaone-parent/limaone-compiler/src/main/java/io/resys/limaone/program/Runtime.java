@@ -44,6 +44,8 @@ public interface Runtime extends Serializable {
 
   Bundle getBundle();
 
+  Bundle getCachelessBundle();
+
   /**
    * @param refId tenant id or lexical name or tenant member id(aka user)
    * @return
