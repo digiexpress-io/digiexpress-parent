@@ -179,6 +179,59 @@ export declare namespace Fs {
     bodySyntax?: string;
     bodyStatment: AstCommand[]; // typo matches backend field name
   }
+
+  export type AstBodyType = "FLOW"
+    | "FLOW_TASK"
+    | "DECISION_TABLE"
+    | "TAG"
+    | "BRANCH";
+
+  export type ValueType = "TIME"
+    | "DATE"
+    | "DATE_TIME"
+    | "INSTANT"
+    | "PERIOD"
+    | "DURATION"
+    | "STRING"
+    | "INTEGER"
+    | "LONG"
+    | "BOOLEAN"
+    | "PERCENT"
+    | "OBJECT"
+    | "ARRAY"
+    | "DECIMAL"
+    | "MAP"
+    | "FLOW_CONTEXT"
+    | 'INTL';
+
+  export type HitPolicy = "FIRST" | "ALL";
+
+  export interface AstBody {
+    name: string;
+    description?: string;
+    headers: Headers;
+    bodyType: AstBodyType;
+    parseTree?: { value: string }
+  }
+
+  // decision table
+  export interface AstDecision extends AstBody {
+    headerTypes: string[];
+    headerExpressions: Record<ValueType, string[]>;
+    hitPolicy: HitPolicy;
+    rows: AstDecisionRow[];
+  }
+  export interface AstDecisionRow {
+    id: string;
+    order: number;
+    cells: AstDecisionCell[];
+  }
+  export interface AstDecisionCell {
+    id: string;
+    header: string;
+    value?: string;
+  }
+
   // ------------- END WRENCH --------------
 
   export type WorldFsBody = ArticlePageBody | WrenchBody | WrenchAstBody<FlowAst | FlowTaskAst | DecisionAst>;

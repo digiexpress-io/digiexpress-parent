@@ -1,28 +1,63 @@
-import React from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import { Fs } from '@dxs-ts/fs-api';
-import { FormattedMessage } from 'react-intl';
+import React from 'react'
 
-interface NameDescHitPolicyEditProps {
-  decision: Fs.DecisionAst;
+import { ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+
+import * as Burger from '@dxs-ts/eveli-primitives';
+import { FormattedMessage } from 'react-intl';
+import { CancelButton } from '@dxs-ts/eveli-primitives';
+import { Fs } from '@dxs-ts/fs-api';
+
+const hitPolicyOptions = [
+  { key: 'ALL', value: 'ALL', text: 'ALL' },
+  { key: 'FIRST', value: 'FIRST', text: 'FIRST' }
+];
+
+
+const NameDescHitPolicyEdit: React.FC<{
+  decision: Fs.AstDecision;
   onClose: () => void;
   onChange: (commands: Fs.AstCommand[]) => void;
-}
+}> = ({ onChange, decision, onClose }) => {
+  const [name, setName] = React.useState(decision.name);
+  const [desc, setDesc] = React.useState(decision.description);
+  const [hitpolicy, setHitpolicy] = React.useState<string>(decision.hitPolicy);
 
-const NameDescHitPolicyEdit: React.FC<NameDescHitPolicyEditProps> = ({ onClose }) => {
   return (
     <Dialog open={true} onClose={onClose}>
       <DialogTitle><FormattedMessage id='decisions.toolbar.nameAndHitpolicy' /></DialogTitle>
       <DialogContent>
-        {/* TODO */}
+        <Burger.TextField label='decisions.name' value={name} onChange={setName} />
+        <Burger.TextField label='decisions.desc' value={desc ? desc : ""} onChange={setDesc} />
+        <Burger.Select label="decisions.hitpolicy" helperText="decisions.hitpolicy.helper"
+          selected={hitpolicy}
+          onChange={setHitpolicy}
+          items={hitPolicyOptions.map((type) => ({
+            id: type.value,
+            value: (<ListItemText primary={type.text} />)
+          }))} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}><FormattedMessage id='button.cancel' /></Button>
-        <Button onClick={onClose}><FormattedMessage id='buttons.apply' /></Button>
+        <CancelButton onClick={onClose} />
+        <Button onClick={() => {
+          const commands: Fs.AstCommand[] = [];
+          if (name !== decision.name) {
+            commands.push({ type: "SET_NAME", value: name, id: "" });
+          }
+          if (hitpolicy !== decision.hitPolicy) {
+            commands.push({ type: "SET_HIT_POLICY", value: hitpolicy, id: "" });
+          }
+          if (desc !== decision.description) {
+            commands.push({ type: "SET_DESCRIPTION", value: desc, id: "" });
+          }
+          if (commands.length > 0) {
+            onChange(commands);
+          }
+          onClose();
+        }}>
+          <FormattedMessage id='buttons.apply' />
+        </Button>
       </DialogActions>
-    </Dialog>
-  );
-};
+    </Dialog>);
+}
 
-export type { NameDescHitPolicyEditProps };
 export { NameDescHitPolicyEdit };

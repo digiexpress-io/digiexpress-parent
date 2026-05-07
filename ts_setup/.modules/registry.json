@@ -1418,7 +1418,6 @@
         "dependencies": {
           "@dxs-ts/eveli-primitives": "*",
           "@dxs-ts/fs-api": "*",
-          "@dxs-ts/wrench-api": "*",
           "react-markdown": "*"
         },
         "peerDependencies": {
@@ -1442,7 +1441,6 @@
       "dependencies": [
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
-        "@dxs-ts/wrench-api",
         "react-markdown",
         "react",
         "react-intl",
@@ -1479,8 +1477,7 @@
       ],
       "internalDependencies": [
         "@dxs-ts/eveli-primitives",
-        "@dxs-ts/fs-api",
-        "@dxs-ts/wrench-api"
+        "@dxs-ts/fs-api"
       ],
       "actualDependencies": [
         "react",
@@ -1488,6 +1485,7 @@
         "react-intl",
         "@dxs-ts/fs-api",
         "@mui/utils",
+        "@dxs-ts/eveli-primitives",
         "@dxs-ts/wrench-api",
         "@monaco-editor/react",
         "@uiw/react-md-editor",
@@ -1510,12 +1508,13 @@
       ],
       "actualInternalDependencies": [
         "@dxs-ts/fs-api",
+        "@dxs-ts/eveli-primitives",
         "@dxs-ts/wrench-api"
       ],
-      "missingDependencies": [],
-      "unusedDependencies": [
-        "@dxs-ts/eveli-primitives"
-      ]
+      "missingDependencies": [
+        "@dxs-ts/wrench-api"
+      ],
+      "unusedDependencies": []
     },
     "@dxs-ts/gamut-api": {
       "name": "@dxs-ts/gamut-api",
@@ -4095,8 +4094,7 @@
       "@dxs-ts/fs-api": [],
       "@dxs-ts/fs-composer": [
         "@dxs-ts/eveli-primitives",
-        "@dxs-ts/fs-api",
-        "@dxs-ts/wrench-api"
+        "@dxs-ts/fs-api"
       ],
       "@dxs-ts/gamut-api": [
         "@dxs-ts/gamut-intl",
@@ -4488,7 +4486,6 @@
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-routes",
-        "@dxs-ts/fs-composer",
         "@dxs-ts/eveli-ide",
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/wrench-routes"
@@ -4655,6 +4652,6 @@
       ]
     }
   },
-  "checksum": "5f81df19c18569a4775ec1afb8fd1c7de1d93de4befd584148e509dbec849bb9",
-  "generatedAt": "2026-05-06T10:21:11.712Z"
+  "checksum": "3335eea5f2eb7937e0f088e7537ab5ae97faf9acd4a186a408073c73116a835f",
+  "generatedAt": "2026-05-06T11:18:13.073Z"
 }

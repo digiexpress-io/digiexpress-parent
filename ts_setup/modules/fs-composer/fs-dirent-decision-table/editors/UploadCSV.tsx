@@ -1,7 +1,6 @@
 import React from 'react';
 import { TextareaAutosize, Button, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, Box, Typography, TextField } from '@mui/material';
 import { Fs } from '@dxs-ts/fs-api';
-import { HdesApi } from '@dxs-ts/wrench-api';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 
@@ -42,7 +41,7 @@ const UploadCSV: React.FC<UploadCSVProps> = ({ onChange, onClose }) => {
       <DialogActions>
         <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
         <Button onClick={() => {
-          const commands: HdesApi.AstCommand[] = [];
+          const commands: Fs.AstCommand[] = [];
           if (csv.trim().length > 0) {
             commands.push({ type: 'IMPORT_ORDERED_CSV', value: csv, id: delimiter === 'custom' ? customDelimiter : delimiter });
           }
