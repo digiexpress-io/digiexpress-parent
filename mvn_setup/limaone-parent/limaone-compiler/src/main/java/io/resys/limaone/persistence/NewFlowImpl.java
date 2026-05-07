@@ -85,8 +85,8 @@ inputs:
     debugValue: "1"
 tasks:
   - First task:
-    id: "first_task"
-    then: end
+      id: "first_task"
+      then: end
 """
     .replace("{id}", Optional.ofNullable(props.getName()).orElse("first_flow"))
     .replace("{desc}", Optional.ofNullable(props.getDesc()).orElse("my first flow"));

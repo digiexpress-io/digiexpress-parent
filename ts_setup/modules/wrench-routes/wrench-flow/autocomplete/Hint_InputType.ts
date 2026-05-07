@@ -12,7 +12,7 @@ export class Hint_InputType {
       return result;
     }
 
-    const isUndefined = node.type === 'FLOW_INPUT' && !HintUtils.get("type", node.value);
+    const isUndefined = node.type === 'FLOW_INPUT' && !HintUtils.get("type", node.value) && HintUtils.isEmptyLine(container);
     const isChange = node.type === 'FLOW_INPUT_ELEMENT' && node.value.keyword === 'type';
 
     if(isUndefined || isChange) {

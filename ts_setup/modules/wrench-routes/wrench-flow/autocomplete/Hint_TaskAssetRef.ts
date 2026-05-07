@@ -12,7 +12,7 @@ export class Hint_TaskAssetRef {
     }
 
     if (container.navDesc.node.type === 'FLOW_TASK_ASSET_REF' && container.navDesc.description === 'ON_ELEMENT') {
-      const task = container.navDesc.node.parent?.value!;
+      const task = HintUtils.findAncestor(container.navDesc.node, ['FLOW_TASK'])?.value!;
       const service = task["service"];
       const decisionTable = task["decisionTable"];
       const target = decisionTable ? decisionTable : service;

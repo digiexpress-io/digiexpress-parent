@@ -63,7 +63,8 @@ export class AstNav {
     
 
     this._currentColumn = modelPosition.column - 1;
-    this._currentLine = modelPosition.lineNumber - 1;
+    // 1-based - matches backend's CST YAML parser's lineNumber, which is 1-based
+    this._currentLine = modelPosition.lineNumber;
     this._modelPosition = modelPosition;
     this._currentLineContent = model.getLineContent(modelPosition.lineNumber);
     this._currentLineEOL = this._currentLineContent.length == this._currentColumn;

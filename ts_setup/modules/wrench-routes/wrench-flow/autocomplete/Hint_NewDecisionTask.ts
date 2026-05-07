@@ -11,9 +11,29 @@ export class Hint_NewDecisionTask {
       return result;
     }
 
-    const isTasks = node.type === 'FLOW_TASKS' || (node.type === 'FLOW_TASK_ASSET_INPUTS' && node.isComplete);
-    const isTask = node.type === 'FLOW_TASK' && HintUtils.get('id', node.value) && HintUtils.get('then', node.value);
-    
+    if (!HintUtils.isEmptyLine(container)) {
+      return result;
+    }
+
+    const tasksAnc = HintUtils.findAncestor(container.navDesc.node, ['FLOW_TASKS']);
+    if (!tasksAnc) {
+      return result;
+    }
+    const taskAnc = HintUtils.findAncestor(container.navDesc.node, ['FLOW_TASK']);
+
+    let isTasks = false;
+    let isTask = false;
+
+    if (!taskAnc) {
+      isTasks = true;
+    } else if (HintUtils.isAfterChildrenOf(container, taskAnc.value)) {
+      if (HintUtils.taskHasBody(taskAnc.value)) {
+        isTasks = true;
+      } else if (HintUtils.get('id', taskAnc.value) && HintUtils.get('then', taskAnc.value)) {
+        isTask = true;
+      }
+    }
+
     if (!(isTasks || isTask)) {
       return result;
     }

@@ -19,6 +19,7 @@ import { Hint_NewDecisionTask } from './Hint_NewDecisionTask';
 import { Hint_TaskThen } from './Hint_TaskThen';
 import { Hint_TaskId } from './Hint_TaskId';
 import { Hint_TaskAssetRef } from './Hint_TaskAssetRef';
+import { Hint_TaskAssetCollection } from './Hint_TaskAssetCollection';
 import { Hint_TaskBodyMapping } from './Hint_TaskBodyMapping';
 import { Hint_TaskInputMapping } from './Hint_TaskInputMapping';
 
@@ -90,6 +91,7 @@ export class CompletionBuilder {
     result.push(...Hint_TaskThen.accept(container));
     result.push(...Hint_TaskId.accept(container));
     result.push(...Hint_TaskAssetRef.accept(container));
+    result.push(...Hint_TaskAssetCollection.accept(container));
     result.push(...Hint_TaskBodyMapping.accept(container));
     result.push(...Hint_TaskInputMapping.accept(container));
 

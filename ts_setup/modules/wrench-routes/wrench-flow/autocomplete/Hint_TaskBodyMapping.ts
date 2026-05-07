@@ -2,6 +2,7 @@ import { languages } from 'monaco-editor';
 import { Container } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
 import { HdesApi } from '@dxs-ts/wrench-api';
+import { HintUtils } from './HintUtils';
 
 
 export class Hint_TaskBodyMapping {
@@ -15,6 +16,10 @@ export class Hint_TaskBodyMapping {
     const node = container.navDesc.node;
     const isInputs = node.type === 'FLOW_TASK_ASSET_INPUTS';
     if (!isInputs) {
+      return result;
+    }
+
+    if (!HintUtils.isEmptyLine(container)) {
       return result;
     }
 

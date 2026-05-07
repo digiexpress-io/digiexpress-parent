@@ -19,7 +19,11 @@ export class Hint_InputDebugValue {
     if (HintUtils.get("debugValue", node.value)) {
       return result;
     }
-  
+
+    if (!HintUtils.isEmptyLine(container)) {
+      return result;
+    }
+
     result.push(new CompletionItemBuilder(container.model, container.modelPosition)
       .id("debugValue")
       .addField("debugValue", { indent: 4, value: "\"\"" })

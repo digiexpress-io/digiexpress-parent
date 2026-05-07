@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-import MonacoReact, { useMonaco, OnChange, BeforeMount } from '@monaco-editor/react';
+import MonacoReact, { useMonaco, OnChange, OnMount, BeforeMount } from '@monaco-editor/react';
 import * as monaco_editor from 'monaco-editor';
 
 import { HdesApi } from '@dxs-ts/wrench-api';
@@ -80,6 +80,8 @@ export const FlowCodeEditor: React.FC<{
   const { messages, onChange, ast } = props;
   const monaco: typeof monaco_editor | null = useMonaco();
   const astRef = React.useRef<HdesApi.AstFlow | undefined>(ast);
+  // tracks the registered provider so it can be disposed
+  const flowYamlCompletionRef = React.useRef<monaco_editor.IDisposable | null>(null);
   const [guided, setGuided] = React.useState<CompletionDialogProps>();
 
   React.useEffect(function loadEditor() {
@@ -129,36 +131,48 @@ export const FlowCodeEditor: React.FC<{
     astRef.current = ast;
   }, [ast]);
 
-  const beforeMount: BeforeMount = React.useCallback((editor) => {
-
-    editor.editor.addCommand({
-      id: EXTERNAL_DIALOG, 
+  const beforeMount: BeforeMount = React.useCallback((monaco) => {
+    monaco.editor.addCommand({
+      id: EXTERNAL_DIALOG,
       run: function(...args) {
-        setGuided(args[1].autocomplete)
-      }
+        setGuided(args[1].autocomplete);
+      },
     });
+  }, []);
 
-    editor.languages.registerCompletionItemProvider('yaml', {
-      provideCompletionItems: function (model, position, context) {
-
-        let suggestions = astRef.current ? new CompletionBuilder()
+  const handleEditorMount: OnMount = React.useCallback((editor, monaco) => {
+    const model = editor.getModel();
+    flowYamlCompletionRef.current?.dispose();
+    flowYamlCompletionRef.current = monaco.languages.registerCompletionItemProvider('yaml', {
+      provideCompletionItems(m, position) {
+        // Monaco registers completion providers per language, not per editor, so this callback fires for every YAML model in the workspace
+        // so only serve suggestions for this editor's own model
+        if (!astRef.current || !model || m !== model) {
+          return { suggestions: [] };
+        }
+        const suggestions = new CompletionBuilder()
           .withFlow(astRef.current)
           .withSite(site)
-          .withModel(model)
+          .withModel(m)
           .withPosition(position)
-          .build() : [];
-
+          .build();
         return { suggestions };
-      }
+      },
     });
 
-  }, []); 
+    // dispose the provider when the editor is disposed
+    editor.onDidDispose(() => {
+      flowYamlCompletionRef.current?.dispose();
+      flowYamlCompletionRef.current = null;
+    });
+  }, []);
 
   return (
   <>
     {guided && monaco ? <SelectOrCreateAsset onClose={() => setGuided(undefined)} flow={props.flow} guided={guided} cm={monaco}/> : undefined}
     <MonacoReact 
       beforeMount={beforeMount}
+      onMount={handleEditorMount}
       onChange={handleChange}
       value={props.src} 
       options={{
