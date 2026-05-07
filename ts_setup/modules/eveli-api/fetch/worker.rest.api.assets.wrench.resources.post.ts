@@ -18,7 +18,7 @@ function hook(props: {}) {
       body: HdesApi.AstCommand[] | undefined, 
       branchName: string | undefined): Promise<HdesApi.Site> => {
       return params
-        .fetch(url({}), { method, body: JSON.stringify({ name, desc, type, body }), headers: { ...headers, ...( branchName ? { 'Branch-Name': branchName } : {})} })
+        .fetch(url({}), { method, body: JSON.stringify({ name, desc, bodyType: type, bodyStatment: body ?? [] }), headers: { ...headers, ...( branchName ? { 'Branch-Name': branchName } : {})} })
         .then(resp => resp.json());
     }
   }
