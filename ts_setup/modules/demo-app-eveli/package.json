@@ -28,11 +28,13 @@
     "@dxs-ts/eveli-primitives": "*",
     "@dxs-ts/fs-api": "*",
     "@dxs-ts/fs-composer": "*",
+    "@dxs-ts/fs-nav": "*",
     "@dxs-ts/eveli-intl": "*",
     "@dxs-ts/eveli-routes": "*",
     "@dxs-ts/xui-datetime": "*",
     "@dxs-ts/eveli-ide": "*",
 
+    
     "@dxs-ts/cockpit-api": "*",
     "@dxs-ts/cockpit-composer": "*",
     "@dxs-ts/task-api": "*",

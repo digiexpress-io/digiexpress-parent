@@ -352,6 +352,7 @@
           "@dxs-ts/eveli-primitives": "*",
           "@dxs-ts/fs-api": "*",
           "@dxs-ts/fs-composer": "*",
+          "@dxs-ts/fs-nav": "*",
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/eveli-routes": "*",
           "@dxs-ts/xui-datetime": "*",
@@ -406,6 +407,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-composer",
+        "@dxs-ts/fs-nav",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -475,6 +477,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-composer",
+        "@dxs-ts/fs-nav",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -536,6 +539,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-composer",
+        "@dxs-ts/fs-nav",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -2628,6 +2632,7 @@
           "@dxs-ts/eveli-primitives": "*",
           "@dxs-ts/fs-api": "*",
           "@dxs-ts/fs-composer": "*",
+          "@dxs-ts/fs-nav": "*",
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/eveli-routes": "*",
           "@dxs-ts/xui-datetime": "*",
@@ -2673,6 +2678,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-composer",
+        "@dxs-ts/fs-nav",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -2712,6 +2718,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-composer",
+        "@dxs-ts/fs-nav",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -2774,6 +2781,7 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-composer",
+        "@dxs-ts/fs-nav",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/xui-table",
         "@dxs-ts/task-composer-v1",
@@ -4066,6 +4074,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-composer",
+        "@dxs-ts/fs-nav",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -4242,6 +4251,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-composer",
+        "@dxs-ts/fs-nav",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -4395,8 +4405,10 @@
         "@dxs-ts/eveli-ide"
       ],
       "@dxs-ts/fs-nav": [
+        "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-routes",
-        "@dxs-ts/fs-composer"
+        "@dxs-ts/fs-composer",
+        "@dxs-ts/eveli-ide"
       ],
       "@dxs-ts/gamut-api": [
         "@dxs-ts/eveli-demo-app",
@@ -4642,6 +4654,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-composer",
+        "@dxs-ts/fs-nav",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -4727,6 +4740,6 @@
       ]
     }
   },
-  "checksum": "4ba4e72cfd51f88d14c94ae1b0a639f1237daf40146d0cf637df9b5d6f9fddbb",
-  "generatedAt": "2026-05-08T10:09:01.047Z"
+  "checksum": "01a47ed62054fb9d997b5d895f817a465af72be9fdb918d9778a76a81fcc9d05",
+  "generatedAt": "2026-05-08T10:46:06.307Z"
 }

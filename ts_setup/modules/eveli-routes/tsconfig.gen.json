@@ -53,9 +53,6 @@
       "@dxs-ts/fs-api": [
         "../fs-api/index.ts"
       ],
-      "@dxs-ts/fs-nav": [
-        "../fs-nav/index.ts"
-      ],
       "@dxs-ts/fs-composer": [
         "../fs-composer/index.ts"
       ],
@@ -94,6 +91,9 @@
       ],
       "@dxs-ts/xui-datetime": [
         "../xui-datetime/index.ts"
+      ],
+      "@dxs-ts/fs-nav": [
+        "../fs-nav/index.ts"
       ]
     }
   },
@@ -148,9 +148,6 @@
       "path": "../fs-api"
     },
     {
-      "path": "../fs-nav"
-    },
-    {
       "path": "../fs-composer"
     },
     {
@@ -188,16 +185,19 @@
     },
     {
       "path": "../xui-datetime"
+    },
+    {
+      "path": "../fs-nav"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-05-08T08:17:31.122Z",
+    "at": "2026-05-08T10:43:19.741Z",
     "forModule": "@dxs-ts/eveli-routes",
-    "fromRegistry": "18156dcb510f",
+    "fromRegistry": "6b447286d2ad",
     "alias": {
       "@dxs-ts/eveli-routes": [
-        "../xui-datetime"
+        "../fs-nav"
       ]
     }
   }
