@@ -1,5 +1,5 @@
 import { Fs } from '@dxs-ts/fs-api';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 
 
 export interface CreateOwnerState {
@@ -18,7 +18,7 @@ function getLocationPath(parentFolder: Fs.DirentBase | undefined): string {
 }
 
 export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined }): CreateOwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
   const locationPath = getLocationPath(props.parentFolder);
   return { isDarkMode, locationPath };
 };

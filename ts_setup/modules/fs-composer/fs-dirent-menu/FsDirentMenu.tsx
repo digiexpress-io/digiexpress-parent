@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 import { useUtilityClasses, FsDirentMenuRoot as Root, MENU_HEIGHT } from './useUtilityClasses';
 import { FsDirentMenuMain } from './FsDirentMenuMain';
 import { FsDirentMenuSub } from './FsDirentMenuSub';
@@ -17,7 +17,7 @@ interface FsDirentMenuProps {
 
 export const FsDirentMenu: React.FC<FsDirentMenuProps> = (props) => {
   const classes = useUtilityClasses();
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
   const { getDirent } = useFsDirent();
   const { shouldExpandUpward, vertical } = usePositioningStrategy(props.anchorPosition, MENU_HEIGHT);
   const direntEntry = props.dirent ? getDirent(props.dirent.id) : undefined;

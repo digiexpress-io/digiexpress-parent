@@ -1,4 +1,4 @@
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 
 
 export interface CreateOwnerState {
@@ -6,7 +6,7 @@ export interface CreateOwnerState {
 }
 
 export const useCreateOwnerState = (): CreateOwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
 
   return ({ isDarkMode });
 };

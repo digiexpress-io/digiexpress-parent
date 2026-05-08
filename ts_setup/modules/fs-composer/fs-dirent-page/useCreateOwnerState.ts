@@ -1,6 +1,7 @@
 import React from 'react';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 
 
@@ -19,7 +20,7 @@ export interface CreateOwnerState {
 }
 
 export const useCreateOwnerState = (): CreateOwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
   const { selectOptions, getArticleName, getConfigOptionsForType } = useFsDirent();
 

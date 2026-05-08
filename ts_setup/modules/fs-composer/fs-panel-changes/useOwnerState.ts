@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFsDirent } from '@dxs-ts/fs-api';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 import { FsPanelChangesProps } from './FsPanelChangesProps';
 import { FsColors } from '../fs-theme';
 
@@ -14,7 +14,7 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (_props: FsPanelChangesProps): OwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
   const { dirents, getDirent } = useFsDirent();
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 

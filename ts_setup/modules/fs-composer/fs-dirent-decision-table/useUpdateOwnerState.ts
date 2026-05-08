@@ -1,6 +1,6 @@
 import React from 'react';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 
 
 export interface UpdateOwnerState {
@@ -12,7 +12,7 @@ export interface UpdateOwnerState {
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
   const { getDirent, fetchDirentBody, applyTransientChanges } = useFsDirent();
 
   const dirent = getDirent(props.direntId);

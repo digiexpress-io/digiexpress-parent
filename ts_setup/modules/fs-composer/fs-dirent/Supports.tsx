@@ -3,6 +3,7 @@ import { Badge, Box, ListItemText, Typography } from '@mui/material';
 
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 
 import { useUtilityClasses } from './useUtilityClasses';
 import { FsIcons, FsIcon, FsColors, getDirentColor } from '../fs-theme';
@@ -42,7 +43,7 @@ function ConfigIcon(props: { type: Fs.ConfigOption, className: string }) {
 }
 
 export const DirentDecorator = (props: { dirent: Fs.DirentBase, children: React.ReactNode }) => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
   const { getDirent } = useFsDirent();
   const { dirent, children } = props;
   const direntEntry = getDirent(dirent.id);

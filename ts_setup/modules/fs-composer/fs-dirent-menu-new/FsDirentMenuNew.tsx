@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, SvgIconProps } from '@mui/material';
+import { MenuItem, Typography, SvgIconProps } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
@@ -45,10 +45,10 @@ export const FsDirentMenuNew: React.FC<FsDirentMenuNewProps> = (props) => {
     <FsDirentMenuNewRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.direntNew.title' })}</Typography>
       {creatableTypes.map((type) => (
-        <div key={type} className={classes.listItem} onClick={() => handleTypeClick(type)}>
+        <MenuItem key={type} className={classes.listItem} onClick={() => handleTypeClick(type)}>
           <FsIcon icon={DIRENT_TYPE_ICONS[type]} small />
           {intl.formatMessage({ id: `fs.direntNew.type.${type.toLocaleLowerCase()}` })}
-        </div>
+        </MenuItem>
       ))}
     </FsDirentMenuNewRoot>
   );

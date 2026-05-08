@@ -1,5 +1,5 @@
 import { FsDirentTextFieldProps } from './FsDirentTextFieldProps';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 
 export interface OwnerState {
   isDarkMode: boolean;
@@ -8,7 +8,7 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (props: FsDirentTextFieldProps): OwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
   const isRequired = props.required === true;
   const showRequiredError = isRequired && !props.value?.trim();
 

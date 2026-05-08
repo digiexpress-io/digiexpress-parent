@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 import type { AssetTypeFilter, FilterData } from './search-helpers';
 import { FsSearchProps } from './FsSearchProps';
 import { useFsSearch } from './FsSearchProvider';
@@ -23,7 +23,7 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (_props: FsSearchProps): OwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
   const { search } = useFsSearch();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {

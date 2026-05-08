@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 
 
 export interface CreateOwnerState {
@@ -9,7 +9,7 @@ export interface CreateOwnerState {
 }
 
 export const useCreateOwnerState = (): CreateOwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   function onToggleExpanded() {

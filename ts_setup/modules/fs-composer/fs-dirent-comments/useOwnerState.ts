@@ -1,5 +1,5 @@
 import { FsDirentCommentsProps } from './FsDirentCommentsProps';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 
 
 export interface OwnerState {
@@ -7,7 +7,7 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (_props: FsDirentCommentsProps): OwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
 
   return ({ isDarkMode });
 }

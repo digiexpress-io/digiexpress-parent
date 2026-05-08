@@ -1,12 +1,12 @@
 import { FsDirentRenameProps } from './FsDirentRenameProps';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 
 export interface OwnerState {
   isDarkMode: boolean;
 }
 
 export const useOwnerState = (_props: FsDirentRenameProps): OwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
 
   return ({ isDarkMode });
 };

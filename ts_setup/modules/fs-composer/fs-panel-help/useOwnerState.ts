@@ -1,4 +1,4 @@
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 import { FsPanelHelpProps } from "./FsPanelHelpProps";
 
 
@@ -8,7 +8,7 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (_props: FsPanelHelpProps): OwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
 
   return ({ isDarkMode });
 }

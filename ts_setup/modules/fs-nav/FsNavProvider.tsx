@@ -1,10 +1,8 @@
 import React from 'react';
 
 interface FsNavContextType {
-  isDarkMode: boolean;
   expandedIds: string[];
   isExpanded: (id: string) => boolean;
-  setIsDarkMode: (isDarkMode: boolean) => void;
   setExpanded: (id: string, value: boolean) => void;
   setExpandedBatch: (ids: string[], value: boolean) => void;
   collapseAll: () => void;
@@ -17,7 +15,6 @@ export interface FsNavProviderProps {
 }
 
 export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
-  const [isDarkMode, setIsDarkMode] = React.useState(false);
   const [expandedIds, setExpandedIds] = React.useState<string[]>([]);
 
   const setExpanded = React.useCallback((id: string, isExpanded: boolean) => {
@@ -40,13 +37,11 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
 
   const contextValue: FsNavContextType = React.useMemo(() => ({
     isExpanded: (id) => expandedIds.includes(id),
-    isDarkMode,
-    setIsDarkMode,
     expandedIds,
     collapseAll,
     setExpanded,
     setExpandedBatch,
-  }), [isDarkMode, expandedIds, setExpanded, collapseAll, setExpandedBatch]);
+  }), [expandedIds, setExpanded, collapseAll, setExpandedBatch]);
 
   return (
     <FsNavContext.Provider value={contextValue}>

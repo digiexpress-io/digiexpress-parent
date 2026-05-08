@@ -1,6 +1,6 @@
 import React from 'react';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 
 
 export interface CreateOwnerState {
@@ -11,7 +11,7 @@ export interface CreateOwnerState {
 }
 
 export const useCreateOwnerState = (): CreateOwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
   const { selectOptions } = useFsDirent();
   const locales = selectOptions.languages;
 

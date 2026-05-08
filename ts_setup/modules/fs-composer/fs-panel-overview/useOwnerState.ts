@@ -1,6 +1,6 @@
 import React from 'react';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 import { FsPanelOverviewProps } from './FsPanelOverviewProps';
 
 
@@ -52,7 +52,7 @@ function collectRows(
 }
 
 export const useOwnerState = (_props: FsPanelOverviewProps): OwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
   const { dirents, getDirent, getArticleName } = useFsDirent();
 
   const rows = React.useMemo(

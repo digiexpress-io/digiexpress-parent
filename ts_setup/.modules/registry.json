@@ -1424,6 +1424,7 @@
           "@dxs-ts/eveli-primitives": "*",
           "@dxs-ts/fs-api": "*",
           "@dxs-ts/fs-nav": "*",
+          "js-file-download": "*",
           "react-markdown": "*"
         },
         "peerDependencies": {
@@ -1448,6 +1449,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-nav",
+        "js-file-download",
         "react-markdown",
         "react",
         "react-intl",
@@ -1471,6 +1473,7 @@
         "elkjs"
       ],
       "externalDependencies": [
+        "js-file-download",
         "react-markdown",
         "react",
         "react-intl",
@@ -1494,6 +1497,7 @@
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-nav",
         "@mui/utils",
+        "js-file-download",
         "@monaco-editor/react",
         "@uiw/react-md-editor",
         "@mui/icons-material",
@@ -1506,6 +1510,7 @@
         "@mui/material",
         "react-intl",
         "@mui/utils",
+        "js-file-download",
         "@monaco-editor/react",
         "@uiw/react-md-editor",
         "@mui/icons-material",
@@ -4722,6 +4727,6 @@
       ]
     }
   },
-  "checksum": "2940636118f78fb47f997c14a5cb87fb7d4b2cc6caf90a522a6008d2971800b2",
-  "generatedAt": "2026-05-08T08:41:35.938Z"
+  "checksum": "4ba4e72cfd51f88d14c94ae1b0a639f1237daf40146d0cf637df9b5d6f9fddbb",
+  "generatedAt": "2026-05-08T10:09:01.047Z"
 }

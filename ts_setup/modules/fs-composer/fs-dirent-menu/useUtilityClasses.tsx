@@ -72,7 +72,6 @@ export const FsDirentMenuRoot = styled(Popover, {
       maxHeight: MENU_HEIGHT,
       padding: theme.spacing(0.5),
       overflow: 'hidden',
-      transition: 'width 0.3s ease-out'
     },
     [`& .${MUI_NAME}-headerMain`]: {
       padding: theme.spacing(0.5, 2, 0.5, 2),

@@ -20,7 +20,7 @@ export const FsDirentMenuSub: React.FC<FsDirentMenuSubProps> = (props) => {
   const classes = useUtilityClasses();
 
   return (
-    <Collapse orientation="horizontal" in={!!props.openSubmenu}>
+    <Collapse orientation="horizontal" in={!!props.openSubmenu} timeout={0}>
       <Divider orientation="vertical" className={classes.dividerSub} />
       <Box className={classes.sectionSub}>
         {props.openSubmenu === 'labels' && <FsDirentLabels dirent={props.dirent} />}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsTheme } from '../fs-theme';
 import { FsPanelPreviewWrenchProps } from './FsPanelPreviewWrenchProps';
 
 
@@ -11,7 +11,7 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (props: FsPanelPreviewWrenchProps): OwnerState => {
-  const { isDarkMode } = useFsNav();
+  const { isDarkMode } = useFsTheme();
   const { fetchDirentBody } = useFsDirent();
 
   const [wrenchBody, setWrenchBody] = React.useState<Fs.WrenchBody | undefined>(undefined);
