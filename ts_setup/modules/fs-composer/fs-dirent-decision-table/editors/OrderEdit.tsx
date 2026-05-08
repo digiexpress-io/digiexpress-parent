@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, InputLabel, Box } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
 import { FsDirentSelectSingle } from '../../fs-dirent-select-single';
 
@@ -19,6 +19,7 @@ interface OrderEditProps {
 }
 
 const ExpressionColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
+  const intl = useIntl();
   const [column, setColumn] = React.useState<string>('');
   const [expression, setExpression] = React.useState<string>('');
   const headers = decision.headers.acceptDefs;
@@ -41,7 +42,7 @@ const ExpressionColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
   return (
     <>
       <Box sx={{ mb: 1 }}>
-        <InputLabel><FormattedMessage id='decisions.toolbar.organize.action.expression.column' /></InputLabel>
+        <InputLabel>{intl.formatMessage({ id: 'decisions.toolbar.organize.action.expression.column' })}</InputLabel>
         <FsDirentSelectSingle
           value={column}
           onChange={handleColumn}
@@ -50,7 +51,7 @@ const ExpressionColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
       </Box>
       {type ? (
         <Box sx={{ mb: 1 }}>
-          <InputLabel><FormattedMessage id='decisions.toolbar.organize.action.expression' /></InputLabel>
+          <InputLabel>{intl.formatMessage({ id: 'decisions.toolbar.organize.action.expression' })}</InputLabel>
           <FsDirentSelectSingle
             value={expression}
             onChange={handleExpression}
@@ -63,6 +64,7 @@ const ExpressionColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
 };
 
 const MoveRow: React.FC<DelegateProps> = ({ decision, onChange }) => {
+  const intl = useIntl();
   const [from, setFrom] = React.useState<string>('');
   const [to, setTo] = React.useState<string>('');
 
@@ -83,7 +85,7 @@ const MoveRow: React.FC<DelegateProps> = ({ decision, onChange }) => {
   return (
     <>
       <Box sx={{ mb: 1 }}>
-        <InputLabel><FormattedMessage id='decisions.toolbar.organize.action.move.from.row' /></InputLabel>
+        <InputLabel>{intl.formatMessage({ id: 'decisions.toolbar.organize.action.move.from.row' })}</InputLabel>
         <FsDirentSelectSingle
           value={from}
           onChange={handleFrom}
@@ -92,7 +94,7 @@ const MoveRow: React.FC<DelegateProps> = ({ decision, onChange }) => {
       </Box>
       {from ? (
         <Box sx={{ mb: 1 }}>
-          <InputLabel><FormattedMessage id='decisions.toolbar.organize.action.move.to.row' /></InputLabel>
+          <InputLabel>{intl.formatMessage({ id: 'decisions.toolbar.organize.action.move.to.row' })}</InputLabel>
           <FsDirentSelectSingle
             value={to}
             onChange={handleTo}
@@ -108,6 +110,7 @@ const MoveRow: React.FC<DelegateProps> = ({ decision, onChange }) => {
 };
 
 const DeleteRow: React.FC<DelegateProps> = ({ decision, onChange }) => {
+  const intl = useIntl();
   const [row, setRow] = React.useState<string>('');
   const headers = [...decision.headers.acceptDefs, ...decision.headers.returnDefs];
 
@@ -121,7 +124,7 @@ const DeleteRow: React.FC<DelegateProps> = ({ decision, onChange }) => {
   return (
     <>
       <Box sx={{ mb: 1 }}>
-        <InputLabel><FormattedMessage id='decisions.toolbar.organize.action.deleteRow' /></InputLabel>
+        <InputLabel>{intl.formatMessage({ id: 'decisions.toolbar.organize.action.deleteRow' })}</InputLabel>
         <FsDirentSelectSingle
           value={row}
           onChange={rowId => {
@@ -133,7 +136,7 @@ const DeleteRow: React.FC<DelegateProps> = ({ decision, onChange }) => {
       </Box>
       {preview ? (
         <InputLabel sx={{ p: 2 }}>
-          <FormattedMessage id='decisions.toolbar.organize.action.deleteRow.contents' />:
+          {intl.formatMessage({ id: 'decisions.toolbar.organize.action.deleteRow.contents' })}:
           {preview}
         </InputLabel>
       ) : null}
@@ -142,6 +145,7 @@ const DeleteRow: React.FC<DelegateProps> = ({ decision, onChange }) => {
 };
 
 const MoveColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
+  const intl = useIntl();
   const [from, setFrom] = React.useState<string>('');
   const [to, setTo] = React.useState<string>('');
   const headers = [...decision.headers.acceptDefs, ...decision.headers.returnDefs];
@@ -164,7 +168,7 @@ const MoveColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
   return (
     <>
       <Box sx={{ mb: 1 }}>
-        <InputLabel><FormattedMessage id='decisions.toolbar.organize.action.move.from.column' /></InputLabel>
+        <InputLabel>{intl.formatMessage({ id: 'decisions.toolbar.organize.action.move.from.column' })}</InputLabel>
         <FsDirentSelectSingle
           value={from}
           onChange={handleFrom}
@@ -173,7 +177,7 @@ const MoveColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
       </Box>
       {type ? (
         <Box sx={{ mb: 1 }}>
-          <InputLabel><FormattedMessage id='decisions.toolbar.organize.action.move.to.column' /></InputLabel>
+          <InputLabel>{intl.formatMessage({ id: 'decisions.toolbar.organize.action.move.to.column' })}</InputLabel>
           <FsDirentSelectSingle
             value={to}
             onChange={handleTo}
@@ -186,12 +190,13 @@ const MoveColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
 };
 
 const DeleteColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
+  const intl = useIntl();
   const [selected, setSelected] = React.useState<string>('');
   const headers = [...decision.headers.acceptDefs, ...decision.headers.returnDefs];
 
   return (
     <Box sx={{ mb: 1 }}>
-      <InputLabel><FormattedMessage id='decisions.toolbar.organize.action.deleteColumn' /></InputLabel>
+      <InputLabel>{intl.formatMessage({ id: 'decisions.toolbar.organize.action.deleteColumn' })}</InputLabel>
       <FsDirentSelectSingle
         value={selected}
         onChange={value => {
@@ -205,6 +210,7 @@ const DeleteColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
 };
 
 const DirectionColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
+  const intl = useIntl();
   const [column, setColumn] = React.useState<string>('');
   const headers = [...decision.headers.acceptDefs, ...decision.headers.returnDefs];
   const selectedHeader = column ? headers.find(h => h.id === column) : undefined;
@@ -221,7 +227,7 @@ const DirectionColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
   return (
     <>
       <Box sx={{ mb: 1 }}>
-        <InputLabel><FormattedMessage id='decisions.toolbar.organize.action.direction.column' /></InputLabel>
+        <InputLabel>{intl.formatMessage({ id: 'decisions.toolbar.organize.action.direction.column' })}</InputLabel>
         <FsDirentSelectSingle
           value={column}
           onChange={handleColumn}
@@ -230,10 +236,7 @@ const DirectionColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
       </Box>
       {selectedHeader ? (
         <InputLabel sx={{ pt: 2, pl: 2 }}>
-          <FormattedMessage
-            id='decisions.toolbar.organize.action.direction.change'
-            values={{ newDirection: selectedHeader.direction === 'IN' ? 'OUT' : 'IN' }}
-          />
+          {intl.formatMessage({ id: 'decisions.toolbar.organize.action.direction.change' }, { newDirection: selectedHeader.direction === 'IN' ? 'OUT' : 'IN' })}
         </InputLabel>
       ) : null}
     </>
@@ -266,10 +269,10 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
   return (
     <>
       <Dialog open={true} onClose={props.onClose}>
-        <DialogTitle><FormattedMessage id='decisions.toolbar.organize.rows.columns' /></DialogTitle>
+        <DialogTitle>{intl.formatMessage({ id: 'decisions.toolbar.organize.rows.columns' })}</DialogTitle>
         <DialogContent sx={{ minWidth: 400 }}>
           <Box sx={{ mb: 1 }}>
-            <InputLabel><FormattedMessage id='decisions.toolbar.organize.action' /></InputLabel>
+            <InputLabel>{intl.formatMessage({ id: 'decisions.toolbar.organize.action' })}</InputLabel>
             <FsDirentSelectSingle
               value={operation}
               onChange={op => { setOperation(op); setCommand(undefined); }}
@@ -279,13 +282,13 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
               }))}
             />
             <InputLabel sx={{ mt: 0.5, fontSize: '0.75rem' }}>
-              <FormattedMessage id={helperText} />
+              {intl.formatMessage({ id: helperText })}
             </InputLabel>
           </Box>
           {operation ? operations[operation as OperationType] : null}
         </DialogContent>
         <DialogActions>
-          <Button variant='outlined' onClick={props.onClose}><FormattedMessage id='button.cancel' /></Button>
+          <Button variant='outlined' onClick={props.onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
           <Button onClick={() => {
             if (!command) {
               props.onClose();
@@ -301,7 +304,7 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
               props.onClose();
             }
           }}>
-            <FormattedMessage id='buttons.apply' />
+            {intl.formatMessage({ id: 'buttons.apply' })}
           </Button>
         </DialogActions>
       </Dialog>
@@ -319,7 +322,7 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmDelete(null)}><FormattedMessage id='button.cancel' /></Button>
+          <Button onClick={() => setConfirmDelete(null)}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
           <Button onClick={() => {
             if (!confirmDelete) {
               return;

@@ -16,7 +16,7 @@ const DownloadCSV: React.FC<DownloadCSVProps> = ({ onClose }) => {
         {/* TODO */}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}><FormattedMessage id='button.cancel' /></Button>
+        <Button variant='contained' onClick={onClose}><FormattedMessage id='button.cancel' /></Button>
         <Button onClick={onClose}><FormattedMessage id='buttons.download' /></Button>
       </DialogActions>
     </Dialog>

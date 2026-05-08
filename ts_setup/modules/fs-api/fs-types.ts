@@ -206,6 +206,11 @@ export declare namespace Fs {
 
   export type HitPolicy = "FIRST" | "ALL";
 
+  export interface Headers {
+    acceptDefs: DecisionTypeDef[];
+    returnDefs: DecisionTypeDef[];
+  }
+
   export interface AstBody {
     name: string;
     description?: string;

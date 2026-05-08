@@ -1,63 +1,64 @@
-import React from 'react'
-
-import { ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-
-import * as Burger from '@dxs-ts/eveli-primitives';
-import { FormattedMessage } from 'react-intl';
-import { CancelButton } from '@dxs-ts/eveli-primitives';
+import React from 'react';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Stack, Typography } from '@mui/material';
+import { useIntl } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
+import { FsDirentTextField } from '../../fs-dirent-text-field';
+import { FsDirentSelectSingle } from '../../fs-dirent-select-single';
 
 const hitPolicyOptions = [
-  { key: 'ALL', value: 'ALL', text: 'ALL' },
-  { key: 'FIRST', value: 'FIRST', text: 'FIRST' }
+  { value: 'ALL', label: 'ALL' },
+  { value: 'FIRST', label: 'FIRST' },
 ];
-
 
 const NameDescHitPolicyEdit: React.FC<{
   decision: Fs.AstDecision;
   onClose: () => void;
   onChange: (commands: Fs.AstCommand[]) => void;
 }> = ({ onChange, decision, onClose }) => {
+  const intl = useIntl();
   const [name, setName] = React.useState(decision.name);
-  const [desc, setDesc] = React.useState(decision.description);
-  const [hitpolicy, setHitpolicy] = React.useState<string>(decision.hitPolicy);
+  const [desc, setDesc] = React.useState(decision.description ?? '');
+  const [hitPolicy, setHitPolicy] = React.useState<string>(decision.hitPolicy);
 
   return (
     <Dialog open={true} onClose={onClose}>
-      <DialogTitle><FormattedMessage id='decisions.toolbar.nameAndHitpolicy' /></DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'decisions.toolbar.nameAndHitpolicy' })}</DialogTitle>
       <DialogContent>
-        <Burger.TextField label='decisions.name' value={name} onChange={setName} />
-        <Burger.TextField label='decisions.desc' value={desc ? desc : ""} onChange={setDesc} />
-        <Burger.Select label="decisions.hitpolicy" helperText="decisions.hitpolicy.helper"
-          selected={hitpolicy}
-          onChange={setHitpolicy}
-          items={hitPolicyOptions.map((type) => ({
-            id: type.value,
-            value: (<ListItemText primary={type.text} />)
-          }))} />
+        <Stack direction='column' gap={1}>
+          <Typography variant='subtitle2'>{intl.formatMessage({ id: 'fs.dirent.decision_table.nameAndHitpolicy.name' })}</Typography>
+          <FsDirentTextField placeholder='decisions.name' value={name} onChange={setName} />
+
+          <Typography variant='subtitle2'>{intl.formatMessage({ id: 'fs.dirent.decision_table.nameAndHitpolicy.description' })}</Typography>
+          <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.decision_table.nameAndHitpolicy.description.placeholder' })} value={desc} onChange={setDesc} />
+
+          <Typography variant='subtitle2'>{intl.formatMessage({ id: 'fs.dirent.decision_table.nameAndHitpolicy.hitPolicy' })}</Typography>
+          <FsDirentSelectSingle value={hitPolicy} onChange={setHitPolicy} options={hitPolicyOptions} />
+          <Typography variant='caption' color='text.secondary'>{intl.formatMessage({ id: 'fs.dirent.decision_table.nameAndHitpolicy.hitPolicy.helper' })}</Typography>
+        </Stack>
       </DialogContent>
       <DialogActions>
-        <CancelButton onClick={onClose} />
+        <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
         <Button onClick={() => {
           const commands: Fs.AstCommand[] = [];
           if (name !== decision.name) {
-            commands.push({ type: "SET_NAME", value: name, id: "" });
+            commands.push({ type: 'SET_NAME', value: name, id: '' });
           }
-          if (hitpolicy !== decision.hitPolicy) {
-            commands.push({ type: "SET_HIT_POLICY", value: hitpolicy, id: "" });
+          if (hitPolicy !== decision.hitPolicy) {
+            commands.push({ type: 'SET_HIT_POLICY', value: hitPolicy, id: '' });
           }
-          if (desc !== decision.description) {
-            commands.push({ type: "SET_DESCRIPTION", value: desc, id: "" });
+          if (desc !== (decision.description ?? '')) {
+            commands.push({ type: 'SET_DESCRIPTION', value: desc, id: '' });
           }
           if (commands.length > 0) {
             onChange(commands);
           }
           onClose();
         }}>
-          <FormattedMessage id='buttons.apply' />
+          {intl.formatMessage({ id: 'buttons.apply' })}
         </Button>
       </DialogActions>
-    </Dialog>);
-}
+      </Dialog >
+    );
+  };
 
 export { NameDescHitPolicyEdit };

@@ -99,11 +99,12 @@ const DecisionTableToolbar: React.FC<DecisionTableToolbarProps> = ({ decision, e
 
   return (
     <>
-      {/*edit?.meta && <NameDescHitPolicyEdit decision={decision} onChange={onChange} onClose={() => setEdit(undefined)} />*/}
+      {edit?.meta && <NameDescHitPolicyEdit decision={decision as Fs.AstDecision} onChange={onChange} onClose={() => setEdit(undefined)} />}
       {edit?.rowsColumns && <OrderEdit decision={decision} onChange={onChange} onClose={() => setEdit(undefined)} />}
       {edit?.upload && <UploadCSV onChange={onChange} onClose={() => setEdit(undefined)} />}
       {edit?.download && <DownloadCSV decision={decision} onClose={() => setEdit(undefined)} />}
       {edit?.header && <HeaderEdit dt={decision} header={edit.header} onChange={onChange} onClose={() => setEdit(undefined)} />}
+
 
       <div>
         <Button variant='text' onClick={(e) => setMenuAnchorEl(e.currentTarget)}>
