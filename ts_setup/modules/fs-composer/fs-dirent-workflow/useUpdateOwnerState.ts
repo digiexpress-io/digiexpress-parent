@@ -1,5 +1,6 @@
 import React from 'react';
-import { useFsNav, useFsDirent, Fs } from '@dxs-ts/fs-api';
+import { useFsDirent, Fs } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;

@@ -1,9 +1,9 @@
 import React from 'react';
+import { useFsNav } from '@dxs-ts/fs-nav';
 import { Box } from '@mui/material';
 import { FsTabs } from '../fs-tabs';
 import { FsBreadcrumb } from '../fs-breadcrumb';
 import { FsMain } from '../fs-main';
-import { useFsNav } from '@dxs-ts/fs-api';
 import { FsColors } from '../fs-theme';
 
 const Main: React.FC<{}> = () => {

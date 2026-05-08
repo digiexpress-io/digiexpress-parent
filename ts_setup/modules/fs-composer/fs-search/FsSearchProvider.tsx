@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
-import { useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { useFsDirent } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 import { allAvailableTypeFilters, AssetTypeFilter, FilterData, LabelFilter } from './search-helpers';
 
 interface FsSearchContextType {

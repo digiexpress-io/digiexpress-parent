@@ -1,20 +1,6 @@
 import React from 'react';
-import { Fs } from '../fs-types';
 
-export interface FsEditTab {
-  type: 'edit';
-  dirent: Fs.DirentBase;
-}
-
-export interface FsCreateTab {
-  type: 'create';
-  direntType: Fs.BodyType;
-  parentFolder: Fs.DirentBase | undefined;
-}
-
-export type FsTab = FsEditTab | FsCreateTab;
-
-export interface FsNavContextType {
+interface FsNavContextType {
   isDarkMode: boolean;
   expandedIds: string[];
   isExpanded: (id: string) => boolean;
@@ -69,7 +55,7 @@ export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
   );
 };
 
-export function useFsNav(): FsNavContextType {
+export function useFsNavContext(): FsNavContextType {
   const result = React.useContext(FsNavContext);
   if (!result) {
     throw new Error('FsNavContext is not created!');

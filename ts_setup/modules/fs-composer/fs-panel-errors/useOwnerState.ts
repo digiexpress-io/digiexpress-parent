@@ -1,5 +1,5 @@
-import { useFsNav } from '@dxs-ts/fs-api';
 import { FsPanelErrorsProps } from './FsPanelErrorsProps';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 
 export interface OwnerState {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFsNav } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 
 export interface CreateOwnerState {

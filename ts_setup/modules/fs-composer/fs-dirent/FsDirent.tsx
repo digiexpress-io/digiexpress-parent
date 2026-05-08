@@ -1,7 +1,7 @@
 import React from 'react';
+import { useFsNav } from '@dxs-ts/fs-nav';
 import { Box, Collapse, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
 
-import { useFsNav } from '@dxs-ts/fs-api';
 import { useUtilityClasses, FsDirentRoot } from './useUtilityClasses';
 import { FsIcons, FsIcon } from '../fs-theme';
 import { FsDirentProps } from './FsDirentProps';

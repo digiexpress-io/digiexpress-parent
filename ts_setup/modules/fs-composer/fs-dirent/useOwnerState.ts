@@ -1,6 +1,6 @@
 import React from 'react';
-import { Fs, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
-import { useFsRouteNav } from '@dxs-ts/fs-nav';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsDirentProps } from './FsDirentProps';
 import { FsDirentClasses } from './useUtilityClasses';
 
@@ -31,7 +31,7 @@ export interface OwnerState {
 export const useOwnerState = (props: FsDirentProps): OwnerState => {
   const { dirent: direntBase, level, onToggle, onContextMenu, searchTerm } = props;
   const { isDarkMode } = useFsNav();
-  const { openAsset, activeDirent } = useFsRouteNav();
+  const { openAsset, activeDirent } = useFsNav();
   const { isChildError, getDirent } = useFsDirent();
 
   const dirent = getDirent(direntBase.id) ?? direntBase;

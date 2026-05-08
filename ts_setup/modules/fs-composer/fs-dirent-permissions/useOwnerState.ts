@@ -1,5 +1,5 @@
-import { useFsNav } from '@dxs-ts/fs-api';
 import { FsDirentPermissionsProps } from './FsDirentPermissionsProps';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 
 export interface OwnerState {

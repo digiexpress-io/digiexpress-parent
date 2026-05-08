@@ -1,4 +1,5 @@
-import { useFsNav, useFsDirent, Fs } from '@dxs-ts/fs-api';
+import { useFsDirent, Fs } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsPanelArticleOrderProps } from './FsPanelArticleOrderProps';
 
 

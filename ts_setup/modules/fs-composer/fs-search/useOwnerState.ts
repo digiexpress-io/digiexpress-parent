@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFsNav } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 import type { AssetTypeFilter, FilterData } from './search-helpers';
 import { FsSearchProps } from './FsSearchProps';
 import { useFsSearch } from './FsSearchProvider';

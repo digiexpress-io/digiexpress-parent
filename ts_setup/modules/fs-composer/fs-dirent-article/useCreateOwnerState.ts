@@ -1,6 +1,6 @@
 import React from 'react';
-import { Fs, useFsNav } from '@dxs-ts/fs-api';
-import { useFsRouteNav } from '@dxs-ts/fs-nav';
+import { Fs } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 
 export interface CreateOwnerState {
@@ -13,7 +13,7 @@ export interface CreateOwnerState {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsNav();
-  const { activeTabPath, openTabs, activeTabIndex } = useFsRouteNav();
+  const { activeTabPath, openTabs, activeTabIndex } = useFsNav();
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const activeTab = openTabs[activeTabIndex];

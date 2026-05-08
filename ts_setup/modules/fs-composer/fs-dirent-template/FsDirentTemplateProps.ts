@@ -1,4 +1,5 @@
-import { Fs, FsTab } from '@dxs-ts/fs-api';
+import { Fs } from '@dxs-ts/fs-api';
+import { FsTab } from '@dxs-ts/fs-nav';
 
 
 export interface FsDirentTemplateCreateProps { }

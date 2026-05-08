@@ -1,5 +1,19 @@
 import { Fs } from '@dxs-ts/fs-api';
 
+export interface FsEditTab {
+  type: 'edit';
+  dirent: Fs.DirentBase;
+}
+
+export interface FsCreateTab {
+  type: 'create';
+  direntType: Fs.BodyType;
+  parentFolder: Fs.DirentBase | undefined;
+}
+
+export type FsTab = FsEditTab | FsCreateTab;
+
+
 export type FsTabDescriptor =
   | { type: 'edit'; id: string }
   | { type: 'create'; direntType: Fs.BodyType };

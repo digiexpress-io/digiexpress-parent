@@ -62,6 +62,9 @@
       "@dxs-ts/fs-api": [
         "../fs-api/index.ts"
       ],
+      "@dxs-ts/fs-nav": [
+        "../fs-nav/index.ts"
+      ],
       "@dxs-ts/fs-composer": [
         "../fs-composer/index.ts"
       ],
@@ -173,6 +176,9 @@
     },
     {
       "path": "../fs-api"
+    },
+    {
+      "path": "../fs-nav"
     },
     {
       "path": "../fs-composer"

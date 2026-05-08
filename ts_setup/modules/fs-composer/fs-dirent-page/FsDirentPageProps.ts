@@ -1,4 +1,4 @@
-import { FsTab } from '@dxs-ts/fs-api';
+import { FsTab } from '@dxs-ts/fs-nav';
 
 
 export interface FsDirentPageCreateProps { }

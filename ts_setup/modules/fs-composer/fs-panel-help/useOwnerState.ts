@@ -1,4 +1,4 @@
-import { useFsNav } from "@dxs-ts/fs-api";
+import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsPanelHelpProps } from "./FsPanelHelpProps";
 
 

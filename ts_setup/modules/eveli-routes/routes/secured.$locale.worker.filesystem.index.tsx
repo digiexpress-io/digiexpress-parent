@@ -3,9 +3,9 @@ import { createFileRoute } from '@tanstack/react-router';
 import { EveliSetup } from '../eveli-setup';
 import { FsSetup } from '@dxs-ts/fs-composer';
 import { EveliApp } from '../eveli-app';
-import { FsNavProvider, FsDirentProvider, FsDirentProviderProps } from '@dxs-ts/fs-api';
+import { FsDirentProvider, FsDirentProviderProps } from '@dxs-ts/fs-api';
 import { FsSearchProvider } from '../../fs-composer/fs-search';
-import { parseFsSearchParams, FsRouteSearchParams } from '@dxs-ts/fs-nav';
+import { parseFsSearchParams, FsRouteSearchParams, FsNavProvider } from '@dxs-ts/fs-nav';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
 export const Route = createFileRoute('/secured/$locale/worker/filesystem/')({

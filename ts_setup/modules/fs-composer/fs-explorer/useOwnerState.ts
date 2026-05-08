@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { FsExplorerProps } from "./FsExplorerProps";
 import { FilterData, filterTreeDirents, useFsSearch } from '../fs-search';
-import { Fs, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
-import { useFsRouteNav } from '@dxs-ts/fs-nav';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 function handleContextMenu(
   event: React.MouseEvent,
@@ -46,7 +46,7 @@ export interface OwnerState {
 
 export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   const { isDarkMode, setIsDarkMode } = useFsNav();
-  const { openAsset } = useFsRouteNav();
+  const { openAsset } = useFsNav();
   const { getDirent, dirents } = useFsDirent();
   const { collapseAll, setExpanded, setExpandedBatch, isExpanded } = useFsNav();
   const { search } = useFsSearch();

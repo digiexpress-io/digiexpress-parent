@@ -1,7 +1,8 @@
 import React from 'react';
+import { useFsNav } from '@dxs-ts/fs-nav';
 import {
   Fs,
-  useFsDirent, useFsNav
+  useFsDirent
 } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {

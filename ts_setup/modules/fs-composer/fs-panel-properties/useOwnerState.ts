@@ -1,4 +1,5 @@
-import { Fs, useFsDirent, useFsNav } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsPanelPropertiesProps } from './FsPanelPropertiesProps';
 
 

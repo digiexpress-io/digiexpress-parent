@@ -1,4 +1,5 @@
-import { Fs, useFsNav } from '@dxs-ts/fs-api';
+import { Fs } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 
 export interface CreateOwnerState {

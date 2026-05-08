@@ -1,7 +1,8 @@
 import React from 'react';
 import { Badge, Box, ListItemText, Typography } from '@mui/material';
 
-import { Fs, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 import { useUtilityClasses } from './useUtilityClasses';
 import { FsIcons, FsIcon, FsColors, getDirentColor } from '../fs-theme';

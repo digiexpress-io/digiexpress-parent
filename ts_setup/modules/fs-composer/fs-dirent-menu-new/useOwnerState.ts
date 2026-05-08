@@ -1,5 +1,5 @@
-import { useFsNav } from '@dxs-ts/fs-api';
 import { FsDirentMenuNewProps } from './FsDirentMenuNewProps';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 export interface OwnerState {
   isDarkMode: boolean;

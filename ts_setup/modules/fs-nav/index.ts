@@ -1,2 +1,3 @@
 export * from './fs-nav-types';
-export * from './useFsRouteNav';
+export * from './FsNavProvider';
+export * from './useFsNav';

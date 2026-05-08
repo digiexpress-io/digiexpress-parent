@@ -1,4 +1,5 @@
-import { Fs, ItemReferencesEntry, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { Fs, ItemReferencesEntry, useFsDirent } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsDirentReferencesProps } from './FsDirentReferencesProps';
 
 

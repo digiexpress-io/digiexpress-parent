@@ -1,5 +1,5 @@
-import { useFsNav } from '@dxs-ts/fs-api';
 import { FsDirentCommentsProps } from './FsDirentCommentsProps';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 
 export interface OwnerState {

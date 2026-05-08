@@ -33,7 +33,8 @@
     "@dxs-ts/ledger-api": "*",
     "@dxs-ts/ledger-composer": "*",
     "@dxs-ts/xui-table": "*",
-    "@dxs-ts/xui-datetime": "*"
+    "@dxs-ts/xui-datetime": "*",
+    "@dxs-ts/fs-nav": "*"
   },
   "peerDependencies": {
     "react": "*",

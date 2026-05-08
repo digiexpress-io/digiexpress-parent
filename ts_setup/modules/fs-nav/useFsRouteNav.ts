@@ -1,5 +1,7 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { Fs, FsTab, FsEditTab, FsCreateTab, useFsDirent } from '@dxs-ts/fs-api';
+import { FsTab, FsEditTab, FsCreateTab } from './fs-nav-types';
+import { Fs, useFsDirent } from '../fs-api';
+
 import {
   FsRouteSearchParams,
   FsTabDescriptor,
@@ -36,12 +38,12 @@ export function useFsRouteNav() {
   const navigate = useNavigate();
   const { getDirent } = useFsDirent();
 
-  const openTabs: FsTab[] = search.openTabs
-    .map(d => toFsTab(d, getDirent))
+  const openTabs: FsTab[] = (search.openTabs as FsTabDescriptor[])
+    .map((d: FsTabDescriptor) => toFsTab(d, getDirent))
     .filter((t): t is FsTab => t !== undefined);
 
   const activeTabIndex = search.activeTab !== undefined
-    ? search.openTabs.findIndex(t => toTabId(t) === search.activeTab)
+    ? search.openTabs.findIndex((t: FsTabDescriptor) => toTabId(t) === search.activeTab)
     : -1;
 
   const activeTab = activeTabIndex >= 0 ? openTabs[activeTabIndex] : undefined;

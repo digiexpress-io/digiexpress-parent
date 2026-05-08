@@ -1,6 +1,6 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { FsTab } from '@dxs-ts/fs-api';
+import { FsTab } from '@dxs-ts/fs-nav';
 import { OwnerState } from './useOwnerState';
 import { FsDirentArticle } from '../fs-dirent-article';
 import { FsDirentFolder } from '../fs-dirent-folder';

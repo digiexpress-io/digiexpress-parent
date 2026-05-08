@@ -1119,7 +1119,8 @@
           "@dxs-ts/ledger-api": "*",
           "@dxs-ts/ledger-composer": "*",
           "@dxs-ts/xui-table": "*",
-          "@dxs-ts/xui-datetime": "*"
+          "@dxs-ts/xui-datetime": "*",
+          "@dxs-ts/fs-nav": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -1176,6 +1177,7 @@
         "@dxs-ts/ledger-composer",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime",
+        "@dxs-ts/fs-nav",
         "react",
         "react-intl",
         "@material-table/core",
@@ -1255,7 +1257,8 @@
         "@dxs-ts/ledger-api",
         "@dxs-ts/ledger-composer",
         "@dxs-ts/xui-table",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/xui-datetime",
+        "@dxs-ts/fs-nav"
       ],
       "actualDependencies": [
         "react",
@@ -1353,9 +1356,7 @@
         "@dxs-ts/fs-nav",
         "@dxs-ts/ledger-composer"
       ],
-      "missingDependencies": [
-        "@dxs-ts/fs-nav"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": []
     },
     "@dxs-ts/fs-api": {
@@ -1561,19 +1562,19 @@
         "@dxs-ts/fs-api"
       ],
       "actualDependencies": [
+        "react",
         "@dxs-ts/fs-api",
         "@tanstack/react-router"
       ],
       "actualExternalDependencies": [
+        "react",
         "@tanstack/react-router"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/fs-api"
       ],
       "missingDependencies": [],
-      "unusedDependencies": [
-        "react"
-      ]
+      "unusedDependencies": []
     },
     "@dxs-ts/gamut-api": {
       "name": "@dxs-ts/gamut-api",
@@ -4148,7 +4149,8 @@
         "@dxs-ts/ledger-api",
         "@dxs-ts/ledger-composer",
         "@dxs-ts/xui-table",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/xui-datetime",
+        "@dxs-ts/fs-nav"
       ],
       "@dxs-ts/fs-api": [],
       "@dxs-ts/fs-composer": [
@@ -4388,6 +4390,7 @@
         "@dxs-ts/eveli-ide"
       ],
       "@dxs-ts/fs-nav": [
+        "@dxs-ts/eveli-routes",
         "@dxs-ts/fs-composer"
       ],
       "@dxs-ts/gamut-api": [
@@ -4719,6 +4722,6 @@
       ]
     }
   },
-  "checksum": "18156dcb510fd334dda5679523f93f81276d53180cc5826fef3a4a8def2c2daf",
-  "generatedAt": "2026-05-08T08:17:31.120Z"
+  "checksum": "2940636118f78fb47f997c14a5cb87fb7d4b2cc6caf90a522a6008d2971800b2",
+  "generatedAt": "2026-05-08T08:41:35.938Z"
 }
