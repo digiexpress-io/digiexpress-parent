@@ -8,6 +8,7 @@
     "@dxs-ts/eveli-primitives": "*",
     "@dxs-ts/fs-api": "*",
     "@dxs-ts/fs-nav": "*",
+    "js-file-download": "*",
     "react-markdown": "*"
   },
   "peerDependencies": {
