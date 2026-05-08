@@ -170,7 +170,7 @@ public class Gen_Multi_RegistryFactory implements MultiTableCodeGenerator {
     
     return MethodSpec.methodBuilder(methodName)
       .addModifiers(Modifier.PUBLIC)
-      .returns(ClassName.bestGuess(implName))
+      .returns(ClassName.get(table.getPackageName() + ".spi",implName))
       .addStatement("return new $L(tables, dataSource)", implName)
       .build();
   }

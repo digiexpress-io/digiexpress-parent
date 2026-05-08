@@ -182,7 +182,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
   
   private void addFields(TypeSpec.Builder classBuilder, RegistryMetamodel registry) {
     classBuilder.addField(FieldSpec.builder(
-      ClassName.bestGuess(registry.getTableClassName()),
+      ClassName.get(registry.getPackageName() + ".spi", registry.getTableClassName()),
       "tables"
     ).build());
     
