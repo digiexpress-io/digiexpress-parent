@@ -1,4 +1,5 @@
 import { Fs, FsTab, useFsNav, useFsDirent } from "@dxs-ts/fs-api";
+import { useFsRouteNav } from '@dxs-ts/fs-nav';
 import { FsBreadcrumbProps } from "./FsBreadcrumbProps";
 
 
@@ -21,7 +22,8 @@ function getAssetName(activeTab: FsTab | undefined): string | undefined {
 }
 
 export function useOwnerState(_props: FsBreadcrumbProps): OwnerState {
-  const { isDarkMode, openTabs, activeTabIndex, activeTabPath, activeDirent } = useFsNav();
+  const { isDarkMode } = useFsNav();
+  const { openTabs, activeTabIndex, activeTabPath, activeDirent } = useFsRouteNav();
   const { getDirent } = useFsDirent();
 
   const activeTab = openTabs[activeTabIndex];

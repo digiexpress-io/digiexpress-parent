@@ -1,0 +1,15 @@
+{
+  "name": "@dxs-ts/fs-nav",
+  "version": "${project.version}",
+  "description": "File system routing and navigation",
+  "main": "./index.ts",
+  "type": "module",
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "*",
+    "@tanstack/react-router": "*",
+    "@dxs-ts/fs-api": "*"
+  },
+  "keywords": ["filesystem", "navigation", "routing"],
+  "private": true
+}

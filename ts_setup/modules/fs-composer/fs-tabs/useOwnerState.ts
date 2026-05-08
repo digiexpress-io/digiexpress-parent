@@ -1,6 +1,7 @@
 import React from "react";
 import { useIntl } from "react-intl";
 import { useFsNav, useFsDirent } from "@dxs-ts/fs-api";
+import { useFsRouteNav } from '@dxs-ts/fs-nav';
 import { FsTabProps } from "./FsTabProps";
 
 
@@ -21,7 +22,8 @@ export interface OwnerState {
 
 export function useOwnerState(_props: FsTabProps): OwnerState {
   const intl = useIntl();
-  const { isDarkMode, openTabs, activeTabIndex, setActiveTab, closeTab } = useFsNav();
+  const { isDarkMode } = useFsNav();
+  const { openTabs, activeTabIndex, setActiveTab, closeTab } = useFsRouteNav();
   const { getDirent, getArticleName } = useFsDirent();
 
   const onTabClick = (index: number) => {

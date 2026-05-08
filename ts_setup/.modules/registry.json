@@ -1301,6 +1301,7 @@
         "@dxs-ts/contract-composer",
         "@dxs-ts/fs-composer",
         "@dxs-ts/fs-api",
+        "@dxs-ts/fs-nav",
         "@dxs-ts/ledger-composer"
       ],
       "actualExternalDependencies": [
@@ -1349,9 +1350,12 @@
         "@dxs-ts/contract-composer",
         "@dxs-ts/fs-composer",
         "@dxs-ts/fs-api",
+        "@dxs-ts/fs-nav",
         "@dxs-ts/ledger-composer"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "@dxs-ts/fs-nav"
+      ],
       "unusedDependencies": []
     },
     "@dxs-ts/fs-api": {
@@ -1418,6 +1422,7 @@
         "dependencies": {
           "@dxs-ts/eveli-primitives": "*",
           "@dxs-ts/fs-api": "*",
+          "@dxs-ts/fs-nav": "*",
           "react-markdown": "*"
         },
         "peerDependencies": {
@@ -1441,6 +1446,7 @@
       "dependencies": [
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
+        "@dxs-ts/fs-nav",
         "react-markdown",
         "react",
         "react-intl",
@@ -1477,15 +1483,16 @@
       ],
       "internalDependencies": [
         "@dxs-ts/eveli-primitives",
-        "@dxs-ts/fs-api"
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-nav"
       ],
       "actualDependencies": [
         "react",
         "@mui/material",
         "react-intl",
         "@dxs-ts/fs-api",
+        "@dxs-ts/fs-nav",
         "@mui/utils",
-        "@dxs-ts/eveli-primitives",
         "@monaco-editor/react",
         "@uiw/react-md-editor",
         "@mui/icons-material",
@@ -1507,10 +1514,66 @@
       ],
       "actualInternalDependencies": [
         "@dxs-ts/fs-api",
-        "@dxs-ts/eveli-primitives"
+        "@dxs-ts/fs-nav"
       ],
       "missingDependencies": [],
-      "unusedDependencies": []
+      "unusedDependencies": [
+        "@dxs-ts/eveli-primitives"
+      ]
+    },
+    "@dxs-ts/fs-nav": {
+      "name": "@dxs-ts/fs-nav",
+      "path": "modules/fs-nav",
+      "packageJson": {
+        "name": "@dxs-ts/fs-nav",
+        "version": "${project.version}",
+        "description": "File system routing and navigation",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {},
+        "peerDependencies": {
+          "react": "*",
+          "@tanstack/react-router": "*",
+          "@dxs-ts/fs-api": "*"
+        },
+        "keywords": [
+          "filesystem",
+          "navigation",
+          "routing"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "react",
+        "@tanstack/react-router",
+        "@dxs-ts/fs-api"
+      ],
+      "peerDependencies": [
+        "react",
+        "@tanstack/react-router",
+        "@dxs-ts/fs-api"
+      ],
+      "externalDependencies": [
+        "react",
+        "@tanstack/react-router"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/fs-api"
+      ],
+      "actualDependencies": [
+        "@dxs-ts/fs-api",
+        "@tanstack/react-router"
+      ],
+      "actualExternalDependencies": [
+        "@tanstack/react-router"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/fs-api"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "react"
+      ]
     },
     "@dxs-ts/gamut-api": {
       "name": "@dxs-ts/gamut-api",
@@ -4090,6 +4153,10 @@
       "@dxs-ts/fs-api": [],
       "@dxs-ts/fs-composer": [
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-nav"
+      ],
+      "@dxs-ts/fs-nav": [
         "@dxs-ts/fs-api"
       ],
       "@dxs-ts/gamut-api": [
@@ -4312,12 +4379,16 @@
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/fs-composer",
+        "@dxs-ts/fs-nav",
         "@dxs-ts/eveli-ide"
       ],
       "@dxs-ts/fs-composer": [
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-ide"
+      ],
+      "@dxs-ts/fs-nav": [
+        "@dxs-ts/fs-composer"
       ],
       "@dxs-ts/gamut-api": [
         "@dxs-ts/eveli-demo-app",
@@ -4648,6 +4719,6 @@
       ]
     }
   },
-  "checksum": "977beac9454540009e846b1de5e7da1ea2a7afdc8349ec263e24cee0cebbcf37",
-  "generatedAt": "2026-05-07T12:08:31.224Z"
+  "checksum": "18156dcb510fd334dda5679523f93f81276d53180cc5826fef3a4a8def2c2daf",
+  "generatedAt": "2026-05-08T08:17:31.120Z"
 }

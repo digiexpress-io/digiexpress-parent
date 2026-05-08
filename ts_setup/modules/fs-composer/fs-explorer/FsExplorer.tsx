@@ -2,7 +2,8 @@ import React from 'react';
 import { Box, Typography, List, IconButton, Badge, Popover, SvgIconProps } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcons, FsIcon } from '../fs-theme';
-import { Fs, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+import { useFsRouteNav } from '@dxs-ts/fs-nav';
 import { FsDirent } from '../fs-dirent';
 import { FsDirentMenu } from '../fs-dirent-menu';
 import { FsSearch } from '../fs-search';
@@ -15,7 +16,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const ownerState = useOwnerState(props);
-  const { openCreateTab } = useFsNav();
+  const { openCreateTab } = useFsRouteNav();
   const [newFileAnchorEl, setNewFileAnchorEl] = React.useState<HTMLElement | null>(null);
 
   return (
@@ -153,7 +154,7 @@ const TYPE_ICONS: Partial<Record<Fs.BodyType, React.ElementType<SvgIconProps>>> 
 
 const NewDirent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const intl = useIntl();
-  const { openCreateTab } = useFsNav();
+  const { openCreateTab } = useFsRouteNav();
   const { creatableTypes } = useFsDirent();
 
   function handleTypeClick(type: Fs.BodyType) {

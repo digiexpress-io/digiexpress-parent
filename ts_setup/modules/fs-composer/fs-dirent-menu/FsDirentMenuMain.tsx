@@ -1,7 +1,8 @@
 import React from 'react';
 import { MenuItem, Divider, Typography, Box, Chip } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { Fs, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+import { useFsRouteNav } from '@dxs-ts/fs-nav';
 import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
 import { FsIcon, FsIcons } from '../fs-theme';
 
@@ -16,7 +17,7 @@ export interface FsDirentMenuMainProps {
 export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { openAsset } = useFsNav();
+  const { openAsset } = useFsRouteNav();
   const { findReferencesToDirent } = useFsDirent();
   const dirent = props.dirent;
 

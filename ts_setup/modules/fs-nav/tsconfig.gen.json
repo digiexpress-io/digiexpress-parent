@@ -5,36 +5,24 @@
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
-      "@dxs-ts/eveli-primitives": [
-        "../eveli-primitives/index.ts"
-      ],
       "@dxs-ts/fs-api": [
         "../fs-api/index.ts"
-      ],
-      "@dxs-ts/fs-nav": [
-        "../fs-nav/index.ts"
       ]
     }
   },
   "extends": "../../tsconfig.json",
   "references": [
     {
-      "path": "../eveli-primitives"
-    },
-    {
       "path": "../fs-api"
-    },
-    {
-      "path": "../fs-nav"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-05-06T11:18:13.075Z",
-    "forModule": "@dxs-ts/fs-composer",
-    "fromRegistry": "3335eea5f2eb",
+    "at": "2026-05-08T08:13:58.043Z",
+    "forModule": "@dxs-ts/fs-nav",
+    "fromRegistry": "8c55cf521781",
     "alias": {
-      "@dxs-ts/fs-composer": [
+      "@dxs-ts/fs-nav": [
         "../fs-api"
       ]
     }

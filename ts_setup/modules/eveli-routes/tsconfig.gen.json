@@ -186,9 +186,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-02-17T10:11:51.051Z",
+    "at": "2026-05-08T08:17:31.122Z",
     "forModule": "@dxs-ts/eveli-routes",
-    "fromRegistry": "599b57f47d17",
+    "fromRegistry": "18156dcb510f",
     "alias": {
       "@dxs-ts/eveli-routes": [
         "../xui-datetime"

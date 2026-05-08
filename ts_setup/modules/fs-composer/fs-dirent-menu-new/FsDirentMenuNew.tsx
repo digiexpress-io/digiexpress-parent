@@ -1,7 +1,8 @@
 import React from 'react';
 import { Typography, SvgIconProps } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { Fs, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+import { useFsRouteNav } from '@dxs-ts/fs-nav';
 import { FsDirentMenuNewProps } from './FsDirentMenuNewProps';
 import { useOwnerState } from './useOwnerState';
 import { useUtilityClasses, FsDirentMenuNewRoot } from './useUtilityClasses';
@@ -32,7 +33,7 @@ export const FsDirentMenuNew: React.FC<FsDirentMenuNewProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
-  const { openCreateTab } = useFsNav();
+  const { openCreateTab } = useFsRouteNav();
   const { creatableTypes } = useFsDirent();
 
   function handleTypeClick(type: Fs.BodyType) {

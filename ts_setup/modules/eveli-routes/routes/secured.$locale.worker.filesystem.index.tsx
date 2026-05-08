@@ -5,10 +5,12 @@ import { FsSetup } from '@dxs-ts/fs-composer';
 import { EveliApp } from '../eveli-app';
 import { FsNavProvider, FsDirentProvider, FsDirentProviderProps } from '@dxs-ts/fs-api';
 import { FsSearchProvider } from '../../fs-composer/fs-search';
+import { parseFsSearchParams, FsRouteSearchParams } from '@dxs-ts/fs-nav';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
 export const Route = createFileRoute('/secured/$locale/worker/filesystem/')({
   component: Component,
+  validateSearch: (search: Record<string, unknown>): FsRouteSearchParams => parseFsSearchParams(search),
 })
 
 const MergedToolbar: React.FC = () => {

@@ -43,7 +43,7 @@ export const Toolbar: React.FC<{}> = ({ }) => {
             onClick={() => navigate({
               from: '/secured/$locale',
               to: '/secured/$locale/worker/filesystem',
-              search: { explorer: [] }
+              search: { openTabs: [] }
             })}>
             <FolderOutlinedIcon />
           </IconButton>

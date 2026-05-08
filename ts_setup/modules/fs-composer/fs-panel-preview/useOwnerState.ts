@@ -1,5 +1,6 @@
 import React from 'react';
 import { Fs, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { useFsRouteNav } from '@dxs-ts/fs-nav';
 import { FsPanelPreviewProps } from './FsPanelPreviewProps';
 
 
@@ -14,7 +15,8 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (props: FsPanelPreviewProps): OwnerState => {
-  const { isDarkMode, activeDirent } = useFsNav();
+  const { isDarkMode } = useFsNav();
+  const { activeDirent } = useFsRouteNav();
   const { getDirent, fetchDirentBody } = useFsDirent();
 
   const dirent = activeDirent ? getDirent(activeDirent.id) : undefined;

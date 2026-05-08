@@ -1,6 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { Fs, FsTab, useFsNav, useFsDirent } from '@dxs-ts/fs-api';
+import { useFsRouteNav } from '@dxs-ts/fs-nav';
 import { FsIcons } from '../fs-theme/fs-icons';
 import { FsMainProps } from './FsMainProps';
 
@@ -55,7 +56,8 @@ const toolbarWidth = '50px';
 
 export const useOwnerState = (_props: FsMainProps): OwnerState => {
   const intl = useIntl();
-  const { isDarkMode, activeDirent, activeTabIndex, openTabs } = useFsNav();
+  const { isDarkMode } = useFsNav();
+  const { activeDirent, activeTabIndex, openTabs } = useFsRouteNav();
   const { getDirent } = useFsDirent();
   const activeDirentEntry = activeDirent ? getDirent(activeDirent.id) : undefined;
   const [isRightPanelOpen, setIsRightPanelOpen] = React.useState(true);
