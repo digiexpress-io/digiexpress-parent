@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { FsPanel } from '../fs-panel';
 
 import { FsPanelArticleOrder } from '../fs-panel-article-order';
+import { FsPanelArticleLocaleOverview } from '../fs-panel-article-locale-overview';
 import { FsPanelChanges } from '../fs-panel-changes';
 import { FsPanelErrors } from '../fs-panel-errors';
 import { FsPanelHelp } from '../fs-panel-help';
@@ -48,6 +49,8 @@ export const ContentPanel: React.FC<ContentPanelProps> = ({ ownerState, classNam
               return <FsPanelPreview dirent={activeDirent} />;
           case 'article-order':
               return <FsPanelArticleOrder />;
+          case 'article-locale-overview':
+              return <FsPanelArticleLocaleOverview />;
           case 'overview':
               return <FsPanelOverview />;
           default:

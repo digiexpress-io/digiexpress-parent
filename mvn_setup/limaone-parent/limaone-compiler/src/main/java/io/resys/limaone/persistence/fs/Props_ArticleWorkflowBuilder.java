@@ -1,5 +1,8 @@
 package io.resys.limaone.persistence.fs;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /*-
  * #%L
  * limaone-compiler
@@ -23,6 +26,7 @@ package io.resys.limaone.persistence.fs;
 import io.resys.limaone.fs.ImmutableServiceProps;
 import io.resys.limaone.fs.WorldFsProps.ServiceProps;
 import io.resys.limaone.model.ArticleWorkflow;
+import io.resys.limaone.model.LocaleLabel;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -32,11 +36,18 @@ public class Props_ArticleWorkflowBuilder {
   
   public ServiceProps build() {
     final ArticleWorkflow service = currentState.getBodyOfType(node);
+    final List<LocaleLabel> labels = service.getLabels();
+
     return ImmutableServiceProps.builder()
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)
         .articles(service.getArticles())
+        .intlValues(labels.stream()
+            .collect(Collectors.toMap(
+                l -> l.getLocale(), 
+                l -> l.getLabelValue()
+              )))
         .serviceName(service.getValue())
         .dialobFormName(service.getFormName())
         .dialobFormTag(service.getFormTag())

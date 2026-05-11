@@ -74,6 +74,7 @@ export const FsDirentTextFieldRoot = styled('div', {
     '& .MuiInputBase-input': {
       color: textColor,
       ...theme.typography.caption,
+      lineHeight: 1,
       padding: theme.spacing(1.5),
 
       '&::placeholder': {

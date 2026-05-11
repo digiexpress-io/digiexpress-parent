@@ -75,6 +75,7 @@ import {
   CompareArrowsRounded,
   FileDownloadDone,
   Upload,
+  TaskAlt,
 } from '@mui/icons-material';
 import { SvgIconProps, Tooltip } from '@mui/material';
 
@@ -106,6 +107,8 @@ export const FsIcons = {
   // Settings & Configuration
   Settings: Settings,
   SettingsOutlined: SettingsOutlined,
+  Checkmark: TaskAlt,
+
 
   // Actions
   Add: Add,

@@ -10,21 +10,21 @@ type ToolbarButtonType = 'toggle' | 'view' | 'save';
 type ViewSupport = Partial<Record<Fs.BodyType, Fs.SecondaryView[]>>;
 
 const SUPPORTED_VIEWS: ViewSupport = {
-  FOLDER: ['properties', 'changes', 'overview', 'article-order'],
-  ARTICLE: ['properties', 'references', 'history', 'changes', 'article-order', 'overview'],
-  ARTICLE_PAGE: ['properties', 'preview', 'history', 'changes', 'article-order'],
-  ARTICLE_TEMPLATE: ['properties', 'preview', 'history', 'changes', 'article-order'],
-  ARTICLE_WORKFLOW: ['properties', 'references', 'history', 'changes', 'article-order'],
-  ARTICLE_LINK: ['properties', 'history', 'changes', 'article-order'],
-  FLOW: ['properties', 'references', 'debug', 'errors', 'preview', 'history', 'changes', 'article-order', 'debug'],
-  FLOW_TASK: ['properties', 'references', 'debug', 'errors', 'history', 'changes', 'article-order', 'debug'],
-  DECISION_TABLE: ['properties', 'references', 'errors', 'history', 'changes', 'article-order', 'debug'],
-  DIALOB_FORM: ['properties', 'history', 'changes', 'article-order'],
-  PRINTOUT: ['properties', 'references', 'history', 'changes', 'article-order'],
-  PRINTOUT_PAGE: ['properties', 'preview', 'history', 'changes', 'article-order'],
-  PRINTOUT_RESOURCE: ['properties', 'history', 'changes', 'article-order'],
-  LOCALE: ['properties', 'history', 'changes', 'article-order'],
-  DEPLOYMENT: ['properties', 'history', 'changes', 'article-order'],
+  FOLDER: ['properties', 'changes', 'overview', 'article-order', 'article-locale-overview'],
+  ARTICLE: ['properties', 'references', 'history', 'changes', 'article-order', 'overview', 'article-locale-overview'],
+  ARTICLE_PAGE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview'],
+  ARTICLE_TEMPLATE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview'],
+  ARTICLE_WORKFLOW: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview'],
+  ARTICLE_LINK: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview'],
+  FLOW: ['properties', 'references', 'debug', 'errors', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'debug'],
+  FLOW_TASK: ['properties', 'references', 'debug', 'errors', 'history', 'changes', 'article-order', 'article-locale-overview', 'debug'],
+  DECISION_TABLE: ['properties', 'references', 'errors', 'history', 'changes', 'article-order', 'article-locale-overview', 'debug'],
+  DIALOB_FORM: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview'],
+  PRINTOUT: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview'],
+  PRINTOUT_PAGE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview'],
+  PRINTOUT_RESOURCE: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview'],
+  LOCALE: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview'],
+  DEPLOYMENT: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview'],
 };
 
 export interface PanelButton {
@@ -174,6 +174,15 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       isSelected: selectedView === 'overview',
       isEnabled: isViewEnabled('overview'),
       onClick: () => handleViewChange('overview'),
+    },
+    {
+      id: 'article-locale-overview',
+      type: 'view',
+      icon: FsIcons.Language,
+      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.articleLocaleOverview' }),
+      isSelected: selectedView === 'article-locale-overview',
+      isEnabled: isViewEnabled('article-locale-overview'),
+      onClick: () => handleViewChange('article-locale-overview'),
     },
     {
       id: 'changes',
