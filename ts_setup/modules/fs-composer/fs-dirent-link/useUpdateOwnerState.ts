@@ -9,12 +9,14 @@ export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
   locales: Fs.SelectOption[];
+  contentType: Fs.LinkType;
   urlValue: string;
   intlValues: Record<string, string>;
   articles: string[];
   configOptions: Fs.ConfigOption[];
   description: string;
   isExpanded: boolean;
+  onChangeContentType: (value: string) => void;
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
   onChangeArticles: (value: string[]) => void;
@@ -31,12 +33,18 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const linkProps = dirent?.type === 'ARTICLE_LINK' ? dirent.props as Fs.LinkProps : undefined;
   const locales = selectOptions.languages;
 
+  const [contentType, setContentType] = React.useState<Fs.LinkType>(linkProps?.contentType ?? 'internal');
   const [urlValue, setUrlValue] = React.useState(linkProps?.urlValue ?? '');
   const [intlValues, setIntlValues] = React.useState<Record<string, string>>(linkProps?.intlValues ?? {});
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>((dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]);
   const [articles, setArticles] = React.useState<string[]>(linkProps?.articles ?? []);
   const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
   const [isExpanded, setIsExpanded] = React.useState(false);
+
+
+  function onChangeContentType(value: string) {
+    setContentType(value as Fs.LinkType);
+  }
 
   function onChangeUrlValue(value: string) {
     setUrlValue(value);
@@ -66,12 +74,14 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isDarkMode,
     dirent,
     locales,
+    contentType,
     urlValue,
     intlValues,
     articles,
     configOptions,
     description,
     isExpanded,
+    onChangeContentType,
     onChangeUrlValue,
     onChangeIntlValue,
     onChangeArticles,

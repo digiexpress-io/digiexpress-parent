@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
+import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentTextField } from '../fs-dirent-text-field';
@@ -21,6 +22,10 @@ export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = () => {
 
   const [selectedArticles, setSelectedArticles] = React.useState<string[]>([]);
   const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
+  const linkTypeOptions = selectOptions.linkTypes.map(v => ({
+    value: v,
+    label: intl.formatMessage({ id: `fs.dirent.link.contentType.${v}` }),
+  }));
 
   return (
     <FsDirentLinkRoot className={classes.root} ownerState={ownerState}>
@@ -29,6 +34,10 @@ export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = () => {
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.urlValueField.label' })}</Typography>
         <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.link.urlValueField.placeholder' })} />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.contentTypeField.label' })}</Typography>
+        <FsDirentSelectSingle options={linkTypeOptions} value={ownerState.contentType} onChange={ownerState.onChangeContentType} />
+        <Typography className={classes.helperText}>{intl.formatMessage({ id: `fs.dirent.link.contentType.${ownerState.contentType}.desc` })}</Typography>
 
         {ownerState.locales.map((locale) => (
           <div key={locale.label} className={classes.localeRow}>

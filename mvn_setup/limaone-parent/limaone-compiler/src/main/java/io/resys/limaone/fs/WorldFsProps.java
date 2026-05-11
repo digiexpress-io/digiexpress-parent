@@ -71,6 +71,7 @@ public interface WorldFsProps {
     String getUrlValue();
     Map<String, String> getIntlValues();
     List<String> getArticles();
+    String getContentType();
   }
   
   interface TemplateProps extends WorldFsProps {

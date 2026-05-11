@@ -67,6 +67,7 @@ export class FsWorld {
         flows: _collectFlows(dirents),
         dialobs: _collectDialobs(dirents),
         languages: _collectLanguages(dirents),
+        linkTypes: _collectLinkTypes(),
         labels: _collectLabels(dirents),
         direntProps: propsMap,
 
@@ -184,6 +185,10 @@ function _collectLanguages(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
     }
   });
   return Array.from(result);
+}
+
+function _collectLinkTypes(): Fs.LinkType[] {
+  return ['internal', 'external', 'phone'];
 }
 
 function _collectLabels(nodes: Fs.DirentBase[]): string[] {

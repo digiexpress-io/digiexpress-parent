@@ -332,7 +332,10 @@ export declare namespace Fs {
     urlValue: string;
     intlValues: Record<string, string>;
     articles: string[];
+    contentType: LinkType;
   }
+
+  export type LinkType = 'internal' | 'external' | 'phone';
 
   export interface PhoneProps extends PropsBase {
     type: 'ARTICLE_LINK';
@@ -386,6 +389,7 @@ export declare namespace Fs {
     flows: SelectOption[];
     dialobs: SelectOption[];
     languages: SelectOption[];
+    linkTypes: LinkType[];
     labels: string[];
     direntProps: Record<string, Fs.Props>;
     collectDialobTags: (dialobId: string) => SelectOption[];

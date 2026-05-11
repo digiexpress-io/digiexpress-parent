@@ -19,6 +19,7 @@ export interface FsDirentLinkClasses {
   sectionBox: string;
   sectionContent: string;
   buttonContainer: string;
+  helperText: string;
 }
 
 export type FsDirentLinkClassKey = keyof FsDirentLinkClasses;
@@ -39,6 +40,7 @@ export const useUtilityClasses = () => {
     sectionBox: ['sectionBox'],
     sectionContent: ['sectionContent'],
     buttonContainer: ['buttonContainer'],
+    helperText: ['helperText'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -129,6 +131,12 @@ export const FsDirentLinkRoot = styled('div', {
   [`& .${MUI_NAME}-sectionContent`]: {
     ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+  },
+
+  [`& .${MUI_NAME}-helperText`]: {
+    ...theme.typography.caption,
+    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    marginTop: theme.spacing(-1),
   },
 
   [`& .${MUI_NAME}-buttonContainer`]: {

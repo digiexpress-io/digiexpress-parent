@@ -41,6 +41,7 @@ public class Props_LinkBuilder {
     return ImmutableLinkProps.builder()
         .id(node.getObjectId())
         .type(node.getBodyType())
+        .contentType(link.getContentType())
         .locked(false)
         .articles(link.getArticles())
         .intlValues(labels.stream()

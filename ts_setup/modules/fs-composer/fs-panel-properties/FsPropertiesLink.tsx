@@ -23,6 +23,8 @@ export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ dirent }) =>
     const lang = selectOptions.languages.find((l) => l.value === localeId);
     return lang?.label ?? localeId;
   })
+  const linkType = (dirent.props as Fs.LinkProps).contentType;
+  const contentType = intl.formatMessage({ id: `fs.dirent.link.contentType.${linkType}` });
 
   return (
     <>
@@ -36,6 +38,11 @@ export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ dirent }) =>
         <div className={classes.propertyList}>
           {locales.map((locale, index) => <Box key={index} className={classes.propertyListItem}>{locale}</Box>)}
         </div>
+      </div>
+
+      <div className={classes.propertyRow}>
+        <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.contentType' })}</Typography>
+        <Typography className={classes.propertyValue}>{contentType}</Typography>
       </div>
     </>
   );
