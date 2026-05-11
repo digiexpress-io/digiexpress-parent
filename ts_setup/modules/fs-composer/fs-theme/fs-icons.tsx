@@ -76,6 +76,10 @@ import {
   FileDownloadDone,
   Upload,
   TaskAlt,
+
+  // Stats & Checkmark
+  Assessment,
+  Check,
 } from '@mui/icons-material';
 import { SvgIconProps, Tooltip } from '@mui/material';
 
@@ -158,6 +162,8 @@ export const FsIcons = {
   Organize: CompareArrowsRounded,
   CsvDownload: FileDownloadDone,
   CsvUpload: Upload,
+  ArticleLocaleOverview: Check,
+  Stats: Assessment,
 };
 
 export interface FsIconProps {
