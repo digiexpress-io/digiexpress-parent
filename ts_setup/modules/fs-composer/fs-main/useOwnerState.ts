@@ -10,8 +10,8 @@ type ToolbarButtonType = 'toggle' | 'view' | 'save';
 type ViewSupport = Partial<Record<Fs.BodyType, Fs.SecondaryView[]>>;
 
 const SUPPORTED_VIEWS: ViewSupport = {
-  FOLDER: ['properties', 'changes', 'overview', 'article-order', 'article-locale-overview', 'stats'],
-  ARTICLE: ['properties', 'references', 'history', 'changes', 'article-order', 'overview', 'article-locale-overview', 'stats'],
+  FOLDER: ['properties', 'changes', 'article-order', 'article-locale-overview', 'stats'],
+  ARTICLE: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
   ARTICLE_PAGE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
   ARTICLE_TEMPLATE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
   ARTICLE_WORKFLOW: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
@@ -165,15 +165,6 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       isSelected: selectedView === 'article-order',
       isEnabled: isViewEnabled('article-order'),
       onClick: () => handleViewChange('article-order'),
-    },
-    {
-      id: 'overview',
-      type: 'view',
-      icon: FsIcons.Tree,
-      tooltip: intl.formatMessage({ id: 'fs.main.tooltip.overview' }),
-      isSelected: selectedView === 'overview',
-      isEnabled: isViewEnabled('overview'),
-      onClick: () => handleViewChange('overview'),
     },
     {
       id: 'article-locale-overview',
