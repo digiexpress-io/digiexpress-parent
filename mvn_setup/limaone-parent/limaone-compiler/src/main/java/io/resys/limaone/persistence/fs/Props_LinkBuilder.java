@@ -42,6 +42,7 @@ public class Props_LinkBuilder {
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)
+        .articles(link.getArticles())
         .intlValues(labels.stream()
             .collect(Collectors.toMap(
                 l -> l.getLocale(), 

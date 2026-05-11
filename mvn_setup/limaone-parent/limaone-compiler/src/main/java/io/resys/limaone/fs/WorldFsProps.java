@@ -70,6 +70,7 @@ public interface WorldFsProps {
   interface LinkProps extends WorldFsProps {
     String getUrlValue();
     Map<String, String> getIntlValues();
+    List<String> getArticles();
   }
   
   interface TemplateProps extends WorldFsProps {

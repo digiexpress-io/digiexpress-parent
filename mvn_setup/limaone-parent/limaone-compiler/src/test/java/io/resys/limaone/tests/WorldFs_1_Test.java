@@ -147,6 +147,7 @@ public class WorldFs_1_Test extends DbSupport {
         .newArticleWorkflow().props(props -> props.value("Workflow1")
           .formName("form1").formTag("v1").flowName("flow1").formId("external-form-id")
           .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("firstForm").build())
+          .addArticles(article2.getId())
           .build()
       ).buildSync();
   }

@@ -331,6 +331,7 @@ export declare namespace Fs {
     type: 'ARTICLE_LINK';
     urlValue: string;
     intlValues: Record<string, string>;
+    articles: string[];
   }
 
   export interface PhoneProps extends PropsBase {

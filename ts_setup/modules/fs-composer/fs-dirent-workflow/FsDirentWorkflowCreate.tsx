@@ -23,7 +23,7 @@ export const FsDirentWorkflowCreate: React.FC<FsDirentWorkflowCreateProps> = () 
   const articles = selectOptions.articles;
   const configOptions = getConfigOptionsForType('ARTICLE_WORKFLOW');
 
-  const [serviceName, setServiceName] = React.useState('');
+  const [workflowName, setWorkflowName] = React.useState('');
   const [selectedDialobForm, setSelectedDialobForm] = React.useState<string>('');
   const [selectedDialobTag, setSelectedDialobTag] = React.useState<string>('');
   const dialobTags = selectOptions.collectDialobTags(selectedDialobForm);
@@ -38,7 +38,7 @@ export const FsDirentWorkflowCreate: React.FC<FsDirentWorkflowCreateProps> = () 
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.nameField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })} required value={serviceName} onChange={setServiceName} />
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })} required value={workflowName} onChange={setWorkflowName} />
 
         <Divider />
 

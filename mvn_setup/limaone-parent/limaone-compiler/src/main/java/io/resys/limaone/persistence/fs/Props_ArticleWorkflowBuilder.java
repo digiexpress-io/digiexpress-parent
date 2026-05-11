@@ -36,6 +36,7 @@ public class Props_ArticleWorkflowBuilder {
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)
+        .articles(service.getArticles())
         .serviceName(service.getValue())
         .dialobFormName(service.getFormName())
         .dialobFormTag(service.getFormTag())

@@ -33,19 +33,19 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { getDirent, selectOptions } = useFsDirent();
 
   const dirent = getDirent(props.direntId);
-  const serviceProps = dirent?.type === 'ARTICLE_WORKFLOW' ? dirent.props as Fs.WorkflowProps : undefined;
+  const workflowProps = dirent?.type === 'ARTICLE_WORKFLOW' ? dirent.props as Fs.WorkflowProps : undefined;
 
   const [name, setName] = React.useState(dirent?.name ?? '');
-  const [dialobFormName, setDialobFormName] = React.useState(serviceProps?.dialobFormName ?? '');
-  const [dialobFormTag, setDialobFormTag] = React.useState(serviceProps?.dialobFormTag ?? '');
-  const [flowName, setFlowName] = React.useState(serviceProps?.flowName ?? '');
-  const [validityStart, setValidityStart] = React.useState(serviceProps?.validityStart ?? '');
-  const [validityEnd, setValidityEnd] = React.useState(serviceProps?.validityEnd ?? '');
-  const [articles, setArticles] = React.useState<string[]>((serviceProps?.articles ?? []) as string[]);
+  const [dialobFormName, setDialobFormName] = React.useState(workflowProps?.dialobFormName ?? '');
+  const [dialobFormTag, setDialobFormTag] = React.useState(workflowProps?.dialobFormTag ?? '');
+  const [flowName, setFlowName] = React.useState(workflowProps?.flowName ?? '');
+  const [validityStart, setValidityStart] = React.useState(workflowProps?.validityStart ?? '');
+  const [validityEnd, setValidityEnd] = React.useState(workflowProps?.validityEnd ?? '');
+  const [articles, setArticles] = React.useState<string[]>((workflowProps?.articles ?? []));
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
   );
-  const [intlValues, setIntlValues] = React.useState<Record<string, string>>(serviceProps?.intlValues ?? {});
+  const [intlValues, setIntlValues] = React.useState<Record<string, string>>(workflowProps?.intlValues ?? {});
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const locales = selectOptions.languages;

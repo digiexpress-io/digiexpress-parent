@@ -33,10 +33,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [urlValue, setUrlValue] = React.useState(linkProps?.urlValue ?? '');
   const [intlValues, setIntlValues] = React.useState<Record<string, string>>(linkProps?.intlValues ?? {});
-  const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
-    (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
-  );
-  const [articles, setArticles] = React.useState<string[]>([]);
+  const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>((dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]);
+  const [articles, setArticles] = React.useState<string[]>(linkProps?.articles ?? []);
   const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
   const [isExpanded, setIsExpanded] = React.useState(false);
 

@@ -19,8 +19,6 @@ export const FsThemeProvider: React.FC<FsThemeProviderProps> = (props) => {
     setIsDarkMode,
   }), [isDarkMode]);
 
-  console.log("XXX")
-
   return (
     <FsThemeContext.Provider value={contextValue}>
       {props.children}
