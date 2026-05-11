@@ -84,7 +84,7 @@ export const useOwnerState = (_props: FsPanelDirentStatsProps): OwnerState => {
 
   // Section 3: Disabled assets (configOption: disabledMode)
   const disabledAssets: DisabledAsset[] = allProps
-    .filter(p => p.configOptions?.includes('disabledMode'))
+    .filter(p => p.configOptions?.includes('DISABLED_MODE'))
     .map(p => ({ name: getDirent(p.id)?.name ?? p.id, type: p.type }));
 
   return { isDarkMode, assetCounts, danglingGroups, disabledAssets };

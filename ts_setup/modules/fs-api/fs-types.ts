@@ -343,7 +343,7 @@ export declare namespace Fs {
     intlValues: Record<string, string>;
   }
 
-  export type ConfigOption = 'devMode' | 'assignableMode' | 'disabledMode' | 'anonymousMode';
+  export type ConfigOption = 'DEV_MODE' | 'ASSIGNABLE_MODE' | 'DISABLED_MODE' | 'ANONYMOUS_MODE';
 
   export interface User {
     userName: string;

@@ -18,10 +18,10 @@ export const ALL_TYPES: Fs.BodyType[] = [
 
 
 const ALL_CONFIG_OPTIONS: Fs.SelectOption[] = [
-  { value: 'devMode', label: 'Development mode' },
-  { value: 'assignableMode', label: 'Assignable mode' },
-  { value: 'disabledMode', label: 'Disabled mode' },
-  { value: 'anonymousMode', label: 'Anonymous mode' },
+  { value: 'DEV_MODE', label: 'Development mode' },
+  { value: 'ASSIGNABLE_MODE', label: 'Assignable mode' },
+  { value: 'DISABLED_MODE', label: 'Disabled mode' },
+  { value: 'ANONYMOUS_MODE', label: 'Anonymous mode' },
 ];
 
 export function getExtension(type: Fs.BodyType): string | undefined {
@@ -39,20 +39,20 @@ export function getExtension(type: Fs.BodyType): string | undefined {
 export function getConfigOptionsForType(type: Fs.BodyType): Fs.SelectOption[] {
   switch (type) {
     case 'ARTICLE_LINK': {
-      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'devMode' || o.value === 'disabledMode');
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE' || o.value === 'DISABLED_MODE');
     }
     case 'ARTICLE_WORKFLOW':
     case 'ARTICLE': {
       return ALL_CONFIG_OPTIONS;
     }
     case 'LOCALE': {
-      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'disabledMode');
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DISABLED_MODE');
     }
     case 'ARTICLE_PAGE': {
-      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'disabledMode' || o.value === 'devMode');
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DISABLED_MODE' || o.value === 'DEV_MODE');
     }
     case 'PRINTOUT': {
-      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'devMode');
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE');
     }
     default: {
       return [];

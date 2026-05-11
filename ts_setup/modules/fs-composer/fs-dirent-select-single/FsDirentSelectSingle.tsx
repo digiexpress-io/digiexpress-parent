@@ -18,7 +18,6 @@ export const FsDirentSelectSingle: React.FC<FsDirentSelectSingleProps> = (props)
         onChange={(e) => props.onChange(e.target.value as string)}
         input={<OutlinedInput />}
       >
-        <MenuItem value='' />
         {props.options.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}

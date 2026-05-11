@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
  */
 
 import io.resys.limaone.fs.ImmutableServiceProps;
+import io.resys.limaone.fs.WorldFsProps.ConfigOption;
 import io.resys.limaone.fs.WorldFsProps.ServiceProps;
 import io.resys.limaone.model.ArticleWorkflow;
 import io.resys.limaone.model.LocaleLabel;
@@ -37,8 +38,23 @@ public class Props_ArticleWorkflowBuilder {
   public ServiceProps build() {
     final ArticleWorkflow service = currentState.getBodyOfType(node);
     final List<LocaleLabel> labels = service.getLabels();
+    
+    final var builder = ImmutableServiceProps.builder();
+    
+    if (Boolean.TRUE.equals(service.getDevMode())) {
+      builder.addConfigOptions(ConfigOption.DEV_MODE);
+    }
+    if (Boolean.TRUE.equals(service.getAssignable())) {
+      builder.addConfigOptions(ConfigOption.ASSIGNABLE_MODE);
+    }
+    if (Boolean.TRUE.equals(service.getDisabled())) {
+      builder.addConfigOptions(ConfigOption.DISABLED_MODE);
+    }
+    if (Boolean.TRUE.equals(service.getAnon())) {
+      builder.addConfigOptions(ConfigOption.ANONYMOUS_MODE);
+    }
 
-    return ImmutableServiceProps.builder()
+    return builder
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)
