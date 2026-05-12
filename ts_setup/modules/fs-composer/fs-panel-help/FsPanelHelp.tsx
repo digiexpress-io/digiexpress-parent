@@ -2,12 +2,46 @@ import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { OpenInNew as OpenInNewIcon } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
+import { Fs } from '@dxs-ts/fs-api';
 
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
 import { FsPanelHelpProps } from './FsPanelHelpProps';
 import { useOwnerState } from './useOwnerState';
 import { useUtilityClasses, FsPanelHelpRoot } from './useUtilityClasses';
+import { helpFolder } from './help-folder';
+import { helpArticle } from './help-article';
+import { helpArticlePage } from './help-article-page';
+import { helpArticleTemplate } from './help-article-template';
+import { helpArticleWorkflow } from './help-article-workflow';
+import { helpArticleLink } from './help-article-link';
+import { helpFlow } from './help-flow';
+import { helpFlowTask } from './help-flow-task';
+import { helpDecisionTable } from './help-decision-table';
+import { helpDialobForm } from './help-dialob-form';
+import { helpPrintout } from './help-printout';
+import { helpPrintoutPage } from './help-printout-page';
+import { helpPrintoutResource } from './help-printout-resource';
+import { helpLocale } from './help-locale';
+import { helpDeployment } from './help-deployment';
+
+const HELP_CONTENT: Partial<Record<Fs.BodyType, string>> = {
+  FOLDER: helpFolder,
+  ARTICLE: helpArticle,
+  ARTICLE_PAGE: helpArticlePage,
+  ARTICLE_TEMPLATE: helpArticleTemplate,
+  ARTICLE_WORKFLOW: helpArticleWorkflow,
+  ARTICLE_LINK: helpArticleLink,
+  FLOW: helpFlow,
+  FLOW_TASK: helpFlowTask,
+  DECISION_TABLE: helpDecisionTable,
+  DIALOB_FORM: helpDialobForm,
+  PRINTOUT: helpPrintout,
+  PRINTOUT_PAGE: helpPrintoutPage,
+  PRINTOUT_RESOURCE: helpPrintoutResource,
+  LOCALE: helpLocale,
+  DEPLOYMENT: helpDeployment,
+};
 
 
 export const FsPanelHelp: React.FC<FsPanelHelpProps> = (props) => {
@@ -47,7 +81,7 @@ export const FsPanelHelp: React.FC<FsPanelHelpProps> = (props) => {
             ...(props.overrides ?? {})
           }}
         >
-          {helpMarkdownMock}
+          {(props.dirent?.type ? HELP_CONTENT[props.dirent.type] : undefined) ?? helpMarkdownDefault}
         </ReactMarkdown>
       </FsPanelHelpRoot>
     </FsPanel>
@@ -55,76 +89,6 @@ export const FsPanelHelp: React.FC<FsPanelHelpProps> = (props) => {
 };
 
 
-const helpMarkdownMock = `
-# Tree Navigation: Getting started
-
-Welcome to the Eveli Tree file explorer! This help section will guide you through using the tree navigation system effectively.
-
-## Basic Navigation
-- **Expand/Collapse**: Click the arrow icons next to folders to expand or collapse them
-- **Select Dirent**: Click on any item to select it and view its details
-- **Context Menu**: Right-click on items to access additional actions
-
-## Tree Structure
-The tree is organized hierarchically:
-- **Root Level**: Main categories and top-level items
-- **Folders**: Contain multiple sub-items
-- **Files**: Individual content items
-
-## Features
-### Search
-Use the search bar to quickly find specific items in the tree.
-
-### Views
-Switch between different view modes:
-- **Properties**: View detailed information about selected items
-- **History**: See change history and versions
-- **References**: View connections and dependencies
-- **Errors**: Check for validation issues
-
-## Tips
-> **Pro Tip**: Use keyboard shortcuts for faster navigation!
-
-- Press \`Ctrl/Cmd + F\` to open search
-- Use arrow keys to navigate between items
-- Press \`Enter\` to expand/collapse selected folders
-
-## Programmatic Access
-
-You can also interact with the tree programmatically using the Eveli Tree API:
-
-\`\`\`typescript
-import { Fs, useFs } from '@dxs-ts/fs-api';
-
-// Example: Find and select a specific dirent
-function useTreeNavigation() {
-  const {
-    activeDirent,
-    setActiveDirent,
-    openTabs,
-    setActiveTab
-  } = useFs();
-
-  const selectDirentById = (nodeId: string) => {
-    // Navigate to a specific dirent
-    const targetDirent = findDirentById(nodeId);
-    if (targetDirent) {
-      setActiveDirent(targetDirent);
-      setActiveTab(targetDirent.path);
-    }
-  };
-
-  const findDirentById = (id: string): Fs | null => {
-    // Implementation to search tree structure
-    return activeDirent?.children?.find(child => child.id === id) || null;
-  };
-
-  return { selectDirentById, currentDirent: activeDirent };
-}
-\`\`\`
-
-## Need More Help?
-If you encounter any issues or need additional assistance, please contact support.
-[Helpdesk](http://www.google.com)
-[Official docs](https://www.thegooddocsproject.dev/)
+const helpMarkdownDefault = `
+# TODO
 `;

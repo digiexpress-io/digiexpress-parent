@@ -20,8 +20,9 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
-import io.resys.limaone.fs.ImmutableLanguageProps;
-import io.resys.limaone.fs.WorldFsProps.LanguageProps;
+import io.resys.limaone.fs.ImmutableLocaleProps;
+import io.resys.limaone.fs.WorldFsProps.ConfigOption;
+import io.resys.limaone.fs.WorldFsProps.LocaleProps;
 import io.resys.limaone.model.Locale;
 import lombok.RequiredArgsConstructor;
 
@@ -30,9 +31,15 @@ public class Props_LocaleBuilder {
   private final WorldFsState currentState;
   private final NodeAndBody node;
   
-  public LanguageProps build() {
+  public LocaleProps build() {
     final Locale locale = currentState.getBodyOfType(node);
-    return ImmutableLanguageProps.builder()
+    final var builder = ImmutableLocaleProps.builder();
+    
+    if(Boolean.TRUE.equals(locale.getDisabled())) {
+      builder.addConfigOptions(ConfigOption.DISABLED_MODE);
+    }
+    
+    return ImmutableLocaleProps.builder()
         .localeCode(locale.getValue())
         .id(node.getObjectId())
         .type(node.getBodyType())
@@ -40,7 +47,7 @@ public class Props_LocaleBuilder {
         .build();
   }
   
-  public static LanguageProps of(WorldFsState currentState, NodeAndBody node) {
+  public static LocaleProps of(WorldFsState currentState, NodeAndBody node) {
     return new Props_LocaleBuilder(currentState, node).build();
   }
 

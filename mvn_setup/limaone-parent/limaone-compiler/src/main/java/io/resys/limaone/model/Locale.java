@@ -22,11 +22,13 @@ package io.resys.limaone.model;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.Body;
 import io.resys.limaone.model.Model.BodyType;
+import jakarta.annotation.Nullable;
 
 @Value.Immutable
 @JsonSerialize(as = ImmutableLocale.class)
@@ -34,6 +36,9 @@ import io.resys.limaone.model.Model.BodyType;
 public interface Locale extends Body {
   String getValue();
   Boolean getEnabled();
+  
+  @JsonInclude(JsonInclude.Include.NON_NULL) 
+  @Nullable Boolean getDisabled();
   
   
   default BodyType getBodyType() {

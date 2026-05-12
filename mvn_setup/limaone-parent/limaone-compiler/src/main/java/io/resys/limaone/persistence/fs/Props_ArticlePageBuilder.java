@@ -22,6 +22,7 @@ package io.resys.limaone.persistence.fs;
 
 import io.resys.limaone.fs.ImmutableArticlePageProps;
 import io.resys.limaone.fs.WorldFsProps.ArticlePageProps;
+import io.resys.limaone.fs.WorldFsProps.ConfigOption;
 import io.resys.limaone.model.ArticlePage;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +34,11 @@ public class Props_ArticlePageBuilder {
   
   public ArticlePageProps build() {
     final ArticlePage articlePage = currentState.getBodyOfType(node);
+    final var builder = ImmutableArticlePageProps.builder();
+    
+   if(Boolean.TRUE.equals(articlePage.getDevMode())) {
+     builder.addConfigOptions(ConfigOption.DEV_MODE);
+   }
     
     return ImmutableArticlePageProps.builder()
         .id(node.getObjectId())

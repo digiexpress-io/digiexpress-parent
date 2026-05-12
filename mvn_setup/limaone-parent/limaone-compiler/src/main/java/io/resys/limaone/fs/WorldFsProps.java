@@ -55,6 +55,7 @@ public interface WorldFsProps {
   @Value.Immutable
   interface ArticleProps extends WorldFsProps {
     Integer getOrderNumber();
+
   }
   
   @Value.Immutable
@@ -96,7 +97,6 @@ public interface WorldFsProps {
     String getValidityEnd();
     
     List<String> getArticles();
-    List<ConfigOption> getConfigOptions();
     Map<String, String> getIntlValues();
   }
 
@@ -123,7 +123,7 @@ public interface WorldFsProps {
   }
 
   @Value.Immutable
-  interface LanguageProps extends WorldFsProps {
+  interface LocaleProps extends WorldFsProps {
     String getLocaleCode();
   }
   

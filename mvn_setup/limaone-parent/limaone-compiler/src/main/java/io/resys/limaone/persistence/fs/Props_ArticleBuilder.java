@@ -22,6 +22,7 @@ package io.resys.limaone.persistence.fs;
 
 import io.resys.limaone.fs.ImmutableArticleProps;
 import io.resys.limaone.fs.WorldFsProps.ArticleProps;
+import io.resys.limaone.fs.WorldFsProps.ConfigOption;
 import io.resys.limaone.model.Article;
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +36,13 @@ public class Props_ArticleBuilder {
   
   public ArticleProps build() {
     final Article article = currentState.getBodyOfType(node);
+    final var builder = ImmutableArticleProps.builder();
+    
+    if(Boolean.TRUE.equals(article.getDevMode())) {
+      builder.addConfigOptions(ConfigOption.DEV_MODE);
+    }
+
+    
     return ImmutableArticleProps.builder()
         .id(node.getObjectId())
         .type(node.getBodyType())

@@ -10,21 +10,21 @@ type ToolbarButtonType = 'toggle' | 'view' | 'save';
 type ViewSupport = Partial<Record<Fs.BodyType, Fs.SecondaryView[]>>;
 
 const SUPPORTED_VIEWS: ViewSupport = {
-  FOLDER: ['properties', 'changes', 'article-order', 'article-locale-overview', 'stats'],
-  ARTICLE: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
-  ARTICLE_PAGE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
-  ARTICLE_TEMPLATE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
-  ARTICLE_WORKFLOW: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
-  ARTICLE_LINK: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
-  FLOW: ['properties', 'references', 'debug', 'errors', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'debug', 'stats'],
-  FLOW_TASK: ['properties', 'references', 'debug', 'errors', 'history', 'changes', 'article-order', 'article-locale-overview', 'debug', 'stats'],
-  DECISION_TABLE: ['properties', 'references', 'errors', 'history', 'changes', 'article-order', 'article-locale-overview', 'debug', 'stats'],
-  DIALOB_FORM: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
-  PRINTOUT: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
-  PRINTOUT_PAGE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
-  PRINTOUT_RESOURCE: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
-  LOCALE: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
-  DEPLOYMENT: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats'],
+  FOLDER: ['properties', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
+  ARTICLE: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
+  ARTICLE_PAGE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
+  ARTICLE_TEMPLATE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
+  ARTICLE_WORKFLOW: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
+  ARTICLE_LINK: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
+  FLOW: ['properties', 'references', 'debug', 'errors', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'debug', 'stats', 'help'],
+  FLOW_TASK: ['properties', 'references', 'debug', 'errors', 'history', 'changes', 'article-order', 'article-locale-overview', 'debug', 'stats', 'help'],
+  DECISION_TABLE: ['properties', 'references', 'errors', 'history', 'changes', 'article-order', 'article-locale-overview', 'debug', 'stats', 'help'],
+  DIALOB_FORM: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
+  PRINTOUT: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
+  PRINTOUT_PAGE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
+  PRINTOUT_RESOURCE: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
+  LOCALE: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
+  DEPLOYMENT: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
 };
 
 export interface PanelButton {

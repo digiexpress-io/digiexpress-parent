@@ -43,13 +43,13 @@ export function getConfigOptionsForType(type: Fs.BodyType): Fs.SelectOption[] {
     }
     case 'ARTICLE_WORKFLOW':
     case 'ARTICLE': {
-      return ALL_CONFIG_OPTIONS;
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE');
     }
     case 'LOCALE': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DISABLED_MODE');
     }
     case 'ARTICLE_PAGE': {
-      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DISABLED_MODE' || o.value === 'DEV_MODE');
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE');
     }
     case 'PRINTOUT': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE');
