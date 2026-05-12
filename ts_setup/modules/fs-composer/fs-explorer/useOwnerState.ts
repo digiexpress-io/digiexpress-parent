@@ -5,6 +5,16 @@ import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { useFsTheme } from '../fs-theme';
 
+function collectParentIds(nodes: Fs.DirentBase[], acc: string[] = []): string[] {
+  nodes.forEach(node => {
+    if (node.children && node.children.length > 0) {
+      acc.push(node.id);
+      collectParentIds(node.children, acc);
+    }
+  });
+  return acc;
+}
+
 function handleContextMenu(
   event: React.MouseEvent,
   dirent: Fs.DirentBase,
@@ -48,47 +58,31 @@ export interface OwnerState {
 export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   const { isDarkMode, setIsDarkMode } = useFsTheme();
   const { openAsset } = useFsNav();
-  const { getDirent, dirents } = useFsDirent();
+  const { getDirent, dirents, getExtension } = useFsDirent();
   const { collapseAll, setExpanded, setExpandedBatch, isExpanded } = useFsNav();
   const { search } = useFsSearch();
-  const debounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<Fs.ContextMenuData | undefined>();
 
   const filteredTreeData = React.useMemo(() => {
-    return filterTreeDirents(dirents, search.searchTerm, search.activeFilters, getDirent);
+    return filterTreeDirents(dirents, search.searchTerm, search.activeFilters, getDirent, getExtension);
   }, [dirents, search.searchTerm, search.activeFilters, getDirent]);
 
-  function collectParentIds(nodes: Fs.DirentBase[], acc: string[] = []): string[] {
-    nodes.forEach(node => {
-      if (node.children && node.children.length > 0) {
-        acc.push(node.id);
-        collectParentIds(node.children, acc);
-      }
-    });
-    return acc;
-  }
+  React.useEffect(() => {
+    const hasSearchTerm = !!search.searchTerm.trim();
+    const hasFilters = search.activeFilters.length > 0;
+    if (hasSearchTerm || hasFilters) {
+      setExpandedBatch(collectParentIds(filteredTreeData), true);
+    }
+  }, [filteredTreeData]);
 
   function handleSetSearchTerm(term: string) {
     search.setSearchTerm(term);
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
-    debounceRef.current = setTimeout(() => {
-      if (term) {
-        const filtered = filterTreeDirents(dirents, term, search.activeFilters, getDirent);
-        setExpandedBatch(collectParentIds(filtered), true);
-      }
-    }, 350);
   }
 
   function handleSetFilters(newFilters: FilterData[]) {
     search.setActiveFilters(newFilters);
-    if (newFilters.length > 0) {
-      const filtered = filterTreeDirents(dirents, search.searchTerm, newFilters, getDirent);
-      setExpandedBatch(collectParentIds(filtered), true);
-    }
   }
 
   function onContextMenuClose() {

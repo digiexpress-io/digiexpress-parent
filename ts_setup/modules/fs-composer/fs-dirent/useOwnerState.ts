@@ -37,7 +37,13 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
 
   const dirent = getDirent(direntBase.id) ?? direntBase;
   const children = (direntBase.children ?? [])
-    .map(c => getDirent(c.id))
+    .map(c => {
+      const full = getDirent(c.id);
+      if (!full) {
+        return undefined;
+      }
+      return { ...full, children: c.children };
+    })
     .filter((c): c is Fs.DirentBase => !!c);
 
   const isChildren = children.length > 0;
