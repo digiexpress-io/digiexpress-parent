@@ -210,40 +210,56 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
       }
     }
     
-    final var visitCalls = new ArrayList<String>();
+    
     int orderNumber = 1;
     
     // 1. DELETES
     if (!deleteOps.isEmpty()) {
       method.addCode("    // === DELETE OPERATIONS ===\n");
       for (final var deleteOp : deleteOps) {
-        visitCalls.add(deleteOp + ", // " + (orderNumber++));
+        if(orderNumber > 1) {
+          method.addCode("    ,");  
+        } else {
+          method.addCode("     ");
+        }
+        method.addCode(deleteOp + " // " + (orderNumber++) + "\n");
       }
-      method.addCode("    " + String.join("\n    ", visitCalls) + "\n\n");
-      visitCalls.clear();
+      method.addCode("\n\n");
+      
     }
     
     // 2. INSERTS  
     if (!insertOps.isEmpty()) {
       method.addCode("    // === INSERT OPERATIONS ===\n");
       for (final var insertOp : insertOps) {
-        visitCalls.add(insertOp + ", // " + (orderNumber++));
+        if(orderNumber > 1) {
+          method.addCode("    ,");  
+        } else {
+          method.addCode("     ");
+        }
+        method.addCode(insertOp + " // " + (orderNumber++) + "\n");
       }
-      method.addCode("    " + String.join("\n    ", visitCalls) + "\n\n");
-      visitCalls.clear();
+      method.addCode("\n\n");
+      
     }
     
     // 3. UPDATES
     if (!updateOps.isEmpty()) {
       method.addCode("    // === UPDATE OPERATIONS ===\n");
-      for (int i = 0; i < updateOps.size(); i++) {
-        final var updateOp = updateOps.get(i);
-        final var isLast = (i == updateOps.size() - 1);
-        visitCalls.add(updateOp + (isLast ? " // " : ", // ") + (orderNumber++));
+      for (final var updateOp : updateOps) {
+        if(orderNumber > 1) {
+          method.addCode("    ,");  
+        } else {
+          method.addCode("     ");
+        }
+        method.addCode(updateOp + " // " + (orderNumber++) + "\n");
       }
-      method.addCode("    " + String.join("\n    ", visitCalls));
+      method.addCode("\n\n");
     }
+    
+    
     method.addCode("\n  )\n");
+    
     
     method.addCode("  .with($T.class, (items) -> visitSuccess(entries, items))\n", 
       ClassName.bestGuess(persistenceUnitName));
