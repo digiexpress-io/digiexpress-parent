@@ -6,7 +6,7 @@ import { useFsSearch } from './FsSearchProvider';
 
 export type { FilterData, AssetTypeFilter };
 
-
+const SEARCH_DEBOUNCE_MS = 350;
 
 export interface OwnerState {
   searchTerm: string;
@@ -25,9 +25,18 @@ export interface OwnerState {
 export const useOwnerState = (_props: FsSearchProps): OwnerState => {
   const { isDarkMode } = useFsTheme();
   const { search } = useFsSearch();
+  const [inputValue, setInputValue] = React.useState(search.searchTerm);
+  const debounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    search.handleSearchChange(event);
+    const value = event.target.value;
+    setInputValue(value);
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    debounceRef.current = setTimeout(() => {
+      search.setSearchTerm(value);
+    }, SEARCH_DEBOUNCE_MS);
   };
 
   const handleTypeFilterSelectChange = (selectedLabels: string[]) => {
@@ -41,7 +50,7 @@ export const useOwnerState = (_props: FsSearchProps): OwnerState => {
   return {
     isDarkMode,
 
-    searchTerm: search.searchTerm,
+    searchTerm: inputValue,
     visibleFilters: search.activeFilters,
     open: search.open,
     allAvailableTypeFilters: search.allAvailableTypeFilters,

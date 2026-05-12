@@ -127,6 +127,7 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   const displayName = props.dirent.type === 'ARTICLE' ? (
     getParentDirent(props.dirent.id)?.name ?? props.dirent.name) : props.dirent.name;
   const extension = getExtension(props.dirent.type);
+  const fullDisplayName = extension ? displayName + extension : displayName;
 
   return (
     <ListItemText className={classes.direntName} primary={<Typography variant='subtitle2'
@@ -137,8 +138,7 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
         fontWeight: props.isDarkTheme ? 400 : 500,
       }}
     >
-      <SearchResultHighlight text={displayName} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />
-      {extension && <Typography component='span' variant='inherit'><SearchResultHighlight text={extension} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} /></Typography>}
+      <SearchResultHighlight text={fullDisplayName} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />
       {description && (
         <Typography component='span' variant='caption' sx={{ ml: 1, color: FsColors.dark.textMuted, fontStyle: 'italic' }}>
           - "<SearchResultHighlight text={description} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />"

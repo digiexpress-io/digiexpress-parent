@@ -14,7 +14,6 @@ interface FsSearchContextType {
   setSearchTerm: (value: string) => void;
   setActiveFilters: (filters: FilterData[]) => void;
   setOpen: (isOpen: boolean) => void;
-  handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleFilterSelectChange: (selectedLabels: string[]) => void;
   handleLabelFilterSelectChange: (selectedValues: string[]) => void;
 }
@@ -29,10 +28,6 @@ export const FsSearchProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilters, setActiveFilters] = useState<FilterData[]>([]);
   const [open, setOpen] = useState(false);
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
 
   const handleFilterSelectChange = (selectedValues: string[]) => {
     const newTypeFilters = allAvailableTypeFilters.filter(f => selectedValues.includes(f.value));
@@ -56,7 +51,6 @@ export const FsSearchProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setSearchTerm,
     setActiveFilters,
     setOpen,
-    handleSearchChange,
     handleFilterSelectChange,
     handleLabelFilterSelectChange,
   }), [searchTerm, activeFilters, open, isDarkMode, selectOptions.labels]);
