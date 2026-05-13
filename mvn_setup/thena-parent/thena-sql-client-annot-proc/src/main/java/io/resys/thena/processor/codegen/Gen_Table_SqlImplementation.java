@@ -174,7 +174,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     
     // Generate all methods
     for (final var method : model.getSqlMethods()) {
-      classBuilder.addMethod(generateMethod(method, model));
+      classBuilder.addMethod(generateMethod(method, model, registry));
     }
     
     return JavaFile.builder(model.getPackageName() + ".spi", classBuilder.build())
@@ -212,10 +212,10 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     classBuilder.addMethod(constructor);
   }
   
-  private MethodSpec generateMethod(SqlMethod method, TableMetamodel model) {
+  private MethodSpec generateMethod(SqlMethod method, TableMetamodel model, RegistryMetamodel registry) {
     return switch (method.getType()) {
-      case SELECT -> generateQueryMethod(method, model);
-      case SELECT_ALL -> generateQueryMethod(method, model);
+      case SELECT -> generateQueryMethod(method, model, registry);
+      case SELECT_ALL -> generateQueryMethod(method, model, registry);
       case INSERT -> generateSingleInsertMethod(method, model);
       case INSERT_ALL -> generateBatchMethod(method, model);
       case UPDATE -> generateSingleUpdateMethod(method, model);
@@ -241,7 +241,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     return builder.build();
   }
   
-  private MethodSpec generateQueryMethod(SqlMethod method, TableMetamodel model) {
+  private MethodSpec generateQueryMethod(SqlMethod method, TableMetamodel model, RegistryMetamodel registry) {
     final var builder = MethodSpec.methodBuilder(method.getMethodName())
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC);
@@ -261,7 +261,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     } else {
       // Direct SQL return
       builder.returns(getDirectReturnType(method.getPropsType()));
-      generateSqlReturnBody(builder, method, model);
+      generateSqlReturnBody(builder, method, model, registry);
     }
     
     return builder.build();
@@ -334,7 +334,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     return builder.build();
   }
   
-  private void generateSqlReturnBody(MethodSpec.Builder builder, SqlMethod method, TableMetamodel model) {
+  private void generateSqlReturnBody(MethodSpec.Builder builder, SqlMethod method, TableMetamodel model, RegistryMetamodel registry) {
     if (method.getSqlBuilderClassName() != null && method.getParameters().size() == 1) {
       final var param = method.getParameters().get(0);
       
@@ -346,7 +346,8 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
       builder.addStatement("var sqlValue = baseSql.getValue()");
       
       // Replace ALL tables from registry (sorted by order) for sqlBuilder methods
-      final var tablesOrderedByOrder = metamodel.getTables().stream()
+      final var tablesOrderedByOrder = metamodel.getTablesForRegistry(registry) 
+        .stream()
         .sorted((a, b) -> Integer.compare(a.getOrder(), b.getOrder()))
         .collect(java.util.stream.Collectors.toList());
       

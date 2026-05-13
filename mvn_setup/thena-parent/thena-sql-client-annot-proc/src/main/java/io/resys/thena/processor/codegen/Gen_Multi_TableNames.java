@@ -1,7 +1,5 @@
 package io.resys.thena.processor.codegen;
 
-import java.util.ArrayList;
-
 /*-
  * #%L
  * thena-sql-client
@@ -117,20 +115,41 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
       Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL
     ).initializer("defaults()").build());
     
+    // Add closed flag field
+    classBuilder.addField(FieldSpec.builder(boolean.class, "closed")
+      .addModifiers(Modifier.PRIVATE)
+      .initializer("false")
+      .build());
+    
     // Add fields
     classBuilder.addField(FieldSpec.builder(String.class, "prefix")
-      .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+      .addModifiers(Modifier.PRIVATE)
       .build());
     
     for (final var table : tables) {
       final var fieldName = uncapitalize(table.getTableName());
       classBuilder.addField(FieldSpec.builder(String.class, fieldName)
-        .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+        .addModifiers(Modifier.PRIVATE)
         .build());
     }
     
-    // Generate constructor
-    classBuilder.addMethod(generateConstructor(tables));
+    // Generate no-arg constructor
+    classBuilder.addMethod(MethodSpec.constructorBuilder()
+      .addModifiers(Modifier.PUBLIC)
+      .build());
+    
+    // Generate isOpen() guard method
+    classBuilder.addMethod(generateIsOpenMethod());
+    
+    // Generate close() method
+    classBuilder.addMethod(generateCloseMethod(className));
+    
+    // Generate with methods for chaining
+    classBuilder.addMethod(generateWithMethod("prefix", String.class, className));
+    for (final var table : tables) {
+      final var fieldName = uncapitalize(table.getTableName());
+      classBuilder.addMethod(generateWithMethod(fieldName, String.class, className));
+    }
     
     // Generate getters
     classBuilder.addMethod(generateGetter("prefix", String.class));
@@ -174,6 +193,37 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
       .build();
   }
   
+  private MethodSpec generateIsOpenMethod() {
+    return MethodSpec.methodBuilder("isOpen")
+      .addModifiers(Modifier.PRIVATE)
+      .returns(void.class)
+      .beginControlFlow("if (closed)")
+      .addStatement("throw new $T($S)", IllegalArgumentException.class, "TableNames instance is closed and cannot be modified")
+      .endControlFlow()
+      .build();
+  }
+  
+  private MethodSpec generateCloseMethod(String className) {
+    return MethodSpec.methodBuilder("close")
+      .addModifiers(Modifier.PUBLIC)
+      .returns(ClassName.bestGuess(className))
+      .addStatement("this.closed = true")
+      .addStatement("return this")
+      .build();
+  }
+  
+  private MethodSpec generateWithMethod(String fieldName, Class<?> type, String className) {
+    final var methodName = "with" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+    return MethodSpec.methodBuilder(methodName)
+      .addModifiers(Modifier.PUBLIC)
+      .addParameter(type, fieldName)
+      .returns(ClassName.bestGuess(className))
+      .addStatement("isOpen()")
+      .addStatement("this.$L = $L", fieldName, fieldName)
+      .addStatement("return this")
+      .build();
+  }
+  
   private MethodSpec generateToRepoStringMethod(
       RegistryMetamodel registry, 
       List<TableMetamodel> tables, 
@@ -184,26 +234,27 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
       .addParameter(String.class, "prefix")
       .returns(ClassName.bestGuess(className));
     
-    // Start builder chain
-    builder.addCode("return $L.builder()\n", className);
-    builder.addCode("  .prefix(prefix)\n");
+    // Create new instance and chain with methods
+    builder.addCode("final var result = new $L()\n", className);
+    builder.addCode("  .withPrefix(prefix)\n");
     
     // Add each table
     for (final var table : tables) {
       final var tableName = table.getTableName();
       final var getterName = "get" + capitalize(tableName);
-      final var builderMethod = uncapitalize(tableName);
+      final var withMethod = "with" + capitalize(uncapitalize(tableName));
       
       if (registry.getNonTenantTables().contains(tableName)) {
         // Non-tenant table - no prefix
-        builder.addCode("  .$L(DEFAULTS.$L())\n", builderMethod, getterName);
+        builder.addCode("  .$L(DEFAULTS.$L())\n", withMethod, getterName);
       } else {
         // Tenant-aware table - add prefix
-        builder.addCode("  .$L(prefix + DEFAULTS.$L())\n", builderMethod, getterName);
+        builder.addCode("  .$L(prefix + DEFAULTS.$L())\n", withMethod, getterName);
       }
     }
     
-    builder.addStatement("  .build()");
+    builder.addStatement("  .close()");
+    builder.addStatement("return result");
     
     return builder.build();
   }
@@ -217,18 +268,19 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
       .returns(ClassName.bestGuess(className));
     
-    // Start builder chain
-    builder.addCode("return $L.builder()\n", className);
-    builder.addCode("  .prefix(\"\")\n");
+    // Create new instance and chain with methods
+    builder.addCode("final var result = new $L()\n", className);
+    builder.addCode("  .withPrefix(\"\")\n");
     
     // Add each table with clean name
     for (final var table : tables) {
       final var tableName = table.getTableName();
-      final var builderMethod = uncapitalize(tableName);
-      builder.addCode("  .$L($S)\n", builderMethod, tableName);
+      final var withMethod = "with" + capitalize(uncapitalize(tableName));
+      builder.addCode("  .$L($S)\n", withMethod, tableName);
     }
     
-    builder.addStatement("  .build()");
+    builder.addStatement("  .close()");
+    builder.addStatement("return result");
     
     return builder.build();
   }
@@ -270,23 +322,6 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
     return result.toString();
   }
   
-  private MethodSpec generateConstructor(List<TableMetamodel> tables) {
-    final var builder = MethodSpec.constructorBuilder()
-      .addModifiers(Modifier.PRIVATE);
-    
-    // Add prefix parameter
-    builder.addParameter(String.class, "prefix");
-    builder.addStatement("this.prefix = prefix");
-    
-    // Add parameters and assignments for each table
-    for (final var table : tables) {
-      final var fieldName = uncapitalize(table.getTableName());
-      builder.addParameter(String.class, fieldName);
-      builder.addStatement("this.$L = $L", fieldName, fieldName);
-    }
-    
-    return builder.build();
-  }
   
   private MethodSpec generateGetter(String fieldName, Class<?> type) {
     final var getterName = "get" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
@@ -346,16 +381,19 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
       .addModifiers(Modifier.PUBLIC)
       .returns(ClassName.bestGuess(className));
     
-    // Build parameter list for constructor call
-    final var params = new ArrayList<String>();
-    params.add("prefix");
+    // Create new instance and chain with methods
+    builder.addCode("final var result = new $L()\n", className);
+    builder.addCode("  .withPrefix(prefix)\n");
+    
+    // Add each table field
     for (final var table : tables) {
-      params.add(uncapitalize(table.getTableName()));
+      final var fieldName = uncapitalize(table.getTableName());
+      final var withMethod = "with" + capitalize(fieldName);
+      builder.addCode("  .$L($L)\n", withMethod, fieldName);
     }
     
-    // Generate constructor call with all parameters
-    final var paramString = String.join(", ", params);
-    builder.addStatement("return new $L($L)", className, paramString);
+    builder.addStatement("  .close()");
+    builder.addStatement("return result");
     
     return builder.build();
   }
