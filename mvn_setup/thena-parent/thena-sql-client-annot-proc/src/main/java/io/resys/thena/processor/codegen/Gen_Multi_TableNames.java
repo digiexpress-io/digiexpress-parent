@@ -1,5 +1,7 @@
 package io.resys.thena.processor.codegen;
 
+import java.util.ArrayList;
+
 /*-
  * #%L
  * thena-sql-client
@@ -106,9 +108,7 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
     final var className = registry.getTableClassName();
     
     final var classBuilder = TypeSpec.classBuilder(className)
-      .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-      .addAnnotation(ClassName.get("lombok", "Value"))
-      .addAnnotation(ClassName.get("lombok", "Builder"));
+      .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
     
     // Add DEFAULTS static field
     classBuilder.addField(FieldSpec.builder(
@@ -118,12 +118,37 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
     ).initializer("defaults()").build());
     
     // Add fields
-    classBuilder.addField(FieldSpec.builder(String.class, "prefix").build());
+    classBuilder.addField(FieldSpec.builder(String.class, "prefix")
+      .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+      .build());
     
     for (final var table : tables) {
       final var fieldName = uncapitalize(table.getTableName());
-      classBuilder.addField(FieldSpec.builder(String.class, fieldName).build());
+      classBuilder.addField(FieldSpec.builder(String.class, fieldName)
+        .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+        .build());
     }
+    
+    // Generate constructor
+    classBuilder.addMethod(generateConstructor(tables));
+    
+    // Generate getters
+    classBuilder.addMethod(generateGetter("prefix", String.class));
+    for (final var table : tables) {
+      final var fieldName = uncapitalize(table.getTableName());
+      final var getterName = "get" + capitalize(table.getTableName());
+      classBuilder.addMethod(generateGetterWithName(fieldName, getterName, String.class));
+    }
+    
+    // Add manual Builder inner class
+    classBuilder.addType(generateBuilderClass(className, tables));
+    
+    // Add static builder() method
+    classBuilder.addMethod(MethodSpec.methodBuilder("builder")
+      .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+      .returns(ClassName.bestGuess("Builder"))
+      .addStatement("return new Builder()")
+      .build());
     
     // Add toRepo(Tenant) method
     classBuilder.addMethod(generateToRepoTenantMethod(registry, className));
@@ -243,5 +268,95 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
       }
     }
     return result.toString();
+  }
+  
+  private MethodSpec generateConstructor(List<TableMetamodel> tables) {
+    final var builder = MethodSpec.constructorBuilder()
+      .addModifiers(Modifier.PRIVATE);
+    
+    // Add prefix parameter
+    builder.addParameter(String.class, "prefix");
+    builder.addStatement("this.prefix = prefix");
+    
+    // Add parameters and assignments for each table
+    for (final var table : tables) {
+      final var fieldName = uncapitalize(table.getTableName());
+      builder.addParameter(String.class, fieldName);
+      builder.addStatement("this.$L = $L", fieldName, fieldName);
+    }
+    
+    return builder.build();
+  }
+  
+  private MethodSpec generateGetter(String fieldName, Class<?> type) {
+    final var getterName = "get" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+    return generateGetterWithName(fieldName, getterName, type);
+  }
+  
+  private MethodSpec generateGetterWithName(String fieldName, String getterName, Class<?> type) {
+    return MethodSpec.methodBuilder(getterName)
+      .addModifiers(Modifier.PUBLIC)
+      .returns(type)
+      .addStatement("return $L", fieldName)
+      .build();
+  }
+  
+  private TypeSpec generateBuilderClass(String className, List<TableMetamodel> tables) {
+    final var builderClass = TypeSpec.classBuilder("Builder")
+      .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+    
+    // Add fields
+    builderClass.addField(FieldSpec.builder(String.class, "prefix")
+      .addModifiers(Modifier.PRIVATE)
+      .build());
+    
+    for (final var table : tables) {
+      final var fieldName = uncapitalize(table.getTableName());
+      builderClass.addField(FieldSpec.builder(String.class, fieldName)
+        .addModifiers(Modifier.PRIVATE)
+        .build());
+    }
+    
+    // Add setter methods
+    builderClass.addMethod(generateBuilderSetter("prefix"));
+    
+    for (final var table : tables) {
+      final var fieldName = uncapitalize(table.getTableName());
+      builderClass.addMethod(generateBuilderSetter(fieldName));
+    }
+    
+    // Add build() method
+    builderClass.addMethod(generateBuildMethod(className, tables));
+    
+    return builderClass.build();
+  }
+  
+  private MethodSpec generateBuilderSetter(String fieldName) {
+    return MethodSpec.methodBuilder(fieldName)
+      .addModifiers(Modifier.PUBLIC)
+      .addParameter(String.class, fieldName)
+      .returns(ClassName.bestGuess("Builder"))
+      .addStatement("this.$L = $L", fieldName, fieldName)
+      .addStatement("return this")
+      .build();
+  }
+  
+  private MethodSpec generateBuildMethod(String className, List<TableMetamodel> tables) {
+    final var builder = MethodSpec.methodBuilder("build")
+      .addModifiers(Modifier.PUBLIC)
+      .returns(ClassName.bestGuess(className));
+    
+    // Build parameter list for constructor call
+    final var params = new ArrayList<String>();
+    params.add("prefix");
+    for (final var table : tables) {
+      params.add(uncapitalize(table.getTableName()));
+    }
+    
+    // Generate constructor call with all parameters
+    final var paramString = String.join(", ", params);
+    builder.addStatement("return new $L($L)", className, paramString);
+    
+    return builder.build();
   }
 }

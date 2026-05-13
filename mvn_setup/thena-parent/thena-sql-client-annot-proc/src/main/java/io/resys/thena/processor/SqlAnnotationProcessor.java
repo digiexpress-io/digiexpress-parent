@@ -119,7 +119,6 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
       return;
     }
     
-    final var filteredTables = tableModels;
     
     // Registry-only generators (single RegistryModel parameter)
     final var registryGenerators = List.of(
@@ -152,13 +151,13 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
     
     // Process multi-table generators
     for (MultiTableCodeGenerator generator : multiTableGenerators) {
-      final var javaFile = generator.generate(registryConfig, filteredTables);
+      final var javaFile = generator.generate(registryConfig, tableModels);
       javaFile.writeTo(processingEnv.getFiler());
       
       processingEnv.getMessager().printMessage(
         javax.tools.Diagnostic.Kind.NOTE,
         "Generated: " + javaFile.typeSpec.name + " using " + generator.getClass().getSimpleName() + 
-        " with " + filteredTables.size() + " tables"
+        " with " + tableModels.size() + " tables"
       );
     }
   }

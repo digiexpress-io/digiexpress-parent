@@ -60,6 +60,7 @@ public class Metamodel {
         return tablePackage.equals(registryPackage) || 
                tablePackage.startsWith(registryPackage + ".");
       })
+      .sorted((a, b) -> a.getTableName().toLowerCase().compareTo(b.getTableName().toLowerCase()))
       .collect(Collectors.toList());
   }
   

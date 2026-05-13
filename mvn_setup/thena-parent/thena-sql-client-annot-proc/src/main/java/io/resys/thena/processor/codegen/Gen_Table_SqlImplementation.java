@@ -1,5 +1,7 @@
 package io.resys.thena.processor.codegen;
 
+import java.util.Arrays;
+
 /*-
  * #%L
  * thena-sql-client
@@ -372,10 +374,13 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
           .map(MethodParameter::getName)
           .collect(Collectors.joining(", "));
         
-        builder.addStatement("return $T.builder().value($L).props($T.of($L)).rowMapper(new $T()).build()",
+
+        
+        builder.addStatement("return $T.builder().value($L).props($T.from($T.asList($L))).rowMapper(new $T()).build()",
           ClassName.get(ImmutableSqlTuple.class),
           resolvedSql,
-          ClassName.get("io.vertx.mutiny.sqlclient", "Tuple"),
+          ClassName.get(io.vertx.mutiny.sqlclient.Tuple.class),
+          ClassName.get(Arrays.class),
           propsArgs,
           ClassName.bestGuess(method.getMapperClassName()));
       }
