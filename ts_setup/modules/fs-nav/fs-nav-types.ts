@@ -83,7 +83,9 @@ export function closeTabsToTheRight(
   prev: FsRouteSearchParams
 ): FsRouteSearchParams {
   const index = prev.openTabs.findIndex(t => toTabId(t) === tabId);
-  if (index === -1) return prev;
+  if (index === -1) {
+    return prev;
+  }
 
   const newTabs = prev.openTabs.slice(0, index + 1);
   const activeStillOpen = newTabs.some(t => toTabId(t) === prev.activeTab);
@@ -92,15 +94,35 @@ export function closeTabsToTheRight(
   return { openTabs: newTabs, activeTab: newActive };
 }
 
+export function closeOtherFsTabs(
+  tabId: string,
+  prev: FsRouteSearchParams
+): FsRouteSearchParams {
+  const tab = prev.openTabs.find(t => toTabId(t) === tabId);
+  if (!tab) {
+    return prev;
+  }
+
+  return { openTabs: [tab], activeTab: tabId };
+}
+
 function parseTabs(raw: unknown): FsTabDescriptor[] {
-  if (!Array.isArray(raw) || raw.length === 0) return [];
+  if (!Array.isArray(raw) || raw.length === 0) {
+    return [];
+  }
   return raw.filter(isValidTabDescriptor);
 }
 
 function isValidTabDescriptor(item: unknown): item is FsTabDescriptor {
-  if (typeof item !== 'object' || item === null) return false;
+  if (typeof item !== 'object' || item === null) {
+    return false;
+  }
   const obj = item as Record<string, unknown>;
-  if (obj['type'] === 'edit') return typeof obj['id'] === 'string';
-  if (obj['type'] === 'create') return typeof obj['direntType'] === 'string';
+  if (obj['type'] === 'edit') {
+    return typeof obj['id'] === 'string';
+  }
+  if (obj['type'] === 'create') {
+    return typeof obj['direntType'] === 'string';
+  }
   return false;
 }

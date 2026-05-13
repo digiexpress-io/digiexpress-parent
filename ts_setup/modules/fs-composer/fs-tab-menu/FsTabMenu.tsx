@@ -11,7 +11,7 @@ export const FsTabMenu: React.FC<FsTabMenuProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
-  const { closeTab, closeAllTabs, closeTabsToTheRight } = useFsNav();
+  const { closeTab, closeAllTabs, closeTabsToTheRight, closeOtherTabs } = useFsNav();
 
   function handleClose() {
     if (props.tabIndex !== undefined) {
@@ -23,6 +23,13 @@ export const FsTabMenu: React.FC<FsTabMenuProps> = (props) => {
   function handleCloseToTheRight() {
     if (props.tabIndex !== undefined) {
       closeTabsToTheRight(props.tabIndex);
+    }
+    props.onClose();
+  }
+
+  function handleCloseOthers() {
+    if (props.tabIndex !== undefined) {
+      closeOtherTabs(props.tabIndex);
     }
     props.onClose();
   }
@@ -48,6 +55,9 @@ export const FsTabMenu: React.FC<FsTabMenuProps> = (props) => {
       </MenuItem>
       <MenuItem className={classes.menuItem} onClick={handleCloseToTheRight}>
         {intl.formatMessage({ id: 'fs.tabMenu.menuItem.closeToTheRight' })}
+      </MenuItem>
+      <MenuItem className={classes.menuItem} onClick={handleCloseOthers}>
+        {intl.formatMessage({ id: 'fs.tabMenu.menuItem.closeOthers' })}
       </MenuItem>
       <MenuItem className={classes.menuItem} onClick={handleCloseAll}>
         {intl.formatMessage({ id: 'fs.tabMenu.menuItem.closeAll' })}

@@ -9,6 +9,7 @@ import {
   closeFsTab,
   closeAllFsTabs,
   closeTabsToTheRight as closeTabsToTheRightFn,
+  closeOtherFsTabs,
   toTabId,
 } from './fs-nav-types';
 
@@ -82,6 +83,14 @@ export function useFsRouteNav() {
     updateSearch(prev => closeTabsToTheRightFn(toTabId(descriptor), prev));
   }
 
+  function closeOtherTabs(index: number) {
+    const descriptor = search.openTabs[index];
+    if (!descriptor) {
+      return;
+    }
+    updateSearch(prev => closeOtherFsTabs(toTabId(descriptor), prev));
+  }
+
   function setActiveTab(index: number) {
     const descriptor = search.openTabs[index];
     if (!descriptor) return;
@@ -98,6 +107,7 @@ export function useFsRouteNav() {
     closeTab,
     closeAllTabs,
     closeTabsToTheRight,
+    closeOtherTabs,
     setActiveTab,
   };
 }
