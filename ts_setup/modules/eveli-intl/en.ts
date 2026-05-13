@@ -1736,7 +1736,7 @@ export const en = {
   'fs.properties.propertyLabel.locales': 'Locales',
   'fs.properties.propertyLabel.localeCode': 'Locale Code',
   'fs.properties.propertyLabel.phoneValue': 'Phone Number',
-  'fs.properties.propertyLabel.urlValue': 'URL',
+  'fs.properties.propertyLabel.urlValue': 'URL/Phone number',
   'fs.properties.propertyLabel.formName': 'Form Name',
   'fs.properties.propertyLabel.formTechnicalId': 'Technical ID',
   'fs.properties.propertyLabel.description': 'Description',
