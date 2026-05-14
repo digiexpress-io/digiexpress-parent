@@ -20,7 +20,7 @@ export const FsDirentPrintoutCreate: React.FC<FsDirentPrintoutCreateProps> = () 
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printout.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.nameField.label' })}</Typography>
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
         <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.printout.nameField.placeholder' })} required value={name} onChange={setName} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.printoutServiceNameField.label' })}</Typography>

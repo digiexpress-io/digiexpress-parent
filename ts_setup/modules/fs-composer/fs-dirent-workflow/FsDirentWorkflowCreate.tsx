@@ -37,12 +37,7 @@ export const FsDirentWorkflowCreate: React.FC<FsDirentWorkflowCreateProps> = () 
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.nameField.label' })}</Typography>
         <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })} required value={workflowName} onChange={setWorkflowName} />
-
-        <Divider />
-
-        <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.dialobForm' })}</Typography>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobFormField.label' })}</Typography>
         <FsDirentSelectSingle options={dialobForms} value={selectedDialobForm} onChange={setSelectedDialobForm} />
@@ -80,7 +75,7 @@ export const FsDirentWorkflowCreate: React.FC<FsDirentWorkflowCreateProps> = () 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.articlesField.label' })}</Typography>
             <FsDirentSelectMulti options={articles} value={selectedArticles} onChange={setSelectedArticles} />
 
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.configOptionsField.label' })}</Typography>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
           </div>
         </Collapse>

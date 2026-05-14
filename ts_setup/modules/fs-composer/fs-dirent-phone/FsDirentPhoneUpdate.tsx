@@ -61,7 +61,7 @@ export const FsDirentPhoneUpdate: React.FC<FsDirentPhoneUpdateProps> = (props) =
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.articlesField.label' })}</Typography>
             <FsDirentSelectMulti options={articles} value={[]} onChange={(_value) => { }} />
 
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.configOptionsField.label' })}</Typography>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
           </div>
         </Collapse>

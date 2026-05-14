@@ -27,7 +27,7 @@ export const FsPropertiesWorkflow: React.FC<FsPropertiesWorkflowProps> = ({ dire
     <>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.serviceName' })}</Typography>
-        <Typography className={classes.propertyValue}>{workflowProps?.serviceName}</Typography>
+        <Typography className={classes.propertyValue}>{workflowProps?.workflowName}</Typography>
       </div>
 
       <div className={classes.propertyRow}>

@@ -33,7 +33,7 @@ export const FsDirentLanguageCreate: React.FC<FsDirentLanguageCreateProps> = () 
           multiline minRows={2} maxRows={4}
         />
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.language.configOptionsField.label' })}</Typography>
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
         <FsDirentSelectMulti options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
 
         <div className={classes.buttonContainer}>

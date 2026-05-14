@@ -30,16 +30,12 @@ export const FsDirentWorkflowUpdate: React.FC<FsDirentWorkflowUpdateProps> = (pr
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.edit' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.nameField.label' })}</Typography>
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
         <FsDirentTextField required
           value={ownerState.name}
           placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })}
           onChange={ownerState.onChangeName}
         />
-
-        <Divider />
-
-        <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.dialobForm' })}</Typography>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobFormField.label' })}</Typography>
         <FsDirentSelectSingle options={dialobForms} value={ownerState.dialobFormName} onChange={ownerState.onChangeDialobFormName} />
@@ -87,7 +83,7 @@ export const FsDirentWorkflowUpdate: React.FC<FsDirentWorkflowUpdateProps> = (pr
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.articlesField.label' })}</Typography>
             <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
 
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.configOptionsField.label' })}</Typography>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
           </div>
         </Collapse>

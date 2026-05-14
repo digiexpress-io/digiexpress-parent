@@ -38,6 +38,7 @@ export declare namespace Fs {
     | 'FLOW_TASK'
     | 'DECISION_TABLE'
     | 'DIALOB_FORM'
+    | 'DIALOB_FORM_META'
     | 'PRINTOUT'
     | 'PRINTOUT_PAGE'
     | 'PRINTOUT_RESOURCE'
@@ -50,6 +51,7 @@ export declare namespace Fs {
     | ArticleProps
     | WorkflowProps
     | DialobProps
+    | DialobFormMetaProps
     | FlowProps
     | FlowTaskProps
     | LanguageProps
@@ -256,7 +258,7 @@ export declare namespace Fs {
 
   export interface WorkflowProps extends PropsBase {
     type: 'ARTICLE_WORKFLOW';
-    serviceName: string;
+    workflowName: string;
     dialobFormName: string;
     dialobFormTag: string;
     flowName: string;
@@ -272,6 +274,14 @@ export declare namespace Fs {
     formName: string;
     formTechnicalId: string;
     versionTags?: string[];
+  }
+
+  export interface DialobFormMetaProps extends PropsBase {
+    type: 'DIALOB_FORM_META';
+    label: string;
+    created: string;
+    lastSaved: string;
+    languages: string[];
   }
 
   export interface FlowProps extends PropsBase {

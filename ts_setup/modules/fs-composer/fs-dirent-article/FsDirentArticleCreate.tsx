@@ -40,7 +40,7 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
           </>
         )}
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.nameField.label' })}</Typography>
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
         <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
           required value={name} onChange={setName}
         />
@@ -63,7 +63,7 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
               multiline minRows={2} maxRows={5}
             />
 
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.configOptionsField.label' })}</Typography>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.labelsField.label' })}</Typography>

@@ -20,7 +20,7 @@ export const FsDirentPrintoutUpdate: React.FC<FsDirentPrintoutUpdateProps> = (pr
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printout.sectionTitle.edit' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.nameField.label' })}</Typography>
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
         <FsDirentTextField value={ownerState.name} placeholder={intl.formatMessage({ id: 'fs.dirent.printout.nameField.placeholder' })}
           onChange={ownerState.onChangeName}
           required

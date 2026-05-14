@@ -67,7 +67,7 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.articlesField.label' })}</Typography>
             <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
 
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.configOptionsField.label' })}</Typography>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
           </div>
         </Collapse>

@@ -172,7 +172,9 @@ function _collectFlows(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
 function _collectDialobs(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
   const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {
-    if (node.type === 'DIALOB_FORM') { result.push({ value: node.id, label: node.name }); }
+    if (node.type === 'DIALOB_FORM' || node.type === 'DIALOB_FORM_META') {
+      result.push({ value: node.id, label: node.name });
+    }
   });
   return result;
 }

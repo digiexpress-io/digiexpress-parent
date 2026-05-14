@@ -54,7 +54,7 @@ export const FsDirentPhoneCreate: React.FC<FsDirentPhoneCreateProps> = (props) =
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.articlesField.label' })}</Typography>
             <FsDirentSelectMulti options={articles} value={selectedArticles} onChange={setSelectedArticles} />
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.phone.configOptionsField.label' })}</Typography>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
           </div>
         </Collapse>

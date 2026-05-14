@@ -27,7 +27,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.article.sectionTitle.edit' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.nameField.label' })}</Typography>
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
         <FsDirentTextField 
           required
           value={ownerState.name}
@@ -58,7 +58,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
               multiline minRows={2} maxRows={5}
             />
 
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.configOptionsField.label' })}</Typography>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.labelsField.label' })}</Typography>

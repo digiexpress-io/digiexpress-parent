@@ -45,7 +45,7 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
           minRows={2} maxRows={4}
         />
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.configOptionsField.label' })}</Typography>
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
         <FsDirentSelectMulti options={ownerState.availableConfigOptions} value={ownerState.configOptions as string[]} onChange={ownerState.onChangeConfigOptions} />
 
         <div className={classes.buttonContainer}>

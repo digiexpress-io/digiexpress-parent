@@ -19,7 +19,7 @@ export const FsDirentFlowCreate: React.FC<FsDirentFlowCreateProps> = (_props) =>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.flow.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.flow.nameField.label' })}</Typography>
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
         <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.flow.nameField.placeholder' })} required />
 
         <div className={classes.buttonContainer}>

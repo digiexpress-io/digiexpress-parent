@@ -23,7 +23,7 @@ export const FsDirentFolderUpdate: React.FC<FsDirentFolderUpdateProps> = (props)
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.folder.locationField.label' })}</Typography>
         <FsDirentTextField value={ownerState.location} disabled />
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.folder.nameField.label' })}</Typography>
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
         <FsDirentTextField
           value={ownerState.name}
           placeholder={intl.formatMessage({ id: 'fs.dirent.folder.nameField.placeholder' })}
