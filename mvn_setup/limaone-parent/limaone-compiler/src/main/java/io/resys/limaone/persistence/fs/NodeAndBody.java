@@ -1,5 +1,6 @@
 package io.resys.limaone.persistence.fs;
 
+
 /*-
  * #%L
  * limaone-compiler
@@ -20,13 +21,26 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
+
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
+import io.resys.limaone.model.ImmutableDialobFormMeta;
 import io.resys.limaone.model.Model.Body;
 import io.resys.limaone.model.Model.BodyType;
+import io.resys.limaone.spi.dialob.FormDb.FormMetadata;
+import io.resys.thena.fs.entities.Entity;
+import io.resys.thena.fs.entities.ImmutableBlob;
+import io.resys.thena.fs.entities.ImmutableIndex;
+import io.resys.thena.fs.entities.ImmutableNode;
+import io.resys.thena.fs.entities.ImmutableNodeTransitives;
 import io.resys.thena.fs.entities.Node;
+import io.resys.thena.fs.entities.Ref;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+
+
 
 @Slf4j
 @Value
@@ -75,5 +89,48 @@ public class NodeAndBody {
       log.warn("Failed to get node type from blob: {}, message: {}", node.getNodeName(), e.getMessage());
       return Optional.empty();
     }
+  }
+  
+  
+  /**
+   * resolve dirent type based on blob or other props
+   */
+  public static Optional<NodeAndBody> of(FormMetadata form, Ref ref) {
+    
+    final var index = ImmutableIndex.builder()
+      .treeId(ref.getTransitives().getTree().getId())
+      .objectId(form.getId())
+      .createdAt(OffsetDateTime.ofInstant(form.getMetadata().getCreated(), ZoneId.systemDefault()))
+      .updatedAt(OffsetDateTime.ofInstant(form.getMetadata().getLastSaved(), ZoneId.systemDefault()))
+      .createdBy(ref.getTransitives().getCommit().getId())
+      .updatedBy(ref.getTransitives().getCommit().getId())
+      .createdByAuthor("_unknown")
+      .updatedByAuthor("_unknown")
+      .build();
+    
+    final var nodeId = Entity.uuid().append(form.getId()).build();
+    final var node = ImmutableNode.builder()
+      .id(nodeId)
+      .objectId(form.getId())
+      .nodePath(Optional.empty())
+      .nodeName(form.getId())
+      .blobId(Optional.ofNullable(nodeId))
+      .propsId(Optional.empty())
+      .transitives(ImmutableNodeTransitives.builder()
+        .objectIndex(index)
+        .blob(ImmutableBlob.builder()
+            .id(nodeId)
+            .blobClass(Optional.empty())
+            .blobType(BodyType.DIALOB_FORM_META.name())
+            .build())
+        .props(null)
+        .build())
+      .build();
+    
+    final var body = ImmutableDialobFormMeta.builder()
+        .metadata(form.getMetadata())
+        .build();
+    
+    return Optional.of(new NodeAndBody(node, BodyType.DIALOB_FORM_META, Optional.of(body)));
   }
 }

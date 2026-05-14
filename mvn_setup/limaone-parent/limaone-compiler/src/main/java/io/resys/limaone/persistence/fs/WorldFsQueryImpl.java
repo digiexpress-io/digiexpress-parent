@@ -27,6 +27,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import io.resys.limaone.authoring.Authoring.WorldFsQuery;
 import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.model.Model.BodyType;
+import io.resys.limaone.spi.dialob.FormDb;
 import io.resys.thena.fs.api.FileSystem;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -40,19 +41,24 @@ public class WorldFsQueryImpl implements WorldFsQuery {
   private final ScheduledExecutorService workerPool;
   private final Duration workerTimeout;
   private final String branchName;
+  private final FormDb formDb;
 
   @Override
   public Uni<WorldFs> findAll() {
-    final var tenant = filesystem.withTenant();    
-    return tenant
-      .branchQuery()
-      .branchName(name -> name.equals(branchName))
-      .blobTypes(
-          Arrays.asList(BodyType.without(BodyType.DEPLOYMENT))
-          .stream().map(e -> e.name())
-          .toList().toArray(new String[]{}))
-      .getOne()
-      .onItem().transform(ref -> new WorldFsFactory(ref).create());
+    
+    final var findAllForms = formDb.withTenant().formMetaQuery().findAll().collect().asList();
+    final var findAllAssets = filesystem.withTenant()
+        .branchQuery()
+        .branchName(name -> name.equals(branchName))
+        .blobTypes(
+            Arrays.asList(BodyType.without(BodyType.DEPLOYMENT))
+            .stream().map(e -> e.name())
+            .toList().toArray(new String[]{}))
+        .getOne();
+    
+    return Uni.combine().all().unis(findAllForms, findAllAssets)
+      .asTuple()
+      .onItem().transform(tuple -> new WorldFsFactory(tuple.getItem2(), tuple.getItem1()).create());
   }
 
   @Override

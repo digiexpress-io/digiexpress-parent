@@ -22,7 +22,9 @@ package io.resys.limaone.persistence.fs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.resys.limaone.fs.ImmutableDirentBase;
 import io.resys.limaone.fs.ImmutableWorldFs;
@@ -33,6 +35,7 @@ import io.resys.limaone.model.ArticlePage;
 import io.resys.limaone.model.ArticleTemplate;
 import io.resys.limaone.model.ArticleWorkflow;
 import io.resys.limaone.model.DecisionTable;
+import io.resys.limaone.model.DialobFormMeta;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.Locale;
@@ -40,18 +43,25 @@ import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Printout;
 import io.resys.limaone.model.PrintoutPage;
 import io.resys.limaone.model.PrintoutResource;
+import io.resys.limaone.spi.dialob.FormDb.FormMetadata;
 import io.resys.thena.fs.entities.Entity;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Ref;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@RequiredArgsConstructor
+
 public class WorldFsFactory {
   private final Ref ref;
+  private final Map<String, FormMetadata> forms;
   private final WorldFsState worldState = new WorldFsState();
+  
+  public WorldFsFactory(Ref ref, List<FormMetadata> forms) {
+    super();
+    this.ref = ref;
+    this.forms = forms.stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+  }  
   
   public WorldFs create() {
     final List<NodeAndBody> parseLater = new ArrayList<>();
@@ -71,10 +81,18 @@ public class WorldFsFactory {
         parseLater.add(nodeType);
       }
     }
+    
+    for(final var form : forms.values()) {
+      final var nodeType = createNodeAndBodyType(form);
+      if(nodeType.isPresent()) {
+        createAnyDirent(nodeType.get());
+      }
+    }
 
     for(final var later : parseLater) {
       createAnyDirent(later);
     }
+    
     
     // create folders ...
     for(final var folderName : worldState.getFolderNames()) {
@@ -240,6 +258,12 @@ public class WorldFsFactory {
       return NodePathAndName.of(path.orElse(""), node.getValue().getNodeName());
     }
     
+    case DIALOB_FORM_META: {
+      final var form = (DialobFormMeta) node.getBody()
+          .orElseThrow(() -> new IllegalArgumentException("Form not found for node: " + node));
+      final var label = form.getMetadata().getLabel();
+      return NodePathAndName.of(path.orElse("forms"), label);
+    }
     default: throw new IllegalArgumentException("Not implemented: " + node);
     }
   }
@@ -269,8 +293,18 @@ public class WorldFsFactory {
     
     final var bodyType = nodeType.get().getBodyType();
     if( bodyType == BodyType.DEPLOYMENT || 
-        bodyType == BodyType.DIALOB_FORM || 
+       // bodyType == BodyType.DIALOB_FORM || 
         bodyType == BodyType.UNKNOWN) {
+      return Optional.empty();
+    }
+    worldState.putNodeAndBody(nodeType.get());
+    return nodeType;
+  }
+  
+  
+  private Optional<NodeAndBody> createNodeAndBodyType(FormMetadata node) {
+    final var nodeType = NodeAndBody.of(node, ref);
+    if(nodeType.isEmpty()) {
       return Optional.empty();
     }
     worldState.putNodeAndBody(nodeType.get());

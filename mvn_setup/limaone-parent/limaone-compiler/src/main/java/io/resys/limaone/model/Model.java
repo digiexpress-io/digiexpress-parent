@@ -77,6 +77,7 @@ public interface Model<T extends Body>  extends Serializable {
     DECISION_TABLE(DecisionTable.class),
     
     DIALOB_FORM(DialobForm.class),
+    DIALOB_FORM_META(DialobFormMeta.class),
     
     PRINTOUT(Printout.class),       // final product, that links article for syntax and data for input, main grouping for locale based templates
     PRINTOUT_PAGE(PrintoutPage.class),  // holds markup for pdf in specific locale
@@ -269,8 +270,7 @@ public interface Model<T extends Body>  extends Serializable {
           builder.printoutResources(map);
         }
 
-        case UNKNOWN, FOLDER -> 
-
+        case UNKNOWN, FOLDER, DIALOB_FORM_META -> 
         throw new UnsupportedOperationException("PRINTOUT types not mapped to ModelWorld: " + body.getBodyType());
       } 
       return builder.build();

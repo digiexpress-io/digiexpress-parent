@@ -77,7 +77,7 @@ public class ModelWorldDb_FS implements ModelWorldDb, TenantAware<ModelWorldDb_F
 
   @Override
   public WorldFsQuery worldFsQuery() {
-    return new WorldFsQueryImpl(getUserFileSystem(), workerPool, workerTimeout, branchName);
+    return new WorldFsQueryImpl(getUserFileSystem(), workerPool, workerTimeout, branchName, formDb);
   }
   @Override
   public WorldRefQuery worldRefQuery() {
