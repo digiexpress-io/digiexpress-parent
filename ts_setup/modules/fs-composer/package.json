@@ -9,6 +9,7 @@
     "@dxs-ts/fs-api": "*",
     "@dxs-ts/fs-nav": "*",
     "js-file-download": "*",
+    "yaml": "*",
     "react-markdown": "*"
   },
   "peerDependencies": {

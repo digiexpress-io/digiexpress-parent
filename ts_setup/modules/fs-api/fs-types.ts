@@ -428,4 +428,93 @@ export declare namespace Fs {
     dirent: DirentBase;
     anchorPosition: { top: number; left: number };
   }
+
+  // ------------- DEBUG TYPES --------------
+
+  export type DebugInputType = 'JSON' | 'CSV';
+
+  export interface TypeDef {
+    id: string;
+    name: string;
+    order: number;
+    data: boolean;
+    direction: 'IN' | 'OUT';
+    valueType: ValueType;
+    required: boolean;
+    properties: TypeDef[];
+    values?: string;
+    valueSet?: string[];
+  }
+
+  export interface DebugResponse {
+    body?: DecisionResult | ServiceResult | FlowResult;
+    bodyCsv?: string;
+  }
+
+  export interface DecisionLogEntry {
+    match: boolean;
+    headerType: TypeDef;
+    expression: string;
+    usedValue?: any;
+  }
+
+  export interface DecisionLog {
+    match: boolean;
+    order: number;
+    accepts: DecisionLogEntry[];
+    returns: DecisionLogEntry[];
+  }
+
+  export interface DecisionResult {
+    rejections: DecisionLog[];
+    matches: DecisionLog[];
+  }
+
+  export interface ServiceResult {
+    value: any;
+  }
+
+  export type FlowExecutionStatus = 'COMPLETED' | 'ERROR';
+
+  export interface FlowResultErrorLog {
+    id: string;
+    msg: string;
+  }
+
+  export interface FlowResultLog {
+    id: number;
+    stepId: string;
+    start: string | Date;
+    end: string | Date;
+    errors: FlowResultErrorLog[];
+    status: FlowExecutionStatus;
+    accepts: Record<string, any>;
+    returns: Record<string, any>;
+  }
+
+  export interface FlowResult {
+    logs: FlowResultLog[];
+  }
+
+  export interface CsvEntry {
+    name: string;
+    value: string;
+  }
+
+  export interface CsvRow {
+    id: string;
+    inputs: CsvEntry[];
+    outputs: CsvEntry[];
+  }
+
+  export interface ServiceErrorMsg {
+    id: string;
+    value: string;
+  }
+
+  export interface StoreError {
+    text: string;
+    status: number;
+    errors: ServiceErrorMsg[];
+  }
 }

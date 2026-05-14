@@ -13,6 +13,7 @@ import { FsPanelProperties } from '../fs-panel-properties';
 import { FsPanelPreview } from '../fs-panel-preview';
 import { FsPanelReferences } from '../fs-panel-references';
 import { FsPanelDirentStats } from '../fs-panel-dirent-stats';
+import { FsPanelDebug } from '../fs-panel-debug';
 
 import { OwnerState } from './useOwnerState';
 
@@ -53,6 +54,8 @@ export const ContentPanel: React.FC<ContentPanelProps> = ({ ownerState, classNam
               return <FsPanelArticleLocaleOverview />;
           case 'stats':
               return <FsPanelDirentStats />;
+          case 'debug':
+              return <FsPanelDebug dirent={activeDirent} />;
           default:
             return (
               <FsPanel title='View not implemented'>

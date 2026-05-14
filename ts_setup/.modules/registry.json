@@ -1429,6 +1429,7 @@
           "@dxs-ts/fs-api": "*",
           "@dxs-ts/fs-nav": "*",
           "js-file-download": "*",
+          "yaml": "*",
           "react-markdown": "*"
         },
         "peerDependencies": {
@@ -1454,6 +1455,7 @@
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-nav",
         "js-file-download",
+        "yaml",
         "react-markdown",
         "react",
         "react-intl",
@@ -1478,6 +1480,7 @@
       ],
       "externalDependencies": [
         "js-file-download",
+        "yaml",
         "react-markdown",
         "react",
         "react-intl",
@@ -1505,6 +1508,8 @@
         "@monaco-editor/react",
         "@uiw/react-md-editor",
         "@mui/icons-material",
+        "@mui/system",
+        "yaml",
         "react-markdown",
         "@xyflow/react",
         "elkjs"
@@ -1518,6 +1523,8 @@
         "@monaco-editor/react",
         "@uiw/react-md-editor",
         "@mui/icons-material",
+        "@mui/system",
+        "yaml",
         "react-markdown",
         "@xyflow/react",
         "elkjs"
@@ -1526,7 +1533,9 @@
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-nav"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "@mui/system"
+      ],
       "unusedDependencies": [
         "@dxs-ts/eveli-primitives"
       ]
@@ -4740,6 +4749,6 @@
       ]
     }
   },
-  "checksum": "01a47ed62054fb9d997b5d895f817a465af72be9fdb918d9778a76a81fcc9d05",
-  "generatedAt": "2026-05-08T10:46:06.307Z"
+  "checksum": "6fce6bfa891761e2aa7d6e7950dc66eb441e80e11fe9e83d094f58e57214aa9e",
+  "generatedAt": "2026-05-14T07:59:03.105Z"
 }
