@@ -1508,7 +1508,6 @@
         "@monaco-editor/react",
         "@uiw/react-md-editor",
         "@mui/icons-material",
-        "@mui/system",
         "yaml",
         "react-markdown",
         "@xyflow/react",
@@ -1523,7 +1522,6 @@
         "@monaco-editor/react",
         "@uiw/react-md-editor",
         "@mui/icons-material",
-        "@mui/system",
         "yaml",
         "react-markdown",
         "@xyflow/react",
@@ -1533,9 +1531,7 @@
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-nav"
       ],
-      "missingDependencies": [
-        "@mui/system"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": [
         "@dxs-ts/eveli-primitives"
       ]
@@ -4749,6 +4745,6 @@
       ]
     }
   },
-  "checksum": "6fce6bfa891761e2aa7d6e7950dc66eb441e80e11fe9e83d094f58e57214aa9e",
-  "generatedAt": "2026-05-14T07:59:03.105Z"
+  "checksum": "bd7eac8218732c0ab95368cb73e2ef4e0410b299f2308034a09f41f2098d08a0",
+  "generatedAt": "2026-05-14T10:27:54.061Z"
 }

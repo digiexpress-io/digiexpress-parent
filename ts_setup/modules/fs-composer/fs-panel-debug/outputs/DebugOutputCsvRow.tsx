@@ -3,13 +3,14 @@ import { Box, TableCell, TableRow, IconButton, Collapse } from '@mui/material';
 import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
 import MonacoReact from '@monaco-editor/react';
 import { useIntl } from 'react-intl';
-import { toYaml } from './utils';
+import { toYaml, calcEditorHeight } from './utils';
 
 import { Fs } from '@dxs-ts/fs-api';
 
 const DebugOutputCsvRow: React.FC<{ csvRow: Fs.CsvRow, index: string }> = ({ csvRow, index }) => {
     const intl = useIntl();
     const [open, setOpen] = React.useState(false);
+    const yaml = toYaml(csvRow);
 
     return (<>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -27,7 +28,7 @@ const DebugOutputCsvRow: React.FC<{ csvRow: Fs.CsvRow, index: string }> = ({ csv
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={2}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <MonacoReact value={toYaml(csvRow)} defaultLanguage='yaml'/>
+              <MonacoReact value={yaml} height={calcEditorHeight(yaml)} defaultLanguage='yaml'/>
             </Box>
           </Collapse>
         </TableCell>

@@ -27,7 +27,6 @@ type LocalDebugSession = {
 };
 
 const DebugView: React.FC<{}> = ({ }) => {
-  const { debugDirent } = useFsDirent();
   const [option, setOption] = React.useState<DebugOptionType | undefined>();
   const [selectedId, setSelectedId] = React.useState<string | undefined>();
   const [selectedDirent, setSelectedDirent] = React.useState<Fs.DirentBase | undefined>();
@@ -66,6 +65,7 @@ const DebugView: React.FC<{}> = ({ }) => {
   }
 
   const handleExecute = () => {
+    /*
     if (!selectedId) {
       return;
     }
@@ -85,6 +85,7 @@ const DebugView: React.FC<{}> = ({ }) => {
         setSession(updated);
         setSessions(prev => ({ ...prev, [selectedId]: updated }));
       });
+      */
   }
 
   const downloadCsv = (delimiter: string, wrap: boolean) => {
@@ -240,7 +241,7 @@ const DebugView: React.FC<{}> = ({ }) => {
 
     {option === 'SELECT_ASSET' ? <SelectAsset onClose={() => setOption(undefined)} selected={selected} onSelect={handleSelectAsset} /> : null}
     {option === 'INPUT_JSON' && json ? <InputJSON onClose={() => setOption(undefined)} onSelect={handleJson} value={json} /> : null}
-    {option === 'INPUT_FORM' && json ? <InputFORM onClose={() => setOption(undefined)} selected={selected} onSelect={handleJson} value={json} /> : null}
+    {option === 'INPUT_FORM' && json ? <InputFORM onClose={() => setOption(undefined)} selectedDirent={selectedDirent} onSelect={handleJson} value={json} /> : null}
     {option === 'INPUT_CSV' ? <InputCSV onClose={() => setOption(undefined)} selected={selected} onSelect={handleCsv} value={csv} /> : null}
 
 

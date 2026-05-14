@@ -4,12 +4,13 @@ import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as Keyboard
 import { useIntl } from 'react-intl';
 import MonacoReact from '@monaco-editor/react';
 import { Fs } from '@dxs-ts/fs-api';
-import { toYaml } from './utils'
+import { toYaml, calcEditorHeight } from './utils'
 
 
 const DebugOutputsFt: React.FC<{ debug: Fs.ServiceResult }> = ({ debug }) => {
   const intl = useIntl();
   const [expanded, setExpanded] = React.useState(false);
+  const yaml = toYaml(debug.value);
 
   return (<>
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -28,9 +29,9 @@ const DebugOutputsFt: React.FC<{ debug: Fs.ServiceResult }> = ({ debug }) => {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Box sx={{ margin: 1 }}>
             <MonacoReact key="debug-output"
-              value={toYaml(debug.value)}
+              value={yaml}
               defaultLanguage='yaml'
-              height='500px'
+              height={calcEditorHeight(yaml)}
               />
           </Box>
         </Collapse>

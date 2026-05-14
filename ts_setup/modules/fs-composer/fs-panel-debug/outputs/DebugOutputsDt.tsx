@@ -4,7 +4,7 @@ import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as Keyboard
 import MonacoReact from '@monaco-editor/react';
 import { useIntl } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
-import { toYaml } from './utils'
+import { toYaml, calcEditorHeight } from './utils'
 
 type Rule = {
   name: string,
@@ -77,6 +77,8 @@ const DebugOutputsDt: React.FC<{ debug: Fs.DecisionResult }> = ({ debug }) => {
   const [rejects, setRejects] = React.useState(debug.rejections.length < 1);
   const rejections = createRejections(debug);
   const matches = createMatches(debug);
+  const matchesYaml = toYaml(matches);
+  const rejectionsYaml = toYaml(rejections);
 
   return (<>
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -95,7 +97,8 @@ const DebugOutputsDt: React.FC<{ debug: Fs.DecisionResult }> = ({ debug }) => {
         <Collapse in={accepted} timeout="auto" unmountOnExit>
           <Box sx={{ margin: 1 }}>
             <MonacoReact
-              value={toYaml(matches)}
+              height={calcEditorHeight(matchesYaml)}
+              value={matchesYaml}
               defaultLanguage='yaml'/>
           </Box>
         </Collapse>
@@ -119,7 +122,8 @@ const DebugOutputsDt: React.FC<{ debug: Fs.DecisionResult }> = ({ debug }) => {
         <Collapse in={rejects} timeout="auto" unmountOnExit>
           <Box sx={{ margin: 1 }}>
             <MonacoReact key="debug-input"
-              value={toYaml(rejections)}
+              height={calcEditorHeight(rejectionsYaml)}
+              value={rejectionsYaml}
               defaultLanguage='yaml'/>
           </Box>
         </Collapse>

@@ -19,7 +19,6 @@ export interface FsDirentContextType {
   updateDirent: (id: string, updated: Partial<Fs.DirentBase>) => void;
   fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
   applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
-  debugDirent: (params: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
 }
 
 const FsDirentContext = React.createContext<FsDirentContextType | undefined>(undefined);
@@ -29,7 +28,6 @@ export interface FsDirentProviderProps {
     fetchDirents: () => Promise<Fs.DirentBase[]>;
     fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
     applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
-    debugDirent?: (params: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
   }
   children: React.ReactNode;
 }
@@ -78,7 +76,6 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       getArticleName: (id) => dirents.getArticleName(id),
       fetchDirentBody: props.persistenceUnit.fetchDirentBody,
       applyTransientChanges: props.persistenceUnit.applyTransientChanges,
-      debugDirent: props.persistenceUnit.debugDirent ?? (() => Promise.resolve({})),
     };
   }, [dirents, updateDirent]);
 

@@ -4,7 +4,7 @@ import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as Keyboard
 import { useIntl } from 'react-intl';
 import Editor from '@monaco-editor/react';
 import { Fs } from '@dxs-ts/fs-api';
-import { toYaml } from './utils';
+import { toYaml, calcEditorHeight } from './utils';
 
 
 
@@ -37,7 +37,7 @@ const DebugStep: React.FC<{ debug: Fs.FlowResultLog }> = ({ debug }) => {
               value={yaml}
               onChange={() => {}}
               defaultLanguage='yaml'
-              height='500px'
+              height={calcEditorHeight(yaml)}
             />
           </Box>
         </Collapse>

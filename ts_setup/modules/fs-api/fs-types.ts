@@ -127,10 +127,18 @@ export declare namespace Fs {
     parseTree?: {
       value: string;
     };
+    headers?: {
+      acceptDefs: DecisionTypeDef[];
+      returnDefs: DecisionTypeDef[];
+    };
   }
 
   export interface FlowTaskAst {
     value: string;
+    headers?: {
+      acceptDefs: DecisionTypeDef[];
+      returnDefs: DecisionTypeDef[];
+    };
   }
 
   export interface DecisionTypeDef {

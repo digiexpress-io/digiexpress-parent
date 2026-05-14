@@ -101,7 +101,7 @@ const SelectAsset: React.FC<SelectAssetProps> = ({ onClose, onSelect, selected }
         </List>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
+        <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
         <Button onClick={() => {
           if (link) {
             onSelect(link);
