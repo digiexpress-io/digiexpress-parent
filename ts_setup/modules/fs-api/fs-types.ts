@@ -54,6 +54,7 @@ export declare namespace Fs {
     | DialobFormMetaProps
     | FlowProps
     | FlowTaskProps
+    | DecisionTableProps
     | LanguageProps
     | PrintoutProps
     | PrintoutPageProps
@@ -302,6 +303,10 @@ export declare namespace Fs {
     type: 'FLOW_TASK';
     taskName: string;
     taskValue: string;
+  }
+
+  export interface DecisionTableProps extends PropsBase {
+    type: 'DECISION_TABLE';
   }
 
   export interface LanguageProps extends PropsBase {

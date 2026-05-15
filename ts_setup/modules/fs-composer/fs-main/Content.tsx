@@ -58,6 +58,7 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
     case 'PRINTOUT': return (activeTab && (<div key={tabId} className={className}><FsDirentPrintout tab={activeTab} /></div>));
     case 'ARTICLE_TEMPLATE': return (activeTab && (<div key={tabId} className={className}><FsDirentTemplate tab={activeTab} /></div>));
     case 'DIALOB_FORM': return (activeTab && (<div key={tabId} className={className}><FsDirentDialob tab={activeTab} /></div>));
+    case 'DIALOB_FORM_META': return (activeTab && (<div key={tabId} className={className}><FsDirentDialob tab={activeTab} /></div>));
     case 'LOCALE': return (activeTab && (<div key={tabId} className={className}><FsDirentLanguage tab={activeTab} /></div>));
     case 'ARTICLE_PAGE': return (activeTab && (<div key={tabId} className={className}><FsDirentPage tab={activeTab} /></div>));
     default: return (<div className={className}>{intl.formatMessage({ id: 'fs.main.message.noAssetSelected' })}</div>);

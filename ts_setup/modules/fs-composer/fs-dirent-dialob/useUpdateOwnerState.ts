@@ -23,8 +23,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const dirent = getDirent(props.direntId);
   const dialobProps = dirent?.type === 'DIALOB_FORM' ? dirent.props as Fs.DialobProps : undefined;
 
-  const [technicalName, setTechnicalName] = React.useState(dialobProps?.formTechnicalId ?? '');
-  const [formName, setFormName] = React.useState(dialobProps?.formName ?? '');
+  const [technicalName, setTechnicalName] = React.useState(dialobProps?.formTechnicalId ?? dirent?.id ?? '');
+  const [formName, setFormName] = React.useState(dialobProps?.formName ?? dirent?.name ?? '');
   const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
   const [isExpanded, setIsExpanded] = React.useState(false);
 
