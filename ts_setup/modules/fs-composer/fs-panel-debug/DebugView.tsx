@@ -36,6 +36,7 @@ const DebugView: React.FC<{}> = ({ }) => {
   const [delimiter, setDelimiter] = React.useState("semicolon");
   const [wrap, setWrap] = React.useState(false);
   const intl = useIntl();
+  const { debugDirent } = useFsDirent();
 
   const handleCsv = (csv: string) => {
     const updated = { ...session, inputType: 'CSV' as Fs.DebugInputType, csv };
@@ -65,11 +66,9 @@ const DebugView: React.FC<{}> = ({ }) => {
   }
 
   const handleExecute = () => {
-    /*
     if (!selectedId) {
       return;
     }
-    // TODO: wire up real backend endpoint when available
     debugDirent({
       id: selectedId,
       input: session.inputType === 'JSON' ? session.json : undefined,
@@ -85,7 +84,6 @@ const DebugView: React.FC<{}> = ({ }) => {
         setSession(updated);
         setSessions(prev => ({ ...prev, [selectedId]: updated }));
       });
-      */
   }
 
   const downloadCsv = (delimiter: string, wrap: boolean) => {

@@ -20,6 +20,7 @@ package io.digiexpress.eveli.client.web.resources.assets;
  * #L%
  */
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.resys.limaone.authoring.Authoring;
+import io.resys.limaone.authoring.DebugAny.DebugAnyProps;
+import io.resys.limaone.authoring.DebugAny.DebugResult;
 import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.fs.WorldFsBody;
 import io.resys.limaone.fs.WorldFsBody.WrenchAstBodyChange;
@@ -59,6 +62,12 @@ public class AssetsFsController {
   }
   
   
+  @PostMapping(path = "/debugs", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  public Uni<DebugResult> debug(@RequestBody DebugAnyProps debug) {
+    return authoring.debugModel().debugAny().props(debug).build();
+  }
+
+
   @PostMapping("dirents/{id}/bodies/{bodyType}/transient-changes")
   public Uni<WorldFsBody> getDirentBody(
       @RequestBody WrenchAstBodyChange transientChanges,

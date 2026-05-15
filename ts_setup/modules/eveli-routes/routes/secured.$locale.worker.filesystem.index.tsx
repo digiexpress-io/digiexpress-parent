@@ -21,11 +21,13 @@ function Component() {
   const { getDirents } = useFetch('worker/rest/api/assets/fs.GET', {});
   const { getDirentBody } = useFetch('worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType.GET', {});
   const { applyTransientChanges } = useFetch('worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType/transient-changes.POST', {});
+  const { debugDirent } = useFetch('worker/rest/api/assets/fs/debugs.POST', {});
 
   const persistenceUnit: FsDirentProviderProps['persistenceUnit'] = {
     fetchDirents: getDirents,
     fetchDirentBody: getDirentBody,
     applyTransientChanges,
+    debugDirent,
   };
 
   return (
