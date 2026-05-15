@@ -89,7 +89,6 @@ export const GFormGroupLabel = styled('div', {
 
   return {
     display: 'flex',
-
     '& .MuiDivider-root': {
       display: label ? undefined : 'none',
       flexGrow: 1,
@@ -144,6 +143,7 @@ const GFormGroupBody = styled('div', {
     gridAutoFlow: 'row',
     gridTemplateRows: `repeat(${rowCount}, auto)`,
     gridTemplateColumns: `repeat(${colCount}, 1fr)`,
+    alignItems: 'end',
 
     // ------------------------- compensation for MUI bug - force grid items in dialob's multi-col group layout to re-render with full width 
     '& .MuiGrid-item': {
