@@ -51,7 +51,6 @@ import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Disabled
 @TagomiTest(enabled = true)
 @DialobTest(enabled = true)
 public class TagomiPdfTest extends DbSupport {
