@@ -421,7 +421,7 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
       .stream()
       .map(e -> allTables.get(e))
       .filter(e -> e != null)
-      .sorted().toList();
+      .sorted((a, b) -> a.getTableName().compareTo(b.getTableName())).toList();
     
     return externalTables;
   }
