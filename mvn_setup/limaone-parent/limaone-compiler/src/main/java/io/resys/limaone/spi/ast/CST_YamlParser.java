@@ -94,16 +94,13 @@ public class CST_YamlParser<T extends MutableYaml> {
       }
 
       if(isMultilineStarted) {
-        // Accumulate table content until we find a non-indented line
-        if(src.startsWith(" ") || src.startsWith("|")) {
-          // This is table content, accumulate it
+        // Continue multiline until a line is not indented past the `|` anchor (parent.getIndent()).
+        if(getIndent(src) > parent.getIndent()) {
           parent.addMultiline(src);
           continue;
-        } else {
-          // End of table content, move back to parent
-          parent = parent.getParent();
-          isMultilineStarted = false; 
         }
+        parent = parent.getParent();
+        isMultilineStarted = false;
       }
       
       final var keywordAndValue = getKeywordAndValue(src, lineNumber);

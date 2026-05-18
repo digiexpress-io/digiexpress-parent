@@ -29,7 +29,11 @@ export type AstNavNodeType = (
   'FLOW_TASK_ASSET_COLLECTION' | 
   
   'FLOW_TASK_ASSET_INPUTS' | 
-  'FLOW_TASK_ASSET_INPUT'
+  'FLOW_TASK_ASSET_INPUT' |
+
+  'FLOW_TASK_FORM' |
+  'FLOW_TASK_FORM_REF' |
+  'FLOW_TASK_FORM_RETURNS'
 )
 
 export interface AstNavNodeDesc {
@@ -204,7 +208,8 @@ export class AstNavNode {
       'FLOW_TASK_SWITCH',
       'FLOW_TASK_SWITCH_CASE',
       'FLOW_TASK_ASSET',
-      'FLOW_TASK_ASSET_INPUTS'
+      'FLOW_TASK_ASSET_INPUTS',
+      'FLOW_TASK_FORM'
     ];
     return !blockTypes.includes(this.type);
   }
@@ -224,7 +229,12 @@ export class AstNavNode {
       case 'inputs': return _isNestedInputsComplete(this, this._query);
       case 'decisionTable': return _isDtComplete(this);
       case 'service': return _isServiceComplete(this);
-      case 'returns': return _isReturnsComplete(this);
+      case 'form': return _isFormComplete(this);
+      case 'returns':
+        if (this._value.parent?.keyword === 'form') {
+          return _isFormReturnsComplete(this);
+        }
+        return _isReturnsComplete(this);
 
       case 'debugValue':
       case 'collection':
@@ -363,6 +373,19 @@ function _isServiceComplete(node: AstNavNode) {
   }
   return true;
 }
+function _isFormComplete(node: AstNavNode) {
+  const keywords: string[] = ['ref', 'returns'];
+  for(const keyword of keywords) {
+    const item = node.value.children[keyword];
+    if(!item) {
+      return false;
+    }
+  }
+  return true;
+}
+function _isFormReturnsComplete(node: AstNavNode) {
+  return node.end > node.start;
+}
 function _isReturnsComplete(node: AstNavNode) {
   const keywords: string[] = ['collection', 'inputs'];
   for(const keyword of keywords) {
@@ -487,6 +510,16 @@ function _classifyNode(node: HdesApi.AstFlowNode): AstNavNodeType {
   }
   
   // Decision Table / Asset
+
+  if(keyword === 'form' && parent_level_2_keyword === 'tasks') {
+    return 'FLOW_TASK_FORM';
+  }
+  if(keyword === 'ref' && parent_level_1_keyword === 'form') {
+    return 'FLOW_TASK_FORM_REF';
+  }
+  if(keyword === 'returns' && parent_level_1_keyword === 'form') {
+    return 'FLOW_TASK_FORM_RETURNS';
+  }
 
   if(keyword === 'ref' && parent_level_3_keyword === 'tasks') {
     return 'FLOW_TASK_ASSET_REF';

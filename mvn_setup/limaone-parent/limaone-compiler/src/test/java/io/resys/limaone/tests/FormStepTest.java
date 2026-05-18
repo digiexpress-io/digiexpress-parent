@@ -258,6 +258,246 @@ tasks:
         "Error should point to line 17 of the flow (returns line 14 + code line 3), but was: " + firstError.getLine());
   }
 
+  @Test
+  public void testFormStepWithEmptyReturns() {
+    final var config = createConfig(null);
+    final var authoring = new AuthoringImpl(config);
+
+    authoring.newModel().newFlow()
+        .props(props -> props
+            .name("form-step-empty-returns")
+            .body("""
+id: form-step-empty-returns
+description: Test form step with empty returns
+
+inputs:
+  questionnaireId:
+    required: true
+    type: STRING
+tasks:
+  - Collect data:
+    id: "collectData"
+    then: end
+    form:
+      ref: questionnaireId
+      returns: |
+        
+""")
+            .build())
+        .buildSync();
+
+    final var compiler = new CompilerImpl(config.getEnvir());
+    final var world = authoring.worldQuery().findAllSync();
+    final var runtime = compiler.compile(world).id(world.getName()).build();
+    final var flow = runtime.getBundle().queryFlows().name("form-step-empty-returns").getOne();
+
+    Assertions.assertFalse(flow.getAst().getErrors().isEmpty(),
+        "Expected validation error for empty returns");
+    
+    final var errorMessages = flow.getAst().getErrors().stream()
+        .map(error -> error.getMsg())
+        .toList();
+    Assertions.assertTrue(
+        errorMessages.stream().anyMatch(msg -> msg.contains("non-empty 'returns' block")),
+        "Expected error about non-empty returns block, but got: " + errorMessages
+    );
+  }
+
+  @Test
+  public void testFormStepInstanceNotFound() {
+    final var config = createConfig(null);
+    final var authoring = new AuthoringImpl(config);
+
+    authoring.newModel().newFlow()
+        .props(props -> props
+            .name("form-step-not-found")
+            .body("""
+id: form-step-not-found
+description: Test form instance not found
+
+inputs:
+  questionnaireId:
+    required: true
+    type: STRING
+tasks:
+  - Collect data:
+    id: "collectData"
+    then: end
+    form:
+      ref: questionnaireId
+      returns: |
+        final String result = "processed"
+""")
+            .build())
+        .buildSync();
+
+    final var compiler = new CompilerImpl(config.getEnvir());
+    final var world = authoring.worldQuery().findAllSync();
+    final var runtime = compiler.compile(world).id(world.getName()).build();
+    final var flow = runtime.getBundle().queryFlows().name("form-step-not-found").getOne();
+
+    final var result = flow.run(DefaultProgramInput.of(Map.of(
+        "questionnaireId", "non-existent-id-12345"
+    ))).andGetBody();
+
+    Assertions.assertEquals(FlowExecutionStatus.ERROR, result.getStatus(),
+        "Expected flow to fail when FormDb is not configured, but got status: " + result.getStatus());
+
+  }
+
+  @Test @DialobResetDB
+  public void testFormStepWithNullValues(FormUrl formUrl) {
+    final var formDb = TestTemplate.getFormDb(formUrl);
+
+    final var form = new JsonObject(TestTemplate.toString("forms/palaute.json")).mapTo(Form.class);
+    final var created = formDb.withTenant().createForm()
+        .props(form).build()
+        .await().atMost(Duration.ofMinutes(1));
+
+    final var sessionId = formDb.withTenant().createFormInstance()
+        .formId(created.getId())
+        .context(Map.of(
+            "FirstNames", "Sam",
+            "LastName", "Vimes"
+        ))
+        .build().await().atMost(Duration.ofMinutes(1));
+
+    completeForm(formDb, formDb.withTenant()
+        .formInstanceQuery()
+        .getOne(sessionId.getId())
+        .await().atMost(Duration.ofMinutes(1)));
+
+    final var config = createConfig(formDb);
+    final var authoring = new AuthoringImpl(config);
+
+    authoring.newModel().newFlow()
+        .props(props -> props
+            .name("form-step-null-values")
+            .body("""
+id: form-step-null-values
+description: Test handling of null values
+
+inputs:
+  questionnaireId:
+    required: true
+    type: STRING
+tasks:
+  - Collect data:
+    id: "collectData"
+    then: end
+    form:
+      ref: questionnaireId
+      returns: |
+        final String firstName = form.context "FirstNames"
+        final String lastName = form.context "LastName"
+        final String ssn = form.context "SocialSecurityNumber"
+        final String email = form.context "Email"
+        final String address = form.context "Address"
+        final Boolean hasAddress = address != null
+        final String defaultEmail = email != null ? email : "no-email@example.com"
+""")
+            .build())
+        .buildSync();
+
+    final var compiler = new CompilerImpl(config.getEnvir());
+    final var world = authoring.worldQuery().findAllSync();
+    final var runtime = compiler.compile(world).id(world.getName()).build();
+    final var flow = runtime.getBundle().queryFlows().name("form-step-null-values").getOne();
+
+    final var result = flow.run(DefaultProgramInput.of(Map.of(
+        "questionnaireId", sessionId.getId()
+    ))).andGetBody();
+
+    Assertions.assertEquals(FlowExecutionStatus.COMPLETED, result.getStatus());
+    Assertions.assertEquals("Sam", result.getReturns().get("firstName"));
+    Assertions.assertEquals("Vimes", result.getReturns().get("lastName"));
+    Assertions.assertNull(result.getReturns().get("ssn"));
+    Assertions.assertNull(result.getReturns().get("email"));
+    Assertions.assertNull(result.getReturns().get("address"));
+    Assertions.assertEquals(false, result.getReturns().get("hasAddress"));
+    Assertions.assertEquals("no-email@example.com", result.getReturns().get("defaultEmail"));
+  }
+
+  @Test @DialobResetDB
+  public void testUsingFormStepOutputsInOtherSteps(FormUrl formUrl) {
+    final var formDb = TestTemplate.getFormDb(formUrl);
+
+    final var form = new JsonObject(TestTemplate.toString("forms/palaute.json")).mapTo(Form.class);
+    final var created = formDb.withTenant().createForm()
+        .props(form).build()
+        .await().atMost(Duration.ofMinutes(1));
+
+    final var sessionId = formDb.withTenant().createFormInstance()
+        .formId(created.getId())
+        .context(Map.of(
+            "FirstNames", "Alice",
+            "LastName", "Smith",
+            "Email", "alice.smith@example.com",
+            "SocialSecurityNumber", "111111-1111"
+        ))
+        .build().await().atMost(Duration.ofMinutes(1));
+
+    completeForm(formDb, formDb.withTenant()
+        .formInstanceQuery()
+        .getOne(sessionId.getId())
+        .await().atMost(Duration.ofMinutes(1)));
+
+    final var config = createConfig(formDb);
+    final var authoring = new AuthoringImpl(config);
+
+    authoring.newModel().newFlow()
+        .props(props -> props
+            .name("form-step-with-output-usage")
+            .body("""
+id: form-step-with-output-usage
+description: Test form step with output usage
+
+inputs:
+  questionnaireId:
+    required: true
+    type: STRING
+tasks:
+  - Extract form data:
+      id: "extractData"
+      then: returnData
+      form:
+        ref: questionnaireId
+        returns: |
+          final String firstName = form.context("FirstNames")
+          final String lastName = form.context("LastName")
+          final String email = form.context("Email")
+          final String ssn = form.context("SocialSecurityNumber")
+  - Return extracted data:
+      id: "returnData"
+      then: end
+      returns:
+        inputs:
+          firstName: extractData.firstName
+          lastName: extractData.lastName
+          email: extractData.email
+          ssn: extractData.ssn
+""")
+            .build())
+        .buildSync();
+
+    final var compiler = new CompilerImpl(config.getEnvir());
+    final var world = authoring.worldQuery().findAllSync();
+    final var runtime = compiler.compile(world).id(world.getName()).build();
+    final var flow = runtime.getBundle().queryFlows().name("form-step-with-output-usage").getOne();
+
+    final var result = flow.run(DefaultProgramInput.of(Map.of(
+        "questionnaireId", sessionId.getId()
+    ))).andGetBody();
+
+    Assertions.assertEquals(FlowExecutionStatus.COMPLETED, result.getStatus());
+
+    Assertions.assertEquals("Alice", result.getReturns().get("firstName"));
+    Assertions.assertEquals("Smith", result.getReturns().get("lastName"));
+    Assertions.assertEquals("alice.smith@example.com", result.getReturns().get("email"));
+    Assertions.assertEquals("111111-1111", result.getReturns().get("ssn"));
+
+  }
+
   @Test @DialobResetDB
   @SuppressWarnings("unchecked")
   public void testFormStepWithGenericTypes(FormUrl formUrl) {

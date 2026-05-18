@@ -68,7 +68,8 @@ export const Internal: React.FC<VisProps> = (init) => {
         'switch':  SwitchNode,
         service: ServiceNode,
         flow: ServiceNode,
-        returns: ReturnsNode
+        returns: ReturnsNode,
+        form: ServiceNode
       }}
     />);
 }

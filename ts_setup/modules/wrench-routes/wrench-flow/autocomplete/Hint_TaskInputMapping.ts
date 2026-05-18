@@ -2,6 +2,7 @@ import { languages } from 'monaco-editor';
 import { Container } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
 import { HdesApi } from '@dxs-ts/wrench-api';
+import { HintUtils } from './HintUtils';
 
 
 export class Hint_TaskInputMapping {
@@ -42,6 +43,23 @@ export class Hint_TaskInputMapping {
 
     for (const task of Object.values(container.flow.parseTree.tasks)) {
       if (task.start > node.start) {
+        continue;
+      }
+
+      const form = HintUtils.get('form', task);
+      if (form) {
+        const taskId = task.id?.value;
+        if (!taskId) {
+          continue;
+        }
+
+        for (const output of HintUtils.getFormOutputFields(container, task)) {
+          const builder = new CompletionItemBuilder(container.model, container.modelPosition);
+          result.push(builder
+            .id("task output: " + taskId + "." + output.name + " " + output.type)
+            .addField(input.keyword, { indent: 10, value: taskId + '.' + output.name })
+            .build());
+        }
         continue;
       }
 

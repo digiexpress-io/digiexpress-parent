@@ -69,6 +69,8 @@ export const Styles = styled('div')(({ theme }) => ({
   ...shape('start', {borderRadius: '50%', height: '100px', width: '100px'}),
   ...shape('end', {borderRadius: '50%', height: '100px', width: '100px'}),
   ...shape('service', {borderRadius: '10px', height: '100px', width: '200px'}),
+  ...shape('form', {borderRadius: '10px', height: '100px', width: '200px'}),
+  ...shape('returns', {borderRadius: '10px', height: '100px', width: '200px'}),
   ...shape('decisionTable', {borderRadius: '10px', height: '100px', width: '200px', transform: 'skew(-25deg)'}),
   ...shape('switch', {borderRadius: '10px', height: '200px', width: '200px', transform: 'rotateX(45deg) rotateZ(45deg)'}),
 }));

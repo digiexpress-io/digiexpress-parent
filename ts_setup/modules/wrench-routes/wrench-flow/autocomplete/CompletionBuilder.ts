@@ -16,12 +16,15 @@ import { Hint_InputDebugValue } from './Hint_InputDebugValue';
 import { Hint_NewSwitchTask } from './Hint_NewSwitchTask';
 import { Hint_NewServiceTask } from './Hint_NewServiceTask';
 import { Hint_NewDecisionTask } from './Hint_NewDecisionTask';
+import { Hint_NewFormTask } from './Hint_NewFormTask';
 import { Hint_TaskThen } from './Hint_TaskThen';
 import { Hint_TaskId } from './Hint_TaskId';
 import { Hint_TaskAssetRef } from './Hint_TaskAssetRef';
 import { Hint_TaskAssetCollection } from './Hint_TaskAssetCollection';
 import { Hint_TaskBodyMapping } from './Hint_TaskBodyMapping';
 import { Hint_TaskInputMapping } from './Hint_TaskInputMapping';
+import { Hint_FormRef } from './Hint_FormRef';
+import { Hint_FormReturns } from './Hint_FormReturns';
 
 export class CompletionBuilder {
   private _flow?: HdesApi.AstFlow;
@@ -88,9 +91,12 @@ export class CompletionBuilder {
     result.push(...Hint_NewSwitchTask.accept(container));
     result.push(...Hint_NewServiceTask.accept(container));
     result.push(...Hint_NewDecisionTask.accept(container));
+    result.push(...Hint_NewFormTask.accept(container));
     result.push(...Hint_TaskThen.accept(container));
     result.push(...Hint_TaskId.accept(container));
     result.push(...Hint_TaskAssetRef.accept(container));
+    result.push(...Hint_FormRef.accept(container));
+    result.push(...Hint_FormReturns.accept(container));
     result.push(...Hint_TaskAssetCollection.accept(container));
     result.push(...Hint_TaskBodyMapping.accept(container));
     result.push(...Hint_TaskInputMapping.accept(container));

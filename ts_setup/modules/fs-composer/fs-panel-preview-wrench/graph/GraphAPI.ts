@@ -2,7 +2,7 @@ import { Fs } from '@dxs-ts/fs-api';
 import { Node, Edge, Model } from '../vis/vis-types';
 
 
-type ModelType = 'switch' | 'decisionTable' | 'service' | 'flow' | 'returns';
+type ModelType = 'switch' | 'decisionTable' | 'service' | 'flow' | 'returns' | 'form';
 
 
 class ModelVisitor {
@@ -100,7 +100,7 @@ class ModelVisitor {
 
     if (group === "switch") {
       this.visitSwitch(step, { parent: node, index: props.index });
-    } else if (group === "decisionTable" || group === "returns") {
+    } else if (group === "decisionTable" || group === "returns" || group === "form") {
       this.visitThen(step.then, { parent: node, index: props.index });
     } else if (group === "service") {
       if(ref) {
@@ -227,6 +227,8 @@ class ModelVisitor {
       return "service";
     } else if (step.returns) {
         return "returns";
+    } else if (step.form) {
+      return "form";
     } else if (step.switch) {
       return "switch";
     }

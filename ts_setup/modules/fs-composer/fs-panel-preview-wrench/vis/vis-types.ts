@@ -7,7 +7,7 @@ export interface Model {
 export interface Node {
   id: string,
   label: string,
-  type: 'start' | 'end' | 'switch' | 'decisionTable' | 'service' | 'flow' | 'returns',
+  type: 'start' | 'end' | 'switch' | 'decisionTable' | 'service' | 'flow' | 'returns' | 'form',
   parents: string[],
   externalId?: string;
   body?: any;

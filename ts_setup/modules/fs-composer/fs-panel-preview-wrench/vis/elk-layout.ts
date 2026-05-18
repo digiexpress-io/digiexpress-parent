@@ -45,7 +45,7 @@ class ModelMapper {
     if(data.type === 'decisionTable' || data.type === 'returns') {
       return { height: 100, width: 200 }
     }
-    if(data.type === 'service') {
+    if(data.type === 'service' || data.type === 'form') {
       return { height: 100, width: 200 }
     }
     return {
