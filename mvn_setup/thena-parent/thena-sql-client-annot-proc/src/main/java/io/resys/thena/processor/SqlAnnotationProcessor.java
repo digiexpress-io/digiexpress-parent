@@ -99,7 +99,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
     for (final var registry : metaModel.getRegistries()) {
       final var tables = metaModel.getTablesForRegistry(registry);
       try {
-        processRegistry(registry, tables);
+        processRegistry(registry, tables, metaModel);
       } catch (Exception e) {
         processingEnv.getMessager().printMessage(
           javax.tools.Diagnostic.Kind.ERROR,
@@ -113,7 +113,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
     return true; // We claim this annotation
   }
   
-  private void processRegistry(RegistryMetamodel registryConfig, List<TableMetamodel> tableModels) throws IOException {
+  private void processRegistry(RegistryMetamodel registryConfig, List<TableMetamodel> tableModels, Metamodel metamodel) throws IOException {
     // Generate registry if we have config
     if (tableModels.isEmpty()) {
       return;
@@ -129,13 +129,13 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
     
     // Multi-table generators (RegistryModel + List<TableModel> parameters)
     final var multiTableGenerators = List.of(
-      new Gen_Multi_TableNames(),
       new Gen_Multi_RegistryFactory(),
       new Gen_Multi_QueryInterface(),
       new Gen_Multi_BuilderInterface(),
       new Gen_Multi_InternalTenantQuery(),
       new Gen_Multi_BuilderImplementation(),
-      new Gen_Multi_QueryImplementation()
+      new Gen_Multi_QueryImplementation(),
+      new Gen_Multi_TableNames()
     );
     
     // Process registry-only generators
@@ -151,7 +151,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
     
     // Process multi-table generators
     for (MultiTableCodeGenerator generator : multiTableGenerators) {
-      final var javaFile = generator.generate(registryConfig, tableModels);
+      final var javaFile = generator.generate(registryConfig, tableModels, metamodel);
       javaFile.writeTo(processingEnv.getFiler());
       
       processingEnv.getMessager().printMessage(

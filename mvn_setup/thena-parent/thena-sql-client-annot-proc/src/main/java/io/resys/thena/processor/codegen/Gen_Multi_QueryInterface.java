@@ -98,6 +98,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import io.resys.thena.processor.model.Metamodel;
 import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.model.TableMetamodel;
 import io.resys.thena.processor.model.TableMetamodel.SqlMethodType;
@@ -106,7 +107,7 @@ import io.resys.thena.processor.support.NamingUtils;
 
 public class Gen_Multi_QueryInterface implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables, Metamodel metamodel) {
     final var className = registry.getName() + "DbQuery";
     
     final var interfaceBuilder = TypeSpec.interfaceBuilder(className)

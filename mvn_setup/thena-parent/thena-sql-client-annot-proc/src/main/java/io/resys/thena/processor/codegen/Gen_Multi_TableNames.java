@@ -86,6 +86,8 @@ package io.resys.thena.processor.codegen;
  */
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.lang.model.element.Modifier;
 
@@ -96,13 +98,19 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.processor.model.Metamodel;
 import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.model.TableMetamodel;
 import io.resys.thena.processor.spi.MultiTableCodeGenerator;
 
 public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
+  
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> registryTables, Metamodel metamodel) {
+    
+    
+    final var tables = Stream.concat(registryTables.stream(), getExtendedTablesFromQueries(registryTables, metamodel).stream()).toList();
+    
     final var className = registry.getTableClassName();
     
     final var classBuilder = TypeSpec.classBuilder(className)
@@ -396,5 +404,25 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
     builder.addStatement("return result");
     
     return builder.build();
+  }
+  
+
+  public List<TableMetamodel> getExtendedTablesFromQueries(List<TableMetamodel> registryTables, Metamodel metamodel) {
+    
+    final var allTables = metamodel.getTables().stream().collect(Collectors.toMap(e -> e.getTableName(), e -> e));
+    
+    final var registryNames = registryTables.stream().map(e -> e.getTableName()).toList();
+    
+    final var externalTables = registryTables.stream()
+      .flatMap(e -> e.getSqlMethods().stream())
+      .flatMap(e -> e.getTableNames().stream())
+      .filter(e -> !registryNames.contains(e))
+      .collect(Collectors.toSet())
+      .stream()
+      .map(e -> allTables.get(e))
+      .filter(e -> e != null)
+      .sorted().toList();
+    
+    return externalTables;
   }
 }

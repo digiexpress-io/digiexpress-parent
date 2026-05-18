@@ -24,6 +24,7 @@ import java.util.List;
 
 import com.squareup.javapoet.JavaFile;
 
+import io.resys.thena.processor.model.Metamodel;
 import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.model.TableMetamodel;
 
@@ -31,5 +32,5 @@ import io.resys.thena.processor.model.TableMetamodel;
  * Code generators that work with RegistryModel and List of TableModels
  */
 public interface MultiTableCodeGenerator {
-  JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables);
+  JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables, Metamodel metamodel);
 }

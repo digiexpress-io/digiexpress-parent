@@ -44,6 +44,7 @@ import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
+import io.resys.thena.processor.model.Metamodel;
 import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.model.TableMetamodel;
 import io.resys.thena.processor.spi.MultiTableCodeGenerator;
@@ -56,7 +57,7 @@ import io.smallrye.mutiny.Uni;
 
 public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables, Metamodel metamodel) {
     final var className = registry.getInternalTenantQueryClassName();
     final var packageName = registry.getPackageName() + ".spi";
     

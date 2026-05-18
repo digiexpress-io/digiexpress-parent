@@ -38,6 +38,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.Message;
+import io.resys.thena.processor.model.Metamodel;
 import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.model.TableMetamodel;
 import io.resys.thena.processor.model.TableMetamodel.SqlMethod;
@@ -47,7 +48,7 @@ import io.resys.thena.processor.support.NamingUtils;
 
 public class Gen_Multi_BuilderInterface implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables, Metamodel metamodel) {
     final var className = registry.getName() + "DbBuilder";
     final var persistenceUnitName = "PersistenceUnit";
     
