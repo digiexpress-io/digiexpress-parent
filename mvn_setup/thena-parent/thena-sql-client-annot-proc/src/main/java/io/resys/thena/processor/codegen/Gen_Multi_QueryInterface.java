@@ -91,7 +91,6 @@ import java.util.Optional;
 
 import javax.lang.model.element.Modifier;
 
-import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -206,8 +205,7 @@ public class Gen_Multi_QueryInterface implements MultiTableCodeGenerator {
   
   private TypeSpec generateWorldInterface(RegistryMetamodel registry, List<TableMetamodel> tables) {
     final var worldInterface = TypeSpec.interfaceBuilder(registry.getWorldName())
-      .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-      .addAnnotation(AnnotationSpec.builder(ClassName.get("org.immutables.value", "Value", "Immutable")).build());
+      .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
     
     for (final var table : tables) {
       final var entityType = findEntityTypeForTable(table);

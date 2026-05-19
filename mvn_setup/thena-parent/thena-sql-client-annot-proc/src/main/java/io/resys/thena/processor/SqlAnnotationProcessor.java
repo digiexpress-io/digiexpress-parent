@@ -38,10 +38,12 @@ import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.processor.codegen.Gen_Multi_BuilderImplementation;
 import io.resys.thena.processor.codegen.Gen_Multi_BuilderInterface;
 import io.resys.thena.processor.codegen.Gen_Multi_InternalTenantQuery;
+import io.resys.thena.processor.codegen.Gen_Multi_PersistenceUnitImplementation;
 import io.resys.thena.processor.codegen.Gen_Multi_QueryImplementation;
 import io.resys.thena.processor.codegen.Gen_Multi_QueryInterface;
 import io.resys.thena.processor.codegen.Gen_Multi_RegistryFactory;
 import io.resys.thena.processor.codegen.Gen_Multi_TableNames;
+import io.resys.thena.processor.codegen.Gen_Multi_WorldImplementation;
 import io.resys.thena.processor.codegen.Gen_Registry_DatabaseImplementation;
 import io.resys.thena.processor.codegen.Gen_Registry_DatabaseInterface;
 import io.resys.thena.processor.codegen.Gen_Registry_Exception;
@@ -133,9 +135,11 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
       new Gen_Multi_QueryInterface(),
       new Gen_Multi_BuilderInterface(),
       new Gen_Multi_InternalTenantQuery(),
+      new Gen_Multi_TableNames(),
+      new Gen_Multi_WorldImplementation(),
+      new Gen_Multi_PersistenceUnitImplementation(),
       new Gen_Multi_BuilderImplementation(),
-      new Gen_Multi_QueryImplementation(),
-      new Gen_Multi_TableNames()
+      new Gen_Multi_QueryImplementation()
     );
     
     // Process registry-only generators
