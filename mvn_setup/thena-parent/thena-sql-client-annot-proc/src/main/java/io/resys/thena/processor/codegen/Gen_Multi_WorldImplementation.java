@@ -160,6 +160,7 @@ public class Gen_Multi_WorldImplementation implements MultiTableCodeGenerator {
       final var entityType = findEntityTypeForTable(table);
       if (entityType != null) {
         builderClass.addMethod(generateBuilderSetter(table, entityType));
+        builderClass.addMethod(generateBuilderPut(table, entityType));
         builderClass.addMethod(generateBuilderPutAll(table, entityType));
       }
     }
@@ -206,6 +207,26 @@ public class Gen_Multi_WorldImplementation implements MultiTableCodeGenerator {
       .addParameter(paramType, "value")
       .returns(ClassName.bestGuess("Builder"))
       .addStatement("this.$L.putAll(value)", fieldName)
+      .addStatement("return this")
+      .build();
+  }
+  
+  private MethodSpec generateBuilderPut(TableMetamodel table, ClassName entityType) {
+    // Convert plural table name to singular for method name
+    final var tableName = table.getTableName();
+    final var singularName = tableName.endsWith("ies") ? tableName.substring(0, tableName.length() - 3) + "y" :
+                            tableName.endsWith("es") ? tableName.substring(0, tableName.length() - 2) :
+                            tableName.endsWith("s") ? tableName.substring(0, tableName.length() - 1) : 
+                            tableName;
+    final var methodName = "put" + NamingUtils.toPascalCase(singularName);
+    final var fieldName = NamingUtils.toCamelCase(table.getTableName());
+    
+    return MethodSpec.methodBuilder(methodName)
+      .addModifiers(Modifier.PUBLIC)
+      .addParameter(ClassName.get(String.class), "key")
+      .addParameter(entityType, "value")
+      .returns(ClassName.bestGuess("Builder"))
+      .addStatement("this.$L.put(key, value)", fieldName)
       .addStatement("return this")
       .build();
   }

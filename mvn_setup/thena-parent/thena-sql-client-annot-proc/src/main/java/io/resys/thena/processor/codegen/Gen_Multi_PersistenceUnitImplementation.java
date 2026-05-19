@@ -95,7 +95,7 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     // Extract and add operation fields
     final var operations = extractOperations(tables);
     for (final var entry : operations.entrySet()) {
-      final var fieldName = NamingUtils.toCamelCase(entry.getKey());
+      final var fieldName = uncapitalize(entry.getKey());
       final var entityType = entry.getValue();
       classBuilder.addField(FieldSpec.builder(
           ParameterizedTypeName.get(ClassName.get(List.class), entityType),
@@ -217,7 +217,7 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     
     // Add operation parameters
     for (final var entry : operations.entrySet()) {
-      final var fieldName = NamingUtils.toCamelCase(entry.getKey());
+      final var fieldName = uncapitalize(entry.getKey());
       final var entityType = entry.getValue();
       builder.addParameter(ParameterizedTypeName.get(ClassName.get(List.class), entityType), fieldName);
       builder.addStatement("this.$L = $L", fieldName, fieldName);
@@ -239,7 +239,7 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
   
   private MethodSpec generateOperationGetter(String fieldName, TypeName entityType) {
     final var getterName = "get" + fieldName;
-    final var camelFieldName = NamingUtils.toCamelCase(fieldName);
+    final var camelFieldName = uncapitalize(fieldName);
     
     return MethodSpec.methodBuilder(getterName)
       .addModifiers(Modifier.PUBLIC)
@@ -346,7 +346,7 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     
     // Add operation fields
     for (final var entry : operations.entrySet()) {
-      final var fieldName = NamingUtils.toCamelCase(entry.getKey());
+      final var fieldName = uncapitalize(entry.getKey());
       final var entityType = entry.getValue();
       builderClass.addField(FieldSpec.builder(
           ParameterizedTypeName.get(immutableListBuilder, entityType),
@@ -366,6 +366,12 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     builderClass.addMethod(generateSimpleSetter("log", ClassName.get(String.class)));
     builderClass.addMethod(generateListSetter("commitLogs", ClassName.get(Message.class)));
     
+    // Generate add single item methods
+    builderClass.addMethod(generateAddMethod("commitMessage", "commitMessages", ClassName.get(String.class)));
+    builderClass.addMethod(generateAddMethod("commitAuthor", "commitAuthors", ClassName.get(String.class)));
+    builderClass.addMethod(generateAddMethod("commitLog", "commitLogs", ClassName.get(Message.class)));
+    
+    // Generate addAll methods
     builderClass.addMethod(generateAddAllMethod("commitMessages", ClassName.get(String.class)));
     builderClass.addMethod(generateAddAllMethod("commitAuthors", ClassName.get(String.class)));
     builderClass.addMethod(generateAddAllMethod("commitLogs", ClassName.get(Message.class)));
@@ -375,6 +381,7 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
       final var fieldName = entry.getKey();
       final var entityType = entry.getValue();
       builderClass.addMethod(generateOperationSetter(fieldName, entityType));
+      builderClass.addMethod(generateOperationAddSingle(fieldName, entityType));
       builderClass.addMethod(generateOperationAddAll(fieldName, entityType));
     }
     
@@ -398,7 +405,7 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     method.addStatement("this.commitLogs.addAll(source.getCommitLogs())");
     
     for (final var fieldName : operations.keySet()) {
-      final var camelFieldName = NamingUtils.toCamelCase(fieldName);
+      final var camelFieldName = uncapitalize(fieldName);
       method.addStatement("this.$L.addAll(source.get$L())", camelFieldName, fieldName);
     }
     
@@ -427,6 +434,18 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
       .build();
   }
   
+  private MethodSpec generateAddMethod(String singularName, String fieldName, TypeName elementType) {
+    final var methodName = "add" + Character.toUpperCase(singularName.charAt(0)) + singularName.substring(1);
+    
+    return MethodSpec.methodBuilder(methodName)
+      .addModifiers(Modifier.PUBLIC)
+      .addParameter(elementType, "value")
+      .returns(ClassName.bestGuess("Builder"))
+      .addStatement("this.$L.add(value)", fieldName)
+      .addStatement("return this")
+      .build();
+  }
+  
   private MethodSpec generateAddAllMethod(String fieldName, TypeName elementType) {
     final var methodName = "addAll" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
     
@@ -440,7 +459,7 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
   }
   
   private MethodSpec generateOperationSetter(String fieldName, TypeName entityType) {
-    final var camelFieldName = NamingUtils.toCamelCase(fieldName);
+    final var camelFieldName = uncapitalize(fieldName);
     
     return MethodSpec.methodBuilder(camelFieldName)
       .addModifiers(Modifier.PUBLIC)
@@ -451,9 +470,23 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
       .build();
   }
   
+  private MethodSpec generateOperationAddSingle(String fieldName, TypeName entityType) {
+    // Use exact field name like Immutables does
+    final var methodName = "add" + fieldName;
+    final var camelFieldName = uncapitalize(fieldName);
+    
+    return MethodSpec.methodBuilder(methodName)
+      .addModifiers(Modifier.PUBLIC)
+      .addParameter(entityType, "value")
+      .returns(ClassName.bestGuess("Builder"))
+      .addStatement("this.$L.add(value)", camelFieldName)
+      .addStatement("return this")
+      .build();
+  }
+  
   private MethodSpec generateOperationAddAll(String fieldName, TypeName entityType) {
     final var methodName = "addAll" + fieldName;
-    final var camelFieldName = NamingUtils.toCamelCase(fieldName);
+    final var camelFieldName = uncapitalize(fieldName);
     
     return MethodSpec.methodBuilder(methodName)
       .addModifiers(Modifier.PUBLIC)
@@ -473,11 +506,18 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     params.append("commitMessages.build(), commitAuthors.build(), tenantId, status, log, commitLogs.build()");
     
     for (final var fieldName : operations.keySet()) {
-      params.append(", ").append(NamingUtils.toCamelCase(fieldName)).append(".build()");
+      params.append(", ").append(uncapitalize(fieldName)).append(".build()");
     }
     
     method.addStatement("return new $L($L)", className, params.toString());
     
     return method.build();
+  }
+  
+  private String uncapitalize(String str) {
+    if (str == null || str.isEmpty()) {
+      return str;
+    }
+    return Character.toLowerCase(str.charAt(0)) + str.substring(1);
   }
 }
