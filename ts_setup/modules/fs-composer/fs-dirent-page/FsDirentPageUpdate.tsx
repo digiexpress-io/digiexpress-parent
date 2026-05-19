@@ -1,8 +1,9 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -36,17 +37,26 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.localeField.label' })}</Typography>
         <FsDirentSelectSingle options={ownerState.localeOptions} value={ownerState.localeCode} onChange={ownerState.onChangeLocaleCode} />
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.descriptionField.label' })}</Typography>
-        <FsDirentTextField
-          value={ownerState.description}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.page.descriptionField.placeholder' })}
-          onChange={ownerState.onChangeDescription}
-          multiline
-          minRows={2} maxRows={4}
-        />
+        <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
+          {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.expandToggle.hide' : 'fs.dirent.expandToggle.show' })}
+          <FsIcon icon={FsIcons.ExpandMore} small className={ownerState.isExpanded ? classes.expandToggleIconOpen : classes.expandToggleIcon} />
+        </div>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
-        <FsDirentSelectMulti options={ownerState.availableConfigOptions} value={ownerState.configOptions as string[]} onChange={ownerState.onChangeConfigOptions} />
+        <Collapse in={ownerState.isExpanded}>
+          <div className={classes.optionalFields}>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.descriptionField.label' })}</Typography>
+            <FsDirentTextField
+              value={ownerState.description}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.page.descriptionField.placeholder' })}
+              onChange={ownerState.onChangeDescription}
+              multiline
+              minRows={2} maxRows={4}
+            />
+
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
+            <FsDirentSelectMulti options={ownerState.availableConfigOptions} value={ownerState.configOptions as string[]} onChange={ownerState.onChangeConfigOptions} />
+          </div>
+        </Collapse>
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />

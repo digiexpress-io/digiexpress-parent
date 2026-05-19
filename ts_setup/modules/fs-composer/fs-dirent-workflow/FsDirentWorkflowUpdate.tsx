@@ -60,7 +60,7 @@ export const FsDirentWorkflowUpdate: React.FC<FsDirentWorkflowUpdateProps> = (pr
         ))}
 
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
-          {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.service.expandToggle.hide' : 'fs.dirent.service.expandToggle.show' })}
+          {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.expandToggle.hide' : 'fs.dirent.expandToggle.show' })}
           <FsIcon icon={FsIcons.ExpandMore} small className={ownerState.isExpanded ? classes.expandToggleIconOpen : classes.expandToggleIcon} />
         </div>
 

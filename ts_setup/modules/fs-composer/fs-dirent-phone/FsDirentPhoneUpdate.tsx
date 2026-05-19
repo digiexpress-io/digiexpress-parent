@@ -44,7 +44,7 @@ export const FsDirentPhoneUpdate: React.FC<FsDirentPhoneUpdateProps> = (props) =
         ))}
 
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
-          {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.phone.expandToggle.hide' : 'fs.dirent.phone.expandToggle.show' })}
+          {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.expandToggle.hide' : 'fs.dirent.expandToggle.show' })}
           <FsIcon icon={FsIcons.ExpandMore} small className={ownerState.isExpanded ? classes.expandToggleIconOpen : classes.expandToggleIcon} />
         </div>
 

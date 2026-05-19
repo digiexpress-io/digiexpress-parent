@@ -50,7 +50,7 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
         ))}
 
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
-          {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.link.expandToggle.hide' : 'fs.dirent.link.expandToggle.show' })}
+          {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.expandToggle.hide' : 'fs.dirent.expandToggle.show' })}
           <FsIcon icon={FsIcons.ExpandMore} small className={ownerState.isExpanded ? classes.expandToggleIconOpen : classes.expandToggleIcon} />
         </div>
 

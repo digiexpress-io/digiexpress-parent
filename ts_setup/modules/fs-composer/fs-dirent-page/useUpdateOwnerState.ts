@@ -13,9 +13,11 @@ export interface UpdateOwnerState {
   configOptions: Fs.ConfigOption[];
   availableConfigOptions: Fs.SelectOption[];
   localeOptions: FsDirentSelectSingleOption[];
+  isExpanded: boolean;
   onChangeLocaleCode: (value: string) => void;
   onChangeDescription: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
+  onToggleExpanded: () => void;
   content: string;
 }
 
@@ -28,6 +30,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [content, setContent] = React.useState(pageProps.content ?? '');
   const [localeCode, setLocaleCode] = React.useState(pageProps.localeCode);
   const [description, setDescription] = React.useState(pageProps.description ?? '');
+  const [isExpanded, setIsExpanded] = React.useState(false);
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
   );
@@ -56,6 +59,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setConfigOptions(value as Fs.ConfigOption[]);
   }
 
+  function onToggleExpanded() {
+    setIsExpanded(prev => !prev);
+  }
+
   return ({
     isDarkMode,
     dirent,
@@ -66,8 +73,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     configOptions,
     availableConfigOptions,
     localeOptions,
+    isExpanded,
     onChangeLocaleCode,
     onChangeDescription,
     onChangeConfigOptions,
+    onToggleExpanded,
   });
 };
