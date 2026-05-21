@@ -73,7 +73,7 @@ function globalFetchOverride(): typeof window.fetch {
 }
 
 export const FrontdeskApp: React.FC = () => {
-  const notistackRef = React.createRef<SnackbarProvider>();
+  const notistackRef = React.useRef<SnackbarProvider>(null);
   const handleCloseNotification = (key: string | number | undefined) => () => {
     notistackRef.current?.closeSnackbar(key);
   }
@@ -95,7 +95,12 @@ export const FrontdeskApp: React.FC = () => {
               maxSnack={3}
               ref={notistackRef}
               action={(key) => (
-                <Button onClick={handleCloseNotification(key)} variant='text' sx={{ color: userTheme.palette.text.primary }}>
+                <Button onClick={handleCloseNotification(key)} variant='contained'
+                  sx={{
+                    backgroundColor: userTheme.palette.background.default,
+                    color: userTheme.palette.text.primary,
+                    borderRadius: userTheme.spacing(0.5)
+                  }}>
                   <FormattedMessage id='button.dismiss' />
                 </Button>
               )}
