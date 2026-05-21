@@ -192,6 +192,7 @@ public interface WorldFsProps {
     OffsetDateTime getCreated();
   }
 
+  @Value.Immutable
   public interface Label {
     String getId();
     String getValue();

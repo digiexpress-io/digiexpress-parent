@@ -5,6 +5,7 @@ import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
+import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonCreate } from '../fs-dirent-button-create';
 import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
@@ -65,6 +66,9 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
               onChange={ownerState.onChangeDescription}
               multiline minRows={2} maxRows={5}
             />
+
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.labelsField.label' })}</Typography>
+            <FsDirentTextFieldAutocomplete options={selectOptions.labels} value={ownerState.tagLabels} onChange={ownerState.onChangeLabels} placeholder={intl.formatMessage({ id: 'fs.dirent.link.labelsField.placeholder' })} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.articlesField.label' })}</Typography>
             <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />

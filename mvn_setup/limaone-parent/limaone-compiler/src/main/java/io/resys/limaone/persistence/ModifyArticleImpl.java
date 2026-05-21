@@ -180,6 +180,7 @@ public class ModifyArticleImpl extends AuthoringTemplate<ModifyArticleImpl, Mode
       .order(props.getOrder())
       .parentId(props.getParentId())
       .description(props.getDescription())
+      .labels(props.getLabels())
       .build();
     
   }

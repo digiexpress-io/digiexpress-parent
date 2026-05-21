@@ -104,25 +104,30 @@ public class ModifyArticleLinkImpl extends AuthoringTemplate<ModifyArticleLinkIm
       link.articles(articles);
     }
     
-    // Handle labels if provided
+    // Handle locale labels if provided
     if(props.getLabels() != null) {
       link.labels(Collections.emptyList());
       for(final var label : props.getLabels()) {
         final var localeRef = label.getLocale();
         final var locale = world.findOneLocale(localeRef);
-            
+
         link.addLabels(ImmutableLocaleLabel.builder()
             .locale(locale.map(e -> e.getId()).orElse(localeRef))
             .labelValue(label.getLabelValue())
             .build());
 
         if(locale.isEmpty()) {
-          throw new AuthoringException(props, 
-              "Locale with id: '" + label.getLocale() + "' does not exist in: '" + String.join(",", world.getLocales().keySet()) + "'!");          
+          throw new AuthoringException(props,
+              "Locale with id: '" + label.getLocale() + "' does not exist in: '" + String.join(",", world.getLocales().keySet()) + "'!");
         }
       }
     }
-    
+
+    // Handle tag labels if provided
+    if(props.getTagLabels() != null) {
+      link.tagLabels(props.getTagLabels());
+    }
+
     return link.build();
   }
 }

@@ -134,10 +134,10 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
     if( this.enablesLocales.values().stream()
         .filter(l -> usedLocales.contains(l.getId()))
         .findFirst().isEmpty() ) {
-      
+
       return result;
     }
-    
+
     if(Boolean.TRUE.equals(link.getBody().getAssignable())) {
       for(final var label : link.getBody().getLabels()) {
         if(!enablesLocales.keySet().contains(label.getLocale())) {
@@ -185,7 +185,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
         if(!enablesLocales.keySet().contains(label.getLocale())) {
           continue;
         }
-        
+
         hashBuilder.append("workflow: ").append(link.getBodyHash());
         final var locale = enablesLocales.get(label.getLocale());
         final var resource = ImmutableLink.builder()
@@ -214,7 +214,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
       for(Model<Article> article : world.getArticles().values().stream()
           .sorted((a, b) -> a.getId().compareTo(b.getId()))
           .toList()) {
-        
+
         for(final var label : link.getBody().getLabels()) {
           if(!enablesLocales.keySet().contains(label.getLocale())) {
             continue;

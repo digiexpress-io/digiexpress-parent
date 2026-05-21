@@ -20,11 +20,14 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.resys.limaone.fs.ImmutableLabel;
 import io.resys.limaone.fs.ImmutableLinkProps;
 import io.resys.limaone.fs.WorldFsProps;
+import io.resys.limaone.fs.WorldFsProps.Label;
 import io.resys.limaone.fs.WorldFsProps.LinkProps;
 import io.resys.limaone.model.ArticleLink;
 import io.resys.limaone.model.LocaleLabel;
@@ -37,7 +40,7 @@ public class Props_ArticleLinkBuilder {
   
   public LinkProps build() {
     final ArticleLink link = currentState.getBodyOfType(node);
-    final List<LocaleLabel> labels = link.getLabels();
+    final List<LocaleLabel> localeLabels = link.getLabels();
 
     final var builder = ImmutableLinkProps.builder();
 
@@ -55,11 +58,15 @@ public class Props_ArticleLinkBuilder {
         .locked(false)
         .articles(link.getArticles())
         .description(link.getDescription())
-        .intlValues(labels.stream()
+        .intlValues(localeLabels.stream()
             .collect(Collectors.toMap(
                 l -> l.getLocale(),
                 l -> l.getLabelValue()
               )))
+        .labels(link.getTagLabels() == null ? Collections.emptyList() :
+            link.getTagLabels().stream()
+                .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
+                .toList())
         .urlValue(link.getValue())
         .build();
   }

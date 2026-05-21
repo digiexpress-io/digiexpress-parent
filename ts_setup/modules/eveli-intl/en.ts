@@ -1466,6 +1466,8 @@ export const en = {
   'fs.dirent.link.labelField.fi.label': 'Label (Finnish)',
   'fs.dirent.link.labelField.sv.label': 'Label (Swedish)',
   'fs.dirent.link.labelField.placeholder': 'Enter label',
+  'fs.dirent.link.labelsField.label': 'Labels',
+  'fs.dirent.link.labelsField.placeholder': 'Select or add new labels',
   'fs.dirent.link.articlesField.label': 'Articles',
   'fs.dirent.link.descriptionField.label': 'Description',
   'fs.dirent.link.descriptionField.placeholder': 'Enter a description',

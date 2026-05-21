@@ -17,6 +17,7 @@ export interface UpdateOwnerState {
   urlValue: string;
   intlValues: Record<string, string>;
   articles: string[];
+  tagLabels: string[];
   configOptions: Fs.ConfigOption[];
   description: string;
   isExpanded: boolean;
@@ -24,6 +25,7 @@ export interface UpdateOwnerState {
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
   onChangeArticles: (value: string[]) => void;
+  onChangeLabels: (value: string[]) => void;
   onChangeConfigOptions: (value: string[]) => void;
   onChangeDescription: (value: string) => void;
   onToggleExpanded: () => void;
@@ -35,6 +37,7 @@ type _ChangeStateProps = {
   type: Fs.LinkType;
   value: string;
   labels: { locale: string; labelValue: string }[];
+  tagLabels: string[];
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
   disabledMode: boolean;
@@ -56,6 +59,7 @@ class _ChangeState implements FsuChange {
   get contentType() { return this._current.type; }
   get urlValue() { return this._current.value; }
   get intlValues() { return Object.fromEntries(this._current.labels.map(l => [l.locale, l.labelValue])); }
+  get tagLabels() { return this._current.tagLabels; }
   get configOptions() { return this._current.configOptions; }
   get articles() { return this._current.articles; }
   get description() { return this._current.description; }
@@ -82,6 +86,9 @@ class _ChangeState implements FsuChange {
     const labels = this._current.labels.filter(l => l.locale !== locale);
     labels.push({ locale, labelValue: value });
     return new _ChangeState({ ...this._current, labels }, this._origin);
+  }
+  withTagLabels(tagLabels: string[]): _ChangeState {
+    return new _ChangeState({ ...this._current, tagLabels }, this._origin);
   }
   withArticles(articles: string[]): _ChangeState {
     return new _ChangeState({ ...this._current, articles }, this._origin);
@@ -113,6 +120,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     type: linkProps?.contentType ?? 'internal',
     value: linkProps?.urlValue ?? '',
     labels: Object.entries(linkProps?.intlValues ?? {}).map(([locale, labelValue]) => ({ locale, labelValue })),
+    tagLabels: (linkProps?.labels ?? []).map(l => l.value),
     configOptions: (linkProps?.configOptions ?? []) as Fs.ConfigOption[],
     devMode: (linkProps?.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (linkProps?.configOptions ?? []).includes('DISABLED_MODE'),
@@ -140,6 +148,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withArticles(value));
   }
 
+  function onChangeLabels(value: string[]) {
+    setState(prev => prev.withTagLabels(value));
+  }
+
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
@@ -162,6 +174,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     urlValue: state.urlValue,
     intlValues: state.intlValues,
     articles: state.articles,
+    tagLabels: state.tagLabels,
     configOptions: state.configOptions,
     description: state.description,
     isExpanded: state.isExpanded,
@@ -169,6 +182,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeUrlValue,
     onChangeIntlValue,
     onChangeArticles,
+    onChangeLabels,
     onChangeConfigOptions,
     onChangeDescription,
     onToggleExpanded,

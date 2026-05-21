@@ -35,6 +35,7 @@ type _ChangeStateProps = {
   name: string;
   order: number;
   description: string;
+  labels: string[];
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
   authOnly: boolean;
@@ -54,6 +55,7 @@ class _ChangeState implements FsuChange {
   get name() { return this._current.name; }
   get orderNumber() { return String(this._current.order); }
   get description() { return this._current.description; }
+  get labels() { return this._current.labels; }
   get configOptions() { return this._current.configOptions; }
   get isExpanded() { return this._current.isExpanded; }
 
@@ -74,6 +76,9 @@ class _ChangeState implements FsuChange {
   }
   withDescription(description: string): _ChangeState {
     return new _ChangeState({ ...this._current, description }, this._origin);
+  }
+  withLabels(labels: string[]): _ChangeState {
+    return new _ChangeState({ ...this._current, labels }, this._origin);
   }
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
     return new _ChangeState({
@@ -103,6 +108,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     name: getArticleName(props.direntId) ?? '',
     order: articleProps?.orderNumber ?? 0,
     description: articleProps?.description ?? '',
+    labels: (articleProps?.labels ?? []).map(l => l.value),
     configOptions: (articleProps?.configOptions ?? []) as Fs.ConfigOption[],
     devMode: (articleProps?.configOptions ?? []).includes('DEV_MODE'),
     authOnly: (articleProps?.configOptions ?? []).includes('AUTH_ONLY_MODE'),
@@ -112,7 +118,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
   // UI-only local state — not sent to backend
-  const [labels, setLabels] = React.useState<string[]>((dirent?.props?.labels ?? []).map(l => l.value));
   const [comments, setComments] = React.useState((dirent?.props?.comments ?? []).map(c => c.comment).join('\n'));
 
   function onChangeName(value: string) {
@@ -128,7 +133,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withDescription(value));
   }
   function onChangeLabels(value: string[]) {
-    setLabels(value);
+    setState(prev => prev.withLabels(value));
   }
   function onChangeComments(value: string) {
     setComments(value);
@@ -145,8 +150,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     name: state.name,
     orderNumber: state.orderNumber,
     description: state.description,
+    labels: state.labels,
     configOptions: state.configOptions,
-    labels,
     comments,
     isExpanded: state.isExpanded,
     onChangeName,

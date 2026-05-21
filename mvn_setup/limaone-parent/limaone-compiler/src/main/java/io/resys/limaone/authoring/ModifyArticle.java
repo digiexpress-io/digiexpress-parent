@@ -51,6 +51,7 @@ public interface ModifyArticle {
     
     @Nullable String getParentId();
     @Nullable String getDescription();
+    @Nullable List<String> getLabels();
 
     @Nullable List<String> getLinks();
     @Nullable List<String> getWorkflows();
