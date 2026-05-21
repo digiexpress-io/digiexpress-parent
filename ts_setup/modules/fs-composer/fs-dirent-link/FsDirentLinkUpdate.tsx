@@ -12,11 +12,13 @@ import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentLinkRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentLinkUpdateProps } from './FsDirentLinkProps';
+import { useFsu } from '@dxs-ts/fs-api';
 
 export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
+  const { push } = useFsu();
   const { selectOptions, getConfigOptionsForType, getArticleName } = useFsDirent();
   const articles = selectOptions.articles.map(item => ({ value: item.value, label: getArticleName(item.value) ?? item.label }));
   const configOptions = getConfigOptionsForType('ARTICLE_LINK');
@@ -75,7 +77,7 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />
           <FsDirentButtonCancel />
-          <FsDirentButtonCreate />
+          <FsDirentButtonCreate onClick={() => push(ownerState.id)} />
         </div>
 
       </div>

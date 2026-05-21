@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
-import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
@@ -19,7 +19,6 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { updateDirent } = useFsDirent();
 
   return (
     <FsDirentPageRoot className={classes.root} ownerState={ownerState}>
@@ -28,7 +27,7 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}</Typography>
         <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
-          <MDEditor preview="edit" value={ownerState.content} onChange={(val) => updateDirent(props.direntId, { props: { content: val ?? '' } as Fs.PageProps })} />
+          <MDEditor preview="edit" value={ownerState.content} onChange={(val) => { }} /> {/* TODO */}
         </div>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.articleField.label' })}</Typography>

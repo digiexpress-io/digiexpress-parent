@@ -2,7 +2,7 @@ import React from 'react';
 import { Fs } from '../fs-types';
 import { ALL_TYPES, getConfigOptionsForType, getExtension } from './helpers';
 import { ItemReferencesEntry, FsWorld } from './FsWorld';
-import { FsuProvider } from '../fsu-provider';
+import { FsuProvider, FsuChange } from '../fsu-provider';
 
 export type { ItemReferencesEntry };
 
@@ -17,7 +17,6 @@ export interface FsDirentContextType {
   getDirent: (id: string) => Fs.DirentBase | undefined;
   isChildError: (dirent: Fs.DirentBase) => boolean;
   findReferencesToDirent: (dirent: Fs.DirentBase) => ItemReferencesEntry[];
-  updateDirent: (id: string, updated: Partial<Fs.DirentBase>) => void;
   fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
   applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
   debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
@@ -31,6 +30,7 @@ export interface FsDirentProviderProps {
     fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
     applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
     debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
+    pushChange: (change: FsuChange) => Promise<void>;
   }
   children: React.ReactNode;
 }
@@ -48,12 +48,6 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       .then(setDirents)
 
   }, []);
-
-  const updateDirent = React.useCallback((_id: string, _updated: Partial<Fs.DirentBase>) => {
-    // TODO: implement
-  }, []);
-
-
 
 
   const contextValue: FsDirentContextType = React.useMemo(() => {
@@ -74,18 +68,17 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
 
       getExtension,
       getConfigOptionsForType,
-      updateDirent,
       getParentDirent: (childId) => dirents.getParentDirent(childId),
       getArticleName: (id) => dirents.getArticleName(id),
       fetchDirentBody: props.persistenceUnit.fetchDirentBody,
       applyTransientChanges: props.persistenceUnit.applyTransientChanges,
       debugDirent: props.persistenceUnit.debugDirent,
     };
-  }, [dirents, updateDirent]);
+  }, [dirents]);
 
   return (
     <FsDirentContext.Provider value={contextValue}>
-      <FsuProvider>
+      <FsuProvider pushChange={props.persistenceUnit.pushChange}>
         {props.children}
       </FsuProvider>
     </FsDirentContext.Provider>

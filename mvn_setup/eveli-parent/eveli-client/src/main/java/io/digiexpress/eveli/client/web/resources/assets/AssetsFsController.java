@@ -24,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,9 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.authoring.DebugAny.DebugAnyProps;
 import io.resys.limaone.authoring.DebugAny.DebugResult;
+import io.resys.limaone.authoring.ModifyArticleLink.ModifyArticleLinkProps;
 import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.fs.WorldFsBody;
 import io.resys.limaone.fs.WorldFsBody.WrenchAstBodyChange;
+import io.resys.limaone.model.ArticleLink;
+import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -74,10 +78,15 @@ public class AssetsFsController {
       @PathVariable("id") String id, 
       @PathVariable("bodyType") BodyType bodyType
   ) {
-    
     return authoring.worldFsBodyQuery().id(id).bodyType(bodyType).withTransientChanges(transientChanges).getOne();
   }
   
-  
+  @PutMapping("dirents/links/{id}")
+  public Uni<Model<ArticleLink>> udpateLink(
+      @PathVariable("id") String id,
+      @RequestBody ModifyArticleLinkProps body)
+  {
+    return authoring.modifyModel().modifyArticleLink().props(body).build();
+  }
 
 }

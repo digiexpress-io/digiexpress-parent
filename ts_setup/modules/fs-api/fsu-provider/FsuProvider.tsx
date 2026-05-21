@@ -18,6 +18,7 @@ const FsuContext = React.createContext<FsuContextType | undefined>(undefined);
 
 export interface FsuProviderProps {
   children: React.ReactNode;
+  pushChange: (change: FsuChange) => Promise<void>;
 }
 
 export const FsuProvider: React.FC<FsuProviderProps> = (props) => {
@@ -46,8 +47,9 @@ export const FsuProvider: React.FC<FsuProviderProps> = (props) => {
       getChange: (id) => fsu.getChange(id),
       isChange: (id) => fsu.isChange(id),
       push: async (changeId) => {
-        const changes = fsu.getChange(changeId);
-        const props = changes.getCurrentProps();
+        //const props = changes.getCurrentProps();
+        const change = fsu.getChange(changeId);
+        await props.pushChange(change);
       }     
     };
   }, [fsu]);
