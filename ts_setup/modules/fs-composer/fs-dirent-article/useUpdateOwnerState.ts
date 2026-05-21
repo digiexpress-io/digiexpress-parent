@@ -86,7 +86,7 @@ class _ChangeState implements FsuChange {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { getDirent } = useFsDirent();
+  const { getDirent, getArticleName } = useFsDirent();
   const { withNewChange, withChange } = useFsu();
 
   const dirent = getDirent(props.direntId);
@@ -95,7 +95,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const state = withNewChange(props.direntId, () => new _ChangeState({
     articleId: props.direntId,
     bodyType: dirent!.type,
-    name: dirent?.name ?? '',
+    name: getArticleName(props.direntId) ?? '',
     order: articleProps?.orderNumber ?? 0,
     configOptions: (articleProps?.configOptions ?? []) as Fs.ConfigOption[],
     devMode: (articleProps?.configOptions ?? []).includes('DEV_MODE'),
