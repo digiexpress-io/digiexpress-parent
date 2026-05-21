@@ -38,19 +38,25 @@ public class Props_ArticleLinkBuilder {
   public LinkProps build() {
     final ArticleLink link = currentState.getBodyOfType(node);
     final List<LocaleLabel> labels = link.getLabels();
-    
-    return ImmutableLinkProps.builder()
+
+    final var builder = ImmutableLinkProps.builder();
+
+    if (Boolean.TRUE.equals(link.getDevMode())) {
+      builder.addConfigOptions(WorldFsProps.ConfigOption.DEV_MODE);
+    }
+    if (Boolean.TRUE.equals(link.getDisabledMode())) {
+      builder.addConfigOptions(WorldFsProps.ConfigOption.DISABLED_MODE);
+    }
+
+    return builder
         .id(node.getObjectId())
         .type(node.getBodyType())
         .contentType(link.getContentType())
         .locked(false)
         .articles(link.getArticles())
-        .configOptions(Boolean.TRUE.equals(link.getDevMode())
-            ? List.of(WorldFsProps.ConfigOption.DEV_MODE)
-            : List.of())
         .intlValues(labels.stream()
             .collect(Collectors.toMap(
-                l -> l.getLocale(), 
+                l -> l.getLocale(),
                 l -> l.getLabelValue()
               )))
         .urlValue(link.getValue())

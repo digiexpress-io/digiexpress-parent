@@ -36,7 +36,8 @@ type _ChangeStateProps = {
   value: string;
   labels: { locale: string; labelValue: string }[];
   configOptions: Fs.ConfigOption[];
-  devMode?: boolean;
+  devMode: boolean;
+  disabledMode: boolean;
   articles: string[];
   description: string;
   isExpanded: boolean;
@@ -86,7 +87,7 @@ class _ChangeState implements FsuChange {
     return new _ChangeState({ ...this._current, articles }, this._origin);
   }
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
-    return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE') }, this._origin);
+    return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
   }
   withDescription(description: string): _ChangeState {
     return new _ChangeState({ ...this._current, description }, this._origin);
@@ -116,7 +117,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     value: linkProps?.urlValue ?? '',
     labels: Object.entries(linkProps?.intlValues ?? {}).map(([locale, labelValue]) => ({ locale, labelValue })),
     configOptions: (linkProps?.configOptions ?? []) as Fs.ConfigOption[],
-    devMode: linkProps?.devMode,
+    devMode: (linkProps?.configOptions ?? []).includes('DEV_MODE'),
+    disabledMode: (linkProps?.configOptions ?? []).includes('DISABLED_MODE'),
     articles: linkProps?.articles ?? [],
     description: dirent?.props?.description ?? '',
     isExpanded: false,

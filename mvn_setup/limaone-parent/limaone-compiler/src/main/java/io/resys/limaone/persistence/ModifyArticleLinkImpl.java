@@ -84,6 +84,7 @@ public class ModifyArticleLinkImpl extends AuthoringTemplate<ModifyArticleLinkIm
     final var link = ImmutableArticleLink.builder()
       .from(start.getBody())
       .devMode(props.getDevMode())
+      .disabledMode(props.getDisabledMode())
       .contentType(props.getType())
       .value(props.getValue());
     
