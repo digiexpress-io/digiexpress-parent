@@ -2,6 +2,7 @@ import React from 'react';
 import { Fs } from '../fs-types';
 import { ALL_TYPES, getConfigOptionsForType, getExtension } from './helpers';
 import { ItemReferencesEntry, FsWorld } from './FsWorld';
+import { FsuProvider } from '../fsu-provider';
 
 export type { ItemReferencesEntry };
 
@@ -84,7 +85,9 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
 
   return (
     <FsDirentContext.Provider value={contextValue}>
-      {props.children}
+      <FsuProvider>
+        {props.children}
+      </FsuProvider>
     </FsDirentContext.Provider>
   );
 };
