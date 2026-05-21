@@ -1408,13 +1408,20 @@
       ],
       "internalDependencies": [],
       "actualDependencies": [
-        "react"
+        "react",
+        "react-intl",
+        "notistack"
       ],
       "actualExternalDependencies": [
-        "react"
+        "react",
+        "react-intl",
+        "notistack"
       ],
       "actualInternalDependencies": [],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "react-intl",
+        "notistack"
+      ],
       "unusedDependencies": [
         "@mui/material",
         "@mui/utils"
@@ -4752,6 +4759,6 @@
       ]
     }
   },
-  "checksum": "1f6b7293db3afcba93bee32f31993bbcdc801fd8d91c303e75ec1311d37375cb",
-  "generatedAt": "2026-05-21T12:41:47.866Z"
+  "checksum": "e04ba1372f2883e86fb30fcdb1ad4899352086d3a35d5205b3178d20a5b15524",
+  "generatedAt": "2026-05-21T15:11:50.790Z"
 }

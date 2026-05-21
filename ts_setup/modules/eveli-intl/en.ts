@@ -1734,5 +1734,7 @@ export const en = {
   'fs.references.message.noReferences': 'This asset does not contain any references.',
   'fs.search.searchField.placeholder': 'Search',
   'fs.search.filterSelect.placeholder': 'Filter by type',
-  'fs.search.labelFilter.placeholder': 'Filter by label'
+  'fs.search.labelFilter.placeholder': 'Filter by label',
+  'fs.snackbar.saveSuccess': 'Saved {type}: {name}',
+  'fs.snackbar.saveFailed': 'Save failed'
 }

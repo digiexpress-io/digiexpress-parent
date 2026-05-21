@@ -95,7 +95,7 @@ export const FrontdeskApp: React.FC = () => {
               maxSnack={3}
               ref={notistackRef}
               action={(key) => (
-                <Button onClick={handleCloseNotification(key)}>
+                <Button onClick={handleCloseNotification(key)} variant='text' sx={{ color: userTheme.palette.text.primary }}>
                   <FormattedMessage id='button.dismiss' />
                 </Button>
               )}
