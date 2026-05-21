@@ -189,7 +189,7 @@ public class WorldFsFactory {
     case ARTICLE_LINK: {
       final ArticleLink link = worldState.getBodyOfType(node);
       final var name = link.getValue();
-      worldState.putProps(node, n -> Props_LinkBuilder.of(worldState, n));
+      worldState.putProps(node, n -> Props_ArticleLinkBuilder.of(worldState, n));
       return NodePathAndName.of(path.orElse("links"), name);
     }
     

@@ -19,7 +19,7 @@ function hook(props: {}) {
 
       return params.fetch(`${url({})}/${assetUrl}`, {
         method,
-        headers: { 'Accept': 'application/json' },
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify(assetBody)
       })
       .then((data) => console.log("update asset:", data))

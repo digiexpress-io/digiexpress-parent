@@ -30,16 +30,16 @@ export interface UpdateOwnerState {
 }
 
 type _ChangeStateProps = {
-  id: string;
+  linkId: string;
   bodyType: Fs.BodyType;
-  contentType: Fs.LinkType;
-  urlValue: string;
-  intlValues: Record<string, string>;
+  type: Fs.LinkType;
+  value: string;
+  labels: { locale: string; labelValue: string }[];
   configOptions: Fs.ConfigOption[];
+  devMode?: boolean;
   articles: string[];
   description: string;
   isExpanded: boolean;
-
 }
 
 class _ChangeState implements FsuChange {
@@ -51,21 +51,17 @@ class _ChangeState implements FsuChange {
     this._origin = origin ?? props;
   }
 
-  get id() { return this._current.id; }
-  get contentType() { return this._current.contentType; }
-  get urlValue() { return this._current.urlValue; }
-  get intlValues() { return this._current.intlValues; }
+  get id() { return this._current.linkId; }
+  get contentType() { return this._current.type; }
+  get urlValue() { return this._current.value; }
+  get intlValues() { return Object.fromEntries(this._current.labels.map(l => [l.locale, l.labelValue])); }
   get configOptions() { return this._current.configOptions; }
   get articles() { return this._current.articles; }
   get description() { return this._current.description; }
   get isExpanded() { return this._current.isExpanded; }
 
-  getCurrentProps(): { bodyType: Fs.BodyType, id: string, changes: Record<string, any> } & Record<string, any> {
-    return {
-      bodyType: this._current.bodyType, id: this.id,
-
-      changes: this._current,
-    };
+  getCurrentProps(): { bodyType: Fs.BodyType, id: string, changes: Record<string, any> } {
+    return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
   }
 
   get bodyType() {
@@ -76,19 +72,21 @@ class _ChangeState implements FsuChange {
   }
 
   withContentType(contentType: Fs.LinkType): _ChangeState {
-    return new _ChangeState({ ...this._current, contentType }, this._origin);
+    return new _ChangeState({ ...this._current, type: contentType }, this._origin);
   }
   withUrlValue(urlValue: string): _ChangeState {
-    return new _ChangeState({ ...this._current, urlValue }, this._origin);
+    return new _ChangeState({ ...this._current, value: urlValue }, this._origin);
   }
   withIntlValue(locale: string, value: string): _ChangeState {
-    return new _ChangeState({ ...this._current, intlValues: { ...this._current.intlValues, [locale]: value } }, this._origin);
+    const labels = this._current.labels.filter(l => l.locale !== locale);
+    labels.push({ locale, labelValue: value });
+    return new _ChangeState({ ...this._current, labels }, this._origin);
   }
   withArticles(articles: string[]): _ChangeState {
     return new _ChangeState({ ...this._current, articles }, this._origin);
   }
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
-    return new _ChangeState({ ...this._current, configOptions }, this._origin);
+    return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE') }, this._origin);
   }
   withDescription(description: string): _ChangeState {
     return new _ChangeState({ ...this._current, description }, this._origin);
@@ -108,17 +106,22 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const linkProps = dirent?.type === 'ARTICLE_LINK' ? dirent.props as Fs.LinkProps : undefined;
   const locales = selectOptions.languages;
 
+  console.log("config options", linkProps?.configOptions, linkProps?.labels)
+
+
   const state = withNewChange(props.direntId, () => new _ChangeState({
-    id: props.direntId,
+    linkId: props.direntId,
     bodyType: dirent!.type,
-    contentType: linkProps?.contentType ?? 'internal',
-    urlValue: linkProps?.urlValue ?? '',
-    intlValues: linkProps?.intlValues ?? {},
-    configOptions: (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[],
+    type: linkProps?.contentType ?? 'internal',
+    value: linkProps?.urlValue ?? '',
+    labels: Object.entries(linkProps?.intlValues ?? {}).map(([locale, labelValue]) => ({ locale, labelValue })),
+    configOptions: (linkProps?.configOptions ?? []) as Fs.ConfigOption[],
+    devMode: linkProps?.devMode,
     articles: linkProps?.articles ?? [],
     description: dirent?.props?.description ?? '',
     isExpanded: false,
   }));
+
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
