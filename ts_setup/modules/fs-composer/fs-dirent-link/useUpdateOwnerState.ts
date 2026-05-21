@@ -60,8 +60,12 @@ class _ChangeState implements FsuChange {
   get description() { return this._current.description; }
   get isExpanded() { return this._current.isExpanded; }
 
-  getCurrentProps(): { bodyType: Fs.BodyType, changes: Record<string, any> } & Record<string, any> {
-    return { bodyType: this._current.bodyType, changes: this._current };
+  getCurrentProps(): { bodyType: Fs.BodyType, id: string, changes: Record<string, any> } & Record<string, any> {
+    return {
+      bodyType: this._current.bodyType, id: this.id,
+
+      changes: this._current,
+    };
   }
 
   get bodyType() {

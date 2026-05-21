@@ -356,6 +356,7 @@ export declare namespace Fs {
     intlValues: Record<string, string>;
     articles: string[];
     contentType: LinkType;
+    devMode?: boolean;
   }
 
   export type LinkType = 'internal' | 'external' | 'phone';

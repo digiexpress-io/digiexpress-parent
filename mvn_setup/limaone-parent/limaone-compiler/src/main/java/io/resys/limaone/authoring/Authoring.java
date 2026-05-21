@@ -185,7 +185,7 @@ public interface Authoring {
   
   // marker interface
   interface AuthoringModelProps {
- 
+    
   }
   
   @Value.Immutable

@@ -22,25 +22,14 @@ function Component() {
   const { getDirentBody } = useFetch('worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType.GET', {});
   const { applyTransientChanges } = useFetch('worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType/transient-changes.POST', {});
   const { debugDirent } = useFetch('worker/rest/api/assets/fs/debugs.POST', {});
-  const { putLink } = useFetch('worker/rest/api/assets/fs/dirents/links/$id.PUT', {});
+  const { putAny } = useFetch('worker/rest/api/assets/fs/dirents.PUT', {});
 
   const persistenceUnit: FsDirentProviderProps['persistenceUnit'] = {
     fetchDirents: getDirents,
     fetchDirentBody: getDirentBody,
     applyTransientChanges,
     debugDirent,
-    pushChange: async (change) => {
-      const { bodyType, changes } = change.getCurrentProps();
-      if (bodyType === 'ARTICLE_LINK') {
-        await putLink({
-          linkId: changes.id,
-          value: changes.urlValue,
-          type: changes.contentType,
-          articles: changes.articles,
-          labels: Object.entries(changes.intlValues as Record<string, string>).map(([locale, labelValue]) => ({ locale, labelValue })),
-        });
-      }
-    }
+    pushChange: async (change) => putAny(change.getCurrentProps())
   };
 
   return (

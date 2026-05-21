@@ -4,7 +4,7 @@ export interface FsuChange {
   id: string;
   isChanged: boolean;
   bodyType: Fs.BodyType;
-  getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> };
+  getCurrentProps(): { bodyType: Fs.BodyType; id: string, changes: Record<string, any> };
 }
 
 export class FsuWorld {
