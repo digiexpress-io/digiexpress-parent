@@ -33,6 +33,9 @@ function hook(props: {}) {
       if (props.bodyType === 'ARTICLE_LINK') {
         await baseline(`links/${props.id}`, props.changes);
       }
+      if (props.bodyType === 'ARTICLE') {
+        await baseline(`articles/${props.id}`, props.changes);
+      }
     }
   }
 }

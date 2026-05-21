@@ -259,6 +259,7 @@ export declare namespace Fs {
   export interface ArticleProps extends PropsBase {
     type: 'ARTICLE';
     orderNumber: number;
+    devMode?: boolean;
   }
 
   export interface ArticlePageBody {
@@ -367,7 +368,7 @@ export declare namespace Fs {
     intlValues: Record<string, string>;
   }
 
-  export type ConfigOption = 'DEV_MODE' | 'ASSIGNABLE_MODE' | 'DISABLED_MODE' | 'ANONYMOUS_MODE';
+  export type ConfigOption = 'DEV_MODE' | 'ASSIGNABLE_MODE' | 'DISABLED_MODE' | 'ANONYMOUS_MODE' | 'AUTH_ONLY_MODE';
 
   export interface User {
     userName: string;

@@ -1,92 +1,153 @@
 import React from 'react';
-import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
+import {
+  Fs,
+  useFsDirent,
+  useFsu,
+  FsuChange
+} from '@dxs-ts/fs-api';
 
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
+  id: string;
+  isChanged: boolean;
   name: string;
   orderNumber: string;
-  description: string;
   configOptions: Fs.ConfigOption[];
+  description: string;
   labels: string[];
   comments: string;
   isExpanded: boolean;
   onChangeName: (value: string) => void;
   onChangeOrderNumber: (value: string) => void;
-  onChangeDescription: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
+  onChangeDescription: (value: string) => void;
   onChangeLabels: (value: string[]) => void;
   onChangeComments: (value: string) => void;
   onToggleExpanded: () => void;
 }
 
+type _ChangeStateProps = {
+  articleId: string;
+  bodyType: Fs.BodyType;
+  name: string;
+  order: number;
+  configOptions: Fs.ConfigOption[];
+  devMode: boolean;
+  authOnly: boolean;
+  isExpanded: boolean;
+}
+
+class _ChangeState implements FsuChange {
+  private _origin: _ChangeStateProps;
+  private _current: _ChangeStateProps;
+
+  constructor(props: _ChangeStateProps, origin?: _ChangeStateProps) {
+    this._current = props;
+    this._origin = origin ?? props;
+  }
+
+  get id() { return this._current.articleId; }
+  get name() { return this._current.name; }
+  get orderNumber() { return String(this._current.order); }
+  get configOptions() { return this._current.configOptions; }
+  get isExpanded() { return this._current.isExpanded; }
+
+  get bodyType() { return this._current.bodyType; }
+  get isChanged(): boolean {
+    return JSON.stringify(this._origin) !== JSON.stringify(this._current);
+  }
+
+  getCurrentProps(): { bodyType: Fs.BodyType; id: string; changes: Record<string, any> } {
+    return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
+  }
+
+  withName(name: string): _ChangeState {
+    return new _ChangeState({ ...this._current, name }, this._origin);
+  }
+  withOrder(order: string): _ChangeState {
+    return new _ChangeState({ ...this._current, order: parseInt(order) || 0 }, this._origin);
+  }
+  withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
+    return new _ChangeState({
+      ...this._current,
+      configOptions,
+      devMode: configOptions.includes('DEV_MODE'),
+      authOnly: configOptions.includes('AUTH_ONLY_MODE'),
+    }, this._origin);
+  }
+  withIsExpanded(isExpanded: boolean): _ChangeState {
+    return new _ChangeState({ ...this._current, isExpanded }, this._origin);
+  }
+}
+
+
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { getDirent, getArticleName } = useFsDirent();
+  const { getDirent } = useFsDirent();
+  const { withNewChange, withChange } = useFsu();
 
   const dirent = getDirent(props.direntId);
-  const displayName = getArticleName(props.direntId);
   const articleProps = dirent?.type === 'ARTICLE' ? dirent.props as Fs.ArticleProps : undefined;
 
-  const [name, setName] = React.useState(displayName ?? '');
-  const [orderNumber, setOrderNumber] = React.useState(articleProps?.orderNumber != undefined ? String(articleProps.orderNumber) : '');
-  const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
-  const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
-    (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
-  );
+  const state = withNewChange(props.direntId, () => new _ChangeState({
+    articleId: props.direntId,
+    bodyType: dirent!.type,
+    name: dirent?.name ?? '',
+    order: articleProps?.orderNumber ?? 0,
+    configOptions: (articleProps?.configOptions ?? []) as Fs.ConfigOption[],
+    devMode: (articleProps?.configOptions ?? []).includes('DEV_MODE'),
+    authOnly: (articleProps?.configOptions ?? []).includes('AUTH_ONLY_MODE'),
+    isExpanded: false,
+  }));
 
-  const [labels, setLabels] = React.useState<string[]>(
-    (dirent?.props?.labels ?? []).map(l => l.value)
-  );
-  const [comments, setComments] = React.useState(
-    (dirent?.props?.comments ?? []).map(c => c.comment).join('\n')
-  );
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+
+  // UI-only local state — not sent to backend
+  const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
+  const [labels, setLabels] = React.useState<string[]>((dirent?.props?.labels ?? []).map(l => l.value));
+  const [comments, setComments] = React.useState((dirent?.props?.comments ?? []).map(c => c.comment).join('\n'));
 
   function onChangeName(value: string) {
-    setName(value);
+    setState(prev => prev.withName(value));
   }
-
   function onChangeOrderNumber(value: string) {
-    setOrderNumber(value);
+    setState(prev => prev.withOrder(value));
   }
-
+  function onChangeConfigOptions(value: string[]) {
+    setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
+  }
   function onChangeDescription(value: string) {
     setDescription(value);
   }
-
-  function onChangeConfigOptions(value: string[]) {
-    setConfigOptions(value as Fs.ConfigOption[]);
-  }
-
   function onChangeLabels(value: string[]) {
     setLabels(value);
   }
-
   function onChangeComments(value: string) {
     setComments(value);
   }
-
   function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
+    setState(prev => prev.withIsExpanded(!prev.isExpanded));
   }
 
   return ({
     isDarkMode,
     dirent,
-    name,
-    orderNumber,
+    id: state.id,
+    isChanged: state.isChanged,
+    name: state.name,
+    orderNumber: state.orderNumber,
+    configOptions: state.configOptions,
     description,
-    configOptions,
     labels,
     comments,
-    isExpanded,
+    isExpanded: state.isExpanded,
     onChangeName,
     onChangeOrderNumber,
-    onChangeDescription,
     onChangeConfigOptions,
+    onChangeDescription,
     onChangeLabels,
     onChangeComments,
     onToggleExpanded,

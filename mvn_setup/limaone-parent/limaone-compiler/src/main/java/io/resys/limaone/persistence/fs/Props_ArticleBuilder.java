@@ -37,13 +37,15 @@ public class Props_ArticleBuilder {
   public ArticleProps build() {
     final Article article = currentState.getBodyOfType(node);
     final var builder = ImmutableArticleProps.builder();
-    
+
     if(Boolean.TRUE.equals(article.getDevMode())) {
       builder.addConfigOptions(ConfigOption.DEV_MODE);
     }
+    if(Boolean.TRUE.equals(article.getAuthOnly())) {
+      builder.addConfigOptions(ConfigOption.AUTH_ONLY_MODE);
+    }
 
-    
-    return ImmutableArticleProps.builder()
+    return builder
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)

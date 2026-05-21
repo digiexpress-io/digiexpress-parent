@@ -32,10 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.authoring.DebugAny.DebugAnyProps;
 import io.resys.limaone.authoring.DebugAny.DebugResult;
+import io.resys.limaone.authoring.ModifyArticle.ModifyArticleProps;
 import io.resys.limaone.authoring.ModifyArticleLink.ModifyArticleLinkProps;
 import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.fs.WorldFsBody;
 import io.resys.limaone.fs.WorldFsBody.WrenchAstBodyChange;
+import io.resys.limaone.model.Article;
 import io.resys.limaone.model.ArticleLink;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
@@ -81,6 +83,14 @@ public class AssetsFsController {
     return authoring.worldFsBodyQuery().id(id).bodyType(bodyType).withTransientChanges(transientChanges).getOne();
   }
   
+  @PutMapping("dirents/articles/{id}")
+  public Uni<Model<Article>> updateArticle(
+      @PathVariable("id") String id,
+      @RequestBody ModifyArticleProps body)
+  {
+    return authoring.modifyModel().modifyArticle().props(body).build();
+  }
+
   @PutMapping("dirents/links/{id}")
   public Uni<Model<ArticleLink>> udpateLink(
       @PathVariable("id") String id,

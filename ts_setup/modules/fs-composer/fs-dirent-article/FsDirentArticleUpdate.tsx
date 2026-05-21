@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsDirent } from '@dxs-ts/fs-api';
+import { useFsDirent, useFsu } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -19,6 +19,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
   const { getConfigOptionsForType, selectOptions } = useFsDirent();
+  const { push } = useFsu();
   const configOptions = getConfigOptionsForType('ARTICLE');
 
 
@@ -82,7 +83,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />
           <FsDirentButtonCancel />
-          <FsDirentButtonCreate />
+          <FsDirentButtonCreate onClick={() => push(ownerState.id)} />
         </div>
 
       </div>
