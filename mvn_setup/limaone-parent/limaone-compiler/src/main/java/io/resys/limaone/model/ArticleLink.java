@@ -43,6 +43,9 @@ public interface ArticleLink extends Body {
   List<LocaleLabel> getLabels();
   
   @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Nullable String getDescription();
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   @Nullable Boolean getDevMode();  
   @JsonInclude(JsonInclude.Include.NON_NULL)
   @Nullable Boolean getDisabledMode();

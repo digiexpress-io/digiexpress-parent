@@ -94,6 +94,7 @@ export const FsPanelPropertiesRoot = styled('div', {
     fontWeight: 400,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     flex: 1,
+    wordBreak: 'break-word',
   },
 
   [`& .${MUI_NAME}-propertyList`]: {

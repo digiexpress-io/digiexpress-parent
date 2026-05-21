@@ -54,6 +54,7 @@ public class Props_ArticleLinkBuilder {
         .contentType(link.getContentType())
         .locked(false)
         .articles(link.getArticles())
+        .description(link.getDescription())
         .intlValues(labels.stream()
             .collect(Collectors.toMap(
                 l -> l.getLocale(),

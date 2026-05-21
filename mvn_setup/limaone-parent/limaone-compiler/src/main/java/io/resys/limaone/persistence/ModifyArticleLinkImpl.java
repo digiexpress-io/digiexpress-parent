@@ -85,6 +85,7 @@ public class ModifyArticleLinkImpl extends AuthoringTemplate<ModifyArticleLinkIm
       .from(start.getBody())
       .devMode(props.getDevMode())
       .disabledMode(props.getDisabledMode())
+      .description(props.getDescription())
       .contentType(props.getType())
       .value(props.getValue());
     

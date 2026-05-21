@@ -107,9 +107,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const linkProps = dirent?.type === 'ARTICLE_LINK' ? dirent.props as Fs.LinkProps : undefined;
   const locales = selectOptions.languages;
 
-  console.log("config options", linkProps?.configOptions, linkProps?.labels)
-
-
   const state = withNewChange(props.direntId, () => new _ChangeState({
     linkId: props.direntId,
     bodyType: dirent!.type,

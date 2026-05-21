@@ -54,5 +54,6 @@ public interface ModifyArticleLink {
     @Nullable List<String> getArticles();
     @Nullable Boolean getDevMode();
     @Nullable Boolean getDisabledMode();
+    @Nullable String getDescription();
   }
 }
