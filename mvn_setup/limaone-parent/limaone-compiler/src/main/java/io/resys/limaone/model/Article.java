@@ -39,7 +39,8 @@ public interface Article extends Body {
   Integer getOrder();
   
   @Nullable String getParentId();
-  
+  @Nullable String getDescription();
+
   @JsonInclude(JsonInclude.Include.NON_NULL)
   @Nullable Boolean getDevMode();
   

@@ -50,7 +50,8 @@ public interface ModifyArticle {
     Integer getOrder();
     
     @Nullable String getParentId();
-    
+    @Nullable String getDescription();
+
     @Nullable List<String> getLinks();
     @Nullable List<String> getWorkflows();
     @Nullable Boolean getDevMode();

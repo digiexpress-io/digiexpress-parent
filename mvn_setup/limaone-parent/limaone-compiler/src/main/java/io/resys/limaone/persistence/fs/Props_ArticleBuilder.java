@@ -50,6 +50,7 @@ public class Props_ArticleBuilder {
         .type(node.getBodyType())
         .locked(false)
         .orderNumber(article.getOrder())
+        .description(article.getDescription())
         .build();
   }
   
