@@ -76,9 +76,16 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
     };
   }, [dirents]);
 
+  async function handlePushChange(change: FsuChange): Promise<void> {
+    await props.persistenceUnit.pushChange(change);
+    props.persistenceUnit.fetchDirents()
+      .then(dirents => new FsWorld({ dirents }))
+      .then(setDirents);
+  }
+
   return (
     <FsDirentContext.Provider value={contextValue}>
-      <FsuProvider pushChange={props.persistenceUnit.pushChange}>
+      <FsuProvider pushChange={handlePushChange}>
         {props.children}
       </FsuProvider>
     </FsDirentContext.Provider>

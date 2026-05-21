@@ -31,7 +31,7 @@ function hook(props: {}) {
   return {
     putAny: async (props: { bodyType: Fs.BodyType; id: string, changes: Record<string, any> }): Promise<void> => {
       if (props.bodyType === 'ARTICLE_LINK') {
-        baseline(`links/${props.id}`, props.changes);
+        await baseline(`links/${props.id}`, props.changes);
       }
     }
   }
