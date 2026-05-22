@@ -3,13 +3,13 @@ import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
 
-const MUI_NAME = 'FsDirentButtonCreate';
+const MUI_NAME = 'FsDirentButtonSave';
 
-export interface FsDirentButtonCreateClasses {
+export interface FsDirentButtonSaveClasses {
   root: string;
 }
 
-export type FsDirentButtonCreateClassKey = keyof FsDirentButtonCreateClasses;
+export type FsDirentButtonSaveClassKey = keyof FsDirentButtonSaveClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -19,7 +19,7 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsDirentButtonCreateRoot = styled('button', {
+export const FsDirentButtonSaveRoot = styled('button', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',

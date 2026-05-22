@@ -238,31 +238,40 @@ public class FlowProgramExecutor {
   @SuppressWarnings("unchecked")
   public ExecutorResult visitFormStatement(FormStatement statement, ExecutorProps ExecutorProps) {
     final LocalDateTime start = LocalDateTime.now();
+    final var taskId = statement.getTaskId();
+    log.debug("Executing form step '{}'", taskId);
+    
     try {
       final var refName = statement.getFormRefInputName();
       final var resolved = assignment.resolveParameter(refName);
-      if(resolved == null) {
-        throw new StatementException(
-            "Form step '" + statement.getTaskId() + "': ref '" + refName + "' could not be resolved from inputs or prior task outputs",
-            statement);
+      if (resolved == null) {
+        throw new StatementException("Form step '" + taskId + "': ref '" + refName + "' could not be resolved from inputs or prior task outputs", statement);
       }
-      final var questionnaireId = (String) resolved;
-      final var formInstance = runtime.getProperties().getFormDb()
-          .withTenant().formInstanceQuery().getOneSync(questionnaireId);
+
+      if (!(resolved instanceof String questionnaireId)) {
+        throw new StatementException("Form step '" + taskId + "': ref '" + refName + "' must be a String, but was " + resolved.getClass().getSimpleName(), statement);
+      }
+      
+      final var formDb = runtime.getProperties().getFormDb();
+      if (formDb == null) {
+        throw new StatementException("Form step '" + taskId + "': FormDb is not configured", statement);
+      }
+      
+      final var formInstance = formDb.withTenant().formInstanceQuery().getOneSync(questionnaireId);
+      if (formInstance == null) {
+        throw new StatementException("Form step '" + taskId + "': Form instance '" + questionnaireId + "' not found", statement);
+      }
 
       final var instance = statement.getCompiledClass().getConstructors()[0].newInstance();
       final var executor = (ServiceExecutorType1<Object, Serializable>) instance;
       final var result = executor.execute(formInstance);
 
-      final var inputs = Collections.<String, Serializable>singletonMap(
-          statement.getFormRefInputName(), questionnaireId);
+      final var inputs = Collections.<String, Serializable>singletonMap(statement.getFormRefInputName(), questionnaireId);
       final var flowTaskResult = ImmutableFlowTaskResult.builder().value(result).build();
       final var newFrame = stack.newFrame(statement, inputs, flowTaskResult, start);
       assignment.assignFromTask(newFrame);
-    } catch(Exception e) {
-      throw new StatementException(
-          "Form step '" + statement.getTaskId() + "' failed: " + e.getMessage(),
-          statement, e);
+    } catch (Exception e) {
+      throw new StatementException("Form step '" + taskId + "' failed: " + e.getMessage(), statement, e);
     }
     return REACHED_END;
   }

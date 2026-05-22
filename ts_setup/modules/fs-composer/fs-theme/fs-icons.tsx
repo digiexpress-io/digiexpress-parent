@@ -80,6 +80,9 @@ import {
   // Stats & Checkmark
   Assessment,
   Check,
+
+  // Unsaved indicator
+  FiberManualRecord,
 } from '@mui/icons-material';
 import { SvgIconProps, Tooltip } from '@mui/material';
 
@@ -164,6 +167,9 @@ export const FsIcons = {
   CsvUpload: Upload,
   ArticleLocaleOverview: Check,
   Stats: Assessment,
+
+  // State indicators
+  Unsaved: FiberManualRecord,
 };
 
 export interface FsIconProps {

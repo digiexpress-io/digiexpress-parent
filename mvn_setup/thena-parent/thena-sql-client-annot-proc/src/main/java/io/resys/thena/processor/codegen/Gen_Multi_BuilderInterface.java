@@ -26,7 +26,6 @@ import java.util.Map;
 
 import javax.lang.model.element.Modifier;
 
-import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
@@ -38,6 +37,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.Message;
+import io.resys.thena.processor.model.Metamodel;
 import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.model.TableMetamodel;
 import io.resys.thena.processor.model.TableMetamodel.SqlMethod;
@@ -47,7 +47,7 @@ import io.resys.thena.processor.support.NamingUtils;
 
 public class Gen_Multi_BuilderInterface implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables, Metamodel metamodel) {
     final var className = registry.getName() + "DbBuilder";
     final var persistenceUnitName = "PersistenceUnit";
     
@@ -132,8 +132,7 @@ public class Gen_Multi_BuilderInterface implements MultiTableCodeGenerator {
   
   private TypeSpec generatePersistenceUnitInterface(String interfaceName, Map<String, TypeName> operations) {
     final var persistenceUnit = TypeSpec.interfaceBuilder(interfaceName)
-      .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-      .addAnnotation(AnnotationSpec.builder(ClassName.get("org.immutables.value", "Value", "Immutable")).build());
+      .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
     
     persistenceUnit.addMethod(MethodSpec.methodBuilder("getCommitMessages")
       .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)

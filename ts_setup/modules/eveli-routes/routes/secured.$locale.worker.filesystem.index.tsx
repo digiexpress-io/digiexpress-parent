@@ -22,27 +22,29 @@ function Component() {
   const { getDirentBody } = useFetch('worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType.GET', {});
   const { applyTransientChanges } = useFetch('worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType/transient-changes.POST', {});
   const { debugDirent } = useFetch('worker/rest/api/assets/fs/debugs.POST', {});
+  const { putAny } = useFetch('worker/rest/api/assets/fs/dirents.PUT', {});
 
   const persistenceUnit: FsDirentProviderProps['persistenceUnit'] = {
     fetchDirents: getDirents,
     fetchDirentBody: getDirentBody,
     applyTransientChanges,
     debugDirent,
+    pushChange: async (change) => putAny(change.getCurrentProps())
   };
 
   return (
     <FsDirentProvider persistenceUnit={persistenceUnit}>
       <FsThemeProvider>
-      <FsNavProvider>
-        <FsSearchProvider>
-          <EveliApp
-            main={FsSetup.Main}
-            secondary={FsSetup.Secondary}
-            toolbar={MergedToolbar}
-            drawerWidth={450}
-          />
-        </FsSearchProvider>
-      </FsNavProvider>
+        <FsNavProvider>
+          <FsSearchProvider>
+            <EveliApp
+              main={FsSetup.Main}
+              secondary={FsSetup.Secondary}
+              toolbar={MergedToolbar}
+              drawerWidth={450}
+            />
+          </FsSearchProvider>
+        </FsNavProvider>
       </FsThemeProvider>
     </FsDirentProvider>
   );

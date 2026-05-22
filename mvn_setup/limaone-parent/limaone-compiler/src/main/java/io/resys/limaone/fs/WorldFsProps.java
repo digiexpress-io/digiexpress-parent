@@ -100,6 +100,7 @@ public interface WorldFsProps {
     Map<String, String> getIntlValues();
   }
 
+  @Value.Immutable
   interface DialobProps extends WorldFsProps {
     String getFormName();
     String getFormTechnicalId();
@@ -186,12 +187,14 @@ public interface WorldFsProps {
     List<PermissionType> getTypes();
   }
   
+  @Value.Immutable
   public interface Comment {
     String getComment();
     String getAuthor();
     OffsetDateTime getCreated();
   }
 
+  @Value.Immutable
   public interface Label {
     String getId();
     String getValue();
@@ -214,7 +217,8 @@ public interface WorldFsProps {
     DEV_MODE,
     ASSIGNABLE_MODE,
     DISABLED_MODE,
-    ANONYMOUS_MODE
+    ANONYMOUS_MODE,
+    AUTH_ONLY_MODE
   } 
   
   public enum ErrorSeverityType {

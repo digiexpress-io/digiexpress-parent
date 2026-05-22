@@ -179,6 +179,8 @@ public class ModifyArticleImpl extends AuthoringTemplate<ModifyArticleImpl, Mode
       .name(props.getName())
       .order(props.getOrder())
       .parentId(props.getParentId())
+      .description(props.getDescription())
+      .labels(props.getLabels())
       .build();
     
   }

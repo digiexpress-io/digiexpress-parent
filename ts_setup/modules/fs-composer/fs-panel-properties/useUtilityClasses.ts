@@ -14,6 +14,7 @@ export interface FsPanelPropertiesClasses {
   propertyValue: string;
   propertyList: string;
   propertyListItem: string;
+  propertyBulletList: string;
   configOptionsListItem: string;
   label: string;
   commentList: string;
@@ -37,6 +38,7 @@ export const useUtilityClasses = () => {
     propertyValue: ['propertyValue'],
     propertyList: ['propertyList'],
     propertyListItem: ['propertyListItem'],
+    propertyBulletList: ['propertyBulletList'],
     configOptionsListItem: ['configOptionsListItem'],
     label: ['label'],
     commentList: ['commentList'],
@@ -94,12 +96,19 @@ export const FsPanelPropertiesRoot = styled('div', {
     fontWeight: 400,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     flex: 1,
+    wordBreak: 'break-word',
   },
 
   [`& .${MUI_NAME}-propertyList`]: {
     display: 'flex',
     flexWrap: 'wrap',
     gap: theme.spacing(0.75),
+    flex: 1,
+  },
+
+  [`& .${MUI_NAME}-propertyBulletList`]: {
+    margin: 0,
+    paddingLeft: theme.spacing(2),
     flex: 1,
   },
 

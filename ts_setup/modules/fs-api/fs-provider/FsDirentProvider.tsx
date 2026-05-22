@@ -1,7 +1,10 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
+import { useSnackbar } from 'notistack';
 import { Fs } from '../fs-types';
 import { ALL_TYPES, getConfigOptionsForType, getExtension } from './helpers';
 import { ItemReferencesEntry, FsWorld } from './FsWorld';
+import { FsuProvider, FsuChange } from '../fsu-provider';
 
 export type { ItemReferencesEntry };
 
@@ -16,7 +19,6 @@ export interface FsDirentContextType {
   getDirent: (id: string) => Fs.DirentBase | undefined;
   isChildError: (dirent: Fs.DirentBase) => boolean;
   findReferencesToDirent: (dirent: Fs.DirentBase) => ItemReferencesEntry[];
-  updateDirent: (id: string, updated: Partial<Fs.DirentBase>) => void;
   fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
   applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
   debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
@@ -30,12 +32,15 @@ export interface FsDirentProviderProps {
     fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
     applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
     debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
+    pushChange: (change: FsuChange) => Promise<void>;
   }
   children: React.ReactNode;
 }
 
 export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
 
+  const intl = useIntl();
+  const { enqueueSnackbar } = useSnackbar();
   const [dirents, setDirents] = React.useState<FsWorld>(() => new FsWorld({ dirents: [] }));
 
   React.useEffect(() => {
@@ -47,12 +52,6 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       .then(setDirents)
 
   }, []);
-
-  const updateDirent = React.useCallback((_id: string, _updated: Partial<Fs.DirentBase>) => {
-    // TODO: implement
-  }, []);
-
-
 
 
   const contextValue: FsDirentContextType = React.useMemo(() => {
@@ -73,18 +72,33 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
 
       getExtension,
       getConfigOptionsForType,
-      updateDirent,
       getParentDirent: (childId) => dirents.getParentDirent(childId),
       getArticleName: (id) => dirents.getArticleName(id),
       fetchDirentBody: props.persistenceUnit.fetchDirentBody,
       applyTransientChanges: props.persistenceUnit.applyTransientChanges,
       debugDirent: props.persistenceUnit.debugDirent,
     };
-  }, [dirents, updateDirent]);
+  }, [dirents]);
+
+  async function handlePushChange(change: FsuChange): Promise<void> {
+    try {
+      await props.persistenceUnit.pushChange(change);
+      const name = dirents.getDirent(change.id)?.name ?? change.id;
+      const type = change.bodyType.toLowerCase().replace(/_/g, ' ');
+      enqueueSnackbar(intl.formatMessage({ id: 'fs.snackbar.saveSuccess' }, { name, type }), { variant: 'success' });
+      props.persistenceUnit.fetchDirents()
+        .then(dirents => new FsWorld({ dirents }))
+        .then(setDirents);
+    } catch (error: any) {
+      enqueueSnackbar(intl.formatMessage({ id: 'fs.snackbar.saveFailed' }, { cause: error?.message ?? 'N/A' }), { variant: 'error' });
+    }
+  }
 
   return (
     <FsDirentContext.Provider value={contextValue}>
-      {props.children}
+      <FsuProvider pushChange={handlePushChange}>
+        {props.children}
+      </FsuProvider>
     </FsDirentContext.Provider>
   );
 };

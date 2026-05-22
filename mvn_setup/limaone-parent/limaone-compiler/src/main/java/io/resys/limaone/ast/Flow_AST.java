@@ -100,11 +100,15 @@ public interface Flow_AST extends Simple_AST, Serializable {
     MappingStatement getMapping();
     default StatementType getType() { return StatementType.BODY_RETURNS; }
   }
+  interface FormOutputField extends Serializable {
+    String getName();
+    String getDeclaredType();
+  }
   interface FormStatement extends BodyStatement {
     String getFormRefInputName();
     String getReturnsCode();
     @JsonIgnore Class<?> getCompiledClass();
-    Map<String, String> getOutputFields();
+    List<FormOutputField> getOutputFields();
     default StatementType getType() { return StatementType.BODY_FORM; }
     default boolean isCollection() { return false; }
   }

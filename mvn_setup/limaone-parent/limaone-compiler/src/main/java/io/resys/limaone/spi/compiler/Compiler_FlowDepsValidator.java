@@ -155,6 +155,27 @@ public class Compiler_FlowDepsValidator {
   }
 
   public ValidatorResult visitFormStatement(FormStatement statement, ValidatorProps ValidatorProps) {
+    final var taskId = statement.getTaskId();
+    acceptDefs.put(taskId, new HashMap<>());
+
+    final Map<String, Parameter> formOutputs = new HashMap<>();
+    for (final var field : statement.getOutputFields()) {
+      final var fieldName = field.getName();
+      final var valueType = toValueType(field.getDeclaredType());
+
+      final var parameter = Parameter_Factory.newParam()
+          .name(fieldName)
+          .id(fieldName)
+          .direction(Direction.OUT)
+          .valueType(valueType)
+          .order(formOutputs.size())
+          .build();
+
+      formOutputs.put(fieldName, parameter);
+    }
+
+    returnDefs.put(taskId, formOutputs);
+
     return REACHED_END;
   }
   
@@ -360,5 +381,46 @@ public class Compiler_FlowDepsValidator {
   private static class DepToValidate {
     MappingStatement statement; 
     StatementType parent;
+  }
+
+  private static ValueType toValueType(String rawType) {
+    if (rawType == null) {
+      return ValueType.UNKNOWN;
+    }
+    String base = rawType.trim();
+    final int lt = base.indexOf('<');
+    if (lt >= 0) {
+      base = base.substring(0, lt).trim();
+    }
+    if (base.endsWith("[]")) {
+      return ValueType.ARRAY;
+    }
+    switch (base) {
+      case "String":
+        return ValueType.STRING;
+      case "Boolean": case "boolean":
+        return ValueType.BOOLEAN;
+      case "Integer": case "int":
+        return ValueType.INTEGER;
+      case "Long": case "long":
+        return ValueType.LONG;
+      case "Double": case "double":
+      case "Float":  case "float":
+      case "BigDecimal":
+        return ValueType.DECIMAL;
+      case "LocalDate":
+        return ValueType.DATE;
+      case "LocalDateTime":
+      case "OffsetDateTime":
+      case "ZonedDateTime":
+        return ValueType.DATE_TIME;
+      case "List": case "Collection": case "Set":
+        return ValueType.ARRAY;
+      case "Map":
+      case "Object":
+        return ValueType.OBJECT;
+      default:
+        return ValueType.UNKNOWN;
+    }
   }
 }

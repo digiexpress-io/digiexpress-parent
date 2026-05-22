@@ -20,6 +20,8 @@ package io.resys.limaone.model;
  * #L%
  */
 
+import java.util.List;
+
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -39,7 +41,9 @@ public interface Article extends Body {
   Integer getOrder();
   
   @Nullable String getParentId();
-  
+  @Nullable String getDescription();
+  @Nullable List<String> getLabels();
+
   @JsonInclude(JsonInclude.Include.NON_NULL)
   @Nullable Boolean getDevMode();
   

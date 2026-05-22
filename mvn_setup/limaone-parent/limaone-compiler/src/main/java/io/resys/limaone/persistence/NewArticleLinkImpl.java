@@ -93,19 +93,19 @@ public class NewArticleLinkImpl extends AuthoringTemplate<NewArticleLinkImpl, Mo
     link.articles(articles);
     
     for(final var label : props.getLabels()) {
-      
+
       final var localeRef = label.getLocale();
       final var locale = world.findOneLocale(localeRef);
-      
+
       link.addLabels(ImmutableLocaleLabel.builder()
           .locale(locale.map(e -> e.getId()).orElse(localeRef))
           .labelValue(label.getLabelValue())
           .build());
-      
+
       if(locale.isEmpty()) {
         throw new AuthoringException(
-            props, 
-            "Locale with id: '" + label.getLocale() + "' does not exist in: '" + String.join(",", world.getLocales().keySet()) + "'!");          
+            props,
+            "Locale with id: '" + label.getLocale() + "' does not exist in: '" + String.join(",", world.getLocales().keySet()) + "'!");
       }
     }
     return link.build();

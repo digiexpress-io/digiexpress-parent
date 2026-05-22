@@ -12,18 +12,19 @@ export interface FsPropertiesLinkProps {
 export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ dirent }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { selectOptions } = useFsDirent();
+  const { selectOptions, getArticleName } = useFsDirent();
 
   if (dirent.type !== 'ARTICLE_LINK') {
     return undefined;
   }
 
-  const intlValues = (dirent.props as Fs.LinkProps).intlValues;
+  const linkProps = dirent.props as Fs.LinkProps;
+  const intlValues = linkProps.intlValues;
   const locales = Object.keys(intlValues).map((localeId) => {
     const lang = selectOptions.languages.find((l) => l.value === localeId);
     return lang?.label ?? localeId;
   })
-  const linkType = (dirent.props as Fs.LinkProps).contentType;
+  const linkType = linkProps.contentType;
   const contentType = intl.formatMessage({ id: `fs.dirent.link.contentType.${linkType}` });
 
   return (
@@ -43,6 +44,13 @@ export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ dirent }) =>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.contentType' })}</Typography>
         <Typography className={classes.propertyValue}>{contentType}</Typography>
+      </div>
+
+      <div className={classes.propertyRow}>
+        <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.selectedArticles' })}</Typography>
+        <div className={classes.propertyList}>
+          {(linkProps.articles ?? []).map((article, index) => <Box key={index} className={classes.propertyListItem}>{getArticleName(article)}</Box>)}
+        </div>
       </div>
     </>
   );

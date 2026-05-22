@@ -18,6 +18,7 @@
     "@dxs-ts/gamut-theme": "*",
     "@dxs-ts/user-profile": "*",
     "@dxs-ts/task-feedback": "*",
+    "@dxs-ts/fs-api": "*",
     "@dxs-ts/xui-table": "*"
   },
   "peerDependencies": {

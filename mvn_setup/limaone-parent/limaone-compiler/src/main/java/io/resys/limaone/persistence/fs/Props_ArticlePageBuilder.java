@@ -35,12 +35,12 @@ public class Props_ArticlePageBuilder {
   public ArticlePageProps build() {
     final ArticlePage articlePage = currentState.getBodyOfType(node);
     final var builder = ImmutableArticlePageProps.builder();
-    
-   if(Boolean.TRUE.equals(articlePage.getDevMode())) {
-     builder.addConfigOptions(ConfigOption.DEV_MODE);
-   }
-    
-    return ImmutableArticlePageProps.builder()
+
+    if (Boolean.TRUE.equals(articlePage.getDevMode())) {
+      builder.addConfigOptions(ConfigOption.DEV_MODE);
+    }
+
+    return builder
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)

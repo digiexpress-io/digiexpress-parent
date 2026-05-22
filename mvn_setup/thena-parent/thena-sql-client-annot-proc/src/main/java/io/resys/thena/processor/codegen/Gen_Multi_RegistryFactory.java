@@ -128,6 +128,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import io.resys.thena.datasource.ThenaSqlDataSource;
+import io.resys.thena.processor.model.Metamodel;
 import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.model.TableMetamodel;
 import io.resys.thena.processor.spi.MultiTableCodeGenerator;
@@ -135,7 +136,7 @@ import io.resys.thena.processor.support.NamingUtils;
 
 public class Gen_Multi_RegistryFactory implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables, Metamodel metamodel) {
     final var className = registry.getRegistryClassName();
     
     final var classBuilder = TypeSpec.classBuilder(className)

@@ -51,7 +51,10 @@ public interface ModifyArticleLink {
     String getType();
     
     @Nullable List<LocaleLabel> getLabels();
+    @Nullable List<String> getTagLabels();
     @Nullable List<String> getArticles();
     @Nullable Boolean getDevMode();
+    @Nullable Boolean getDisabledMode();
+    @Nullable String getDescription();
   }
 }

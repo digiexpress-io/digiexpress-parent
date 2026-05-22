@@ -55,7 +55,7 @@ import io.vertx.mutiny.sqlclient.Row;
 public interface CustomerTable {
 
   @TenantSql.FindAll(
-    sql = "SELECT * FROM {customer}",
+    sql = "SELECT * FROM {customer} inner join {batch}",
     rowMapper = CustomerMapper.class
   )
   Sql findAll();

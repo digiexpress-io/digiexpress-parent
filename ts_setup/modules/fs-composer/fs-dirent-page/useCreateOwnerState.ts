@@ -7,16 +7,18 @@ import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
-  activeTabPath: string;  
+  activeTabPath: string;
   articleId: string;
   localeCode: string;
   configOptions: Fs.ConfigOption[];
   availableConfigOptions: Fs.SelectOption[];
   articleOptions: FsDirentSelectSingleOption[];
   localeOptions: FsDirentSelectSingleOption[];
+  isExpanded: boolean;
   onChangeArticleId: (value: string) => void;
   onChangeLocaleCode: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
+  onToggleExpanded: () => void;
 }
 
 export const useCreateOwnerState = (): CreateOwnerState => {
@@ -28,6 +30,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const [articleId, setArticleId] = React.useState('');
   const [localeCode, setLocaleCode] = React.useState('');
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>([]);
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   const articleOptions: FsDirentSelectSingleOption[] = selectOptions.articles.map(o => ({
     value: o.value,
@@ -48,6 +51,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setConfigOptions(value as Fs.ConfigOption[]);
   }
 
+  function onToggleExpanded() {
+    setIsExpanded(prev => !prev);
+  }
+
   return ({
     isDarkMode,
     activeTabPath,
@@ -57,8 +64,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     availableConfigOptions,
     articleOptions,
     localeOptions,
+    isExpanded,
     onChangeArticleId,
     onChangeLocaleCode,
     onChangeConfigOptions,
+    onToggleExpanded,
   });
 };

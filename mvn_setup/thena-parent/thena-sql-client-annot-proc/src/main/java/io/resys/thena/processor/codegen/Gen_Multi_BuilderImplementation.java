@@ -41,6 +41,7 @@ import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.datasource.ThenaSqlDataSource;
+import io.resys.thena.processor.model.Metamodel;
 import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.model.TableMetamodel;
 import io.resys.thena.processor.model.TableMetamodel.SqlMethod;
@@ -51,7 +52,7 @@ import io.smallrye.mutiny.Uni;
 
 public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables, Metamodel metamodel) {
     final var className = registry.getName() + "DbBuilderImpl";
     final var builderInterfaceName = registry.getName() + "DbBuilder";
     final var persistenceUnitName = builderInterfaceName + ".PersistenceUnit";

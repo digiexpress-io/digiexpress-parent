@@ -95,7 +95,7 @@ export const DirentIcon = (props: { dirent: Fs.DirentBase }) => {
     case 'FLOW':
       return <FsIcons.Flow />;
     case 'ARTICLE_LINK':
-      return <FsIcons.Link />;
+      return (dirent.props as Fs.LinkProps)?.contentType === 'phone' ? <FsIcons.Phone /> : <FsIcons.Link />;
     case 'LOCALE':
       return <FsIcons.Language />;
     case 'PRINTOUT':
@@ -105,7 +105,7 @@ export const DirentIcon = (props: { dirent: Fs.DirentBase }) => {
     case 'PRINTOUT_PAGE':
       return <FsIcons.Pdf />;
     case 'UNKNOWN':
-      return <FsIcons.Phone />;
+      return <FsIcons.Article />;
     case 'ARTICLE_PAGE':
       return <FsIcons.Page />;
     default:

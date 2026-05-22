@@ -302,6 +302,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
     }
   },
 
+
   MuiPaper: {
     defaultProps: {
       variant: 'outlined',

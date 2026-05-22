@@ -108,8 +108,8 @@ public class FlowStack {
     if(exception instanceof StatementException) {
       final StatementException ex = (StatementException) exception;
       errorMsg.append(System.lineSeparator())
-        .append(" props: ").append(JsonObject.mapFrom(ex.getProps()).encodePrettily()).append(System.lineSeparator())
-        .append(" statement: ").append(JsonObject.mapFrom(ex.getStatement()).encodePrettily());
+        .append(" props: ").append(ex.getProps() != null ? JsonObject.mapFrom(ex.getProps()).encodePrettily() : "null").append(System.lineSeparator())
+        .append(" statement: ").append(ex.getStatement() != null ? JsonObject.mapFrom(ex.getStatement()).encodePrettily() : "null");
       
       final var stment = ex.getStatement();
       if(stment instanceof BodyStatement) {

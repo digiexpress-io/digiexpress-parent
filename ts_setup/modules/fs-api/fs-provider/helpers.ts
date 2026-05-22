@@ -22,6 +22,7 @@ const ALL_CONFIG_OPTIONS: Fs.SelectOption[] = [
   { value: 'ASSIGNABLE_MODE', label: 'Assignable mode' },
   { value: 'DISABLED_MODE', label: 'Disabled mode' },
   { value: 'ANONYMOUS_MODE', label: 'Anonymous mode' },
+  { value: 'AUTH_ONLY_MODE', label: 'Auth only mode' },
 ];
 
 export function getExtension(type: Fs.BodyType): string | undefined {
@@ -43,7 +44,7 @@ export function getConfigOptionsForType(type: Fs.BodyType): Fs.SelectOption[] {
     }
     case 'ARTICLE_WORKFLOW':
     case 'ARTICLE': {
-      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE');
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE' || o.value === 'AUTH_ONLY_MODE');
     }
     case 'LOCALE': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DISABLED_MODE');

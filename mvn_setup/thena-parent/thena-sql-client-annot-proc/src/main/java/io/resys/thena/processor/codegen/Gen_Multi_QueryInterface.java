@@ -91,13 +91,13 @@ import java.util.Optional;
 
 import javax.lang.model.element.Modifier;
 
-import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import io.resys.thena.processor.model.Metamodel;
 import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.model.TableMetamodel;
 import io.resys.thena.processor.model.TableMetamodel.SqlMethodType;
@@ -106,7 +106,7 @@ import io.resys.thena.processor.support.NamingUtils;
 
 public class Gen_Multi_QueryInterface implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables, Metamodel metamodel) {
     final var className = registry.getName() + "DbQuery";
     
     final var interfaceBuilder = TypeSpec.interfaceBuilder(className)
@@ -205,8 +205,7 @@ public class Gen_Multi_QueryInterface implements MultiTableCodeGenerator {
   
   private TypeSpec generateWorldInterface(RegistryMetamodel registry, List<TableMetamodel> tables) {
     final var worldInterface = TypeSpec.interfaceBuilder(registry.getWorldName())
-      .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-      .addAnnotation(AnnotationSpec.builder(ClassName.get("org.immutables.value", "Value", "Immutable")).build());
+      .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
     
     for (final var table : tables) {
       final var entityType = findEntityTypeForTable(table);

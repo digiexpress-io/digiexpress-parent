@@ -41,11 +41,8 @@ export const FsTabs: React.FC<FsTabProps> = (props) => {
           className={`${classes.tab} ${tab.isActive ? classes.active : classes.inActive}
           ${tab.isError ? classes.tabError : ''}`}
         >
-          <FsTab
-            index={index}
-            ownerState={ownerState}
-            className={classes.tabTypography}
-          />
+          <FsTab index={index} ownerState={ownerState} className={classes.tabTypography} />
+
           <IconButton onClick={(event) => ownerState.onTabClose(index, event)}>
             <FsIcon icon={FsIcons.Close} large color={tab.isError ? (
               ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight

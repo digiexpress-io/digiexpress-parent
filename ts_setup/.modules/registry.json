@@ -782,6 +782,7 @@
           "@dxs-ts/gamut-theme": "*",
           "@dxs-ts/user-profile": "*",
           "@dxs-ts/task-feedback": "*",
+          "@dxs-ts/fs-api": "*",
           "@dxs-ts/xui-table": "*"
         },
         "peerDependencies": {
@@ -813,6 +814,7 @@
         "@dxs-ts/gamut-theme",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
+        "@dxs-ts/fs-api",
         "@dxs-ts/xui-table",
         "react",
         "@tanstack/react-query",
@@ -851,6 +853,7 @@
         "@dxs-ts/gamut-theme",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
+        "@dxs-ts/fs-api",
         "@dxs-ts/xui-table"
       ],
       "actualDependencies": [
@@ -866,6 +869,7 @@
         "@dxs-ts/gamut-theme",
         "notistack",
         "@dxs-ts/stencil-api",
+        "@dxs-ts/fs-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/wrench-api",
         "@dxs-ts/cockpit-api",
@@ -890,6 +894,7 @@
         "@dxs-ts/eveli-intl",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/stencil-api",
+        "@dxs-ts/fs-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/wrench-api",
         "@dxs-ts/cockpit-api",
@@ -1403,13 +1408,20 @@
       ],
       "internalDependencies": [],
       "actualDependencies": [
-        "react"
+        "react",
+        "react-intl",
+        "notistack"
       ],
       "actualExternalDependencies": [
-        "react"
+        "react",
+        "react-intl",
+        "notistack"
       ],
       "actualInternalDependencies": [],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "react-intl",
+        "notistack"
+      ],
       "unusedDependencies": [
         "@mui/material",
         "@mui/utils"
@@ -4128,6 +4140,7 @@
         "@dxs-ts/gamut-theme",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
+        "@dxs-ts/fs-api",
         "@dxs-ts/xui-table"
       ],
       "@dxs-ts/eveli-intl": [],
@@ -4399,6 +4412,7 @@
       ],
       "@dxs-ts/fs-api": [
         "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/fs-composer",
         "@dxs-ts/fs-nav",
@@ -4745,6 +4759,6 @@
       ]
     }
   },
-  "checksum": "bd7eac8218732c0ab95368cb73e2ef4e0410b299f2308034a09f41f2098d08a0",
-  "generatedAt": "2026-05-14T10:27:54.061Z"
+  "checksum": "e04ba1372f2883e86fb30fcdb1ad4899352086d3a35d5205b3178d20a5b15524",
+  "generatedAt": "2026-05-21T15:11:50.790Z"
 }

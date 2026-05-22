@@ -20,15 +20,16 @@ package io.resys.limaone.spi.ast;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import groovy.lang.GroovyClassLoader;
+import io.resys.limaone.ast.Flow_AST.FormOutputField;
+import io.resys.limaone.spi.ast.FlowStatementFactory.ImmutableFormOutputField;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.spi.groovy.FailSafeService;
@@ -41,13 +42,29 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FormStepCompiler {
 
-  private static final Pattern FINAL_DECL_PATTERN = Pattern.compile(
-      "^\\s*final\\s+([\\w<>\\[\\],.\\s]+?)\\s+(\\w+)\\s*=");
+  private static final Pattern FINAL_DECL_PATTERN = Pattern.compile("^\\s*final\\s+([\\w<>\\[\\],.\\s]+?)\\s+(\\w+)\\s*=");
+  private static final String SOURCE_TEMPLATE = """
+package io.resys.limaone.spi.compiler.groovy.form;
+
+public class FormStep_@@SAFE_NAME@@ {
+
+  public Output execute(FormInstance form) {
+@@EXECUTE_BODY@@
+    Output output = new Output();
+@@OUTPUT_ASSIGNMENTS@@
+    return output;
+  }
+
+  public static class Output {
+@@OUTPUT_FIELD_DECLS@@
+  }
+}
+""";
 
   @Builder @Getter
   public static class FormStepResult {
     private final Class<?> compiledClass;
-    private final Map<String, String> outputFields;
+    private final List<FormOutputField> outputFields;
     @Builder.Default
     private final List<ModelError> errors = Collections.emptyList();
   }
@@ -66,7 +83,7 @@ public class FormStepCompiler {
       final var msg = "Failed to compile form step '" + taskId + "': " + e.getMessage() +
           System.lineSeparator() + source;
       log.error(msg, e);
-      final var parsed = GroovyErrorParser.parseErrors(e.getMessage(), returnsCode);
+      final var parsed = GroovyErrorParser.parseErrors(e.getMessage(), returnsCode != null ? returnsCode : "");
       final List<ModelError> errors = parsed.stream()
           .map(error -> (ModelError) ImmutableModelError.builder()
               .id(error.getId())
@@ -84,48 +101,73 @@ public class FormStepCompiler {
     }
   }
 
-  static Map<String, String> extractFinalDeclarations(String returnsCode) {
-    final Map<String, String> fields = new LinkedHashMap<>();
+  static List<FormOutputField> extractFinalDeclarations(String returnsCode) {
+    if (returnsCode == null || returnsCode.isEmpty()) {
+      return List.of();
+    }
+    final List<FormOutputField> fields = new ArrayList<>();
     for (final var line : returnsCode.split("\\r?\\n")) {
       final Matcher matcher = FINAL_DECL_PATTERN.matcher(line);
       if (matcher.find()) {
-        final var type = matcher.group(1);
+        final var declaredType = matcher.group(1).trim();
         final var name = matcher.group(2);
-        fields.put(name, type);
+        fields.add(new ImmutableFormOutputField(name, declaredType));
       }
     }
-    return fields;
+    return Collections.unmodifiableList(fields);
   }
 
-  static String generateSource(String taskId, String returnsCode, Map<String, String> outputFields) {
+  static String generateSource(String taskId, String returnsCode, List<FormOutputField> outputFields) {
     final var safeName = taskId.replaceAll("[^a-zA-Z0-9_]", "_");
-    final var src = new StringBuilder();
-    
-    src.append("package io.resys.limaone.spi.compiler.groovy.form;").append(System.lineSeparator());
-    src.append(System.lineSeparator());
-    src.append("public class FormStep_").append(safeName).append(" {").append(System.lineSeparator());
-    src.append(System.lineSeparator());
+    return SOURCE_TEMPLATE
+        .replace("@@SAFE_NAME@@", safeName)
+        .replace("@@EXECUTE_BODY@@", formatExecuteBody(returnsCode))
+        .replace("@@OUTPUT_ASSIGNMENTS@@", formatOutputAssignments(outputFields))
+        .replace("@@OUTPUT_FIELD_DECLS@@", formatOutputFieldDeclarations(outputFields));
+  }
 
-    src.append("  public Output execute(FormInstance form) {").append(System.lineSeparator());
-    for (final var line : returnsCode.split("\\r?\\n")) {
-      src.append("    ").append(line).append(System.lineSeparator());
+  private static String formatExecuteBody(String returnsCode) {
+    if (returnsCode == null || returnsCode.trim().isEmpty()) {
+      return "";
     }
-    src.append(System.lineSeparator());
-    src.append("    Output output = new Output();").append(System.lineSeparator());
-    for (final var field : outputFields.keySet()) {
-      src.append("    output.").append(field).append(" = ").append(field).append(";").append(System.lineSeparator());
+    final var lines = returnsCode.split("\\r?\\n", -1);
+    final var executeIndent = "    ";
+    final var sb = new StringBuilder();
+    for (final var line : lines) {
+      sb.append(executeIndent).append(line.stripLeading()).append(System.lineSeparator());
     }
-    src.append("    return output;").append(System.lineSeparator());
-    src.append("  }").append(System.lineSeparator());
-    src.append(System.lineSeparator());
+    return sb.toString();
+  }
 
-    src.append("  public static class Output {").append(System.lineSeparator());
-    for (final var entry : outputFields.entrySet()) {
-      src.append("    ").append(entry.getValue()).append(" ").append(entry.getKey()).append(";").append(System.lineSeparator());
+  private static String formatOutputAssignments(List<FormOutputField> outputFields) {
+    if (outputFields.isEmpty()) {
+      return "";
     }
-    src.append("  }").append(System.lineSeparator());
+    final var sb = new StringBuilder();
+    for (final var field : outputFields) {
+      sb.append("    output.")
+          .append(field.getName())
+          .append(" = ")
+          .append(field.getName())
+          .append(";")
+          .append(System.lineSeparator());
+    }
+    return sb.toString();
+  }
 
-    src.append("}").append(System.lineSeparator());
-    return src.toString();
+  private static String formatOutputFieldDeclarations(List<FormOutputField> outputFields) {
+    if (outputFields.isEmpty()) {
+      return "";
+    }
+    final var sb = new StringBuilder();
+    for (final var field : outputFields) {
+      sb.append("    ")
+          .append(field.getDeclaredType())
+          .append(" ")
+          .append(field.getName())
+          .append(";")
+          .append(System.lineSeparator());
+    }
+    return sb.toString();
   }
 }

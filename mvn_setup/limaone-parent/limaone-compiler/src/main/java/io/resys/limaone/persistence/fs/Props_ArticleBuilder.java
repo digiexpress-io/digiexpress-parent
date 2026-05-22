@@ -20,9 +20,14 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
+import java.util.Collections;
+import java.util.List;
+
 import io.resys.limaone.fs.ImmutableArticleProps;
+import io.resys.limaone.fs.ImmutableLabel;
 import io.resys.limaone.fs.WorldFsProps.ArticleProps;
 import io.resys.limaone.fs.WorldFsProps.ConfigOption;
+import io.resys.limaone.fs.WorldFsProps.Label;
 import io.resys.limaone.model.Article;
 import lombok.RequiredArgsConstructor;
 
@@ -37,17 +42,26 @@ public class Props_ArticleBuilder {
   public ArticleProps build() {
     final Article article = currentState.getBodyOfType(node);
     final var builder = ImmutableArticleProps.builder();
-    
+
     if(Boolean.TRUE.equals(article.getDevMode())) {
       builder.addConfigOptions(ConfigOption.DEV_MODE);
     }
+    if(Boolean.TRUE.equals(article.getAuthOnly())) {
+      builder.addConfigOptions(ConfigOption.AUTH_ONLY_MODE);
+    }
 
-    
-    return ImmutableArticleProps.builder()
+    final List<Label> labels = article.getLabels() == null ? Collections.emptyList() :
+        article.getLabels().stream()
+            .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
+            .toList();
+
+    return builder
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)
         .orderNumber(article.getOrder())
+        .description(article.getDescription())
+        .labels(labels)
         .build();
   }
   
