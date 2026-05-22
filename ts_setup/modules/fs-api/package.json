@@ -8,7 +8,9 @@
   "peerDependencies": {
     "react": "*",
     "@mui/material": "*",
-    "@mui/utils": "*"
+    "@mui/utils": "*",
+    "react-intl": "*",
+    "notistack": "*"
   },
   "keywords": ["filesystem", "explorer", "api", "types"],
   "private": true
