@@ -34,11 +34,13 @@ import io.resys.limaone.authoring.DebugAny.DebugAnyProps;
 import io.resys.limaone.authoring.DebugAny.DebugResult;
 import io.resys.limaone.authoring.ModifyArticle.ModifyArticleProps;
 import io.resys.limaone.authoring.ModifyArticleLink.ModifyArticleLinkProps;
+import io.resys.limaone.authoring.ModifyArticlePage.ModifyArticlePageProps;
 import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.fs.WorldFsBody;
 import io.resys.limaone.fs.WorldFsBody.WrenchAstBodyChange;
 import io.resys.limaone.model.Article;
 import io.resys.limaone.model.ArticleLink;
+import io.resys.limaone.model.ArticlePage;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.smallrye.mutiny.Uni;
@@ -99,4 +101,11 @@ public class AssetsFsController {
     return authoring.modifyModel().modifyArticleLink().props(body).build();
   }
 
+  @PutMapping("dirents/article-page/{id}")
+  public Uni<Model<ArticlePage>> updatePage(
+      @PathVariable("id") String id,
+      @RequestBody ModifyArticlePageProps body)
+  {
+    return authoring.modifyModel().modifyArticlePage().props(body).build();
+  }
 }

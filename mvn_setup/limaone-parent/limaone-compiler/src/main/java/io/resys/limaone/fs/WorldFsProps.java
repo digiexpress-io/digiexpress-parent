@@ -100,6 +100,7 @@ public interface WorldFsProps {
     Map<String, String> getIntlValues();
   }
 
+  @Value.Immutable
   interface DialobProps extends WorldFsProps {
     String getFormName();
     String getFormTechnicalId();
@@ -186,6 +187,7 @@ public interface WorldFsProps {
     List<PermissionType> getTypes();
   }
   
+  @Value.Immutable
   public interface Comment {
     String getComment();
     String getAuthor();
