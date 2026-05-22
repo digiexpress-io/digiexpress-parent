@@ -15,7 +15,7 @@ export interface FsPropertiesArticleProps {
 export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { getParentDirent, getArticleName } = useFsDirent();
+  const { getParentDirent, getArticleName, selectOptions, getDirent } = useFsDirent();
 
   if (dirent.type !== 'ARTICLE') {
     return undefined;
@@ -23,8 +23,20 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent
 
   const parentFolder = getParentDirent(dirent.id);
   const descendants = collectDescendants(parentFolder?.children ?? [], dirent.id, 0);
+  const associatedLinks = Object.values(selectOptions.direntProps)
+    .filter(p => p.type === 'ARTICLE_LINK' && (p as Fs.LinkProps).articles?.includes(dirent.id))
+    .map(p => getDirent(p.id)?.name ?? p.id);
 
   return (
+    <>
+    {associatedLinks.length > 0 && (
+      <div className={classes.propertyRow}>
+        <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.associatedLinks' })}</Typography>
+        <ul className={classes.propertyBulletList}>
+          {associatedLinks.map((name, index) => <li key={index}><Typography className={classes.propertyValue}>{name}</Typography></li>)}
+        </ul>
+      </div>
+    )}
     <div className={classes.propertyRow}>
       <Typography className={classes.childPropertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
       <div className={classes.childContainer}>
@@ -36,6 +48,7 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent
         ))}
       </div>
     </div>
+    </>
   );
 };
 

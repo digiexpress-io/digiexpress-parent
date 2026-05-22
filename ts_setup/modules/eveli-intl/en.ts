@@ -1715,6 +1715,7 @@ export const en = {
   'fs.properties.propertyLabel.flowName': 'Flow Name',
   'fs.properties.propertyLabel.configOptionsEnabled': 'Config options',
   'fs.properties.propertyLabel.selectedArticles': 'Associated Articles',
+  'fs.properties.propertyLabel.associatedLinks': 'Associated Links',
   'fs.properties.propertyLabel.comments': 'Comments',
   'fs.properties.propertyLabel.locales': 'Locales',
   'fs.properties.propertyLabel.localeCode': 'Locale Code',
