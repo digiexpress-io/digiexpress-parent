@@ -8,6 +8,8 @@ import { FsDirentProps } from './FsDirentProps';
 import { useOwnerState } from './useOwnerState';
 
 import { ConfigOptionIcons, FsDirentName, DirentDecorator, DirentIcon } from './Supports';
+import { FsDiffIndicator } from '../fs-diff-indicator';
+import { useFsu } from '@dxs-ts/fs-api';
 
 
 export const FsDirent: React.FC<FsDirentProps> = (props) => {
@@ -16,6 +18,8 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
 
   const { isExpanded } = useFsNav();
   const expanded = isExpanded(props.dirent.id) ?? false;
+  const { isChange, getChange } = useFsu();
+  const isUnsavedChanges = isChange(props.dirent.id) && getChange(props.dirent.id).isChanged;
 
 
   function handleClick() {
@@ -44,7 +48,7 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
 
         <ListItemIcon className={classes[ownerState.direntIconClassName]}>
           <DirentDecorator dirent={ownerState.dirent}>
-            <DirentIcon dirent={ownerState.dirent} />
+            {isUnsavedChanges ? <FsDiffIndicator direntId={props.dirent.id} /> : <DirentIcon dirent={ownerState.dirent} />}
           </DirentDecorator>
         </ListItemIcon>
 

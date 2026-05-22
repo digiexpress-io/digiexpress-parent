@@ -73,9 +73,9 @@ export const FsTabRoot = styled('div', {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      flex: 1,
-      minWidth: 0,
       fontWeight: 500,
+      display: 'flex',
+      alignItems: 'center',
       color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     },
 
