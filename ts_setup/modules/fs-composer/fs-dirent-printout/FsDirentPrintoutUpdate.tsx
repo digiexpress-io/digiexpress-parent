@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Divider } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentPrintoutRoot } from './useUtilityClasses';
@@ -64,7 +64,7 @@ export const FsDirentPrintoutUpdate: React.FC<FsDirentPrintoutUpdateProps> = (pr
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />
           <FsDirentButtonCancel />
-          <FsDirentButtonCreate />
+          <FsDirentButtonSave />
         </div>
 
       </div>

@@ -12,9 +12,7 @@ export interface FsDiffIndicatorClasses {
 export type FsDiffIndicatorClassKey = keyof FsDiffIndicatorClasses;
 
 export const useUtilityClasses = () => {
-  const slots = {
-    root: ['root'],
-  };
+  const slots = { root: ['root'] };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
 };
@@ -24,10 +22,8 @@ export const FsDiffIndicatorRoot = styled('span', {
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
- 
   display: 'inline-flex',
   alignItems: 'center',
   color: ownerState.isDarkMode ? FsColors.semantic.warning : FsColors.semantic.warningLight,
-  visibility: ownerState.isChanged ? 'visible' : 'hidden',
-  marginLeft: theme.spacing(0.5)
+  marginLeft: theme.spacing(0.5),
 }));

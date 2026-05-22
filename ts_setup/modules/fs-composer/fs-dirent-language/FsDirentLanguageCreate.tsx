@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentLanguageRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
@@ -38,7 +38,7 @@ export const FsDirentLanguageCreate: React.FC<FsDirentLanguageCreateProps> = () 
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonCancel />
-          <FsDirentButtonCreate />
+          <FsDirentButtonSave />
         </div>
 
       </div>

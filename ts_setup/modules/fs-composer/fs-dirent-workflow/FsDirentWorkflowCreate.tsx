@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
@@ -82,7 +82,7 @@ export const FsDirentWorkflowCreate: React.FC<FsDirentWorkflowCreateProps> = () 
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonCancel />
-          <FsDirentButtonCreate />
+          <FsDirentButtonSave />
         </div>
 
       </div>

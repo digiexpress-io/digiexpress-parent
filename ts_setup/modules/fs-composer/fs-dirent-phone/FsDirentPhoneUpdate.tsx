@@ -5,7 +5,7 @@ import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentPhoneRoot } from './useUtilityClasses';
@@ -69,7 +69,7 @@ export const FsDirentPhoneUpdate: React.FC<FsDirentPhoneUpdateProps> = (props) =
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />
           <FsDirentButtonCancel />
-          <FsDirentButtonCreate />
+          <FsDirentButtonSave />
         </div>
 
       </div>

@@ -6,7 +6,7 @@ import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { useUtilityClasses, FsDirentPageRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentPageCreateProps } from './FsDirentPageProps';
@@ -49,7 +49,7 @@ export const FsDirentPageCreate: React.FC<FsDirentPageCreateProps> = () => {
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonCancel />
-          <FsDirentButtonCreate />
+          <FsDirentButtonSave />
         </div>
 
       </div>

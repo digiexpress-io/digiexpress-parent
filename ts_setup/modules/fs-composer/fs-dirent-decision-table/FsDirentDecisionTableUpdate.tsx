@@ -5,7 +5,7 @@ import { FsIcon, FsIcons } from '../fs-theme';
 
 import { Fs } from '@dxs-ts/fs-api';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { useUtilityClasses, FsDirentDecisionTableRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
@@ -68,7 +68,7 @@ export const FsDirentDecisionTableUpdate: React.FC<FsDirentDecisionTableUpdatePr
       <div className={classes.buttonContainer}>
         <FsDirentButtonDelete assetId={props.direntId} />
         <FsDirentButtonCancel />
-        <FsDirentButtonCreate />
+        <FsDirentButtonSave />
       </div>
     </FsDirentDecisionTableRoot>
   );

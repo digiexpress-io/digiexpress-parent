@@ -7,7 +7,7 @@ import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonCreate } from '../fs-dirent-button-create';
+import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentLinkRoot } from './useUtilityClasses';
@@ -81,7 +81,7 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />
           <FsDirentButtonCancel />
-          <FsDirentButtonCreate onClick={() => push(ownerState.id)} />
+          <FsDirentButtonSave onClick={() => push(ownerState.id)} />
         </div>
 
       </div>

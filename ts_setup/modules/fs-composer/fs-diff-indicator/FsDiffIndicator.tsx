@@ -1,9 +1,8 @@
 import React from 'react';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDiffIndicatorProps } from './FsDiffIndicatorProps';
-import { FsDiffIndicatorRoot } from './useUtilityClasses';
+import { FsDiffIndicatorRoot, useUtilityClasses } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
-import { useUtilityClasses } from './useUtilityClasses';
 
 export const FsDiffIndicator: React.FC<FsDiffIndicatorProps> = (props) => {
   const ownerState = useOwnerState(props);
@@ -12,6 +11,6 @@ export const FsDiffIndicator: React.FC<FsDiffIndicatorProps> = (props) => {
   return (
     <FsDiffIndicatorRoot className={classes.root} ownerState={ownerState}>
       <FsIcon icon={FsIcons.Unsaved} small />
-    </FsDiffIndicatorRoot>  
+    </FsDiffIndicatorRoot>
   );
 };
