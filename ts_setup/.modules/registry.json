@@ -1381,7 +1381,9 @@
         "peerDependencies": {
           "react": "*",
           "@mui/material": "*",
-          "@mui/utils": "*"
+          "@mui/utils": "*",
+          "react-intl": "*",
+          "notistack": "*"
         },
         "keywords": [
           "filesystem",
@@ -1394,17 +1396,23 @@
       "dependencies": [
         "react",
         "@mui/material",
-        "@mui/utils"
+        "@mui/utils",
+        "react-intl",
+        "notistack"
       ],
       "peerDependencies": [
         "react",
         "@mui/material",
-        "@mui/utils"
+        "@mui/utils",
+        "react-intl",
+        "notistack"
       ],
       "externalDependencies": [
         "react",
         "@mui/material",
-        "@mui/utils"
+        "@mui/utils",
+        "react-intl",
+        "notistack"
       ],
       "internalDependencies": [],
       "actualDependencies": [
@@ -1418,10 +1426,7 @@
         "notistack"
       ],
       "actualInternalDependencies": [],
-      "missingDependencies": [
-        "react-intl",
-        "notistack"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": [
         "@mui/material",
         "@mui/utils"
@@ -4759,6 +4764,6 @@
       ]
     }
   },
-  "checksum": "e04ba1372f2883e86fb30fcdb1ad4899352086d3a35d5205b3178d20a5b15524",
-  "generatedAt": "2026-05-21T15:11:50.790Z"
+  "checksum": "97b6b169a2856be855138003f02b523c0a899c8f434e6c0d1d80febb82f67d5d",
+  "generatedAt": "2026-05-22T13:45:32.556Z"
 }
