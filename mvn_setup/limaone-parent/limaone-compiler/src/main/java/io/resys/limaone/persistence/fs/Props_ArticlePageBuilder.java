@@ -39,6 +39,9 @@ public class Props_ArticlePageBuilder {
     if (Boolean.TRUE.equals(articlePage.getDevMode())) {
       builder.addConfigOptions(ConfigOption.DEV_MODE);
     }
+    if (Boolean.TRUE.equals(articlePage.getDisabledMode())) {
+      builder.addConfigOptions(ConfigOption.DISABLED_MODE);
+    }
 
     return builder
         .id(node.getObjectId())
@@ -46,6 +49,7 @@ public class Props_ArticlePageBuilder {
         .locked(false)
         .articleId(articlePage.getArticle())
         .localeCode(articlePage.getLocale())
+        .description(articlePage.getDescription())
         .build();
   }
   

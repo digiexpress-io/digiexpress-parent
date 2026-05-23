@@ -50,6 +50,7 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
               value={ownerState.description}
               placeholder={intl.formatMessage({ id: 'fs.dirent.page.descriptionField.placeholder' })}
               onChange={ownerState.onChangeDescription}
+              onBlur={ownerState.onBlurDescription}
               multiline
               minRows={2} maxRows={4}
             />

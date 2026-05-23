@@ -20,6 +20,7 @@ export const FsDirentTextField: React.FC<FsDirentTextFieldProps> = (props) => {
         minRows={props.minRows}
         maxRows={props.maxRows}
         onChange={(e) => props.onChange?.(e.target.value)}
+        onBlur={props.onBlur}
       />
       {ownerState.showRequiredError && (
         <Typography className={classes.requiredMessage}>

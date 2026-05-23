@@ -9,6 +9,10 @@ type _ChangeStateProps = {
   bodyType: Fs.BodyType;
   locale: string;
   content: string;
+  description: string;
+  configOptions: Fs.ConfigOption[];
+  devMode: boolean;
+  disabledMode: boolean;
   isExpanded: boolean;
 }
 
@@ -24,9 +28,11 @@ class _ChangeState implements FsuChange {
   get id() { return this._current.pageId; }
   get locale() { return this._current.locale; }
   get content() { return this._current.content; }
+  get description() { return this._current.description; }
   get isExpanded() { return this._current.isExpanded; }
 
-  get bodyType() { return this._current.bodyType; }
+  get configOptions() { return this._current.configOptions; }
+  get bodyType() { return this._origin.bodyType; }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; id: string; changes: Record<string, any> } {
@@ -39,6 +45,14 @@ class _ChangeState implements FsuChange {
 
   withContent(content: string): _ChangeState {
     return new _ChangeState({ ...this._current, content }, this._origin);
+  }
+
+  withDescription(description: string): _ChangeState {
+    return new _ChangeState({ ...this._current, description }, this._origin);
+  }
+
+  withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
+    return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
   }
 
   withIsExpanded(isExpanded: boolean): _ChangeState {
@@ -61,6 +75,7 @@ export interface UpdateOwnerState {
   isExpanded: boolean;
   onChangeLocale: (value: string) => void;
   onChangeDescription: (value: string) => void;
+  onBlurDescription: () => void;
   onChangeConfigOptions: (value: string[]) => void;
   onToggleExpanded: () => void;
   content: string;
@@ -79,15 +94,17 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     bodyType: dirent.type,
     locale: pageProps.localeCode,
     content: pageProps.content ?? '',
+    description: pageProps.description ?? '',
+    configOptions: (pageProps.configOptions ?? []) as Fs.ConfigOption[],
+    devMode: (pageProps.configOptions ?? []).includes('DEV_MODE'),
+    disabledMode: (pageProps.configOptions ?? []).includes('DISABLED_MODE'),
     isExpanded: false,
   }));
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
-  const [description, setDescription] = React.useState(pageProps.description ?? '');
-  const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
-    (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
-  );
+  // local state to store all text inputs before saving
+  const [descriptionDisplay, setDescriptionDisplay] = React.useState(pageProps.description ?? '');
 
   const articleName = getArticleName(pageProps.articleId) ?? '';
   const usedLocaleIds = Object.values(selectOptions.direntProps)
@@ -111,11 +128,15 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeDescription(value: string) {
-    setDescription(value);
+    setDescriptionDisplay(value);
+  }
+
+  function onBlurDescription() {
+    setState(prev => prev.withDescription(descriptionDisplay));
   }
 
   function onChangeConfigOptions(value: string[]) {
-    setConfigOptions(value as Fs.ConfigOption[]);
+    setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
 
   function onToggleExpanded() {
@@ -128,15 +149,16 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     id: state.id,
     content: state.content,
     locale: state.locale,
-    description,
+    description: descriptionDisplay,
     articleName,
-    configOptions,
+    configOptions: state.configOptions,
     availableConfigOptions,
     localeOptions,
-    isChanged: state.isChanged,
+    isChanged: state.isChanged || descriptionDisplay !== state.description,
     isExpanded: state.isExpanded,
     onChangeLocale,
     onChangeDescription,
+    onBlurDescription,
     onChangeConfigOptions,
     onToggleExpanded,
   });

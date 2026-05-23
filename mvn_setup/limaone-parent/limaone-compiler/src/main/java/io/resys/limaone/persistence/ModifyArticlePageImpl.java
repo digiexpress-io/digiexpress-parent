@@ -133,7 +133,9 @@ public class ModifyArticlePageImpl extends AuthoringTemplate<ModifyArticlePageIm
       .from(start.getBody())
       .content(props.getContent())
       .locale(locale.get().getId())
+      .description(props.getDescription())
       .devMode(props.getDevMode())
+      .disabledMode(props.getDisabledMode())
       .build();
   }
 }

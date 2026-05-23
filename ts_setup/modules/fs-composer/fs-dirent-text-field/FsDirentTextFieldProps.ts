@@ -7,4 +7,5 @@ export interface FsDirentTextFieldProps {
   maxRows?: number;
   required?: boolean;
   onChange?: (value: string) => void;
+  onBlur?: () => void;
 }
