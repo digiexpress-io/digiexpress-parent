@@ -32,6 +32,7 @@ class _ChangeState implements FsuChange {
   get bodyType() { return this._current.bodyType; }
   get value() { return this._current.value; }
   get description() { return this._current.description; }
+  get intlValues() { return this._current.intlValues; }
   get validityStart() { return this._current.validityStart; }
   get validityEnd() { return this._current.validityEnd; }
   get tagLabels() { return this._current.tagLabels; }
@@ -152,6 +153,7 @@ export interface UpdateOwnerState {
   onChangeConfigOptions: (value: string[]) => void;
   onChangeIntlValues: (locale: string, value: string) => void;
   onChangeLabels: (value: string[]) => void;
+  onBlurIntlValues: (locale: string) => void;
   onBlurName: () => void;
   onBlurDescription: () => void;
   onToggleExpanded: () => void;
@@ -210,6 +212,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setFields(prev => ({ ...prev, description: value }));
   }
 
+  function onChangeIntlValues(locale: string, value: string) {
+    setFields(prev => ({ ...prev, intlValues: { ...prev.intlValues, [locale]: value } }));
+  }
+
   function onChangeDialobFormName(value: string) {
     setFields(prev => ({ ...prev, formName: value }));
     setState(prev => prev.withFormName(value));
@@ -253,17 +259,16 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withTagLabels(value));
   }
 
-  function onChangeIntlValues(locale: string, value: string) {
-    setFields(prev => ({ ...prev, intlValues: { ...prev.intlValues, [locale]: value } }));
-    setState(prev => prev.withIntlValues(locale, value));
-  }
-
   function onBlurName() {
     setState(prev => prev.withValue(fields.name));
   }
 
   function onBlurDescription() {
     setState(prev => prev.withDescription(fields.description));
+  }
+
+  function onBlurIntlValues(locale: string) {
+    setState(prev => prev.withIntlValues(locale, fields.intlValues[locale] ?? ''));
   }
 
   function onToggleExpanded() {
@@ -287,7 +292,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     cancel(props.direntId);
   }
 
-  const changes = state.isChanged || fields.name !== state.value || fields.description !== state.description;
+  const changes = state.isChanged
+    || fields.name !== state.value
+    || fields.description !== state.description
+    || JSON.stringify(fields.intlValues) !== JSON.stringify(state.intlValues);
 
   return ({
     isDarkMode,
@@ -320,6 +328,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeIntlValues,
     onBlurName,
     onBlurDescription,
+    onBlurIntlValues,
     onToggleExpanded,
     onCancel,
   });
