@@ -7,7 +7,7 @@ import { FsDirentFolder } from '../fs-dirent-folder';
 import { FsDirentLink } from '../fs-dirent-link';
 import { FsDirentPhone } from '../fs-dirent-phone';
 import { FsDirentWorkflow } from '../fs-dirent-workflow';
-import { FsDirentLanguage } from '../fs-dirent-language';
+import { FsDirentLocale } from '../fs-dirent-locale';
 import { FsDirentPage } from '../fs-dirent-page';
 import { FsDirentFlow } from '../fs-dirent-flow';
 import { FsDirentDialob } from '../fs-dirent-dialob';
@@ -59,7 +59,7 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
     case 'ARTICLE_TEMPLATE': return (activeTab && (<div key={tabId} className={className}><FsDirentTemplate tab={activeTab} /></div>));
     case 'DIALOB_FORM': return (activeTab && (<div key={tabId} className={className}><FsDirentDialob tab={activeTab} /></div>));
     case 'DIALOB_FORM_META': return (activeTab && (<div key={tabId} className={className}><FsDirentDialob tab={activeTab} /></div>));
-    case 'LOCALE': return (activeTab && (<div key={tabId} className={className}><FsDirentLanguage tab={activeTab} /></div>));
+    case 'LOCALE': return (activeTab && (<div key={tabId} className={className}><FsDirentLocale tab={activeTab} /></div>));
     case 'ARTICLE_PAGE': return (activeTab && (<div key={tabId} className={className}><FsDirentPage tab={activeTab} /></div>));
     default: return (<div className={className}>{intl.formatMessage({ id: 'fs.main.message.noAssetSelected' })}</div>);
   }
