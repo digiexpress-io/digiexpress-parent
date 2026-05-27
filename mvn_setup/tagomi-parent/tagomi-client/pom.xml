@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.digiexpress</groupId>
     <artifactId>tagomi-parent</artifactId>
-    <version>0.y-SNAPSHOT</version>
+    <version>5.3.9</version>
   </parent>
   <name>tagomi-client</name>
   <artifactId>tagomi-client</artifactId>
