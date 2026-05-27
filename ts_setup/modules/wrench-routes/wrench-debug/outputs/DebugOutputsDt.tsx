@@ -97,6 +97,7 @@ const DebugOutputsDt: React.FC<{ debug:HdesApi.DecisionResult }> = ({ debug }) =
         <Collapse in={accepted} timeout="auto" unmountOnExit>
           <Box sx={{ margin: 1 }}>
             <MonacoReact 
+              height='250px'
               value={toYaml(matches)}
               defaultLanguage='yaml'/>
           </Box>
@@ -121,6 +122,7 @@ const DebugOutputsDt: React.FC<{ debug:HdesApi.DecisionResult }> = ({ debug }) =
         <Collapse in={rejects} timeout="auto" unmountOnExit>
           <Box sx={{ margin: 1 }}>
             <MonacoReact key="debug-input"
+              height='250px'
               value={toYaml(rejections)}
               defaultLanguage='yaml'/>
           </Box>

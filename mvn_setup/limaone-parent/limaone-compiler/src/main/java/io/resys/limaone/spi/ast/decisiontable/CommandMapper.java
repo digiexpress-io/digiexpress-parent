@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -375,7 +376,7 @@ public class CommandMapper {
 
     final HitPolicy hitPolicy = this.hitPolicy == null ? HitPolicy.FIRST : this.hitPolicy;
     return ImmutableDecisionTable_AST.builder()
-        .name(name)
+        .name(createName())
         .bodyType(Model.BodyType.DECISION_TABLE)
         .description(description)
         .hitPolicy(hitPolicy)
@@ -386,5 +387,12 @@ public class CommandMapper {
             .returnDefs(headers.stream().filter(p -> p.getDirection() == Direction.OUT).collect(Collectors.toList()))
             .build())
         .rows(rows);
+  }
+  
+  private String createName() {
+    if(name != null) {
+      return name;
+    }
+    return "_no_name_" + UUID.randomUUID();
   }
 }
