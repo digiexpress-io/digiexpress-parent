@@ -50,7 +50,7 @@ export function getConfigOptionsForType(type: Fs.BodyType): Fs.SelectOption[] {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DISABLED_MODE');
     }
     case 'ARTICLE_PAGE': {
-      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE');
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE' || o.value === 'DISABLED_MODE');
     }
     case 'PRINTOUT': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE');

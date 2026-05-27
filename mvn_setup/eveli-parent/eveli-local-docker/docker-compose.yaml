@@ -63,7 +63,7 @@ services:
       - dialob-backend
 
   dialob-service:
-    image: resys/dialob-boot:latest
+    image: resys/dialob-boot:2.4.2
     restart: no
     ports:
       - 8081:8081
@@ -93,7 +93,7 @@ services:
       - dialob-backend
 
   dialob-session:
-    image: resys/dialob-session-boot:latest
+    image: resys/dialob-session-boot:2.4.2
     restart: no
     ports:
       - 8082:8082

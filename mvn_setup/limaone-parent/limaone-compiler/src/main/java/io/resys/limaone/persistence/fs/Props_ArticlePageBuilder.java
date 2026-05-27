@@ -47,6 +47,7 @@ public class Props_ArticlePageBuilder {
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)
+        .content(articlePage.getContent())
         .articleId(articlePage.getArticle())
         .localeCode(articlePage.getLocale())
         .description(articlePage.getDescription())

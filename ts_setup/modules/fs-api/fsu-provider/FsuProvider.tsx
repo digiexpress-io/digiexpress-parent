@@ -50,6 +50,7 @@ export const FsuProvider: React.FC<FsuProviderProps> = (props) => {
         //const props = changes.getCurrentProps();
         const change = fsu.getChange(changeId);
         await props.pushChange(change);
+        setFsu(prev => prev.clearChange(changeId));
       }     
     };
   }, [fsu]);

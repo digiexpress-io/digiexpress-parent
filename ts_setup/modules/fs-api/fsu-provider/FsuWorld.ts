@@ -23,7 +23,7 @@ export class FsuWorld {
 
   public getChange(id: string): FsuChange {
     const change = this._changes[id];
-    if(change) {
+    if (change) {
       return change;
     }
     throw new Error("Change not created!");
@@ -32,7 +32,7 @@ export class FsuWorld {
   public withNewChange(init: () => FsuChange): [FsuWorld, string] {
     const created = init();
     const change = this._changes[created.id];
-    if(change) {
+    if (change) {
       throw new Error("Change already created!");
     }
     const changes = { ...this._changes };
@@ -45,6 +45,13 @@ export class FsuWorld {
     const next = callback(prev);
     const changes = { ...this._changes };
     changes[next.id] = next;
+    return new FsuWorld({ changes });
+  }
+
+  public clearChange(id: string): FsuWorld {
+    const changes = Object.fromEntries(
+      Object.entries(this._changes).filter(([key]) => key !== id)
+    );
     return new FsuWorld({ changes });
   }
 }

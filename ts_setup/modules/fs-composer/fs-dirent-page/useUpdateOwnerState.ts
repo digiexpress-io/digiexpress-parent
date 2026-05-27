@@ -13,7 +13,6 @@ type _ChangeStateProps = {
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
   disabledMode: boolean;
-  isExpanded: boolean;
 }
 
 class _ChangeState implements FsuChange {
@@ -29,7 +28,6 @@ class _ChangeState implements FsuChange {
   get locale() { return this._current.locale; }
   get content() { return this._current.content; }
   get description() { return this._current.description; }
-  get isExpanded() { return this._current.isExpanded; }
 
   get configOptions() { return this._current.configOptions; }
   get bodyType() { return this._origin.bodyType; }
@@ -55,9 +53,6 @@ class _ChangeState implements FsuChange {
     return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
   }
 
-  withIsExpanded(isExpanded: boolean): _ChangeState {
-    return new _ChangeState({ ...this._current, isExpanded }, this._origin);
-  }
 }
 
 
@@ -74,6 +69,8 @@ export interface UpdateOwnerState {
   isChanged: boolean;
   isExpanded: boolean;
   onChangeLocale: (value: string) => void;
+  onChangeContent: (value: string) => void;
+  onBlurContent: () => void;
   onChangeDescription: (value: string) => void;
   onBlurDescription: () => void;
   onChangeConfigOptions: (value: string[]) => void;
@@ -83,7 +80,7 @@ export interface UpdateOwnerState {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { getDirent, getArticleName, selectOptions, getConfigOptionsForType, fetchDirentBody } = useFsDirent();
+  const { getDirent, getArticleName, selectOptions, getConfigOptionsForType } = useFsDirent();
   const { withNewChange, withChange } = useFsu();
 
   const dirent = getDirent(props.direntId)!;
@@ -98,13 +95,15 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     configOptions: (pageProps.configOptions ?? []) as Fs.ConfigOption[],
     devMode: (pageProps.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (pageProps.configOptions ?? []).includes('DISABLED_MODE'),
-    isExpanded: false,
   }));
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
   // local state to store all text inputs before saving
+  const [contentDisplay, setContentDisplay] = React.useState(pageProps.content ?? '');
+  const contentDebounceRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const [descriptionDisplay, setDescriptionDisplay] = React.useState(pageProps.description ?? '');
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   const articleName = getArticleName(pageProps.articleId) ?? '';
   const usedLocaleIds = Object.values(selectOptions.direntProps)
@@ -115,16 +114,25 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   );
   const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('ARTICLE_PAGE');
 
-  React.useEffect(() => {
-    fetchDirentBody(props.direntId, 'ARTICLE_PAGE')
-      .then(body => {
-        const c = (body as Fs.ArticlePageBody).content;
-        setState(prev => prev.withContent(c));
-      });
-  }, [props.direntId]);
-
   function onChangeLocale(value: string) {
     setState(prev => prev.withLocale(value));
+  }
+
+  function onChangeContent(value: string) {
+    setContentDisplay(value);
+    if (contentDebounceRef.current) {
+      clearTimeout(contentDebounceRef.current);
+    }
+    contentDebounceRef.current = setTimeout(() => {
+      setState(prev => prev.withContent(value));
+    }, 300);
+  }
+
+  function onBlurContent() {
+    if (contentDebounceRef.current) {
+      clearTimeout(contentDebounceRef.current)
+    };
+    setState(prev => prev.withContent(contentDisplay));
   }
 
   function onChangeDescription(value: string) {
@@ -140,23 +148,25 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onToggleExpanded() {
-    setState(prev => prev.withIsExpanded(!prev.isExpanded));
+    setIsExpanded(prev => !prev);
   }
 
   return ({
     isDarkMode,
     dirent,
     id: state.id,
-    content: state.content,
+    content: contentDisplay,
     locale: state.locale,
     description: descriptionDisplay,
     articleName,
     configOptions: state.configOptions,
     availableConfigOptions,
     localeOptions,
-    isChanged: state.isChanged || descriptionDisplay !== state.description,
-    isExpanded: state.isExpanded,
+    isChanged: state.isChanged || descriptionDisplay !== state.description || contentDisplay !== state.content,
+    isExpanded,
     onChangeLocale,
+    onChangeContent,
+    onBlurContent,
     onChangeDescription,
     onBlurDescription,
     onChangeConfigOptions,
