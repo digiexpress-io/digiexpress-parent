@@ -76,7 +76,7 @@ public class DecisionCST_1_Test {
     assertTrue(isCommand(commands, StatementType.SET_HIT_POLICY, "FIRST"));
     
     // Verify value set command
-    assertTrue(isCommandWithId(commands, StatementType.SET_VALUE_SET, "riskLevel", "low,medium,high"));
+    assertTrue(isCommandWithId(commands, StatementType.SET_VALUE_SET, "2", "low,medium,high"));
     
     // Verify header commands
     assertTrue(isCommandWithValue(commands, StatementType.SET_HEADER_REF, "age"), () -> "Known commands: " + join(null, commands));

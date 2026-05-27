@@ -65,25 +65,31 @@ public class DecisionCSTToCommands {
           .build());
     }
     
-    // Add value sets
-    for (YamlValueSet valueSet : parseTree.getValueSetNodes().values()) {
-      final String valueSetDefinition = String.join(",", valueSet.getValues());
-      commands.add(ImmutableDecisionStatement.builder()
-          .type(StatementType.SET_VALUE_SET)
-          .id(valueSet.getName())
-          .value(valueSetDefinition)
-          .build());
-    }
-    
     // Process table if present
     final YamlTable table = parseTree.getTable();
     if (table != null) {
       convertTable(table, commands);
     }
     
+    // Add value sets
+    for (YamlValueSet valueSet : parseTree.getValueSetNodes().values()) {
+      final String valueSetDefinition = String.join(",", valueSet.getValues());
+      commands.add(ImmutableDecisionStatement.builder()
+          .type(StatementType.SET_VALUE_SET)
+          .id(findHeaderIdByName(valueSet.getName(), commands))
+          .value(valueSetDefinition)
+          .build());
+    }
+    
     return commands;
   }
   
+  private String findHeaderIdByName(String name, List<DecisionStatement> commands) {
+    return commands.stream()
+    .filter(c->DecisionTable.StatementType.SET_HEADER_REF.equals(c.getType()) && name.equals(c.getValue()))
+    .map(c->c.getId()).findFirst().orElseThrow(()->new NullPointerException("Header not found by name " + name));
+  }
+
   private void convertTable(YamlTable table, List<DecisionStatement> commands) {
     // Add headers in order (input headers first, then output headers)
     final var headers = new ArrayList<Tuple2<String, YamlTableHeader>>();
