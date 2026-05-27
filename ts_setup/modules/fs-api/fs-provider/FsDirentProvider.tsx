@@ -86,9 +86,9 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       const name = dirents.getDirent(change.id)?.name ?? change.id;
       const type = change.bodyType.toLowerCase().replace(/_/g, ' ');
       enqueueSnackbar(intl.formatMessage({ id: 'fs.snackbar.saveSuccess' }, { name, type }), { variant: 'success' });
-      props.persistenceUnit.fetchDirents()
-        .then(dirents => new FsWorld({ dirents }))
-        .then(setDirents);
+
+      const updated = await props.persistenceUnit.fetchDirents();
+      setDirents(new FsWorld({ dirents: updated }));
     } catch (error: any) {
       enqueueSnackbar(intl.formatMessage({ id: 'fs.snackbar.saveFailed' }, { cause: error?.message ?? 'N/A' }), { variant: 'error' });
     }

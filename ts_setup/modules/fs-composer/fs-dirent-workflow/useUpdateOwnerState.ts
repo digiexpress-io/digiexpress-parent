@@ -46,8 +46,8 @@ class _ChangeState implements FsuChange {
         formName: c.formName || null,
         formTag: c.formTag || null,
         flowName: c.flowName || null,
-        startDate: c.validityStart || null,
-        endDate: c.validityEnd || null,
+        startDate: c.validityStart || undefined,
+        endDate: c.validityEnd || undefined,
         articles: c.articles,
         labels: Object.entries(c.intlValues).map(([locale, labelValue]) => ({ locale, labelValue })),
         tagLabels: c.tagLabels,
@@ -136,15 +136,13 @@ export interface UpdateOwnerState {
   onChangeDialobFormName: (value: string) => void;
   onChangeDialobFormTag: (value: string) => void;
   onChangeFlowName: (value: string) => void;
-  onChangeValidityStart: (value: string) => void;
-  onChangeValidityEnd: (value: string) => void;
+  onChangeValidityStart: (date: Date | undefined) => void;
+  onChangeValidityEnd: (date: Date | undefined) => void;
   onChangeArticles: (value: string[]) => void;
   onChangeConfigOptions: (value: string[]) => void;
   onChangeIntlValues: (locale: string, value: string) => void;
   onChangeLabels: (value: string[]) => void;
   onBlurName: () => void;
-  onBlurValidityStart: () => void;
-  onBlurValidityEnd: () => void;
   onToggleExpanded: () => void;
   onCancel: () => void;
 }
@@ -210,12 +208,16 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withFlowName(value));
   }
 
-  function onChangeValidityStart(value: string) {
-    setFields(prev => ({ ...prev, validityStart: value }));
+  function onChangeValidityStart(date: Date | undefined) {
+    const iso = date ? date.toISOString() : '';
+    setFields(prev => ({ ...prev, validityStart: iso }));
+    setState(prev => prev.withValidityStart(iso));
   }
 
-  function onChangeValidityEnd(value: string) {
-    setFields(prev => ({ ...prev, validityEnd: value }));
+  function onChangeValidityEnd(date: Date | undefined) {
+    const iso = date ? date.toISOString() : '';
+    setFields(prev => ({ ...prev, validityEnd: iso }));
+    setState(prev => prev.withValidityEnd(iso));
   }
 
   function onChangeArticles(value: string[]) {
@@ -243,14 +245,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withValue(fields.name));
   }
 
-  function onBlurValidityStart() {
-    setState(prev => prev.withValidityStart(fields.validityStart));
-  }
-
-  function onBlurValidityEnd() {
-    setState(prev => prev.withValidityEnd(fields.validityEnd));
-  }
-
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
@@ -271,10 +265,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     cancel(props.direntId);
   }
 
-  const changes = state.isChanged
-    || fields.name !== state.value
-    || fields.validityStart !== state.validityStart
-    || fields.validityEnd !== state.validityEnd;
+  const changes = state.isChanged || fields.name !== state.value;
 
   return ({
     isDarkMode,
@@ -304,8 +295,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeLabels,
     onChangeIntlValues,
     onBlurName,
-    onBlurValidityStart,
-    onBlurValidityEnd,
     onToggleExpanded,
     onCancel,
   });

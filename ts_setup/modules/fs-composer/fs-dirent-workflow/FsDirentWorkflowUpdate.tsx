@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Divider, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { DatePicker } from '@dxs-ts/xui-datetime';
 import { useFsDirent, useFsu } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
@@ -70,20 +71,10 @@ export const FsDirentWorkflowUpdate: React.FC<FsDirentWorkflowUpdateProps> = (pr
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityStartField.label' })}</Typography>
-            <FsDirentTextField
-              value={ownerState.validityStart}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.service.validityStartField.placeholder' })}
-              onChange={ownerState.onChangeValidityStart}
-              onBlur={ownerState.onBlurValidityStart}
-            />
+            <DatePicker value={ownerState.validityStart ? new Date(ownerState.validityStart) : null} onChange={(d) => ownerState.onChangeValidityStart(d ?? undefined)} fullWidth size='small' />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityEndField.label' })}</Typography>
-            <FsDirentTextField
-              value={ownerState.validityEnd}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.service.validityEndField.placeholder' })}
-              onChange={ownerState.onChangeValidityEnd}
-              onBlur={ownerState.onBlurValidityEnd}
-            />
+            <DatePicker value={ownerState.validityEnd ? new Date(ownerState.validityEnd) : null} onChange={(d) => ownerState.onChangeValidityEnd(d ?? undefined)} fullWidth size='small' />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
             <FsDirentTextFieldAutocomplete options={selectOptions.labels} value={ownerState.tagLabels} onChange={ownerState.onChangeLabels} placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })} />

@@ -1524,6 +1524,7 @@
         "js-file-download",
         "@monaco-editor/react",
         "@uiw/react-md-editor",
+        "@dxs-ts/xui-datetime",
         "@mui/icons-material",
         "yaml",
         "react-markdown",
@@ -1546,9 +1547,12 @@
       ],
       "actualInternalDependencies": [
         "@dxs-ts/fs-api",
-        "@dxs-ts/fs-nav"
+        "@dxs-ts/fs-nav",
+        "@dxs-ts/xui-datetime"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "@dxs-ts/xui-datetime"
+      ],
       "unusedDependencies": [
         "@dxs-ts/eveli-primitives"
       ]
@@ -4764,6 +4768,6 @@
       ]
     }
   },
-  "checksum": "97b6b169a2856be855138003f02b523c0a899c8f434e6c0d1d80febb82f67d5d",
-  "generatedAt": "2026-05-22T13:45:32.556Z"
+  "checksum": "80559f56339c844226f5b0f28fad44c8901c1a840f49b28c408457b8b5cdbff6",
+  "generatedAt": "2026-05-27T10:56:07.648Z"
 }
