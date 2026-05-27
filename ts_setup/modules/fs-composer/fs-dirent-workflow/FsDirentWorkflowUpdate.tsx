@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Divider, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsDirent } from '@dxs-ts/fs-api';
+import { useFsDirent, useFsu } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
@@ -9,6 +9,7 @@ import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
+import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { FsDirentWorkflowUpdateProps } from './FsDirentWorkflowProps';
 import { useUtilityClasses, FsDirentWorkflowRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
@@ -19,6 +20,7 @@ export const FsDirentWorkflowUpdate: React.FC<FsDirentWorkflowUpdateProps> = (pr
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
   const { selectOptions, getConfigOptionsForType, getArticleName } = useFsDirent();
+  const { push } = useFsu();
   const dialobForms = selectOptions.dialobs;
   const flows = selectOptions.flows;
   const articles = selectOptions.articles.map(item => ({ value: item.value, label: getArticleName(item.value) ?? item.label }));
@@ -35,6 +37,7 @@ export const FsDirentWorkflowUpdate: React.FC<FsDirentWorkflowUpdateProps> = (pr
           value={ownerState.name}
           placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })}
           onChange={ownerState.onChangeName}
+          onBlur={ownerState.onBlurName}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobFormField.label' })}</Typography>
@@ -71,6 +74,7 @@ export const FsDirentWorkflowUpdate: React.FC<FsDirentWorkflowUpdateProps> = (pr
               value={ownerState.validityStart}
               placeholder={intl.formatMessage({ id: 'fs.dirent.service.validityStartField.placeholder' })}
               onChange={ownerState.onChangeValidityStart}
+              onBlur={ownerState.onBlurValidityStart}
             />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityEndField.label' })}</Typography>
@@ -78,7 +82,11 @@ export const FsDirentWorkflowUpdate: React.FC<FsDirentWorkflowUpdateProps> = (pr
               value={ownerState.validityEnd}
               placeholder={intl.formatMessage({ id: 'fs.dirent.service.validityEndField.placeholder' })}
               onChange={ownerState.onChangeValidityEnd}
+              onBlur={ownerState.onBlurValidityEnd}
             />
+
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
+            <FsDirentTextFieldAutocomplete options={selectOptions.labels} value={ownerState.tagLabels} onChange={ownerState.onChangeLabels} placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.articlesField.label' })}</Typography>
             <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
@@ -90,8 +98,8 @@ export const FsDirentWorkflowUpdate: React.FC<FsDirentWorkflowUpdateProps> = (pr
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel />
-          <FsDirentButtonSave />
+          <FsDirentButtonCancel onClick={ownerState.onCancel} />
+          <FsDirentButtonSave onClick={() => push(ownerState.id)} />
         </div>
 
       </div>

@@ -61,6 +61,8 @@ public interface ModifyArticleWorkflow {
     @Nullable Boolean getDevMode();
     @Nullable Boolean getAnon();
     @Nullable Boolean getAssignable();
+    @Nullable Boolean getAuthOnly();
+    @Nullable List<String> getTagLabels();
     
     @Nullable OffsetDateTime getStartDate();
     @Nullable OffsetDateTime getEndDate();

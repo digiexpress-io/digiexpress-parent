@@ -69,10 +69,16 @@ public interface ArticleWorkflow extends Body {
   @JsonInclude(JsonInclude.Include.NON_NULL) 
   @Nullable String getFormTag();
   
-  @JsonInclude(JsonInclude.Include.NON_NULL) 
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   @Nullable String getFlowName();
-  
-  
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Nullable Boolean getAuthOnly();
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Nullable List<String> getTagLabels();
+
+
   default BodyType getBodyType() {
     return BodyType.ARTICLE_WORKFLOW;
   }

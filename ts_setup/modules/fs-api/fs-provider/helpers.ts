@@ -42,7 +42,9 @@ export function getConfigOptionsForType(type: Fs.BodyType): Fs.SelectOption[] {
     case 'ARTICLE_LINK': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE' || o.value === 'DISABLED_MODE');
     }
-    case 'ARTICLE_WORKFLOW':
+    case 'ARTICLE_WORKFLOW': {
+      return ALL_CONFIG_OPTIONS
+    }
     case 'ARTICLE': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE' || o.value === 'AUTH_ONLY_MODE');
     }

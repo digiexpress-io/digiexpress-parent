@@ -53,12 +53,12 @@ export const FsDirentDialobUpdate: React.FC<FsDirentDialobUpdateProps> = (props)
               multiline minRows={2} maxRows={5}
             />
 
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.dialob.labelsField.label' })}</Typography>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
             <FsDirentTextFieldAutocomplete
               options={selectOptions.labels}
               value={labels}
               onChange={setLabels}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.dialob.labelsField.placeholder' })}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })}
             />
           </div>
         </Collapse>

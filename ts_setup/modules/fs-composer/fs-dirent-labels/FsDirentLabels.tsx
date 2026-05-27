@@ -19,7 +19,7 @@ export const FsDirentLabels: React.FC<FsDirentLabelsProps> = (props) => {
         maxRows={5}
         value={labels}
         onChange={(e) => setLabels(e.target.value)}
-        placeholder={intl.formatMessage({ id: 'fs.direntLabels.labelsField.placeholder' })}
+        placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })}
         size='small'
       />
     </FsDirentLabelsRoot>

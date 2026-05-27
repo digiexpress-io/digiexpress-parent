@@ -42,6 +42,9 @@ function hook(props: {}) {
       if (props.bodyType === 'LOCALE') {
         await baseline(`locales/${props.id}`, props.changes);
       }
+      if (props.bodyType === 'ARTICLE_WORKFLOW') {
+        await baseline(`article-workflows/${props.id}`, props.changes);
+      }
     }
   }
 }
