@@ -29,11 +29,12 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField 
+        <FsDirentTextField
           required
           value={ownerState.name}
           placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
           onChange={ownerState.onChangeName}
+          onBlur={ownerState.onBlurName}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.label' })}</Typography>
@@ -42,6 +43,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
           value={ownerState.orderNumber}
           placeholder={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.placeholder' })}
           onChange={ownerState.onChangeOrderNumber}
+          onBlur={ownerState.onBlurOrderNumber}
         />
 
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
@@ -56,6 +58,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
               value={ownerState.description}
               placeholder={intl.formatMessage({ id: 'fs.dirent.article.descriptionField.placeholder' })}
               onChange={ownerState.onChangeDescription}
+              onBlur={ownerState.onBlurDescription}
               multiline minRows={2} maxRows={5}
             />
 

@@ -7,6 +7,12 @@ import {
   FsuChange
 } from '@dxs-ts/fs-api';
 
+export interface TextFields {
+  description: string;
+  urlValue: string;
+  intlValues: Record<string, string>;
+}
+
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
@@ -30,6 +36,8 @@ export interface UpdateOwnerState {
   onChangeDescription: (value: string) => void;
   onToggleExpanded: () => void;
   onBlurDescription: () => void;
+  onBlurIntlValue: (locale: string) => void;
+  onBlurUrlValue: () => void;
 }
 
 type _ChangeStateProps = {
@@ -108,9 +116,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const dirent = getDirent(props.direntId);
   const linkProps = dirent?.type === 'ARTICLE_LINK' ? dirent.props as Fs.LinkProps : undefined;
 
-  // local state to store all text inputs before saving
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [descriptionDisplay, setDescriptionDisplay] = React.useState(dirent?.props?.description ?? '');
+  const [fields, setFields] = React.useState<TextFields>({
+    description: dirent?.props?.description ?? '',
+    urlValue: linkProps?.urlValue ?? '',
+    intlValues: linkProps?.intlValues ?? {},
+  });
   const locales = selectOptions.languages;
 
 
@@ -128,6 +139,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     description: dirent?.props?.description ?? ''
   }));
 
+  const isChangesPresent = state.isChanged
+    || fields.description !== state.description
+    || fields.urlValue !== state.urlValue
+    || Object.entries(fields.intlValues).some(([locale, val]) => val !== (state.intlValues[locale] ?? ''));
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
@@ -136,11 +151,15 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeUrlValue(value: string) {
-    setState(prev => prev.withUrlValue(value));
+    setFields(prev => ({ ...prev, urlValue: value }));
   }
 
   function onChangeIntlValue(locale: string, value: string) {
-    setState(prev => prev.withIntlValue(locale, value));
+    setFields(prev => ({ ...prev, intlValues: { ...prev.intlValues, [locale]: value } }));
+  }
+
+  function onChangeDescription(value: string) {
+    setFields(prev => ({ ...prev, description: value }));
   }
 
   function onChangeArticles(value: string[]) {
@@ -155,16 +174,20 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
 
-  function onChangeDescription(value: string) {
-    setDescriptionDisplay(value);
-  }
-
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
 
+  function onBlurUrlValue() {
+    setState(prev => prev.withUrlValue(fields.urlValue));
+  }
+
+  function onBlurIntlValue(locale: string) {
+    setState(prev => prev.withIntlValue(locale, fields.intlValues[locale] ?? ''));
+  }
+
   function onBlurDescription() {
-    setState(prev => prev.withDescription(descriptionDisplay));
+    setState(prev => prev.withDescription(fields.description));
   }
 
   return ({
@@ -172,18 +195,20 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     dirent,
     locales,
     id: state.id,
-    isChanged: state.isChanged || descriptionDisplay !== state.description,
+    isChanged: isChangesPresent,
     contentType: state.contentType,
-    urlValue: state.urlValue,
-    intlValues: state.intlValues,
+    urlValue: fields.urlValue,
+    intlValues: fields.intlValues,
     articles: state.articles,
     tagLabels: state.tagLabels,
     configOptions: state.configOptions,
-    description: descriptionDisplay,
+    description: fields.description,
     isExpanded,
     onChangeContentType,
     onChangeUrlValue,
+    onBlurUrlValue,
     onChangeIntlValue,
+    onBlurIntlValue,
     onChangeArticles,
     onChangeLabels,
     onChangeConfigOptions,

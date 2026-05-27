@@ -56,6 +56,11 @@ class _ChangeState implements FsuChange {
 }
 
 
+export interface TextFields {
+  content: string;
+  description: string;
+}
+
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
@@ -99,10 +104,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
-  // local state to store all text inputs before saving
-  const [contentDisplay, setContentDisplay] = React.useState(pageProps.content ?? '');
-  const contentDebounceRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [descriptionDisplay, setDescriptionDisplay] = React.useState(pageProps.description ?? '');
+  const [fields, setFields] = React.useState<TextFields>({
+    content: pageProps.content ?? '',
+    description: pageProps.description ?? '',
+  });
+  const contentDebounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const articleName = getArticleName(pageProps.articleId) ?? '';
@@ -119,7 +125,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeContent(value: string) {
-    setContentDisplay(value);
+    setFields(prev => ({ ...prev, content: value }));
     if (contentDebounceRef.current) {
       clearTimeout(contentDebounceRef.current);
     }
@@ -128,19 +134,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     }, 300);
   }
 
-  function onBlurContent() {
-    if (contentDebounceRef.current) {
-      clearTimeout(contentDebounceRef.current)
-    };
-    setState(prev => prev.withContent(contentDisplay));
-  }
-
   function onChangeDescription(value: string) {
-    setDescriptionDisplay(value);
-  }
-
-  function onBlurDescription() {
-    setState(prev => prev.withDescription(descriptionDisplay));
+    setFields(prev => ({ ...prev, description: value }));
   }
 
   function onChangeConfigOptions(value: string[]) {
@@ -151,25 +146,40 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setIsExpanded(prev => !prev);
   }
 
+  function onBlurContent() {
+    if (contentDebounceRef.current) {
+      clearTimeout(contentDebounceRef.current);
+    }
+    setState(prev => prev.withContent(fields.content));
+  }
+
+  function onBlurDescription() {
+    setState(prev => prev.withDescription(fields.description));
+  }
+
+  const changes = state.isChanged
+    || fields.description !== state.description
+    || fields.content !== state.content;
+
   return ({
     isDarkMode,
     dirent,
     id: state.id,
-    content: contentDisplay,
+    content: fields.content,
     locale: state.locale,
-    description: descriptionDisplay,
+    description: fields.description,
     articleName,
     configOptions: state.configOptions,
     availableConfigOptions,
     localeOptions,
-    isChanged: state.isChanged || descriptionDisplay !== state.description || contentDisplay !== state.content,
+    isChanged: changes,
     isExpanded,
     onChangeLocale,
     onChangeContent,
-    onBlurContent,
     onChangeDescription,
-    onBlurDescription,
     onChangeConfigOptions,
     onToggleExpanded,
+    onBlurContent,
+    onBlurDescription,
   });
 };

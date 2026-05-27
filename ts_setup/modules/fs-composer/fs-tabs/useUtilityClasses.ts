@@ -60,7 +60,7 @@ export const FsTabRoot = styled('div', {
       display: 'flex',
       alignItems: 'center',
       cursor: 'pointer',
-      paddingLeft: theme.spacing(0.5),
+      paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(0.5),
       minWidth: '10ch',
       maxWidth: '20ch',

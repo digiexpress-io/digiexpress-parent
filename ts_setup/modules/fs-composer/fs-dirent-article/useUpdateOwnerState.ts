@@ -8,6 +8,12 @@ import {
 } from '@dxs-ts/fs-api';
 
 
+export interface TextFields {
+  name: string;
+  orderNumber: string;
+  description: string;
+}
+
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
@@ -26,6 +32,9 @@ export interface UpdateOwnerState {
   onChangeDescription: (value: string) => void;
   onChangeLabels: (value: string[]) => void;
   onChangeComments: (value: string) => void;
+  onBlurOrderNumber: () => void;
+  onBlurDescription: () => void;
+  onBlurName: () => void;
   onToggleExpanded: () => void;
 }
 
@@ -111,21 +120,25 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
-  // UI-only local state — not sent to backend
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [comments, setComments] = React.useState((dirent?.props?.comments ?? []).map(c => c.comment).join('\n'));
+  const [fields, setFields] = React.useState<TextFields>({
+    name: getArticleName(props.direntId) ?? '',
+    orderNumber: String(articleProps?.orderNumber ?? 0),
+    description: articleProps?.description ?? '',
+  });
 
   function onChangeName(value: string) {
-    setState(prev => prev.withName(value));
+    setFields(prev => ({ ...prev, name: value }));
   }
   function onChangeOrderNumber(value: string) {
-    setState(prev => prev.withOrder(value));
+    setFields(prev => ({ ...prev, orderNumber: value }));
+  }
+  function onChangeDescription(value: string) {
+    setFields(prev => ({ ...prev, description: value }));
   }
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
-  }
-  function onChangeDescription(value: string) {
-    setState(prev => prev.withDescription(value));
   }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
@@ -137,22 +150,40 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setIsExpanded(prev => !prev);
   }
 
+  function onBlurName() {
+    setState(prev => prev.withName(fields.name));
+  }
+  function onBlurOrderNumber() {
+    setState(prev => prev.withOrder(fields.orderNumber));
+  }
+  function onBlurDescription() {
+    setState(prev => prev.withDescription(fields.description));
+  }
+
+  const changes = state.isChanged
+    || fields.name !== state.name
+    || fields.orderNumber !== state.orderNumber
+    || fields.description !== state.description;
+
   return ({
     isDarkMode,
     dirent,
     id: state.id,
-    isChanged: state.isChanged,
-    name: state.name,
-    orderNumber: state.orderNumber,
-    description: state.description,
+    isChanged: changes,
+    name: fields.name,
+    orderNumber: fields.orderNumber,
+    description: fields.description,
     labels: state.labels,
     configOptions: state.configOptions,
     comments,
     isExpanded,
     onChangeName,
+    onBlurName,
     onChangeOrderNumber,
+    onBlurOrderNumber,
     onChangeConfigOptions,
     onChangeDescription,
+    onBlurDescription,
     onChangeLabels,
     onChangeComments,
     onToggleExpanded,
