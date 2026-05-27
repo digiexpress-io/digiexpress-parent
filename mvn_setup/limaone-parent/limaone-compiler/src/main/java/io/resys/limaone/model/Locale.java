@@ -36,9 +36,12 @@ import jakarta.annotation.Nullable;
 public interface Locale extends Body {
   String getValue();
   Boolean getEnabled();
-  
-  @JsonInclude(JsonInclude.Include.NON_NULL) 
-  @Nullable Boolean getDisabled();
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Nullable String getDescription();
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Nullable Boolean getDisabledMode();
   
   
   default BodyType getBodyType() {

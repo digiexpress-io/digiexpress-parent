@@ -82,7 +82,7 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel />
+          <FsDirentButtonCancel onClick={ownerState.onCancel} />
           <FsDirentButtonSave onClick={() => push(ownerState.id)} />
         </div>
 

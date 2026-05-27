@@ -36,6 +36,7 @@ export interface UpdateOwnerState {
   onBlurDescription: () => void;
   onBlurName: () => void;
   onToggleExpanded: () => void;
+  onCancel: () => void;
 }
 
 type _ChangeStateProps = {
@@ -101,7 +102,7 @@ class _ChangeState implements FsuChange {
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, getArticleName } = useFsDirent();
-  const { withNewChange, withChange } = useFsu();
+  const { withNewChange, withChange, cancel } = useFsu();
 
   const dirent = getDirent(props.direntId);
   const articleProps = dirent?.type === 'ARTICLE' ? dirent.props as Fs.ArticleProps : undefined;
@@ -160,6 +161,15 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withDescription(fields.description));
   }
 
+  function onCancel() {
+    setFields({
+      name: getArticleName(props.direntId) ?? '',
+      orderNumber: String(articleProps?.orderNumber ?? 0),
+      description: articleProps?.description ?? '',
+    });
+    cancel(props.direntId);
+  }
+
   const changes = state.isChanged
     || fields.name !== state.name
     || fields.orderNumber !== state.orderNumber
@@ -187,5 +197,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeLabels,
     onChangeComments,
     onToggleExpanded,
+    onCancel,
   });
 };

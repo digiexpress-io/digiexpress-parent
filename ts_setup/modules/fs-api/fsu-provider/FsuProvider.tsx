@@ -12,6 +12,8 @@ export interface FsuContextType {
 
   // pushes to backend
   push(changeId: string): Promise<void>;
+  // discards local changes without saving
+  cancel(changeId: string): void;
 }
 
 const FsuContext = React.createContext<FsuContextType | undefined>(undefined);
@@ -51,7 +53,10 @@ export const FsuProvider: React.FC<FsuProviderProps> = (props) => {
         const change = fsu.getChange(changeId);
         await props.pushChange(change);
         setFsu(prev => prev.clearChange(changeId));
-      }     
+      },
+      cancel: (changeId) => {
+        setFsu(prev => prev.clearChange(changeId));
+      }
     };
   }, [fsu]);
 

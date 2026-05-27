@@ -80,13 +80,14 @@ export interface UpdateOwnerState {
   onBlurDescription: () => void;
   onChangeConfigOptions: (value: string[]) => void;
   onToggleExpanded: () => void;
+  onCancel: () => void;
   content: string;
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, getArticleName, selectOptions, getConfigOptionsForType } = useFsDirent();
-  const { withNewChange, withChange } = useFsu();
+  const { withNewChange, withChange, cancel } = useFsu();
 
   const dirent = getDirent(props.direntId)!;
   const pageProps = dirent.props as Fs.PageProps;
@@ -157,6 +158,17 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withDescription(fields.description));
   }
 
+  function onCancel() {
+    if (contentDebounceRef.current) {
+      clearTimeout(contentDebounceRef.current);
+    }
+    setFields({
+      content: pageProps.content ?? '',
+      description: pageProps.description ?? '',
+    });
+    cancel(props.direntId);
+  }
+
   const changes = state.isChanged
     || fields.description !== state.description
     || fields.content !== state.content;
@@ -181,5 +193,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onToggleExpanded,
     onBlurContent,
     onBlurDescription,
+    onCancel,
   });
 };

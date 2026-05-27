@@ -38,6 +38,7 @@ export interface UpdateOwnerState {
   onBlurDescription: () => void;
   onBlurIntlValue: (locale: string) => void;
   onBlurUrlValue: () => void;
+  onCancel: () => void;
 }
 
 type _ChangeStateProps = {
@@ -112,7 +113,7 @@ class _ChangeState implements FsuChange {
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, selectOptions } = useFsDirent();
-  const { withNewChange, withChange } = useFsu();
+  const { withNewChange, withChange, cancel } = useFsu();
   const dirent = getDirent(props.direntId);
   const linkProps = dirent?.type === 'ARTICLE_LINK' ? dirent.props as Fs.LinkProps : undefined;
 
@@ -190,6 +191,15 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withDescription(fields.description));
   }
 
+  function onCancel() {
+    setFields({
+      description: dirent?.props?.description ?? '',
+      urlValue: linkProps?.urlValue ?? '',
+      intlValues: linkProps?.intlValues ?? {},
+    });
+    cancel(props.direntId);
+  }
+
   return ({
     isDarkMode,
     dirent,
@@ -215,5 +225,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeDescription,
     onBlurDescription,
     onToggleExpanded,
+    onCancel,
   });
 };

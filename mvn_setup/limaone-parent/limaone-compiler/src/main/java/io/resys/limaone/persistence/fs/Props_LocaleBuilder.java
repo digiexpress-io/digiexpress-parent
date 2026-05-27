@@ -34,13 +34,14 @@ public class Props_LocaleBuilder {
   public LocaleProps build() {
     final Locale locale = currentState.getBodyOfType(node);
     final var builder = ImmutableLocaleProps.builder();
-    
-    if(Boolean.TRUE.equals(locale.getDisabled())) {
+
+    if (Boolean.TRUE.equals(locale.getDisabledMode())) {
       builder.addConfigOptions(ConfigOption.DISABLED_MODE);
     }
-    
-    return ImmutableLocaleProps.builder()
+
+    return builder
         .localeCode(locale.getValue())
+        .description(locale.getDescription())
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)

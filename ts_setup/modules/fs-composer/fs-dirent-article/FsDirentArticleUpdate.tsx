@@ -85,7 +85,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel />
+          <FsDirentButtonCancel onClick={ownerState.onCancel} />
           <FsDirentButtonSave onClick={() => push(ownerState.id)} />
         </div>
 

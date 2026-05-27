@@ -39,6 +39,9 @@ function hook(props: {}) {
       if (props.bodyType === 'ARTICLE_PAGE') {
         await baseline(`article-page/${props.id}`, props.changes);
       }
+      if (props.bodyType === 'LOCALE') {
+        await baseline(`locales/${props.id}`, props.changes);
+      }
     }
   }
 }

@@ -94,6 +94,8 @@ public class ModifyLocaleImpl extends AuthoringTemplate<ModifyLocaleImpl, Model<
       .from(start.getBody())
       .value(props.getValue())
       .enabled(props.getEnabled())
+      .disabledMode(props.getDisabledMode())
+      .description(props.getDescription())
       .build();
   }
 }
