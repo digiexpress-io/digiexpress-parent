@@ -87,6 +87,7 @@ export const FsDirentPageRoot = styled('div', {
 
   [`& .${MUI_NAME}-label`]: {
     ...theme.typography.subtitle2,
+    fontWeight: 500,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
   },
 
