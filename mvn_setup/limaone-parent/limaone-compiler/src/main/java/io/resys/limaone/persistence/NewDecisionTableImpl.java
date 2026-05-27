@@ -88,8 +88,12 @@ table: |
     .replace("{desc}", Optional.ofNullable(props.getDesc()).orElse("my dt"));
     
     final var decision = config.getEnvir().getAstParser().parseDecisionTable().syntax(syntax).parse();
+    final var nodes = config.getEnvir().getAstParser().parseDecisionTable().syntax(syntax).parseNodes();
+    
+    
     return ImmutableDecisionTable.builder()
         .name(decision.getName())
+        .nodes(nodes)
         .build();
   }
 }

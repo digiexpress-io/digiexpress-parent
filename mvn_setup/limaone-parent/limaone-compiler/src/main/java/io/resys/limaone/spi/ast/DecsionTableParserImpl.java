@@ -22,9 +22,11 @@ package io.resys.limaone.spi.ast;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.apache.commons.csv.CSVFormat;
@@ -62,6 +64,7 @@ public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
   private final AST_ParserProps props;
   private final CommandMapper builder = new CommandMapper();
   private final List<ModelError> errors = new ArrayList<>();
+  
   
   private List<DecisionStatement> src;
 
@@ -235,5 +238,10 @@ public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
     } catch(Exception e) {
       throw new AST_Exception(command, e.getMessage(), e);
     }
+  }
+
+  @Override
+  public List<DecisionStatement> parseNodes() {
+    return Collections.unmodifiableList(Optional.ofNullable(this.src).orElse(Collections.emptyList()));
   }
 }

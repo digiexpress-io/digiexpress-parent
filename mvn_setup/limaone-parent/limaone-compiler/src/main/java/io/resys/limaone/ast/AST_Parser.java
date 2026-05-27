@@ -76,6 +76,9 @@ public interface AST_Parser {
   interface DecsionTableParser {
     DecsionTableParser nodes(List<DecisionStatement> nodes);
     DecsionTableParser syntax(String syntax);
+     
+    // just extract nodes from what the DT would be built
+    List<DecisionStatement> parseNodes();
     DecisionTable_AST parse();
   }
   
