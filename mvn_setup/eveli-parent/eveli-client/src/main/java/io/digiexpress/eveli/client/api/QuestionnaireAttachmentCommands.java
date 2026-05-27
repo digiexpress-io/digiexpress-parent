@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.api;
  */
 
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
+import io.digiexpress.eveli.client.api.PdfClient.PdfRequestFields;
 
 public interface QuestionnaireAttachmentCommands {
   // only used in WRENCH FLOW
@@ -28,8 +29,22 @@ public interface QuestionnaireAttachmentCommands {
 
   interface QuestionnaireAttachmentBuilder {
     QuestionnaireAttachmentBuilder processId(String processId);
+    QuestionnaireAttachmentBuilder docType(String docType);
+    QuestionnaireAttachmentBuilder docCategory(String docCategory);
     QuestionnaireAttachmentBuilder taskId(String taskId);
     QuestionnaireAttachmentBuilder questionnaireId(String questionnaireId);
+    QuestionnaireAttachmentBuilder fields(PdfRequestFields... inputFields);
+    /**
+     * 
+     * @param pattern - filename pattern with following variables recognized:
+     * <li> $TASK_REF -task reference
+     * <li> $FORM_NAME - name of form
+     * <li> $CLIENT_NAME - name of client
+     * Default pattern if not specified is: $FORM_NAME-$TASK_REF.pdf
+     * Spaces in resulting filename (e.g. from client name) are replaced with underscores.
+     * @return
+     */
+    QuestionnaireAttachmentBuilder attachmentPattern(String pattern);
     Attachment build();
   }
 }
