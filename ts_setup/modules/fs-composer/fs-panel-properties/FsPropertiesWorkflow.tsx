@@ -1,8 +1,16 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { DateTime } from 'luxon';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
+
+function formatFiDate(iso: string | undefined): string {
+  if (!iso) {
+    return '';
+  }
+  return DateTime.fromISO(iso).setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
+}
 
 
 export interface FsPropertiesWorkflowProps {
@@ -27,7 +35,7 @@ export const FsPropertiesWorkflow: React.FC<FsPropertiesWorkflowProps> = ({ dire
     <>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.serviceName' })}</Typography>
-        <Typography className={classes.propertyValue}>{workflowProps?.workflowName}</Typography>
+        <Typography className={classes.propertyValue}>{workflowProps?.serviceName}</Typography>
       </div>
 
       <div className={classes.propertyRow}>
@@ -39,12 +47,12 @@ export const FsPropertiesWorkflow: React.FC<FsPropertiesWorkflowProps> = ({ dire
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.serviceValidityStart' })}</Typography>
-        <Typography className={classes.propertyValue}>{workflowProps?.validityStart}</Typography>
+        <Typography className={classes.propertyValue}>{formatFiDate(workflowProps?.validityStart)}</Typography>
       </div>
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.serviceValidityEnd' })}</Typography>
-        <Typography className={classes.propertyValue}>{workflowProps?.validityEnd}</Typography>
+        <Typography className={classes.propertyValue}>{formatFiDate(workflowProps?.validityEnd)}</Typography>
       </div>
 
       <div className={classes.propertyRow}>

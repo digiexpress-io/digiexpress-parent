@@ -45,10 +45,10 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
 
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.descriptionField.label' })}</Typography>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
             <FsDirentTextField
               value={ownerState.description}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.page.descriptionField.placeholder' })}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
               onChange={ownerState.onChangeDescription}
               onBlur={ownerState.onBlurDescription}
               multiline

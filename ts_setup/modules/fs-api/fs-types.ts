@@ -268,7 +268,7 @@ export declare namespace Fs {
 
   export interface WorkflowProps extends PropsBase {
     type: 'ARTICLE_WORKFLOW';
-    workflowName: string;
+    serviceName: string;
     dialobFormName: string;
     dialobFormTag: string;
     flowName: string;

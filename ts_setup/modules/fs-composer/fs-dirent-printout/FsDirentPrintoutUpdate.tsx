@@ -40,10 +40,10 @@ export const FsDirentPrintoutUpdate: React.FC<FsDirentPrintoutUpdateProps> = (pr
           onChange={ownerState.onChangeOrchestratorName}
         />
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.descriptionField.label' })}</Typography>
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
         <FsDirentTextField
           value={ownerState.description}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.printout.descriptionField.placeholder' })}
+          placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
           onChange={ownerState.onChangeDescription}
           multiline minRows={2} maxRows={5}
         />

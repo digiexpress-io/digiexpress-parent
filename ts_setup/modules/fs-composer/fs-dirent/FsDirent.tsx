@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFsNav } from '@dxs-ts/fs-nav';
-import { Box, Collapse, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
+import { Box, Collapse, IconButton, List, ListItem, ListItemIcon, Tooltip } from '@mui/material';
 
 import { useUtilityClasses, FsDirentRoot } from './useUtilityClasses';
 import { FsIcons, FsIcon } from '../fs-theme';
@@ -52,11 +52,22 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
           </DirentDecorator>
         </ListItemIcon>
 
-        <FsDirentName dirent={ownerState.dirent}
-          isDarkTheme={ownerState.isDarkMode}
-          error={ownerState.showError ? true : false}
-          searchTerm={ownerState.searchTerm}
-        />
+        <Tooltip
+          title={ownerState.dirent.props?.description ?? ''}
+          arrow
+          enterDelay={700}
+          placement="top"
+          disableHoverListener={!ownerState.dirent.props?.description}
+          slotProps={{ popper: { modifiers: [{ name: 'offset', options: { offset: [0, -12] } }] } }}
+        >
+          <span>
+            <FsDirentName dirent={ownerState.dirent}
+              isDarkTheme={ownerState.isDarkMode}
+              error={ownerState.showError ? true : false}
+              searchTerm={ownerState.searchTerm}
+            />
+          </span>
+        </Tooltip>
         <ConfigOptionIcons ownerState={ownerState} />
       </Box>
     </FsDirentRoot>

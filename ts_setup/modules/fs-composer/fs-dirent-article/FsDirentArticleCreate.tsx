@@ -58,8 +58,8 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
 
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.descriptionField.label' })}</Typography>
-            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.article.descriptionField.placeholder' })}
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
+            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
               multiline minRows={2} maxRows={5}
             />
 

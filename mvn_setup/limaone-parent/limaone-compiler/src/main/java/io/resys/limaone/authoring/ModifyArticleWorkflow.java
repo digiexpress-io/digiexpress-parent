@@ -63,7 +63,8 @@ public interface ModifyArticleWorkflow {
     @Nullable Boolean getAssignable();
     @Nullable Boolean getAuthOnly();
     @Nullable List<String> getTagLabels();
-    
+    @Nullable String getDescription();
+
     @Nullable OffsetDateTime getStartDate();
     @Nullable OffsetDateTime getEndDate();
   }

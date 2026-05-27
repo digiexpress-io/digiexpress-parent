@@ -95,7 +95,8 @@ public class ModifyArticleWorkflowImpl extends AuthoringTemplate<ModifyArticleWo
       .formName(props.getFormName())
       .formTag(props.getFormTag())
       .formId(props.getFormId())
-      .flowName(props.getFlowName());
+      .flowName(props.getFlowName())
+      .description(props.getDescription());
     
     // Handle articles if provided
     if(props.getArticles() != null) {

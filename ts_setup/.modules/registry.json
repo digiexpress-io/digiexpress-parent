@@ -1529,7 +1529,8 @@
         "yaml",
         "react-markdown",
         "@xyflow/react",
-        "elkjs"
+        "elkjs",
+        "luxon"
       ],
       "actualExternalDependencies": [
         "react",
@@ -1543,7 +1544,8 @@
         "yaml",
         "react-markdown",
         "@xyflow/react",
-        "elkjs"
+        "elkjs",
+        "luxon"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/fs-api",
@@ -1551,7 +1553,8 @@
         "@dxs-ts/xui-datetime"
       ],
       "missingDependencies": [
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/xui-datetime",
+        "luxon"
       ],
       "unusedDependencies": [
         "@dxs-ts/eveli-primitives"
@@ -4768,6 +4771,6 @@
       ]
     }
   },
-  "checksum": "80559f56339c844226f5b0f28fad44c8901c1a840f49b28c408457b8b5cdbff6",
-  "generatedAt": "2026-05-27T10:56:07.648Z"
+  "checksum": "7505053d56b1f0d034088b94c1e7a34785ab8622e8d519798bd805d23765e9b9",
+  "generatedAt": "2026-05-27T11:48:51.124Z"
 }

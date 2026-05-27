@@ -29,8 +29,8 @@ export const FsDirentLocaleCreate: React.FC<FsDirentLocaleCreateProps> = () => {
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.label' })}</Typography>
         <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.placeholder' })} required value={localeCode} onChange={setLocaleCode} />
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.language.descriptionField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.language.descriptionField.placeholder' })}
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
+        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
           multiline minRows={2} maxRows={4}
         />
 

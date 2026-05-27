@@ -7,6 +7,7 @@ type _ChangeStateProps = {
   workflowId: string;
   bodyType: Fs.BodyType;
   value: string;
+  description: string;
   formName: string;
   formTag: string;
   flowName: string;
@@ -30,6 +31,7 @@ class _ChangeState implements FsuChange {
   get id() { return this._current.workflowId; }
   get bodyType() { return this._current.bodyType; }
   get value() { return this._current.value; }
+  get description() { return this._current.description; }
   get validityStart() { return this._current.validityStart; }
   get validityEnd() { return this._current.validityEnd; }
   get tagLabels() { return this._current.tagLabels; }
@@ -43,25 +45,30 @@ class _ChangeState implements FsuChange {
       changes: {
         workflowId: c.workflowId,
         value: c.value,
-        formName: c.formName || null,
-        formTag: c.formTag || null,
-        flowName: c.flowName || null,
+        description: c.description || undefined,
+        formName: c.formName || undefined,
+        formTag: c.formTag || undefined,
+        flowName: c.flowName || undefined,
         startDate: c.validityStart || undefined,
         endDate: c.validityEnd || undefined,
         articles: c.articles,
         labels: Object.entries(c.intlValues).map(([locale, labelValue]) => ({ locale, labelValue })),
         tagLabels: c.tagLabels,
-        disabled: c.configOptions.includes('DISABLED_MODE') || null,
-        devMode: c.configOptions.includes('DEV_MODE') || null,
-        anon: c.configOptions.includes('ANONYMOUS_MODE') || null,
-        assignable: c.configOptions.includes('ASSIGNABLE_MODE') || null,
-        authOnly: c.configOptions.includes('AUTH_ONLY_MODE') || null,
+        disabled: c.configOptions.includes('DISABLED_MODE') || undefined,
+        devMode: c.configOptions.includes('DEV_MODE') || undefined,
+        anon: c.configOptions.includes('ANONYMOUS_MODE') || undefined,
+        assignable: c.configOptions.includes('ASSIGNABLE_MODE') || undefined,
+        authOnly: c.configOptions.includes('AUTH_ONLY_MODE') || undefined,
       }
     };
   }
 
   withValue(value: string): _ChangeState {
     return new _ChangeState({ ...this._current, value }, this._origin);
+  }
+
+  withDescription(description: string): _ChangeState {
+    return new _ChangeState({ ...this._current, description }, this._origin);
   }
 
   withFormName(formName: string): _ChangeState {
@@ -104,6 +111,7 @@ class _ChangeState implements FsuChange {
 
 export interface TextFields {
   name: string;
+  description: string;
   formName: string;
   formTag: string;
   flowName: string;
@@ -120,6 +128,7 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   id: string;
   name: string;
+  description: string;
   dialobFormName: string;
   dialobFormTag: string;
   flowName: string;
@@ -133,6 +142,7 @@ export interface UpdateOwnerState {
   isExpanded: boolean;
   isChanged: boolean;
   onChangeName: (value: string) => void;
+  onChangeDescription: (value: string) => void;
   onChangeDialobFormName: (value: string) => void;
   onChangeDialobFormTag: (value: string) => void;
   onChangeFlowName: (value: string) => void;
@@ -143,6 +153,7 @@ export interface UpdateOwnerState {
   onChangeIntlValues: (locale: string, value: string) => void;
   onChangeLabels: (value: string[]) => void;
   onBlurName: () => void;
+  onBlurDescription: () => void;
   onToggleExpanded: () => void;
   onCancel: () => void;
 }
@@ -159,6 +170,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     workflowId: props.direntId,
     bodyType: dirent.type,
     value: dirent.name ?? '',
+    description: workflowProps.description ?? '',
     formName: workflowProps.dialobFormName ?? '',
     formTag: workflowProps.dialobFormTag ?? '',
     flowName: workflowProps.flowName ?? '',
@@ -174,6 +186,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<TextFields>({
     name: dirent.name ?? '',
+    description: workflowProps.description ?? '',
     formName: workflowProps.dialobFormName ?? '',
     formTag: workflowProps.dialobFormTag ?? '',
     flowName: workflowProps.flowName ?? '',
@@ -191,6 +204,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   function onChangeName(value: string) {
     setFields(prev => ({ ...prev, name: value }));
+  }
+
+  function onChangeDescription(value: string) {
+    setFields(prev => ({ ...prev, description: value }));
   }
 
   function onChangeDialobFormName(value: string) {
@@ -245,6 +262,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withValue(fields.name));
   }
 
+  function onBlurDescription() {
+    setState(prev => prev.withDescription(fields.description));
+  }
+
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
@@ -252,6 +273,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onCancel() {
     setFields({
       name: dirent.name ?? '',
+      description: workflowProps.description ?? '',
       formName: workflowProps.dialobFormName ?? '',
       formTag: workflowProps.dialobFormTag ?? '',
       flowName: workflowProps.flowName ?? '',
@@ -265,13 +287,14 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     cancel(props.direntId);
   }
 
-  const changes = state.isChanged || fields.name !== state.value;
+  const changes = state.isChanged || fields.name !== state.value || fields.description !== state.description;
 
   return ({
     isDarkMode,
     dirent,
     id: state.id,
     name: fields.name,
+    description: fields.description,
     dialobFormName: fields.formName,
     dialobFormTag: fields.formTag,
     flowName: fields.flowName,
@@ -285,6 +308,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isExpanded,
     isChanged: changes,
     onChangeName,
+    onChangeDescription,
     onChangeDialobFormName,
     onChangeDialobFormTag,
     onChangeFlowName,
@@ -295,6 +319,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeLabels,
     onChangeIntlValues,
     onBlurName,
+    onBlurDescription,
     onToggleExpanded,
     onCancel,
   });

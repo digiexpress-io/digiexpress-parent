@@ -33,10 +33,10 @@ export const FsDirentLocaleUpdate: React.FC<FsDirentLocaleUpdateProps> = (props)
           disabled
         />
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.language.descriptionField.label' })}</Typography>
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
         <FsDirentTextField
           value={ownerState.description}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.language.descriptionField.placeholder' })}
+          placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
           onChange={ownerState.onChangeDescription}
           onBlur={ownerState.onBlurDescription}
           multiline minRows={2} maxRows={4}

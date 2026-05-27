@@ -70,6 +70,14 @@ export const FsDirentWorkflowUpdate: React.FC<FsDirentWorkflowUpdateProps> = (pr
 
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
+            <FsDirentTextField
+              value={ownerState.description}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
+              onChange={ownerState.onChangeDescription}
+              onBlur={ownerState.onBlurDescription}
+            />
+
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityStartField.label' })}</Typography>
             <DatePicker value={ownerState.validityStart ? new Date(ownerState.validityStart) : null} onChange={(d) => ownerState.onChangeValidityStart(d ?? undefined)} fullWidth size='small' />
 

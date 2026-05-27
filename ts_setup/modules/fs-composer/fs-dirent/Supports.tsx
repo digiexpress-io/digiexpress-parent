@@ -121,9 +121,8 @@ interface FsDirentNameProps {
 }
 
 export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
-  const { getDirent, getParentDirent, getExtension } = useFsDirent();
+  const { getParentDirent, getExtension } = useFsDirent();
   const classes = useUtilityClasses(props.isDarkTheme);
-  const description = getDirent(props.dirent.id)?.props?.description;
   const displayName = props.dirent.type === 'ARTICLE' ? (
     getParentDirent(props.dirent.id)?.name ?? props.dirent.name) : props.dirent.name;
   const extension = getExtension(props.dirent.type);
@@ -139,11 +138,6 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
       }}
     >
       <SearchResultHighlight text={fullDisplayName} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />
-      {description && (
-        <Typography component='span' variant='caption' sx={{ ml: 1, color: FsColors.dark.textMuted, fontStyle: 'italic' }}>
-          - "<SearchResultHighlight text={description} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />"
-        </Typography>
-      )}
     </Typography>
     }
     />

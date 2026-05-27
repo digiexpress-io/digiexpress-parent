@@ -78,6 +78,9 @@ public interface ArticleWorkflow extends Body {
   @JsonInclude(JsonInclude.Include.NON_NULL)
   @Nullable List<String> getTagLabels();
 
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Nullable String getDescription();
+
 
   default BodyType getBodyType() {
     return BodyType.ARTICLE_WORKFLOW;

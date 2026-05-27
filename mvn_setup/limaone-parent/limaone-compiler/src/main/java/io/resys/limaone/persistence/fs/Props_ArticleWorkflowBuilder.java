@@ -82,6 +82,7 @@ public class Props_ArticleWorkflowBuilder {
         .flowName(service.getFlowName())
         .validityStart(service.getStartDate() != null ? service.getStartDate().toString() : null)
         .validityEnd(service.getEndDate() != null ? service.getEndDate().toString() : null)
+        .description(service.getDescription())
         .labels(tagLabels)
         .build();
   }
