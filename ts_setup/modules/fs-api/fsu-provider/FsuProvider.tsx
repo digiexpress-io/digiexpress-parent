@@ -5,6 +5,7 @@ import { FsuWorld, FsuChange } from './FsuWorld';
 
 export interface FsuContextType {
 
+  allChanges: FsuChange[];
   getChange(id: string): FsuChange;
   isChange(id: string): boolean;
   withNewChange<T extends FsuChange>(id: string, init: () => T): T;
@@ -44,6 +45,7 @@ export const FsuProvider: React.FC<FsuProviderProps> = (props) => {
     }
 
     return {
+      allChanges: fsu.allChanges,
       withNewChange,
       withChange,
       getChange: (id) => fsu.getChange(id),

@@ -12,7 +12,7 @@ export const ContentPanelToolbar: React.FC<ContentPanelToolbarProps> = ({ ownerS
 
   const renderIcon = (button: PanelButton) => {
     const IconComponent = button.icon;
-    return <IconComponent color={button.type === 'save' ? 'error' : undefined} />;
+    return <IconComponent />;
   };
 
   return (

@@ -146,7 +146,7 @@ export const FsMainRoot = styled('div', {
       border: '1px solid transparent',
       '& .MuiSvgIcon-root': {
         fontSize: '1.2rem',
-        color: theme.palette.error.main
+        color: ownerState.unsavedCount > 0 ? theme.palette.error.main : (ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text),
       },
       '&:hover': {
         backgroundColor: ownerState.isDarkMode ? FsColors.dark.border + '20' : FsColors.light.surface

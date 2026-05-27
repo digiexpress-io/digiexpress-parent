@@ -17,6 +17,10 @@ export class FsuWorld {
     this._changes = props?.changes || {};
   }
 
+  get allChanges(): FsuChange[] {
+    return Object.values(this._changes);
+  }
+
   public isChange(id: string): boolean {
     return !!this._changes[id];
   }

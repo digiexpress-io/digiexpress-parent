@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFsDirent } from '@dxs-ts/fs-api';
+import { useFsDirent, useFsu } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { FsPanelChangesProps } from './FsPanelChangesProps';
 import { FsColors } from '../fs-theme';
@@ -10,23 +10,33 @@ export interface OwnerState {
   confirmOpen: boolean;
   setConfirmOpen: React.Dispatch<React.SetStateAction<boolean>>;
   getStatusColor: (status: string, isDarkMode: boolean) => string;
-  changes: { id: string; name: string; status: string }[];
+  changes: { id: string; name: string; fullPath: string; bodyType: string }[];
+  onDiscard: (id: string) => void;
 }
 
 export const useOwnerState = (_props: FsPanelChangesProps): OwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { dirents, getDirent } = useFsDirent();
+  const { getDirent } = useFsDirent();
+  const { allChanges, cancel } = useFsu();
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
-  const changes = dirents
-    .map(dirent => getDirent(dirent.id))
-    .filter(dirent => dirent && dirent.props && dirent.props?.changes.length > 0)
-    .map(dirent => {
-      const latest = dirent!.props!.changes[dirent!.props!.changes!.length - 1];
-      return { id: dirent!.id, name: dirent!.id, status: latest.changeType };
+  const changes = allChanges
+    .filter(change => change.isChanged)
+    .map(change => {
+      const dirent = getDirent(change.id);
+      return {
+        id: change.id,
+        name: dirent?.name ?? change.id,
+        fullPath: dirent?.fullPath ?? change.id,
+        bodyType: change.bodyType,
+      };
     });
 
-  return ({ isDarkMode, confirmOpen, setConfirmOpen, getStatusColor, changes });
+  function onDiscard(id: string) {
+    cancel(id);
+  }
+
+  return ({ isDarkMode, confirmOpen, setConfirmOpen, getStatusColor, changes, onDiscard });
 }
 
 function getStatusColor(status: string, isDarkMode: boolean) {

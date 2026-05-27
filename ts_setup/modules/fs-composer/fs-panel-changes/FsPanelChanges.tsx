@@ -13,7 +13,7 @@ import { UndoConfirmDialog } from './FsChangesConfirmDialog';
 export const FsPanelChanges: React.FC<FsPanelChangesProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props)
-  const { confirmOpen, isDarkMode, setConfirmOpen, getStatusColor, changes } = ownerState;
+  const { confirmOpen, setConfirmOpen, changes, onDiscard } = ownerState;
   const classes = useUtilityClasses();
 
 
@@ -27,15 +27,13 @@ export const FsPanelChanges: React.FC<FsPanelChangesProps> = (props) => {
       <FsPanelChangesRoot className={classes.root} ownerState={ownerState}>
         {changes.map((asset) => (
           <div key={asset.id} className={classes.changeRow}>
-            <Typography className={classes.assetName}>
-              {asset.name}
-            </Typography>
-            <Typography className={classes.statusText} style={{ color: getStatusColor(asset.status, isDarkMode) }}>
-              {asset.status}
-            </Typography>
+            <div className={classes.assetName}>
+              <Typography variant='subtitle2' fontWeight='bold'>{asset.name}</Typography>
+              <Typography variant='caption'>{asset.fullPath}</Typography>
+            </div>
 
             <Tooltip title={intl.formatMessage({ id: 'fs.changesView.undo' })}>
-              <IconButton size="small" onClick={() => setConfirmOpen(true)} className={classes.undoButton}>
+              <IconButton size="small" onClick={() => onDiscard(asset.id)} className={classes.undoButton}>
                 <FsIcon icon={FsIcons.Undo} medium />
               </IconButton>
             </Tooltip>

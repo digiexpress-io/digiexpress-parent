@@ -163,7 +163,7 @@ export interface UpdateOwnerState {
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, selectOptions } = useFsDirent();
-  const { withNewChange, withChange, cancel } = useFsu();
+  const { withNewChange, withChange, cancel, isChange } = useFsu();
 
   const dirent = getDirent(props.direntId)!;
   const workflowProps = dirent.props as Fs.WorkflowProps;

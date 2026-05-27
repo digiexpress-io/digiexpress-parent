@@ -1,6 +1,6 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, useFsu } from '@dxs-ts/fs-api';
 import { FsTab, useFsNav } from '@dxs-ts/fs-nav';
 import { useFsTheme } from '../fs-theme';
 import { FsIcons } from '../fs-theme/fs-icons';
@@ -40,6 +40,7 @@ export interface PanelButton {
 
 export interface OwnerState {
   isDarkMode: boolean;
+  unsavedCount: number;
   activeDirent: Fs.DirentBase | undefined;
   isRightPanelOpen: boolean;
   selectedView: Fs.SecondaryView | undefined;
@@ -60,6 +61,8 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
   const { isDarkMode } = useFsTheme();
   const { activeDirent, activeTabIndex, openTabs } = useFsNav();
   const { getDirent } = useFsDirent();
+  const { allChanges } = useFsu();
+  const unsavedCount = allChanges.filter(c => c.isChanged).length;
   const activeDirentEntry = activeDirent ? getDirent(activeDirent.id) : undefined;
   const [isRightPanelOpen, setIsRightPanelOpen] = React.useState(true);
   const [selectedView, setSelectedView] = React.useState<Fs.SecondaryView | undefined>();
@@ -191,13 +194,14 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
       tooltip: intl.formatMessage({ id: 'fs.main.tooltip.changes' }),
       isSelected: selectedView === 'changes',
       isEnabled: true,
-      badge: 7,
+      badge: unsavedCount || undefined,
       onClick: () => handleViewChange('changes'),
     },
-  ], [isRightPanelOpen, selectedView, toggleRightPanel, handleViewChange, supportedViews]);
+  ], [isRightPanelOpen, selectedView, toggleRightPanel, handleViewChange, supportedViews, unsavedCount]);
 
   return {
     isDarkMode,
+    unsavedCount,
     activeDirent: activeDirentEntry,
     activeTabIndex,
     openTabs,
