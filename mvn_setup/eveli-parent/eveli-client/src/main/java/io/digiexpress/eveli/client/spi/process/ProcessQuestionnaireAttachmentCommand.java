@@ -21,6 +21,8 @@ package io.digiexpress.eveli.client.spi.process;
  */
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.api.PdfClient;
+import io.digiexpress.eveli.client.api.PdfClient.PdfRequestFields;
 import io.digiexpress.eveli.client.api.QuestionnaireAttachmentCommands;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
@@ -48,6 +51,10 @@ public class ProcessQuestionnaireAttachmentCommand implements QuestionnaireAttac
       private String taskId;
       private String processId;
       private String questionnaireId;
+      private List<PdfRequestFields> requestedFields = new ArrayList<>();
+      private String attachmentPattern = "$FORM_NAME-$TASK_REF.pdf";
+      private String docType;
+      private String docCategory;
       @Override
       public QuestionnaireAttachmentBuilder taskId(String taskId) {
         this.taskId = taskId;
@@ -57,6 +64,14 @@ public class ProcessQuestionnaireAttachmentCommand implements QuestionnaireAttac
       @Override
       public QuestionnaireAttachmentBuilder processId(String processId) {
         this.processId = processId;
+        return this;
+      }
+
+      @Override
+      public QuestionnaireAttachmentBuilder fields(PdfRequestFields... inputFields) {
+        for (var f : inputFields) {
+          this.requestedFields.add(f);
+        }
         return this;
       }
       
@@ -82,15 +97,48 @@ public class ProcessQuestionnaireAttachmentCommand implements QuestionnaireAttac
         String formName = process.getFormName();
         Task task = tasks.queryTasks().getOneById(taskId != null ? taskId : process.getTaskId()).await().atMost(timeout);
         String taskRef = task.getTaskRef();
-        byte[] content = pdf.pdfBuilder().process(process).task(task).build();
+        byte[] content = pdf.pdfBuilder().process(process).task(task)
+            .requestFields(requestedFields)
+            .docType(docType)
+            .docCategory(docCategory)
+            .build();
 
-        String attachmentName = "%s-%s.pdf".formatted(StringUtils.firstNonBlank(formName, "NA"), StringUtils.firstNonBlank(taskRef, "NA"));
+        String attachmentName = getAttachmentName(task, formName);
+            "%s-%s.pdf".formatted(StringUtils.firstNonBlank(formName, "NA"), StringUtils.firstNonBlank(taskRef, "NA"));
         return attachments.contentUpload().processId(processId).filename(attachmentName).build(content);
+      }
+
+      private String getAttachmentName(Task task, String formName) {
+        return attachmentPattern
+            .replace("$TASK_REF", StringUtils.firstNonBlank(task.getTaskRef(), "NA"))
+            .replace("$FORM_NAME", StringUtils.firstNonBlank(formName, "NA"))
+            .replace("$CLIENT_NAME", StringUtils.firstNonBlank(task.getClientIdentificator(), "NA"))
+            .replaceAll("\\s+", "_");
       }
 
       @Override
       public QuestionnaireAttachmentBuilder questionnaireId(String questionnaireId) {
         this.questionnaireId = questionnaireId;
+        return this;
+      }
+
+      @Override
+      public QuestionnaireAttachmentBuilder attachmentPattern(String pattern) {
+        if (StringUtils.isNotBlank(pattern)) {
+          this.attachmentPattern = pattern;
+        }
+        return this;
+      }
+
+      @Override
+      public QuestionnaireAttachmentBuilder docType(String docType) {
+        this.docType = docType;
+        return this;
+      }
+
+      @Override
+      public QuestionnaireAttachmentBuilder docCategory(String docCategory) {
+        this.docCategory = docCategory;
         return this;
       }
     };

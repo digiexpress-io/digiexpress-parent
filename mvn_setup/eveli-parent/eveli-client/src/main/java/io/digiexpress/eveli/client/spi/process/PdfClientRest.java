@@ -73,6 +73,8 @@ public class PdfClientRest implements PdfClient {
     private TaskClient.Task task;
     private ProcessInstance process;
     private List<PdfRequestFields> requestedFields = new ArrayList<>();
+    private String docType;
+    private String docCategory;
     
     @Override
     public byte[] build() {
@@ -88,7 +90,8 @@ public class PdfClientRest implements PdfClient {
             .session(questionnaire.getQuestionnaire())
             .lang(questionnaire.metadata().getLanguage())
             .referenceId(task.getTaskRef())
-            
+            .docType(docType)
+            .docCategory(docCategory)
             .customerName(requestedFields.contains(PdfRequestFields.CUSTOMER_NAME) ? task.getClientIdentificator() : null)
             .customerSsn(requestedFields.contains(PdfRequestFields.CUSTOMER_SSN) ? process.getUserId() : null)
             .comments(requestedFields.contains(PdfRequestFields.EXTERNAL_COMMENTS) ? task.getComments().stream()
@@ -207,6 +210,16 @@ public class PdfClientRest implements PdfClient {
       this.task = task;
       return this;
     }
+    @Override
+    public ProcessQuestionnairePdfBuilder docType(String dt) {
+      this.docType = dt;
+      return this;
+    }
+    @Override
+    public ProcessQuestionnairePdfBuilder docCategory(String dc) {
+      this.docCategory = dc;
+      return this;
+    }
 
   }
 
@@ -217,6 +230,9 @@ public class PdfClientRest implements PdfClient {
     private final Form form;
     private final Questionnaire session;
     private final String referenceId;
+    
+    @Nullable private final String docType;
+    @Nullable private final String docCategory;
     
     @Nullable private final String customerName;
     @Nullable private final String customerSsn;

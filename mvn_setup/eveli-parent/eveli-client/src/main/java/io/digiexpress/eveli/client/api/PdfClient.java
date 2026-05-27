@@ -51,6 +51,8 @@ public interface PdfClient {
     ProcessQuestionnairePdfBuilder task(Task task);
     ProcessQuestionnairePdfBuilder requestFields(PdfRequestFields ...field);
     ProcessQuestionnairePdfBuilder requestFields(Collection<PdfRequestFields> fields);
+    ProcessQuestionnairePdfBuilder docType(String dt);
+    ProcessQuestionnairePdfBuilder docCategory(String dc);
     byte[] build();
   }
 }
