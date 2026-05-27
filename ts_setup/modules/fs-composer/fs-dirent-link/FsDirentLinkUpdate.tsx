@@ -65,6 +65,7 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
               placeholder={intl.formatMessage({ id: 'fs.dirent.link.descriptionField.placeholder' })}
               onChange={ownerState.onChangeDescription}
               multiline minRows={2} maxRows={5}
+              onBlur={ownerState.onBlurDescription}
             />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.labelsField.label' })}</Typography>

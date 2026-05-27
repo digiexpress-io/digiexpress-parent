@@ -13,6 +13,7 @@ export interface UpdateOwnerState {
   locales: Fs.SelectOption[];
   id: string;
   isChanged: boolean;
+  isExpanded: boolean;
   contentType: Fs.LinkType;
   urlValue: string;
   intlValues: Record<string, string>;
@@ -20,7 +21,6 @@ export interface UpdateOwnerState {
   tagLabels: string[];
   configOptions: Fs.ConfigOption[];
   description: string;
-  isExpanded: boolean;
   onChangeContentType: (value: string) => void;
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
@@ -29,6 +29,7 @@ export interface UpdateOwnerState {
   onChangeConfigOptions: (value: string[]) => void;
   onChangeDescription: (value: string) => void;
   onToggleExpanded: () => void;
+  onBlurDescription: () => void;
 }
 
 type _ChangeStateProps = {
@@ -43,7 +44,6 @@ type _ChangeStateProps = {
   disabledMode: boolean;
   articles: string[];
   description: string;
-  isExpanded: boolean;
 }
 
 class _ChangeState implements FsuChange {
@@ -63,7 +63,6 @@ class _ChangeState implements FsuChange {
   get configOptions() { return this._current.configOptions; }
   get articles() { return this._current.articles; }
   get description() { return this._current.description; }
-  get isExpanded() { return this._current.isExpanded; }
 
   getCurrentProps(): { bodyType: Fs.BodyType, id: string, changes: Record<string, any> } {
     return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
@@ -99,9 +98,6 @@ class _ChangeState implements FsuChange {
   withDescription(description: string): _ChangeState {
     return new _ChangeState({ ...this._current, description }, this._origin);
   }
-  withIsExpanded(isExpanded: boolean): _ChangeState {
-    return new _ChangeState({ ...this._current, isExpanded }, this._origin);
-  }
 }
 
 
@@ -109,10 +105,14 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsTheme();
   const { getDirent, selectOptions } = useFsDirent();
   const { withNewChange, withChange } = useFsu();
-
   const dirent = getDirent(props.direntId);
   const linkProps = dirent?.type === 'ARTICLE_LINK' ? dirent.props as Fs.LinkProps : undefined;
+
+  // local state to store all text inputs before saving
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [descriptionDisplay, setDescriptionDisplay] = React.useState(dirent?.props?.description ?? '');
   const locales = selectOptions.languages;
+
 
   const state = withNewChange(props.direntId, () => new _ChangeState({
     linkId: props.direntId,
@@ -125,8 +125,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     devMode: (linkProps?.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (linkProps?.configOptions ?? []).includes('DISABLED_MODE'),
     articles: linkProps?.articles ?? [],
-    description: dirent?.props?.description ?? '',
-    isExpanded: false,
+    description: dirent?.props?.description ?? ''
   }));
 
 
@@ -157,11 +156,15 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeDescription(value: string) {
-    setState(prev => prev.withDescription(value));
+    setDescriptionDisplay(value);
   }
 
   function onToggleExpanded() {
-    setState(prev => prev.withIsExpanded(!prev.isExpanded));
+    setIsExpanded(prev => !prev);
+  }
+
+  function onBlurDescription() {
+    setState(prev => prev.withDescription(descriptionDisplay));
   }
 
   return ({
@@ -169,15 +172,15 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     dirent,
     locales,
     id: state.id,
-    isChanged: state.isChanged,
+    isChanged: state.isChanged || descriptionDisplay !== state.description,
     contentType: state.contentType,
     urlValue: state.urlValue,
     intlValues: state.intlValues,
     articles: state.articles,
     tagLabels: state.tagLabels,
     configOptions: state.configOptions,
-    description: state.description,
-    isExpanded: state.isExpanded,
+    description: descriptionDisplay,
+    isExpanded,
     onChangeContentType,
     onChangeUrlValue,
     onChangeIntlValue,
@@ -185,6 +188,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeLabels,
     onChangeConfigOptions,
     onChangeDescription,
+    onBlurDescription,
     onToggleExpanded,
   });
 };

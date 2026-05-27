@@ -60,8 +60,8 @@ export const FsTabRoot = styled('div', {
       display: 'flex',
       alignItems: 'center',
       cursor: 'pointer',
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1),
+      paddingLeft: theme.spacing(0.5),
+      paddingRight: theme.spacing(0.5),
       minWidth: '10ch',
       maxWidth: '20ch',
       overflow: 'hidden',
@@ -70,13 +70,18 @@ export const FsTabRoot = styled('div', {
     },
 
     [`& .${MUI_NAME}-tabTypography`]: {
+      flex: 1,
+      minWidth: 0,
+      display: 'flex',
+      alignItems: 'center',
+      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    },
+
+    [`& .${MUI_NAME}-tabTypography .MuiTypography-root`]: {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       fontWeight: 500,
-      display: 'flex',
-      alignItems: 'center',
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     },
 
     [`& .${MUI_NAME}-tabError .${MUI_NAME}-tabTypography`]: {

@@ -20,10 +20,8 @@ export const FsTab: React.FC<FsTabItemProps> = ({ ownerState, className, index }
   return (
     <Tooltip title={tab.name} arrow enterDelay={700} placement="bottom">
       <span className={className}>
+        {isChanged && <FsDiffIndicator direntId={tab.id} />}
         <Typography variant='subtitle2'>{tab.name}</Typography>
-        <span style={{ visibility: isChanged ? 'visible' : 'hidden' }}>
-          <FsDiffIndicator direntId={tab.id} />
-        </span>
       </span>
     </Tooltip>
   )

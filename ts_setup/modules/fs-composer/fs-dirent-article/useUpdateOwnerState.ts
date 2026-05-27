@@ -39,7 +39,6 @@ type _ChangeStateProps = {
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
   authOnly: boolean;
-  isExpanded: boolean;
 }
 
 class _ChangeState implements FsuChange {
@@ -57,7 +56,6 @@ class _ChangeState implements FsuChange {
   get description() { return this._current.description; }
   get labels() { return this._current.labels; }
   get configOptions() { return this._current.configOptions; }
-  get isExpanded() { return this._current.isExpanded; }
 
   get bodyType() { return this._current.bodyType; }
   get isChanged(): boolean {
@@ -88,9 +86,6 @@ class _ChangeState implements FsuChange {
       authOnly: configOptions.includes('AUTH_ONLY_MODE'),
     }, this._origin);
   }
-  withIsExpanded(isExpanded: boolean): _ChangeState {
-    return new _ChangeState({ ...this._current, isExpanded }, this._origin);
-  }
 }
 
 
@@ -112,12 +107,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     configOptions: (articleProps?.configOptions ?? []) as Fs.ConfigOption[],
     devMode: (articleProps?.configOptions ?? []).includes('DEV_MODE'),
     authOnly: (articleProps?.configOptions ?? []).includes('AUTH_ONLY_MODE'),
-    isExpanded: false,
   }));
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
   // UI-only local state — not sent to backend
+  const [isExpanded, setIsExpanded] = React.useState(false);
   const [comments, setComments] = React.useState((dirent?.props?.comments ?? []).map(c => c.comment).join('\n'));
 
   function onChangeName(value: string) {
@@ -139,7 +134,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setComments(value);
   }
   function onToggleExpanded() {
-    setState(prev => prev.withIsExpanded(!prev.isExpanded));
+    setIsExpanded(prev => !prev);
   }
 
   return ({
@@ -153,7 +148,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     labels: state.labels,
     configOptions: state.configOptions,
     comments,
-    isExpanded: state.isExpanded,
+    isExpanded,
     onChangeName,
     onChangeOrderNumber,
     onChangeConfigOptions,

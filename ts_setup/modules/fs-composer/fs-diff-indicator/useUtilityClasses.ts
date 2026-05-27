@@ -25,5 +25,4 @@ export const FsDiffIndicatorRoot = styled('span', {
   display: 'inline-flex',
   alignItems: 'center',
   color: ownerState.isDarkMode ? FsColors.semantic.warning : FsColors.semantic.warningLight,
-  marginLeft: theme.spacing(0.5),
 }));
