@@ -12,6 +12,7 @@ import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentDecisionTableUpdateProps } from './FsDirentDecisionTableProps';
 import { DecisionTable, DecisionTableHeader, DecisionTableRow, DecisionTableCell } from './table';
 import { NameDescHitPolicyEdit, OrderEdit, HeaderEdit, UploadCSV, DownloadCSV } from './editors';
+import { useFsu } from '@dxs-ts/fs-api';
 
 
 interface EditMode {
@@ -33,6 +34,7 @@ interface DecisionTableToolbarProps {
 export const FsDirentDecisionTableUpdate: React.FC<FsDirentDecisionTableUpdateProps> = (props) => {
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
+  const { push } = useFsu();
   const [edit, setEdit] = React.useState<EditMode | undefined>();
 
   const onChange = ownerState.onChangeCommands;
@@ -67,8 +69,8 @@ export const FsDirentDecisionTableUpdate: React.FC<FsDirentDecisionTableUpdatePr
 
       <div className={classes.buttonContainer}>
         <FsDirentButtonDelete assetId={props.direntId} />
-        <FsDirentButtonCancel />
-        <FsDirentButtonSave />
+        <FsDirentButtonCancel onClick={ownerState.onCancel} />
+        <FsDirentButtonSave onClick={() => push(ownerState.id)} />
       </div>
     </FsDirentDecisionTableRoot>
   );

@@ -36,6 +36,7 @@ import io.resys.limaone.authoring.ModifyArticle.ModifyArticleProps;
 import io.resys.limaone.authoring.ModifyArticleLink.ModifyArticleLinkProps;
 import io.resys.limaone.authoring.ModifyArticlePage.ModifyArticlePageProps;
 import io.resys.limaone.authoring.ModifyArticleWorkflow.ModifyArticleWorkflowProps;
+import io.resys.limaone.authoring.ModifyDecisionTable.ModifyDecisionTableProps;
 import io.resys.limaone.authoring.ModifyFlow.ModifyFlowProps;
 import io.resys.limaone.authoring.ModifyLocale.ModifyLocaleProps;
 import io.resys.limaone.fs.WorldFs;
@@ -45,6 +46,7 @@ import io.resys.limaone.model.Article;
 import io.resys.limaone.model.ArticleLink;
 import io.resys.limaone.model.ArticlePage;
 import io.resys.limaone.model.ArticleWorkflow;
+import io.resys.limaone.model.DecisionTable;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.Locale;
 import io.resys.limaone.model.Model;
@@ -121,6 +123,14 @@ public class AssetsFsController {
       @RequestBody ModifyArticleWorkflowProps body)
   {
     return authoring.modifyModel().modifyArticleWorkflow().props(body).build();
+  }
+
+  @PutMapping("dirents/decision-tables/{id}")
+  public Uni<Model<DecisionTable>> updateDecisionTable(
+      @PathVariable("id") String id,
+      @RequestBody ModifyDecisionTableProps body)
+  {
+    return authoring.modifyModel().modifyDecisionTable().props(body).build();
   }
 
   @PutMapping("dirents/flows/{id}")
