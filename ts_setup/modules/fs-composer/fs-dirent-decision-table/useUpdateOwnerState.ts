@@ -59,6 +59,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { getDirent, fetchDirentBody, applyTransientChanges } = useFsDirent();
   const { withNewChange, withChange, cancel } = useFsu();
 
+  const withChangeRef = React.useRef(withChange);
+  withChangeRef.current = withChange;
+
   const dirent = getDirent(props.direntId);
 
   const [wrenchBody, setWrenchBody] = React.useState<Fs.WrenchBody | undefined>(undefined);
@@ -67,7 +70,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [initialCommands, setInitialCommands] = React.useState<Fs.AstCommand[]>([]);
   const [initialDecision, setInitialDecision] = React.useState<Fs.DecisionAst | undefined>(undefined);
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChangeRef.current(props.direntId, callback);
 
   // Factory uses current commands — after body loads, cancel() clears FsuWorld so withNewChange
   // re-runs the factory with loaded commands as _origin (React 18 batches setCommands + cancel).
