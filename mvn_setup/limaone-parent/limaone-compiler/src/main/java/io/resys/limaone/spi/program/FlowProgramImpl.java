@@ -38,7 +38,10 @@ import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.spi.parameter.Parameter_Factory;
 import io.resys.limaone.spi.program.input.DefaultProgramInput;
 import io.resys.limaone.yaml.YamlMapper;
+import lombok.extern.slf4j.Slf4j;
 
+
+@Slf4j
 public class FlowProgramImpl implements FlowProgram {
 
   private static final long serialVersionUID = -4209510801206880302L;
@@ -88,7 +91,18 @@ public class FlowProgramImpl implements FlowProgram {
             .build());
         
       } catch (Exception e) {
-        final String msg = String.format("Failed to convert data type from: %s, error: %s", entry.getValue().getType().getValue(), e.getMessage());
+        final String msg = String.format("Failed to convert data type from: %s, error: %s, \n  L%s: %s", 
+            entry.getValue().getType().getValue(), 
+            e.getMessage(), 
+            entry.getValue().getStart() + "",
+            entry.getValue().getSyntax()
+            );
+        
+        if(status == ProgramStatus.ERROR) {
+          log.warn(msg, e);
+          continue;
+        }
+        
         throw new ProgramException(msg, e);
       }
     }

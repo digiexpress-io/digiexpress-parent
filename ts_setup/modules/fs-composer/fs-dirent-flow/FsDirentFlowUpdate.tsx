@@ -8,6 +8,7 @@ import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { useUtilityClasses, FsDirentFlowRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentFlowUpdateProps } from './FsDirentFlowProps';
+import { useFsu } from '@dxs-ts/fs-api';
 
 
 
@@ -15,6 +16,7 @@ export const FsDirentFlowUpdate: React.FC<FsDirentFlowUpdateProps> = (props) => 
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
+  const { push } = useFsu();
 
   return (
     <FsDirentFlowRoot className={classes.root} ownerState={ownerState}>
@@ -35,8 +37,8 @@ export const FsDirentFlowUpdate: React.FC<FsDirentFlowUpdateProps> = (props) => 
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel />
-          <FsDirentButtonSave />
+          <FsDirentButtonCancel onClick={ownerState.onCancel} />
+          <FsDirentButtonSave onClick={() => push(ownerState.id)} />
         </div>
 
       </div>

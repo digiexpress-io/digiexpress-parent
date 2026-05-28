@@ -45,6 +45,9 @@ function hook(props: {}) {
       if (props.bodyType === 'ARTICLE_WORKFLOW') {
         await baseline(`article-workflows/${props.id}`, props.changes);
       }
+      if (props.bodyType === 'FLOW') {
+        await baseline(`flows/${props.id}`, props.changes);
+      }
     }
   }
 }
