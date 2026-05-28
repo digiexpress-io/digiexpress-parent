@@ -30,26 +30,33 @@ type _ChangeStateProps = {
 class _ChangeState implements FsuChange {
   private _origin: _ChangeStateProps;
   private _current: _ChangeStateProps;
+  // Holds a pointer to the ref object — dereferenced at save time so getCurrentProps()
+  // always returns the latest editor content regardless of when this instance was created.
+  private _liveContent: React.MutableRefObject<string>;
 
-  constructor(props: _ChangeStateProps, origin?: _ChangeStateProps) {
+  constructor(props: _ChangeStateProps, liveContent: React.MutableRefObject<string>, origin?: _ChangeStateProps) {
     this._current = props;
     this._origin = origin ?? props;
+    this._liveContent = liveContent;
   }
 
   get id() { return this._current.flowId; }
   get bodyType() { return this._current.bodyType; }
-  get flowValue() { return this._current.flowValue; }
 
   get isChanged(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
 
   getCurrentProps(): { bodyType: Fs.BodyType; id: string; changes: Record<string, any> } {
-    return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
+    return {
+      bodyType: this._current.bodyType,
+      id: this.id,
+      changes: { ...this._current, flowValue: this._liveContent.current },
+    };
   }
 
   withFlowValue(flowValue: string): _ChangeState {
-    return new _ChangeState({ ...this._current, flowValue }, this._origin);
+    return new _ChangeState({ ...this._current, flowValue }, this._liveContent, this._origin);
   }
 }
 
@@ -57,44 +64,46 @@ class _ChangeState implements FsuChange {
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, fetchDirentBody } = useFsDirent();
-  const { withNewChange, withChange, cancel } = useFsu();
+  const { withNewChange, cancel } = useFsu();
 
   const dirent = getDirent(props.direntId);
-  const originalContentRef = React.useRef<string>('');
 
   const [fields, setFields] = React.useState<TextFields>({ content: '' });
+  const originalContentRef = React.useRef<string>('');
+  const liveContentRef = React.useRef<string>('');
 
-  // Factory captures fields.content — after body load, cancel() clears the entry so
-  // withNewChange re-runs the factory with the loaded yaml as _origin.
-  const state = withNewChange(props.direntId, () => new _ChangeState({
-    flowId: props.direntId,
-    bodyType: dirent!.type,
-    flowValue: fields.content,
-  }));
-
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+  // Factory captures liveContentRef (the object, not .current) — always points to latest value.
+  // After body loads, cancel() clears the FsuWorld entry so withNewChange re-runs the factory
+  // with the loaded yaml as _origin (React 18 batches setFields + cancel before re-render).
+  const state = withNewChange(props.direntId, () => new _ChangeState(
+    { flowId: props.direntId, bodyType: dirent!.type, flowValue: liveContentRef.current },
+    liveContentRef,
+  ));
 
   React.useEffect(() => {
     fetchDirentBody(props.direntId, 'FLOW').then((body) => {
       const wb = body as Fs.WrenchBody;
       const yaml = wb.flows[props.direntId]?.ast?.parseTree?.value ?? '';
       originalContentRef.current = yaml;
+      liveContentRef.current = yaml;
       setFields({ content: yaml });
       cancel(props.direntId);
     });
   }, [props.direntId]);
 
   function onChangeContent(value: string) {
+    liveContentRef.current = value;
     setFields({ content: value });
-    setState(prev => prev.withFlowValue(value));
   }
 
   function onCancel() {
-    setFields({ content: originalContentRef.current });
+    const original = originalContentRef.current;
+    liveContentRef.current = original;
+    setFields({ content: original });
     cancel(props.direntId);
   }
 
-  const isChanged = state.isChanged || fields.content !== state.flowValue;
+  const isChanged = fields.content !== originalContentRef.current;
 
   return {
     isDarkMode,
