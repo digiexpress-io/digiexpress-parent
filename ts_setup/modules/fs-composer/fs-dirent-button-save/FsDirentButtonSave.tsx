@@ -10,7 +10,7 @@ export const FsDirentButtonSave: React.FC<FsDirentButtonSaveProps> = (props) => 
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentButtonSaveRoot className={classes.root} ownerState={ownerState} onClick={props.onClick}>
+    <FsDirentButtonSaveRoot className={classes.root} ownerState={ownerState} onClick={props.onClick} disabled={props.disabled}>
       {intl.formatMessage({ id: 'button.save' })}
     </FsDirentButtonSaveRoot>
   );

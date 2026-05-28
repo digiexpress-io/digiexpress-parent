@@ -1,5 +1,7 @@
 import React from 'react';
-import { TextareaAutosize, Button, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, Box, Typography, TextField } from '@mui/material';
+import { TextareaAutosize, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, Box, Typography, TextField } from '@mui/material';
+import { FsDirentButtonCancel } from '../../fs-dirent-button-cancel';
+import { FsDirentButtonSave } from '../../fs-dirent-button-save';
 import { Fs } from '@dxs-ts/fs-api';
 
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -39,8 +41,8 @@ const UploadCSV: React.FC<UploadCSVProps> = ({ onChange, onClose }) => {
         <TextareaAutosize minRows={15} style={{ width: '100%' }} value={csv} onChange={({ target }) => setCsv(target.value)} />
       </DialogContent>
       <DialogActions>
-        <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-        <Button onClick={() => {
+        <FsDirentButtonCancel onClick={onClose} />
+        <FsDirentButtonSave disabled={!csv.trim() || (delimiter === 'custom' && !customDelimiter)} onClick={() => {
           const commands: Fs.AstCommand[] = [];
           if (csv.trim().length > 0) {
             commands.push({ type: 'IMPORT_ORDERED_CSV', value: csv, id: delimiter === 'custom' ? customDelimiter : delimiter });
@@ -49,11 +51,7 @@ const UploadCSV: React.FC<UploadCSVProps> = ({ onChange, onClose }) => {
             onChange(commands);
           }
           onClose();
-        }}
-          disabled={delimiter === 'custom' && !customDelimiter}
-        >
-          <FormattedMessage id='buttons.apply' />
-        </Button>
+        }} />
       </DialogActions>
     </Dialog>);
 }

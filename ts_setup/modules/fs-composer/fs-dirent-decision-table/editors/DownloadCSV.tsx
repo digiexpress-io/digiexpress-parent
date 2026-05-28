@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, Typography, TextField } from '@mui/material';
+import { FsDirentButtonCancel } from '../../fs-dirent-button-cancel';
 import { useIntl } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
 import fileDownload from 'js-file-download';
@@ -61,7 +62,7 @@ const DownloadCSV: React.FC<DownloadCSVProps> = ({ decision, onClose }) => {
         )}
       </DialogContent>
       <DialogActions>
-        <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
+        <FsDirentButtonCancel onClick={onClose} />
         <Button onClick={handleDownload} disabled={delimiter === 'custom' && !customDelimiter}>
           {intl.formatMessage({ id: 'buttons.download' })}
         </Button>

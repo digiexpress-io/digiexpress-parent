@@ -31,8 +31,11 @@ export const FsDirentButtonSaveRoot = styled('button', {
   minWidth: '13ch',
   padding: theme.spacing(0.5),
   ...theme.typography.subtitle2,
-  cursor: 'pointer',
+  cursor: ownerState.disabled ? 'not-allowed' : 'pointer',
+  opacity: ownerState.disabled ? 0.4 : 1,
   '&:hover': {
-    backgroundColor: alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.2),
+    backgroundColor: ownerState.disabled
+      ? alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.1)
+      : alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.2),
   },
 }));

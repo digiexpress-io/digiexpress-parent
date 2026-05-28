@@ -11,11 +11,12 @@ import { useUtilityClasses, FsDirentDecisionTableRoot } from './useUtilityClasse
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentDecisionTableUpdateProps } from './FsDirentDecisionTableProps';
 import { DecisionTable, DecisionTableHeader, DecisionTableRow, DecisionTableCell } from './table';
-import { NameDescHitPolicyEdit, OrderEdit, HeaderEdit, UploadCSV, DownloadCSV } from './editors';
+import { NameDescHitPolicyEdit, OrderEdit, HeaderEdit, UploadCSV, DownloadCSV, CellEdit } from './editors';
 import { useFsu } from '@dxs-ts/fs-api';
 
 
 interface EditMode {
+  cell?: Fs.DecisionAstCell;
   header?: Fs.DecisionTypeDef;
   meta?: boolean;
   upload?: boolean;
@@ -53,7 +54,7 @@ export const FsDirentDecisionTableUpdate: React.FC<FsDirentDecisionTableUpdatePr
           <DecisionTable
             ast={ownerState.decision}
             renderHeader={({ ast, headers }) => (
-              <DecisionTableHeader ast={ast} headers={headers}>
+              <DecisionTableHeader ast={ast} headers={headers} onClick={(h) => setEdit({ header: h })}>
                 <span />
               </DecisionTableHeader>
             )}
@@ -61,7 +62,14 @@ export const FsDirentDecisionTableUpdate: React.FC<FsDirentDecisionTableUpdatePr
               <DecisionTableRow row={row} headers={headers} renderCell={renderCell} />
             )}
             renderCell={({ row, header, cell }) => (
-              <DecisionTableCell row={row} header={header} cell={cell} />
+              <DecisionTableCell
+                dt={ownerState.decision!}
+                row={row}
+                header={header}
+                cell={cell}
+                onChange={onChange}
+                onClick={() => cell && setEdit({ cell })}
+              />
             )}
           />
         </>
@@ -106,6 +114,7 @@ const DecisionTableToolbar: React.FC<DecisionTableToolbarProps> = ({ decision, e
       {edit?.upload && <UploadCSV onChange={onChange} onClose={() => setEdit(undefined)} />}
       {edit?.download && <DownloadCSV decision={decision} onClose={() => setEdit(undefined)} />}
       {edit?.header && <HeaderEdit dt={decision} header={edit.header} onChange={onChange} onClose={() => setEdit(undefined)} />}
+      {edit?.cell && <CellEdit dt={decision} cell={edit.cell} onClose={() => setEdit(undefined)} onChange={(cmd) => onChange([cmd])} />}
 
 
       <div>

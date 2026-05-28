@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Edit as EditIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
 
@@ -8,7 +9,8 @@ const DecisionTableHeader: React.FC<{
   ast: Fs.DecisionAst;
   headers: Fs.DecisionTypeDef[];
   children: React.ReactNode;
-}> = ({ ast, headers, children }) => {
+  onClick: (header: Fs.DecisionTypeDef) => void;
+}> = ({ ast, headers, children, onClick }) => {
   const totalCols = ast.headers.returnDefs.length + ast.headers.acceptDefs.length + 2;
 
   return (
@@ -36,14 +38,23 @@ const DecisionTableHeader: React.FC<{
       <TableRow>
         <TableCell align="left" sx={{ fontWeight: 'bold', width: '30px', backgroundColor: 'secondary.contrastText', color: 'primary.contrastText' }}>#</TableCell>
         {headers.map((header) => (
-          <TableCell key={header.id} align="left" sx={{
-            fontWeight: 'bold',
-            minWidth: '50px',
-            maxWidth: '200px',
-            backgroundColor: header.direction === 'OUT' ? 'primary.main' : 'secondary.contrastText',
-            color: 'primary.contrastText',
-          }}>
-            {header.name}
+          <TableCell
+            key={header.id}
+            align="left"
+            onClick={() => onClick(header)}
+            sx={{
+              fontWeight: 'bold',
+              minWidth: '50px',
+              maxWidth: '200px',
+              cursor: 'pointer',
+              backgroundColor: header.direction === 'OUT' ? 'primary.main' : 'secondary.contrastText',
+              color: 'primary.contrastText',
+            }}
+          >
+            <Box display="flex">
+              <Box flexGrow={1}>{header.name}</Box>
+              <Box><EditIcon fontSize="small" /></Box>
+            </Box>
           </TableCell>
         ))}
         <TableCell key="_delete" align="center" sx={{ backgroundColor: 'secondary.contrastText', color: 'primary.contrastText' }} />

@@ -1,5 +1,7 @@
 import React from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Stack, Typography } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Stack, Typography } from '@mui/material';
+import { FsDirentButtonCancel } from '../../fs-dirent-button-cancel';
+import { FsDirentButtonSave } from '../../fs-dirent-button-save';
 import { useIntl } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
 import { FsDirentTextField } from '../../fs-dirent-text-field';
@@ -37,8 +39,8 @@ const NameDescHitPolicyEdit: React.FC<{
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-        <Button onClick={() => {
+        <FsDirentButtonCancel onClick={onClose} />
+        <FsDirentButtonSave onClick={() => {
           const commands: Fs.AstCommand[] = [];
           if (name !== decision.name) {
             commands.push({ type: 'SET_NAME', value: name, id: '' });
@@ -53,9 +55,7 @@ const NameDescHitPolicyEdit: React.FC<{
             onChange(commands);
           }
           onClose();
-        }}>
-          {intl.formatMessage({ id: 'buttons.apply' })}
-        </Button>
+        }} />
       </DialogActions>
       </Dialog >
     );

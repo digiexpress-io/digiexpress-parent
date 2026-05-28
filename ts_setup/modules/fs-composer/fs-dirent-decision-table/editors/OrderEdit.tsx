@@ -1,8 +1,10 @@
 import React from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, InputLabel, Box } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, InputLabel, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
 import { FsDirentSelectSingle } from '../../fs-dirent-select-single';
+import { FsDirentButtonCancel } from '../../fs-dirent-button-cancel';
+import { FsDirentButtonSave } from '../../fs-dirent-button-save';
 
 type OperationType = 'MOVE_ROW' | 'DELETE_ROW' | 'MOVE_HEADER' | 'DELETE_HEADER' | 'SET_HEADER_EXPRESSION' | 'SET_HEADER_DIRECTION';
 
@@ -288,8 +290,8 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
           {operation ? operations[operation as OperationType] : null}
         </DialogContent>
         <DialogActions>
-          <Button variant='outlined' onClick={props.onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-          <Button onClick={() => {
+          <FsDirentButtonCancel onClick={props.onClose} />
+          <FsDirentButtonSave onClick={() => {
             if (!command) {
               props.onClose();
               return;
@@ -303,9 +305,7 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
               props.onChange([command]);
               props.onClose();
             }
-          }}>
-            {intl.formatMessage({ id: 'buttons.apply' })}
-          </Button>
+          }} />
         </DialogActions>
       </Dialog>
 
@@ -322,8 +322,8 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmDelete(null)}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-          <Button onClick={() => {
+          <FsDirentButtonCancel onClick={() => setConfirmDelete(null)} />
+          <FsDirentButtonSave onClick={() => {
             if (!confirmDelete) {
               return;
             };
@@ -332,9 +332,7 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
             props.onChange([cmd]);
             setConfirmDelete(null);
             props.onClose();
-          }}>
-            {intl.formatMessage({ id: 'button.confirmDelete' })}
-          </Button>
+          }} />
         </DialogActions>
       </Dialog>
     </>
