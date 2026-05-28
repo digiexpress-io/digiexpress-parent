@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled, darken } from '@mui/material';
+import { generateUtilityClass, styled, darken, lighten } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 
@@ -95,6 +95,9 @@ export const FsDirentLinkRoot = styled('div', {
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1.5),
+    backgroundColor: ownerState.isDarkMode ? lighten(FsColors.dark.background, 0.05) : darken(FsColors.light.background, 0.06),
+    border: ownerState.isDarkMode ? `1px solid ${FsColors.dark.border}` : `1px solid ${FsColors.light.border}`,
+    padding: theme.spacing(1.5),
   },
 
   [`& .${MUI_NAME}-label`]: {
