@@ -57,10 +57,13 @@ class _ChangeState implements FsuChange {
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, fetchDirentBody, applyTransientChanges } = useFsDirent();
-  const { withNewChange, withChange, cancel } = useFsu();
+  const { withNewChange, withChange, cancel, push } = useFsu();
 
   const withChangeRef = React.useRef(withChange);
   withChangeRef.current = withChange;
+
+  const pushRef = React.useRef(push);
+  pushRef.current = push;
 
   const dirent = getDirent(props.direntId);
 
@@ -106,6 +109,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     }).then((body) => {
       const wb = body as Fs.WrenchAstBody<Fs.DecisionAst>;
       setDecision(wb.ast);
+      pushRef.current(props.direntId);
     });
   }, [commands, props.direntId, applyTransientChanges]);
 

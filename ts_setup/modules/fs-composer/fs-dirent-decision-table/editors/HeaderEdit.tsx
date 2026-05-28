@@ -1,11 +1,12 @@
 import React from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Stack, Typography } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Stack, Typography } from '@mui/material';
 import { Fs } from '@dxs-ts/fs-api';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { FsDirentTextField } from '../../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../../fs-dirent-select-single';
 import { FsDirentButtonCancel } from '../../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../../fs-dirent-button-save';
+import { FsDirentButtonDelete } from '../../fs-dirent-button-delete';
 import { EditValueSet } from './builders/EditValueSet';
 import { EditIntlValueSet } from './builders/EditIntlValueSet';
 
@@ -122,12 +123,7 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={() => {
-          onChange([{ type: 'DELETE_HEADER', id: header.id }]);
-          onClose();
-        }}>
-          {intl.formatMessage({ id: 'dt.header.delete' })}
-        </Button>
+        <FsDirentButtonDelete assetId={header.id} onDelete={() => { onChange([{ type: 'DELETE_HEADER', id: header.id }]); onClose(); }} />
         <FsDirentButtonCancel onClick={onClose} />
         <FsDirentButtonSave onClick={() => {
           onChange(commands);

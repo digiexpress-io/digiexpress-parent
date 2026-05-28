@@ -15,13 +15,11 @@ export const FsDirentButtonDeleteDialog: React.FC<FsDirentButtonDeleteDialogProp
   const intl = useIntl();
   const { getDirent } = useFsDirent();
 
-  const asset = getDirent(assetId)!;
-
-
+  const asset = getDirent(assetId);
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{intl.formatMessage({ id: 'fs.dirent.deleteConfirmDialog.title' })}{": "}{asset.name}</DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'fs.dirent.deleteConfirmDialog.title' })}{asset ? `: ${asset.name}` : ''}</DialogTitle>
       <DialogContent>{intl.formatMessage({ id: 'fs.dirent.deleteConfirmDialog.content' })}</DialogContent>
       <DialogActions>
         <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
