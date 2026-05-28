@@ -51,6 +51,9 @@ function hook(props: {}) {
       if (props.bodyType === 'DECISION_TABLE') {
         await baseline(`decision-tables/${props.id}`, props.changes);
       }
+      if (props.bodyType === 'FLOW_TASK') {
+        await baseline(`flow-tasks/${props.id}`, props.changes);
+      }
     }
   }
 }

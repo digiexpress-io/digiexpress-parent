@@ -64,13 +64,19 @@ class _ChangeState implements FsuChange {
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, fetchDirentBody } = useFsDirent();
-  const { withNewChange, cancel } = useFsu();
+  const { withNewChange, withChange, cancel } = useFsu();
+
+  const withChangeRef = React.useRef(withChange);
+  withChangeRef.current = withChange;
+
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChangeRef.current(props.direntId, callback);
 
   const dirent = getDirent(props.direntId);
 
   const [fields, setFields] = React.useState<TextFields>({ content: '' });
   const originalContentRef = React.useRef<string>('');
   const liveContentRef = React.useRef<string>('');
+  const debounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   // Factory captures liveContentRef (the object, not .current) — always points to latest value.
   // After body loads, cancel() clears the FsuWorld entry so withNewChange re-runs the factory
@@ -94,6 +100,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeContent(value: string) {
     liveContentRef.current = value;
     setFields({ content: value });
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    debounceRef.current = setTimeout(() => {
+      setState(prev => prev.withFlowValue(value));
+    }, 500);
   }
 
   function onCancel() {
@@ -103,13 +115,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     cancel(props.direntId);
   }
 
-  const isChanged = fields.content !== originalContentRef.current;
-
   return {
     isDarkMode,
     dirent,
     id: state.id,
-    isChanged,
+    isChanged: state.isChanged,
     content: fields.content,
     onChangeContent,
     onCancel,
