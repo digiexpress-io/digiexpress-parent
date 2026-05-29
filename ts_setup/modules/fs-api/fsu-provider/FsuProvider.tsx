@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { FsuWorld, FsuChange, FsuCreateChange } from './FsuWorld';
+import { Fs } from '../fs-types';
 
 
 export interface FsuContextType {
@@ -13,7 +14,7 @@ export interface FsuContextType {
 
   // pushes to backend
   push(changeId: string): Promise<void>;
-  pushCreate(change: FsuCreateChange): Promise<void>;
+  pushCreate(change: FsuCreateChange): Promise<Fs.DirentBase>;
   // discards local changes without saving
   cancel(changeId: string): void;
 }
@@ -23,7 +24,7 @@ const FsuContext = React.createContext<FsuContextType | undefined>(undefined);
 export interface FsuProviderProps {
   children: React.ReactNode;
   pushChange: (change: FsuChange) => Promise<void>;
-  pushCreate: (change: FsuCreateChange) => Promise<void>;
+  pushCreate: (change: FsuCreateChange) => Promise<Fs.DirentBase>;
 }
 
 export const FsuProvider: React.FC<FsuProviderProps> = (props) => {
@@ -59,7 +60,7 @@ export const FsuProvider: React.FC<FsuProviderProps> = (props) => {
         setFsu(prev => prev.clearChange(changeId));
       },
       pushCreate: async (change) => {
-        await props.pushCreate(change);
+        return props.pushCreate(change);
       },
       cancel: (changeId) => {
         setFsu(prev => prev.clearChange(changeId));

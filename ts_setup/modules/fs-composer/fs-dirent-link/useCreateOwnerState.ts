@@ -6,6 +6,7 @@ import {
   useFsu,
   FsuCreateChange,
 } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 export interface TextFields {
   description: string;
@@ -132,6 +133,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { selectOptions } = useFsDirent();
   const { pushCreate } = useFsu();
+  const { openAsset } = useFsNav();
 
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [fields, setFields] = React.useState<TextFields>(_emptyFields);
@@ -189,8 +191,13 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withDescription(fields.description));
   }
 
-  function onSave() {
-    pushCreate(state);
+  async function onSave() {
+    try {
+      const dirent = await pushCreate(state);
+      openAsset(dirent);
+    } catch {
+      // error snackbar already shown by handlePushCreate
+    }
   }
 
   function onCancel() {

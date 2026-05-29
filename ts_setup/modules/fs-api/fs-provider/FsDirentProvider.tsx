@@ -33,7 +33,7 @@ export interface FsDirentProviderProps {
     applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
     debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
     pushChange: (change: FsuChange) => Promise<void>;
-    pushCreate: (change: FsuCreateChange) => Promise<void>;
+    pushCreate: (change: FsuCreateChange) => Promise<string>;
   }
   children: React.ReactNode;
 }
@@ -95,16 +95,19 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
     }
   }
 
-  async function handlePushCreate(change: FsuCreateChange): Promise<void> {
+  async function handlePushCreate(change: FsuCreateChange): Promise<Fs.DirentBase> {
     try {
-      await props.persistenceUnit.pushCreate(change);
+      const newId = await props.persistenceUnit.pushCreate(change);
       const type = intl.formatMessage({ id: `fs.bodyType.${change.bodyType}` });
       enqueueSnackbar(intl.formatMessage({ id: 'fs.snackbar.saveSuccess' }, { name: type, type }), { variant: 'success' });
 
       const updated = await props.persistenceUnit.fetchDirents();
-      setDirents(new FsWorld({ dirents: updated }));
+      const newWorld = new FsWorld({ dirents: updated });
+      setDirents(newWorld);
+      return newWorld.getDirent(newId)!;
     } catch (error: any) {
       enqueueSnackbar(intl.formatMessage({ id: 'fs.snackbar.saveFailed' }, { cause: error?.message ?? 'N/A' }), { variant: 'error' });
+      throw error;
     }
   }
 

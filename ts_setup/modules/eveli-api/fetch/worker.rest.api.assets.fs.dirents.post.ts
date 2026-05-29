@@ -15,23 +15,26 @@ function hook(props: {}) {
   const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
 
-  const baseline = React.useCallback(async (assetUrl: string, assetBody: {}) => {
+  const baseline = React.useCallback(async (assetUrl: string, assetBody: {}): Promise<string> => {
     return params.fetch(`${url({})}/${assetUrl}`, {
       method,
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
       body: JSON.stringify(assetBody)
     })
-    .then((data) => console.log("create asset:", data))
+    .then(resp => resp.json())
+    .then((data: { id: string }) => data.id)
     .catch(error => {
       enqueueSnackbar(intl.formatMessage({ id: 'error.saveFailed' }, { cause: (error.message || 'N/A') }), { variant: 'error' });
+      throw error;
     });
   }, [params]);
 
   return {
-    postAny: async (props: { bodyType: Fs.BodyType; changes: Record<string, any> }): Promise<void> => {
+    postAny: async (props: { bodyType: Fs.BodyType; changes: Record<string, any> }): Promise<string> => {
       if (props.bodyType === 'ARTICLE_LINK') {
-        await baseline('links', props.changes);
+        return baseline('links', props.changes);
       }
+      throw new Error(`postAny: unsupported bodyType ${props.bodyType}`);
     }
   }
 }
