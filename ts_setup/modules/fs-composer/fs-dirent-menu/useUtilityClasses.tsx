@@ -238,20 +238,6 @@ export const FsDirentMenuRoot = styled(Popover, {
       minHeight: MENU_HEIGHT - MENU_PADDING,
     },
 
-    // Collapse component styling to ensure proper flex behavior
-    '& .MuiCollapse-root': {
-      display: 'flex',
-      alignItems: 'flex-start',
-    },
-    '& .MuiCollapse-wrapper': {
-      display: 'flex',
-      alignItems: 'flex-start',
-    },
-    '& .MuiCollapse-wrapperInner': {
-      display: 'flex',
-      alignItems: 'flex-start',
-    },
-
     [`& .${MUI_NAME}-sectionSub`]: {
       width: MENU_WIDTH - MENU_PADDING,
       maxHeight: MENU_HEIGHT - MENU_PADDING,

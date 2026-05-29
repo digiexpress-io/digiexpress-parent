@@ -1612,7 +1612,6 @@ export const en = {
   'fs.direntMenu.menuItem.comments': 'Comments ({count})',
   'fs.direntMenu.menuItem.sharing': 'Sharing and Permissions',
   'fs.direntMenu.menuItem.history': 'History',
-  'fs.direntMenu.menuItem.references': 'References ({count})',
   'fs.tabMenu.menuItem.close': 'Close',
   'fs.tabMenu.menuItem.closeToTheRight': 'Close all to the right',
   'fs.tabMenu.menuItem.closeOthers': 'Close others',

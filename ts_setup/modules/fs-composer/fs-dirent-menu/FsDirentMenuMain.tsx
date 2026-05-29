@@ -1,7 +1,7 @@
 import React from 'react';
 import { MenuItem, Divider, Typography, Box, Chip } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+import { Fs } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
 import { FsIcon, FsIcons } from '../fs-theme';
@@ -18,10 +18,8 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const { openAsset } = useFsNav();
-  const { findReferencesToDirent } = useFsDirent();
   const dirent = props.dirent;
 
-  const referencesCount = dirent ? findReferencesToDirent(dirent).length : 0;
   const changes = dirent?.props?.changes ?? [];
   const lastChange = changes.length > 0 ? changes[changes.length - 1] : undefined;
 
@@ -189,16 +187,6 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
 
-      <Divider className={classes.divider} />
-
-      <MenuItem
-        className={props.openSubmenu === 'references' ? classes.menuItemActive : classes.menuItem}
-        onClick={() => handleSubmenuToggle('references')}
-      >
-        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.references' }, { count: referencesCount })}
-        <Box flex={1} />
-        <FsIcon icon={FsIcons.ChevronRight} small />
-      </MenuItem>
     </Box>
   );
 };
