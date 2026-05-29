@@ -7,6 +7,7 @@ import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
+import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentPageRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentPageCreateProps } from './FsDirentPageProps';
@@ -17,18 +18,21 @@ export const FsDirentPageCreate: React.FC<FsDirentPageCreateProps> = () => {
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
 
-  const [content, setContent] = React.useState('');
-
   return (
     <FsDirentPageRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.page.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.localeField.label' })}</Typography>
-        <FsDirentSelectSingle options={ownerState.localeOptions} value={ownerState.localeCode} onChange={ownerState.onChangeLocaleCode} />
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}</Typography>
+        <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
+          <MDEditor preview="edit" value={ownerState.content} onChange={(val) => ownerState.onChangeContent(val ?? '')} textareaProps={{ onBlur: ownerState.onBlurContent }} />
+        </div>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.articleField.label' })}</Typography>
-        <FsDirentSelectSingle options={ownerState.articleOptions} value={ownerState.articleId} onChange={ownerState.onChangeArticleId} />
+        <FsDirentSelectSingle options={ownerState.articleOptions} value={ownerState.articleId} onChange={ownerState.onChangeArticle} />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.localeField.label' })}</Typography>
+        <FsDirentSelectSingle options={ownerState.localeOptions} value={ownerState.locale} onChange={ownerState.onChangeLocale} />
 
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
           {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.expandToggle.hide' : 'fs.dirent.expandToggle.show' })}
@@ -37,19 +41,23 @@ export const FsDirentPageCreate: React.FC<FsDirentPageCreateProps> = () => {
 
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
+            <FsDirentTextField
+              value={ownerState.description}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
+              onChange={ownerState.onChangeDescription}
+              onBlur={ownerState.onBlurDescription}
+              multiline minRows={2} maxRows={4}
+            />
+
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={ownerState.availableConfigOptions} value={ownerState.configOptions as string[]} onChange={ownerState.onChangeConfigOptions} />
           </div>
         </Collapse>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}</Typography>
-        <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
-          <MDEditor value={content} onChange={(val) => setContent(val ?? '')} />
-        </div>
-
         <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel />
-          <FsDirentButtonSave />
+          <FsDirentButtonCancel onClick={ownerState.onCancel} />
+          <FsDirentButtonSave onClick={ownerState.onSave} />
         </div>
 
       </div>

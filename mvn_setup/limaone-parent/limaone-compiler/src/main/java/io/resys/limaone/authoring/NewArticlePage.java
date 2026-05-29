@@ -46,9 +46,11 @@ public interface NewArticlePage {
   interface NewArticlePageProps extends AuthoringModelProps {
     String getArticleId();
     String getLocale();
-    
+
     @Nullable String getId();
     @Nullable String getContent();
+    @Nullable String getDescription();
     @Nullable Boolean getDevMode();
+    @Nullable Boolean getDisabledMode();
   }
 }

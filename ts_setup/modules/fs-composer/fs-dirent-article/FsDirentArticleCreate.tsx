@@ -20,11 +20,6 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
   const { getConfigOptionsForType, selectOptions } = useFsDirent();
   const configOptions = getConfigOptionsForType('ARTICLE');
 
-  const [name, setName] = React.useState('');
-  const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
-  const [labels, setLabels] = React.useState<string[]>([]);
-  const [orderNumber, setOrderNumber] = React.useState('');
-
   return (
     <FsDirentArticleRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.article.sectionTitle.createNew' })}</Typography>
@@ -41,15 +36,22 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
         )}
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
-          required value={name} onChange={setName}
+        <FsDirentTextField
+          required
+          placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
+          value={ownerState.name}
+          onChange={ownerState.onChangeName}
+          onBlur={ownerState.onBlurName}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.placeholder' })}
+        <FsDirentTextField
           required
-          value={orderNumber}
-          onChange={(value) => setOrderNumber(value)} />
+          placeholder={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.placeholder' })}
+          value={ownerState.orderNumber}
+          onChange={ownerState.onChangeOrderNumber}
+          onBlur={ownerState.onBlurOrderNumber}
+        />
 
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
           {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.expandToggle.hide' : 'fs.dirent.expandToggle.show' })}
@@ -59,18 +61,23 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
+            <FsDirentTextField
+              placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
+              value={ownerState.description}
+              onChange={ownerState.onChangeDescription}
+              onBlur={ownerState.onBlurDescription}
               multiline minRows={2} maxRows={5}
             />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
-            <FsDirentSelectMulti options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
+            <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
-            <FsDirentTextFieldAutocomplete options={selectOptions.labels} value={labels} onChange={setLabels} placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })} />
+            <FsDirentTextFieldAutocomplete options={selectOptions.labels} value={ownerState.labels} onChange={ownerState.onChangeLabels} placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.commentsField.label' })}</Typography>
-            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.article.commentsField.placeholder' })}
+            <FsDirentTextField
+              placeholder={intl.formatMessage({ id: 'fs.dirent.article.commentsField.placeholder' })}
               multiline minRows={2} maxRows={5}
             />
 
@@ -82,8 +89,8 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
         </Collapse>
 
         <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel />
-          <FsDirentButtonSave />
+          <FsDirentButtonCancel onClick={ownerState.onCancel} />
+          <FsDirentButtonSave onClick={ownerState.onSave} />
         </div>
 
       </div>

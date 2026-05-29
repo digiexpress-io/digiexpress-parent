@@ -9,6 +9,7 @@ import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
+import { FsDirentLoader } from '../fs-dirent-loader';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentArticleUpdateProps } from './FsDirentArticleProps';
@@ -22,6 +23,15 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
   const { push } = useFsu();
   const configOptions = getConfigOptionsForType('ARTICLE');
 
+  const [isLoading, setIsLoading] = React.useState(true);
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 700);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (ownerState.isLoading || isLoading) {
+    return <FsDirentLoader />;
+  }
 
   return (
     <FsDirentArticleRoot className={classes.root} ownerState={ownerState}>

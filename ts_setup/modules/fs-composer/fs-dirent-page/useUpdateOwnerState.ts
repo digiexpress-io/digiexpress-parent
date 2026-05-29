@@ -64,6 +64,7 @@ export interface TextFields {
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
+  isLoading: boolean;
   id: string;
   articleName: string;
   locale: string;
@@ -176,6 +177,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   return ({
     isDarkMode,
     dirent,
+    isLoading: !dirent,
     id: state.id,
     content: fields.content,
     locale: state.locale,

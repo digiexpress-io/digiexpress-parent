@@ -20,6 +20,7 @@ package io.resys.limaone.persistence;
  * #L%
  */
 
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -78,7 +79,9 @@ public class NewArticleImpl extends AuthoringTemplate<NewArticleImpl, Model<Arti
         .devMode(props.getDevMode())
         .name(props.getName())
         .parentId(props.getParentId())
-        .order(Optional.ofNullable(props.getOrder()).orElse(0));
+        .order(Optional.ofNullable(props.getOrder()).orElse(0))
+        .description(props.getDescription())
+        .labels(props.getLabels() != null ? props.getLabels() : Collections.emptyList());
     
     final var duplicate = world.getArticles().values().stream()
         .filter(p -> p.getBody().getName().equals(props.getName()))

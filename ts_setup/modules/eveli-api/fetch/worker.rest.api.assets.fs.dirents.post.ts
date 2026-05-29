@@ -22,6 +22,12 @@ function hook(props: {}) {
 
   return {
     postAny: async (props: { bodyType: Fs.BodyType; changes: Record<string, any> }): Promise<string> => {
+      if (props.bodyType === 'ARTICLE') {
+        return baseline('articles', props.changes);
+      }
+      if (props.bodyType === 'ARTICLE_PAGE') {
+        return baseline('article-page', props.changes);
+      }
       if (props.bodyType === 'ARTICLE_LINK') {
         return baseline('links', props.changes);
       }

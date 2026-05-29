@@ -20,6 +20,7 @@ package io.resys.limaone.authoring;
  * #L%
  */
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.immutables.value.Value;
@@ -37,18 +38,20 @@ public interface NewArticle {
 
   NewArticle props(NewArticleProps props);
   NewArticle props(Consumer<ImmutableNewArticleProps.Builder> props);
-  
+
   Uni<Model<Article>> build();
   Model<Article> buildSync();
-  
-  
+
+
   @Value.Immutable @JsonSerialize(as = ImmutableNewArticleProps.class) @JsonDeserialize(as = ImmutableNewArticleProps.class)
   interface NewArticleProps extends AuthoringModelProps {
     String getName();
-    
+
     @Nullable String getId();
     @Nullable String getParentId();
     @Nullable Integer getOrder();
+    @Nullable String getDescription();
+    @Nullable List<String> getLabels();
     @Nullable Boolean getDevMode();
     @Nullable Boolean getAuthOnly();
   }

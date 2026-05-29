@@ -11,6 +11,7 @@ import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useFsu } from '@dxs-ts/fs-api';
+import { FsDirentLoader } from '../fs-dirent-loader';
 import { useUtilityClasses, FsDirentPageRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPageUpdateProps } from './FsDirentPageProps';
@@ -21,6 +22,16 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
   const { push } = useFsu();
+
+  const [isLoading, setIsLoading] = React.useState(true);
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 700);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (ownerState.isLoading || isLoading) {
+    return <FsDirentLoader />;
+  }
 
   return (
     <FsDirentPageRoot className={classes.root} ownerState={ownerState}>
