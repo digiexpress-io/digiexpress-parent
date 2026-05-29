@@ -20,6 +20,7 @@ package io.resys.limaone.authoring;
  * #L%
  */
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.immutables.value.Value;
@@ -32,6 +33,7 @@ import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 
 public interface ModifyFlow {
   
@@ -47,5 +49,9 @@ public interface ModifyFlow {
   interface ModifyFlowProps extends AuthoringModelProps {
     String getFlowId();
     String getFlowValue();
+    @Nullable String getDescription();
+    @Nullable List<String> getTagLabels();
+    @Nullable Boolean getDevMode();
+    @Nullable Boolean getDisabledMode();
   }
 }

@@ -57,6 +57,9 @@ export function getConfigOptionsForType(type: Fs.BodyType): Fs.SelectOption[] {
     case 'PRINTOUT': {
       return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE');
     }
+    case 'FLOW': {
+      return ALL_CONFIG_OPTIONS.filter(o => o.value === 'DEV_MODE' || o.value === 'DISABLED_MODE')
+    }
     default: {
       return [];
     }

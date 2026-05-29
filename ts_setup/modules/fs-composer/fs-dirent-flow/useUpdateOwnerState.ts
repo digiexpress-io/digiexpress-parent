@@ -9,6 +9,7 @@ import {
 
 export interface TextFields {
   content: string;
+  description: string;
 }
 
 export interface UpdateOwnerState {
@@ -16,8 +17,17 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   id: string;
   isChanged: boolean;
+  isExpanded: boolean;
   content: string;
+  description: string;
+  configOptions: Fs.ConfigOption[];
+  tagLabels: string[];
   onChangeContent: (value: string) => void;
+  onChangeConfigOptions: (value: string[]) => void;
+  onChangeLabels: (value: string[]) => void;
+  onChangeDescription: (value: string) => void;
+  onBlurDescription: () => void;
+  onToggleExpanded: () => void;
   onCancel: () => void;
 }
 
@@ -25,6 +35,11 @@ type _ChangeStateProps = {
   flowId: string;
   bodyType: Fs.BodyType;
   flowValue: string;
+  description: string;
+  configOptions: Fs.ConfigOption[];
+  devMode: boolean;
+  disabledMode: boolean;
+  tagLabels: string[];
 }
 
 class _ChangeState implements FsuChange {
@@ -42,6 +57,9 @@ class _ChangeState implements FsuChange {
 
   get id() { return this._current.flowId; }
   get bodyType() { return this._current.bodyType; }
+  get description() { return this._current.description; }
+  get configOptions() { return this._current.configOptions; }
+  get tagLabels() { return this._current.tagLabels; }
 
   get isChanged(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
@@ -58,6 +76,18 @@ class _ChangeState implements FsuChange {
   withFlowValue(flowValue: string): _ChangeState {
     return new _ChangeState({ ...this._current, flowValue }, this._liveContent, this._origin);
   }
+
+  withDescription(description: string): _ChangeState {
+    return new _ChangeState({ ...this._current, description }, this._liveContent, this._origin);
+  }
+
+  withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
+    return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._liveContent, this._origin);
+  }
+
+  withTagLabels(tagLabels: string[]): _ChangeState {
+    return new _ChangeState({ ...this._current, tagLabels }, this._liveContent, this._origin);
+  }
 }
 
 
@@ -66,23 +96,27 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { getDirent, fetchDirentBody } = useFsDirent();
   const { withNewChange, withChange, cancel } = useFsu();
 
-  const withChangeRef = React.useRef(withChange);
-  withChangeRef.current = withChange;
-
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChangeRef.current(props.direntId, callback);
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
   const dirent = getDirent(props.direntId);
 
-  const [fields, setFields] = React.useState<TextFields>({ content: '' });
+  const [fields, setFields] = React.useState<TextFields>({ content: '', description: dirent?.props?.description ?? '' });
+  const [isExpanded, setIsExpanded] = React.useState(false);
   const originalContentRef = React.useRef<string>('');
   const liveContentRef = React.useRef<string>('');
   const debounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-  // Factory captures liveContentRef (the object, not .current) — always points to latest value.
-  // After body loads, cancel() clears the FsuWorld entry so withNewChange re-runs the factory
-  // with the loaded yaml as _origin (React 18 batches setFields + cancel before re-render).
   const state = withNewChange(props.direntId, () => new _ChangeState(
-    { flowId: props.direntId, bodyType: dirent!.type, flowValue: liveContentRef.current },
+    {
+      flowId: props.direntId,
+      bodyType: dirent!.type,
+      flowValue: liveContentRef.current,
+      description: dirent?.props?.description ?? '',
+      configOptions: (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[],
+      devMode: (dirent?.props?.configOptions ?? []).includes('DEV_MODE'),
+      disabledMode: (dirent?.props?.configOptions ?? []).includes('DISABLED_MODE'),
+      tagLabels: (dirent?.props?.labels ?? []).map(l => l.value),
+    },
     liveContentRef,
   ));
 
@@ -92,14 +126,14 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
       const yaml = wb.flows[props.direntId]?.ast?.parseTree?.value ?? '';
       originalContentRef.current = yaml;
       liveContentRef.current = yaml;
-      setFields({ content: yaml });
+      setFields({ content: yaml, description: dirent?.props?.description ?? '' });
       cancel(props.direntId);
     });
   }, [props.direntId]);
 
   function onChangeContent(value: string) {
     liveContentRef.current = value;
-    setFields({ content: value });
+    setFields(prev => ({ ...prev, content: value }));
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
@@ -108,20 +142,54 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     }, 500);
   }
 
+  function onChangeDescription(value: string) {
+    setFields(prev => ({ ...prev, description: value }));
+  }
+
+  function onBlurDescription() {
+    setState(prev => prev.withDescription(fields.description));
+  }
+
+  function onChangeConfigOptions(value: string[]) {
+    setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
+  }
+
+  function onChangeLabels(value: string[]) {
+    setState(prev => prev.withTagLabels(value));
+  }
+
+  function onToggleExpanded() {
+    setIsExpanded(prev => !prev);
+  }
+
   function onCancel() {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
     const original = originalContentRef.current;
     liveContentRef.current = original;
-    setFields({ content: original });
+    setFields({ content: original, description: dirent?.props?.description ?? '' });
     cancel(props.direntId);
   }
+
+  const isChanged = state.isChanged || fields.description !== state.description;
 
   return {
     isDarkMode,
     dirent,
     id: state.id,
-    isChanged: state.isChanged,
+    isChanged,
+    isExpanded,
     content: fields.content,
+    description: fields.description,
+    configOptions: state.configOptions,
+    tagLabels: state.tagLabels,
     onChangeContent,
+    onChangeConfigOptions,
+    onChangeLabels,
+    onChangeDescription,
+    onBlurDescription,
+    onToggleExpanded,
     onCancel,
   };
 };
