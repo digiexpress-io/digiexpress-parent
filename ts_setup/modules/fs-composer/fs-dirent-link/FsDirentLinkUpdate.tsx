@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, Collapse } from '@mui/material';
+import { FsDirentLoader } from '../fs-dirent-loader';
 import { useIntl } from 'react-intl';
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
@@ -27,6 +28,16 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
     value: v,
     label: intl.formatMessage({ id: `fs.dirent.link.contentType.${v}` }),
   }));
+
+  const [isLoading, setIsLoading] = React.useState(true);
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 700);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (ownerState.isLoading || isLoading) {
+    return <FsDirentLoader />;
+  }
 
   return (
     <FsDirentLinkRoot className={classes.root} ownerState={ownerState}>
