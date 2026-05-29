@@ -23,13 +23,15 @@ function Component() {
   const { applyTransientChanges } = useFetch('worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType/transient-changes.POST', {});
   const { debugDirent } = useFetch('worker/rest/api/assets/fs/debugs.POST', {});
   const { putAny } = useFetch('worker/rest/api/assets/fs/dirents.PUT', {});
+  const { postAny } = useFetch('worker/rest/api/assets/fs/dirents.POST', {});
 
   const persistenceUnit: FsDirentProviderProps['persistenceUnit'] = {
     fetchDirents: getDirents,
     fetchDirentBody: getDirentBody,
     applyTransientChanges,
     debugDirent,
-    pushChange: async (change) => putAny(change.getCurrentProps())
+    pushChange: async (change) => putAny(change.getCurrentProps()),
+    pushCreate: async (change) => postAny(change.getCurrentProps()),
   };
 
   return (

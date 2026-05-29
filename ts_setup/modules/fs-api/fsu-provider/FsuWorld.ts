@@ -7,6 +7,12 @@ export interface FsuChange {
   getCurrentProps(): { bodyType: Fs.BodyType; id: string, changes: Record<string, any> };
 }
 
+export interface FsuCreateChange {
+  bodyType: Fs.BodyType;
+  getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> };
+}
+
+
 export class FsuWorld {
   private _changes: Record<string, FsuChange>;
 

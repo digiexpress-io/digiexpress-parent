@@ -4,7 +4,7 @@ import {
   Fs,
   useFsDirent,
   useFsu,
-  FsuChange
+  FsuCreateChange,
 } from '@dxs-ts/fs-api';
 
 export interface TextFields {
@@ -40,8 +40,7 @@ export interface CreateOwnerState {
   onCancel: () => void;
 }
 
-type _ChangeStateProps = {
-  linkId: string;
+type _CreateStateProps = {
   bodyType: Fs.BodyType;
   type: Fs.LinkType;
   value: string;
@@ -54,16 +53,16 @@ type _ChangeStateProps = {
   description: string;
 }
 
-class _ChangeState implements FsuChange {
-  private _origin: _ChangeStateProps;
-  private _current: _ChangeStateProps;
+class _CreateState implements FsuCreateChange {
+  private _origin: _CreateStateProps;
+  private _current: _CreateStateProps;
 
-  constructor(props: _ChangeStateProps, origin?: _ChangeStateProps) {
+  constructor(props: _CreateStateProps, origin?: _CreateStateProps) {
     this._current = props;
     this._origin = origin ?? props;
   }
 
-  get id() { return this._current.linkId; }
+  get bodyType() { return this._current.bodyType; }
   get contentType() { return this._current.type; }
   get urlValue() { return this._current.value; }
   get intlValues() { return Object.fromEntries(this._current.labels.map(l => [l.locale, l.labelValue])); }
@@ -71,75 +70,80 @@ class _ChangeState implements FsuChange {
   get configOptions() { return this._current.configOptions; }
   get articles() { return this._current.articles; }
   get description() { return this._current.description; }
+  get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
-  getCurrentProps(): { bodyType: Fs.BodyType, id: string, changes: Record<string, any> } {
-    return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
+  getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
+    return {
+      bodyType: this._current.bodyType,
+      changes: {
+        value: this._current.value,
+        type: this._current.type,
+        labels: this._current.labels,
+        articles: this._current.articles,
+        devMode: this._current.devMode,
+        disabledMode: this._current.disabledMode,
+        description: this._current.description,
+        tagLabels: this._current.tagLabels,
+      }
+    };
   }
 
-  get bodyType() {
-    return this._origin.bodyType;
+  withContentType(contentType: Fs.LinkType): _CreateState {
+    return new _CreateState({ ...this._current, type: contentType }, this._origin);
   }
-  get isChanged(): boolean {
-    return JSON.stringify(this._origin) !== JSON.stringify(this._current);
+  withUrlValue(urlValue: string): _CreateState {
+    return new _CreateState({ ...this._current, value: urlValue }, this._origin);
   }
-
-  withContentType(contentType: Fs.LinkType): _ChangeState {
-    return new _ChangeState({ ...this._current, type: contentType }, this._origin);
-  }
-  withUrlValue(urlValue: string): _ChangeState {
-    return new _ChangeState({ ...this._current, value: urlValue }, this._origin);
-  }
-  withIntlValue(locale: string, value: string): _ChangeState {
+  withIntlValue(locale: string, value: string): _CreateState {
     const labels = this._current.labels.filter(l => l.locale !== locale);
     labels.push({ locale, labelValue: value });
-    return new _ChangeState({ ...this._current, labels }, this._origin);
+    return new _CreateState({ ...this._current, labels }, this._origin);
   }
-  withTagLabels(tagLabels: string[]): _ChangeState {
-    return new _ChangeState({ ...this._current, tagLabels }, this._origin);
+  withTagLabels(tagLabels: string[]): _CreateState {
+    return new _CreateState({ ...this._current, tagLabels }, this._origin);
   }
-  withArticles(articles: string[]): _ChangeState {
-    return new _ChangeState({ ...this._current, articles }, this._origin);
+  withArticles(articles: string[]): _CreateState {
+    return new _CreateState({ ...this._current, articles }, this._origin);
   }
-  withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
-    return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
+  withConfigOptions(configOptions: Fs.ConfigOption[]): _CreateState {
+    return new _CreateState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
   }
-  withDescription(description: string): _ChangeState {
-    return new _ChangeState({ ...this._current, description }, this._origin);
+  withDescription(description: string): _CreateState {
+    return new _CreateState({ ...this._current, description }, this._origin);
   }
 }
+
+const _initProps: _CreateStateProps = {
+  bodyType: 'ARTICLE_LINK',
+  type: 'internal',
+  value: '',
+  labels: [],
+  tagLabels: [],
+  configOptions: [],
+  devMode: false,
+  disabledMode: false,
+  articles: [],
+  description: '',
+};
 
 const _emptyFields: TextFields = { description: '', urlValue: '', intlValues: {} };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { selectOptions } = useFsDirent();
-  const { withNewChange, withChange, cancel, push } = useFsu();
-  const id = React.useMemo(() => crypto.randomUUID(), []);
+  const { pushCreate } = useFsu();
 
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [fields, setFields] = React.useState<TextFields>(_emptyFields);
+  const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
   const locales = selectOptions.languages;
 
-  const state = withNewChange(id, () => new _ChangeState({
-    linkId: id,
-    bodyType: 'ARTICLE_LINK',
-    type: 'internal',
-    value: '',
-    labels: [],
-    tagLabels: [],
-    configOptions: [],
-    devMode: false,
-    disabledMode: false,
-    articles: [],
-    description: '',
-  }));
+  const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
 
   const isChangesPresent = state.isChanged
     || fields.description !== state.description
     || fields.urlValue !== state.urlValue
     || Object.entries(fields.intlValues).some(([locale, val]) => val !== (state.intlValues[locale] ?? ''));
-
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(id, callback);
 
   function onChangeContentType(value: string) {
     setState(prev => prev.withContentType(value as Fs.LinkType));
@@ -186,12 +190,12 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onSave() {
-    push(id);
+    pushCreate(state);
   }
 
   function onCancel() {
     setFields(_emptyFields);
-    cancel(id);
+    setStateRaw(new _CreateState(_initProps));
   }
 
   return ({

@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 import { Fs } from '../fs-types';
 import { ALL_TYPES, getConfigOptionsForType, getExtension } from './helpers';
 import { ItemReferencesEntry, FsWorld } from './FsWorld';
-import { FsuProvider, FsuChange } from '../fsu-provider';
+import { FsuProvider, FsuChange, FsuCreateChange } from '../fsu-provider';
 
 export type { ItemReferencesEntry };
 
@@ -33,6 +33,7 @@ export interface FsDirentProviderProps {
     applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
     debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
     pushChange: (change: FsuChange) => Promise<void>;
+    pushCreate: (change: FsuCreateChange) => Promise<void>;
   }
   children: React.ReactNode;
 }
@@ -84,8 +85,21 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
     try {
       await props.persistenceUnit.pushChange(change);
       const name = dirents.getDirent(change.id)?.name ?? change.id;
-      const type = change.bodyType.toLowerCase().replace(/_/g, ' ');
+      const type = intl.formatMessage({ id: `fs.bodyType.${change.bodyType}` });
       enqueueSnackbar(intl.formatMessage({ id: 'fs.snackbar.saveSuccess' }, { name, type }), { variant: 'success' });
+
+      const updated = await props.persistenceUnit.fetchDirents();
+      setDirents(new FsWorld({ dirents: updated }));
+    } catch (error: any) {
+      enqueueSnackbar(intl.formatMessage({ id: 'fs.snackbar.saveFailed' }, { cause: error?.message ?? 'N/A' }), { variant: 'error' });
+    }
+  }
+
+  async function handlePushCreate(change: FsuCreateChange): Promise<void> {
+    try {
+      await props.persistenceUnit.pushCreate(change);
+      const type = intl.formatMessage({ id: `fs.bodyType.${change.bodyType}` });
+      enqueueSnackbar(intl.formatMessage({ id: 'fs.snackbar.saveSuccess' }, { name: type, type }), { variant: 'success' });
 
       const updated = await props.persistenceUnit.fetchDirents();
       setDirents(new FsWorld({ dirents: updated }));
@@ -96,7 +110,7 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
 
   return (
     <FsDirentContext.Provider value={contextValue}>
-      <FsuProvider pushChange={handlePushChange}>
+      <FsuProvider pushChange={handlePushChange} pushCreate={handlePushCreate}>
         {props.children}
       </FsuProvider>
     </FsDirentContext.Provider>
