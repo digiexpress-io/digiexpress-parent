@@ -13,6 +13,9 @@
       ],
       "@dxs-ts/fs-nav": [
         "../fs-nav/index.ts"
+      ],
+      "@dxs-ts/xui-datetime": [
+        "../xui-datetime/index.ts"
       ]
     }
   },
@@ -26,16 +29,19 @@
     },
     {
       "path": "../fs-nav"
+    },
+    {
+      "path": "../xui-datetime"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-05-06T11:18:13.075Z",
+    "at": "2026-05-29T10:14:12.796Z",
     "forModule": "@dxs-ts/fs-composer",
-    "fromRegistry": "3335eea5f2eb",
+    "fromRegistry": "39da9073515c",
     "alias": {
       "@dxs-ts/fs-composer": [
-        "../fs-api"
+        "../xui-datetime"
       ]
     }
   }

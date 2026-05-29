@@ -1445,11 +1445,12 @@
           "@dxs-ts/eveli-primitives": "*",
           "@dxs-ts/fs-api": "*",
           "@dxs-ts/fs-nav": "*",
-          "js-file-download": "*",
-          "yaml": "*",
-          "react-markdown": "*"
+          "@dxs-ts/xui-datetime": "*"
         },
         "peerDependencies": {
+          "js-file-download": "*",
+          "yaml": "*",
+          "react-markdown": "*",
           "react": "*",
           "react-intl": "*",
           "@monaco-editor/react": "*",
@@ -1458,7 +1459,8 @@
           "@mui/utils": "*",
           "@uiw/react-md-editor": "*",
           "@xyflow/react": "*",
-          "elkjs": "*"
+          "elkjs": "*",
+          "luxon": "*"
         },
         "keywords": [
           "filesystem",
@@ -1471,6 +1473,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-nav",
+        "@dxs-ts/xui-datetime",
         "js-file-download",
         "yaml",
         "react-markdown",
@@ -1482,9 +1485,13 @@
         "@mui/utils",
         "@uiw/react-md-editor",
         "@xyflow/react",
-        "elkjs"
+        "elkjs",
+        "luxon"
       ],
       "peerDependencies": [
+        "js-file-download",
+        "yaml",
+        "react-markdown",
         "react",
         "react-intl",
         "@monaco-editor/react",
@@ -1493,7 +1500,8 @@
         "@mui/utils",
         "@uiw/react-md-editor",
         "@xyflow/react",
-        "elkjs"
+        "elkjs",
+        "luxon"
       ],
       "externalDependencies": [
         "js-file-download",
@@ -1507,12 +1515,14 @@
         "@mui/utils",
         "@uiw/react-md-editor",
         "@xyflow/react",
-        "elkjs"
+        "elkjs",
+        "luxon"
       ],
       "internalDependencies": [
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
-        "@dxs-ts/fs-nav"
+        "@dxs-ts/fs-nav",
+        "@dxs-ts/xui-datetime"
       ],
       "actualDependencies": [
         "react",
@@ -1521,11 +1531,11 @@
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-nav",
         "@mui/utils",
-        "js-file-download",
-        "@monaco-editor/react",
         "@uiw/react-md-editor",
-        "@dxs-ts/xui-datetime",
+        "js-file-download",
         "@mui/icons-material",
+        "@monaco-editor/react",
+        "@dxs-ts/xui-datetime",
         "yaml",
         "react-markdown",
         "@xyflow/react",
@@ -1537,10 +1547,10 @@
         "@mui/material",
         "react-intl",
         "@mui/utils",
-        "js-file-download",
-        "@monaco-editor/react",
         "@uiw/react-md-editor",
+        "js-file-download",
         "@mui/icons-material",
+        "@monaco-editor/react",
         "yaml",
         "react-markdown",
         "@xyflow/react",
@@ -1552,10 +1562,7 @@
         "@dxs-ts/fs-nav",
         "@dxs-ts/xui-datetime"
       ],
-      "missingDependencies": [
-        "@dxs-ts/xui-datetime",
-        "luxon"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": [
         "@dxs-ts/eveli-primitives"
       ]
@@ -3442,6 +3449,7 @@
         "dependencies": {
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/task-api": "*",
+          "@dxs-ts/eveli-api": "*",
           "@dxs-ts/xui-table": "*",
           "@dxs-ts/xui-datetime": "*"
         },
@@ -3467,6 +3475,7 @@
       "dependencies": [
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
+        "@dxs-ts/eveli-api",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime",
         "react",
@@ -3513,6 +3522,7 @@
       "internalDependencies": [
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
+        "@dxs-ts/eveli-api",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
@@ -3532,6 +3542,7 @@
         "yaml",
         "@tanstack/react-table",
         "@dxs-ts/xui-table",
+        "@dxs-ts/eveli-api",
         "notistack"
       ],
       "actualExternalDependencies": [
@@ -3552,7 +3563,8 @@
         "@dxs-ts/xui-datetime",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
-        "@dxs-ts/xui-table"
+        "@dxs-ts/xui-table",
+        "@dxs-ts/eveli-api"
       ],
       "missingDependencies": [],
       "unusedDependencies": []
@@ -4200,7 +4212,8 @@
       "@dxs-ts/fs-composer": [
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/fs-api",
-        "@dxs-ts/fs-nav"
+        "@dxs-ts/fs-nav",
+        "@dxs-ts/xui-datetime"
       ],
       "@dxs-ts/fs-nav": [
         "@dxs-ts/fs-api"
@@ -4330,6 +4343,7 @@
       "@dxs-ts/task-composer-v2": [
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
+        "@dxs-ts/eveli-api",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
@@ -4402,6 +4416,7 @@
         "@dxs-ts/eveli-ide",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/tagomi-routes",
+        "@dxs-ts/task-composer-v2",
         "@dxs-ts/wrench-routes"
       ],
       "@dxs-ts/eveli-intl": [
@@ -4620,6 +4635,7 @@
         "@dxs-ts/gamut-demo-app",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-routes",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/gamut-form",
         "@dxs-ts/ledger-composer",
         "@dxs-ts/eveli-ide",
@@ -4771,6 +4787,6 @@
       ]
     }
   },
-  "checksum": "7505053d56b1f0d034088b94c1e7a34785ab8622e8d519798bd805d23765e9b9",
-  "generatedAt": "2026-05-27T11:48:51.124Z"
+  "checksum": "a1320c9a732272175e6016ef1144c71b2aaab3443716e7685126b71c522bcb87",
+  "generatedAt": "2026-05-29T10:15:00.637Z"
 }

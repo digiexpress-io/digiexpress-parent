@@ -8,11 +8,12 @@
     "@dxs-ts/eveli-primitives": "*",
     "@dxs-ts/fs-api": "*",
     "@dxs-ts/fs-nav": "*",
-    "js-file-download": "*",
-    "yaml": "*",
-    "react-markdown": "*"
+    "@dxs-ts/xui-datetime": "*"
   },
   "peerDependencies": {
+    "js-file-download": "*",
+    "yaml": "*",
+    "react-markdown": "*",
     "react": "*",
     "react-intl": "*",
     "@monaco-editor/react": "*",
@@ -21,7 +22,8 @@
     "@mui/utils": "*",
     "@uiw/react-md-editor": "*",
     "@xyflow/react": "*",
-    "elkjs": "*"
+    "elkjs": "*",
+    "luxon": "*"
   },
   "keywords": ["filesystem", "tree", "components"],
   "private": true
