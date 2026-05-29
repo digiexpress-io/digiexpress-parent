@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { useFsExpanded } from '@dxs-ts/fs-nav';
 import { Box, Collapse, IconButton, List, ListItem, ListItemIcon, Tooltip } from '@mui/material';
 
 import { useUtilityClasses, FsDirentRoot } from './useUtilityClasses';
@@ -16,7 +16,7 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(ownerState.isDarkMode);
 
-  const { isExpanded } = useFsNav();
+  const isExpanded = useFsExpanded();
   const expanded = isExpanded(props.dirent.id) ?? false;
   const { isChange, getChange } = useFsu();
   const isUnsavedChanges = isChange(props.dirent.id) && getChange(props.dirent.id).isChanged;
@@ -80,6 +80,8 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
               key={child.id}
               dirent={child}
               level={ownerState.level + 1}
+              activeDirentId={props.activeDirentId}
+              openAsset={props.openAsset}
               onToggle={ownerState.onToggle}
               onContextMenu={ownerState.onContextMenu}
               searchTerm={ownerState.searchTerm}

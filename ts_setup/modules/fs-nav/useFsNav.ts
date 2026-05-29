@@ -14,3 +14,7 @@ export function useFsNav() {
     ...routeNav,
   };
 }
+
+export function useFsExpanded(): (id: string) => boolean {
+  return useFsNavContext().isExpanded;
+}

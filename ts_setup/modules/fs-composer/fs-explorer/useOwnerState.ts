@@ -32,6 +32,8 @@ export interface OwnerState {
   isSearchExpanded: boolean;
   isAnyDirentExpanded: boolean;
   isContextMenuOpen: boolean;
+  activeDirentId: string | undefined;
+  openAsset: (asset: Fs.DirentBase) => void;
 
   filteredTreeData: Fs.DirentBase[];
   searchTerm: string;
@@ -57,7 +59,7 @@ export interface OwnerState {
 
 export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   const { isDarkMode, setIsDarkMode } = useFsTheme();
-  const { openAsset } = useFsNav();
+  const { openAsset, activeDirent } = useFsNav();
   const { getDirent, dirents, getExtension } = useFsDirent();
   const { collapseAll, setExpanded, setExpandedBatch, isExpanded } = useFsNav();
   const { search } = useFsSearch();
@@ -104,6 +106,8 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   return {
     isAnyDirentExpanded,
     isDarkMode,
+    activeDirentId: activeDirent?.id,
+    openAsset,
     isSearchExpanded: search.open,
     isContextMenuOpen: contextMenuOpen,
 

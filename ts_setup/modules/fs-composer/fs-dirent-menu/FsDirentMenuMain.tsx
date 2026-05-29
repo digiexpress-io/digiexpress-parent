@@ -70,7 +70,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
 
       <Divider className={classes.divider} />
 
-      <MenuItem
+      <MenuItem disableRipple
         className={props.openSubmenu === 'new' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('new')}
       >
@@ -80,12 +80,12 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
 
-      <MenuItem className={classes.menuItem} onClick={handleEdit}>
+      <MenuItem disableRipple className={classes.menuItem} onClick={handleEdit}>
         <FsIcon icon={FsIcons.Edit} small />
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.edit' })}
       </MenuItem>
 
-      <MenuItem
+      <MenuItem disableRipple
         className={dirent?.props?.locked ? classes.menuItemLocked : classes.menuItemUnlocked}
         onClick={handleLock}
       >
@@ -93,12 +93,12 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         {dirent?.props?.locked ? intl.formatMessage({ id: 'fs.direntMenu.menuItem.unlock' }) : intl.formatMessage({ id: 'fs.direntMenu.menuItem.lock' })}
       </MenuItem>
 
-      <MenuItem className={classes.menuItem} onClick={handleCopy}>
+      <MenuItem disableRipple className={classes.menuItem} onClick={handleCopy}>
         <FsIcon icon={FsIcons.Copy} small />
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.copy' })}
       </MenuItem>
 
-      <MenuItem
+      <MenuItem disableRipple
         className={props.openSubmenu === 'rename' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('rename')}
       >
@@ -108,7 +108,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
 
-      <MenuItem className={classes.menuItemDelete} onClick={handleDelete}>
+      <MenuItem disableRipple className={classes.menuItemDelete} onClick={handleDelete}>
         <FsIcon icon={FsIcons.Delete} small />
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.delete' })}
       </MenuItem>
@@ -116,7 +116,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
       <Divider className={classes.divider} />
 
       {dirent && (dirent.props?.configOptions ?? []).length > 0 && (
-        <MenuItem className={classes.menuItem}>
+        <MenuItem disableRipple className={classes.menuItem}>
           <div>
             <div>{intl.formatMessage({ id: 'fs.direntMenu.menuItem.configOptions' })}</div>
             <div>
@@ -133,7 +133,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
 
       <Divider className={classes.divider} />
 
-      <MenuItem className={props.openSubmenu === 'labels' ? classes.menuItemActive : classes.menuItem} onClick={() => handleSubmenuToggle('labels')}>
+      <MenuItem disableRipple className={props.openSubmenu === 'labels' ? classes.menuItemActive : classes.menuItem} onClick={() => handleSubmenuToggle('labels')}>
         <div>
           <div>{intl.formatMessage({ id: 'fs.direntMenu.menuItem.labels' })}</div>
           {dirent && (dirent.props?.labels ?? []).length > 0 && (
@@ -156,7 +156,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
 
       <Divider className={classes.divider} />
 
-      <MenuItem
+      <MenuItem disableRipple
         className={props.openSubmenu === 'comments' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('comments')}
       >
@@ -167,7 +167,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
 
       <Divider className={classes.divider} />
 
-      <MenuItem
+      <MenuItem disableRipple
         className={props.openSubmenu === 'sharing' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('sharing')}
       >
@@ -178,7 +178,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
 
       <Divider className={classes.divider} />
 
-      <MenuItem
+      <MenuItem disableRipple
         className={props.openSubmenu === 'history' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('history')}
       >

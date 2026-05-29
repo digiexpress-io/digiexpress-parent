@@ -122,6 +122,8 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
               key={dirent.id}
               dirent={dirent}
               level={0}
+              activeDirentId={ownerState.activeDirentId}
+              openAsset={ownerState.openAsset}
               onToggle={(direntId) => ownerState.toggleDirent(direntId)}
               onContextMenu={(event, dirent) => ownerState.onContextMenu(event, dirent, ownerState.setContextMenuData, ownerState.setContextMenuOpen)}
               searchTerm={ownerState.searchTerm}
