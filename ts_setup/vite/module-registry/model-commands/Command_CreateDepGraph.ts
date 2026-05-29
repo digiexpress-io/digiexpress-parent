@@ -14,8 +14,6 @@ export class Command_CreateDepGraph {
   execute(input: Command_CreateDepGraph.Input): Command_CreateDepGraph.Result {
     const { moduleInfos } = input;
 
-    console.log(`🔗 Building dependency graph...`);
-
     const forward: Record<string, string[]> = {};
     const reverse: Record<string, string[]> = {};
 
@@ -47,8 +45,6 @@ export class Command_CreateDepGraph {
       circularDependencies.forEach(cycle => {
         console.warn(`   ${cycle.join(' → ')}`);
       });
-    } else {
-      console.log(`✅ No circular dependencies detected`);
     }
 
     const dependencyGraph: DependencyGraph = {

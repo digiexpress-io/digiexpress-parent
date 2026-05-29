@@ -17,8 +17,6 @@ export class Command_FindImports {
   execute(input: Command_FindImports.Input): Command_FindImports.Result {
     const { moduleInfos, rootPath } = input;
 
-    console.log(`🔍 Analyzing source code usage...`);
-
     // Create a copy to avoid mutating the input
     const updatedModuleInfos = moduleInfos.map(moduleInfo => {
       const actualUsage = _scanModuleSourceFiles(moduleInfo, rootPath);
@@ -32,15 +30,6 @@ export class Command_FindImports {
       const actualDeps = new Set(actualUsage);
       const missingDeps = [...actualDeps].filter(dep => !declaredDeps.has(dep));
       const unusedDeps = [...declaredDeps].filter(dep => !actualDeps.has(dep));
-
-      if (missingDeps.length > 0) {
-        console.warn(`   ⚠️  ${moduleInfo.name}: Missing dependencies: ${missingDeps.join(', ')}`);
-      }
-      if (unusedDeps.length > 0) {
-        console.warn(`   ⚠️  ${moduleInfo.name}: Unused dependencies: ${unusedDeps.join(', ')}`);
-      }
-
-      console.log(`   ✅ ${moduleInfo.name}: ${actualUsage.length} dependencies used, ${missingDeps.length} missing, ${unusedDeps.length} unused`);
 
       return {
         ...moduleInfo,

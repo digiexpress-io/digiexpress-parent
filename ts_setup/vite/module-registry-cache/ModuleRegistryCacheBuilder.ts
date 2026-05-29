@@ -25,7 +25,7 @@ export class ModuleRegistryCacheBuilder {
   build(rootPath: string, forceRebuild: boolean = false): ModuleRegistry {
     const fullRegistryPath = resolve(rootPath, this.options.registryPath);
     
-    console.log(`🔍 Module Registry Cache Builder: ${rootPath}`);
+    // console.log(`🔍 Module Registry Cache Builder: ${rootPath}`);
     
     try {
       if (forceRebuild) {

@@ -25,8 +25,6 @@ export class Command_ResolveTargetModule {
     }
 
     const targetModuleInfo = registry.modules[moduleName];
-    console.log(`✅ Target module resolved: ${targetModuleInfo.name}`);
-
     return { targetModuleInfo };
   }
 }

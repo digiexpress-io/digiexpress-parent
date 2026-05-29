@@ -19,7 +19,7 @@ export class Command_LoadRegistry {
   execute(input: Command_LoadRegistry.Input): Command_LoadRegistry.Result {
     const { rootPath, registryPath } = input;
 
-    console.log(`🏗️  Loading registry from: ${registryPath}`);
+    // console.log(`🏗️  Loading registry from: ${registryPath}`);
 
     const fullRegistryPath = resolve(rootPath, registryPath);
 
@@ -36,7 +36,7 @@ export class Command_LoadRegistry {
     const registryContent = readFileSync(fullRegistryPath, 'utf-8');
     const registry = JSON.parse(registryContent);
 
-    console.log(`✅ Registry loaded: ${Object.keys(registry.modules).length} modules`);
+    // console.log(`✅ Registry loaded: ${Object.keys(registry.modules).length} modules`);
 
     return { registry };
   }

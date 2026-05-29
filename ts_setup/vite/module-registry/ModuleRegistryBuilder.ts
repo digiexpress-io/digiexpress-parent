@@ -16,7 +16,7 @@ export class ModuleRegistryBuilder {
  }
 
  build(): ModuleRegistry {
-   console.log(`🔍 Building module registry from: ${this.rootPath}`);
+//   console.log(`🔍 Building module registry from: ${this.rootPath}`);
 
    // Command pipeline orchestration
    const findModulesCmd = new Command_FindModules();

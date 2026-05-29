@@ -186,7 +186,6 @@ class CollectDepChain {
 }
 
 function _validateModuleDependenciesStrict(registry: ModuleRegistry, moduleInfo: ModuleInfo, errors: ValidationError[]): void {
-  console.log(`🔒 Strict validation for ${moduleInfo.name} - each module must be self-sufficient`);
 
   const refs: string[] = new CollectDepChain(registry, moduleInfo).findAll();
   const missingDependencies: string[] = [... (moduleInfo.missingDependencies ?? []), ...refs];
@@ -209,8 +208,17 @@ function _validateModuleDependenciesStrict(registry: ModuleRegistry, moduleInfo:
   // Validate unused dependencies (as warnings in strict mode)
   if (moduleInfo.unusedDependencies) {
     for (const unusedDep of moduleInfo.unusedDependencies) {
+
+      // main exports projects are barrel files and mostly defined "unused" exports
+      const seg = moduleInfo.path.split(/[\\/]/);
+      if(seg[seg.length -1].startsWith('lib-')) {
+        continue;
+      }
+
+
       const isExternal = !unusedDep.startsWith('@dxs-ts/');
       const isInternal = unusedDep.startsWith('@dxs-ts/');
+
 
       errors.push({
         type: isExternal ? 'unused_external' : 'unused_internal',
@@ -221,15 +229,6 @@ function _validateModuleDependenciesStrict(registry: ModuleRegistry, moduleInfo:
         solution: `Remove "${unusedDep}" from dependencies in ${moduleInfo.name}/package.json or use it in your code`
       });
     }
-  }
-
-  const missingCount = moduleInfo.missingDependencies?.length || 0;
-  const unusedCount = moduleInfo.unusedDependencies?.length || 0;
-
-  if (missingCount > 0 || unusedCount > 0) {
-    console.log(`   🔒 ${moduleInfo.name}: ${missingCount} missing, ${unusedCount} unused dependencies`);
-  } else {
-    console.log(`   ✅ ${moduleInfo.name}: All dependencies properly declared`);
   }
 }
 

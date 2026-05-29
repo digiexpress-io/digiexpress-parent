@@ -20,8 +20,6 @@ export class Command_CreateChecksum {
 
     const moduleInfos: ModuleInfo[] = JSON.parse(JSON.stringify(rawModuleInfos));
 
-    console.log(`🔐 Calculating ecosystem checksum...`);
-
     const hash = createHash('sha256');
 
     // Sort modules by name for consistent checksum

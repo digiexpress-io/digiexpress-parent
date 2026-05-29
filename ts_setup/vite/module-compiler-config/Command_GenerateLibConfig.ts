@@ -67,7 +67,7 @@ export class Command_GenerateLibConfig {
     // Generate lib-specific config
     const libConfig = _generateLibConfig(targetModuleInfo, buildProfile);
 
-    console.log(`📊 Build config: ${internalDependencies.length} internal, ${externalDependencies.length} external deps`);
+    // console.log(`📊 Build config: ${internalDependencies.length} internal, ${externalDependencies.length} external deps`);
 
     return {
       buildProfile,

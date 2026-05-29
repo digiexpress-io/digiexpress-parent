@@ -42,11 +42,11 @@ export function moduleRegistryCreate(props: { strict: boolean }): Plugin {
         }
 
         // Validation passed or only warnings
-        if (result.warnings.length > 0) {
-          const printer = new ValidationResultPrinter();
-          const report = printer.print(result);
-          console.warn(`⚠️ Registry validation passed with ${result.warnings.length} warning(s)\n${report}`);
-        }
+        //if (result.warnings.length > 0) {
+        //  const printer = new ValidationResultPrinter();
+        //  const report = printer.print(result);
+        //  console.warn(`⚠️ Registry validation passed with ${result.warnings.length} warning(s)\n${report}`);
+        //}
       }
     }
   };

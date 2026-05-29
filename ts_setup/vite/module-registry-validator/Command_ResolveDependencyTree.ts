@@ -19,9 +19,6 @@ export class Command_ResolveDependencyTree {
     const modulesToValidate = targetModule
       ? _getDependencyTree(registry, targetModule)
       : Object.keys(registry.modules);
-
-    console.log(`📊 Validating ${modulesToValidate.length} modules in scope`);
-
     return { modulesToValidate };
   }
 }
@@ -52,7 +49,7 @@ function _getDependencyTree(registry: ModuleRegistry, targetModule: string): str
     };
 
     traverse(targetModule);
-    console.log(`🌳 Dependency tree for ${targetModule}: ${result.length} modules`);
+    // console.log(`🌳 Dependency tree for ${targetModule}: ${result.length} modules`);
     return result;
 
   } catch (error) {

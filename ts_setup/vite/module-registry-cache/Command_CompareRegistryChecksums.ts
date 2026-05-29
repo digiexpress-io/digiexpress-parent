@@ -16,7 +16,6 @@ export class Command_CompareRegistryChecksums {
   execute(input: Command_CompareRegistryChecksums.Input): Command_CompareRegistryChecksums.Result {
     const { rootPath, cachedRegistry } = input;
     
-    console.log('🔐 Calculating current checksum...');
     const builder = new ModuleRegistryBuilder(rootPath);
     const currentRegistry = builder.build();
     

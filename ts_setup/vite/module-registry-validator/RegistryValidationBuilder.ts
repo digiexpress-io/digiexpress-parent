@@ -11,7 +11,7 @@ export class RegistryValidationBuilder {
  
  build(registry: ModuleRegistry, targetModule?: string, options: ValidationOptions = {}): ValidationResult {
    const startTime = Date.now();
-   console.log(`🔍 Registry validation starting${targetModule ? ` for target: ${targetModule}` : ' (full registry)'}`);
+   // console.log(`🔍 Registry validation starting${targetModule ? ` for target: ${targetModule}` : ' (full registry)'}`);
 
    try {
      // Command pipeline orchestration
@@ -58,7 +58,7 @@ export class RegistryValidationBuilder {
        validationTime
      });
 
-     console.log(`✅ Validation completed in ${validationResult.validationTime}ms`);
+     // console.log(`✅ Validation completed in ${validationResult.validationTime}ms`);
      return validationResult;
 
    } catch (error) {

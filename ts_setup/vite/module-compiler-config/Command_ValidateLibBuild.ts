@@ -56,13 +56,13 @@ export class Command_ValidateLibBuild {
     }
 
     // Validation passed or only warnings
-    if (result.warnings.length > 0) {
-      const printer = new ValidationResultPrinter();
-      const report = printer.print(result);
-      console.warn(`⚠️ Registry validation passed with ${result.warnings.length} warning(s)\n${report}`);
-    }
+    // if (result.warnings.length > 0) {
+    //  const printer = new ValidationResultPrinter();
+    //  const report = printer.print(result);
+    //  console.warn(`⚠️ Registry validation passed with ${result.warnings.length} warning(s)\n${report}`);
+    // }
 
-    console.log(`✅ Registry validation passed`);
+    
     return {};
   }
 }

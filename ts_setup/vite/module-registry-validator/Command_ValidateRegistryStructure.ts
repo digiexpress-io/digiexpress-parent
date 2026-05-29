@@ -39,7 +39,6 @@ export class Command_ValidateRegistryStructure {
         throw new Error('Registry.dependencyGraph.circularDependencies is missing or not an array');
       }
 
-      console.log('✅ Registry sanity checks passed');
       return {};
 
     } catch (error) {

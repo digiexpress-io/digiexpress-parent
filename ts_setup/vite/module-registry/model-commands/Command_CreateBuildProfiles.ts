@@ -37,8 +37,6 @@ export class Command_CreateBuildProfiles {
         console.log(`   📋 Profile: ${profile.name} (${profile.includedModules.length} modules)`);
       }
     }
-
-    console.log(`✅ Generated ${profiles.length} build profiles`);
     return { buildProfiles: profiles };
   }
 }

@@ -27,9 +27,6 @@ export class ModuleCompilerConfigBuilder {
 
   build(registryRecreate: boolean, rootPath: string = process.cwd()): ModuleCompilerConfig {
     const { moduleName, registryPath } = this.options;
-
-    console.log(`🏗️  Enhanced Lib Build Config: ${moduleName}`);
-
     try {
       // Command pipeline orchestration
       const loadRegistryCmd = new Command_LoadRegistry();
@@ -117,7 +114,6 @@ export class ModuleCompilerConfigBuilder {
         }
       };
 
-      console.log(`✅ Lib build config generated successfully`);
       return libBuildConfig;
 
     } catch (error) {
