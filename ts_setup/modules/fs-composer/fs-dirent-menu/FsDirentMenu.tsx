@@ -37,6 +37,7 @@ export const FsDirentMenu: React.FC<FsDirentMenuProps> = (props) => {
     <Root
       className={classes.root}
       open={props.open}
+      transitionDuration={0}
       onClose={props.onClose}
       isSubmenuOpen={!!openSubmenu}
       shouldExpandUpward={shouldExpandUpward}
