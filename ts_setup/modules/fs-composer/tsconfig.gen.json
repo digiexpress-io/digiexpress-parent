@@ -1,21 +1,20 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
       "@dxs-ts/eveli-primitives": [
-        "../eveli-primitives/index.ts"
+        "./../eveli-primitives/index.ts"
       ],
       "@dxs-ts/fs-api": [
-        "../fs-api/index.ts"
+        "./../fs-api/index.ts"
       ],
       "@dxs-ts/fs-nav": [
-        "../fs-nav/index.ts"
+        "./../fs-nav/index.ts"
       ],
       "@dxs-ts/xui-datetime": [
-        "../xui-datetime/index.ts"
+        "./../xui-datetime/index.ts"
       ]
     }
   },
@@ -36,9 +35,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-05-29T10:14:12.796Z",
+    "at": "2026-05-29T10:45:18.153Z",
     "forModule": "@dxs-ts/fs-composer",
-    "fromRegistry": "39da9073515c",
+    "fromRegistry": "a1320c9a7322",
     "alias": {
       "@dxs-ts/fs-composer": [
         "../xui-datetime"

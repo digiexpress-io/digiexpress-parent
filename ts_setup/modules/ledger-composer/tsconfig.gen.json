@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
       "@dxs-ts/ledger-api": [
-        "../ledger-api/index.ts"
+        "./../ledger-api/index.ts"
       ],
       "@dxs-ts/xui-table": [
-        "../xui-table/index.ts"
+        "./../xui-table/index.ts"
       ],
       "@dxs-ts/xui-datetime": [
-        "../xui-datetime/index.ts"
+        "./../xui-datetime/index.ts"
       ]
     }
   },
@@ -30,11 +29,11 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-12-08T09:26:27.984Z",
-    "forModule": "@dxs-ts/contract-composer",
-    "fromRegistry": "8840d0c4cc41",
+    "at": "2026-05-29T10:45:18.153Z",
+    "forModule": "@dxs-ts/ledger-composer",
+    "fromRegistry": "a1320c9a7322",
     "alias": {
-      "@dxs-ts/contract-composer": [
+      "@dxs-ts/ledger-composer": [
         "../xui-datetime"
       ]
     }

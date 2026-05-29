@@ -8,7 +8,6 @@ export interface TSConfigGeneratorOptions {
 
 export interface TSConfigOutput {
   compilerOptions: {
-    baseUrl: string;
     paths: Record<string, string[]>;
     [key: string]: any;
   };

@@ -1,30 +1,29 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
       "@dxs-ts/envir-fetch": [
-        "../envir-fetch/index.ts"
+        "./../envir-fetch/index.ts"
       ],
       "@dxs-ts/tagomi-api": [
-        "../tagomi-api/index.ts"
+        "./../tagomi-api/index.ts"
       ],
       "@dxs-ts/wrench-api": [
-        "../wrench-api/index.ts"
+        "./../wrench-api/index.ts"
       ],
       "@dxs-ts/eveli-api": [
-        "../eveli-api/index.ts"
+        "./../eveli-api/index.ts"
       ],
       "@dxs-ts/eveli-primitives": [
-        "../eveli-primitives/index.ts"
+        "./../eveli-primitives/index.ts"
       ],
       "@dxs-ts/xui-table": [
-        "../xui-table/index.ts"
+        "./../xui-table/index.ts"
       ],
       "@dxs-ts/xui-datetime": [
-        "../xui-datetime/index.ts"
+        "./../xui-datetime/index.ts"
       ]
     }
   },
@@ -54,9 +53,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-10-21T06:18:06.875Z",
+    "at": "2026-05-29T10:45:18.154Z",
     "forModule": "@dxs-ts/tagomi-routes",
-    "fromRegistry": "c0b714dd251c",
+    "fromRegistry": "a1320c9a7322",
     "alias": {
       "@dxs-ts/tagomi-routes": [
         "../xui-datetime"

@@ -36,7 +36,7 @@ export class Command_GenerateModuleTSConfigs {
           // Transform path from root-relative to module-relative
           // From: "./modules/envir-fetch/index.ts" 
           // To: "../envir-fetch/index.ts"
-          const relativePath = this._transformPathToModuleRelative(depModuleInfo.path);
+          const relativePath = "./" + this._transformPathToModuleRelative(depModuleInfo.path);
           paths[depModuleName] = [relativePath];
 
           // Add project reference
@@ -51,10 +51,7 @@ export class Command_GenerateModuleTSConfigs {
 
       // Build module-specific tsconfig
       const tsConfig: TSConfigOutput = {
-        compilerOptions: {
-          baseUrl: ".",
-          paths
-        },
+        compilerOptions: { paths },
         extends: '../../tsconfig.json',
         references,
         _generated: {

@@ -1,15 +1,14 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
       "@dxs-ts/task-feedback": [
-        "../task-feedback/index.ts"
+        "./../task-feedback/index.ts"
       ],
       "@dxs-ts/task-api": [
-        "../task-api/index.ts"
+        "./../task-api/index.ts"
       ]
     }
   },
@@ -24,9 +23,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-27T14:00:08.304Z",
+    "at": "2026-05-29T10:45:18.154Z",
     "forModule": "@dxs-ts/task-composer-v1",
-    "fromRegistry": "ada9335539fc",
+    "fromRegistry": "a1320c9a7322",
     "alias": {
       "@dxs-ts/task-composer-v1": [
         "../task-api"

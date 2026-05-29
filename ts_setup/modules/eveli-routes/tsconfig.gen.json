@@ -1,99 +1,98 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
       "@dxs-ts/gamut-api": [
-        "../gamut-api/index.ts"
+        "./../gamut-api/index.ts"
       ],
       "@dxs-ts/gamut-form": [
-        "../gamut-form/index.ts"
+        "./../gamut-form/index.ts"
       ],
       "@dxs-ts/gamut-shell": [
-        "../gamut-shell/index.ts"
+        "./../gamut-shell/index.ts"
       ],
       "@dxs-ts/gamut-theme": [
-        "../gamut-theme/index.ts"
+        "./../gamut-theme/index.ts"
       ],
       "@dxs-ts/gamut-form-review": [
-        "../gamut-form-review/index.ts"
+        "./../gamut-form-review/index.ts"
       ],
       "@dxs-ts/stencil-api": [
-        "../stencil-api/index.ts"
+        "./../stencil-api/index.ts"
       ],
       "@dxs-ts/stencil-routes": [
-        "../stencil-routes/index.ts"
+        "./../stencil-routes/index.ts"
       ],
       "@dxs-ts/wrench-api": [
-        "../wrench-api/index.ts"
+        "./../wrench-api/index.ts"
       ],
       "@dxs-ts/wrench-routes": [
-        "../wrench-routes/index.ts"
+        "./../wrench-routes/index.ts"
       ],
       "@dxs-ts/tagomi-api": [
-        "../tagomi-api/index.ts"
+        "./../tagomi-api/index.ts"
       ],
       "@dxs-ts/tagomi-routes": [
-        "../tagomi-routes/index.ts"
+        "./../tagomi-routes/index.ts"
       ],
       "@dxs-ts/envir-fetch": [
-        "../envir-fetch/index.ts"
+        "./../envir-fetch/index.ts"
       ],
       "@dxs-ts/task-api": [
-        "../task-api/index.ts"
+        "./../task-api/index.ts"
       ],
       "@dxs-ts/eveli-api": [
-        "../eveli-api/index.ts"
+        "./../eveli-api/index.ts"
       ],
       "@dxs-ts/eveli-primitives": [
-        "../eveli-primitives/index.ts"
+        "./../eveli-primitives/index.ts"
       ],
       "@dxs-ts/fs-api": [
-        "../fs-api/index.ts"
+        "./../fs-api/index.ts"
       ],
       "@dxs-ts/fs-composer": [
-        "../fs-composer/index.ts"
+        "./../fs-composer/index.ts"
       ],
       "@dxs-ts/user-profile": [
-        "../user-profile/index.ts"
+        "./../user-profile/index.ts"
       ],
       "@dxs-ts/task-feedback": [
-        "../task-feedback/index.ts"
+        "./../task-feedback/index.ts"
       ],
       "@dxs-ts/task-composer-v1": [
-        "../task-composer-v1/index.ts"
+        "./../task-composer-v1/index.ts"
       ],
       "@dxs-ts/task-composer-v2": [
-        "../task-composer-v2/index.ts"
+        "./../task-composer-v2/index.ts"
       ],
       "@dxs-ts/contract-api": [
-        "../contract-api/index.ts"
+        "./../contract-api/index.ts"
       ],
       "@dxs-ts/contract-composer": [
-        "../contract-composer/index.ts"
+        "./../contract-composer/index.ts"
       ],
       "@dxs-ts/cockpit-api": [
-        "../cockpit-api/index.ts"
+        "./../cockpit-api/index.ts"
       ],
       "@dxs-ts/cockpit-composer": [
-        "../cockpit-composer/index.ts"
+        "./../cockpit-composer/index.ts"
       ],
       "@dxs-ts/ledger-api": [
-        "../ledger-api/index.ts"
+        "./../ledger-api/index.ts"
       ],
       "@dxs-ts/ledger-composer": [
-        "../ledger-composer/index.ts"
+        "./../ledger-composer/index.ts"
       ],
       "@dxs-ts/xui-table": [
-        "../xui-table/index.ts"
+        "./../xui-table/index.ts"
       ],
       "@dxs-ts/xui-datetime": [
-        "../xui-datetime/index.ts"
+        "./../xui-datetime/index.ts"
       ],
       "@dxs-ts/fs-nav": [
-        "../fs-nav/index.ts"
+        "./../fs-nav/index.ts"
       ]
     }
   },
@@ -192,9 +191,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-05-08T10:43:19.741Z",
+    "at": "2026-05-29T10:45:18.153Z",
     "forModule": "@dxs-ts/eveli-routes",
-    "fromRegistry": "6b447286d2ad",
+    "fromRegistry": "a1320c9a7322",
     "alias": {
       "@dxs-ts/eveli-routes": [
         "../fs-nav"

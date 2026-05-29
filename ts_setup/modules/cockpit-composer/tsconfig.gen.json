@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
       "@dxs-ts/cockpit-api": [
-        "../cockpit-api/index.ts"
+        "./../cockpit-api/index.ts"
       ],
       "@dxs-ts/xui-table": [
-        "../xui-table/index.ts"
+        "./../xui-table/index.ts"
       ],
       "@dxs-ts/xui-datetime": [
-        "../xui-datetime/index.ts"
+        "./../xui-datetime/index.ts"
       ]
     }
   },
@@ -30,9 +29,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-11-07T10:39:52.412Z",
+    "at": "2026-05-29T10:45:18.152Z",
     "forModule": "@dxs-ts/cockpit-composer",
-    "fromRegistry": "da9c0fd57435",
+    "fromRegistry": "a1320c9a7322",
     "alias": {
       "@dxs-ts/cockpit-composer": [
         "../xui-datetime"

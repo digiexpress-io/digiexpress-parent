@@ -1,24 +1,23 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
       "@dxs-ts/wrench-api": [
-        "../wrench-api/index.ts"
+        "./../wrench-api/index.ts"
       ],
       "@dxs-ts/eveli-api": [
-        "../eveli-api/index.ts"
+        "./../eveli-api/index.ts"
       ],
       "@dxs-ts/envir-fetch": [
-        "../envir-fetch/index.ts"
+        "./../envir-fetch/index.ts"
       ],
       "@dxs-ts/eveli-primitives": [
-        "../eveli-primitives/index.ts"
+        "./../eveli-primitives/index.ts"
       ],
       "@dxs-ts/xui-datetime": [
-        "../xui-datetime/index.ts"
+        "./../xui-datetime/index.ts"
       ]
     }
   },
@@ -42,9 +41,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-09-25T12:40:57.061Z",
+    "at": "2026-05-29T10:45:18.154Z",
     "forModule": "@dxs-ts/wrench-routes",
-    "fromRegistry": "5dbc9bc879a7",
+    "fromRegistry": "a1320c9a7322",
     "alias": {
       "@dxs-ts/wrench-routes": [
         "../xui-datetime"

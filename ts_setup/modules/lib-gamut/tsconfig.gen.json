@@ -1,45 +1,44 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
       "@dxs-ts/envir-util": [
-        "../envir-util/index.ts"
+        "./../envir-util/index.ts"
       ],
       "@dxs-ts/gamut-cockpit-store": [
-        "../gamut-cockpit-store/index.ts"
+        "./../gamut-cockpit-store/index.ts"
       ],
       "@dxs-ts/gamut-api": [
-        "../gamut-api/index.ts"
+        "./../gamut-api/index.ts"
       ],
       "@dxs-ts/gamut-md": [
-        "../gamut-md/index.ts"
+        "./../gamut-md/index.ts"
       ],
       "@dxs-ts/gamut-primitives": [
-        "../gamut-primitives/index.ts"
+        "./../gamut-primitives/index.ts"
       ],
       "@dxs-ts/gamut-form-review": [
-        "../gamut-form-review/index.ts"
+        "./../gamut-form-review/index.ts"
       ],
       "@dxs-ts/gamut-form": [
-        "../gamut-form/index.ts"
+        "./../gamut-form/index.ts"
       ],
       "@dxs-ts/gamut-shell": [
-        "../gamut-shell/index.ts"
+        "./../gamut-shell/index.ts"
       ],
       "@dxs-ts/gamut-intl": [
-        "../gamut-intl/index.ts"
+        "./../gamut-intl/index.ts"
       ],
       "@dxs-ts/gamut-routes": [
-        "../gamut-routes/index.ts"
+        "./../gamut-routes/index.ts"
       ],
       "@dxs-ts/gamut-theme": [
-        "../gamut-theme/index.ts"
+        "./../gamut-theme/index.ts"
       ],
       "@dxs-ts/xui-datetime": [
-        "../xui-datetime/index.ts"
+        "./../xui-datetime/index.ts"
       ]
     }
   },
@@ -84,9 +83,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-01-23T09:36:18.037Z",
+    "at": "2026-05-29T10:45:18.154Z",
     "forModule": "@dxs-ts/gamut",
-    "fromRegistry": "11ffe20f86e2",
+    "fromRegistry": "a1320c9a7322",
     "alias": {
       "@dxs-ts/gamut": [
         "../xui-datetime"

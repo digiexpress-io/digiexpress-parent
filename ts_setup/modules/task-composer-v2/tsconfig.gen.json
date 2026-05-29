@@ -1,24 +1,23 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
       "@dxs-ts/task-feedback": [
-        "../task-feedback/index.ts"
+        "./../task-feedback/index.ts"
       ],
       "@dxs-ts/task-api": [
-        "../task-api/index.ts"
+        "./../task-api/index.ts"
       ],
       "@dxs-ts/eveli-api": [
-        "../eveli-api/index.ts"
+        "./../eveli-api/index.ts"
       ],
       "@dxs-ts/xui-table": [
-        "../xui-table/index.ts"
+        "./../xui-table/index.ts"
       ],
       "@dxs-ts/xui-datetime": [
-        "../xui-datetime/index.ts"
+        "./../xui-datetime/index.ts"
       ]
     }
   },
@@ -42,9 +41,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-05-29T09:55:45.924Z",
+    "at": "2026-05-29T10:45:18.154Z",
     "forModule": "@dxs-ts/task-composer-v2",
-    "fromRegistry": "11bd4fdc9271",
+    "fromRegistry": "a1320c9a7322",
     "alias": {
       "@dxs-ts/task-composer-v2": [
         "../xui-datetime"

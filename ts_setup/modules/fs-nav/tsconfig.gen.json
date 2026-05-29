@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
       "@dxs-ts/fs-api": [
-        "../fs-api/index.ts"
+        "./../fs-api/index.ts"
       ]
     }
   },
@@ -18,9 +17,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-05-08T08:13:58.043Z",
+    "at": "2026-05-29T10:45:18.153Z",
     "forModule": "@dxs-ts/fs-nav",
-    "fromRegistry": "8c55cf521781",
+    "fromRegistry": "a1320c9a7322",
     "alias": {
       "@dxs-ts/fs-nav": [
         "../fs-api"

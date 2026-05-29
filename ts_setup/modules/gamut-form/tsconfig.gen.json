@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
       "@dxs-ts/gamut-api": [
-        "../gamut-api/index.ts"
+        "./../gamut-api/index.ts"
       ],
       "@dxs-ts/gamut-md": [
-        "../gamut-md/index.ts"
+        "./../gamut-md/index.ts"
       ],
       "@dxs-ts/xui-datetime": [
-        "../xui-datetime/index.ts"
+        "./../xui-datetime/index.ts"
       ]
     }
   },
@@ -24,18 +23,18 @@
     {
       "path": "../gamut-md"
     },
-    { 
-      "path": "../xui-datetime" 
+    {
+      "path": "../xui-datetime"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-25T08:29:08.096Z",
+    "at": "2026-05-29T10:45:18.153Z",
     "forModule": "@dxs-ts/gamut-form",
-    "fromRegistry": "308e7ad54407",
+    "fromRegistry": "a1320c9a7322",
     "alias": {
       "@dxs-ts/gamut-form": [
-        "../gamut-md"
+        "../xui-datetime"
       ]
     }
   }
