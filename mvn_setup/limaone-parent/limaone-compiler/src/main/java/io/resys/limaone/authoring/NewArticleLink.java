@@ -45,12 +45,17 @@ public interface NewArticleLink {
   
   @Value.Immutable @JsonSerialize(as = ImmutableNewArticleLinkProps.class) @JsonDeserialize(as = ImmutableNewArticleLinkProps.class)
   interface NewArticleLinkProps extends AuthoringModelProps {
+    @Nullable String getId();
+    
     String getValue(); 
     String getType();
     List<String> getArticles();
     List<LocaleLabel> getLabels();
+
+    @Nullable String getDescription();
+    @Nullable List<String> getTagLabels();
     
-    @Nullable String getId();
+    @Nullable Boolean getDisabledMode();
     @Nullable Boolean getDevMode();
   }
 }

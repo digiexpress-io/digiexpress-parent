@@ -5,6 +5,7 @@ import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
+import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
@@ -17,11 +18,9 @@ export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = () => {
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
   const { selectOptions, getConfigOptionsForType, getArticleName } = useFsDirent();
+
   const articles = selectOptions.articles.map(item => ({ value: item.value, label: getArticleName(item.value) ?? item.label }));
   const configOptions = getConfigOptionsForType('ARTICLE_LINK');
-
-  const [selectedArticles, setSelectedArticles] = React.useState<string[]>([]);
-  const [selectedConfigOptions, setSelectedConfigOptions] = React.useState<string[]>([]);
   const linkTypeOptions = selectOptions.linkTypes.map(v => ({
     value: v,
     label: intl.formatMessage({ id: `fs.dirent.link.contentType.${v}` }),
@@ -33,7 +32,12 @@ export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = () => {
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.urlValueField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.link.urlValueField.placeholder' })} />
+        <FsDirentTextField
+          value={ownerState.urlValue}
+          placeholder={intl.formatMessage({ id: 'fs.dirent.link.urlValueField.placeholder' })}
+          onChange={ownerState.onChangeUrlValue}
+          onBlur={ownerState.onBlurUrlValue}
+        />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.contentTypeField.label' })}</Typography>
         <FsDirentSelectSingle options={linkTypeOptions} value={ownerState.contentType} onChange={ownerState.onChangeContentType} />
@@ -42,7 +46,7 @@ export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = () => {
         {ownerState.locales.map((locale) => (
           <div key={locale.label} className={classes.localeRow}>
             <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.link.labelField.${locale.label}.label` })}</Typography>
-            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.link.labelField.placeholder' })} />
+            <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''} onChange={(value) => ownerState.onChangeIntlValue(locale.value, value)} onBlur={() => ownerState.onBlurIntlValue(locale.value)} />
           </div>
         ))}
 
@@ -54,21 +58,28 @@ export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = () => {
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
+            <FsDirentTextField
+              value={ownerState.description}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
+              onChange={ownerState.onChangeDescription}
               multiline minRows={2} maxRows={5}
+              onBlur={ownerState.onBlurDescription}
             />
 
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
+            <FsDirentTextFieldAutocomplete options={selectOptions.labels} value={ownerState.tagLabels} onChange={ownerState.onChangeLabels} placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })} />
+
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.articlesField.label' })}</Typography>
-            <FsDirentSelectMulti options={articles} value={selectedArticles} onChange={setSelectedArticles} />
+            <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
-            <FsDirentSelectMulti options={configOptions} value={selectedConfigOptions} onChange={setSelectedConfigOptions} />
+            <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
           </div>
         </Collapse>
 
         <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel />
-          <FsDirentButtonSave />
+          <FsDirentButtonCancel onClick={ownerState.onCancel} />
+          <FsDirentButtonSave onClick={ownerState.onSave} />
         </div>
 
       </div>
