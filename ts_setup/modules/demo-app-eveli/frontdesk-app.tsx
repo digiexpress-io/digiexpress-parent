@@ -121,7 +121,10 @@ export const FrontdeskApp: React.FC = () => {
                     'smart_tables',
                     'user_profile',
                     'batches',
-                    'tagomi']}>
+                    'tagomi',
+                    'task_transfer_debug',
+                    'task_transfer_files'
+                  ]}>
 
                     <IamBackendProvider onExpire={handleExpire}>
                       <RouterProvider router={router} />

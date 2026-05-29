@@ -35,7 +35,7 @@ const TaskDashboardInternal: React.FC = () => {
         size={{ xs: 12, md: isReviewOpen ? 6 : 12 }}
         spacing={style.cardSpacing}
         sx={{ overflowY: 'auto', maxHeight: '100%', overflow: 'visible' }}>
-        {cardOrder.map((cardId) => (
+        {[...cardOrder, 'transfer'].map((cardId) => (
           <Grid2 key={cardId} size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
             <DraggableCardWrapper {...getDragPropsForId(cardId)} draggingId={draggingId}>
               <TaskCardFactory cardId={cardId} />

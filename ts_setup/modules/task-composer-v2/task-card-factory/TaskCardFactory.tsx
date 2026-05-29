@@ -19,7 +19,8 @@ import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
 
-import { TaskApi, TaskFeature } from '@dxs-ts/task-api';
+import { TaskFeature } from '@dxs-ts/task-api';
+import { EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
 
 import { TaskRolesReadOnly } from '../task-roles';
 import { TaskStatusReadOnly } from '../task-status';
@@ -376,26 +377,33 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
 
     case 'transfer':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.transfer' })}
-          {...commonProps}
-          showFlashyToggle={true}
-          showEditOnMenu={true}
-          showEditButton={true}
-          showReviewOnMenu={false}
-          onDoubleClick={handleEdit}
-          onEdit={handleEdit}
-          editDialog={isEditOpen && (<TaskTransferEditDialog open onClose={handleEditClose} task={task} />)}
-          isMenu
-          startAdornmentIcon={<StartAdornmentIcon icon={DriveFileMoveOutlinedIcon} />}>
-          <TaskCardDataRowText
-            label={task.transferredId ? (intl.formatMessage({ id: 'taskcard.body.transfer.title' })
-            ) : (
-              intl.formatMessage({ id: 'taskcard.body.transfer.none' })
-            )}
-            value={task.transferredId ?? task.transferredId}
-            style={style}
-          />
-        </TaskCard>
+        <>
+          <EveliTenantFeatureEnabled id='TASK_TRANSFER_FILES'>
+            <>list files</>
+          </EveliTenantFeatureEnabled>
+          <EveliTenantFeatureEnabled id='TASK_TRANSFER_DEBUG'>
+            <TaskCard title={intl.formatMessage({ id: 'taskcard.title.transfer' })}
+              {...commonProps}
+              showFlashyToggle={true}
+              showEditOnMenu={true}
+              showEditButton={true}
+              showReviewOnMenu={false}
+              onDoubleClick={handleEdit}
+              onEdit={handleEdit}
+              editDialog={isEditOpen && (<TaskTransferEditDialog open onClose={handleEditClose} task={task} />)}
+              isMenu
+              startAdornmentIcon={<StartAdornmentIcon icon={DriveFileMoveOutlinedIcon} />}>
+              <TaskCardDataRowText
+                label={task.transferredId ? (intl.formatMessage({ id: 'taskcard.body.transfer.title' })
+                ) : (
+                  intl.formatMessage({ id: 'taskcard.body.transfer.none' })
+                )}
+                value={task.transferredId ?? task.transferredId}
+                style={style}
+              />
+            </TaskCard>
+          </EveliTenantFeatureEnabled>
+        </>
       );
 
     case 'audit_viewers':

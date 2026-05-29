@@ -7,6 +7,7 @@
   "dependencies": {
     "@dxs-ts/task-feedback": "*",
     "@dxs-ts/task-api": "*",
+    "@dxs-ts/eveli-api": "*",
     "@dxs-ts/xui-table": "*",
     "@dxs-ts/xui-datetime": "*"
   },

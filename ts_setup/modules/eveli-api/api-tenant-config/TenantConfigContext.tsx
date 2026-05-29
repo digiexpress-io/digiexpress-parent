@@ -37,7 +37,10 @@ export const tenant_features = [
   'ai-assistant',
   'cockpits',
 
-  'eveli_tree'
+  'eveli_tree',
+
+  'task_transfer_debug',
+  'task_transfer_files'
 ] as const;
 
 export type TenantFeature = typeof tenant_features[number];

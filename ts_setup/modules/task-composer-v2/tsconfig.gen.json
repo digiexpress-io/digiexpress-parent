@@ -11,6 +11,9 @@
       "@dxs-ts/task-api": [
         "../task-api/index.ts"
       ],
+      "@dxs-ts/eveli-api": [
+        "../eveli-api/index.ts"
+      ],
       "@dxs-ts/xui-table": [
         "../xui-table/index.ts"
       ],
@@ -28,6 +31,9 @@
       "path": "../task-api"
     },
     {
+      "path": "../eveli-api"
+    },
+    {
       "path": "../xui-table"
     },
     {
@@ -36,9 +42,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-28T08:29:56.493Z",
+    "at": "2026-05-29T09:55:45.924Z",
     "forModule": "@dxs-ts/task-composer-v2",
-    "fromRegistry": "d4c21ece3cb7",
+    "fromRegistry": "11bd4fdc9271",
     "alias": {
       "@dxs-ts/task-composer-v2": [
         "../xui-datetime"
