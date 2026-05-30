@@ -377,7 +377,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
         
 
         
-        builder.addStatement("return $T.builder().value($L).props($T.from($T.asList($L))).rowMapper(new $T()).build()",
+        builder.addStatement("return $T.builder().value($L).props($T.from($T.asList((Object) $L))).rowMapper(new $T()).build()",
           ClassName.get(ImmutableSqlTuple.class),
           resolvedSql,
           ClassName.get(io.vertx.mutiny.sqlclient.Tuple.class),
