@@ -40,6 +40,9 @@ function hook(props: {}) {
       if (props.bodyType === 'FLOW') {
         return baseline('flows', props.changes);
       }
+      if (props.bodyType === 'FLOW_TASK') {
+        return baseline('flow-tasks', props.changes);
+      }
       throw new Error(`postAny: unsupported bodyType ${props.bodyType}`);
     }
   }

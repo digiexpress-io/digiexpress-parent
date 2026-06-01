@@ -45,6 +45,7 @@ import io.resys.limaone.authoring.NewArticleLink.NewArticleLinkProps;
 import io.resys.limaone.authoring.NewArticlePage.NewArticlePageProps;
 import io.resys.limaone.authoring.NewArticleWorkflow.NewArticleWorkflowProps;
 import io.resys.limaone.authoring.NewFlow.NewFlowProps;
+import io.resys.limaone.authoring.NewFlowTask.NewFlowTaskProps;
 import io.resys.limaone.authoring.NewLocale.NewLocaleProps;
 import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.fs.WorldFsBody;
@@ -194,4 +195,10 @@ public class AssetsFsController {
   public Uni<Model<Flow>> createFlow(@RequestBody NewFlowProps body) {
     return authoring.newModel().newFlow().props(body).build();
   }
+  
+  @PostMapping("dirents/flow-tasks")
+  public Uni<Model<FlowTask>> createFlowTask(@RequestBody NewFlowTaskProps body) {
+    return authoring.newModel().newFlowTask().props(body).build();
+  }
+
 }
