@@ -37,6 +37,7 @@ import io.resys.limaone.authoring.ModifyArticleLink.ModifyArticleLinkProps;
 import io.resys.limaone.authoring.ModifyArticlePage.ModifyArticlePageProps;
 import io.resys.limaone.authoring.ModifyArticleWorkflow.ModifyArticleWorkflowProps;
 import io.resys.limaone.authoring.ModifyDecisionTable.ModifyDecisionTableProps;
+import io.resys.limaone.authoring.ModifyPrintout.ModifyPrintoutProps;
 import io.resys.limaone.authoring.ModifyFlow.ModifyFlowProps;
 import io.resys.limaone.authoring.ModifyFlowTask.ModifyFlowTaskProps;
 import io.resys.limaone.authoring.ModifyLocale.ModifyLocaleProps;
@@ -48,6 +49,7 @@ import io.resys.limaone.authoring.NewDecisionTable.NewDecisionTableProps;
 import io.resys.limaone.authoring.NewFlow.NewFlowProps;
 import io.resys.limaone.authoring.NewFlowTask.NewFlowTaskProps;
 import io.resys.limaone.authoring.NewLocale.NewLocaleProps;
+import io.resys.limaone.authoring.NewPrintout.NewPrintoutProps;
 import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.fs.WorldFsBody;
 import io.resys.limaone.fs.WorldFsBody.WrenchAstBodyChange;
@@ -61,6 +63,7 @@ import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.Locale;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
+import io.resys.limaone.model.Printout;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -205,6 +208,19 @@ public class AssetsFsController {
   @PostMapping("dirents/decision-tables")
   public Uni<Model<DecisionTable>> createDecisionTable(@RequestBody NewDecisionTableProps body) {
     return authoring.newModel().newDecisionTable().props(body).build();
+  }
+  
+  @PostMapping("dirents/printouts")
+  public Uni<Model<Printout>> createPrintout(@RequestBody NewPrintoutProps body) {
+    return authoring.newModel().newPrintout().props(body).build();
+  }
+
+  @PutMapping("dirents/printouts/{id}")
+  public Uni<Model<Printout>> updatePrintout(
+      @PathVariable("id") String id,
+      @RequestBody ModifyPrintoutProps body)
+  {
+    return authoring.modifyModel().modifyPrintout().props(body).build();
   }
 
 }

@@ -46,6 +46,10 @@ function hook(props: {}) {
       if (props.bodyType === 'DECISION_TABLE') {
         return baseline('decision-tables', props.changes);
       }
+      if (props.bodyType === 'PRINTOUT') {
+        return baseline('printouts', props.changes);
+      }
+
       throw new Error(`postAny: unsupported bodyType ${props.bodyType}`);
     }
   }

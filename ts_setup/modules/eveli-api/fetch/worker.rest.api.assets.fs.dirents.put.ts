@@ -54,6 +54,9 @@ function hook(props: {}) {
       if (props.bodyType === 'FLOW_TASK') {
         await baseline(`flow-tasks/${props.id}`, props.changes);
       }
+      if (props.bodyType === 'PRINTOUT') {
+        await baseline(`printouts/${props.id}`, props.changes);
+      }
     }
   }
 }

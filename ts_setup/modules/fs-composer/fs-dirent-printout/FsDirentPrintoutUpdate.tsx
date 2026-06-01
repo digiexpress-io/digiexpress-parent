@@ -1,18 +1,20 @@
 import React from 'react';
-import { Typography, Divider } from '@mui/material';
+import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { useFsu } from '@dxs-ts/fs-api';
+import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
-import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { useUtilityClasses, FsDirentPrintoutRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPrintoutUpdateProps } from './FsDirentPrintoutProps';
 
-
-export const FsDirentPrintoutUpdate: React.FC<FsDirentPrintoutUpdateProps> = (props) => {
+export const FsDirentPrintoutUpdate: React.FC<FsDirentPrintoutUpdateProps> = ({ direntId }) => {
   const intl = useIntl();
-  const ownerState = useUpdateOwnerState(props);
+  const { push } = useFsu();
+  const ownerState = useUpdateOwnerState({ direntId });
   const classes = useUtilityClasses();
 
   return (
@@ -21,50 +23,43 @@ export const FsDirentPrintoutUpdate: React.FC<FsDirentPrintoutUpdateProps> = (pr
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField value={ownerState.name} placeholder={intl.formatMessage({ id: 'fs.dirent.printout.nameField.placeholder' })}
-          onChange={ownerState.onChangeName}
-          required
-        />
-
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.printoutServiceNameField.label' })}</Typography>
-        <FsDirentTextField
-          value={ownerState.printoutServiceName}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.printout.printoutServiceNameField.placeholder' })}
-          onChange={ownerState.onChangePrintoutServiceName}
+        <FsDirentTextField required
+          placeholder={intl.formatMessage({ id: 'fs.dirent.printout.nameField.placeholder' })}
+          value={ownerState.serviceName}
+          onChange={ownerState.onChangeServiceName}
+          onBlur={ownerState.onBlurServiceName}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.orchestratorNameField.label' })}</Typography>
-        <FsDirentTextField
+        <FsDirentSelectSingle
+          options={ownerState.flows}
           value={ownerState.orchestratorName}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.printout.orchestratorNameField.placeholder' })}
           onChange={ownerState.onChangeOrchestratorName}
         />
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-        <FsDirentTextField
-          value={ownerState.description}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
-          onChange={ownerState.onChangeDescription}
-          multiline minRows={2} maxRows={5}
-        />
-      <Divider />
+        <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
+          {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.expandToggle.hide' : 'fs.dirent.expandToggle.show' })}
+          <FsIcon icon={FsIcons.ExpandMore} small className={ownerState.isExpanded ? classes.expandToggleIconOpen : classes.expandToggleIcon} />
+        </div>
 
-        <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.printout.sectionTitle.localeLabels' })}</Typography>
-        {ownerState.locales.map((locale) => (
-          <div key={locale} className={classes.localeRow}>
-            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: 'fs.dirent.printout.labelField.label' }, { locale })}</Typography>
-            <FsDirentTextField
-              value={ownerState.intlValues[locale] ?? ''}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.printout.labelField.placeholder' })}
-              onChange={(value) => ownerState.onChangeIntlValue(locale, value)}
-            />
+        <Collapse in={ownerState.isExpanded}>
+          <div className={classes.optionalFields}>
+            {ownerState.locales.map(locale => (
+              <React.Fragment key={locale.value}>
+                <Typography className={classes.label}>{locale.label}</Typography>
+                <FsDirentTextField
+                  value={ownerState.intlValues[locale.value] ?? ''}
+                  onChange={(v) => ownerState.onChangeIntlValues(locale.value, v)}
+                  onBlur={() => ownerState.onBlurIntlValues(locale.value)}
+                />
+              </React.Fragment>
+            ))}
           </div>
-        ))}
+        </Collapse>
 
         <div className={classes.buttonContainer}>
-          <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel />
-          <FsDirentButtonSave />
+          <FsDirentButtonCancel onClick={ownerState.onCancel} />
+          <FsDirentButtonSave onClick={() => push(direntId)} disabled={!ownerState.isChanged} />
         </div>
 
       </div>
