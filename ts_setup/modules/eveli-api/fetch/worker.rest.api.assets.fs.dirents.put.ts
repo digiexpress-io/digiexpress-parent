@@ -57,6 +57,9 @@ function hook(props: {}) {
       if (props.bodyType === 'PRINTOUT') {
         await baseline(`printouts/${props.id}`, props.changes);
       }
+      if (props.bodyType === 'PRINTOUT_RESOURCE') {
+        await baseline(`printout-resources/${props.id}`, props.changes);
+      }
     }
   }
 }

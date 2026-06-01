@@ -34,11 +34,10 @@ export const FsDirentPhoneUpdate: React.FC<FsDirentPhoneUpdateProps> = (props) =
 
         {ownerState.locales.map((locale) => (
           <div key={locale.value} className={classes.localeRow}>
-            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.phone.labelField.${locale}.label` })}</Typography>
+            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}</Typography>
             <FsDirentTextField
-              value={ownerState.intlValues[locale.label] ?? ''}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.phone.labelField.placeholder' })}
-              onChange={(value) => ownerState.onChangeIntlValue(locale.label, value)}
+              value={ownerState.intlValues[locale.value] ?? ''}
+              onChange={(value) => ownerState.onChangeIntlValue(locale.value, value)}
             />
           </div>
         ))}

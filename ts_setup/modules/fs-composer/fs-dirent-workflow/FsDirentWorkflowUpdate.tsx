@@ -55,8 +55,8 @@ export const FsDirentWorkflowUpdate: React.FC<FsDirentWorkflowUpdateProps> = (pr
         <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createLocaleLabels' })}</Typography>
 
         {ownerState.locales.map((locale) => (
-          <div key={locale.label} className={classes.localeRow}>
-            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.service.labelField.${locale.label}.label` })}</Typography>
+          <div key={locale.value} className={classes.localeRow}>
+            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}</Typography>
             <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''}
               onChange={(value) => ownerState.onChangeIntlValues(locale.value, value)}
               onBlur={() => ownerState.onBlurIntlValues(locale.value)}

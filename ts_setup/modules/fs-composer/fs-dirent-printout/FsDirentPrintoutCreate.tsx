@@ -44,7 +44,7 @@ export const FsDirentPrintoutCreate: React.FC<FsDirentPrintoutCreateProps> = (_p
           <div className={classes.optionalFields}>
             {ownerState.locales.map(locale => (
               <React.Fragment key={locale.value}>
-                <Typography className={classes.label}>{locale.label}</Typography>
+                <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}</Typography>
                 <FsDirentTextField
                   value={ownerState.intlValues[locale.value] ?? ''}
                   onChange={(v) => ownerState.onChangeIntlValues(locale.value, v)}

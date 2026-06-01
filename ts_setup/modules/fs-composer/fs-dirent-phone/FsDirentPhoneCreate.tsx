@@ -34,9 +34,9 @@ export const FsDirentPhoneCreate: React.FC<FsDirentPhoneCreateProps> = (props) =
         <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.phone.phoneValueField.placeholder' })} required value={phoneValue} onChange={setPhoneValue} />
 
         {ownerState.locales.map((locale) => (
-          <div key={locale.label} className={classes.localeRow}>
-            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: `fs.dirent.phone.labelField.${locale}.label` })}</Typography>
-            <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.phone.labelField.placeholder' })} />
+          <div key={locale.value} className={classes.localeRow}>
+            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}</Typography>
+            <FsDirentTextField />
           </div>
         ))}
 

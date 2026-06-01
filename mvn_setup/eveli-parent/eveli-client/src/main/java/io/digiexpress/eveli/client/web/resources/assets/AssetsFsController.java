@@ -38,6 +38,9 @@ import io.resys.limaone.authoring.ModifyArticlePage.ModifyArticlePageProps;
 import io.resys.limaone.authoring.ModifyArticleWorkflow.ModifyArticleWorkflowProps;
 import io.resys.limaone.authoring.ModifyDecisionTable.ModifyDecisionTableProps;
 import io.resys.limaone.authoring.ModifyPrintout.ModifyPrintoutProps;
+import io.resys.limaone.authoring.ModifyPrintoutResource.ModifyPrintoutResourceProps;
+import io.resys.limaone.authoring.NewPrintoutResource.NewPrintoutResourceProps;
+import io.resys.limaone.model.PrintoutResource;
 import io.resys.limaone.authoring.ModifyFlow.ModifyFlowProps;
 import io.resys.limaone.authoring.ModifyFlowTask.ModifyFlowTaskProps;
 import io.resys.limaone.authoring.ModifyLocale.ModifyLocaleProps;
@@ -221,6 +224,19 @@ public class AssetsFsController {
       @RequestBody ModifyPrintoutProps body)
   {
     return authoring.modifyModel().modifyPrintout().props(body).build();
+  }
+
+  @PostMapping("dirents/printout-resources")
+  public Uni<Model<PrintoutResource>> createPrintoutResource(@RequestBody NewPrintoutResourceProps body) {
+    return authoring.newModel().newPrintoutResource().props(body).build();
+  }
+
+  @PutMapping("dirents/printout-resources/{id}")
+  public Uni<Model<PrintoutResource>> updatePrintoutResource(
+      @PathVariable("id") String id,
+      @RequestBody ModifyPrintoutResourceProps body)
+  {
+    return authoring.modifyModel().modifyPrintoutResource().props(body).build();
   }
 
 }
