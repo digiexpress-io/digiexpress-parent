@@ -34,6 +34,9 @@ function hook(props: {}) {
       if (props.bodyType === 'LOCALE') {
         return baseline('locales', props.changes);
       }
+      if (props.bodyType === 'ARTICLE_WORKFLOW') {
+        return baseline('article-workflows', props.changes);
+      }
       throw new Error(`postAny: unsupported bodyType ${props.bodyType}`);
     }
   }

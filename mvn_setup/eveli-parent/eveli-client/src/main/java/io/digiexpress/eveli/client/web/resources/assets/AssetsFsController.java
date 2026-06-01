@@ -43,6 +43,7 @@ import io.resys.limaone.authoring.ModifyLocale.ModifyLocaleProps;
 import io.resys.limaone.authoring.NewArticle.NewArticleProps;
 import io.resys.limaone.authoring.NewArticleLink.NewArticleLinkProps;
 import io.resys.limaone.authoring.NewArticlePage.NewArticlePageProps;
+import io.resys.limaone.authoring.NewArticleWorkflow.NewArticleWorkflowProps;
 import io.resys.limaone.authoring.NewLocale.NewLocaleProps;
 import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.fs.WorldFsBody;
@@ -181,5 +182,10 @@ public class AssetsFsController {
   @PostMapping("dirents/locales")
    public Uni<Model<Locale>> createLocale(@RequestBody NewLocaleProps body) {
    return authoring.newModel().newLocale().props(body).build();
+  }
+  
+  @PostMapping("dirents/article-workflows")
+  public Uni<Model<ArticleWorkflow>> createArticleWorkflow(@RequestBody NewArticleWorkflowProps body) {
+    return authoring.newModel().newArticleWorkflow().props(body).build();
   }
 }

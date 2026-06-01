@@ -1494,6 +1494,7 @@ export const en = {
   'fs.dirent.service.labelField.en.label': 'English label',
   'fs.dirent.service.labelField.fi.label': 'Finnish label',
   'fs.dirent.service.labelField.sv.label': 'Swedish label',
+  'fs.dirent.service.labelField.et.label': 'Estonian label',
   'fs.dirent.service.labelField.placeholder': 'Display text for this language',
   'fs.dirent.service.validityStartField.label': 'Valid from',
   'fs.dirent.service.validityStartField.placeholder': 'DD.MM.YYYY',
