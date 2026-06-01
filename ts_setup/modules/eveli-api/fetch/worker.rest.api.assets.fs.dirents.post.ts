@@ -31,6 +31,9 @@ function hook(props: {}) {
       if (props.bodyType === 'ARTICLE_LINK') {
         return baseline('links', props.changes);
       }
+      if (props.bodyType === 'LOCALE') {
+        return baseline('locales', props.changes);
+      }
       throw new Error(`postAny: unsupported bodyType ${props.bodyType}`);
     }
   }

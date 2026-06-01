@@ -25,7 +25,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
 
   const [isLoading, setIsLoading] = React.useState(true);
   React.useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 700);
+    const timer = setTimeout(() => setIsLoading(false), 300);
     return () => clearTimeout(timer);
   }, []);
 

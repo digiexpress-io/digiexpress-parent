@@ -43,6 +43,7 @@ import io.resys.limaone.authoring.ModifyLocale.ModifyLocaleProps;
 import io.resys.limaone.authoring.NewArticle.NewArticleProps;
 import io.resys.limaone.authoring.NewArticleLink.NewArticleLinkProps;
 import io.resys.limaone.authoring.NewArticlePage.NewArticlePageProps;
+import io.resys.limaone.authoring.NewLocale.NewLocaleProps;
 import io.resys.limaone.fs.WorldFs;
 import io.resys.limaone.fs.WorldFsBody;
 import io.resys.limaone.fs.WorldFsBody.WrenchAstBodyChange;
@@ -175,5 +176,10 @@ public class AssetsFsController {
   @PostMapping("dirents/links")
   public Uni<Model<ArticleLink>> createLink(@RequestBody NewArticleLinkProps body) {
     return authoring.newModel().newArticleLink().props(body).build();
+  }
+  
+  @PostMapping("dirents/locales")
+   public Uni<Model<Locale>> createLocale(@RequestBody NewLocaleProps body) {
+   return authoring.newModel().newLocale().props(body).build();
   }
 }
