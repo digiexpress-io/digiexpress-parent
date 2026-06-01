@@ -1,7 +1,6 @@
 import React from 'react';
-import { Typography, Collapse } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
@@ -34,26 +33,6 @@ export const FsDirentPrintoutCreate: React.FC<FsDirentPrintoutCreateProps> = (_p
           value={ownerState.orchestratorName}
           onChange={ownerState.onChangeOrchestratorName}
         />
-
-        <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
-          {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.expandToggle.hide' : 'fs.dirent.expandToggle.show' })}
-          <FsIcon icon={FsIcons.ExpandMore} small className={ownerState.isExpanded ? classes.expandToggleIconOpen : classes.expandToggleIcon} />
-        </div>
-
-        <Collapse in={ownerState.isExpanded}>
-          <div className={classes.optionalFields}>
-            {ownerState.locales.map(locale => (
-              <React.Fragment key={locale.value}>
-                <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}</Typography>
-                <FsDirentTextField
-                  value={ownerState.intlValues[locale.value] ?? ''}
-                  onChange={(v) => ownerState.onChangeIntlValues(locale.value, v)}
-                  onBlur={() => ownerState.onBlurIntlValues(locale.value)}
-                />
-              </React.Fragment>
-            ))}
-          </div>
-        </Collapse>
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonCancel onClick={ownerState.onCancel} />

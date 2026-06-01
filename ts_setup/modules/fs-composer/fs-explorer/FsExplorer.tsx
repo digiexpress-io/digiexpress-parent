@@ -145,13 +145,16 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
 const TYPE_ICONS: Partial<Record<Fs.BodyType, React.ElementType<SvgIconProps>>> = {
   ARTICLE: FsIcons.Article,
   ARTICLE_WORKFLOW: FsIcons.Settings,
-  DIALOB_FORM: FsIcons.Form,
-  FLOW: FsIcons.Flow,
   ARTICLE_LINK: FsIcons.Link,
-  LOCALE: FsIcons.Language,
-  PRINTOUT: FsIcons.Print,
   ARTICLE_TEMPLATE: FsIcons.Pdf,
   ARTICLE_PAGE: FsIcons.Page,
+  DIALOB_FORM: FsIcons.Form,
+  FLOW: FsIcons.Flow,
+  LOCALE: FsIcons.Language,
+  PRINTOUT: FsIcons.Print,
+  PRINTOUT_RESOURCE: FsIcons.Image,
+  PRINTOUT_PAGE: FsIcons.Page,
+
 };
 
 const NewDirent: React.FC<{ onClose: () => void }> = ({ onClose }) => {

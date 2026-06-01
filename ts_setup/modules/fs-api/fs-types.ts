@@ -414,6 +414,7 @@ export declare namespace Fs {
     flows: SelectOption[];
     dialobs: SelectOption[];
     languages: SelectOption[];
+    printouts: SelectOption[];
     linkTypes: LinkType[];
     labels: string[];
     direntProps: Record<string, Fs.Props>;

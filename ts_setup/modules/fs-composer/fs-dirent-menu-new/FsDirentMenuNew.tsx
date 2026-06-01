@@ -25,7 +25,7 @@ const DIRENT_TYPE_ICONS: Record<Fs.BodyType, React.ElementType<SvgIconProps>> = 
 
   FLOW_TASK: FsIcons.Assignment,
   DECISION_TABLE: FsIcons.DecisionTable,
-  PRINTOUT_PAGE: 'symbol',
+  PRINTOUT_PAGE: FsIcons.Page,
   DEPLOYMENT: 'symbol',
   UNKNOWN: 'symbol'
 };

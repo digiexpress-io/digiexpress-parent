@@ -34,6 +34,9 @@ public class Props_PrintoutPageBuilder {
     final PrintoutPage page = currentState.getBodyOfType(node);
     
     return ImmutablePrintoutPageProps.builder()
+          .id(node.getObjectId())
+          .type(node.getBodyType())
+          .locked(false)
           .localeId(page.getLocaleId())
           .content(page.getContent())
           .serviceId(page.getServiceId())

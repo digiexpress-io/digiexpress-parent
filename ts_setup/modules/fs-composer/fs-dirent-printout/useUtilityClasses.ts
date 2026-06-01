@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled, darken, lighten } from '@mui/material';
+import { generateUtilityClass, styled } from '@mui/material';
   import composeClasses from '@mui/utils/composeClasses';
   import { FsColors } from '../fs-theme';
 
@@ -8,11 +8,8 @@ import { generateUtilityClass, styled, darken, lighten } from '@mui/material';
     root: string;
     title: string;
     formContainer: string;
-    expandToggle: string;
-    expandToggleIcon: string;
-    expandToggleIconOpen: string;
-    optionalFields: string;
     label: string;
+    pageList: string;
     buttonContainer: string;
   }
 
@@ -23,11 +20,8 @@ import { generateUtilityClass, styled, darken, lighten } from '@mui/material';
       root: ['root'],
       title: ['title'],
       formContainer: ['formContainer'],
-      expandToggle: ['expandToggle'],
-      expandToggleIcon: ['expandToggleIcon'],
-      expandToggleIconOpen: ['expandToggleIconOpen'],
-      optionalFields: ['optionalFields'],
       label: ['label'],
+      pageList: ['pageList'],
       buttonContainer: ['buttonContainer'],
     };
     const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -55,42 +49,16 @@ import { generateUtilityClass, styled, darken, lighten } from '@mui/material';
       padding: '8px 0',
     },
 
-    [`& .${MUI_NAME}-expandToggle`]: {
-      ...theme.typography.subtitle2,
-      color: ownerState.isDarkMode ? FsColors.direntTypes.dark.form : darken(FsColors.direntTypes.light.form, 0.1),
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      gap: theme.spacing(0.5),
-      fontWeight: 'bold',
-      '&:hover': {
-        opacity: 0.8,
-      },
-    },
-
-    [`& .${MUI_NAME}-expandToggleIcon`]: {
-      transition: 'transform 200ms ease',
-      transform: 'rotate(0deg)',
-    },
-
-    [`& .${MUI_NAME}-expandToggleIconOpen`]: {
-      transition: 'transform 200ms ease',
-      transform: 'rotate(180deg)',
-    },
-
-    [`& .${MUI_NAME}-optionalFields`]: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: theme.spacing(1.5),
-      backgroundColor: ownerState.isDarkMode ? lighten(FsColors.dark.background, 0.05) : darken(FsColors.light.background, 0.06),
-      border: ownerState.isDarkMode ? `1px solid ${FsColors.dark.border}` : `1px solid ${FsColors.light.border}`,
-      padding: theme.spacing(1.5),
-    },
-
     [`& .${MUI_NAME}-label`]: {
       ...theme.typography.subtitle2,
       fontWeight: 500,
       color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    },
+
+    [`& .${MUI_NAME}-pageList`]: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: theme.spacing(0.5),
     },
 
     [`& .${MUI_NAME}-buttonContainer`]: {

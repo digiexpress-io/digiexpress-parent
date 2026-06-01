@@ -15,6 +15,8 @@ import { FsPropertiesPrintout } from './FsPropertiesPrintout';
 import { FsPropertiesLink } from './FsPropertiesLink';
 import { FsPropertiesPhone } from './FsPropertiesPhone';
 import { FsPropertiesTemplate } from './FsPropertiesTemplate';
+import { FsPropertiesPrintoutResource } from './FsPropertiesPrintoutResource';
+import { FsPropertiesPrintoutPage } from './FsPropertiesPrintoutPage';
 
 
 
@@ -28,6 +30,8 @@ function renderTypeSpecificRows(dirent: Fs.DirentBase): React.ReactNode {
     case 'ARTICLE_LINK': return <FsPropertiesLink dirent={dirent} />;
     // case 'ARTICLE_LINK': return <FsPropertiesPhone dirent={direntProps} />;
     case 'ARTICLE_TEMPLATE': return <FsPropertiesTemplate dirent={dirent} />;
+    case 'PRINTOUT_RESOURCE': return <FsPropertiesPrintoutResource dirent={dirent} />;
+    case 'PRINTOUT_PAGE': return <FsPropertiesPrintoutPage dirent={dirent} />;
     default: return null;
   }
 }

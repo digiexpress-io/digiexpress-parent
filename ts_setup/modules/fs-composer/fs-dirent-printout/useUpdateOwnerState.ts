@@ -2,6 +2,11 @@ import React from 'react';
 import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 
+export interface ConnectedPage {
+  id: string;
+  localeName: string;
+}
+
 
 type _ChangeStateProps = {
   printoutId: string;
@@ -69,24 +74,18 @@ class _ChangeState implements FsuChange {
 
 interface _TextFields {
   serviceName: string;
-  intlValues: Record<string, string>;
 }
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
-  isExpanded: boolean;
   serviceName: string;
   orchestratorName: string;
-  intlValues: Record<string, string>;
-  locales: Fs.SelectOption[];
   flows: Fs.SelectOption[];
+  connectedPages: ConnectedPage[];
   onChangeServiceName: (v: string) => void;
   onBlurServiceName: () => void;
   onChangeOrchestratorName: (v: string) => void;
-  onChangeIntlValues: (locale: string, value: string) => void;
-  onBlurIntlValues: (locale: string) => void;
-  onToggleExpanded: () => void;
   onCancel: () => void;
 }
 
@@ -110,14 +109,17 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<_TextFields>({
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-    intlValues: printoutProps.intlValues ?? {},
   });
 
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const isChangesPresent = state.isChanged || fields.serviceName !== state.serviceName;
 
-  const isChangesPresent = state.isChanged
-    || fields.serviceName !== state.serviceName
-    || JSON.stringify(fields.intlValues) !== JSON.stringify(state.intlValues);
+  const connectedPages: ConnectedPage[] = Object.values(selectOptions.direntProps)
+    .filter(p => p.type === 'PRINTOUT_PAGE' && (p as Fs.PrintoutPageProps).serviceId === props.direntId)
+    .map(p => {
+      const pageProps = p as Fs.PrintoutPageProps;
+      const localeName = selectOptions.languages.find(l => l.value === pageProps.localeId)?.label ?? pageProps.localeId;
+      return { id: p.id, localeName };
+    });
 
   function onChangeServiceName(v: string) {
     setFields(prev => ({ ...prev, serviceName: v }));
@@ -128,39 +130,21 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeOrchestratorName(v: string) {
     setState(prev => prev.withOrchestratorName(v));
   }
-  function onChangeIntlValues(locale: string, value: string) {
-    setFields(prev => ({ ...prev, intlValues: { ...prev.intlValues, [locale]: value } }));
-  }
-  function onBlurIntlValues(locale: string) {
-    setState(prev => prev.withIntlValues(locale, fields.intlValues[locale] ?? ''));
-  }
-  function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
-  }
   function onCancel() {
-    setFields({
-      serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-      intlValues: printoutProps.intlValues ?? {},
-    });
+    setFields({ serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '' });
     cancel(props.direntId);
-    setIsExpanded(false);
   }
 
   return {
     isDarkMode,
     isChanged: isChangesPresent,
-    isExpanded,
     serviceName: fields.serviceName,
     orchestratorName: state.orchestratorName,
-    intlValues: fields.intlValues,
-    locales: selectOptions.languages,
     flows: selectOptions.flows,
+    connectedPages,
     onChangeServiceName,
     onBlurServiceName,
     onChangeOrchestratorName,
-    onChangeIntlValues,
-    onBlurIntlValues,
-    onToggleExpanded,
     onCancel,
   };
 };

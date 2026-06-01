@@ -52,6 +52,9 @@ function hook(props: {}) {
       if (props.bodyType === 'PRINTOUT_RESOURCE') {
         return baseline('printout-resources', props.changes);
       }
+      if (props.bodyType === 'PRINTOUT_PAGE') {
+        return baseline('printout-pages', props.changes);
+      }
 
       throw new Error(`postAny: unsupported bodyType ${props.bodyType}`);
     }
