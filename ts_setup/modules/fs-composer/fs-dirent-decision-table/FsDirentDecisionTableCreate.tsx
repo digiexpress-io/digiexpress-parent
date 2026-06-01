@@ -20,11 +20,27 @@ export const FsDirentDecisionTableCreate: React.FC<FsDirentDecisionTableCreatePr
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.decision_table.nameField.placeholder' })} required />
+        <FsDirentTextField
+          placeholder={intl.formatMessage({ id: 'fs.dirent.decision_table.nameField.placeholder' })}
+          required
+          value={ownerState.name}
+          onChange={ownerState.onChangeName}
+          onBlur={ownerState.onBlurName}
+        />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
+        <FsDirentTextField
+          placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
+          multiline
+          minRows={2}
+          value={ownerState.desc}
+          onChange={ownerState.onChangeDesc}
+          onBlur={ownerState.onBlurDesc}
+        />
 
         <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel />
-          <FsDirentButtonSave />
+          <FsDirentButtonCancel onClick={ownerState.onCancel} />
+          <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isChanged} />
         </div>
 
       </div>
