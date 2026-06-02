@@ -147,28 +147,6 @@ public class DocContainerClientDummy implements DocContainerClient {
         .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).currentTxCommit().build())
         .build();
         
-        
-        if(previousTransfer.isEmpty()) {
-          merge.addLink(newLink -> newLink
-            .linkType(TaskMapper.LINK_TYPE_TRANSFERRED_ID)
-            .linkValue(docContainerId)
-            .linkBody(linkBody)
-            .build());
-        } else {
-          merge.modifyLink(previousTransfer.get().getId(), modLink -> {
-            modLink
-              .linkType(TaskMapper.LINK_TYPE_TRANSFERRED_ID)
-              .linkValue(docContainerId)
-              .linkBody(linkBody)
-              .build();
-          });
-        }
-        
-        merge.status(TaskStatus.TRANSFERRED.name())
-        // change is viewed by worker who created it
-        .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).currentTxCommit().build())
-        .build();
-        
       }
 
     };
