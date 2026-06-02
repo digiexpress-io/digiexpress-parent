@@ -21,6 +21,7 @@ export const FsPropertiesArticlePage: React.FC<FsPropertiesArticlePageProps> = (
   const pageProps = dirent.props as Fs.PageProps;
   const configOptionsEnabled = dirent.props?.configOptions ?? [];
   const articleName = getDirentName(pageProps.articleId) ?? pageProps.articleId;
+  const localeName = getDirentName(pageProps.localeCode) ?? pageProps.localeCode;
 
   return (
     <>
@@ -42,7 +43,7 @@ export const FsPropertiesArticlePage: React.FC<FsPropertiesArticlePageProps> = (
 
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.localeCode' })}</Typography>
-        <Typography className={classes.propertyValue}>{pageProps.localeCode}</Typography>
+        <Typography className={classes.propertyValue}>{localeName}</Typography>
       </div>
     </>
   );
