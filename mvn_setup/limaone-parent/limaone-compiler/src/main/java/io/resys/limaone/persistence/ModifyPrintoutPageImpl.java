@@ -134,6 +134,8 @@ return ImmutablePrintoutPage.builder()
         .content(props.getContent() == null ? start.getBody().getContent() : props.getContent())
         .localeId(locale.get().getId())
         .printoutPageIds(templateDependencies)
+        .description(props.getDescription() == null ? start.getBody().getDescription() : props.getDescription())
+        .labels(props.getLabels() == null ? start.getBody().getLabels() : props.getLabels())
         .build();
 
   }

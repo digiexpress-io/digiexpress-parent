@@ -48,6 +48,8 @@ public interface ModifyPrintoutPage {
     String getPageId();
     @Nullable String getContent();
     @Nullable String getLocaleId();
+    @Nullable String getDescription();
+    @Nullable List<String> getLabels();
     @Nullable List<String> getResourceIds();
     @Nullable List<String> getPrintoutPageIds();
   }

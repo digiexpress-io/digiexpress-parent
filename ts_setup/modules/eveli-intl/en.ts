@@ -1531,6 +1531,8 @@ export const en = {
   'fs.dirent.printoutPage.localeIdField.label': 'Locale',
   'fs.dirent.printoutPage.contentField.label': 'Content',
   'fs.dirent.printoutPage.contentField.placeholder': 'Enter markdown content',
+  'fs.dirent.printoutPage.printoutResourcesField.label': 'Printout resources',
+  'fs.dirent.printoutPage.printoutResourcesField.empty': 'No resources connected',
   'fs.dirent.template.sectionTitle.createNew': 'Create new template',
   'fs.dirent.template.sectionTitle.edit': 'Edit template',
   'fs.dirent.template.printoutServiceIdField.label': 'Printout',

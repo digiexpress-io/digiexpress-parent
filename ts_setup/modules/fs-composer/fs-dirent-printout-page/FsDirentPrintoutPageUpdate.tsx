@@ -32,6 +32,19 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageUpdateProp
           onBlur={ownerState.onBlurContent}
         />
 
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.printoutResourcesField.label' })}</Typography>
+        {ownerState.connectedResourceNames.length === 0 ? (
+          <Typography variant='body2' color='textSecondary'>
+            {intl.formatMessage({ id: 'fs.dirent.printoutPage.printoutResourcesField.empty' })}
+          </Typography>
+        ) : (
+          <div className={classes.resourceList}>
+            {ownerState.connectedResourceNames.map((name, index) => (
+              <Typography key={index} variant='body2'>{name}</Typography>
+            ))}
+          </div>
+        )}
+
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
           {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.expandToggle.hide' : 'fs.dirent.expandToggle.show' })}
           <FsIcon icon={FsIcons.ExpandMore} small className={ownerState.isExpanded ? classes.expandToggleIconOpen : classes.expandToggleIcon} />

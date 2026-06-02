@@ -76,6 +76,7 @@ export interface UpdateOwnerState {
   description: string;
   labels: string[];
   labelOptions: string[];
+  connectedResourceNames: string[];
   onChangeContent: (v: string) => void;
   onBlurContent: () => void;
   onChangeDescription: (v: string) => void;
@@ -108,6 +109,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     content: pageProps.content ?? '',
     description: pageProps.description ?? '',
   });
+
+  const connectedResourceNames = Object.values(selectOptions.direntProps)
+    .filter(p => p.type === 'PRINTOUT_RESOURCE')
+    .map(p => p as Fs.PrintoutResourceProps)
+    .filter(p => p.printoutPageIds.includes(props.direntId))
+    .map(p => p.resourceName);
 
   const isChangesPresent = state.isChanged
     || fields.content !== state.content
@@ -148,6 +155,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     description: fields.description,
     labels: state.labels,
     labelOptions: selectOptions.labels,
+    connectedResourceNames,
     onChangeContent,
     onBlurContent,
     onChangeDescription,

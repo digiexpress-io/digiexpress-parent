@@ -14,6 +14,7 @@ export interface FsDirentPrintoutPageClasses {
   expandToggleIcon: string;
   expandToggleIconOpen: string;
   optionalFields: string;
+  resourceList: string;
 }
 
 export type FsDirentPrintoutPageClassKey = keyof FsDirentPrintoutPageClasses;
@@ -29,6 +30,7 @@ export const useUtilityClasses = () => {
     expandToggleIcon: ['expandToggleIcon'],
     expandToggleIconOpen: ['expandToggleIconOpen'],
     optionalFields: ['optionalFields'],
+    resourceList: ['resourceList'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -84,6 +86,12 @@ export const FsDirentPrintoutPageRoot = styled('div', {
   [`& .${MUI_NAME}-expandToggleIconOpen`]: {
     transition: 'transform 0.2s',
     transform: 'rotate(180deg)',
+  },
+
+  [`& .${MUI_NAME}-resourceList`]: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.5),
   },
 
   [`& .${MUI_NAME}-optionalFields`]: {

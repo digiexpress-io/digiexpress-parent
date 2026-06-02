@@ -24,11 +24,13 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.Body;
 import io.resys.limaone.model.Model.BodyType;
+import jakarta.annotation.Nullable;
 
 @Value.Immutable
 @JsonSerialize(as = ImmutablePrintoutPage.class)
@@ -39,6 +41,12 @@ public interface PrintoutPage extends Body {
   String getLocaleId();
   String getServiceId();
   List<String> getPrintoutPageIds();
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Nullable String getDescription();
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Nullable List<String> getLabels();
 
   default BodyType getBodyType() { return BodyType.PRINTOUT_PAGE; };
 }
