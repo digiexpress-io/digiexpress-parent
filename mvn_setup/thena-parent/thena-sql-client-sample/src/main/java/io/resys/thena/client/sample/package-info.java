@@ -1,4 +1,4 @@
-@TenantSql.Registry(name = "Batch2", tenantType = StructureType.unknown)
+@TenantSql.Registry(name = "Batch2", tenantType = StructureType.contract)
 package io.resys.thena.client.sample;
 
 /*-

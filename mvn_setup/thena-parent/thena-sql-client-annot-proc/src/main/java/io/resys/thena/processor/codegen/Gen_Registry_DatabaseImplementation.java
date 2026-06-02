@@ -383,12 +383,20 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
     
     builder.addField(ClassName.get("io.vertx.mutiny.sqlclient", "Pool"), "client", Modifier.PRIVATE);
     
-    builder.addField(
-      FieldSpec
-        .builder(registry.isTenantDisabled() ? Tenant.class : String.class, "db", Modifier.PRIVATE)
-        .initializer("$T.unknown()", ClassName.get(Tenant.class) )
-        .build()
-    );
+    if(registry.isTenantDisabled()) {
+      builder.addField(
+        FieldSpec
+          .builder(Tenant.class, "db", Modifier.PRIVATE)
+          .initializer("$T.unknown()", ClassName.get(Tenant.class) )
+          .build()
+      );
+    } else {
+      builder.addField(
+          FieldSpec
+            .builder(String.class, "db", Modifier.PRIVATE)
+            .build()
+        );
+    }
     
     builder.addField(ClassName.get(ThenaSqlDataSourceErrorHandler.class), "errorHandler", Modifier.PRIVATE);
     builder.addField(ClassName.get(TenantCache.class), "tenantCache", Modifier.PRIVATE);
