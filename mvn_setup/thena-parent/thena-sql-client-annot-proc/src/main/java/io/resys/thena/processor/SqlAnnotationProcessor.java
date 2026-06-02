@@ -75,6 +75,11 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     
+    processingEnv.getMessager().printMessage(
+        javax.tools.Diagnostic.Kind.NOTE,
+        "Thena generator started"
+      );
+    
     // Build centralized metadata model
     final var metaModel = Metamodel.builder(processingEnv)
       .addAllRegistries(roundEnv.getElementsAnnotatedWith(TenantSql.Registry.class))

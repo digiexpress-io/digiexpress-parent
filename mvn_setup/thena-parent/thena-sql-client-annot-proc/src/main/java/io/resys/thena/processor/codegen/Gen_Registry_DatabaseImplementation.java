@@ -383,9 +383,13 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
     
     builder.addField(ClassName.get("io.vertx.mutiny.sqlclient", "Pool"), "client", Modifier.PRIVATE);
     
-    if(!registry.isTenantDisabled()) {
-      builder.addField(String.class, "db", Modifier.PRIVATE);
-    }
+    builder.addField(
+      FieldSpec
+        .builder(registry.isTenantDisabled() ? Tenant.class : String.class, "db", Modifier.PRIVATE)
+        .initializer("$T.unknown()", ClassName.get(Tenant.class) )
+        .build()
+    );
+    
     builder.addField(ClassName.get(ThenaSqlDataSourceErrorHandler.class), "errorHandler", Modifier.PRIVATE);
     builder.addField(ClassName.get(TenantCache.class), "tenantCache", Modifier.PRIVATE);
     
@@ -397,15 +401,14 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .addStatement("return this")
       .build());
     
-    if(!registry.isTenantDisabled()) {
-      builder.addMethod(MethodSpec.methodBuilder("tenant")
+    builder.addMethod(MethodSpec.methodBuilder("tenant")
         .addModifiers(Modifier.PUBLIC)
-        .addParameter(String.class, "db")
+        .addParameter(registry.isTenantDisabled() ? Tenant.class : String.class, "db")
         .returns(ClassName.bestGuess("Builder"))
         .addStatement("this.db = db")
         .addStatement("return this")
         .build());
-    }
+    
     builder.addMethod(MethodSpec.methodBuilder("tenantCache")
       .addModifiers(Modifier.PUBLIC)
       .addParameter(ClassName.get(TenantCache.class), "tenantCache")
@@ -436,7 +439,7 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
     
     if(registry.isTenantDisabled() ) {
       buildMethod
-        .addStatement("final var db = $T.unknown()", ClassName.get(Tenant.class))
+        .addStatement("final var db = this.db")
         .addStatement("final var ctx = $T.defaults(\"\")", ClassName.get(TenantContext.class));
     } else {
       buildMethod
