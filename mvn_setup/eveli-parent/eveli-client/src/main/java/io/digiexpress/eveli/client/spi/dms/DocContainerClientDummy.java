@@ -87,26 +87,26 @@ public class DocContainerClientDummy implements DocContainerClient {
   }
 
   @Override
-  public DocContainerTasUpdater updateTask() {
-    return new DocContainerTasUpdater() {
+  public DocContainerTaskUpdater updateTask() {
+    return new DocContainerTaskUpdater() {
       private MergeMission merge;
       private DocContainer doc;
       private String userId;
       
       @Override
-      public DocContainerTasUpdater task(MergeMission task) {
+      public DocContainerTaskUpdater task(MergeMission task) {
         this.merge = task;
         return this;
       }
       
       @Override
-      public DocContainerTasUpdater doc(DocContainer doc) {
+      public DocContainerTaskUpdater doc(DocContainer doc) {
         this.doc = doc;
         return this;
       }
 
       @Override
-      public DocContainerTasUpdater userId(String userId) {
+      public DocContainerTaskUpdater userId(String userId) {
         this.userId = userId;
         return this;
       }
@@ -146,29 +146,6 @@ public class DocContainerClientDummy implements DocContainerClient {
         // change is viewed by worker who created it
         .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).currentTxCommit().build())
         .build();
-        
-        
-        if(previousTransfer.isEmpty()) {
-          merge.addLink(newLink -> newLink
-            .linkType(TaskMapper.LINK_TYPE_TRANSFERRED_ID)
-            .linkValue(docContainerId)
-            .linkBody(linkBody)
-            .build());
-        } else {
-          merge.modifyLink(previousTransfer.get().getId(), modLink -> {
-            modLink
-              .linkType(TaskMapper.LINK_TYPE_TRANSFERRED_ID)
-              .linkValue(docContainerId)
-              .linkBody(linkBody)
-              .build();
-          });
-        }
-        
-        merge.status(TaskStatus.TRANSFERRED.name())
-        // change is viewed by worker who created it
-        .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).currentTxCommit().build())
-        .build();
-        
       }
 
     };

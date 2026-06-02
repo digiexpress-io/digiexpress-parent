@@ -30,12 +30,12 @@ import io.smallrye.mutiny.Uni;
 
 public interface DocContainerClient {
   CreateDoc createDoc();
-  DocContainerTasUpdater updateTask();
+  DocContainerTaskUpdater updateTask();
   
-  interface DocContainerTasUpdater {
-    DocContainerTasUpdater userId(String userId);
-    DocContainerTasUpdater doc(DocContainer doc);
-    DocContainerTasUpdater task(MergeMission task);
+  interface DocContainerTaskUpdater {
+    DocContainerTaskUpdater userId(String userId);
+    DocContainerTaskUpdater doc(DocContainer doc);
+    DocContainerTaskUpdater task(MergeMission task);
     void build();
   }
   
