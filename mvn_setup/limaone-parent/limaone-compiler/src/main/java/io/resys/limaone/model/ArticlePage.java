@@ -20,6 +20,8 @@ package io.resys.limaone.model;
  * #L%
  */
 
+import java.util.List;
+
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -47,6 +49,9 @@ public interface ArticlePage extends Body {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   @Nullable Boolean getDisabledMode();
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Nullable List<String> getLabels();
   
   default BodyType getBodyType() {
     return BodyType.ARTICLE_PAGE;

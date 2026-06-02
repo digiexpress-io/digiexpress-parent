@@ -26,9 +26,20 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent
   const associatedLinks = Object.values(selectOptions.direntProps)
     .filter(p => p.type === 'ARTICLE_LINK' && (p as Fs.LinkProps).articles?.includes(dirent.id))
     .map(p => getDirent(p.id)?.name ?? p.id);
+  const configOptionsEnabled = dirent.props?.configOptions ?? [];
 
   return (
     <>
+    <div className={classes.propertyRow}>
+      <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.configOptionsEnabled' })}</Typography>
+      <div className={classes.propertyList}>
+        {configOptionsEnabled.map((option, index) => (
+          <Box key={index} className={classes.configOptionsListItem}>
+            {intl.formatMessage({ id: `fs.dirent.configOption.${option}` })}
+          </Box>
+        ))}
+      </div>
+    </div>
     {associatedLinks.length > 0 && (
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.associatedLinks' })}</Typography>

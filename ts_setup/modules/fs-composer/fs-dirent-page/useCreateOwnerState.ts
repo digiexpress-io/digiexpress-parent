@@ -16,6 +16,8 @@ export interface CreateOwnerState {
   content: string;
   description: string;
   configOptions: Fs.ConfigOption[];
+  labels: string[];
+  labelOptions: string[];
   availableConfigOptions: Fs.SelectOption[];
   articleOptions: FsDirentSelectSingleOption[];
   localeOptions: FsDirentSelectSingleOption[];
@@ -28,6 +30,7 @@ export interface CreateOwnerState {
   onChangeDescription: (value: string) => void;
   onBlurDescription: () => void;
   onChangeConfigOptions: (value: string[]) => void;
+  onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
   onSave: () => void;
   onCancel: () => void;
@@ -40,6 +43,7 @@ type _CreateStateProps = {
   content: string;
   description: string;
   configOptions: Fs.ConfigOption[];
+  labels: string[];
   devMode: boolean;
   disabledMode: boolean;
 }
@@ -59,6 +63,7 @@ class _CreateState implements FsuCreateChange {
   get content() { return this._current.content; }
   get description() { return this._current.description; }
   get configOptions() { return this._current.configOptions; }
+  get labels() { return this._current.labels; }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
@@ -69,6 +74,7 @@ class _CreateState implements FsuCreateChange {
         locale: this._current.locale,
         content: this._current.content,
         description: this._current.description,
+        labels: this._current.labels.length ? this._current.labels : undefined,
         devMode: this._current.devMode,
         disabledMode: this._current.disabledMode,
       }
@@ -95,6 +101,9 @@ class _CreateState implements FsuCreateChange {
       disabledMode: configOptions.includes('DISABLED_MODE'),
     }, this._origin);
   }
+  withLabels(labels: string[]): _CreateState {
+    return new _CreateState({ ...this._current, labels }, this._origin);
+  }
 }
 
 const _initFields: TextFields = { content: '', description: '' };
@@ -106,6 +115,7 @@ const _initProps: _CreateStateProps = {
   content: '',
   description: '',
   configOptions: [],
+  labels: [],
   devMode: false,
   disabledMode: false,
 };
@@ -169,6 +179,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
 
+  function onChangeLabels(value: string[]) {
+    setState(prev => prev.withLabels(value));
+  }
+
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
@@ -208,6 +222,8 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     content: fields.content,
     description: fields.description,
     configOptions: state.configOptions,
+    labels: state.labels,
+    labelOptions: selectOptions.labels,
     availableConfigOptions,
     articleOptions,
     localeOptions,
@@ -220,6 +236,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeDescription,
     onBlurDescription,
     onChangeConfigOptions,
+    onChangeLabels,
     onToggleExpanded,
     onSave,
     onCancel,

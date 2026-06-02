@@ -20,9 +20,13 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
+import java.util.Collections;
+
 import io.resys.limaone.fs.ImmutableArticlePageProps;
+import io.resys.limaone.fs.ImmutableLabel;
 import io.resys.limaone.fs.WorldFsProps.ArticlePageProps;
 import io.resys.limaone.fs.WorldFsProps.ConfigOption;
+import io.resys.limaone.fs.WorldFsProps.Label;
 import io.resys.limaone.model.ArticlePage;
 import lombok.RequiredArgsConstructor;
 
@@ -51,6 +55,10 @@ public class Props_ArticlePageBuilder {
         .articleId(articlePage.getArticle())
         .localeCode(articlePage.getLocale())
         .description(articlePage.getDescription())
+        .labels(articlePage.getLabels() == null ? Collections.emptyList() :
+            articlePage.getLabels().stream()
+                .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
+                .toList())
         .build();
   }
   

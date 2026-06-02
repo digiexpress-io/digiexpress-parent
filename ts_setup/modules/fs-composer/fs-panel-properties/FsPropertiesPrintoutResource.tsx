@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
@@ -17,9 +17,20 @@ export const FsPropertiesPrintoutResource: React.FC<FsPropertiesPrintoutResource
   }
 
   const resourceProps = dirent.props as Fs.PrintoutResourceProps;
+  const configOptionsEnabled = dirent.props?.configOptions ?? [];
 
   return (
     <>
+      <div className={classes.propertyRow}>
+        <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.configOptionsEnabled' })}</Typography>
+        <div className={classes.propertyList}>
+          {configOptionsEnabled.map((option, index) => (
+            <Box key={index} className={classes.configOptionsListItem}>
+              {intl.formatMessage({ id: `fs.dirent.configOption.${option}` })}
+            </Box>
+          ))}
+        </div>
+      </div>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.resourceContentType' })}</Typography>
         <Typography className={classes.propertyValue}>{resourceProps.contentType}</Typography>

@@ -60,6 +60,9 @@ function hook(props: {}) {
       if (props.bodyType === 'PRINTOUT_RESOURCE') {
         await baseline(`printout-resources/${props.id}`, props.changes);
       }
+      if (props.bodyType === 'PRINTOUT_PAGE') {
+        await baseline(`printout-pages/${props.id}`, props.changes);
+      }
     }
   }
 }

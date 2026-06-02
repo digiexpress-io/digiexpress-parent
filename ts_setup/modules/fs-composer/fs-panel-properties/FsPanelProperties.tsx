@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
@@ -17,6 +17,7 @@ import { FsPropertiesPhone } from './FsPropertiesPhone';
 import { FsPropertiesTemplate } from './FsPropertiesTemplate';
 import { FsPropertiesPrintoutResource } from './FsPropertiesPrintoutResource';
 import { FsPropertiesPrintoutPage } from './FsPropertiesPrintoutPage';
+import { FsPropertiesArticlePage } from './FsPropertiesArticlePage';
 
 
 
@@ -32,6 +33,7 @@ function renderTypeSpecificRows(dirent: Fs.DirentBase): React.ReactNode {
     case 'ARTICLE_TEMPLATE': return <FsPropertiesTemplate dirent={dirent} />;
     case 'PRINTOUT_RESOURCE': return <FsPropertiesPrintoutResource dirent={dirent} />;
     case 'PRINTOUT_PAGE': return <FsPropertiesPrintoutPage dirent={dirent} />;
+    case 'ARTICLE_PAGE': return <FsPropertiesArticlePage dirent={dirent} />;
     default: return null;
   }
 }
@@ -57,7 +59,6 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
   }
 
   const labels = (dirent.props?.labels ?? []).map(l => l.value);
-  const configOptionsEnabled = dirent.props?.configOptions ?? [];
   const comments = dirent.props?.comments ?? [];
   const description = dirent.props?.description;
 
@@ -79,17 +80,6 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
               <div key={index} className={classes.label}>
                 <Typography component="span">{label ?? "-"}</Typography>
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={classes.propertyRow}>
-          <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.configOptionsEnabled' })}</Typography>
-          <div className={classes.propertyList}>
-            {configOptionsEnabled.map((option, index) => (
-              <Box key={index} className={classes.configOptionsListItem}>
-                {intl.formatMessage({ id: `fs.dirent.configOption.${option}` })}
-              </Box>
             ))}
           </div>
         </div>

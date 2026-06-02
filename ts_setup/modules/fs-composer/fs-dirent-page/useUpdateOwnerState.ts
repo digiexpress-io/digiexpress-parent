@@ -11,6 +11,7 @@ type _ChangeStateProps = {
   content: string;
   description: string;
   configOptions: Fs.ConfigOption[];
+  labels: string[];
   devMode: boolean;
   disabledMode: boolean;
 }
@@ -30,6 +31,7 @@ class _ChangeState implements FsuChange {
   get description() { return this._current.description; }
 
   get configOptions() { return this._current.configOptions; }
+  get labels() { return this._current.labels; }
   get bodyType() { return this._origin.bodyType; }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
@@ -52,7 +54,9 @@ class _ChangeState implements FsuChange {
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
     return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
   }
-
+  withLabels(labels: string[]): _ChangeState {
+    return new _ChangeState({ ...this._current, labels }, this._origin);
+  }
 }
 
 
@@ -70,6 +74,8 @@ export interface UpdateOwnerState {
   locale: string;
   description: string;
   configOptions: Fs.ConfigOption[];
+  labels: string[];
+  labelOptions: string[];
   availableConfigOptions: Fs.SelectOption[];
   localeOptions: FsDirentSelectSingleOption[];
   isChanged: boolean;
@@ -80,6 +86,7 @@ export interface UpdateOwnerState {
   onChangeDescription: (value: string) => void;
   onBlurDescription: () => void;
   onChangeConfigOptions: (value: string[]) => void;
+  onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
   onCancel: () => void;
   content: string;
@@ -100,6 +107,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     content: pageProps.content ?? '',
     description: pageProps.description ?? '',
     configOptions: (pageProps.configOptions ?? []) as Fs.ConfigOption[],
+    labels: (pageProps.labels ?? []).map(l => l.value),
     devMode: (pageProps.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (pageProps.configOptions ?? []).includes('DISABLED_MODE'),
   }));
@@ -144,6 +152,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
 
+  function onChangeLabels(value: string[]) {
+    setState(prev => prev.withLabels(value));
+  }
+
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
@@ -184,6 +196,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     description: fields.description,
     articleName,
     configOptions: state.configOptions,
+    labels: state.labels,
+    labelOptions: selectOptions.labels,
     availableConfigOptions,
     localeOptions,
     isChanged: changes,
@@ -192,6 +206,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeContent,
     onChangeDescription,
     onChangeConfigOptions,
+    onChangeLabels,
     onToggleExpanded,
     onBlurContent,
     onBlurDescription,

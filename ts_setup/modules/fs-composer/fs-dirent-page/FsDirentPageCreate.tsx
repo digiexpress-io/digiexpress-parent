@@ -8,6 +8,7 @@ import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { useUtilityClasses, FsDirentPageRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentPageCreateProps } from './FsDirentPageProps';
@@ -52,6 +53,14 @@ export const FsDirentPageCreate: React.FC<FsDirentPageCreateProps> = () => {
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={ownerState.availableConfigOptions} value={ownerState.configOptions as string[]} onChange={ownerState.onChangeConfigOptions} />
+
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
+            <FsDirentTextFieldAutocomplete
+              options={ownerState.labelOptions}
+              value={ownerState.labels}
+              onChange={ownerState.onChangeLabels}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })}
+            />
           </div>
         </Collapse>
 

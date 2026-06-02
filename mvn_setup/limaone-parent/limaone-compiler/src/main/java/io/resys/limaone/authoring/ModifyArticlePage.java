@@ -55,6 +55,7 @@ public interface ModifyArticlePage {
     String getLocale();
     
     @Nullable String getDescription();
+    @Nullable List<String> getLabels();
     @Nullable Boolean getDevMode();
     @Nullable Boolean getDisabledMode();
   }

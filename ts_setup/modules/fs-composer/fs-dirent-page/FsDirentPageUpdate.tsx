@@ -10,6 +10,7 @@ import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { useFsu } from '@dxs-ts/fs-api';
 import { FsDirentLoader } from '../fs-dirent-loader';
 import { useUtilityClasses, FsDirentPageRoot } from './useUtilityClasses';
@@ -68,6 +69,14 @@ export const FsDirentPageUpdate: React.FC<FsDirentPageUpdateProps> = (props) => 
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={ownerState.availableConfigOptions} value={ownerState.configOptions as string[]} onChange={ownerState.onChangeConfigOptions} />
+
+            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
+            <FsDirentTextFieldAutocomplete
+              options={ownerState.labelOptions}
+              value={ownerState.labels}
+              onChange={ownerState.onChangeLabels}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })}
+            />
           </div>
         </Collapse>
 

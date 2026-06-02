@@ -25,9 +25,20 @@ export const FsPropertiesPrintout: React.FC<FsPropertiesPrintoutProps> = ({ dire
     const lang = selectOptions.languages.find((l) => l.value === localeId);
     return lang?.label ?? localeId;
   });
+  const configOptionsEnabled = dirent.props?.configOptions ?? [];
 
   return (
     <>
+      <div className={classes.propertyRow}>
+        <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.configOptionsEnabled' })}</Typography>
+        <div className={classes.propertyList}>
+          {configOptionsEnabled.map((option, index) => (
+            <Box key={index} className={classes.configOptionsListItem}>
+              {intl.formatMessage({ id: `fs.dirent.configOption.${option}` })}
+            </Box>
+          ))}
+        </div>
+      </div>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.printoutServiceName' })}</Typography>
         <Typography className={classes.propertyValue}>{printoutProps?.printoutServiceName}</Typography>

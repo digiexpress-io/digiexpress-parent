@@ -26,9 +26,20 @@ export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ dirent }) =>
   })
   const linkType = linkProps.contentType;
   const contentType = intl.formatMessage({ id: `fs.dirent.link.contentType.${linkType}` });
+  const configOptionsEnabled = dirent.props?.configOptions ?? [];
 
   return (
     <>
+      <div className={classes.propertyRow}>
+        <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.configOptionsEnabled' })}</Typography>
+        <div className={classes.propertyList}>
+          {configOptionsEnabled.map((option, index) => (
+            <Box key={index} className={classes.configOptionsListItem}>
+              {intl.formatMessage({ id: `fs.dirent.configOption.${option}` })}
+            </Box>
+          ))}
+        </div>
+      </div>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.urlValue' })}</Typography>
         <Typography className={classes.propertyValue}>{dirent.name}</Typography>

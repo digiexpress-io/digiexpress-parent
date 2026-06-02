@@ -5,20 +5,29 @@ import { useFsNav } from '@dxs-ts/fs-nav';
 
 interface _TextFields {
   content: string;
+  description: string;
 }
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
+  isExpanded: boolean;
   serviceId: string;
   localeId: string;
   content: string;
+  description: string;
+  labels: string[];
+  labelOptions: string[];
   printoutOptions: Fs.SelectOption[];
   localeOptions: Fs.SelectOption[];
   onChangeServiceId: (value: string) => void;
   onChangeLocaleId: (value: string) => void;
   onChangeContent: (value: string) => void;
   onBlurContent: () => void;
+  onChangeDescription: (value: string) => void;
+  onBlurDescription: () => void;
+  onChangeLabels: (value: string[]) => void;
+  onToggleExpanded: () => void;
   onSave: () => void;
   onCancel: () => void;
 }
@@ -28,6 +37,8 @@ type _CreateStateProps = {
   serviceId: string;
   localeId: string;
   content: string;
+  description: string;
+  labels: string[];
 }
 
 class _CreateState implements FsuCreateChange {
@@ -51,6 +62,12 @@ class _CreateState implements FsuCreateChange {
   get content() {
     return this._current.content;
   }
+  get description() {
+    return this._current.description;
+  }
+  get labels() {
+    return this._current.labels;
+  }
   get isChanged(): boolean {
     return !!this._current.serviceId && !!this._current.localeId;
   }
@@ -62,6 +79,8 @@ class _CreateState implements FsuCreateChange {
         serviceId: this._current.serviceId,
         localeId: this._current.localeId,
         content: this._current.content || undefined,
+        description: this._current.description || undefined,
+        labels: this._current.labels.length ? this._current.labels : undefined,
       }
     };
   }
@@ -75,15 +94,23 @@ class _CreateState implements FsuCreateChange {
   withContent(content: string): _CreateState {
     return new _CreateState({ ...this._current, content }, this._origin);
   }
+  withDescription(description: string): _CreateState {
+    return new _CreateState({ ...this._current, description }, this._origin);
+  }
+  withLabels(labels: string[]): _CreateState {
+    return new _CreateState({ ...this._current, labels }, this._origin);
+  }
 }
 
-const _initFields: _TextFields = { content: '' };
+const _initFields: _TextFields = { content: '', description: '' };
 
 const _initProps: _CreateStateProps = {
   bodyType: 'PRINTOUT_PAGE',
   serviceId: '',
   localeId: '',
   content: '',
+  description: '',
+  labels: [],
 };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
@@ -93,6 +120,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const { openAsset } = useFsNav();
 
   const [fields, setFields] = React.useState<_TextFields>(_initFields);
+  const [isExpanded, setIsExpanded] = React.useState(false);
   const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
 
   const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
@@ -110,17 +138,26 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   function onChangeServiceId(value: string) {
     setState(prev => prev.withServiceId(value));
   }
-
   function onChangeLocaleId(value: string) {
     setState(prev => prev.withLocaleId(value));
   }
-
   function onChangeContent(value: string) {
     setFields(prev => ({ ...prev, content: value }));
   }
-
   function onBlurContent() {
     setState(prev => prev.withContent(fields.content));
+  }
+  function onChangeDescription(value: string) {
+    setFields(prev => ({ ...prev, description: value }));
+  }
+  function onBlurDescription() {
+    setState(prev => prev.withDescription(fields.description));
+  }
+  function onChangeLabels(value: string[]) {
+    setState(prev => prev.withLabels(value));
+  }
+  function onToggleExpanded() {
+    setIsExpanded(prev => !prev);
   }
 
   async function onSave() {
@@ -134,21 +171,30 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   function onCancel() {
     setFields(_initFields);
+    setIsExpanded(false);
     setStateRaw(new _CreateState(_initProps));
   }
 
   return {
     isDarkMode,
     isChanged: state.isChanged,
+    isExpanded,
     serviceId: state.serviceId,
     localeId: state.localeId,
     content: fields.content,
+    description: fields.description,
+    labels: state.labels,
+    labelOptions: selectOptions.labels,
     printoutOptions: selectOptions.printouts,
     localeOptions,
     onChangeServiceId,
     onChangeLocaleId,
     onChangeContent,
     onBlurContent,
+    onChangeDescription,
+    onBlurDescription,
+    onChangeLabels,
+    onToggleExpanded,
     onSave,
     onCancel,
   };

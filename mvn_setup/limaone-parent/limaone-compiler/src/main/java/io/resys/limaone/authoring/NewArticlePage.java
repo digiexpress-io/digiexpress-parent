@@ -20,6 +20,7 @@ package io.resys.limaone.authoring;
  * #L%
  */
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.immutables.value.Value;
@@ -50,6 +51,7 @@ public interface NewArticlePage {
     @Nullable String getId();
     @Nullable String getContent();
     @Nullable String getDescription();
+    @Nullable List<String> getLabels();
     @Nullable Boolean getDevMode();
     @Nullable Boolean getDisabledMode();
   }
