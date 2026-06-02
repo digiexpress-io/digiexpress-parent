@@ -11,12 +11,13 @@ import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
-import { FsDirentWorkflowCreateProps } from './FsDirentWorkflowProps';
-import { useUtilityClasses, FsDirentWorkflowRoot } from './useUtilityClasses';
+import { FsDirentArticleWorkflowCreateProps } from './FsDirentArticleWorkflowProps';
+
+import { useUtilityClasses, FsDirentArticleWorkflowRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 
 
-export const FsDirentWorkflowCreate: React.FC<FsDirentWorkflowCreateProps> = () => {
+export const FsDirentArticleWorkflowCreate: React.FC<FsDirentArticleWorkflowCreateProps> = () => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
@@ -28,7 +29,7 @@ export const FsDirentWorkflowCreate: React.FC<FsDirentWorkflowCreateProps> = () 
     const dialobTags = selectOptions.collectDialobTags(ownerState.formName);
 
     return (
-      <FsDirentWorkflowRoot className={classes.root} ownerState={ownerState}>
+      <FsDirentArticleWorkflowRoot className={classes.root} ownerState={ownerState}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createNew' })}</Typography>
         <div className={classes.formContainer}>
 
@@ -95,6 +96,6 @@ export const FsDirentWorkflowCreate: React.FC<FsDirentWorkflowCreateProps> = () 
           </div>
 
         </div>
-      </FsDirentWorkflowRoot>
+      </FsDirentArticleWorkflowRoot>
     );
   };

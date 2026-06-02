@@ -11,12 +11,12 @@ import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
-import { useUtilityClasses, FsDirentLinkRoot } from './useUtilityClasses';
+import { useUtilityClasses, FsDirentArticleLinkRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
-import { FsDirentLinkUpdateProps } from './FsDirentLinkProps';
+import { FsDirentArticleLinkUpdateProps } from './FsDirentArticleLinkProps';
 import { useFsu } from '@dxs-ts/fs-api';
 
-export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => {
+export const FsDirentArticleLinkUpdate: React.FC<FsDirentArticleLinkUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
@@ -40,7 +40,7 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
   }
 
   return (
-    <FsDirentLinkRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentArticleLinkRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.link.sectionTitle.edit' })}</Typography>
       <div className={classes.formContainer}>
 
@@ -98,6 +98,6 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
         </div>
 
       </div>
-    </FsDirentLinkRoot>
+    </FsDirentArticleLinkRoot>
   );
 };

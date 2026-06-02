@@ -4,11 +4,11 @@ import { FsTab } from '@dxs-ts/fs-nav';
 import { OwnerState } from './useOwnerState';
 import { FsDirentArticle } from '../fs-dirent-article';
 import { FsDirentFolder } from '../fs-dirent-folder';
-import { FsDirentLink } from '../fs-dirent-link';
+import { FsDirentArticleLink } from '../fs-dirent-article-link';
 import { FsDirentPhone } from '../fs-dirent-phone';
-import { FsDirentWorkflow } from '../fs-dirent-workflow';
+import { FsDirentArticleWorkflow } from '../fs-dirent-article-workflow';
 import { FsDirentLocale } from '../fs-dirent-locale';
-import { FsDirentPage } from '../fs-dirent-page';
+import { FsDirentArticlePage } from '../fs-dirent-article-page';
 import { FsDirentFlow } from '../fs-dirent-flow';
 import { FsDirentDialob } from '../fs-dirent-dialob';
 import { FsDirentPrintout } from '../fs-dirent-printout';
@@ -52,8 +52,8 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
   switch (tabType) {
     case 'ARTICLE': return (activeTab && (<div key={tabId} className={className}><FsDirentArticle tab={activeTab} /></div>));
     case 'FOLDER': return (activeTab && (<div key={tabId} className={className}><FsDirentFolder tab={activeTab} /></div>));
-    case 'ARTICLE_LINK': return (activeTab && (<div key={tabId} className={className}><FsDirentLink tab={activeTab} /></div>));
-    case 'ARTICLE_WORKFLOW': return (activeTab && (<div key={tabId} className={className}><FsDirentWorkflow tab={activeTab} /></div>));
+    case 'ARTICLE_LINK': return (activeTab && (<div key={tabId} className={className}><FsDirentArticleLink tab={activeTab} /></div>));
+    case 'ARTICLE_WORKFLOW': return (activeTab && (<div key={tabId} className={className}><FsDirentArticleWorkflow tab={activeTab} /></div>));
     case 'FLOW': return (activeTab && (<div key={tabId} className={className}><FsDirentFlow tab={activeTab} /></div>));
     case 'FLOW_TASK': return (activeTab && (<div key={tabId} className={className}><FsDirentFlowTask tab={activeTab} /></div>));
     case 'DECISION_TABLE': return (activeTab && (<div key={tabId} className={className}><FsDirentDecisionTable tab={activeTab} /></div>));
@@ -64,7 +64,7 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
     case 'DIALOB_FORM': return (activeTab && (<div key={tabId} className={className}><FsDirentDialob tab={activeTab} /></div>));
     case 'DIALOB_FORM_META': return (activeTab && (<div key={tabId} className={className}><FsDirentDialob tab={activeTab} /></div>));
     case 'LOCALE': return (activeTab && (<div key={tabId} className={className}><FsDirentLocale tab={activeTab} /></div>));
-    case 'ARTICLE_PAGE': return (activeTab && (<div key={tabId} className={className}><FsDirentPage tab={activeTab} /></div>));
+    case 'ARTICLE_PAGE': return (activeTab && (<div key={tabId} className={className}><FsDirentArticlePage tab={activeTab} /></div>));
     default: return (<div className={className}>{intl.formatMessage({ id: 'fs.main.message.noAssetSelected' })}</div>);
   }
 };

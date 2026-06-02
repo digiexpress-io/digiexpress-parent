@@ -2,26 +2,41 @@ import React from 'react';
 import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
+
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
+import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
-import { useUtilityClasses, FsDirentPageRoot } from './useUtilityClasses';
-import { useCreateOwnerState } from './useCreateOwnerState';
-import { FsDirentPageCreateProps } from './FsDirentPageProps';
+import { useFsu } from '@dxs-ts/fs-api';
+import { FsDirentLoader } from '../fs-dirent-loader';
+import { useUtilityClasses, FsDirentArticlePageRoot } from './useUtilityClasses';
+import { useUpdateOwnerState } from './useUpdateOwnerState';
+import { FsDirentArticlePageUpdateProps } from './FsDirentArticlePageProps';
 
 
-export const FsDirentPageCreate: React.FC<FsDirentPageCreateProps> = () => {
+export const FsDirentArticlePageUpdate: React.FC<FsDirentArticlePageUpdateProps> = (props) => {
   const intl = useIntl();
-  const ownerState = useCreateOwnerState();
+  const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
+  const { push } = useFsu();
+
+  const [isLoading, setIsLoading] = React.useState(true);
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (ownerState.isLoading || isLoading) {
+    return <FsDirentLoader />;
+  }
 
   return (
-    <FsDirentPageRoot className={classes.root} ownerState={ownerState}>
-      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.page.sectionTitle.createNew' })}</Typography>
+    <FsDirentArticlePageRoot className={classes.root} ownerState={ownerState}>
+      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.page.sectionTitle.edit' })}{": "}{ownerState.dirent?.name}</Typography>
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}</Typography>
@@ -30,7 +45,7 @@ export const FsDirentPageCreate: React.FC<FsDirentPageCreateProps> = () => {
         </div>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.articleField.label' })}</Typography>
-        <FsDirentSelectSingle options={ownerState.articleOptions} value={ownerState.articleId} onChange={ownerState.onChangeArticle} />
+        <FsDirentTextField disabled value={ownerState.articleName} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.localeField.label' })}</Typography>
         <FsDirentSelectSingle options={ownerState.localeOptions} value={ownerState.locale} onChange={ownerState.onChangeLocale} />
@@ -48,7 +63,8 @@ export const FsDirentPageCreate: React.FC<FsDirentPageCreateProps> = () => {
               placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
               onChange={ownerState.onChangeDescription}
               onBlur={ownerState.onBlurDescription}
-              multiline minRows={2} maxRows={4}
+              multiline
+              minRows={2} maxRows={4}
             />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
@@ -65,11 +81,12 @@ export const FsDirentPageCreate: React.FC<FsDirentPageCreateProps> = () => {
         </Collapse>
 
         <div className={classes.buttonContainer}>
+          <FsDirentButtonDelete assetId={props.direntId} />
           <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={ownerState.onSave} />
+          <FsDirentButtonSave onClick={() => push(ownerState.id)} />
         </div>
 
       </div>
-    </FsDirentPageRoot>
+    </FsDirentArticlePageRoot>
   );
 };

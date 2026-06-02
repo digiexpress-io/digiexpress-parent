@@ -2,9 +2,9 @@ import { generateUtilityClass, styled, darken, lighten } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 
-const MUI_NAME = 'FsDirentLink';
+const MUI_NAME = 'FsDirentArticleLink';
 
-export interface FsDirentLinkClasses {
+export interface FsDirentArticleLinkClasses {
   root: string;
   title: string;
   formContainer: string;
@@ -22,7 +22,7 @@ export interface FsDirentLinkClasses {
   helperText: string;
 }
 
-export type FsDirentLinkClassKey = keyof FsDirentLinkClasses;
+export type FsDirentArticleLinkClassKey = keyof FsDirentArticleLinkClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -46,7 +46,7 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsDirentLinkRoot = styled('div', {
+export const FsDirentArticleLinkRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',

@@ -2,9 +2,9 @@ import { generateUtilityClass, styled, darken, lighten } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 
-const MUI_NAME = 'FsDirentWorkflowRoot';
+const MUI_NAME = 'FsDirentArticleWorkflowRoot';
 
-export interface FsDirentWorkflowClasses {
+export interface FsDirentArticleWorkflowClasses {
   root: string;
   title: string;
   formContainer: string;
@@ -19,7 +19,7 @@ export interface FsDirentWorkflowClasses {
   buttonContainer: string;
 }
 
-export type FsDirentWorkflowClassKey = keyof FsDirentWorkflowClasses;
+export type FsDirentArticleWorkflowClassKey = keyof FsDirentArticleWorkflowClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -40,7 +40,7 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsDirentWorkflowRoot = styled('div', {
+export const FsDirentArticleWorkflowRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',

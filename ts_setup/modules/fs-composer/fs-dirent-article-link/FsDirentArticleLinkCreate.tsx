@@ -9,11 +9,11 @@ import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomple
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
-import { useUtilityClasses, FsDirentLinkRoot } from './useUtilityClasses';
+import { useUtilityClasses, FsDirentArticleLinkRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
-import { FsDirentLinkCreateProps } from './FsDirentLinkProps';
+import { FsDirentArticleLinkCreateProps } from './FsDirentArticleLinkProps';
 
-export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = () => {
+export const FsDirentArticleLinkCreate: React.FC<FsDirentArticleLinkCreateProps> = () => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
@@ -27,7 +27,7 @@ export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = () => {
   }));
 
   return (
-    <FsDirentLinkRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentArticleLinkRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.link.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 
@@ -83,6 +83,6 @@ export const FsDirentLinkCreate: React.FC<FsDirentLinkCreateProps> = () => {
         </div>
 
       </div>
-    </FsDirentLinkRoot>
+    </FsDirentArticleLinkRoot>
   );
 };
