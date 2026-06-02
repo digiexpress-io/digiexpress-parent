@@ -5,6 +5,7 @@ import { useFsu } from '@dxs-ts/fs-api';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { useUtilityClasses, FsDirentPrintoutResourceRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPrintoutResourceUpdateProps } from './FsDirentPrintoutResourceProps';
@@ -48,6 +49,13 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourceUp
           value={ownerState.resourceName}
           onChange={ownerState.onChangeResourceName}
           onBlur={ownerState.onBlurResourceName}
+        />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.printoutPagesField.label' })}</Typography>
+        <FsDirentSelectMulti
+          options={ownerState.printoutPageOptions}
+          value={ownerState.printoutPageIds}
+          onChange={ownerState.onChangePrintoutPageIds}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.label' })}</Typography>

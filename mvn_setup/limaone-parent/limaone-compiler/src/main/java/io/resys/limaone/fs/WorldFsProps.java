@@ -149,8 +149,8 @@ public interface WorldFsProps {
     String getExternalLocation();
     String getResourceName();
     String getContentType();
-    List<String> getTemplateIds();
-    
+    List<String> getPrintoutPageIds();
+
     @Nullable String getContent();
   }
 

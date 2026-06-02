@@ -342,7 +342,7 @@ export declare namespace Fs {
     externalLocation: string;
     resourceName: string;
     contentType: string;
-    templateIds: string[];
+    printoutPageIds: string[];
     content?: string;
   }
 

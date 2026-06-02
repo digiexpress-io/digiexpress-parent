@@ -40,7 +40,7 @@ public class Props_PrintoutResourceBuilder {
       .resourceName(resource.getResourceName())
       .contentType(resource.getContentType())
       .content(resource.getContent())
-      .templateIds(resource.getPrintoutPageIds())
+      .printoutPageIds(resource.getPrintoutPageIds())
       .externalLocation(resource.getExternalLocation())
          .build();
   }

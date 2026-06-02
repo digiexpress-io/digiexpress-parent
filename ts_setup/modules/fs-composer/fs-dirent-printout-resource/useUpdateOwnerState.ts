@@ -1,6 +1,7 @@
 import React from 'react';
 import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
+import { FsDirentSelectMultiOption } from '../fs-dirent-select-multi';
 
 type _ChangeStateProps = {
   resourceId: string;
@@ -8,6 +9,7 @@ type _ChangeStateProps = {
   resourceName: string;
   contentType: string;
   uploadBody: string;
+  printoutPageIds: string[];
 }
 
 class _ChangeState implements FsuChange {
@@ -34,6 +36,9 @@ class _ChangeState implements FsuChange {
   get uploadBody() {
     return this._current.uploadBody;
   }
+  get printoutPageIds() {
+    return this._current.printoutPageIds;
+  }
   get isChanged(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
@@ -47,6 +52,7 @@ class _ChangeState implements FsuChange {
         resourceId: c.resourceId,
         resourceName: c.resourceName || undefined,
         uploadBody: c.uploadBody || undefined,
+        printoutPageIds: c.printoutPageIds,
       },
     };
   }
@@ -56,6 +62,9 @@ class _ChangeState implements FsuChange {
   }
   withUploadBody(uploadBody: string): _ChangeState {
     return new _ChangeState({ ...this._current, uploadBody }, this._origin);
+  }
+  withPrintoutPageIds(printoutPageIds: string[]): _ChangeState {
+    return new _ChangeState({ ...this._current, printoutPageIds }, this._origin);
   }
 }
 
@@ -69,15 +78,18 @@ export interface UpdateOwnerState {
   resourceName: string;
   contentType: string;
   uploadBody: string;
+  printoutPageIds: string[];
+  printoutPageOptions: FsDirentSelectMultiOption[];
   onChangeResourceName: (v: string) => void;
   onBlurResourceName: () => void;
   onChangeUploadBody: (body: string) => void;
+  onChangePrintoutPageIds: (value: string[]) => void;
   onCancel: () => void;
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { getDirent } = useFsDirent();
+  const { getDirent, selectOptions, getDirentName } = useFsDirent();
   const { withNewChange, withChange, cancel } = useFsu();
 
   const dirent = getDirent(props.direntId)!;
@@ -89,6 +101,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     resourceName: resourceProps.resourceName ?? dirent.name ?? '',
     contentType: resourceProps.contentType ?? '',
     uploadBody: '',
+    printoutPageIds: resourceProps.printoutPageIds ?? [],
   }));
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
@@ -96,6 +109,15 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [fields, setFields] = React.useState<_TextFields>({
     resourceName: resourceProps.resourceName ?? dirent.name ?? '',
   });
+
+  const printoutPageOptions: FsDirentSelectMultiOption[] = Object.values(selectOptions.direntProps)
+    .filter(p => p.type === 'PRINTOUT_PAGE')
+    .map(p => {
+      const pageProps = p as Fs.PrintoutPageProps;
+      const printoutLabel = selectOptions.printouts.find(opt => opt.value === pageProps.serviceId)?.label ?? pageProps.serviceId;
+      const localeName = getDirentName(pageProps.id) ?? pageProps.id;
+      return { value: pageProps.id, label: `${printoutLabel} / ${localeName}` };
+    });
 
   const isChangesPresent = state.isChanged
     || fields.resourceName !== state.resourceName;
@@ -109,6 +131,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeUploadBody(body: string) {
     setState(prev => prev.withUploadBody(body));
   }
+  function onChangePrintoutPageIds(value: string[]) {
+    setState(prev => prev.withPrintoutPageIds(value));
+  }
   function onCancel() {
     setFields({ resourceName: resourceProps.resourceName ?? dirent.name ?? '' });
     cancel(props.direntId);
@@ -120,9 +145,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     resourceName: fields.resourceName,
     contentType: state.contentType,
     uploadBody: state.uploadBody,
+    printoutPageIds: state.printoutPageIds,
+    printoutPageOptions,
     onChangeResourceName,
     onBlurResourceName,
     onChangeUploadBody,
+    onChangePrintoutPageIds,
     onCancel,
   };
 };

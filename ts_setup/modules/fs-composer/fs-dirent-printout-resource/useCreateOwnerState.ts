@@ -1,7 +1,8 @@
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
-import { Fs, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
+import { FsDirentSelectMultiOption } from '../fs-dirent-select-multi';
 
 interface _TextFields {
   resourceName: string;
@@ -13,11 +14,14 @@ export interface CreateOwnerState {
   resourceName: string;
   contentType: string;
   uploadBody: string;
+  printoutPageIds: string[];
   contentTypeOptions: Fs.SelectOption[];
+  printoutPageOptions: FsDirentSelectMultiOption[];
   onChangeResourceName: (v: string) => void;
   onBlurResourceName: () => void;
   onChangeContentType: (v: string) => void;
   onChangeUploadBody: (body: string) => void;
+  onChangePrintoutPageIds: (value: string[]) => void;
   onSave: () => void;
   onCancel: () => void;
 }
@@ -27,6 +31,7 @@ type _CreateStateProps = {
   resourceName: string;
   contentType: string;
   uploadBody: string;
+  printoutPageIds: string[];
 }
 
 class _CreateState implements FsuCreateChange {
@@ -50,6 +55,9 @@ class _CreateState implements FsuCreateChange {
   get uploadBody() {
     return this._current.uploadBody;
   }
+  get printoutPageIds() {
+    return this._current.printoutPageIds;
+  }
   get isChanged(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
@@ -62,7 +70,7 @@ class _CreateState implements FsuCreateChange {
         resourceName: c.resourceName || undefined,
         contentType: c.contentType || undefined,
         uploadBody: c.uploadBody || undefined,
-        printoutPageIds: [],
+        printoutPageIds: c.printoutPageIds,
       },
     };
   }
@@ -76,6 +84,9 @@ class _CreateState implements FsuCreateChange {
   withUploadBody(uploadBody: string): _CreateState {
     return new _CreateState({ ...this._current, uploadBody }, this._origin);
   }
+  withPrintoutPageIds(printoutPageIds: string[]): _CreateState {
+    return new _CreateState({ ...this._current, printoutPageIds }, this._origin);
+  }
 }
 
 const _contentTypeOptions: Fs.SelectOption[] = [
@@ -88,10 +99,12 @@ const _initProps: _CreateStateProps = {
   resourceName: '',
   contentType: 'image/*',
   uploadBody: '',
+  printoutPageIds: [],
 };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
+  const { selectOptions, getDirentName } = useFsDirent();
   const { pushCreate } = useFsu();
   const { openAsset } = useFsNav();
 
@@ -101,6 +114,15 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
 
   const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
+
+  const printoutPageOptions: FsDirentSelectMultiOption[] = Object.values(selectOptions.direntProps)
+    .filter(p => p.type === 'PRINTOUT_PAGE')
+    .map(p => {
+      const pageProps = p as Fs.PrintoutPageProps;
+      const printoutLabel = selectOptions.printouts.find(opt => opt.value === pageProps.serviceId)?.label ?? pageProps.serviceId;
+      const localeName = getDirentName(pageProps.id) ?? pageProps.id;
+      return { value: pageProps.id, label: `${printoutLabel} / ${localeName}` };
+    });
 
   const isChangesPresent = state.isChanged
     || fields.resourceName !== state.resourceName;
@@ -116,6 +138,9 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
   function onChangeUploadBody(body: string) {
     setState(prev => prev.withUploadBody(body));
+  }
+  function onChangePrintoutPageIds(value: string[]) {
+    setState(prev => prev.withPrintoutPageIds(value));
   }
 
   async function onSave() {
@@ -138,11 +163,14 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     resourceName: fields.resourceName,
     contentType: state.contentType,
     uploadBody: state.uploadBody,
+    printoutPageIds: state.printoutPageIds,
     contentTypeOptions: _contentTypeOptions,
+    printoutPageOptions,
     onChangeResourceName,
     onBlurResourceName,
     onChangeContentType,
     onChangeUploadBody,
+    onChangePrintoutPageIds,
     onSave,
     onCancel,
   };

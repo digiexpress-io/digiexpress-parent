@@ -5,6 +5,7 @@ import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
+import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { useUtilityClasses, FsDirentPrintoutResourceRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentPrintoutResourceCreateProps } from './FsDirentPrintoutResourceProps';
@@ -52,6 +53,13 @@ export const FsDirentPrintoutResourceCreate: React.FC<FsDirentPrintoutResourceCr
           options={ownerState.contentTypeOptions}
           value={ownerState.contentType}
           onChange={ownerState.onChangeContentType}
+        />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.printoutPagesField.label' })}</Typography>
+        <FsDirentSelectMulti
+          options={ownerState.printoutPageOptions}
+          value={ownerState.printoutPageIds}
+          onChange={ownerState.onChangePrintoutPageIds}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.label' })}</Typography>
