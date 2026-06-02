@@ -6,6 +6,7 @@ import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
+import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { useUtilityClasses, FsDirentPrintoutResourceRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPrintoutResourceUpdateProps } from './FsDirentPrintoutResourceProps';
@@ -56,6 +57,24 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourceUp
           options={ownerState.printoutPageOptions}
           value={ownerState.printoutPageIds}
           onChange={ownerState.onChangePrintoutPageIds}
+        />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
+        <FsDirentTextField
+          multiline
+          minRows={2}
+          placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
+          value={ownerState.description}
+          onChange={ownerState.onChangeDescription}
+          onBlur={ownerState.onBlurDescription}
+        />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
+        <FsDirentTextFieldAutocomplete
+          options={ownerState.labelOptions}
+          value={ownerState.labels}
+          onChange={ownerState.onChangeLabels}
+          placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.label' })}</Typography>

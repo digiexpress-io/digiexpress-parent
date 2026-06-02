@@ -130,6 +130,8 @@ public class ModifyPrintoutResourceImpl extends AuthoringTemplate<ModifyPrintout
         .externalLocation(imageExternalLocation == null ? start.getBody().getExternalLocation() : imageExternalLocation)
         .content(props.getUploadBody() == null ? start.getBody().getContent() : props.getUploadBody())
         .printoutPageIds(props.getPrintoutPageIds() == null ? start.getBody().getPrintoutPageIds() : props.getPrintoutPageIds())
+        .description(props.getDescription() == null ? start.getBody().getDescription() : props.getDescription())
+        .labels(props.getLabels() == null ? start.getBody().getLabels() : props.getLabels())
         .build();
   }
 }

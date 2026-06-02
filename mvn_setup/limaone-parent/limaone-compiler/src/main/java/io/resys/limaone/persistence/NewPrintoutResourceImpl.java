@@ -108,6 +108,8 @@ public class NewPrintoutResourceImpl extends AuthoringTemplate<NewPrintoutResour
         .contentType(props.getContentType())
         .externalLocation("")
         .content(props.getUploadBody())
+        .description(props.getDescription())
+        .labels(props.getLabels() == null ? java.util.Collections.emptyList() : props.getLabels())
         .printoutPageIds(props.getPrintoutPageIds());
 
     return printoutResource.build();
@@ -121,6 +123,8 @@ public class NewPrintoutResourceImpl extends AuthoringTemplate<NewPrintoutResour
         .contentType(props.getContentType())
         .externalLocation(externalLocation)
         .content(props.getUploadBody())
+        .description(props.getDescription())
+        .labels(props.getLabels() == null ? java.util.Collections.emptyList() : props.getLabels())
         .printoutPageIds(props.getPrintoutPageIds());
 
     return printoutResource.build();

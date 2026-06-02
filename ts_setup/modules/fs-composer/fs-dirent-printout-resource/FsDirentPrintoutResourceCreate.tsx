@@ -6,6 +6,7 @@ import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
+import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { useUtilityClasses, FsDirentPrintoutResourceRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentPrintoutResourceCreateProps } from './FsDirentPrintoutResourceProps';
@@ -60,6 +61,24 @@ export const FsDirentPrintoutResourceCreate: React.FC<FsDirentPrintoutResourceCr
           options={ownerState.printoutPageOptions}
           value={ownerState.printoutPageIds}
           onChange={ownerState.onChangePrintoutPageIds}
+        />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
+        <FsDirentTextField
+          multiline
+          minRows={2}
+          placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
+          value={ownerState.description}
+          onChange={ownerState.onChangeDescription}
+          onBlur={ownerState.onBlurDescription}
+        />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
+        <FsDirentTextFieldAutocomplete
+          options={ownerState.labelOptions}
+          value={ownerState.labels}
+          onChange={ownerState.onChangeLabels}
+          placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.label' })}</Typography>

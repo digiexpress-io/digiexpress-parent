@@ -7,6 +7,8 @@ type _ChangeStateProps = {
   resourceId: string;
   bodyType: Fs.BodyType;
   resourceName: string;
+  description: string;
+  labels: string[];
   contentType: string;
   uploadBody: string;
   printoutPageIds: string[];
@@ -30,6 +32,12 @@ class _ChangeState implements FsuChange {
   get resourceName() {
     return this._current.resourceName;
   }
+  get description() {
+    return this._current.description;
+  }
+  get labels() {
+    return this._current.labels;
+  }
   get contentType() {
     return this._current.contentType;
   }
@@ -51,6 +59,8 @@ class _ChangeState implements FsuChange {
       changes: {
         resourceId: c.resourceId,
         resourceName: c.resourceName || undefined,
+        description: c.description || undefined,
+        labels: c.labels.length ? c.labels : undefined,
         uploadBody: c.uploadBody || undefined,
         printoutPageIds: c.printoutPageIds,
       },
@@ -59,6 +69,12 @@ class _ChangeState implements FsuChange {
 
   withResourceName(resourceName: string): _ChangeState {
     return new _ChangeState({ ...this._current, resourceName }, this._origin);
+  }
+  withDescription(description: string): _ChangeState {
+    return new _ChangeState({ ...this._current, description }, this._origin);
+  }
+  withLabels(labels: string[]): _ChangeState {
+    return new _ChangeState({ ...this._current, labels }, this._origin);
   }
   withUploadBody(uploadBody: string): _ChangeState {
     return new _ChangeState({ ...this._current, uploadBody }, this._origin);
@@ -70,18 +86,25 @@ class _ChangeState implements FsuChange {
 
 interface _TextFields {
   resourceName: string;
+  description: string;
 }
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
   resourceName: string;
+  description: string;
+  labels: string[];
+  labelOptions: string[];
   contentType: string;
   uploadBody: string;
   printoutPageIds: string[];
   printoutPageOptions: FsDirentSelectMultiOption[];
   onChangeResourceName: (v: string) => void;
   onBlurResourceName: () => void;
+  onChangeDescription: (v: string) => void;
+  onBlurDescription: () => void;
+  onChangeLabels: (value: string[]) => void;
   onChangeUploadBody: (body: string) => void;
   onChangePrintoutPageIds: (value: string[]) => void;
   onCancel: () => void;
@@ -99,6 +122,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     resourceId: props.direntId,
     bodyType: dirent.type,
     resourceName: resourceProps.resourceName ?? dirent.name ?? '',
+    description: resourceProps.description ?? '',
+    labels: (resourceProps.labels ?? []).map(l => l.value),
     contentType: resourceProps.contentType ?? '',
     uploadBody: '',
     printoutPageIds: resourceProps.printoutPageIds ?? [],
@@ -108,6 +133,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<_TextFields>({
     resourceName: resourceProps.resourceName ?? dirent.name ?? '',
+    description: resourceProps.description ?? '',
   });
 
   const printoutPageOptions: FsDirentSelectMultiOption[] = Object.values(selectOptions.direntProps)
@@ -120,13 +146,23 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     });
 
   const isChangesPresent = state.isChanged
-    || fields.resourceName !== state.resourceName;
+    || fields.resourceName !== state.resourceName
+    || fields.description !== state.description;
 
   function onChangeResourceName(v: string) {
     setFields(prev => ({ ...prev, resourceName: v }));
   }
   function onBlurResourceName() {
     setState(prev => prev.withResourceName(fields.resourceName));
+  }
+  function onChangeDescription(v: string) {
+    setFields(prev => ({ ...prev, description: v }));
+  }
+  function onBlurDescription() {
+    setState(prev => prev.withDescription(fields.description));
+  }
+  function onChangeLabels(value: string[]) {
+    setState(prev => prev.withLabels(value));
   }
   function onChangeUploadBody(body: string) {
     setState(prev => prev.withUploadBody(body));
@@ -135,7 +171,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withPrintoutPageIds(value));
   }
   function onCancel() {
-    setFields({ resourceName: resourceProps.resourceName ?? dirent.name ?? '' });
+    setFields({
+      resourceName: resourceProps.resourceName ?? dirent.name ?? '',
+      description: resourceProps.description ?? '',
+    });
     cancel(props.direntId);
   }
 
@@ -143,12 +182,18 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isDarkMode,
     isChanged: isChangesPresent,
     resourceName: fields.resourceName,
+    description: fields.description,
+    labels: state.labels,
+    labelOptions: selectOptions.labels,
     contentType: state.contentType,
     uploadBody: state.uploadBody,
     printoutPageIds: state.printoutPageIds,
     printoutPageOptions,
     onChangeResourceName,
     onBlurResourceName,
+    onChangeDescription,
+    onBlurDescription,
+    onChangeLabels,
     onChangeUploadBody,
     onChangePrintoutPageIds,
     onCancel,
