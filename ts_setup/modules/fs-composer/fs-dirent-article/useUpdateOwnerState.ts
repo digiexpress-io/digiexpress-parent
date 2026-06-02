@@ -102,7 +102,7 @@ class _ChangeState implements FsuChange {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { getDirent, getArticleName } = useFsDirent();
+  const { getDirent, getDirentName } = useFsDirent();
   const { withNewChange, withChange, cancel } = useFsu();
 
   const dirent = getDirent(props.direntId);
@@ -111,7 +111,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const state = withNewChange(props.direntId, () => new _ChangeState({
     articleId: props.direntId,
     bodyType: dirent!.type,
-    name: getArticleName(props.direntId) ?? '',
+    name: getDirentName(props.direntId) ?? '',
     order: articleProps?.orderNumber ?? 0,
     description: articleProps?.description ?? '',
     labels: (articleProps?.labels ?? []).map(l => l.value),
@@ -125,7 +125,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [comments, setComments] = React.useState((dirent?.props?.comments ?? []).map(c => c.comment).join('\n'));
   const [fields, setFields] = React.useState<TextFields>({
-    name: getArticleName(props.direntId) ?? '',
+    name: getDirentName(props.direntId) ?? '',
     orderNumber: String(articleProps?.orderNumber ?? 0),
     description: articleProps?.description ?? '',
   });
@@ -164,7 +164,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   function onCancel() {
     setFields({
-      name: getArticleName(props.direntId) ?? '',
+      name: getDirentName(props.direntId) ?? '',
       orderNumber: String(articleProps?.orderNumber ?? 0),
       description: articleProps?.description ?? '',
     });

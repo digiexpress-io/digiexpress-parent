@@ -28,7 +28,7 @@ export interface OwnerState {
 
 export const useOwnerState = (_props: FsPanelDirentStatsProps): OwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { getDirent, selectOptions, getArticleName } = useFsDirent();
+  const { getDirent, selectOptions, getDirentName } = useFsDirent();
 
   const allProps = Object.values(selectOptions.direntProps);
 
@@ -50,7 +50,7 @@ export const useOwnerState = (_props: FsPanelDirentStatsProps): OwnerState => {
 
   const danglingArticles = allProps
     .filter(p => p.type === 'ARTICLE' && !articleIdsWithPages.has(p.id))
-    .map(p => getArticleName(p.id) ?? p.id);
+    .map(p => getDirentName(p.id) ?? p.id);
 
   const danglingWorkflows = workflows
     .filter(w => w.articles.length === 0)

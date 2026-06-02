@@ -43,8 +43,8 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
   const classes = useUtilityClasses();
 
   const { dirent } = ownerState;
-  const { getArticleName } = useFsDirent();
-  const displayName = props.dirent ? getArticleName(props.dirent.id) : undefined;
+  const { getDirentName } = useFsDirent();
+  const displayName = props.dirent ? getDirentName(props.dirent.id) : undefined;
 
   if (!dirent) {
     return (

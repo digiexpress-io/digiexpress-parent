@@ -15,7 +15,7 @@ export interface FsPropertiesArticleProps {
 export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { getParentDirent, getArticleName, selectOptions, getDirent } = useFsDirent();
+  const { getParentDirent, getDirentName, selectOptions, getDirent } = useFsDirent();
 
   if (dirent.type !== 'ARTICLE') {
     return undefined;
@@ -43,7 +43,7 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent
         {descendants.map(({ dirent: child, depth }) => (
           <Box key={child.id} className={classes.childRow} sx={{ paddingLeft: `${depth * 16}px` }}> {/* TODO remove sx */}
             <FsIcon small icon={getTypeIcon(child.type)} />
-            <Typography className={classes.propertyValue}>{child.type === 'ARTICLE' ? getArticleName(child.id) : child.name}</Typography>
+            <Typography className={classes.propertyValue}>{child.type === 'ARTICLE' ? getDirentName(child.id) : child.name}</Typography>
           </Box>
         ))}
       </div>

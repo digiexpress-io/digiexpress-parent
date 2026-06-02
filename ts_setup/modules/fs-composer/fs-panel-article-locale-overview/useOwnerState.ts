@@ -7,13 +7,13 @@ export interface OwnerState {
   isDarkMode: boolean;
   articles: Fs.DirentBase[];
   locales: Fs.SelectOption[];
-  getArticleName: (id: string) => string | undefined;
+  getDirentName: (id: string) => string | undefined;
   isPageInLocale: (articleId: string, localeCode: string) => boolean;
 }
 
 export const useOwnerState = (_props: FsPanelArticleLocaleOverviewProps): OwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { getDirent, selectOptions, getArticleName } = useFsDirent();
+  const { getDirent, selectOptions, getDirentName } = useFsDirent();
 
   const articles = selectOptions.articles
     .map(opt => getDirent(opt.value))
@@ -33,5 +33,5 @@ export const useOwnerState = (_props: FsPanelArticleLocaleOverviewProps): OwnerS
     return pages.some(p => p.articleId === articleId && p.localeCode === localeCode);
   }
 
-  return { isDarkMode, articles, locales, getArticleName, isPageInLocale };
+  return { isDarkMode, articles, locales, getDirentName, isPageInLocale };
 };

@@ -32,7 +32,7 @@ export const FsPanelArticleOrder: React.FC<FsPanelArticleOrderProps> = (props) =
               <Typography className={classes.orderNumber}>
                 {String((entry.props as Fs.ArticleProps)?.orderNumber ?? 0).padStart(3, '0')}
               </Typography>
-              <Typography className={classes.name}>{ownerState.getArticleName(entry.id)}</Typography>
+              <Typography className={classes.name}>{ownerState.getDirentName(entry.id)}</Typography>
               {entry.props?.description && (
                 <Typography className={classes.description}>{entry.props?.description}</Typography>
               )}

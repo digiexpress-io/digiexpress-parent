@@ -224,7 +224,7 @@ public class WorldFsFactory {
       final PrintoutPage printout = worldState.getBodyOfType(node);
       final var name = printout.getLocaleId();
       worldState.putProps(node, n -> Props_PrintoutPageBuilder.of(worldState, n));
-      return NodePathAndName.of(path.orElse("printout-templates"), name);
+      return NodePathAndName.of(path.orElse("printout-pages"), name);
     }
     
     case PRINTOUT_RESOURCE: {

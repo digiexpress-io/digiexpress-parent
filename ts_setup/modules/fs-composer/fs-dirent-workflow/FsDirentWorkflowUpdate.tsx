@@ -20,11 +20,11 @@ export const FsDirentWorkflowUpdate: React.FC<FsDirentWorkflowUpdateProps> = (pr
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { selectOptions, getConfigOptionsForType, getArticleName } = useFsDirent();
+  const { selectOptions, getConfigOptionsForType, getDirentName } = useFsDirent();
   const { push } = useFsu();
   const dialobForms = selectOptions.dialobs;
   const flows = selectOptions.flows;
-  const articles = selectOptions.articles.map(item => ({ value: item.value, label: getArticleName(item.value) ?? item.label }));
+  const articles = selectOptions.articles.map(item => ({ value: item.value, label: getDirentName(item.value) ?? item.label }));
   const configOptions = getConfigOptionsForType('ARTICLE_WORKFLOW');
   const dialobTags = selectOptions.collectDialobTags(ownerState.dialobFormName);
 

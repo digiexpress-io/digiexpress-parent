@@ -20,7 +20,7 @@ export interface FsPropertiesWorkflowProps {
 export const FsPropertiesWorkflow: React.FC<FsPropertiesWorkflowProps> = ({ dirent }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { getArticleName, selectOptions } = useFsDirent();
+  const { getDirentName, selectOptions } = useFsDirent();
 
   if (dirent.type !== 'ARTICLE_WORKFLOW') {
     return undefined;
@@ -73,7 +73,7 @@ export const FsPropertiesWorkflow: React.FC<FsPropertiesWorkflowProps> = ({ dire
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.selectedArticles' })}</Typography>
         <div className={classes.propertyList}>
-          {(workflowProps?.articles ?? []).map((article, index) => <Box key={index} className={classes.propertyListItem}>{getArticleName(article)}</Box>)}
+          {(workflowProps?.articles ?? []).map((article, index) => <Box key={index} className={classes.propertyListItem}>{getDirentName(article)}</Box>)}
         </div>
       </div>
     </>

@@ -12,7 +12,7 @@ export interface FsPropertiesLinkProps {
 export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ dirent }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { selectOptions, getArticleName } = useFsDirent();
+  const { selectOptions, getDirentName } = useFsDirent();
 
   if (dirent.type !== 'ARTICLE_LINK') {
     return undefined;
@@ -49,7 +49,7 @@ export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ dirent }) =>
       <div className={classes.propertyRow}>
         <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.selectedArticles' })}</Typography>
         <div className={classes.propertyList}>
-          {(linkProps.articles ?? []).map((article, index) => <Box key={index} className={classes.propertyListItem}>{getArticleName(article)}</Box>)}
+          {(linkProps.articles ?? []).map((article, index) => <Box key={index} className={classes.propertyListItem}>{getDirentName(article)}</Box>)}
         </div>
       </div>
     </>

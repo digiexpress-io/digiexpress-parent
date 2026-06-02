@@ -24,12 +24,16 @@ function toFsTab(descriptor: FsTabDescriptor, getDirent: (id: string) => Fs.Dire
   return tab;
 }
 
-function getTabPath(tab: FsTab): string {
+function getTabPath(tab: FsTab, getDirentName: (id: string) => string | undefined): string {
   if (tab.type === 'create') {
     return tab.parentFolder?.fullPath ?? '';
   }
   if (tab.dirent.type === 'ARTICLE') {
     return tab.dirent.fullPath.split('/').slice(0, -1).join('/');
+  }
+  if (tab.dirent.type === 'PRINTOUT_PAGE') {
+    const localeName = getDirentName(tab.dirent.id) ?? tab.dirent.name;
+    return tab.dirent.fullPath.split('/').slice(0, -1).join('/') + '/' + localeName;
   }
   return tab.dirent.fullPath;
 }
@@ -37,7 +41,7 @@ function getTabPath(tab: FsTab): string {
 export function useFsRouteNav() {
   const search = useSearch({ from: '/secured/$locale/worker/filesystem/' });
   const navigate = useNavigate();
-  const { getDirent } = useFsDirent();
+  const { getDirent, getDirentName } = useFsDirent();
 
   const openTabs: FsTab[] = (search.openTabs as FsTabDescriptor[])
     .map((d: FsTabDescriptor) => toFsTab(d, getDirent))
@@ -49,7 +53,7 @@ export function useFsRouteNav() {
 
   const activeTab = activeTabIndex >= 0 ? openTabs[activeTabIndex] : undefined;
   const activeDirent: Fs.DirentBase | undefined = activeTab?.type === 'edit' ? activeTab.dirent : undefined;
-  const activeTabPath: string = activeTab ? getTabPath(activeTab) : '';
+  const activeTabPath: string = activeTab ? getTabPath(activeTab, getDirentName) : '';
 
   function updateSearch(updater: (prev: FsRouteSearchParams) => FsRouteSearchParams) {
     navigate({

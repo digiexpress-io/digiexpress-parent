@@ -121,10 +121,17 @@ interface FsDirentNameProps {
 }
 
 export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
-  const { getParentDirent, getExtension } = useFsDirent();
+  const { getParentDirent, getDirentName, getExtension } = useFsDirent();
   const classes = useUtilityClasses(props.isDarkTheme);
-  const displayName = props.dirent.type === 'ARTICLE' ? (
-    getParentDirent(props.dirent.id)?.name ?? props.dirent.name) : props.dirent.name;
+  let displayName: string;
+
+  if (props.dirent.type === 'ARTICLE') {
+    displayName = getParentDirent(props.dirent.id)?.name ?? props.dirent.name;
+  } else if (props.dirent.type === 'PRINTOUT_PAGE') {
+    displayName = getDirentName(props.dirent.id) ?? props.dirent.name;
+  } else {
+    displayName = props.dirent.name;
+  }
   const extension = getExtension(props.dirent.type);
   const fullDisplayName = extension ? displayName + extension : displayName;
 

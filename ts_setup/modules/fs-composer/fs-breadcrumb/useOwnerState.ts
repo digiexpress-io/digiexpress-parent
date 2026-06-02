@@ -4,6 +4,16 @@ import { useFsTheme } from '../fs-theme';
 import { FsBreadcrumbProps } from "./FsBreadcrumbProps";
 
 
+function _getAssetName(activeTab: FsTab | undefined, getDirentName: (id: string) => string | undefined): string | undefined {
+  if (!activeTab) {
+    return undefined;
+  }
+  if (activeTab.type === 'create') {
+    return activeTab.direntType;
+  }
+  return getDirentName(activeTab.dirent.id) ?? activeTab.dirent.name;
+}
+
 export interface OwnerState {
   isDarkMode: boolean;
   assetName: string | undefined;
@@ -12,23 +22,13 @@ export interface OwnerState {
   isError: boolean | undefined;
 }
 
-function getAssetName(activeTab: FsTab | undefined): string | undefined {
-  if (!activeTab) {
-    return undefined;
-  }
-  if (activeTab.type === 'create') {
-    return activeTab.direntType;
-  }
-  return activeTab.dirent.name;
-}
-
 export function useOwnerState(_props: FsBreadcrumbProps): OwnerState {
   const { isDarkMode } = useFsTheme();
   const { openTabs, activeTabIndex, activeTabPath, activeDirent } = useFsNav();
-  const { getDirent } = useFsDirent();
+  const { getDirent, getDirentName } = useFsDirent();
 
   const activeTab = openTabs[activeTabIndex];
-  const assetName = getAssetName(activeTab);
+  const assetName = _getAssetName(activeTab, getDirentName);
   const assetPath = activeTabPath;
   const activeDirentEntry = activeDirent ? getDirent(activeDirent.id) : undefined;
   const isError = (activeDirentEntry?.props?.errors.length ?? 0) > 0;

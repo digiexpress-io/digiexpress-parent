@@ -25,7 +25,7 @@ export class FsWorld {
     return parentId ? this._flat_dirents[parentId] : undefined;
   }
 
-  public getArticleName(id: string): string | undefined {
+  public getDirentName(id: string): string | undefined {
     const dirent = this._flat_dirents[id];
     if (!dirent) {
       return undefined;

@@ -112,7 +112,7 @@ const _initProps: _CreateStateProps = {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { selectOptions, getArticleName, getConfigOptionsForType } = useFsDirent();
+  const { selectOptions, getDirentName, getConfigOptionsForType } = useFsDirent();
   const { pushCreate } = useFsu();
   const { openAsset } = useFsNav();
 
@@ -125,7 +125,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   const articleOptions: FsDirentSelectSingleOption[] = selectOptions.articles.map(item => ({
     value: item.value,
-    label: getArticleName(item.value) ?? item.label,
+    label: getDirentName(item.value) ?? item.label,
   }));
 
   const usedLocaleIds = state.articleId

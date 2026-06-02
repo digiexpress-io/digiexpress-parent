@@ -21,8 +21,8 @@ export const FsDirentLinkUpdate: React.FC<FsDirentLinkUpdateProps> = (props) => 
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
   const { push } = useFsu();
-  const { selectOptions, getConfigOptionsForType, getArticleName } = useFsDirent();
-  const articles = selectOptions.articles.map(item => ({ value: item.value, label: getArticleName(item.value) ?? item.label }));
+  const { selectOptions, getConfigOptionsForType, getDirentName } = useFsDirent();
+  const articles = selectOptions.articles.map(item => ({ value: item.value, label: getDirentName(item.value) ?? item.label }));
   const configOptions = getConfigOptionsForType('ARTICLE_LINK');
   const linkTypeOptions = selectOptions.linkTypes.map(v => ({
     value: v,

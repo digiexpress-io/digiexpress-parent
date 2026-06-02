@@ -31,7 +31,7 @@ export const FsPanelArticleLocaleOverview: React.FC<FsPanelArticleLocaleOverview
         <div className={classes.container}>
           {ownerState.articles.map((article) => (
             <div key={article.id} className={classes.row}>
-              <Typography className={classes.name}>{ownerState.getArticleName(article.id)}</Typography>
+              <Typography className={classes.name}>{ownerState.getDirentName(article.id)}</Typography>
               {ownerState.locales.map((locale) => (
                 <div key={locale.value} className={classes.localeCell}>
                   {ownerState.isPageInLocale(article.id, locale.value) ? <FsIcon icon={FsIcons.Checkmark} small color={FsColors.semantic.success} /> : "--"}
