@@ -11,32 +11,32 @@ export interface TextFields {
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
-    isChanged: boolean;
-    isExpanded: boolean;
-    value: string;
-    formName: string;
-    formTag: string;
-    flowName: string;
-    articles: string[];
-    intlValues: Record<string, string>;
-    configOptions: Fs.ConfigOption[];
-    tagLabels: string[];
-    validityStart: string;
-    validityEnd: string;
-    locales: Fs.SelectOption[];
-    onChangeValue: (v: string) => void;
-    onBlurValue: () => void;
-    onChangeFormName: (v: string) => void;
-    onChangeFormTag: (v: string) => void;
-    onChangeFlowName: (v: string) => void;
-    onChangeArticles: (v: string[]) => void;
-    onChangeIntlValues: (locale: string, value: string) => void;
-    onBlurIntlValues: (locale: string) => void;
-    onChangeConfigOptions: (v: string[]) => void;
-    onChangeLabels: (v: string[]) => void;
-    onChangeValidityStart: (date: Date | undefined) => void;
-    onChangeValidityEnd: (date: Date | undefined) => void;
-    onToggleExpanded: () => void;
+  isChanged: boolean;
+  isExpanded: boolean;
+  value: string;
+  formName: string;
+  formTag: string;
+  flowName: string;
+  articles: string[];
+  intlValues: Record<string, string>;
+  configOptions: Fs.ConfigOption[];
+  tagLabels: string[];
+  validityStart: string;
+  validityEnd: string;
+  locales: Fs.SelectOption[];
+  onChangeValue: (v: string) => void;
+  onBlurValue: () => void;
+  onChangeFormName: (v: string) => void;
+  onChangeFormTag: (v: string) => void;
+  onChangeFlowName: (v: string) => void;
+  onChangeArticles: (v: string[]) => void;
+  onChangeIntlValues: (locale: string, value: string) => void;
+  onBlurIntlValues: (locale: string) => void;
+  onChangeConfigOptions: (v: string[]) => void;
+  onChangeLabels: (v: string[]) => void;
+  onChangeValidityStart: (date: Date | undefined) => void;
+  onChangeValidityEnd: (date: Date | undefined) => void;
+  onToggleExpanded: () => void;
   onSave: () => void;
   onCancel: () => void;
 }
@@ -122,7 +122,7 @@ class _CreateState implements FsuCreateChange {
   }
   withTagLabels(tagLabels: string[]): _CreateState {
     return new _CreateState({ ...this._current, tagLabels }, this._origin);
-    }
+  }
   withValidityStart(validityStart: string): _CreateState {
     return new _CreateState({ ...this._current, validityStart }, this._origin);
   }
@@ -131,7 +131,7 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _emptyProps: _CreateStateProps = {
+const _initProps: _CreateStateProps = {
   bodyType: 'ARTICLE_WORKFLOW',
   value: '',
   formName: '',
@@ -147,106 +147,106 @@ const _emptyProps: _CreateStateProps = {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
-    const { pushCreate } = useFsu();
-    const { openAsset } = useFsNav();
-    const { selectOptions } = useFsDirent();
+  const { pushCreate } = useFsu();
+  const { openAsset } = useFsNav();
+  const { selectOptions } = useFsDirent();
 
-    const [isExpanded, setIsExpanded] = React.useState(false);
-    const [fields, setFields] = React.useState<TextFields>({ value: _emptyProps.value, intlValues: _emptyProps.intlValues });
-    const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_emptyProps));
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [fields, setFields] = React.useState<TextFields>({ value: _initProps.value, intlValues: _initProps.intlValues });
+  const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
 
-    const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
+  const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
 
-    const isChangesPresent = state.isChanged
-      || fields.value !== state.value
-      || JSON.stringify(fields.intlValues) !== JSON.stringify(state.intlValues);
+  const isChangesPresent = state.isChanged
+    || fields.value !== state.value
+    || JSON.stringify(fields.intlValues) !== JSON.stringify(state.intlValues);
 
-    function onChangeValue(v: string) {
-      setFields(prev => ({ ...prev, value: v }));
-    }
-    function onBlurValue() {
-      setState(prev => prev.withValue(fields.value));
-    }
-    function onChangeFormName(v: string) {
-      setState(prev => prev.withFormName(v));
-    }
-    function onChangeFormTag(v: string) {
-      setState(prev => prev.withFormTag(v));
-    }
-    function onChangeFlowName(v: string) {
-      setState(prev => prev.withFlowName(v));
-    }
-    function onChangeArticles(v: string[]) {
-      setState(prev => prev.withArticles(v));
-    }
-    function onChangeIntlValues(locale: string, value: string) {
-      setFields(prev => ({ ...prev, intlValues: { ...prev.intlValues, [locale]: value } }));
-    }
-    function onBlurIntlValues(locale: string) {
-      setState(prev => prev.withIntlValues(locale, fields.intlValues[locale] ?? ''));
-    }
-    function onChangeConfigOptions(v: string[]) {
-      setState(prev => prev.withConfigOptions(v as Fs.ConfigOption[]));
-    }
-    function onChangeLabels(v: string[]) {
-      setState(prev => prev.withTagLabels(v));
-    }
-    function onChangeValidityStart(date: Date | undefined) {
-      const iso = date ? date.toISOString() : '';
-      setState(prev => prev.withValidityStart(iso));
-    }
-    function onChangeValidityEnd(date: Date | undefined) {
-      const iso = date ? date.toISOString() : '';
-      setState(prev => prev.withValidityEnd(iso));
-    }
-    function onToggleExpanded() {
-      setIsExpanded(prev => !prev);
-    }
+  function onChangeValue(v: string) {
+    setFields(prev => ({ ...prev, value: v }));
+  }
+  function onBlurValue() {
+    setState(prev => prev.withValue(fields.value));
+  }
+  function onChangeFormName(v: string) {
+    setState(prev => prev.withFormName(v));
+  }
+  function onChangeFormTag(v: string) {
+    setState(prev => prev.withFormTag(v));
+  }
+  function onChangeFlowName(v: string) {
+    setState(prev => prev.withFlowName(v));
+  }
+  function onChangeArticles(v: string[]) {
+    setState(prev => prev.withArticles(v));
+  }
+  function onChangeIntlValues(locale: string, value: string) {
+    setFields(prev => ({ ...prev, intlValues: { ...prev.intlValues, [locale]: value } }));
+  }
+  function onBlurIntlValues(locale: string) {
+    setState(prev => prev.withIntlValues(locale, fields.intlValues[locale] ?? ''));
+  }
+  function onChangeConfigOptions(v: string[]) {
+    setState(prev => prev.withConfigOptions(v as Fs.ConfigOption[]));
+  }
+  function onChangeLabels(v: string[]) {
+    setState(prev => prev.withTagLabels(v));
+  }
+  function onChangeValidityStart(date: Date | undefined) {
+    const iso = date ? date.toISOString() : '';
+    setState(prev => prev.withValidityStart(iso));
+  }
+  function onChangeValidityEnd(date: Date | undefined) {
+    const iso = date ? date.toISOString() : '';
+    setState(prev => prev.withValidityEnd(iso));
+  }
+  function onToggleExpanded() {
+    setIsExpanded(prev => !prev);
+  }
 
-    async function onSave() {
-      try {
-        const dirent = await pushCreate(state);
-        openAsset(dirent);
-      } catch {
-        // error snackbar already shown by handlePushCreate
-      }
+  async function onSave() {
+    try {
+      const dirent = await pushCreate(state);
+      openAsset(dirent);
+    } catch {
+      // error snackbar already shown by handlePushCreate
     }
+  }
 
-    function onCancel() {
-      setFields({ value: _emptyProps.value, intlValues: _emptyProps.intlValues });
-      setStateRaw(new _CreateState(_emptyProps));
-      setIsExpanded(false);
-    }
+  function onCancel() {
+    setFields({ value: _initProps.value, intlValues: _initProps.intlValues });
+    setStateRaw(new _CreateState(_initProps));
+    setIsExpanded(false);
+  }
 
-    return ({
-      isDarkMode,
-      isChanged: isChangesPresent,
-      isExpanded,
-      value: fields.value,
-      formName: state.formName,
-      formTag: state.formTag,
-      flowName: state.flowName,
-      articles: state.articles,
-      intlValues: fields.intlValues,
-      configOptions: state.configOptions,
-      tagLabels: state.tagLabels,
-      validityStart: state.validityStart,
-      validityEnd: state.validityEnd,
-      locales: selectOptions.languages,
-      onChangeValue,
-      onBlurValue,
-      onChangeFormName,
-      onChangeFormTag,
-      onChangeFlowName,
-      onChangeArticles,
-      onChangeIntlValues,
-      onBlurIntlValues,
-      onChangeConfigOptions,
-      onChangeLabels,
-      onChangeValidityStart,
-      onChangeValidityEnd,
-      onToggleExpanded,
-      onSave,
-      onCancel,
-    });
-  };
+  return ({
+    isDarkMode,
+    isChanged: isChangesPresent,
+    isExpanded,
+    value: fields.value,
+    formName: state.formName,
+    formTag: state.formTag,
+    flowName: state.flowName,
+    articles: state.articles,
+    intlValues: fields.intlValues,
+    configOptions: state.configOptions,
+    tagLabels: state.tagLabels,
+    validityStart: state.validityStart,
+    validityEnd: state.validityEnd,
+    locales: selectOptions.languages,
+    onChangeValue,
+    onBlurValue,
+    onChangeFormName,
+    onChangeFormTag,
+    onChangeFlowName,
+    onChangeArticles,
+    onChangeIntlValues,
+    onBlurIntlValues,
+    onChangeConfigOptions,
+    onChangeLabels,
+    onChangeValidityStart,
+    onChangeValidityEnd,
+    onToggleExpanded,
+    onSave,
+    onCancel,
+  });
+};
