@@ -56,6 +56,7 @@ public class ChangeDocProperties implements TaskStoreConfig.MergeTaskVisitor<Tas
           Arrays.asList(command.getDocumentProperties()), 
           newlink -> (builder) -> builder
           .linkType(TaskMapper.LINK_TYPE_DOC_PROPS)
+          .linkValue("data associated with task creating")
           .linkBody(JsonObject.mapFrom(command.getDocumentProperties()))
           .build());
     }
