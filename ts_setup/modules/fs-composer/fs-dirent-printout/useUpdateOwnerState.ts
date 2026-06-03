@@ -12,6 +12,7 @@ type _ChangeStateProps = {
   printoutId: string;
   bodyType: Fs.BodyType;
   serviceName: string;
+  description: string;
   orchestratorName: string;
   intlValues: Record<string, string>;
 }
@@ -34,6 +35,9 @@ class _ChangeState implements FsuChange {
   get serviceName() {
     return this._current.serviceName;
   }
+  get description() {
+    return this._current.description;
+  }
   get orchestratorName() {
     return this._current.orchestratorName;
   }
@@ -52,6 +56,7 @@ class _ChangeState implements FsuChange {
       changes: {
         serviceId: c.printoutId,
         serviceName: c.serviceName || undefined,
+        description: c.description || undefined,
         orchestratorName: c.orchestratorName || undefined,
         labels: Object.entries(c.intlValues).map(([locale, labelValue]) => ({ locale, labelValue })),
       },
@@ -60,6 +65,9 @@ class _ChangeState implements FsuChange {
 
   withServiceName(serviceName: string): _ChangeState {
     return new _ChangeState({ ...this._current, serviceName }, this._origin);
+  }
+  withDescription(description: string): _ChangeState {
+    return new _ChangeState({ ...this._current, description }, this._origin);
   }
   withOrchestratorName(orchestratorName: string): _ChangeState {
     return new _ChangeState({ ...this._current, orchestratorName }, this._origin);
@@ -74,17 +82,21 @@ class _ChangeState implements FsuChange {
 
 interface _TextFields {
   serviceName: string;
+  description: string;
 }
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
   serviceName: string;
+  description: string;
   orchestratorName: string;
   flows: Fs.SelectOption[];
   connectedPages: ConnectedPage[];
   onChangeServiceName: (v: string) => void;
   onBlurServiceName: () => void;
+  onChangeDescription: (v: string) => void;
+  onBlurDescription: () => void;
   onChangeOrchestratorName: (v: string) => void;
   onCancel: () => void;
 }
@@ -101,6 +113,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     printoutId: props.direntId,
     bodyType: dirent.type,
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
+    description: printoutProps.description ?? '',
     orchestratorName: printoutProps.orchestratorName ?? '',
     intlValues: printoutProps.intlValues ?? {},
   }));
@@ -109,9 +122,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<_TextFields>({
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
+    description: printoutProps.description ?? '',
   });
 
-  const isChangesPresent = state.isChanged || fields.serviceName !== state.serviceName;
+  const isChangesPresent = state.isChanged
+    || fields.serviceName !== state.serviceName
+    || fields.description !== state.description;
 
   const connectedPages: ConnectedPage[] = Object.values(selectOptions.direntProps)
     .filter(p => p.type === 'PRINTOUT_PAGE' && (p as Fs.PrintoutPageProps).serviceId === props.direntId)
@@ -127,11 +143,20 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onBlurServiceName() {
     setState(prev => prev.withServiceName(fields.serviceName));
   }
+  function onChangeDescription(v: string) {
+    setFields(prev => ({ ...prev, description: v }));
+  }
+  function onBlurDescription() {
+    setState(prev => prev.withDescription(fields.description));
+  }
   function onChangeOrchestratorName(v: string) {
     setState(prev => prev.withOrchestratorName(v));
   }
   function onCancel() {
-    setFields({ serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '' });
+    setFields({
+      serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
+      description: printoutProps.description ?? '',
+    });
     cancel(props.direntId);
   }
 
@@ -139,11 +164,14 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isDarkMode,
     isChanged: isChangesPresent,
     serviceName: fields.serviceName,
+    description: fields.description,
     orchestratorName: state.orchestratorName,
     flows: selectOptions.flows,
     connectedPages,
     onChangeServiceName,
     onBlurServiceName,
+    onChangeDescription,
+    onBlurDescription,
     onChangeOrchestratorName,
     onCancel,
   };

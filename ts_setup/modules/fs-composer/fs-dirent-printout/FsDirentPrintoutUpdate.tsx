@@ -36,6 +36,15 @@ export const FsDirentPrintoutUpdate: React.FC<FsDirentPrintoutUpdateProps> = ({ 
           onChange={ownerState.onChangeOrchestratorName}
         />
 
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
+        <FsDirentTextField
+          multiline minRows={2} maxRows={5}
+          placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
+          value={ownerState.description}
+          onChange={ownerState.onChangeDescription}
+          onBlur={ownerState.onBlurDescription}
+        />
+
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.pagesSection.label' })}</Typography>
         {ownerState.connectedPages.length === 0 ? (
           <Typography variant='body2' color='textSecondary'>

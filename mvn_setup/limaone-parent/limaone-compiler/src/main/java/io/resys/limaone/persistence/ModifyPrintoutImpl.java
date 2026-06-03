@@ -92,6 +92,7 @@ public class ModifyPrintoutImpl extends AuthoringTemplate<ModifyPrintoutImpl, Mo
         .from(start.getBody())
         .serviceName(props.getServiceName())
         .orchestratorName(props.getOrchestratorName())
+        .description(props.getDescription() == null ? start.getBody().getDescription() : props.getDescription())
         .labels(props.getLabels() == null ? start.getBody().getLabels() : props.getLabels())
         .build();
   }

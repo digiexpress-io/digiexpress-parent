@@ -76,7 +76,8 @@ public class NewPrintoutImpl extends AuthoringTemplate<NewPrintoutImpl, Model<Pr
     
     final var printout = ImmutablePrintout.builder()
         .serviceName(props.getServiceName())
-        .orchestratorName(props.getOrchestratorName());
+        .orchestratorName(props.getOrchestratorName())
+        .description(props.getDescription());
 
     final var duplicate = world.getPrintouts().values().stream()
         .filter(p -> p.getBody().getServiceName().equals(props.getServiceName()))

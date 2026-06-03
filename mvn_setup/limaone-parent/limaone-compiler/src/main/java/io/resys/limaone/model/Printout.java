@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.Body;
 import io.resys.limaone.model.Model.BodyType;
+import jakarta.annotation.Nullable;
 
 @Value.Immutable
 @JsonSerialize(as = ImmutablePrintout.class)
@@ -39,5 +40,7 @@ public interface Printout extends Body {
   
   List<LocaleLabel> getLabels(); // localized labels, human readable names
   default BodyType getBodyType() { return BodyType.PRINTOUT; };
+  
+  @Nullable String getDescription();
 
 }

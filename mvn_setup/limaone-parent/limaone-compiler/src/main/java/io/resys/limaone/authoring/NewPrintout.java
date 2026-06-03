@@ -24,6 +24,7 @@ import java.util.List;
 
 import java.util.function.Consumer;
 
+import jakarta.annotation.Nullable;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -47,8 +48,8 @@ public interface NewPrintout {
   @Value.Immutable @JsonSerialize(as = ImmutableNewPrintoutProps.class) @JsonDeserialize(as = ImmutableNewPrintoutProps.class)
   interface NewPrintoutProps extends AuthoringModelProps {
     List<LocaleLabel> getLabels();
-    
     String getServiceName();
     String getOrchestratorName();
+    @Nullable String getDescription();
   }
 }

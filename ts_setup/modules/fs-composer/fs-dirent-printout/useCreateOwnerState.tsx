@@ -6,16 +6,20 @@ import React from 'react';
 
   interface _TextFields {
     serviceName: string;
+    description: string;
   }
 
   export interface CreateOwnerState {
     isDarkMode: boolean;
     isChanged: boolean;
     serviceName: string;
+    description: string;
     orchestratorName: string;
     flows: Fs.SelectOption[];
     onChangeServiceName: (v: string) => void;
     onBlurServiceName: () => void;
+    onChangeDescription: (v: string) => void;
+    onBlurDescription: () => void;
     onChangeOrchestratorName: (v: string) => void;
     onSave: () => void;
     onCancel: () => void;
@@ -24,6 +28,7 @@ import React from 'react';
   type _CreateStateProps = {
     bodyType: Fs.BodyType;
     serviceName: string;
+    description: string;
     orchestratorName: string;
   }
 
@@ -42,6 +47,9 @@ import React from 'react';
     get serviceName() {
       return this._current.serviceName;
     }
+    get description() {
+      return this._current.description;
+    }
     get orchestratorName() {
       return this._current.orchestratorName;
     }
@@ -55,6 +63,7 @@ import React from 'react';
         bodyType: c.bodyType,
         changes: {
           serviceName: c.serviceName || undefined,
+          description: c.description || undefined,
           orchestratorName: c.orchestratorName || undefined,
           labels: [],
         },
@@ -64,6 +73,9 @@ import React from 'react';
     withServiceName(serviceName: string): _CreateState {
       return new _CreateState({ ...this._current, serviceName }, this._origin);
     }
+    withDescription(description: string): _CreateState {
+      return new _CreateState({ ...this._current, description }, this._origin);
+    }
     withOrchestratorName(orchestratorName: string): _CreateState {
       return new _CreateState({ ...this._current, orchestratorName }, this._origin);
     }
@@ -72,6 +84,7 @@ import React from 'react';
   const _initProps: _CreateStateProps = {
     bodyType: 'PRINTOUT',
     serviceName: '',
+    description: '',
     orchestratorName: '',
   };
 
@@ -81,18 +94,29 @@ import React from 'react';
     const { openAsset } = useFsNav();
     const { selectOptions } = useFsDirent();
 
-    const [fields, setFields] = React.useState<_TextFields>({ serviceName: _initProps.serviceName });
+    const [fields, setFields] = React.useState<_TextFields>({
+      serviceName: _initProps.serviceName,
+      description: _initProps.description,
+    });
     const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
 
     const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
 
-    const isChangesPresent = state.isChanged || fields.serviceName !== state.serviceName;
+    const isChangesPresent = state.isChanged
+      || fields.serviceName !== state.serviceName
+      || fields.description !== state.description;
 
     function onChangeServiceName(v: string) {
       setFields(prev => ({ ...prev, serviceName: v }));
     }
     function onBlurServiceName() {
       setState(prev => prev.withServiceName(fields.serviceName));
+    }
+    function onChangeDescription(v: string) {
+      setFields(prev => ({ ...prev, description: v }));
+    }
+    function onBlurDescription() {
+      setState(prev => prev.withDescription(fields.description));
     }
     function onChangeOrchestratorName(v: string) {
       setState(prev => prev.withOrchestratorName(v));
@@ -108,7 +132,7 @@ import React from 'react';
     }
 
     function onCancel() {
-      setFields({ serviceName: _initProps.serviceName });
+      setFields({ serviceName: _initProps.serviceName, description: _initProps.description });
       setStateRaw(new _CreateState(_initProps));
     }
 
@@ -116,10 +140,13 @@ import React from 'react';
       isDarkMode,
       isChanged: isChangesPresent,
       serviceName: fields.serviceName,
+      description: fields.description,
       orchestratorName: state.orchestratorName,
       flows: selectOptions.flows,
       onChangeServiceName,
       onBlurServiceName,
+      onChangeDescription,
+      onBlurDescription,
       onChangeOrchestratorName,
       onSave,
       onCancel,

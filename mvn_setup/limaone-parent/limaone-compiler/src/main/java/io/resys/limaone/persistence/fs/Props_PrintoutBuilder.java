@@ -41,6 +41,7 @@ public class Props_PrintoutBuilder {
         .locked(false)
         .printoutServiceName(printout.getServiceName())
         .orchestratorName(printout.getOrchestratorName())
+        .description(printout.getDescription())
         .intlValues(printout.getLabels()
             .stream()
             .collect(Collectors.toMap(

@@ -49,6 +49,8 @@ public interface ModifyPrintout {
     String getServiceId();
     String getServiceName();
     String getOrchestratorName();
+    
+    @Nullable String getDescription();
     @Nullable List<LocaleLabel> getLabels();
   }
 }
