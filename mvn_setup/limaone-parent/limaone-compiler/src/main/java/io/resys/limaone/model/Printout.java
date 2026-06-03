@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -38,9 +40,14 @@ public interface Printout extends Body {
   String getServiceName(); // human readable name, what IS this PDF
   String getOrchestratorName(); // external name/id that will be called to resolve data/ most likely wrench flow name
   
-  List<LocaleLabel> getLabels(); // localized labels, human readable names
-  default BodyType getBodyType() { return BodyType.PRINTOUT; };
+  List<LocaleLabel> getLabels();
   
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   @Nullable String getDescription();
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Nullable List<String> getTagLabels();
+
+  default BodyType getBodyType() { return BodyType.PRINTOUT; };
 
 }

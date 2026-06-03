@@ -13,6 +13,7 @@ type _ChangeStateProps = {
   bodyType: Fs.BodyType;
   serviceName: string;
   description: string;
+  labels: string[];
   orchestratorName: string;
   intlValues: Record<string, string>;
 }
@@ -38,6 +39,9 @@ class _ChangeState implements FsuChange {
   get description() {
     return this._current.description;
   }
+  get labels() {
+    return this._current.labels;
+  }
   get orchestratorName() {
     return this._current.orchestratorName;
   }
@@ -57,8 +61,9 @@ class _ChangeState implements FsuChange {
         serviceId: c.printoutId,
         serviceName: c.serviceName || undefined,
         description: c.description || undefined,
+        tagLabels: c.labels.length ? c.labels : undefined,
         orchestratorName: c.orchestratorName || undefined,
-        labels: Object.entries(c.intlValues).map(([locale, labelValue]) => ({ locale, labelValue })),
+        localeLabels: Object.entries(c.intlValues).map(([locale, labelValue]) => ({ locale, labelValue })),
       },
     };
   }
@@ -68,6 +73,9 @@ class _ChangeState implements FsuChange {
   }
   withDescription(description: string): _ChangeState {
     return new _ChangeState({ ...this._current, description }, this._origin);
+  }
+  withLabels(labels: string[]): _ChangeState {
+    return new _ChangeState({ ...this._current, labels }, this._origin);
   }
   withOrchestratorName(orchestratorName: string): _ChangeState {
     return new _ChangeState({ ...this._current, orchestratorName }, this._origin);
@@ -90,6 +98,8 @@ export interface UpdateOwnerState {
   isChanged: boolean;
   serviceName: string;
   description: string;
+  labels: string[];
+  labelOptions: string[];
   orchestratorName: string;
   flows: Fs.SelectOption[];
   connectedPages: ConnectedPage[];
@@ -97,6 +107,7 @@ export interface UpdateOwnerState {
   onBlurServiceName: () => void;
   onChangeDescription: (v: string) => void;
   onBlurDescription: () => void;
+  onChangeLabels: (value: string[]) => void;
   onChangeOrchestratorName: (v: string) => void;
   onCancel: () => void;
 }
@@ -114,6 +125,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     bodyType: dirent.type,
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
     description: printoutProps.description ?? '',
+    labels: (printoutProps.labels ?? []).map(l => l.value),
     orchestratorName: printoutProps.orchestratorName ?? '',
     intlValues: printoutProps.intlValues ?? {},
   }));
@@ -149,6 +161,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onBlurDescription() {
     setState(prev => prev.withDescription(fields.description));
   }
+  function onChangeLabels(value: string[]) {
+    setState(prev => prev.withLabels(value));
+  }
   function onChangeOrchestratorName(v: string) {
     setState(prev => prev.withOrchestratorName(v));
   }
@@ -165,6 +180,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isChanged: isChangesPresent,
     serviceName: fields.serviceName,
     description: fields.description,
+    labels: state.labels,
+    labelOptions: selectOptions.labels,
     orchestratorName: state.orchestratorName,
     flows: selectOptions.flows,
     connectedPages,
@@ -172,6 +189,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onBlurServiceName,
     onChangeDescription,
     onBlurDescription,
+    onChangeLabels,
     onChangeOrchestratorName,
     onCancel,
   };

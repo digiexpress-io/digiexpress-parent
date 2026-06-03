@@ -69,7 +69,7 @@ public class TagomiPdfTest extends DbSupport {
         .props(p -> p
             .serviceName("test-doc")
             .orchestratorName("")
-            .addLabels(ImmutableLocaleLabel.builder()
+            .addLocaleLabels(ImmutableLocaleLabel.builder()
                 .locale(locale.getId()).labelValue("Test").build()))
         .buildSync();
 
@@ -163,7 +163,7 @@ public class TagomiPdfTest extends DbSupport {
         .props(p -> p
             .serviceName("feedback-doc")
             .orchestratorName("")
-            .addLabels(ImmutableLocaleLabel.builder()
+            .addLocaleLabels(ImmutableLocaleLabel.builder()
                 .locale(locale.getId()).labelValue("Feedback").build()))
         .buildSync();
 
@@ -171,7 +171,7 @@ public class TagomiPdfTest extends DbSupport {
         .props(p -> p
             .serviceName("appendix")
             .orchestratorName("")
-            .addLabels(ImmutableLocaleLabel.builder()
+            .addLocaleLabels(ImmutableLocaleLabel.builder()
                 .locale(locale.getId()).labelValue("Appendix").build()))
         .buildSync();
 

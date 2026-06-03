@@ -14,12 +14,15 @@ import React from 'react';
     isChanged: boolean;
     serviceName: string;
     description: string;
+    labels: string[];
+    labelOptions: string[];
     orchestratorName: string;
     flows: Fs.SelectOption[];
     onChangeServiceName: (v: string) => void;
     onBlurServiceName: () => void;
     onChangeDescription: (v: string) => void;
     onBlurDescription: () => void;
+    onChangeLabels: (value: string[]) => void;
     onChangeOrchestratorName: (v: string) => void;
     onSave: () => void;
     onCancel: () => void;
@@ -29,6 +32,7 @@ import React from 'react';
     bodyType: Fs.BodyType;
     serviceName: string;
     description: string;
+    labels: string[];
     orchestratorName: string;
   }
 
@@ -50,6 +54,9 @@ import React from 'react';
     get description() {
       return this._current.description;
     }
+    get labels() {
+      return this._current.labels;
+    }
     get orchestratorName() {
       return this._current.orchestratorName;
     }
@@ -64,8 +71,9 @@ import React from 'react';
         changes: {
           serviceName: c.serviceName || undefined,
           description: c.description || undefined,
+          tagLabels: c.labels.length ? c.labels : undefined,
           orchestratorName: c.orchestratorName || undefined,
-          labels: [],
+          localeLabels: [],
         },
       };
     }
@@ -76,6 +84,9 @@ import React from 'react';
     withDescription(description: string): _CreateState {
       return new _CreateState({ ...this._current, description }, this._origin);
     }
+    withLabels(labels: string[]): _CreateState {
+      return new _CreateState({ ...this._current, labels }, this._origin);
+    }
     withOrchestratorName(orchestratorName: string): _CreateState {
       return new _CreateState({ ...this._current, orchestratorName }, this._origin);
     }
@@ -85,6 +96,7 @@ import React from 'react';
     bodyType: 'PRINTOUT',
     serviceName: '',
     description: '',
+    labels: [],
     orchestratorName: '',
   };
 
@@ -118,6 +130,9 @@ import React from 'react';
     function onBlurDescription() {
       setState(prev => prev.withDescription(fields.description));
     }
+    function onChangeLabels(value: string[]) {
+      setState(prev => prev.withLabels(value));
+    }
     function onChangeOrchestratorName(v: string) {
       setState(prev => prev.withOrchestratorName(v));
     }
@@ -141,12 +156,15 @@ import React from 'react';
       isChanged: isChangesPresent,
       serviceName: fields.serviceName,
       description: fields.description,
+      labels: state.labels,
+      labelOptions: selectOptions.labels,
       orchestratorName: state.orchestratorName,
       flows: selectOptions.flows,
       onChangeServiceName,
       onBlurServiceName,
       onChangeDescription,
       onBlurDescription,
+      onChangeLabels,
       onChangeOrchestratorName,
       onSave,
       onCancel,

@@ -74,24 +74,25 @@ public class NewPrintoutImpl extends AuthoringTemplate<NewPrintoutImpl, Model<Pr
     Objects.requireNonNull(props, () -> "props must be defined");
 
     
-    final var printout = ImmutablePrintout.builder()
-        .serviceName(props.getServiceName())
-        .orchestratorName(props.getOrchestratorName())
-        .description(props.getDescription());
-
     final var duplicate = world.getPrintouts().values().stream()
         .filter(p -> p.getBody().getServiceName().equals(props.getServiceName()))
         .findFirst();
-    
+
     if(duplicate.isPresent()) {
       throw new AuthoringException(props, "Printout: '" + props.getServiceName() + "' already exists!");
     }
-              
-    for(final var label : props.getLabels()) {        
+
+    final var printout = ImmutablePrintout.builder()
+        .serviceName(props.getServiceName())
+        .orchestratorName(props.getOrchestratorName())
+        .description(props.getDescription())
+        .tagLabels(props.getTagLabels() == null ? java.util.Collections.emptyList() : props.getTagLabels());
+
+    for(final var label : props.getLocaleLabels()) {
 
       final var localeRef = label.getLocale();
       final var locale = world.findOneLocale(localeRef);
-          
+
       printout.addLabels(ImmutableLocaleLabel.builder()
           .locale(locale.map(e -> e.getId()).orElse(localeRef))
           .labelValue(label.getLabelValue())
@@ -99,11 +100,11 @@ public class NewPrintoutImpl extends AuthoringTemplate<NewPrintoutImpl, Model<Pr
 
       if(locale.isEmpty()) {
         throw new AuthoringException(
-            props, 
-            "Locale with id: '" + label.getLocale() + "' does not exist in: '" + String.join(",", world.getLocales().keySet()) + "'!");          
+            props,
+            "Locale with id: '" + label.getLocale() + "' does not exist in: '" + String.join(",", world.getLocales().keySet()) + "'!");
       }
     }
-    
+
     return printout.build();
   }
 }

@@ -49,7 +49,7 @@ public class Authoring_5_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("original service name")
             .orchestratorName("original orchestrator")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("English label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("English label").build())
             .build()
         )
         .buildSync();
@@ -89,7 +89,7 @@ public class Authoring_5_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("loan application")
             .orchestratorName("flow-1")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("English label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("English label").build())
             .build()
         )
         .buildSync();
@@ -100,7 +100,7 @@ public class Authoring_5_Test extends DbSupport {
             .serviceId(printout1.getId())
             .serviceName("loan application")
             .orchestratorName("flow-1")
-            .labels(List.of(
+            .localeLabels(List.of(
                 ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("Updated English").build(),
                 ImmutableLocaleLabel.builder().locale(locale2.getId()).labelValue("Finnish label").build()
             )))
@@ -121,7 +121,7 @@ public class Authoring_5_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("service")
             .orchestratorName("orch")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("en label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("en label").build())
             .build()
         )
         .buildSync();
@@ -133,7 +133,7 @@ public class Authoring_5_Test extends DbSupport {
               .serviceId(printout1.getId())
               .serviceName("service")
               .orchestratorName("orch")
-              .labels(List.of(
+              .localeLabels(List.of(
                   ImmutableLocaleLabel.builder().locale("non-existent-locale-id").labelValue("bad label").build()
               )))
           .buildSync()
@@ -152,7 +152,7 @@ public class Authoring_5_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("service")
             .orchestratorName("orch")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
             .build()
         )
         .buildSync();
@@ -204,7 +204,7 @@ public class Authoring_5_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("service")
             .orchestratorName("orch")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
             .build()
         )
         .buildSync();
@@ -244,7 +244,7 @@ public class Authoring_5_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("service")
             .orchestratorName("orch")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
             .build()
         )
         .buildSync();
@@ -279,7 +279,7 @@ public class Authoring_5_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("service")
             .orchestratorName("orch")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
             .build()
         )
         .buildSync();
@@ -319,7 +319,7 @@ public class Authoring_5_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("service")
             .orchestratorName("orch")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
             .build()
         )
         .buildSync();
@@ -349,7 +349,7 @@ public class Authoring_5_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("service")
             .orchestratorName("orch")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
             .build()
         )
         .buildSync();
@@ -403,7 +403,7 @@ public class Authoring_5_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("service")
             .orchestratorName("orch")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
             .build()
         )
         .buildSync();
@@ -433,7 +433,7 @@ public class Authoring_5_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("service")
             .orchestratorName("orch")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
             .build()
         )
         .buildSync();

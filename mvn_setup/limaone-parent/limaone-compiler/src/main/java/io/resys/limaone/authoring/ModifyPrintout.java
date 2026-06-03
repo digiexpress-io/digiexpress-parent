@@ -51,6 +51,7 @@ public interface ModifyPrintout {
     String getOrchestratorName();
     
     @Nullable String getDescription();
-    @Nullable List<LocaleLabel> getLabels();
+    @Nullable List<LocaleLabel> getLocaleLabels();
+    @Nullable List<String> getTagLabels();
   }
 }

@@ -6,6 +6,7 @@ import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
+import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { useUtilityClasses, FsDirentPrintoutRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPrintoutUpdateProps } from './FsDirentPrintoutProps';
@@ -43,6 +44,14 @@ export const FsDirentPrintoutUpdate: React.FC<FsDirentPrintoutUpdateProps> = ({ 
           value={ownerState.description}
           onChange={ownerState.onChangeDescription}
           onBlur={ownerState.onBlurDescription}
+        />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
+        <FsDirentTextFieldAutocomplete
+          options={ownerState.labelOptions}
+          value={ownerState.labels}
+          onChange={ownerState.onChangeLabels}
+          placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.pagesSection.label' })}</Typography>

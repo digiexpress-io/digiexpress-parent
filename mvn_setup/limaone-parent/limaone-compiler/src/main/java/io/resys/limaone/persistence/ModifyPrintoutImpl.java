@@ -78,8 +78,8 @@ public class ModifyPrintoutImpl extends AuthoringTemplate<ModifyPrintoutImpl, Mo
       throw new AuthoringException(props, "Can't find printout: '" + props.getServiceId() + "' to update!");
     }
 
-    if(props.getLabels() != null) {
-      for(final var label : props.getLabels()) {
+    if(props.getLocaleLabels() != null) {
+      for(final var label : props.getLocaleLabels()) {
         final var localeId = label.getLocale();
         if(!world.getLocales().containsKey(localeId)) {
           throw new AuthoringException(props,
@@ -93,7 +93,8 @@ public class ModifyPrintoutImpl extends AuthoringTemplate<ModifyPrintoutImpl, Mo
         .serviceName(props.getServiceName())
         .orchestratorName(props.getOrchestratorName())
         .description(props.getDescription() == null ? start.getBody().getDescription() : props.getDescription())
-        .labels(props.getLabels() == null ? start.getBody().getLabels() : props.getLabels())
+        .labels(props.getLocaleLabels() == null ? start.getBody().getLabels() : props.getLocaleLabels())
+        .tagLabels(props.getTagLabels() == null ? start.getBody().getTagLabels() : props.getTagLabels())
         .build();
   }
 }

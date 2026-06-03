@@ -47,9 +47,10 @@ public interface NewPrintout {
   
   @Value.Immutable @JsonSerialize(as = ImmutableNewPrintoutProps.class) @JsonDeserialize(as = ImmutableNewPrintoutProps.class)
   interface NewPrintoutProps extends AuthoringModelProps {
-    List<LocaleLabel> getLabels();
+    List<LocaleLabel> getLocaleLabels();
     String getServiceName();
     String getOrchestratorName();
     @Nullable String getDescription();
+    @Nullable List<String> getTagLabels();
   }
 }

@@ -47,7 +47,7 @@ public class Authoring_6_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("loan application")
             .orchestratorName("flow-1")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("English").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("English").build())
             .build()
         )
         .buildSync();
@@ -100,7 +100,7 @@ public class Authoring_6_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("service")
             .orchestratorName("orch")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
             .build()
         )
         .buildSync();
@@ -136,7 +136,7 @@ public class Authoring_6_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("service")
             .orchestratorName("orch")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
             .build()
         )
         .buildSync();
@@ -176,7 +176,7 @@ public class Authoring_6_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("to be deleted")
             .orchestratorName("orch")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
             .build()
         )
         .buildSync();
@@ -206,7 +206,7 @@ public class Authoring_6_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("service")
             .orchestratorName("orch")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("label").build())
             .build()
         )
         .buildSync();
@@ -237,7 +237,7 @@ public class Authoring_6_Test extends DbSupport {
         .props(builder -> builder
             .serviceName("loan application")
             .orchestratorName("flow-1")
-            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("Loan").build())
+            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("Loan").build())
             .build()
         )
         .buildSync();
