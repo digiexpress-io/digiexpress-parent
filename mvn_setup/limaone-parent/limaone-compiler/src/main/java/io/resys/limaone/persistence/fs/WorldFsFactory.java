@@ -173,8 +173,7 @@ public class WorldFsFactory {
     }
     
     case ARTICLE_PAGE: {
-      final var blob = node.getValue().getTransitives().getBlob();
-      final var page = blob.getBlobValue().mapTo(ArticlePage.class);
+      final ArticlePage page = worldState.getBodyOfType(node);
       final var localeId = page.getLocale();
       final var locale = worldState.getLocale(localeId);
       final var name = locale.getValue();
@@ -214,22 +213,36 @@ public class WorldFsFactory {
     }
     
     case PRINTOUT: {
-      final Printout printout = worldState.getBodyOfType(node);
+      final Printout printout = worldState.getBodyOfType(node);      
       final var name = printout.getServiceName();
+      final var namePath = "/" + name;
       worldState.putProps(node, n -> Props_PrintoutBuilder.of(worldState, n));
-      return NodePathAndName.of(path.orElse("printouts"), name);
+      return NodePathAndName.of(path.orElse("printouts") + namePath, name);
     }
     
     case PRINTOUT_PAGE: {
-      final PrintoutPage printout = worldState.getBodyOfType(node);
-      final var name = printout.getLocaleId();
+      
+      final PrintoutPage page = worldState.getBodyOfType(node);
+      final var locale = worldState.getLocale(page.getLocaleId());
+      final var name = locale.getValue();
+      final var printoutNode = worldState.getNodeAndBody(page.getServiceId());
+      final var printoutPath = getPathAndName(printoutNode);
       worldState.putProps(node, n -> Props_PrintoutPageBuilder.of(worldState, n));
-      return NodePathAndName.of(path.orElse("printout-pages"), name);
+      
+      return NodePathAndName.of(printoutPath.getPath() + "/pages", name);
     }
-    
+
     case PRINTOUT_RESOURCE: {
       final PrintoutResource printoutResource = worldState.getBodyOfType(node);
       final var name = printoutResource.getResourceName();
+      final var firstPageId = printoutResource.getPrintoutPageIds().isEmpty() ? null : printoutResource.getPrintoutPageIds().get(0);
+      if(firstPageId != null) {
+        final PrintoutPage firstPage = worldState.getBodyOfType(worldState.getNodeAndBody(firstPageId));
+        final var printoutNode = worldState.getNodeAndBody(firstPage.getServiceId());
+        final var printoutPath = getPathAndName(printoutNode);
+        worldState.putProps(node, n -> Props_PrintoutResourceBuilder.of(worldState, n));
+        return NodePathAndName.of(printoutPath.getPath() + "/resources", name);
+      }
       worldState.putProps(node, n -> Props_PrintoutResourceBuilder.of(worldState, n));
       return NodePathAndName.of(path.orElse("printout-resources"), name);
     }

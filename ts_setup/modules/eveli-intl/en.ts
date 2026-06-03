@@ -1698,6 +1698,7 @@ export const en = {
   'fs.properties.propertyLabel.dialobFormName': 'Dialob Form Name',
   'fs.properties.propertyLabel.dialobFormTag': 'Dialob Form Tag',
   'fs.properties.propertyLabel.flowName': 'Flow Name',
+  'fs.properties.propertyLabel.printoutPages': 'Printout pages',
   'fs.properties.propertyLabel.configOptionsEnabled': 'Config options',
   'fs.properties.propertyLabel.selectedArticles': 'Associated Articles',
   'fs.properties.propertyLabel.associatedLinks': 'Associated Links',
