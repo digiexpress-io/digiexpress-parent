@@ -181,13 +181,19 @@ public class AssetsWrenchController {
 
   @GetMapping(path="/flow-names")
   public Uni<List<String>> flowNames() {
+    return getComposer()
+    .onItem().transformToUni(composer -> composer.withBranch(null).get().map(state->{
+      return state.getFlows().entrySet().stream().map(flow->flow.getValue().getAst().getName()).toList();
+    }));
+    /*
     return envir.withCockpitIdSupplier(composer.getCockpitIdSupplier())
         .runtimeQuery().findOne().onItem().transform(runtime -> {
       if(runtime.isEmpty()) {
         return Collections.emptyList();
       }
       return runtime.get().getWrench().getFlowNames();
-    }); 
+    });
+    */ 
   }
   
   @GetMapping(path = "/commitlogs", produces = MediaType.APPLICATION_JSON_VALUE)
