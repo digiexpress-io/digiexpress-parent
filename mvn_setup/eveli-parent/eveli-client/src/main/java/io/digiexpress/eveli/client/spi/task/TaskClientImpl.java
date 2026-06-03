@@ -39,6 +39,7 @@ import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.task.visitors.AddCustomerCommitViewer;
 import io.digiexpress.eveli.client.spi.task.visitors.AddFormToCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.AddWorkerCommitViewer;
+import io.digiexpress.eveli.client.spi.task.visitors.ChangeDocProperties;
 import io.digiexpress.eveli.client.spi.task.visitors.CompleteCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTask;
@@ -242,6 +243,11 @@ public class TaskClientImpl implements TaskClient {
         TaskAssert.isTrue(!assignmentId.isEmpty(), () -> "assignmentId can't be empty!");
 
         return ctx.getConfig().accept(new DeleteCustomerAssignment(userId, taskId, assignmentId));
+      }
+      @Override
+      public Uni<Task> changeDocProperties(String taskId, ChangeDocPropertiesCommand command) {
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        return ctx.getConfig().accept(new ChangeDocProperties(userId, taskId, command));
       }
     };
   }

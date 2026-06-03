@@ -186,6 +186,7 @@ public interface TaskClient {
     Uni<Task> createCustomerAssignment(String taskId, List<CreateCustomerAssignmentCommand> command);
     Uni<Task> addFormToCustomerAssignment(String taskId, List<AddFormToCustomerAssignmentCommand> command);
     Uni<Task> deleteCustomerTaskAssignment(String taskId, List<String> assignmentId);
+    Uni<Task> changeDocProperties(String taskId, ChangeDocPropertiesCommand command);
     
     Uni<Void> addWorkerCommitViewer(String taskId);
     Uni<Void> addCustomerCommitViewer(String taskId);
@@ -315,8 +316,6 @@ public interface TaskClient {
     @Value.Default
     @Override default TaskCommandType getCommandType() { return TaskCommandType.ModifyTask; }
   }
-  
-  
   
   @JsonSerialize(as = ImmutableTransferTaskCommand.class)
   @JsonDeserialize(as = ImmutableTransferTaskCommand.class)
@@ -564,5 +563,16 @@ public interface TaskClient {
     
     // Additional tenant based configuration is provided
     @Nullable String getCockpitId();
+  }
+  
+  
+  @JsonSerialize(as = ImmutableChangeDocPropertiesCommand.class)
+  @JsonDeserialize(as = ImmutableChangeDocPropertiesCommand.class)
+  @Value.Immutable
+  interface ChangeDocPropertiesCommand  extends TaskUpdateCommand {
+    Map<String, String> getDocumentProperties();
+    
+    @Value.Default
+    @Override default TaskCommandType getCommandType() { return TaskCommandType.ChangeDocProperties; }
   }
 }
