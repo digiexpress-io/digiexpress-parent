@@ -75,7 +75,8 @@ import io.vertx.core.json.JsonObject;
   @Type(value = ImmutableChangeChecklistItemAssignees.class, name = "ChangeChecklistItemAssignees"),
   @Type(value = ImmutableChangeChecklistItemCompleted.class, name = "ChangeChecklistItemCompleted"),
   @Type(value = ImmutableChangeChecklistItemDueDate.class, name = "ChangeChecklistItemDueDate"),
-  @Type(value = ImmutableChangeChecklistItemTitle.class, name = "ChangeChecklistItemTitle")
+  @Type(value = ImmutableChangeChecklistItemTitle.class, name = "ChangeChecklistItemTitle"),
+  @Type(value = ImmutableChangeDocPropertiesCommand.class, name = "ChangeDocProperties")
 })
 public interface TaskCommand extends Serializable {
   @Nullable String getUserId();
@@ -90,7 +91,8 @@ public interface TaskCommand extends Serializable {
     ArchiveTask, CommentOnTask, ChangeTaskComment, AssignTaskRoles, AssignTask, ChangeTaskStartDate,
     ChangeTaskDueDate, ChangeTaskInfo, CreateTaskExtension, ChangeTaskExtension, AssignTaskParent,
     CreateChecklist, ChangeChecklistTitle, DeleteChecklist, AddChecklistItem, DeleteChecklistItem,
-    ChangeChecklistItemAssignees, ChangeChecklistItemCompleted, ChangeChecklistItemDueDate, ChangeChecklistItemTitle
+    ChangeChecklistItemAssignees, ChangeChecklistItemCompleted, ChangeChecklistItemDueDate, ChangeChecklistItemTitle,
+    ChangeDocProperties
   }
 
 
@@ -127,7 +129,8 @@ public interface TaskCommand extends Serializable {
     @Type(value = ImmutableChangeChecklistItemAssignees.class, name = "ChangeChecklistItemAssignees"),
     @Type(value = ImmutableChangeChecklistItemCompleted.class, name = "ChangeChecklistItemCompleted"),
     @Type(value = ImmutableChangeChecklistItemDueDate.class, name = "ChangeChecklistItemDueDate"),
-    @Type(value = ImmutableChangeChecklistItemTitle.class, name = "ChangeChecklistItemTitle")
+    @Type(value = ImmutableChangeChecklistItemTitle.class, name = "ChangeChecklistItemTitle"),
+    @Type(value = ImmutableChangeDocPropertiesCommand.class, name = "ChangeDocProperties")
   })
   interface TaskUpdateCommand extends TaskCommand {
     @Nullable String getTaskId();
