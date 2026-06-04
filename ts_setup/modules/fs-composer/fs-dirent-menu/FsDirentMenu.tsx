@@ -38,6 +38,7 @@ export const FsDirentMenu: React.FC<FsDirentMenuProps> = (props) => {
       className={classes.root}
       open={props.open}
       transitionDuration={0}
+      disableAutoFocus
       onClose={props.onClose}
       isSubmenuOpen={!!openSubmenu}
       shouldExpandUpward={shouldExpandUpward}

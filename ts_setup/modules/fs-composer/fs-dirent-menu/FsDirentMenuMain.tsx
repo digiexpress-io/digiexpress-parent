@@ -14,7 +14,7 @@ export interface FsDirentMenuMainProps {
   onClose: () => void;
 }
 
-export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
+export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((props) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const { openAsset } = useFsNav();
@@ -108,12 +108,15 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
 
+      <MenuItem disableRipple className={classes.menuItem} onClick={handleDuplicate}>
+        <FsIcon icon={FsIcons.Copy} small />
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.duplicate' })}
+      </MenuItem>
+
       <MenuItem disableRipple className={classes.menuItemDelete} onClick={handleDelete}>
         <FsIcon icon={FsIcons.Delete} small />
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.delete' })}
       </MenuItem>
-
-      <Divider className={classes.divider} />
 
       {dirent && (dirent.props?.configOptions ?? []).length > 0 && (
         <MenuItem disableRipple className={classes.menuItem}>
@@ -131,62 +134,6 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         </MenuItem>
       )}
 
-      <Divider className={classes.divider} />
-
-      <MenuItem disableRipple className={props.openSubmenu === 'labels' ? classes.menuItemActive : classes.menuItem} onClick={() => handleSubmenuToggle('labels')}>
-        <div>
-          <div>{intl.formatMessage({ id: 'fs.direntMenu.menuItem.labels' })}</div>
-          {dirent && (dirent.props?.labels ?? []).length > 0 && (
-            <Box sx={{
-              mt: 0.5,
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 0.5,
-              overflow: 'hidden'
-            }}>
-              {(dirent.props?.labels ?? []).map(label => (
-                <Chip key={label.id} label={label.value} size='small' className={classes.label} />
-              ))}
-            </Box>
-          )}
-        </div>
-        <Box flex={1} />
-        <FsIcon icon={FsIcons.ChevronRight} small />
-      </MenuItem>
-
-      <Divider className={classes.divider} />
-
-      <MenuItem disableRipple
-        className={props.openSubmenu === 'comments' ? classes.menuItemActive : classes.menuItem}
-        onClick={() => handleSubmenuToggle('comments')}
-      >
-        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.comments' }, { count: (dirent?.props?.comments ?? []).length })}
-        <Box flex={1} />
-        <FsIcon icon={FsIcons.ChevronRight} small />
-      </MenuItem>
-
-      <Divider className={classes.divider} />
-
-      <MenuItem disableRipple
-        className={props.openSubmenu === 'sharing' ? classes.menuItemActive : classes.menuItem}
-        onClick={() => handleSubmenuToggle('sharing')}
-      >
-        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.sharing' })}
-        <Box flex={1} />
-        <FsIcon icon={FsIcons.ChevronRight} small />
-      </MenuItem>
-
-      <Divider className={classes.divider} />
-
-      <MenuItem disableRipple
-        className={props.openSubmenu === 'history' ? classes.menuItemActive : classes.menuItem}
-        onClick={() => handleSubmenuToggle('history')}
-      >
-        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.history' })}
-        <Box flex={1} />
-        <FsIcon icon={FsIcons.ChevronRight} small />
-      </MenuItem>
-
     </Box>
   );
-};
+});

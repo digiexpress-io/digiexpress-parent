@@ -5,7 +5,7 @@ import { FsColors } from '../fs-theme';
 export const MUI_NAME = 'FsDirentMenu';
 export const MENU_WIDTH = 350;
 export const MENU_WIDTH_EXTENDED = MENU_WIDTH * 2;
-export const MENU_HEIGHT = 700; // Approximate height when submenu is open
+export const MENU_HEIGHT = 600;
 export const MENU_PADDING = 8; // theme.spacing(0.5) * 2 for top and bottom padding
 
 export interface FsDirentMenuClasses {

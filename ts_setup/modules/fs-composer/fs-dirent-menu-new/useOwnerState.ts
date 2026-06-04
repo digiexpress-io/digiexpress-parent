@@ -1,3 +1,4 @@
+import React from 'react';
 import { FsDirentMenuNewProps } from './FsDirentMenuNewProps';
 import { useFsTheme } from '../fs-theme';
 
@@ -8,5 +9,5 @@ export interface OwnerState {
 export const useOwnerState = (_props: FsDirentMenuNewProps): OwnerState => {
   const { isDarkMode } = useFsTheme();
 
-  return ({ isDarkMode });
+  return React.useMemo(() => ({ isDarkMode }), [isDarkMode]);
 };

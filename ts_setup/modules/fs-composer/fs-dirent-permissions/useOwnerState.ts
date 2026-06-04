@@ -1,6 +1,6 @@
+import React from 'react';
 import { FsDirentPermissionsProps } from './FsDirentPermissionsProps';
 import { useFsTheme } from '../fs-theme';
-
 
 export interface OwnerState {
   isDarkMode: boolean;
@@ -9,5 +9,5 @@ export interface OwnerState {
 export const useOwnerState = (_props: FsDirentPermissionsProps): OwnerState => {
   const { isDarkMode } = useFsTheme();
 
-  return ({ isDarkMode });
+  return React.useMemo(() => ({ isDarkMode }), [isDarkMode]);
 }
