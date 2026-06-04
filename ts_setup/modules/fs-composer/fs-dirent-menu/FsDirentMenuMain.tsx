@@ -1,10 +1,11 @@
 import React from 'react';
 import { MenuItem, Divider, Typography, Box, Chip } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { Fs } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
 import { FsIcon, FsIcons } from '../fs-theme';
+import { FsDirentMenuDeleteDialog } from './FsDirentMenuDeleteDialog';
 
 
 export interface FsDirentMenuMainProps {
@@ -18,6 +19,8 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
   const intl = useIntl();
   const classes = useUtilityClasses();
   const { openAsset } = useFsNav();
+  const { deleteDirent } = useFsDirent();
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const dirent = props.dirent;
 
   const changes = dirent?.props?.changes ?? [];
@@ -36,8 +39,15 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
   }
 
   function handleDelete() {
-    console.log('Delete:', dirent?.name);
+    setDeleteDialogOpen(true);
+  }
+
+  async function handleConfirmDelete() {
+    setDeleteDialogOpen(false);
     props.onClose();
+    if (dirent) {
+      await deleteDirent(dirent.id, dirent.type);
+    }
   }
 
   function handleDuplicate() {
@@ -59,7 +69,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
     }
   }
 
-  return (
+  return (<>
     <Box className={classes.sectionMain}>
       <Box className={classes.headerMain}>
         <Typography variant='h3' paddingBottom={0} paddingTop={0}>{dirent?.name}</Typography>
@@ -117,7 +127,18 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
         <FsIcon icon={FsIcons.Delete} small />
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.delete' })}
       </MenuItem>
-
     </Box>
-  );
-});
+
+    {deleteDialogOpen && dirent && (
+      <FsDirentMenuDeleteDialog
+        dirent={dirent}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
+    )}
+
+  </>
+  )
+})
+
+

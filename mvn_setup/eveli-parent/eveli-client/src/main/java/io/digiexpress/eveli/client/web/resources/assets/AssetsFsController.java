@@ -21,17 +21,20 @@ package io.digiexpress.eveli.client.web.resources.assets;
  */
 
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.authoring.DebugAny.DebugAnyProps;
 import io.resys.limaone.authoring.DebugAny.DebugResult;
+import io.resys.limaone.authoring.DeleteAny.DeleteAnyProps;
 import io.resys.limaone.authoring.ModifyArticle.ModifyArticleProps;
 import io.resys.limaone.authoring.ModifyArticleLink.ModifyArticleLinkProps;
 import io.resys.limaone.authoring.ModifyArticlePage.ModifyArticlePageProps;
@@ -83,6 +86,16 @@ public class AssetsFsController {
   private final Authoring authoring; 
 
   
+  @DeleteMapping("dirents/{id}")
+  public Uni<Model<?>> deleteAny(
+      @PathVariable("id") String id,
+      @RequestParam(value = "bodyType", required = false) BodyType bodyType)
+  {
+    return authoring.deleteModel().deleteAny()
+        .props(p -> p.id(id).bodyType(bodyType))
+        .build();
+  }
+
   @GetMapping("dirents")
   public Uni<WorldFs> findAllDirents() {
     return authoring.worldFsQuery().findAll();

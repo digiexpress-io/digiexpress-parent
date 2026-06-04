@@ -22,6 +22,7 @@ export interface FsDirentContextType {
   fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
   applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
   debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
+  deleteDirent: (id: string, bodyType: Fs.BodyType) => Promise<void>;
 }
 
 const FsDirentContext = React.createContext<FsDirentContextType | undefined>(undefined);
@@ -34,6 +35,7 @@ export interface FsDirentProviderProps {
     debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
     pushChange: (change: FsuChange) => Promise<void>;
     pushCreate: (change: FsuCreateChange) => Promise<string>;
+    deleteDirent: (id: string, bodyType: Fs.BodyType) => Promise<void>;
   }
   children: React.ReactNode;
 }
@@ -78,13 +80,14 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       fetchDirentBody: props.persistenceUnit.fetchDirentBody,
       applyTransientChanges: props.persistenceUnit.applyTransientChanges,
       debugDirent: props.persistenceUnit.debugDirent,
+      deleteDirent: handleDelete,
     };
   }, [dirents]);
 
   async function handlePushChange(change: FsuChange): Promise<void> {
     try {
       await props.persistenceUnit.pushChange(change);
-      const name = dirents.getDirent(change.id)?.name ?? change.id;
+      const name = dirents.getDirentName(change.id) ?? change.id;
       const type = intl.formatMessage({ id: `fs.bodyType.${change.bodyType}` });
       enqueueSnackbar(intl.formatMessage({ id: 'fs.snackbar.saveSuccess' }, { name, type }), { variant: 'success' });
 
@@ -92,6 +95,19 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
       setDirents(new FsWorld({ dirents: updated }));
     } catch (error: any) {
       enqueueSnackbar(intl.formatMessage({ id: 'fs.snackbar.saveFailed' }, { cause: error?.message ?? 'N/A' }), { variant: 'error' });
+    }
+  }
+
+  async function handleDelete(id: string, bodyType: Fs.BodyType): Promise<void> {
+    try {
+      const name = dirents.getDirent(id)?.name ?? id;
+      const type = intl.formatMessage({ id: `fs.bodyType.${bodyType}` });
+      await props.persistenceUnit.deleteDirent(id, bodyType);
+      enqueueSnackbar(intl.formatMessage({ id: 'fs.snackbar.deleteSuccess' }, { name, type }), { variant: 'success' });
+      const updated = await props.persistenceUnit.fetchDirents();
+      setDirents(new FsWorld({ dirents: updated }));
+    } catch (error: any) {
+      enqueueSnackbar(intl.formatMessage({ id: 'fs.snackbar.deleteFailed' }, { cause: error?.message ?? 'N/A' }), { variant: 'error' });
     }
   }
 

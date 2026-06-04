@@ -24,6 +24,7 @@ function Component() {
   const { debugDirent } = useFetch('worker/rest/api/assets/fs/debugs.POST', {});
   const { putAny } = useFetch('worker/rest/api/assets/fs/dirents.PUT', {});
   const { postAny } = useFetch('worker/rest/api/assets/fs/dirents.POST', {});
+  const { deleteAny } = useFetch('worker/rest/api/assets/fs/dirents/$id.DELETE', {});
 
   const persistenceUnit: FsDirentProviderProps['persistenceUnit'] = {
     fetchDirents: getDirents,
@@ -32,6 +33,7 @@ function Component() {
     debugDirent,
     pushChange: async (change) => putAny(change.getCurrentProps()),
     pushCreate: async (change) => postAny(change.getCurrentProps()),
+    deleteDirent: deleteAny,
   };
 
   return (
