@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -33,6 +34,7 @@ import io.resys.limaone.model.Model.BodyType;
 @Value.Immutable
 @JsonSerialize(as = ImmutablePrintout.class)
 @JsonDeserialize(as = ImmutablePrintout.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public interface Printout extends Body {
   String getServiceName(); // human readable name, what IS this PDF
   String getOrchestratorName(); // external name/id that will be called to resolve data/ most likely wrench flow name

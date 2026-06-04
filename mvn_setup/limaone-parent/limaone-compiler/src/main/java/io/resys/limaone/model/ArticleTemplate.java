@@ -22,6 +22,7 @@ package io.resys.limaone.model;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -31,6 +32,7 @@ import io.resys.limaone.model.Model.BodyType;
 @Value.Immutable
 @JsonSerialize(as = ImmutableArticleTemplate.class)
 @JsonDeserialize(as = ImmutableArticleTemplate.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public interface ArticleTemplate extends Body {
   
   String getName();

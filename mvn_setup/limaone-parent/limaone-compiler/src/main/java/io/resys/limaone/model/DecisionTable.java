@@ -37,6 +37,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableDecisionTable.class)
 @JsonDeserialize(as = ImmutableDecisionTable.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public interface DecisionTable extends Body {
 
   String getName();

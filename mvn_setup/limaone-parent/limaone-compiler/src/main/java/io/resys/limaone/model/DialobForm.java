@@ -22,6 +22,7 @@ package io.resys.limaone.model;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -33,6 +34,7 @@ import io.resys.limaone.model.Model.BodyType;
 @JsonSerialize(as = ImmutableDialobForm.class)
 @JsonDeserialize(as = ImmutableDialobForm.class)
 @Value.Immutable
+@JsonIgnoreProperties(ignoreUnknown = true)
 public interface DialobForm extends Body {
   String getFormName();
   String getFormTagName();

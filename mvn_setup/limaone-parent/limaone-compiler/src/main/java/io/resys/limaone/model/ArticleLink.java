@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -35,6 +36,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableArticleLink.class)
 @JsonDeserialize(as = ImmutableArticleLink.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public interface ArticleLink extends Body {
   
   String getValue();

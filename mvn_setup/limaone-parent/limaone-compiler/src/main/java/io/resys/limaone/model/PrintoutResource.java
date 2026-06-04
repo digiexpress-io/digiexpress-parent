@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -34,6 +35,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutablePrintoutResource.class)
 @JsonDeserialize(as = ImmutablePrintoutResource.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public interface PrintoutResource extends Body {
   String getExternalLocation();
   String getResourceName();

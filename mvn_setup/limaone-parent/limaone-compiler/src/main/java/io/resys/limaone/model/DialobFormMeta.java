@@ -22,6 +22,7 @@ package io.resys.limaone.model;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -33,6 +34,7 @@ import io.resys.limaone.model.Model.BodyType;
 @JsonSerialize(as = ImmutableDialobFormMeta.class)
 @JsonDeserialize(as = ImmutableDialobFormMeta.class)
 @Value.Immutable
+@JsonIgnoreProperties(ignoreUnknown = true)
 public interface DialobFormMeta extends Body {
   
   Form.Metadata getMetadata();

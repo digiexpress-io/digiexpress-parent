@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -36,6 +37,7 @@ import jakarta.annotation.Nullable;
 @JsonSerialize(as = ImmutableDeployment.class)
 @JsonDeserialize(as = ImmutableDeployment.class)
 @Value.Immutable
+@JsonIgnoreProperties(ignoreUnknown = true)
 public interface Deployment extends Model.Body {
   UUID getFromCommitId();
   @Nullable UUID getFromRefId();

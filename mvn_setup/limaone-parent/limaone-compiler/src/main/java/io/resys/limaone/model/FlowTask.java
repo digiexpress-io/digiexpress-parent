@@ -28,6 +28,7 @@ import java.lang.annotation.Target;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -39,6 +40,7 @@ import io.resys.limaone.model.Model.BodyType;
 @Value.Immutable
 @JsonSerialize(as = ImmutableFlowTask.class)
 @JsonDeserialize(as = ImmutableFlowTask.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public interface FlowTask extends Body {
   String getTaskName();
   String getTaskValue();

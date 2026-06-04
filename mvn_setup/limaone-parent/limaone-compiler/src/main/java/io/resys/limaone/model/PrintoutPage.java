@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -33,6 +34,7 @@ import io.resys.limaone.model.Model.BodyType;
 @Value.Immutable
 @JsonSerialize(as = ImmutablePrintoutPage.class)
 @JsonDeserialize(as = ImmutablePrintoutPage.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public interface PrintoutPage extends Body {
   String getContent(); // the markdown definition
 
