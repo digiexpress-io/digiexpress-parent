@@ -85,18 +85,15 @@ public class ModifyArticleWorkflowImpl extends AuthoringTemplate<ModifyArticleWo
       
       .devMode(props.getDevMode())
       .anon(Boolean.TRUE.equals(props.getAnon()))
-      .assignable(Boolean.TRUE.equals(props.getAssignable()))
-      .disabled(Boolean.TRUE.equals(props.getDisabled()))
-      .authOnly(Boolean.TRUE.equals(props.getAuthOnly()))
+      .assignable(Boolean.TRUE.equals(props.getAssignable()) ? true : null)
+      .disabled(Boolean.TRUE.equals(props.getDisabled()) ? true : null)
       .value(props.getValue())
       .startDate(props.getStartDate())
       .endDate(props.getEndDate())
       
       .formName(props.getFormName())
       .formTag(props.getFormTag())
-      .formId(props.getFormId())
-      .flowName(props.getFlowName())
-      .description(props.getDescription());
+      .formId(props.getFormId());
     
     // Handle articles if provided
     if(props.getArticles() != null) {
@@ -114,11 +111,6 @@ public class ModifyArticleWorkflowImpl extends AuthoringTemplate<ModifyArticleWo
       
     }
     
-    // Handle tagLabels if provided
-    if (props.getTagLabels() != null) {
-      workflow.tagLabels(props.getTagLabels());
-    }
-
     // Handle labels if provided
     if(props.getLabels() != null) {
       workflow.labels(Collections.emptyList());

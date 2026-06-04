@@ -20,11 +20,7 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
-import java.util.Collections;
-
-import io.resys.limaone.fs.ImmutableLabel;
 import io.resys.limaone.fs.ImmutablePrintoutPageProps;
-import io.resys.limaone.fs.WorldFsProps.Label;
 import io.resys.limaone.fs.WorldFsProps.PrintoutPageProps;
 import io.resys.limaone.model.PrintoutPage;
 import lombok.RequiredArgsConstructor;
@@ -45,11 +41,11 @@ public class Props_PrintoutPageBuilder {
           .content(page.getContent())
           .serviceId(page.getServiceId())
           .templateIds(page.getPrintoutPageIds())
-          .description(page.getDescription())
-          .labels(page.getLabels() == null ? Collections.emptyList() :
-              page.getLabels().stream()
-                  .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
-                  .toList())
+//          .description(page.getDescription())
+//          .labels(page.getLabels() == null ? Collections.emptyList() :
+//              page.getLabels().stream()
+//                  .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
+//                  .toList())
         .build();
   }
   

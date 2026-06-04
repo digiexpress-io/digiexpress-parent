@@ -22,8 +22,6 @@ package io.resys.limaone.authoring;
 
 import java.util.function.Consumer;
 
-import jakarta.annotation.Nullable;
-
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -48,7 +46,5 @@ public interface ModifyLocale {
     String getLocaleId();
     String getValue();
     Boolean getEnabled();
-    @Nullable Boolean getDisabledMode();
-    @Nullable String getDescription();
   }
 }

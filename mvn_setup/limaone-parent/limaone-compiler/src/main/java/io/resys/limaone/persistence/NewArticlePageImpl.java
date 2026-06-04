@@ -81,9 +81,6 @@ public class NewArticlePageImpl extends AuthoringTemplate<NewArticlePageImpl, Mo
 
     final var page = ImmutableArticlePage.builder()
       .devMode(props.getDevMode())
-      .disabledMode(props.getDisabledMode())
-      .description(props.getDescription())
-      .labels(props.getLabels())
       .article(article.map(e -> e.getId()).orElse(articleRef))
       .locale(locale.map(e -> e.getId()).orElse(localeRef))
       .content(Optional.ofNullable(props.getContent()).orElse(""));

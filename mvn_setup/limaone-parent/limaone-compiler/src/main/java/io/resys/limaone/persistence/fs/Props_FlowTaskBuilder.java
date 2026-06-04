@@ -20,12 +20,8 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
-import java.util.Collections;
-
 import io.resys.limaone.fs.ImmutableFlowTaskProps;
-import io.resys.limaone.fs.ImmutableLabel;
 import io.resys.limaone.fs.WorldFsProps.FlowTaskProps;
-import io.resys.limaone.fs.WorldFsProps.Label;
 import io.resys.limaone.model.FlowTask;
 import lombok.RequiredArgsConstructor;
 
@@ -41,13 +37,14 @@ public class Props_FlowTaskBuilder {
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)
-        .description(flowTask.getDescription())
         .taskName(flowTask.getTaskName())
         .taskValue(flowTask.getTaskValue())
-        .labels(flowTask.getTagLabels() == null ? Collections.emptyList() :
-            flowTask.getTagLabels().stream()
-                .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
-                .toList())
+        
+//        .description(flowTask.getDescription())
+//        .labels(flowTask.getTagLabels() == null ? Collections.emptyList() :
+//            flowTask.getTagLabels().stream()
+//                .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
+//                .toList())
         .build();
   }
   

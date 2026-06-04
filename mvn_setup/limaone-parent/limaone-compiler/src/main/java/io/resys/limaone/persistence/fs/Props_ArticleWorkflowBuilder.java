@@ -20,14 +20,11 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.limaone.fs.ImmutableLabel;
 import io.resys.limaone.fs.ImmutableServiceProps;
 import io.resys.limaone.fs.WorldFsProps.ConfigOption;
-import io.resys.limaone.fs.WorldFsProps.Label;
 import io.resys.limaone.fs.WorldFsProps.ServiceProps;
 import io.resys.limaone.model.ArticleWorkflow;
 import io.resys.limaone.model.LocaleLabel;
@@ -42,11 +39,11 @@ public class Props_ArticleWorkflowBuilder {
     final ArticleWorkflow service = currentState.getBodyOfType(node);
     final List<LocaleLabel> labels = service.getLabels();
     
-    final List<Label> tagLabels = service.getTagLabels() == null ? Collections.emptyList() :
-      service.getTagLabels().stream()
-          .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
-          .toList();
-    
+//    final List<Label> tagLabels = service.getTagLabels() == null ? Collections.emptyList() :
+//      service.getTagLabels().stream()
+//          .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
+//          .toList();
+//    
     
     final var builder = ImmutableServiceProps.builder();
     
@@ -62,9 +59,9 @@ public class Props_ArticleWorkflowBuilder {
     if (Boolean.TRUE.equals(service.getAnon())) {
       builder.addConfigOptions(ConfigOption.ANONYMOUS_MODE);
     }
-    if (Boolean.TRUE.equals(service.getAuthOnly())) {
-      builder.addConfigOptions(ConfigOption.AUTH_ONLY_MODE);
-    }
+//    if (Boolean.TRUE.equals(service.getAuthOnly())) {
+//      builder.addConfigOptions(ConfigOption.AUTH_ONLY_MODE);
+//    }
 
     return builder
         .id(node.getObjectId())
@@ -82,8 +79,8 @@ public class Props_ArticleWorkflowBuilder {
         .flowName(service.getFlowName())
         .validityStart(service.getStartDate() != null ? service.getStartDate().toString() : null)
         .validityEnd(service.getEndDate() != null ? service.getEndDate().toString() : null)
-        .description(service.getDescription())
-        .labels(tagLabels)
+//        .description(service.getDescription())
+//        .labels(tagLabels)
         .build();
   }
   

@@ -20,8 +20,6 @@ package io.resys.limaone.model;
  * #L%
  */
 
-import java.util.List;
-
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -29,7 +27,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.Body;
 import io.resys.limaone.model.Model.BodyType;
-import jakarta.annotation.Nullable;
 
 
 @Value.Immutable
@@ -38,10 +35,6 @@ import jakarta.annotation.Nullable;
 public interface Flow extends Body {
   String getFlowName();
   String getFlowValue();
-  @Nullable String getDescription();
-  @Nullable List<String> getTagLabels();
-  @Nullable Boolean getDevMode();
-  @Nullable Boolean getDisabledMode();
   
   default BodyType getBodyType() {
     return BodyType.FLOW;

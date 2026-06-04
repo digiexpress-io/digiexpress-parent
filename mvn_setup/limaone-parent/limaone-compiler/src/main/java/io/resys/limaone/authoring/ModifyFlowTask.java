@@ -20,7 +20,6 @@ package io.resys.limaone.authoring;
  * #L%
  */
 
-import java.util.List;
 import java.util.function.Consumer;
 
 import org.immutables.value.Value;
@@ -33,7 +32,6 @@ import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.smallrye.mutiny.Uni;
-import jakarta.annotation.Nullable;
 
 public interface ModifyFlowTask {
   
@@ -48,7 +46,5 @@ public interface ModifyFlowTask {
   interface ModifyFlowTaskProps extends AuthoringModelProps {
     String getFlowTaskId();
     String getFlowTaskValue();
-    @Nullable List<String> getTagLabels();
-
   }
 }

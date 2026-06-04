@@ -106,10 +106,6 @@ public class ModifyFlowImpl extends AuthoringTemplate<ModifyFlowImpl, Model<Flow
       .from(start.getBody())
       .flowName(flow.getName())
       .flowValue(props.getFlowValue())
-      .description(props.getDescription())
-      .tagLabels(props.getTagLabels())
-      .devMode(props.getDevMode())
-      .disabledMode(props.getDisabledMode())
       .build();
   }
 }

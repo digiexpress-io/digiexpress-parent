@@ -20,13 +20,8 @@ package io.resys.limaone.persistence.fs;
  * #L%
  */
 
-import java.util.Collections;
-
 import io.resys.limaone.fs.ImmutableFlowProps;
-import io.resys.limaone.fs.ImmutableLabel;
-import io.resys.limaone.fs.WorldFsProps;
 import io.resys.limaone.fs.WorldFsProps.FlowProps;
-import io.resys.limaone.fs.WorldFsProps.Label;
 import io.resys.limaone.model.Flow;
 import lombok.RequiredArgsConstructor;
 
@@ -40,23 +35,23 @@ public class Props_FlowBuilder {
 
     final var builder = ImmutableFlowProps.builder();
 
-    if (Boolean.TRUE.equals(flow.getDevMode())) {
-      builder.addConfigOptions(WorldFsProps.ConfigOption.DEV_MODE);
-    }
-    if (Boolean.TRUE.equals(flow.getDisabledMode())) {
-      builder.addConfigOptions(WorldFsProps.ConfigOption.DISABLED_MODE);
-    }
+//    if (Boolean.TRUE.equals(flow.getDevMode())) {
+//      builder.addConfigOptions(WorldFsProps.ConfigOption.DEV_MODE);
+//    }
+//    if (Boolean.TRUE.equals(flow.getDisabledMode())) {
+//      builder.addConfigOptions(WorldFsProps.ConfigOption.DISABLED_MODE);
+//    }
 
     return builder
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)
         .name(flow.getFlowName())
-        .description(flow.getDescription())
-        .labels(flow.getTagLabels() == null ? Collections.emptyList() :
-            flow.getTagLabels().stream()
-                .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
-                .toList())
+//        .description(flow.getDescription())
+//        .labels(flow.getTagLabels() == null ? Collections.emptyList() :
+//            flow.getTagLabels().stream()
+//                .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
+//                .toList())
         .build();
   }
   

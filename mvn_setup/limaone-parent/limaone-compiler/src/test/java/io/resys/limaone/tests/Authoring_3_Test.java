@@ -53,7 +53,7 @@ public class Authoring_3_Test extends DbSupport {
         .newPrintout()
         .props(builder -> builder
             .serviceName("application for loan")
-            .addLocaleLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("English printout name").build())
+            .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("English printout name").build())
             .orchestratorName("wrench flow 1, we dont have it yet")
             .build()
         )

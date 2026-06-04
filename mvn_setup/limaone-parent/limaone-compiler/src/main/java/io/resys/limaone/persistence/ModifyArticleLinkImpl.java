@@ -68,7 +68,7 @@ public class ModifyArticleLinkImpl extends AuthoringTemplate<ModifyArticleLinkIm
       .docs(BodyType.LOCALE, BodyType.ARTICLE, BodyType.ARTICLE_LINK)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld);
-        return nextWorld.mergeModel(props.getLinkId(), props.getLinkId(), body);
+        return nextWorld.mergeModel(props.getLinkId(), body.getValue(), body);
       });
   }
   
@@ -84,8 +84,6 @@ public class ModifyArticleLinkImpl extends AuthoringTemplate<ModifyArticleLinkIm
     final var link = ImmutableArticleLink.builder()
       .from(start.getBody())
       .devMode(props.getDevMode())
-      .disabledMode(props.getDisabledMode())
-      .description(props.getDescription())
       .contentType(props.getType())
       .value(props.getValue());
     
@@ -104,30 +102,25 @@ public class ModifyArticleLinkImpl extends AuthoringTemplate<ModifyArticleLinkIm
       link.articles(articles);
     }
     
-    // Handle locale labels if provided
+    // Handle labels if provided
     if(props.getLabels() != null) {
       link.labels(Collections.emptyList());
       for(final var label : props.getLabels()) {
         final var localeRef = label.getLocale();
         final var locale = world.findOneLocale(localeRef);
-
+            
         link.addLabels(ImmutableLocaleLabel.builder()
             .locale(locale.map(e -> e.getId()).orElse(localeRef))
             .labelValue(label.getLabelValue())
             .build());
 
         if(locale.isEmpty()) {
-          throw new AuthoringException(props,
-              "Locale with id: '" + label.getLocale() + "' does not exist in: '" + String.join(",", world.getLocales().keySet()) + "'!");
+          throw new AuthoringException(props, 
+              "Locale with id: '" + label.getLocale() + "' does not exist in: '" + String.join(",", world.getLocales().keySet()) + "'!");          
         }
       }
     }
-
-    // Handle tag labels if provided
-    if(props.getTagLabels() != null) {
-      link.tagLabels(props.getTagLabels());
-    }
-
+    
     return link.build();
   }
 }

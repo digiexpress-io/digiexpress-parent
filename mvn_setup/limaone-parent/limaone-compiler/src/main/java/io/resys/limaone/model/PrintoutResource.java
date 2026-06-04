@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -41,13 +40,7 @@ public interface PrintoutResource extends Body {
   String getContentType();
   List<String> getPrintoutPageIds();
   @Nullable String getContent();
-
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  @Nullable String getDescription();
-
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  @Nullable List<String> getLabels();
-
+  
   default BodyType getBodyType() { return BodyType.PRINTOUT_RESOURCE; };
 
 }

@@ -21,7 +21,6 @@ package io.resys.limaone.persistence.fs;
  */
 
 import io.resys.limaone.fs.ImmutableLocaleProps;
-import io.resys.limaone.fs.WorldFsProps.ConfigOption;
 import io.resys.limaone.fs.WorldFsProps.LocaleProps;
 import io.resys.limaone.model.Locale;
 import lombok.RequiredArgsConstructor;
@@ -35,13 +34,13 @@ public class Props_LocaleBuilder {
     final Locale locale = currentState.getBodyOfType(node);
     final var builder = ImmutableLocaleProps.builder();
 
-    if (Boolean.TRUE.equals(locale.getDisabledMode())) {
-      builder.addConfigOptions(ConfigOption.DISABLED_MODE);
-    }
+//    if (Boolean.TRUE.equals(locale.getDisabledMode())) {
+//      builder.addConfigOptions(ConfigOption.DISABLED_MODE);
+//    }
 
     return builder
         .localeCode(locale.getValue())
-        .description(locale.getDescription())
+//        .description(locale.getDescription())
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)

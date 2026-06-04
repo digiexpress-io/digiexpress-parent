@@ -26,7 +26,6 @@ import java.util.Base64;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,7 +68,7 @@ public class TagomiPdfTest extends DbSupport {
         .props(p -> p
             .serviceName("test-doc")
             .orchestratorName("")
-            .addLocaleLabels(ImmutableLocaleLabel.builder()
+            .addLabels(ImmutableLocaleLabel.builder()
                 .locale(locale.getId()).labelValue("Test").build()))
         .buildSync();
 
@@ -163,7 +162,7 @@ public class TagomiPdfTest extends DbSupport {
         .props(p -> p
             .serviceName("feedback-doc")
             .orchestratorName("")
-            .addLocaleLabels(ImmutableLocaleLabel.builder()
+            .addLabels(ImmutableLocaleLabel.builder()
                 .locale(locale.getId()).labelValue("Feedback").build()))
         .buildSync();
 
@@ -171,7 +170,7 @@ public class TagomiPdfTest extends DbSupport {
         .props(p -> p
             .serviceName("appendix")
             .orchestratorName("")
-            .addLocaleLabels(ImmutableLocaleLabel.builder()
+            .addLabels(ImmutableLocaleLabel.builder()
                 .locale(locale.getId()).labelValue("Appendix").build()))
         .buildSync();
 

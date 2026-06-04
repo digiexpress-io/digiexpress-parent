@@ -41,10 +41,6 @@ public interface ArticleLink extends Body {
   String getContentType();
   List<String> getArticles();
   List<LocaleLabel> getLabels();
-  @Nullable List<String> getTagLabels();
-
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  @Nullable String getDescription();
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   @Nullable Boolean getDevMode();  
