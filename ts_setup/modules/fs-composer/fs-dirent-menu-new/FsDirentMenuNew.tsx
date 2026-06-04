@@ -8,7 +8,7 @@ import { useOwnerState } from './useOwnerState';
 import { useUtilityClasses, FsDirentMenuNewRoot } from './useUtilityClasses';
 import { FsIcon, FsIcons } from '../fs-theme';
 
-const DIRENT_TYPE_ICONS: Record<Fs.BodyType, React.ElementType<SvgIconProps>> = {
+const DIRENT_TYPE_ICONS: { [key: string]: React.ElementType<SvgIconProps> } = {
   FOLDER: FsIcons.FolderClosed,
   ARTICLE: FsIcons.Article,
   ARTICLE_WORKFLOW: FsIcons.Settings,
@@ -19,15 +19,11 @@ const DIRENT_TYPE_ICONS: Record<Fs.BodyType, React.ElementType<SvgIconProps>> = 
   PRINTOUT: FsIcons.Print,
   PRINTOUT_RESOURCE: FsIcons.Image,
   ARTICLE_TEMPLATE: FsIcons.Pdf,
-  //: FsIcons.Phone,
   ARTICLE_PAGE: FsIcons.Form,
   DIALOB_FORM_META: 'symbol',
-
   FLOW_TASK: FsIcons.Assignment,
   DECISION_TABLE: FsIcons.DecisionTable,
   PRINTOUT_PAGE: FsIcons.Page,
-  DEPLOYMENT: 'symbol',
-  UNKNOWN: 'symbol'
 };
 
 export const FsDirentMenuNew: React.FC<FsDirentMenuNewProps> = (props) => {

@@ -118,22 +118,6 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.delete' })}
       </MenuItem>
 
-      {dirent && (dirent.props?.configOptions ?? []).length > 0 && (
-        <MenuItem disableRipple className={classes.menuItem}>
-          <div>
-            <div>{intl.formatMessage({ id: 'fs.direntMenu.menuItem.configOptions' })}</div>
-            <div>
-              <Box sx={{ mt: 0.5, display: 'flex', flexWrap: 'wrap', gap: 0.5, maxWidth: MENU_WIDTH - 32, overflow: 'hidden' }}>
-                {(dirent.props?.configOptions ?? []).includes('DEV_MODE') && (<Chip icon={<FsIcon icon={FsIcons.DevMode} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.devMode' })} size='small' className={classes.label} />)}
-                {(dirent.props?.configOptions ?? []).includes('ASSIGNABLE_MODE') && (<Chip icon={<FsIcon icon={FsIcons.Assignment} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.assignable' })} size='small' className={classes.label} />)}
-                {(dirent.props?.configOptions ?? []).includes('DISABLED_MODE') && (<Chip icon={<FsIcon icon={FsIcons.Disabled} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.disabled' })} size='small' className={classes.label} />)}
-                {(dirent.props?.configOptions ?? []).includes('ANONYMOUS_MODE') && (<Chip icon={<FsIcon icon={FsIcons.Anonymous} />} label={intl.formatMessage({ id: 'fs.direntMenu.chip.anonymous' })} size='small' className={classes.label} />)}
-              </Box>
-            </div>
-          </div>
-        </MenuItem>
-      )}
-
     </Box>
   );
 });
