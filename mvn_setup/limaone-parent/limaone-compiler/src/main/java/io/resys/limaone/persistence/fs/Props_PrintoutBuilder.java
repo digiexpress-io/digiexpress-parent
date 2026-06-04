@@ -1,5 +1,7 @@
 package io.resys.limaone.persistence.fs;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * limaone-compiler
@@ -47,11 +49,8 @@ public class Props_PrintoutBuilder {
                 l -> l.getLocale(),
                 l -> l.getLabelValue()
             )))
-//        .description(printout.getDescription())
-//        .labels(printout.getTagLabels() == null ? Collections.emptyList() :
-//            printout.getTagLabels().stream()
-//                .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
-//                .toList())
+        .description(node.getDescription().map(e -> e.getText()).orElse(null))
+        .labels(node.getDescription().map(e -> e.getLabels()).orElse(Collections.emptyList()))
         .build();
   }
   

@@ -72,7 +72,7 @@ public class ModifyDecisionTableImpl extends AuthoringTemplate<ModifyDecisionTab
       .docs(BodyType.DECISION_TABLE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.mergeModel(props.getDecisionTableId(), body.getName(), body);
+        return nextWorld.mergeModel(props.getDecisionTableId(), body.getName(), body, props.getAssetDescription());
       });
   }
   

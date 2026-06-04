@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
+import io.resys.limaone.model.Description;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
@@ -46,5 +47,8 @@ public interface NewFlow {
     @Nullable String getName();
     @Nullable String getDesc();
     @Nullable String getBody();
+    
+    
+    @Nullable Description getAssetDescription();
   }
 }

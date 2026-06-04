@@ -1,5 +1,7 @@
 package io.resys.limaone.persistence.fs;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * limaone-compiler
@@ -39,12 +41,8 @@ public class Props_FlowTaskBuilder {
         .locked(false)
         .taskName(flowTask.getTaskName())
         .taskValue(flowTask.getTaskValue())
-        
-//        .description(flowTask.getDescription())
-//        .labels(flowTask.getTagLabels() == null ? Collections.emptyList() :
-//            flowTask.getTagLabels().stream()
-//                .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
-//                .toList())
+        .description(node.getDescription().map(e -> e.getText()).orElse(null))
+        .labels(node.getDescription().map(e -> e.getLabels()).orElse(Collections.emptyList()))
         .build();
   }
   

@@ -65,7 +65,7 @@ public class NewFlowImpl extends AuthoringTemplate<NewFlowImpl, Model<Flow>> imp
       .author(getAuthor())
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body.getFlowName(), body);
+        return nextWorld.newModel(body.getFlowName(), body, props.getAssetDescription());
       });
   }
   

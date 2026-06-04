@@ -28,10 +28,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
+import io.resys.limaone.model.Description;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 
 public interface ModifyFlow {
   
@@ -47,5 +49,7 @@ public interface ModifyFlow {
   interface ModifyFlowProps extends AuthoringModelProps {
     String getFlowId();
     String getFlowValue();
+    
+    @Nullable Description getAssetDescription();
   }
 }

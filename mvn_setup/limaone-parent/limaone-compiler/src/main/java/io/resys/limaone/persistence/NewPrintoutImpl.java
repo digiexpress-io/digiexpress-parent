@@ -66,7 +66,7 @@ public class NewPrintoutImpl extends AuthoringTemplate<NewPrintoutImpl, Model<Pr
       .docs(BodyType.PRINTOUT, BodyType.LOCALE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body.getServiceName(), body);
+        return nextWorld.newModel(body.getServiceName(), body, props.getAssetDescription());
       });
   }
   

@@ -1,5 +1,7 @@
 package io.resys.limaone.persistence.fs;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * limaone-compiler
@@ -55,8 +57,8 @@ public class Props_ArticleBuilder {
         .type(node.getBodyType())
         .locked(false)
         .orderNumber(article.getOrder())
-        //.description(article.getDescription())
-        //.labels(labels)
+        .description(node.getDescription().map(e -> e.getText()).orElse(null))
+        .labels(node.getDescription().map(e -> e.getLabels()).orElse(Collections.emptyList()))
         .build();
   }
   

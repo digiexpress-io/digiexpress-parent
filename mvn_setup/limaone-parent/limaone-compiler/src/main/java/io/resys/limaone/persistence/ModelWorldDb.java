@@ -29,11 +29,13 @@ import io.resys.limaone.authoring.Authoring.WorldFsQuery;
 import io.resys.limaone.authoring.Authoring.WorldIndexQuery;
 import io.resys.limaone.authoring.Authoring.WorldQuery;
 import io.resys.limaone.authoring.Authoring.WorldRefQuery;
+import io.resys.limaone.model.Description;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.thena.fs.api.FileSystem;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 
 public interface ModelWorldDb {
   ModelWorldDb withBranchName(Optional<String> branchName);
@@ -66,8 +68,8 @@ public interface ModelWorldDb {
     // model state at current commit
     ModelWorld getCurrentWorld();
     
-    <T extends Model.Body> Model<T> newModel(String fileName, T body);
-    <T extends Model.Body> Model<T> mergeModel(String id, String fileName, T body);
+    <T extends Model.Body> Model<T> newModel(String fileName, T body, @Nullable Description desc);
+    <T extends Model.Body> Model<T> mergeModel(String id, String fileName, T body, @Nullable Description desc);
     <T extends Model.Body> Model<T> deleteModel(String id, T body);
   }
 

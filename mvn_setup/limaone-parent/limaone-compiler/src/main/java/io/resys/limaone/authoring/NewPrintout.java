@@ -30,10 +30,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
+import io.resys.limaone.model.Description;
 import io.resys.limaone.model.LocaleLabel;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Printout;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 
 public interface NewPrintout {
 
@@ -50,5 +52,7 @@ public interface NewPrintout {
     
     String getServiceName();
     String getOrchestratorName();
+    
+    @Nullable Description getAssetDescription();
   }
 }

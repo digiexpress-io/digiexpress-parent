@@ -65,7 +65,7 @@ public class NewDeploymentImpl extends AuthoringTemplate<NewDeploymentImpl, Mode
       .author(getAuthor())
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body.getName(), body);
+        return nextWorld.newModel(body.getName(), body, null);
       });
   }
   

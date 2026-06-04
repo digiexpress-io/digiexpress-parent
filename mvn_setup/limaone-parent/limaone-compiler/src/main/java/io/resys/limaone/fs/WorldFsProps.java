@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.immutables.value.Value;
 
+import io.resys.limaone.model.Description;
 import io.resys.limaone.model.Model.BodyType;
 import jakarta.annotation.Nullable;
 
@@ -36,15 +37,16 @@ public interface WorldFsProps {
   BodyType getType();
   Boolean getLocked();
   
-  @Nullable
-  String getDescription();
+  @Nullable String getDescription();
+  List<Description.DescriptionLabel> getLabels();
+  
   
   List<ConfigOption> getConfigOptions();
   List<Comment> getComments();
   List<Change> getChanges();
   List<Permission> getPermissions();
   
-  List<Label> getLabels();
+
   List<Error> getErrors();
   
   
@@ -194,13 +196,6 @@ public interface WorldFsProps {
     OffsetDateTime getCreated();
   }
 
-  @Value.Immutable
-  interface Label {
-    String getId();
-    String getValue();
-    
-    @Nullable String getDescription();
-  }
   
   enum ChangeType { 
     UPDATE, 

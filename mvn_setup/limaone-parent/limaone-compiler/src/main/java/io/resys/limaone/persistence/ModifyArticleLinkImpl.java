@@ -68,7 +68,7 @@ public class ModifyArticleLinkImpl extends AuthoringTemplate<ModifyArticleLinkIm
       .docs(BodyType.LOCALE, BodyType.ARTICLE, BodyType.ARTICLE_LINK)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld);
-        return nextWorld.mergeModel(props.getLinkId(), body.getValue(), body);
+        return nextWorld.mergeModel(props.getLinkId(), body.getValue(), body, props.getAssetDescription());
       });
   }
   

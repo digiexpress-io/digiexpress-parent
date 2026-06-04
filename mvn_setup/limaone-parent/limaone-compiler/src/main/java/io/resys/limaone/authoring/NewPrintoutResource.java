@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
+import io.resys.limaone.model.Description;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.PrintoutResource;
 import io.smallrye.mutiny.Uni;
@@ -51,5 +52,7 @@ public interface NewPrintoutResource {
     String getContentType();
     @Nullable String getUploadBody();
     List<String> getPrintoutPageIds();
+    
+    @Nullable Description getAssetDescription();
   }
 }

@@ -72,7 +72,7 @@ public class DeleteArticleLinkImpl extends AuthoringTemplate<DeleteArticleLinkIm
           return noChanges;
         }
         final var body = raw.get();
-        return nextWorld.mergeModel(props.getLinkId(), body.getValue(), body);
+        return nextWorld.mergeModel(props.getLinkId(), body.getValue(), body, null);
       });
   }
   

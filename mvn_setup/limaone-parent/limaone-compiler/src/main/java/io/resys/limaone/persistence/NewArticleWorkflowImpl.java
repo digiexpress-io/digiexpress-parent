@@ -67,7 +67,7 @@ public class NewArticleWorkflowImpl extends AuthoringTemplate<NewArticleWorkflow
       .author(getAuthor())
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body.getValue(), body);
+        return nextWorld.newModel(body.getValue(), body, props.getAssetDescription());
       });
   }
   

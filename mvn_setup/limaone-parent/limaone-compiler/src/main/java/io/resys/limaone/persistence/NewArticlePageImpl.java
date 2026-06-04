@@ -66,7 +66,7 @@ public class NewArticlePageImpl extends AuthoringTemplate<NewArticlePageImpl, Mo
       .docs(BodyType.LOCALE, BodyType.ARTICLE, BodyType.ARTICLE_PAGE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(OidUtils.gen(), body);
+        return nextWorld.newModel(OidUtils.gen(), body, props.getAssetDescription());
       });
   }
   

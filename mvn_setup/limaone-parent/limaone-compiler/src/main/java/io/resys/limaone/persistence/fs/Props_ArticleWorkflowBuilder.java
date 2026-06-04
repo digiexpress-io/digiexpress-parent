@@ -1,5 +1,7 @@
 package io.resys.limaone.persistence.fs;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * limaone-compiler
@@ -39,12 +41,6 @@ public class Props_ArticleWorkflowBuilder {
     final ArticleWorkflow service = currentState.getBodyOfType(node);
     final List<LocaleLabel> labels = service.getLabels();
     
-//    final List<Label> tagLabels = service.getTagLabels() == null ? Collections.emptyList() :
-//      service.getTagLabels().stream()
-//          .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
-//          .toList();
-//    
-    
     final var builder = ImmutableServiceProps.builder();
     
     if (Boolean.TRUE.equals(service.getDevMode())) {
@@ -58,10 +54,9 @@ public class Props_ArticleWorkflowBuilder {
     }
     if (Boolean.TRUE.equals(service.getAnon())) {
       builder.addConfigOptions(ConfigOption.ANONYMOUS_MODE);
+    } else {
+      builder.addConfigOptions(ConfigOption.AUTH_ONLY_MODE);
     }
-//    if (Boolean.TRUE.equals(service.getAuthOnly())) {
-//      builder.addConfigOptions(ConfigOption.AUTH_ONLY_MODE);
-//    }
 
     return builder
         .id(node.getObjectId())
@@ -79,8 +74,8 @@ public class Props_ArticleWorkflowBuilder {
         .flowName(service.getFlowName())
         .validityStart(service.getStartDate() != null ? service.getStartDate().toString() : null)
         .validityEnd(service.getEndDate() != null ? service.getEndDate().toString() : null)
-//        .description(service.getDescription())
-//        .labels(tagLabels)
+        .description(node.getDescription().map(e -> e.getText()).orElse(null))
+        .labels(node.getDescription().map(e -> e.getLabels()).orElse(Collections.emptyList()))
         .build();
   }
   

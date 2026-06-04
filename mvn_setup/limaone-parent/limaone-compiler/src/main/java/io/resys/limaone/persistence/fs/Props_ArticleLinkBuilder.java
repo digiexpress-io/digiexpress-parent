@@ -1,5 +1,7 @@
 package io.resys.limaone.persistence.fs;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * limaone-compiler
@@ -54,16 +56,13 @@ public class Props_ArticleLinkBuilder {
         .contentType(link.getContentType())
         .locked(false)
         .articles(link.getArticles())
-        //.description(link.getDescription())
         .intlValues(localeLabels.stream()
             .collect(Collectors.toMap(
                 l -> l.getLocale(),
                 l -> l.getLabelValue()
               )))
-//        .labels(link.getTagLabels() == null ? Collections.emptyList() :
-//            link.getTagLabels().stream()
-//                .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
-//                .toList())
+        .description(node.getDescription().map(e -> e.getText()).orElse(null))
+        .labels(node.getDescription().map(e -> e.getLabels()).orElse(Collections.emptyList()))
         .urlValue(link.getValue())
         .build();
   }

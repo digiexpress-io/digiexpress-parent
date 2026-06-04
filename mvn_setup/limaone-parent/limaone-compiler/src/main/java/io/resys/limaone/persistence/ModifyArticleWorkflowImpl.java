@@ -67,7 +67,7 @@ public class ModifyArticleWorkflowImpl extends AuthoringTemplate<ModifyArticleWo
       .docs(BodyType.LOCALE, BodyType.ARTICLE, BodyType.ARTICLE_WORKFLOW)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld);
-        return nextWorld.mergeModel(props.getWorkflowId(), body.getValue(), body);
+        return nextWorld.mergeModel(props.getWorkflowId(), body.getValue(), body, props.getAssetDescription());
       });
   }
   

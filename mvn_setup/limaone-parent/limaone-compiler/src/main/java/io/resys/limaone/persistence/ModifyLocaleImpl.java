@@ -65,7 +65,7 @@ public class ModifyLocaleImpl extends AuthoringTemplate<ModifyLocaleImpl, Model<
       .docs(BodyType.LOCALE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld);
-        return nextWorld.mergeModel(props.getLocaleId(), body.getValue(), body);
+        return nextWorld.mergeModel(props.getLocaleId(), body.getValue(), body, props.getAssetDescription());
       });
   }
   

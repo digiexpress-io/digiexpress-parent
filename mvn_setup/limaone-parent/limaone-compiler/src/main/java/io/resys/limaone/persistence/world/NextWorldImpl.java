@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.resys.limaone.model.Deployment;
+import io.resys.limaone.model.Description;
 import io.resys.limaone.model.ImmutableModel;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.Body;
@@ -37,6 +38,7 @@ import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 import lombok.Value;
 
 public class NextWorldImpl implements NextWorld {
@@ -110,7 +112,7 @@ public class NextWorldImpl implements NextWorld {
   }
 
   @Override
-  public <T extends Body> Model<T> newModel(String name, T body) {
+  public <T extends Body> Model<T> newModel(String name, T body, @Nullable Description desc) {
     final var id = OidUtils.genUUID();   
     if(body.getBodyType() == BodyType.DEPLOYMENT) {
       
@@ -149,7 +151,7 @@ public class NextWorldImpl implements NextWorld {
   
   @SuppressWarnings("unchecked")
   @Override
-  public <T extends Body> Model<T> mergeModel(String id, String name, T body) {
+  public <T extends Body> Model<T> mergeModel(String id, String name, T body, @Nullable Description desc) {
     if(body.getBodyType() == BodyType.DEPLOYMENT) {
       
       RepoAssert.isTrue(newDeployment.isEmpty() && updateDeployment.isEmpty(), () -> "No point in creating more then one tag in one tx!");

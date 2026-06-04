@@ -66,7 +66,7 @@ public class NewArticleTemplateImpl extends AuthoringTemplate<NewArticleTemplate
       .author(getAuthor())
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body.getName(), body);
+        return nextWorld.newModel(body.getName(), body, props.getAssetDescription());
       });
   }
   

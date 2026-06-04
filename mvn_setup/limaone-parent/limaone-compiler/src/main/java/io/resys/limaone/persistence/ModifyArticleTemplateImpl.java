@@ -65,7 +65,7 @@ public class ModifyArticleTemplateImpl extends AuthoringTemplate<ModifyArticleTe
       .docs(BodyType.ARTICLE_TEMPLATE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld);
-        return nextWorld.mergeModel(props.getTemplateId(), body.getName(), body);
+        return nextWorld.mergeModel(props.getTemplateId(), body.getName(), body, props.getAssetDescription());
       });
   }
   

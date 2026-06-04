@@ -68,7 +68,7 @@ public class ModifyPrintoutPageImpl extends AuthoringTemplate<ModifyPrintoutPage
       .docs(BodyType.PRINTOUT_PAGE, BodyType.PRINTOUT_RESOURCE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld);
-        return nextWorld.mergeModel(props.getPageId(), body.getServiceId() + "_" + body.getLocaleId(), body);
+        return nextWorld.mergeModel(props.getPageId(), body.getServiceId() + "_" + body.getLocaleId(), body, props.getAssetDescription());
       });
   }
 
@@ -103,7 +103,7 @@ public class ModifyPrintoutPageImpl extends AuthoringTemplate<ModifyPrintoutPage
               .from(resource.getBody())
               .addPrintoutPageIds(props.getPageId())
               .build();
-          nextWorld.mergeModel(resource.getId(), newResource.getResourceName(), newResource);
+          nextWorld.mergeModel(resource.getId(), newResource.getResourceName(), newResource, null);
         }
 
         if(isPageInResource && !isResourceInChanges) {
@@ -114,7 +114,7 @@ public class ModifyPrintoutPageImpl extends AuthoringTemplate<ModifyPrintoutPage
               .from(resource.getBody())
               .printoutPageIds(templateIds)
               .build();
-          nextWorld.mergeModel(resource.getId(), newResource.getResourceName(), newResource);
+          nextWorld.mergeModel(resource.getId(), newResource.getResourceName(), newResource, null);
         }
       }
     }

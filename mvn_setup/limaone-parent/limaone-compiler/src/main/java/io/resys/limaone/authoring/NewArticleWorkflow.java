@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.ArticleWorkflow;
+import io.resys.limaone.model.Description;
 import io.resys.limaone.model.LocaleLabel;
 import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
@@ -65,5 +66,7 @@ public interface NewArticleWorkflow {
     
     @Nullable OffsetDateTime getStartDate();
     @Nullable OffsetDateTime getEndDate();
+    
+    @Nullable Description getAssetDescription();
   }
 }

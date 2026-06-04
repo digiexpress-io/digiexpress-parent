@@ -81,7 +81,7 @@ public class ModifyPrintoutResourceImpl extends AuthoringTemplate<ModifyPrintout
       .docs(BodyType.PRINTOUT_RESOURCE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld(), null);
-        return nextWorld.mergeModel(props.getResourceId(), body.getResourceName(), body);
+        return nextWorld.mergeModel(props.getResourceId(), body.getResourceName(), body, props.getAssetDescription());
       });
   }
 
@@ -93,7 +93,7 @@ public class ModifyPrintoutResourceImpl extends AuthoringTemplate<ModifyPrintout
       .docs(BodyType.PRINTOUT_RESOURCE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld(), externalLocation);
-        return nextWorld.mergeModel(props.getResourceId(), body.getResourceName(), body);
+        return nextWorld.mergeModel(props.getResourceId(), body.getResourceName(), body, props.getAssetDescription());
       });
   }
 

@@ -26,6 +26,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
 
+import io.resys.limaone.model.Description;
 import io.resys.limaone.model.ImmutableDialobFormMeta;
 import io.resys.limaone.model.Model.Body;
 import io.resys.limaone.model.Model.BodyType;
@@ -37,17 +38,42 @@ import io.resys.thena.fs.entities.ImmutableNode;
 import io.resys.thena.fs.entities.ImmutableNodeTransitives;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Ref;
-import lombok.Value;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
 
 @Slf4j
-@Value
+@RequiredArgsConstructor @Getter
 public class NodeAndBody {
-  Node value;
-  BodyType bodyType;
-  Optional<Body> body;
+  private final Node value;
+  private final BodyType bodyType;
+  private final Optional<Body> body;
+  
+  private Optional<Description> description;
+  
+  public Optional<Description> getDescription() {
+    
+    if(description == null) {
+      if(getValue().getTransitives() == null || getValue().getTransitives().getProps() == null) {
+        description =  Optional.empty();
+        return description;
+      }
+      
+      final var nodeProps = getValue().getTransitives().getProps();
+      if(nodeProps.getPropsLabels().isEmpty()) {
+        description =  Optional.empty();
+        return description;
+      }
+      
+      description = nodeProps.getPropsLabels().map(e -> e.mapTo(Description.class));
+      return description;
+    }
+    
+    
+    return description;
+  }
   
   @SuppressWarnings("unchecked")
   public <T extends Body> T getBodyOfType() {

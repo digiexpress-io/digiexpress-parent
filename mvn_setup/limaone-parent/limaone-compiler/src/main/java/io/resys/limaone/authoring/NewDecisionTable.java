@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.DecisionTable;
 import io.resys.limaone.model.DecisionTable.DecisionStatement;
+import io.resys.limaone.model.Description;
 import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
@@ -48,5 +49,7 @@ public interface NewDecisionTable {
     @Nullable String getName();
     @Nullable String getDesc();
     List<DecisionStatement> getNodes();
+    
+    @Nullable Description getAssetDescription();
   }
 }

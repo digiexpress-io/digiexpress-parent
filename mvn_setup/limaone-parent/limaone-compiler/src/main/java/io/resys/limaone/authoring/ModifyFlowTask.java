@@ -28,10 +28,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
+import io.resys.limaone.model.Description;
 import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 
 public interface ModifyFlowTask {
   
@@ -46,5 +48,7 @@ public interface ModifyFlowTask {
   interface ModifyFlowTaskProps extends AuthoringModelProps {
     String getFlowTaskId();
     String getFlowTaskValue();
+    
+    @Nullable Description getAssetDescription();
   }
 }

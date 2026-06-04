@@ -34,11 +34,8 @@ import io.dialob.api.form.Form;
 import io.dialob.api.form.Form.Metadata;
 import io.dialob.api.form.FormTag;
 import io.resys.limaone.authoring.Authoring.WorldImport;
-import io.resys.limaone.model.Printout;
 import io.resys.limaone.model.Article;
 import io.resys.limaone.model.ArticleLink;
-import io.resys.limaone.model.PrintoutPage;
-import io.resys.limaone.model.PrintoutResource;
 import io.resys.limaone.model.ArticlePage;
 import io.resys.limaone.model.ArticleTemplate;
 import io.resys.limaone.model.ArticleWorkflow;
@@ -56,6 +53,9 @@ import io.resys.limaone.model.Locale;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.model.Printout;
+import io.resys.limaone.model.PrintoutPage;
+import io.resys.limaone.model.PrintoutResource;
 import io.resys.limaone.persistence.AuthoringImpl.AuthoringConfig;
 import io.resys.limaone.persistence.ModelWorldDb.NextWorld;
 import io.smallrye.mutiny.Uni;
@@ -154,9 +154,9 @@ public class WorldImportImpl implements WorldImport {
   
     final Model<Article> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(prev.get().getId(), target.getBody().getName(), target.getBody());
+      next = nextWorld.mergeModel(prev.get().getId(), target.getBody().getName(), target.getBody(), null);
     } else {
-      next = nextWorld.newModel(target.getBody().getName(), target.getBody());
+      next = nextWorld.newModel(target.getBody().getName(), target.getBody(), null);
     }
     ctx.addNewId(target.getId(), next.getId());
   }
@@ -186,9 +186,9 @@ public class WorldImportImpl implements WorldImport {
   
     final Model<ArticleLink> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(prev.get().getId(), targetBody.getValue(), targetBody);
+      next = nextWorld.mergeModel(prev.get().getId(), targetBody.getValue(), targetBody, null);
     } else {
-      next = nextWorld.newModel(target.getBody().getValue(), target.getBody());
+      next = nextWorld.newModel(target.getBody().getValue(), target.getBody(), null);
     }
   }
   
@@ -216,9 +216,9 @@ public class WorldImportImpl implements WorldImport {
   
     final Model<ArticlePage> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), targetBody);
+      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), targetBody, null);
     } else {
-      next = nextWorld.newModel(target.getId(), targetBody);
+      next = nextWorld.newModel(target.getId(), targetBody, null);
     }
   }
   
@@ -237,9 +237,9 @@ public class WorldImportImpl implements WorldImport {
   
     final Model<ArticleTemplate> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getName(), target.getBody());
+      next = nextWorld.mergeModel(target.getId(), target.getBody().getName(), target.getBody(), null);
     } else {
-      next = nextWorld.newModel(target.getBody().getName(), target.getBody());
+      next = nextWorld.newModel(target.getBody().getName(), target.getBody(), null);
     }
   }
   
@@ -268,9 +268,9 @@ public class WorldImportImpl implements WorldImport {
     
     final Model<ArticleWorkflow> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), targetBody.getValue(), targetBody);
+      next = nextWorld.mergeModel(target.getId(), targetBody.getValue(), targetBody, null);
     } else {
-      next = nextWorld.newModel(targetBody.getValue(), targetBody);
+      next = nextWorld.newModel(targetBody.getValue(), targetBody, null);
     }
   }
   
@@ -289,9 +289,9 @@ public class WorldImportImpl implements WorldImport {
   
     final Model<DecisionTable> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getName(), target.getBody());
+      next = nextWorld.mergeModel(target.getId(), target.getBody().getName(), target.getBody(), null);
     } else {
-      next = nextWorld.newModel(target.getBody().getName(), target.getBody());
+      next = nextWorld.newModel(target.getBody().getName(), target.getBody(), null);
     }
   }
   
@@ -310,9 +310,9 @@ public class WorldImportImpl implements WorldImport {
   
     final Model<Flow> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getFlowName(), target.getBody());
+      next = nextWorld.mergeModel(target.getId(), target.getBody().getFlowName(), target.getBody(), null);
     } else {
-      next = nextWorld.newModel(target.getBody().getFlowName(), target.getBody());
+      next = nextWorld.newModel(target.getBody().getFlowName(), target.getBody(), null);
     }
   }
   
@@ -331,9 +331,9 @@ public class WorldImportImpl implements WorldImport {
   
     final Model<FlowTask> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getTaskName(), target.getBody());
+      next = nextWorld.mergeModel(target.getId(), target.getBody().getTaskName(), target.getBody(), null);
     } else {
-      next = nextWorld.newModel(target.getBody().getTaskName(), target.getBody());
+      next = nextWorld.newModel(target.getBody().getTaskName(), target.getBody(), null);
     }
   }
   
@@ -352,7 +352,7 @@ public class WorldImportImpl implements WorldImport {
       // no point in merging its same
       next = prev.get();
     } else {
-      next = nextWorld.newModel(target.getBody().getValue(), target.getBody());
+      next = nextWorld.newModel(target.getBody().getValue(), target.getBody(), null);
     }
     ctx.addNewId(target.getId(), next.getId());
   }
@@ -370,9 +370,9 @@ public class WorldImportImpl implements WorldImport {
 
     final Model<Printout> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getServiceName(), target.getBody());
+      next = nextWorld.mergeModel(target.getId(), target.getBody().getServiceName(), target.getBody(), null);
     } else {
-      next = nextWorld.newModel(target.getBody().getServiceName(), target.getBody());
+      next = nextWorld.newModel(target.getBody().getServiceName(), target.getBody(), null);
     }
   }
 
@@ -389,9 +389,9 @@ public class WorldImportImpl implements WorldImport {
 
     final Model<PrintoutPage> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getServiceId(), target.getBody());
+      next = nextWorld.mergeModel(target.getId(), target.getBody().getServiceId(), target.getBody(), null);
     } else {
-      next = nextWorld.newModel(target.getBody().getServiceId(), target.getBody());
+      next = nextWorld.newModel(target.getBody().getServiceId(), target.getBody(), null);
     }
   }
 
@@ -408,9 +408,9 @@ public class WorldImportImpl implements WorldImport {
 
     final Model<PrintoutResource> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getResourceName(), target.getBody());
+      next = nextWorld.mergeModel(target.getId(), target.getBody().getResourceName(), target.getBody(), null);
     } else {
-      next = nextWorld.newModel(target.getBody().getResourceName(), target.getBody());
+      next = nextWorld.newModel(target.getBody().getResourceName(), target.getBody(), null);
     }
   }
 

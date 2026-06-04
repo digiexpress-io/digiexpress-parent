@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
+import io.resys.limaone.model.Description;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.PrintoutPage;
 import io.smallrye.mutiny.Uni;
@@ -50,5 +51,7 @@ public interface ModifyPrintoutPage {
     @Nullable String getLocaleId();
     @Nullable List<String> getResourceIds();
     @Nullable List<String> getPrintoutPageIds();
+    
+    @Nullable Description getAssetDescription();
   }
 }
