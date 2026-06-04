@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSearch, useNavigate } from '@tanstack/react-router';
 
 interface FsNavContextType {
   expandedIds: string[];
@@ -15,18 +16,39 @@ export interface FsNavProviderProps {
 }
 
 export const FsNavProvider: React.FC<FsNavProviderProps> = (props) => {
-  const [expandedIds, setExpandedIds] = React.useState<string[]>([]);
+  const search = useSearch({ from: '/secured/$locale/worker/filesystem/' });
+  const navigate = useNavigate();
+  const [expandedIds, setExpandedIds] = React.useState<string[]>(search.expandedIds ?? []);
+
+  const isMounted = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
+    navigate({
+      from: '/secured/$locale/worker/filesystem',
+      to: '.',
+      search: (prev: any) => ({ ...prev, expandedIds }),
+      replace: true,
+    });
+  }, [expandedIds]);
 
   const setExpanded = React.useCallback((id: string, isExpanded: boolean) => {
     setExpandedIds(prev => {
-      if (isExpanded) return [...prev, id];
+      if (isExpanded) {
+        return [...prev, id];
+      }
       return prev.filter(i => i !== id);
     });
   }, []);
 
   const setExpandedBatch = React.useCallback((ids: string[], isExpanded: boolean) => {
     setExpandedIds(prev => {
-      if (isExpanded) return [...prev, ...ids];
+      if (isExpanded) {
+        return [...prev, ...ids];
+      }
       return prev.filter(i => !ids.includes(i));
     });
   }, []);

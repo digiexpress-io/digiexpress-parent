@@ -21,6 +21,7 @@ export type FsTabDescriptor =
 export interface FsRouteSearchParams {
   openTabs: FsTabDescriptor[];
   activeTab?: string;
+  expandedIds?: string[];
 }
 
 export function toTabId(descriptor: FsTabDescriptor): string {
@@ -33,10 +34,9 @@ export function toTabId(descriptor: FsTabDescriptor): string {
 export function parseFsSearchParams(search: Record<string, unknown>): FsRouteSearchParams {
   const openTabs = parseTabs(search['openTabs']);
   const rawActive = search['activeTab'];
-  const activeTab = openTabs.find(t => toTabId(t) === rawActive)
-    ? (rawActive as string)
-    : openTabs.length > 0 ? toTabId(openTabs[0]) : undefined;
-  return { openTabs, activeTab };
+  const expandedIds = parseExpandedIds(search['expandedIds']);
+  const activeTab = openTabs.find(t => toTabId(t) === rawActive) ? (rawActive as string) : openTabs.length > 0 ? toTabId(openTabs[0]) : undefined;
+  return { openTabs, activeTab, expandedIds };
 }
 
 export function mergeFsSearchParams(
@@ -46,6 +46,7 @@ export function mergeFsSearchParams(
   const id = toTabId(descriptor);
   const exists = prev.openTabs.some(t => toTabId(t) === id);
   return {
+    ...prev,
     openTabs: exists ? prev.openTabs : [...prev.openTabs, descriptor],
     activeTab: id,
   };
@@ -56,7 +57,9 @@ export function closeFsTab(
   prev: FsRouteSearchParams
 ): FsRouteSearchParams {
   const index = prev.openTabs.findIndex(t => toTabId(t) === tabId);
-  if (index === -1) return prev;
+  if (index === -1) {
+    return prev;
+  }
 
   const newTabs = prev.openTabs.filter((_, i) => i !== index);
   const wasActive = prev.activeTab === tabId;
@@ -71,11 +74,11 @@ export function closeFsTab(
     newActive = toTabId(newTabs[nextIndex]);
   }
 
-  return { openTabs: newTabs, activeTab: newActive };
+  return { ...prev, openTabs: newTabs, activeTab: newActive };
 }
 
 export function closeAllFsTabs(): FsRouteSearchParams {
-  return { openTabs: [], activeTab: undefined };
+  return { openTabs: [], activeTab: undefined, expandedIds: [] };
 }
 
 export function closeTabsToTheRight(
@@ -91,7 +94,7 @@ export function closeTabsToTheRight(
   const activeStillOpen = newTabs.some(t => toTabId(t) === prev.activeTab);
   const newActive = activeStillOpen ? prev.activeTab : toTabId(newTabs[index]);
 
-  return { openTabs: newTabs, activeTab: newActive };
+  return { ...prev, openTabs: newTabs, activeTab: newActive };
 }
 
 export function closeOtherFsTabs(
@@ -103,7 +106,14 @@ export function closeOtherFsTabs(
     return prev;
   }
 
-  return { openTabs: [tab], activeTab: tabId };
+  return { ...prev, openTabs: [tab], activeTab: tabId };
+}
+
+function parseExpandedIds(raw: unknown): string[] {
+  if (!Array.isArray(raw)) {
+    return [];
+  }
+  return raw.filter((item): item is string => typeof item === 'string');
 }
 
 function parseTabs(raw: unknown): FsTabDescriptor[] {

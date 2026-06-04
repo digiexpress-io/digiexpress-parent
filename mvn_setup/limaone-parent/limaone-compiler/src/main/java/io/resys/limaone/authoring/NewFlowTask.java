@@ -20,6 +20,7 @@ package io.resys.limaone.authoring;
  * #L%
  */
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.immutables.value.Value;
@@ -46,5 +47,6 @@ public interface NewFlowTask {
     @Nullable String getName();
     @Nullable String getBody();
     @Nullable String getDesc();
+    @Nullable List<String> getTagLabels();
   }
 }

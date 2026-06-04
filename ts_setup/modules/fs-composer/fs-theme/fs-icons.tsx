@@ -22,7 +22,7 @@ import {
   ArticleOutlined,
   Description,
   PrintOutlined,
-  ImageOutlined,
+  Image,
   PictureAsPdf,
 
   // Settings & Configuration Icons
@@ -108,7 +108,7 @@ export const FsIcons = {
   ArticleOutlined: ArticleOutlined,
   Form: Description,
   Print: PrintOutlined,
-  Image: ImageOutlined,
+  Image: Image,
   Pdf: PictureAsPdf,
 
   // Settings & Configuration

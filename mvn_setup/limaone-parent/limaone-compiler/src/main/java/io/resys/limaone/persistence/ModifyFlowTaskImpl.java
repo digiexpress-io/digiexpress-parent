@@ -106,6 +106,8 @@ public class ModifyFlowTaskImpl extends AuthoringTemplate<ModifyFlowTaskImpl, Mo
       .from(start.getBody())
       .taskName(flow.getName())
       .taskValue(props.getFlowTaskValue())
+      .description(flow.getDescription())
+      .tagLabels(props.getTagLabels() == null ? java.util.Collections.emptyList() : props.getTagLabels())
       .build();
   }
 }

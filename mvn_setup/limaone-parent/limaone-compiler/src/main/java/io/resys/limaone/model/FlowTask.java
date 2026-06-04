@@ -20,6 +20,7 @@ package io.resys.limaone.model;
  * #L%
  */
 
+import java.util.List;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
@@ -28,11 +29,13 @@ import java.lang.annotation.Target;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.Body;
 import io.resys.limaone.model.Model.BodyType;
+import jakarta.annotation.Nullable;
 
 
 
@@ -42,6 +45,14 @@ import io.resys.limaone.model.Model.BodyType;
 public interface FlowTask extends Body {
   String getTaskName();
   String getTaskValue();
+  
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Nullable
+  String getDescription();
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Nullable
+  List<String> getTagLabels();
   
   
   @Target(ElementType.TYPE)

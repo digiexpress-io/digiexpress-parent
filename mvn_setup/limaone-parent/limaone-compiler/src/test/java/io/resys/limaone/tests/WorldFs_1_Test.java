@@ -132,7 +132,7 @@ public class WorldFs_1_Test extends DbSupport {
     
     final var flowTask1 = authoring.newModel()
         .newFlowTask()
-        .props(props -> props.name("FlowTask1").desc("FlowTaskDescription"))
+        .props(props -> props.name("FlowTask1"))
         .buildSync();
       
     final var link1 = authoring.newModel()

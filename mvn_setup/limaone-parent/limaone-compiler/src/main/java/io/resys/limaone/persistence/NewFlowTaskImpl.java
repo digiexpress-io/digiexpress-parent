@@ -105,6 +105,7 @@ public class {name} {
     return ImmutableFlowTask.builder()
         .taskName(flow.getName())
         .taskValue(syntax)
+        .tagLabels(props.getTagLabels() == null ? java.util.Collections.emptyList() : props.getTagLabels())
         .build();
   }
 }
