@@ -12,7 +12,7 @@ import { FsDiffIndicator } from '../fs-diff-indicator';
 import { useFsu } from '@dxs-ts/fs-api';
 
 
-export const FsDirent: React.FC<FsDirentProps> = (props) => {
+export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(ownerState.isDarkMode);
 
@@ -92,5 +92,5 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
     )}
   </>
   );
-};
+});
 

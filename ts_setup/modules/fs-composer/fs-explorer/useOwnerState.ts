@@ -15,17 +15,6 @@ function collectParentIds(nodes: Fs.DirentBase[], acc: string[] = []): string[] 
   return acc;
 }
 
-function handleContextMenu(
-  event: React.MouseEvent,
-  dirent: Fs.DirentBase,
-  setContextMenuData: React.Dispatch<React.SetStateAction<Fs.ContextMenuData | undefined>>,
-  setContextMenuOpen: React.Dispatch<React.SetStateAction<boolean>>
-) {
-  event.preventDefault();
-  setContextMenuData({ dirent, anchorPosition: { top: event.clientY, left: event.clientX } });
-  setContextMenuOpen(true);
-}
-
 
 export interface OwnerState {
   isDarkMode: boolean;
@@ -42,11 +31,8 @@ export interface OwnerState {
   contextMenuData: Fs.ContextMenuData | undefined;
 
   setContextMenuData: Dispatch<SetStateAction<Fs.ContextMenuData | undefined>>;
-  setContextMenuOpen: Dispatch<SetStateAction<boolean>>;
   onContextMenuClose: () => void;
-  onContextMenu: (event: React.MouseEvent, dirent: Fs.DirentBase,
-    setContextMenuData: React.Dispatch<React.SetStateAction<Fs.ContextMenuData | undefined>>,
-    setContextMenuOpen: React.Dispatch<React.SetStateAction<boolean>>) => void;
+  onContextMenu: (event: React.MouseEvent, dirent: Fs.DirentBase) => void;
 
   setIsDarkMode: (darkMode: boolean) => void;
   setSearchExpanded: (expanded: boolean) => void;
@@ -67,6 +53,12 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<Fs.ContextMenuData | undefined>();
 
+  const isExpandedRef = React.useRef(isExpanded);
+  isExpandedRef.current = isExpanded;
+
+  const openAssetRef = React.useRef(openAsset);
+  openAssetRef.current = openAsset;
+
   const filteredTreeData = React.useMemo(() => {
     return filterTreeDirents(dirents, search.searchTerm, search.activeFilters, getDirent, getExtension);
   }, [dirents, search.searchTerm, search.activeFilters, getDirent]);
@@ -78,6 +70,21 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
       setExpandedBatch(collectParentIds(filteredTreeData), true);
     }
   }, [filteredTreeData]);
+
+  const stableOpenAsset = React.useCallback((asset: Fs.DirentBase) => {
+    openAssetRef.current(asset);
+  }, []);
+
+  const stableToggleDirent = React.useCallback((direntId: string) => {
+    const current = isExpandedRef.current(direntId);
+    setExpanded(direntId, !current);
+  }, [setExpanded]);
+
+  const stableOnContextMenu = React.useCallback((event: React.MouseEvent, dirent: Fs.DirentBase) => {
+    event.preventDefault();
+    setContextMenuData({ dirent, anchorPosition: { top: event.clientY, left: event.clientX } });
+    setContextMenuOpen(true);
+  }, [setContextMenuData, setContextMenuOpen]);
 
   function handleSetSearchTerm(term: string) {
     search.setSearchTerm(term);
@@ -94,7 +101,7 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   function onDoubleClick(dirent: Fs.DirentBase) {
     const fullDirent = getDirent(dirent.id);
     if (fullDirent) {
-      openAsset(fullDirent);
+      openAssetRef.current(fullDirent);
     }
   }
 
@@ -107,7 +114,7 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     isAnyDirentExpanded,
     isDarkMode,
     activeDirentId: activeDirent?.id,
-    openAsset,
+    openAsset: stableOpenAsset,
     isSearchExpanded: search.open,
     isContextMenuOpen: contextMenuOpen,
 
@@ -117,24 +124,18 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     filters: search.activeFilters,
     contextMenuData,
 
-    onContextMenu: handleContextMenu,
+    onContextMenu: stableOnContextMenu,
     onDoubleClick,
     onContextMenuClose,
 
-    setContextMenuOpen,
     setSearchExpanded: search.setOpen,
     setIsDarkMode,
     setSearchTerm: handleSetSearchTerm,
     setContextMenuData,
     setFilters: handleSetFilters,
 
-
     collapseAll,
-    toggleDirent: (direntId: string) => {
-
-      const current = isExpanded(direntId);
-      setExpanded(direntId, !current);
-    },
+    toggleDirent: stableToggleDirent,
   }
 
 }

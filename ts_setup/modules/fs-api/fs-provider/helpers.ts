@@ -2,20 +2,20 @@ import { Fs } from "../fs-types";
 
 
 export const ALL_TYPES: Fs.BodyType[] = [
-  'FOLDER',
   'ARTICLE',
+  'ARTICLE_PAGE',
+  'ARTICLE_LINK',
   'ARTICLE_WORKFLOW',
-  'DIALOB_FORM',
+  'ARTICLE_TEMPLATE',
   'FLOW',
   'FLOW_TASK',
   'DECISION_TABLE',
   'LOCALE',
   'PRINTOUT',
-  'PRINTOUT_RESOURCE',
   'PRINTOUT_PAGE',
-  'ARTICLE_PAGE',
-  'ARTICLE_TEMPLATE',
-  'ARTICLE_LINK',
+  'PRINTOUT_RESOURCE',
+  'FOLDER',
+  'DIALOB_FORM',
 ];
 
 
@@ -35,6 +35,9 @@ export function getExtension(type: Fs.BodyType): string | undefined {
     case 'DECISION_TABLE': return '.dt';
     case 'DIALOB_FORM': return '.dialob';
     case 'ARTICLE_LINK': return '.link';
+    case 'PRINTOUT': return '.printout';
+    case 'PRINTOUT_RESOURCE': return '.resource';
+    case 'PRINTOUT_PAGE': return '.printout-page';
     default: return '.' + type.toLowerCase().replaceAll('_', '');
   }
 }
