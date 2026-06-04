@@ -116,7 +116,7 @@ const Secondary: React.FC<{}> = () => {
           </Button>
         </EveliPermissions>
 
-        <EveliTenantFeatureEnabled id='STENCIL_RELEASES'>
+
           <EveliPermissions id='NAV_TO_STENCIL_RELEASES'>
             <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
               startIcon={<NewReleasesOutlinedIcon />}
@@ -124,7 +124,7 @@ const Secondary: React.FC<{}> = () => {
               {intl.formatMessage({ id: 'menu.releases' })}
             </Button>
           </EveliPermissions>
-        </EveliTenantFeatureEnabled>
+
 
         <Button variant='explorerInactive'
           startIcon={<HelpOutlineOutlinedIcon />}

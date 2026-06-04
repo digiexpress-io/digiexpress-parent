@@ -15,7 +15,7 @@ const ReleasesView: React.FC<{}> = () => {
   const { onTabCurrentClose } = useStencilNav();
 
 
-  const releases = Object.values(site.releases);
+  const releases = Object.values(site.releases ?? {});
   const [releaseComposer, setReleaseComposer] = React.useState(false);
 
   return (
