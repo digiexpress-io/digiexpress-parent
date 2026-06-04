@@ -176,46 +176,46 @@ public interface WorldFsProps {
     User getChangedBy();
   }
   
-  public interface User {
+  interface User {
     String getUserName();
     String getEmail();
     List<PermissionType> getPermissions();
   }
   
-  public interface Permission {
+  interface Permission {
     String getName();
     List<PermissionType> getTypes();
   }
   
   @Value.Immutable
-  public interface Comment {
+  interface Comment {
     String getComment();
     String getAuthor();
     OffsetDateTime getCreated();
   }
 
   @Value.Immutable
-  public interface Label {
+  interface Label {
     String getId();
     String getValue();
     
     @Nullable String getDescription();
   }
   
-  public enum ChangeType { 
+  enum ChangeType { 
     UPDATE, 
     CREATE, 
     DELETE 
   }
 
-  public enum PermissionType {
+  enum PermissionType {
     READ,
     WRITE,
     VIEW,
     NONE
   }
 
-  public enum ConfigOption {
+  enum ConfigOption {
     DEV_MODE,
     ASSIGNABLE_MODE,
     DISABLED_MODE,
@@ -223,7 +223,7 @@ public interface WorldFsProps {
     AUTH_ONLY_MODE
   } 
   
-  public enum ErrorSeverityType {
+  enum ErrorSeverityType {
     CRITICAL,
     WARNING
   }
