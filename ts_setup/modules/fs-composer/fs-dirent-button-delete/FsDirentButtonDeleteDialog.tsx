@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { useFsDirent } from "@dxs-ts/fs-api";
@@ -16,14 +16,17 @@ export const FsDirentButtonDeleteDialog: React.FC<FsDirentButtonDeleteDialogProp
   const { getDirent } = useFsDirent();
 
   const asset = getDirent(assetId);
+  const type = asset ? intl.formatMessage({ id: `fs.bodyType.${asset.type}` }) : '';
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{intl.formatMessage({ id: 'fs.dirent.deleteConfirmDialog.title' })}{asset ? `: ${asset.name}` : ''}</DialogTitle>
-      <DialogContent>{intl.formatMessage({ id: 'fs.dirent.deleteConfirmDialog.content' })}</DialogContent>
+      <DialogTitle>{intl.formatMessage({ id: 'fs.direntMenu.deleteDialog.title' }, { type })}</DialogTitle>
+      <DialogContent>
+        <Typography>{intl.formatMessage({ id: 'fs.direntMenu.deleteDialog.message' }, { name: asset?.name ?? assetId })}</Typography>
+      </DialogContent>
       <DialogActions>
         <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-        <Button onClick={onConfirm}>{intl.formatMessage({ id: 'button.delete' })}</Button>
+        <Button onClick={onConfirm} color='error'>{intl.formatMessage({ id: 'button.confirmDelete' })}</Button>
       </DialogActions>
     </Dialog>
   );
