@@ -29,15 +29,24 @@ export interface FsuProviderProps {
 
 export const FsuProvider: React.FC<FsuProviderProps> = (props) => {
   const [fsu, setFsu] = React.useState<FsuWorld>(() => new FsuWorld());
+  const pendingRef = React.useRef<FsuWorld>(fsu);
+  pendingRef.current = fsu;
+
+  React.useEffect(() => {
+    if (pendingRef.current !== fsu) {
+      setFsu(pendingRef.current);
+    }
+  });
+
   const contextValue: FsuContextType = React.useMemo(() => {
 
     function withNewChange<T extends FsuChange>(id: string, init: () => T) {
-      if(fsu.isChange(id)) {
-        return fsu.getChange(id) as T;
+      if (pendingRef.current.isChange(id)) {
+        return pendingRef.current.getChange(id) as T;
       }
 
-      const [world] = fsu.withNewChange(init)
-      setFsu(world);
+      const [world] = pendingRef.current.withNewChange(init);
+      pendingRef.current = world;
       return world.getChange(id) as T;
     }
 
@@ -54,7 +63,6 @@ export const FsuProvider: React.FC<FsuProviderProps> = (props) => {
       getChange: (id) => fsu.getChange(id),
       isChange: (id) => fsu.isChange(id),
       push: async (changeId) => {
-        //const props = changes.getCurrentProps();
         const change = fsu.getChange(changeId);
         await props.pushChange(change);
         setFsu(prev => prev.clearChange(changeId));
