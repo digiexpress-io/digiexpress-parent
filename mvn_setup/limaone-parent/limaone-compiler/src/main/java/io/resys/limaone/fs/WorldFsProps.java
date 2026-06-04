@@ -198,6 +198,8 @@ public interface WorldFsProps {
   public interface Label {
     String getId();
     String getValue();
+    
+    @Nullable String getDescription();
   }
   
   public enum ChangeType { 
