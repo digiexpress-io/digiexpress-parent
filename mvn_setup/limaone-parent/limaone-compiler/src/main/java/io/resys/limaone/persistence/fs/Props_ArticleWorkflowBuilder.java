@@ -74,7 +74,7 @@ public class Props_ArticleWorkflowBuilder {
         .flowName(service.getFlowName())
         .validityStart(service.getStartDate() != null ? service.getStartDate().toString() : null)
         .validityEnd(service.getEndDate() != null ? service.getEndDate().toString() : null)
-        .description(node.getDescription().map(e -> e.getText()).orElse(null))
+        .assetDescription(node.getDescription().map(e -> e.getText()).orElse(null))
         .labels(node.getLabels().map(e -> e.getValues()).orElse(Collections.emptyList()))
         .build();
   }

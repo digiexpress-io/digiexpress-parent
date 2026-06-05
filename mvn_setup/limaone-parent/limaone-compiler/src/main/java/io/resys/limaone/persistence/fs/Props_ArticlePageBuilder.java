@@ -52,7 +52,7 @@ public class Props_ArticlePageBuilder {
         .content(articlePage.getContent())
         .articleId(articlePage.getArticle())
         .localeCode(articlePage.getLocale())
-        .description(node.getDescription().map(e -> e.getText()).orElse(null))
+        .assetDescription(node.getDescription().map(e -> e.getText()).orElse(null))
         .labels(node.getLabels().map(e -> e.getValues()).orElse(Collections.emptyList()))
         .build();
   }

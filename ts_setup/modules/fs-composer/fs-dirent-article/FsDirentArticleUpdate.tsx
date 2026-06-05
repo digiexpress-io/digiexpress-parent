@@ -65,7 +65,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
             <FsDirentTextField
-              value={ownerState.assetDescription.text}
+              value={ownerState.assetDescription}
               placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
               onChange={ownerState.onChangeDescription}
               onBlur={ownerState.onBlurDescription}

@@ -57,7 +57,7 @@ public class Props_ArticleBuilder {
         .type(node.getBodyType())
         .locked(false)
         .orderNumber(article.getOrder())
-        .description(node.getDescription().map(e -> e.getText()).orElse(null))
+        .assetDescription(node.getDescription().map(e -> e.getText()).orElse(null))
         .labels(node.getLabels().map(e -> e.getValues()).orElse(Collections.emptyList()))
         .build();
   }

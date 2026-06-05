@@ -49,7 +49,7 @@ public class Props_PrintoutBuilder {
                 l -> l.getLocale(),
                 l -> l.getLabelValue()
             )))
-        .description(node.getDescription().map(e -> e.getText()).orElse(null))
+        .assetDescription(node.getDescription().map(e -> e.getText()).orElse(null))
         .labels(node.getLabels().map(e -> e.getValues()).orElse(Collections.emptyList()))
         .build();
   }

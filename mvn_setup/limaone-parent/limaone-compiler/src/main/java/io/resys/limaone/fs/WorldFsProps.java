@@ -37,7 +37,7 @@ public interface WorldFsProps {
   BodyType getType();
   Boolean getLocked();
   
-  @Nullable String getDescription();
+  @Nullable String getAssetDescription();
   List<DescriptionLabel> getLabels();
   
   
