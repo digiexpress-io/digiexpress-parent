@@ -156,7 +156,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
-
   function onBlurName() {
     setState(prev => prev.withName(fields.name));
   }

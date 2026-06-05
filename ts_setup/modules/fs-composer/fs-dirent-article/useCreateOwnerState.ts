@@ -10,7 +10,7 @@ import { useFsNav } from '@dxs-ts/fs-nav';
 export interface TextFields {
   name: string;
   orderNumber: string;
-  description: string;
+  assetDescription: string;
 }
 
 export interface CreateOwnerState {
@@ -21,7 +21,7 @@ export interface CreateOwnerState {
   isExpanded: boolean;
   name: string;
   orderNumber: string;
-  description: string;
+  assetDescription: string;
   labels: string[];
   configOptions: Fs.ConfigOption[];
   onChangeName: (value: string) => void;
@@ -42,7 +42,7 @@ type _CreateStateProps = {
   name: string;
   parentId: string | undefined;
   order: number;
-  description: string;
+  assetDescription: string;
   labels: string[];
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
@@ -61,7 +61,7 @@ class _CreateState implements FsuCreateChange {
   get bodyType() { return this._current.bodyType; }
   get name() { return this._current.name; }
   get orderNumber() { return String(this._current.order); }
-  get description() { return this._current.description; }
+  get assetDescription() { return this._current.assetDescription; }
   get labels() { return this._current.labels; }
   get configOptions() { return this._current.configOptions; }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
@@ -73,7 +73,7 @@ class _CreateState implements FsuCreateChange {
         name: this._current.name,
         parentId: this._current.parentId,
         order: this._current.order,
-        description: this._current.description,
+        assetDescription: this._current.assetDescription,
         labels: this._current.labels,
         devMode: this._current.devMode,
         authOnly: this._current.authOnly,
@@ -87,8 +87,8 @@ class _CreateState implements FsuCreateChange {
   withOrder(order: string): _CreateState {
     return new _CreateState({ ...this._current, order: parseInt(order) || 0 }, this._origin);
   }
-  withDescription(description: string): _CreateState {
-    return new _CreateState({ ...this._current, description }, this._origin);
+  withDescription(assetDescription: string): _CreateState {
+    return new _CreateState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _CreateState {
     return new _CreateState({ ...this._current, labels }, this._origin);
@@ -103,7 +103,7 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _initFields: TextFields = { name: '', orderNumber: '0', description: '' };
+const _initFields: TextFields = { name: '', orderNumber: '0', assetDescription: '' };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
@@ -123,7 +123,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     name: '',
     parentId,
     order: 0,
-    description: '',
+    assetDescription: '',
     labels: [],
     configOptions: [],
     devMode: false,
@@ -135,7 +135,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const isChangesPresent = state.isChanged
     || fields.name !== state.name
     || fields.orderNumber !== state.orderNumber
-    || fields.description !== state.description;
+    || fields.assetDescription !== state.assetDescription;
 
   function onChangeName(value: string) {
     setFields(prev => ({ ...prev, name: value }));
@@ -146,7 +146,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, description: value }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onChangeLabels(value: string[]) {
@@ -170,7 +170,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.description));
+    setState(prev => prev.withDescription(fields.assetDescription));
   }
 
   async function onSave() {
@@ -189,7 +189,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
       name: '',
       parentId,
       order: 0,
-      description: '',
+      assetDescription: '',
       labels: [],
       configOptions: [],
       devMode: false,
@@ -205,7 +205,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     isExpanded,
     name: fields.name,
     orderNumber: fields.orderNumber,
-    description: fields.description,
+    assetDescription: fields.assetDescription,
     labels: state.labels,
     configOptions: state.configOptions,
     onChangeName,

@@ -9,7 +9,7 @@ import {
 
 export interface TextFields {
   content: string;
-  assetDescription: { text: string };
+  assetDescription: string;
 }
 
 export interface UpdateOwnerState {
@@ -19,7 +19,7 @@ export interface UpdateOwnerState {
   isChanged: boolean;
   isExpanded: boolean;
   content: string;
-  assetDescription: { text: string };
+  assetDescription: string;
   configOptions: Fs.ConfigOption[];
   tagLabels: string[];
   onChangeContent: (value: string) => void;
@@ -100,7 +100,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const dirent = getDirent(props.direntId);
 
-  const [fields, setFields] = React.useState<TextFields>({ content: '', assetDescription: dirent?.props?.assetDescription ?? { text: '' } });
+  const [fields, setFields] = React.useState<TextFields>({ content: '', assetDescription: dirent?.props?.assetDescription ?? '' });
   const [isExpanded, setIsExpanded] = React.useState(false);
   const originalContentRef = React.useRef<string>('');
   const liveContentRef = React.useRef<string>('');
@@ -111,7 +111,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
       flowId: props.direntId,
       bodyType: dirent!.type,
       flowValue: liveContentRef.current,
-      assetDescription: dirent?.props?.assetDescription ?? { text: '' },
+      assetDescription: { text: dirent?.props?.assetDescription ?? '' },
       configOptions: (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[],
       devMode: (dirent?.props?.configOptions ?? []).includes('DEV_MODE'),
       disabledMode: (dirent?.props?.configOptions ?? []).includes('DISABLED_MODE'),
@@ -126,7 +126,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
       const yaml = wb.flows[props.direntId]?.ast?.parseTree?.value ?? '';
       originalContentRef.current = yaml;
       liveContentRef.current = yaml;
-      setFields({ content: yaml, assetDescription: dirent?.props?.assetDescription ?? { text: '' } });
+      setFields({ content: yaml, assetDescription: dirent?.props?.assetDescription ?? '' });
       cancel(props.direntId);
     });
   }, [props.direntId]);
@@ -143,11 +143,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.assetDescription));
+    setState(prev => prev.withDescription({ text: fields.assetDescription }));
   }
 
   function onChangeConfigOptions(value: string[]) {
@@ -168,11 +168,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     }
     const original = originalContentRef.current;
     liveContentRef.current = original;
-    setFields({ content: original, assetDescription: dirent?.props?.assetDescription ?? { text: '' } });
+    setFields({ content: original, assetDescription: dirent?.props?.assetDescription ?? '' });
     cancel(props.direntId);
   }
 
-  const isChanged = state.isChanged || fields.assetDescription.text !== state.assetDescription.text;
+  const isChanged = state.isChanged || fields.assetDescription !== state.assetDescription.text;
 
   return {
     isDarkMode,

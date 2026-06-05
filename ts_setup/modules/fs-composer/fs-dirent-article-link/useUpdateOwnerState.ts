@@ -8,7 +8,7 @@ import {
 } from '@dxs-ts/fs-api';
 
 export interface TextFields {
-  assetDescription: { text: string };
+  assetDescription: string;
   urlValue: string;
   intlValues: Record<string, string>;
 }
@@ -27,7 +27,7 @@ export interface UpdateOwnerState {
   articles: string[];
   tagLabels: string[];
   configOptions: Fs.ConfigOption[];
-  assetDescription: { text: string };
+  assetDescription: string;
   onChangeContentType: (value: string) => void;
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
@@ -120,7 +120,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [fields, setFields] = React.useState<TextFields>({
-    assetDescription: dirent?.props?.assetDescription ?? { text: '' },
+    assetDescription: linkProps?.assetDescription ?? '',
     urlValue: linkProps?.urlValue ?? '',
     intlValues: linkProps?.intlValues ?? {},
   });
@@ -138,11 +138,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     devMode: (linkProps?.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (linkProps?.configOptions ?? []).includes('DISABLED_MODE'),
     articles: linkProps?.articles ?? [],
-    assetDescription: dirent?.props?.assetDescription ?? { text: '' }
+    assetDescription: { text: linkProps?.assetDescription ?? '' }
   }));
 
   const isChangesPresent = state.isChanged
-    || fields.assetDescription.text !== state.assetDescription.text
+    || fields.assetDescription !== state.assetDescription.text
     || fields.urlValue !== state.urlValue
     || Object.entries(fields.intlValues).some(([locale, val]) => val !== (state.intlValues[locale] ?? ''));
 
@@ -161,7 +161,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onChangeArticles(value: string[]) {
@@ -189,12 +189,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.assetDescription));
+    setState(prev => prev.withDescription({ text: fields.assetDescription }));
   }
 
   function onCancel() {
     setFields({
-      assetDescription: dirent?.props?.assetDescription ?? { text: '' },
+      assetDescription: linkProps?.assetDescription ?? '',
       urlValue: linkProps?.urlValue ?? '',
       intlValues: linkProps?.intlValues ?? {},
     });

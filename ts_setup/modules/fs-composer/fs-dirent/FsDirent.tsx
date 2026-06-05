@@ -53,7 +53,7 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
         </ListItemIcon>
 
         <Tooltip
-          title={ownerState.dirent.props?.assetDescription?.text ?? ''}
+          title={ownerState.dirent.props?.assetDescription ?? ''}
           arrow
           enterDelay={700}
           placement="top"

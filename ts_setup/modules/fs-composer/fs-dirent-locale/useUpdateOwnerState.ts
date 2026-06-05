@@ -48,7 +48,7 @@ class _ChangeState implements FsuChange {
 
 
 export interface TextFields {
-  assetDescription: { text: string };
+  assetDescription: string;
   configOptions: Fs.ConfigOption[];
 }
 
@@ -57,7 +57,7 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   id: string;
   localeCode: string;
-  assetDescription: { text: string };
+  assetDescription: string;
   configOptions: Fs.ConfigOption[];
   isChanged: boolean;
   onChangeDescription: (value: string) => void;
@@ -80,19 +80,19 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     value: languageProps.localeCode,
     enabled: !(languageProps.configOptions ?? []).includes('DISABLED_MODE'),
     disabledMode: (languageProps.configOptions ?? []).includes('DISABLED_MODE'),
-    assetDescription: languageProps.assetDescription ?? { text: '' },
+    assetDescription: { text: languageProps.assetDescription ?? '' },
     configOptions: (languageProps.configOptions ?? []) as Fs.ConfigOption[],
   }));
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
   const [fields, setFields] = React.useState<TextFields>({
-    assetDescription: languageProps.assetDescription ?? { text: '' },
+    assetDescription: languageProps.assetDescription ?? '',
     configOptions: (languageProps.configOptions ?? []) as Fs.ConfigOption[],
   });
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onChangeConfigOptions(value: string[]) {
@@ -102,19 +102,19 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.assetDescription));
+    setState(prev => prev.withDescription({ text: fields.assetDescription }));
   }
 
   function onCancel() {
     setFields({
-      assetDescription: languageProps.assetDescription ?? { text: '' },
+      assetDescription: languageProps.assetDescription ?? '',
       configOptions: (languageProps.configOptions ?? []) as Fs.ConfigOption[],
     });
     cancel(props.direntId);
   }
 
   const changes = state.isChanged
-    || fields.assetDescription.text !== state.assetDescription.text
+    || fields.assetDescription !== state.assetDescription.text
     || JSON.stringify(fields.configOptions) !== JSON.stringify(state.configOptions);
 
   return ({

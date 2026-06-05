@@ -90,14 +90,14 @@ class _ChangeState implements FsuChange {
 
 interface _TextFields {
   serviceName: string;
-  assetDescription: { text: string };
+  assetDescription: string;
 }
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
   serviceName: string;
-  assetDescription: { text: string };
+  assetDescription: string;
   labels: string[];
   labelOptions: string[];
   orchestratorName: string;
@@ -124,7 +124,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     printoutId: props.direntId,
     bodyType: dirent.type,
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-    assetDescription: printoutProps.assetDescription ?? { text: '' },
+    assetDescription: { text: printoutProps.assetDescription ?? '' },
     labels: (printoutProps.labels ?? []).map(l => l.value),
     orchestratorName: printoutProps.orchestratorName ?? '',
     intlValues: printoutProps.intlValues ?? {},
@@ -134,12 +134,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<_TextFields>({
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-    assetDescription: printoutProps.assetDescription ?? { text: '' },
+    assetDescription: printoutProps.assetDescription ?? '',
   });
 
   const isChangesPresent = state.isChanged
     || fields.serviceName !== state.serviceName
-    || fields.assetDescription.text !== state.assetDescription.text;
+    || fields.assetDescription !== state.assetDescription.text;
 
   const connectedPages: ConnectedPage[] = Object.values(selectOptions.direntProps)
     .filter(p => p.type === 'PRINTOUT_PAGE' && (p as Fs.PrintoutPageProps).serviceId === props.direntId)
@@ -156,10 +156,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withServiceName(fields.serviceName));
   }
   function onChangeDescription(v: string) {
-    setFields(prev => ({ ...prev, assetDescription: { text: v } }));
+    setFields(prev => ({ ...prev, assetDescription: v }));
   }
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.assetDescription));
+    setState(prev => prev.withDescription({ text: fields.assetDescription }));
   }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
@@ -170,7 +170,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onCancel() {
     setFields({
       serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-      assetDescription: printoutProps.assetDescription ?? { text: '' },
+      assetDescription: printoutProps.assetDescription ?? '',
     });
     cancel(props.direntId);
   }

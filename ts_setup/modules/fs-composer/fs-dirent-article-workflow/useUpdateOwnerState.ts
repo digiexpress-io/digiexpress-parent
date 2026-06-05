@@ -112,7 +112,7 @@ class _ChangeState implements FsuChange {
 
 export interface TextFields {
   name: string;
-  assetDescription: { text: string };
+  assetDescription: string;
   formName: string;
   formTag: string;
   flowName: string;
@@ -129,7 +129,7 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   id: string;
   name: string;
-  assetDescription: { text: string };
+  assetDescription: string;
   dialobFormName: string;
   dialobFormTag: string;
   flowName: string;
@@ -172,7 +172,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     workflowId: props.direntId,
     bodyType: dirent.type,
     value: dirent.name ?? '',
-    assetDescription: workflowProps.assetDescription ?? { text: '' },
+    assetDescription: { text: workflowProps.assetDescription ?? '' },
     formName: workflowProps.dialobFormName ?? '',
     formTag: workflowProps.dialobFormTag ?? '',
     flowName: workflowProps.flowName ?? '',
@@ -188,7 +188,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<TextFields>({
     name: dirent.name ?? '',
-    assetDescription: workflowProps.assetDescription ?? { text: '' },
+    assetDescription: workflowProps.assetDescription ?? '',
     formName: workflowProps.dialobFormName ?? '',
     formTag: workflowProps.dialobFormTag ?? '',
     flowName: workflowProps.flowName ?? '',
@@ -209,7 +209,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onChangeIntlValues(locale: string, value: string) {
@@ -264,7 +264,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.assetDescription));
+    setState(prev => prev.withDescription({ text: fields.assetDescription }));
   }
 
   function onBlurIntlValues(locale: string) {
@@ -278,7 +278,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onCancel() {
     setFields({
       name: dirent.name ?? '',
-      assetDescription: workflowProps.assetDescription ?? { text: '' },
+      assetDescription: workflowProps.assetDescription ?? '',
       formName: workflowProps.dialobFormName ?? '',
       formTag: workflowProps.dialobFormTag ?? '',
       flowName: workflowProps.flowName ?? '',
@@ -294,7 +294,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const changes = state.isChanged
     || fields.name !== state.value
-    || fields.assetDescription.text !== state.assetDescription.text
+    || fields.assetDescription !== state.assetDescription.text
     || JSON.stringify(fields.intlValues) !== JSON.stringify(state.intlValues);
 
   return ({

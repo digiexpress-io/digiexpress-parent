@@ -6,7 +6,7 @@ import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 
 export interface TextFields {
   content: string;
-  assetDescription: { text: string };
+  assetDescription: string;
 }
 
 export interface CreateOwnerState {
@@ -14,7 +14,7 @@ export interface CreateOwnerState {
   articleId: string;
   locale: string;
   content: string;
-  assetDescription: { text: string };
+  assetDescription: string;
   configOptions: Fs.ConfigOption[];
   labels: string[];
   labelOptions: string[];
@@ -106,7 +106,7 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _initFields: TextFields = { content: '', assetDescription: { text: '' } };
+const _initFields: TextFields = { content: '', assetDescription: '' };
 
 const _initProps: _CreateStateProps = {
   bodyType: 'ARTICLE_PAGE',
@@ -151,7 +151,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   const isChangesPresent = state.isChanged
     || fields.content !== state.content
-    || fields.assetDescription.text !== state.assetDescription.text;
+    || fields.assetDescription !== state.assetDescription.text;
 
   function onChangeArticle(value: string) {
     setState(prev => prev.withArticle(value));
@@ -172,7 +172,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onChangeConfigOptions(value: string[]) {
@@ -195,7 +195,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.assetDescription));
+    setState(prev => prev.withDescription({ text: fields.assetDescription }));
   }
 
   async function onSave() {

@@ -6,14 +6,14 @@ import { FsDirentSelectMultiOption } from '../fs-dirent-select-multi';
 
 interface _TextFields {
   resourceName: string;
-  assetDescription: { text: string };
+  assetDescription: string;
 }
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
   resourceName: string;
-  assetDescription: { text: string };
+  assetDescription: string;
   labels: string[];
   labelOptions: string[];
   contentType: string;
@@ -135,7 +135,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   const [fields, setFields] = React.useState<_TextFields>({
     resourceName: _initProps.resourceName,
-    assetDescription: _initProps.assetDescription,
+    assetDescription: _initProps.assetDescription.text,
   });
   const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
 
@@ -152,7 +152,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   const isChangesPresent = state.isChanged
     || fields.resourceName !== state.resourceName
-    || fields.assetDescription.text !== state.assetDescription.text;
+    || fields.assetDescription !== state.assetDescription.text;
 
   function onChangeResourceName(v: string) {
     setFields(prev => ({ ...prev, resourceName: v }));
@@ -161,10 +161,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withResourceName(fields.resourceName));
   }
   function onChangeDescription(v: string) {
-    setFields(prev => ({ ...prev, assetDescription: { text: v } }));
+    setFields(prev => ({ ...prev, assetDescription: v }));
   }
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.assetDescription));
+    setState(prev => prev.withDescription({ text: fields.assetDescription }));
   }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
@@ -189,7 +189,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onCancel() {
-    setFields({ resourceName: _initProps.resourceName, assetDescription: _initProps.assetDescription });
+    setFields({ resourceName: _initProps.resourceName, assetDescription: _initProps.assetDescription.text });
     setStateRaw(new _CreateState(_initProps));
   }
 

@@ -3,13 +3,44 @@ import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 
+export interface TextFields {
+  content: string;
+  assetDescription: string;
+}
+
+export interface UpdateOwnerState {
+  isDarkMode: boolean;
+  dirent: Fs.DirentBase | undefined;
+  isLoading: boolean;
+  id: string;
+  articleName: string;
+  locale: string;
+  assetDescription: string;
+  configOptions: Fs.ConfigOption[];
+  labels: string[];
+  labelOptions: string[];
+  availableConfigOptions: Fs.SelectOption[];
+  localeOptions: FsDirentSelectSingleOption[];
+  isChanged: boolean;
+  isExpanded: boolean;
+  onChangeLocale: (value: string) => void;
+  onChangeContent: (value: string) => void;
+  onBlurContent: () => void;
+  onChangeDescription: (value: string) => void;
+  onBlurDescription: () => void;
+  onChangeConfigOptions: (value: string[]) => void;
+  onChangeLabels: (value: string[]) => void;
+  onToggleExpanded: () => void;
+  onCancel: () => void;
+  content: string;
+}
 
 type _ChangeStateProps = {
   pageId: string;
   bodyType: Fs.BodyType;
   locale: string;
   content: string;
-  assetDescription: { text: string };
+  assetDescription: string;
   configOptions: Fs.ConfigOption[];
   labels: string[];
   devMode: boolean;
@@ -47,7 +78,7 @@ class _ChangeState implements FsuChange {
     return new _ChangeState({ ...this._current, content }, this._origin);
   }
 
-  withDescription(assetDescription: { text: string }): _ChangeState {
+  withDescription(assetDescription: string): _ChangeState {
     return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 
@@ -60,37 +91,6 @@ class _ChangeState implements FsuChange {
 }
 
 
-export interface TextFields {
-  content: string;
-  assetDescription: { text: string };
-}
-
-export interface UpdateOwnerState {
-  isDarkMode: boolean;
-  dirent: Fs.DirentBase | undefined;
-  isLoading: boolean;
-  id: string;
-  articleName: string;
-  locale: string;
-  assetDescription: { text: string };
-  configOptions: Fs.ConfigOption[];
-  labels: string[];
-  labelOptions: string[];
-  availableConfigOptions: Fs.SelectOption[];
-  localeOptions: FsDirentSelectSingleOption[];
-  isChanged: boolean;
-  isExpanded: boolean;
-  onChangeLocale: (value: string) => void;
-  onChangeContent: (value: string) => void;
-  onBlurContent: () => void;
-  onChangeDescription: (value: string) => void;
-  onBlurDescription: () => void;
-  onChangeConfigOptions: (value: string[]) => void;
-  onChangeLabels: (value: string[]) => void;
-  onToggleExpanded: () => void;
-  onCancel: () => void;
-  content: string;
-}
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
@@ -105,7 +105,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     bodyType: dirent.type,
     locale: pageProps.localeCode,
     content: pageProps.content ?? '',
-    assetDescription: pageProps.assetDescription ?? { text: '' },
+    assetDescription: pageProps.assetDescription ?? '',
     configOptions: (pageProps.configOptions ?? []) as Fs.ConfigOption[],
     labels: (pageProps.labels ?? []).map(l => l.value),
     devMode: (pageProps.configOptions ?? []).includes('DEV_MODE'),
@@ -116,7 +116,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<TextFields>({
     content: pageProps.content ?? '',
-    assetDescription: pageProps.assetDescription ?? { text: '' },
+    assetDescription: pageProps.assetDescription ?? '',
   });
   const contentDebounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [isExpanded, setIsExpanded] = React.useState(false);
@@ -145,7 +145,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onChangeConfigOptions(value: string[]) {
@@ -177,13 +177,13 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     }
     setFields({
       content: pageProps.content ?? '',
-      assetDescription: pageProps.assetDescription ?? { text: '' },
+      assetDescription: pageProps.assetDescription ?? '',
     });
     cancel(props.direntId);
   }
 
   const changes = state.isChanged
-    || fields.assetDescription.text !== state.assetDescription.text
+    || fields.assetDescription !== state.assetDescription
     || fields.content !== state.content;
 
   return ({

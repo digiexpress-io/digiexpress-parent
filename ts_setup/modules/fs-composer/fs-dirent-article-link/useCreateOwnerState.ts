@@ -9,7 +9,7 @@ import {
 import { useFsNav } from '@dxs-ts/fs-nav';
 
 export interface TextFields {
-  assetDescription: { text: string };
+  assetDescription: string;
   urlValue: string;
   intlValues: Record<string, string>;
 }
@@ -25,7 +25,7 @@ export interface CreateOwnerState {
   articles: string[];
   tagLabels: string[];
   configOptions: Fs.ConfigOption[];
-  assetDescription: { text: string };
+  assetDescription: string;
   onChangeContentType: (value: string) => void;
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
@@ -127,7 +127,7 @@ const _initProps: _CreateStateProps = {
   assetDescription: { text: '' },
 };
 
-const _emptyFields: TextFields = { assetDescription: { text: '' }, urlValue: '', intlValues: {} };
+const _emptyFields: TextFields = { assetDescription: '', urlValue: '', intlValues: {} };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
@@ -143,7 +143,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
 
   const isChangesPresent = state.isChanged
-    || fields.assetDescription.text !== state.assetDescription.text
+    || fields.assetDescription !== state.assetDescription.text
     || fields.urlValue !== state.urlValue
     || Object.entries(fields.intlValues).some(([locale, val]) => val !== (state.intlValues[locale] ?? ''));
 
@@ -160,7 +160,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onChangeArticles(value: string[]) {
@@ -188,7 +188,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.assetDescription));
+    setState(prev => prev.withDescription({ text: fields.assetDescription }));
   }
 
   async function onSave() {

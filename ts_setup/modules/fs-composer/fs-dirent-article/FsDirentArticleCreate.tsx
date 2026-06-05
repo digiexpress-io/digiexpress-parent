@@ -63,7 +63,7 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
             <FsDirentTextField
               placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
-              value={ownerState.description}
+              value={ownerState.assetDescription}
               onChange={ownerState.onChangeDescription}
               onBlur={ownerState.onBlurDescription}
               multiline minRows={2} maxRows={5}
