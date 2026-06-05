@@ -1293,7 +1293,5 @@ export const sv = {
   'task.audit.ai.similar.unavailable': 'Ingen liknande feedback tillgänglig',
   'taskcard.body.customerName.none': 'Ej angiven',
   'taskcard.body.form.canPublishFeedback.yes': 'Ja',
-  'taskcard.body.form.representative.placeholder': 'Representantens namn',
-  'fs.dirent.deleteConfirmDialog.title': 'Ta bort resurs',
-  'fs.dirent.deleteConfirmDialog.content': 'Är du säker på att du vill ta bort den här resursen? Det går inte att ångra den här åtgärden.'
+  'taskcard.body.form.representative.placeholder': 'Representantens namn'
 }

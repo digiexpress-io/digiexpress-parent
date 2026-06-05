@@ -142,7 +142,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }));
 
   const isChangesPresent = state.isChanged
-    || fields.assetDescription !== state.assetDescription.text
+  // || fields.assetDescription !== state.assetDescription.text
     || fields.urlValue !== state.urlValue
     || Object.entries(fields.intlValues).some(([locale, val]) => val !== (state.intlValues[locale] ?? ''));
 
