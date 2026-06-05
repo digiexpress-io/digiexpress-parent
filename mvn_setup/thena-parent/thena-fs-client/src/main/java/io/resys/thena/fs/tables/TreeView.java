@@ -87,7 +87,8 @@ import io.vertx.mutiny.sqlclient.Row;
           'props_labels', props.props_labels, 
           'props_flags', props.props_flags,
           'props_comments', props.props_comments,
-          'props_permissions', props.props_permissions
+          'props_permissions', props.props_permissions,
+          'props_description', props.props_description
         )
       ) as tree_node_blob
 

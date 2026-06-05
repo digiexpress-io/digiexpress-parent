@@ -71,6 +71,7 @@ public class NodeParser {
   private io.vertx.core.json.JsonObject blobValue = null;
   
   // Temporary storage for Props fields
+  private String propsDescription = null;
   private io.vertx.core.json.JsonObject propsLabels = null;
   private io.vertx.core.json.JsonObject propsComments = null;
   private io.vertx.core.json.JsonObject propsPermissions = null;
@@ -117,6 +118,7 @@ public class NodeParser {
     if (propsId != null) {
       props = ImmutableProps.builder()
         .id(propsId)
+        .propsDescription(Optional.ofNullable(propsDescription))
         .propsLabels(Optional.ofNullable(propsLabels))
         .propsComments(Optional.ofNullable(propsComments))
         .propsPermissions(Optional.ofNullable(propsPermissions))
@@ -196,6 +198,9 @@ public class NodeParser {
         break;
       case "blob_class":
         blobClass = nullOrText();
+        break;
+      case "props_description":
+        propsDescription = nullOrText();
         break;
       case "blob_value":
         if (root.currentToken() == JsonToken.START_OBJECT) {
