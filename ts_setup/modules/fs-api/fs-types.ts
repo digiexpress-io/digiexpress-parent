@@ -18,7 +18,9 @@ export declare namespace Fs {
     expanded: boolean;
     reference: boolean;
     locked: boolean;
-    assetDescription?: string;
+    assetDescription?: {
+      text: string
+    };
     configOptions: ConfigOption[];
     comments: Comment[];
     changes: Change[];

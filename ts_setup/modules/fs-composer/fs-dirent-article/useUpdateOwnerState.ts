@@ -11,7 +11,9 @@ import {
 export interface TextFields {
   name: string;
   orderNumber: string;
-  assetDescription: string;
+  assetDescription: {
+    text: string
+  };
 }
 
 export interface UpdateOwnerState {
@@ -23,7 +25,9 @@ export interface UpdateOwnerState {
   name: string;
   orderNumber: string;
   configOptions: Fs.ConfigOption[];
-  assetDescription: string;
+  assetDescription: {
+    text: string
+  };
   labels: string[];
   comments: string;
   isExpanded: boolean;
@@ -45,7 +49,9 @@ type _ChangeStateProps = {
   bodyType: Fs.BodyType;
   name: string;
   order: number;
-  assetDescription: string;
+  assetDescription: {
+    text: string
+  };
   labels: string[];
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
@@ -83,7 +89,7 @@ class _ChangeState implements FsuChange {
   withOrder(order: string): _ChangeState {
     return new _ChangeState({ ...this._current, order: parseInt(order) || 0 }, this._origin);
   }
-  withDescription(assetDescription: string): _ChangeState {
+  withDescription(assetDescription: { text: string }): _ChangeState {
     return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _ChangeState {
@@ -113,7 +119,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     bodyType: dirent!.type,
     name: getDirentName(props.direntId) ?? '',
     order: articleProps?.orderNumber ?? 0,
-    assetDescription: articleProps?.assetDescription ?? '',
+    assetDescription: articleProps?.assetDescription ?? { text: '' },
     labels: (articleProps?.labels ?? []).map(l => l.value),
     configOptions: (articleProps?.configOptions ?? []) as Fs.ConfigOption[],
     devMode: (articleProps?.configOptions ?? []).includes('DEV_MODE'),
@@ -127,7 +133,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [fields, setFields] = React.useState<TextFields>({
     name: getDirentName(props.direntId) ?? '',
     orderNumber: String(articleProps?.orderNumber ?? 0),
-    assetDescription: articleProps?.assetDescription ?? '',
+    assetDescription: articleProps?.assetDescription ?? { text: '' },
   });
 
   function onChangeName(value: string) {
@@ -137,7 +143,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setFields(prev => ({ ...prev, orderNumber: value }));
   }
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: value }));
+    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
   }
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
@@ -166,7 +172,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setFields({
       name: getDirentName(props.direntId) ?? '',
       orderNumber: String(articleProps?.orderNumber ?? 0),
-      assetDescription: articleProps?.assetDescription ?? '',
+      assetDescription: articleProps?.assetDescription ?? { text: '' },
     });
     cancel(props.direntId);
   }
