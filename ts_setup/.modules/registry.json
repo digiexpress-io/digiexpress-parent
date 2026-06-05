@@ -1532,10 +1532,10 @@
         "@dxs-ts/fs-nav",
         "@mui/utils",
         "@uiw/react-md-editor",
+        "@dxs-ts/xui-datetime",
         "js-file-download",
         "@mui/icons-material",
         "@monaco-editor/react",
-        "@dxs-ts/xui-datetime",
         "yaml",
         "react-markdown",
         "@xyflow/react",
@@ -1608,8 +1608,8 @@
       ],
       "actualDependencies": [
         "react",
-        "@dxs-ts/fs-api",
-        "@tanstack/react-router"
+        "@tanstack/react-router",
+        "@dxs-ts/fs-api"
       ],
       "actualExternalDependencies": [
         "react",
@@ -3542,7 +3542,6 @@
         "yaml",
         "@tanstack/react-table",
         "@dxs-ts/xui-table",
-        "@dxs-ts/eveli-api",
         "notistack"
       ],
       "actualExternalDependencies": [
@@ -3563,11 +3562,12 @@
         "@dxs-ts/xui-datetime",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
-        "@dxs-ts/xui-table",
-        "@dxs-ts/eveli-api"
+        "@dxs-ts/xui-table"
       ],
       "missingDependencies": [],
-      "unusedDependencies": []
+      "unusedDependencies": [
+        "@dxs-ts/eveli-api"
+      ]
     },
     "@dxs-ts/task-feedback": {
       "name": "@dxs-ts/task-feedback",
@@ -4787,6 +4787,6 @@
       ]
     }
   },
-  "checksum": "a1320c9a732272175e6016ef1144c71b2aaab3443716e7685126b71c522bcb87",
-  "generatedAt": "2026-05-29T10:46:32.197Z"
+  "checksum": "0b9443ac5121f63fd29220cddeba2f9e85fae7b0384e756941d43b025b4ad784",
+  "generatedAt": "2026-06-05T14:02:35.326Z"
 }
