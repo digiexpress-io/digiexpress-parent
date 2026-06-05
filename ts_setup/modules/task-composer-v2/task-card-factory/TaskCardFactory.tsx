@@ -20,7 +20,6 @@ import { DateTime } from 'luxon';
 
 
 import { TaskFeature } from '@dxs-ts/task-api';
-import { EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
 
 import { TaskRolesReadOnly } from '../task-roles';
 import { TaskStatusReadOnly } from '../task-status';
@@ -34,7 +33,7 @@ import { PriorityStatusEditDialog } from '../task-priority-status-edit';
 import { useTaskDashboard } from '../task-dashboard';
 import { CustomerMessagesReadOnly, CustomerMessagesEditDialog } from '../task-messages';
 import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly, PublishedNotifierTextOnly } from '../task-feedback';
-import { TaskTransferEditDialog } from '../task-transfer';
+import { TaskTransferEditDialog, TaskTransferFileList } from '../task-transfer';
 import { TaskAiAssistant } from '../task-ai-assistant';
 import { TaskEditDialog, TaskOverdueWarning, TaskProperties, TaskPropertiesAlt } from '../task';
 
@@ -378,10 +377,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     case 'transfer':
       return (
         <>
-          <EveliTenantFeatureEnabled id='TASK_TRANSFER_FILES'>
-            <>list files</>
-          </EveliTenantFeatureEnabled>
-          <EveliTenantFeatureEnabled id='TASK_TRANSFER_DEBUG'>
+          <TaskFeature id='TASK_TRANSFER'>
             <TaskCard title={intl.formatMessage({ id: 'taskcard.title.transfer' })}
               {...commonProps}
               showFlashyToggle={true}
@@ -394,15 +390,27 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
               isMenu
               startAdornmentIcon={<StartAdornmentIcon icon={DriveFileMoveOutlinedIcon} />}>
               <TaskCardDataRowText
-                label={task.transferredId ? (intl.formatMessage({ id: 'taskcard.body.transfer.title' })
+                label={task.transferredId ? (intl.formatMessage({ id: 'task.transfer.create.journalNumber' })
                 ) : (
                   intl.formatMessage({ id: 'taskcard.body.transfer.none' })
                 )}
                 value={task.transferredId ?? task.transferredId}
                 style={style}
               />
+              {task.transferredProps && (<>
+              <TaskCardDataRowElement
+                label={intl.formatMessage({ id: 'task.transfer.create.files' })}
+                value={Object.entries(task.transferredProps).filter(([key, v])=>key==='files').map(([k, value])=><TaskTransferFileList files={value}/>)}
+                style={style}
+              />
+              <TaskCardDataRowElement
+                label={intl.formatMessage({ id: 'task.transfer.create.receivedFiles' })}
+                value={Object.entries(task.transferredProps).filter(([key, v])=>key==='received_files').map(([k, value])=><TaskTransferFileList files={value}/>)}
+                style={style}
+              />
+              </>)}
             </TaskCard>
-          </EveliTenantFeatureEnabled>
+          </TaskFeature>
         </>
       );
 
