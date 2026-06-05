@@ -113,7 +113,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const dirent = getDirent(props.direntId);
   const articleProps = dirent?.type === 'ARTICLE' ? dirent.props as Fs.ArticleProps : undefined;
-
+  console.log("XXXXXXXXX", dirent);
   const state = withNewChange(props.direntId, () => new _ChangeState({
     articleId: props.direntId,
     bodyType: dirent!.type,
@@ -181,6 +181,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     || fields.name !== state.name
     || fields.orderNumber !== state.orderNumber
     || fields.assetDescription !== state.assetDescription;
+
+
+  console.log("xxx", fields.assetDescription)
 
   return ({
     isDarkMode,

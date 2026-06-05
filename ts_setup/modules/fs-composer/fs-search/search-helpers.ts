@@ -29,7 +29,7 @@ export function filterTreeDirents(
     const extension = getExtension(dirent.type) ?? '';
     const displayName = dirent.name + extension;
     const nameMatches = displayName.toLowerCase().includes(searchTerm.toLowerCase());
-    const descriptionMatches = direntEntry?.props?.assetDescription?.toLowerCase().includes(searchTerm.toLowerCase());
+    const descriptionMatches = direntEntry?.props?.assetDescription?.text.toLowerCase().includes(searchTerm.toLowerCase());
     const typeMatches = typeFilters.length === 0 || typeFilters.some(f => f.value === dirent.type);
     const labelMatches = labelFilters.length === 0 || (direntEntry?.props?.labels ?? []).some(l => labelValues.includes(l.value));
     const childMatches = dirent.children ? filterTreeDirents(dirent.children, searchTerm, visibleFilters, getDirent, getExtension) : [];

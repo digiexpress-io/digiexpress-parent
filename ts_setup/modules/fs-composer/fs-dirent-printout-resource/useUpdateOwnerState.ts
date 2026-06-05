@@ -7,7 +7,7 @@ type _ChangeStateProps = {
   resourceId: string;
   bodyType: Fs.BodyType;
   resourceName: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   labels: string[];
   contentType: string;
   uploadBody: string;
@@ -70,7 +70,7 @@ class _ChangeState implements FsuChange {
   withResourceName(resourceName: string): _ChangeState {
     return new _ChangeState({ ...this._current, resourceName }, this._origin);
   }
-  withDescription(assetDescription: string): _ChangeState {
+  withDescription(assetDescription: { text: string }): _ChangeState {
     return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _ChangeState {
@@ -86,14 +86,14 @@ class _ChangeState implements FsuChange {
 
 interface _TextFields {
   resourceName: string;
-  assetDescription: string;
+  assetDescription: { text: string };
 }
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
   resourceName: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   labels: string[];
   labelOptions: string[];
   contentType: string;
@@ -122,7 +122,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     resourceId: props.direntId,
     bodyType: dirent.type,
     resourceName: resourceProps.resourceName ?? dirent.name ?? '',
-    assetDescription: resourceProps.assetDescription ?? '',
+    assetDescription: resourceProps.assetDescription ?? { text: '' },
     labels: (resourceProps.labels ?? []).map(l => l.value),
     contentType: resourceProps.contentType ?? '',
     uploadBody: '',
@@ -133,7 +133,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<_TextFields>({
     resourceName: resourceProps.resourceName ?? dirent.name ?? '',
-    assetDescription: resourceProps.assetDescription ?? '',
+    assetDescription: resourceProps.assetDescription ?? { text: '' },
   });
 
   const printoutPageOptions: FsDirentSelectMultiOption[] = Object.values(selectOptions.direntProps)
@@ -147,7 +147,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const isChangesPresent = state.isChanged
     || fields.resourceName !== state.resourceName
-    || fields.assetDescription !== state.assetDescription;
+    || fields.assetDescription.text !== state.assetDescription.text;
 
   function onChangeResourceName(v: string) {
     setFields(prev => ({ ...prev, resourceName: v }));
@@ -156,7 +156,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withResourceName(fields.resourceName));
   }
   function onChangeDescription(v: string) {
-    setFields(prev => ({ ...prev, assetDescription: v }));
+    setFields(prev => ({ ...prev, assetDescription: { text: v } }));
   }
   function onBlurDescription() {
     setState(prev => prev.withDescription(fields.assetDescription));
@@ -173,7 +173,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onCancel() {
     setFields({
       resourceName: resourceProps.resourceName ?? dirent.name ?? '',
-      assetDescription: resourceProps.assetDescription ?? '',
+      assetDescription: resourceProps.assetDescription ?? { text: '' },
     });
     cancel(props.direntId);
   }

@@ -12,7 +12,7 @@ type _ChangeStateProps = {
   printoutId: string;
   bodyType: Fs.BodyType;
   serviceName: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   labels: string[];
   orchestratorName: string;
   intlValues: Record<string, string>;
@@ -71,7 +71,7 @@ class _ChangeState implements FsuChange {
   withServiceName(serviceName: string): _ChangeState {
     return new _ChangeState({ ...this._current, serviceName }, this._origin);
   }
-  withDescription(assetDescription: string): _ChangeState {
+  withDescription(assetDescription: { text: string }): _ChangeState {
     return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _ChangeState {
@@ -90,14 +90,14 @@ class _ChangeState implements FsuChange {
 
 interface _TextFields {
   serviceName: string;
-  assetDescription: string;
+  assetDescription: { text: string };
 }
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
   serviceName: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   labels: string[];
   labelOptions: string[];
   orchestratorName: string;
@@ -124,7 +124,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     printoutId: props.direntId,
     bodyType: dirent.type,
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-    assetDescription: printoutProps.assetDescription ?? '',
+    assetDescription: printoutProps.assetDescription ?? { text: '' },
     labels: (printoutProps.labels ?? []).map(l => l.value),
     orchestratorName: printoutProps.orchestratorName ?? '',
     intlValues: printoutProps.intlValues ?? {},
@@ -134,12 +134,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<_TextFields>({
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-    assetDescription: printoutProps.assetDescription ?? '',
+    assetDescription: printoutProps.assetDescription ?? { text: '' },
   });
 
   const isChangesPresent = state.isChanged
     || fields.serviceName !== state.serviceName
-    || fields.assetDescription !== state.assetDescription;
+    || fields.assetDescription.text !== state.assetDescription.text;
 
   const connectedPages: ConnectedPage[] = Object.values(selectOptions.direntProps)
     .filter(p => p.type === 'PRINTOUT_PAGE' && (p as Fs.PrintoutPageProps).serviceId === props.direntId)
@@ -156,7 +156,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withServiceName(fields.serviceName));
   }
   function onChangeDescription(v: string) {
-    setFields(prev => ({ ...prev, assetDescription: v }));
+    setFields(prev => ({ ...prev, assetDescription: { text: v } }));
   }
   function onBlurDescription() {
     setState(prev => prev.withDescription(fields.assetDescription));
@@ -170,7 +170,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onCancel() {
     setFields({
       serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-      assetDescription: printoutProps.assetDescription ?? '',
+      assetDescription: printoutProps.assetDescription ?? { text: '' },
     });
     cancel(props.direntId);
   }

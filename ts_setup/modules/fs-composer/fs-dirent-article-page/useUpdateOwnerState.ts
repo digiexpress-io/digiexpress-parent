@@ -9,7 +9,7 @@ type _ChangeStateProps = {
   bodyType: Fs.BodyType;
   locale: string;
   content: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   configOptions: Fs.ConfigOption[];
   labels: string[];
   devMode: boolean;
@@ -47,7 +47,7 @@ class _ChangeState implements FsuChange {
     return new _ChangeState({ ...this._current, content }, this._origin);
   }
 
-  withDescription(assetDescription: string): _ChangeState {
+  withDescription(assetDescription: { text: string }): _ChangeState {
     return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 
@@ -62,7 +62,7 @@ class _ChangeState implements FsuChange {
 
 export interface TextFields {
   content: string;
-  assetDescription: string;
+  assetDescription: { text: string };
 }
 
 export interface UpdateOwnerState {
@@ -72,7 +72,7 @@ export interface UpdateOwnerState {
   id: string;
   articleName: string;
   locale: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   configOptions: Fs.ConfigOption[];
   labels: string[];
   labelOptions: string[];
@@ -105,7 +105,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     bodyType: dirent.type,
     locale: pageProps.localeCode,
     content: pageProps.content ?? '',
-    assetDescription: pageProps.assetDescription ?? '',
+    assetDescription: pageProps.assetDescription ?? { text: '' },
     configOptions: (pageProps.configOptions ?? []) as Fs.ConfigOption[],
     labels: (pageProps.labels ?? []).map(l => l.value),
     devMode: (pageProps.configOptions ?? []).includes('DEV_MODE'),
@@ -116,7 +116,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<TextFields>({
     content: pageProps.content ?? '',
-    assetDescription: pageProps.assetDescription ?? '',
+    assetDescription: pageProps.assetDescription ?? { text: '' },
   });
   const contentDebounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [isExpanded, setIsExpanded] = React.useState(false);
@@ -145,7 +145,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: value }));
+    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
   }
 
   function onChangeConfigOptions(value: string[]) {
@@ -177,13 +177,13 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     }
     setFields({
       content: pageProps.content ?? '',
-      assetDescription: pageProps.assetDescription ?? '',
+      assetDescription: pageProps.assetDescription ?? { text: '' },
     });
     cancel(props.direntId);
   }
 
   const changes = state.isChanged
-    || fields.assetDescription !== state.assetDescription
+    || fields.assetDescription.text !== state.assetDescription.text
     || fields.content !== state.content;
 
   return ({

@@ -227,6 +227,8 @@ public class NextWorldImpl implements NextWorld {
   }
   
   private void addProps(@Nullable Description desc, @Nullable DescriptionLabels labels, PropsBuilder propsBuilder, Optional<Props> previousProps) {
+    RepoAssert.isTrue(desc != null || labels != null, () -> "desc or labels must be defined!");
+    
     
     if(labels != null) {
       propsBuilder.propsLabels(JsonObject.mapFrom(labels));

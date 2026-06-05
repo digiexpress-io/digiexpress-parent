@@ -6,14 +6,14 @@ import { FsDirentSelectMultiOption } from '../fs-dirent-select-multi';
 
 interface _TextFields {
   resourceName: string;
-  assetDescription: string;
+  assetDescription: { text: string };
 }
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
   resourceName: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   labels: string[];
   labelOptions: string[];
   contentType: string;
@@ -36,7 +36,7 @@ export interface CreateOwnerState {
 type _CreateStateProps = {
   bodyType: Fs.BodyType;
   resourceName: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   labels: string[];
   contentType: string;
   uploadBody: string;
@@ -95,7 +95,7 @@ class _CreateState implements FsuCreateChange {
   withResourceName(resourceName: string): _CreateState {
     return new _CreateState({ ...this._current, resourceName }, this._origin);
   }
-  withDescription(assetDescription: string): _CreateState {
+  withDescription(assetDescription: { text: string }): _CreateState {
     return new _CreateState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _CreateState {
@@ -120,7 +120,7 @@ const _contentTypeOptions: Fs.SelectOption[] = [
 const _initProps: _CreateStateProps = {
   bodyType: 'PRINTOUT_RESOURCE',
   resourceName: '',
-  assetDescription: '',
+  assetDescription: { text: '' },
   labels: [],
   contentType: 'image/*',
   uploadBody: '',
@@ -152,7 +152,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   const isChangesPresent = state.isChanged
     || fields.resourceName !== state.resourceName
-    || fields.assetDescription !== state.assetDescription;
+    || fields.assetDescription.text !== state.assetDescription.text;
 
   function onChangeResourceName(v: string) {
     setFields(prev => ({ ...prev, resourceName: v }));
@@ -161,7 +161,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withResourceName(fields.resourceName));
   }
   function onChangeDescription(v: string) {
-    setFields(prev => ({ ...prev, assetDescription: v }));
+    setFields(prev => ({ ...prev, assetDescription: { text: v } }));
   }
   function onBlurDescription() {
     setState(prev => prev.withDescription(fields.assetDescription));

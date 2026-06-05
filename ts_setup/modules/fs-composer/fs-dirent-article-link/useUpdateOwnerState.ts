@@ -8,7 +8,7 @@ import {
 } from '@dxs-ts/fs-api';
 
 export interface TextFields {
-  assetDescription: string;
+  assetDescription: { text: string };
   urlValue: string;
   intlValues: Record<string, string>;
 }
@@ -27,7 +27,7 @@ export interface UpdateOwnerState {
   articles: string[];
   tagLabels: string[];
   configOptions: Fs.ConfigOption[];
-  assetDescription: string;
+  assetDescription: { text: string };
   onChangeContentType: (value: string) => void;
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
@@ -53,7 +53,7 @@ type _ChangeStateProps = {
   devMode: boolean;
   disabledMode: boolean;
   articles: string[];
-  assetDescription: string;
+  assetDescription: { text: string };
 }
 
 class _ChangeState implements FsuChange {
@@ -105,7 +105,7 @@ class _ChangeState implements FsuChange {
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
     return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
   }
-  withDescription(assetDescription: string): _ChangeState {
+  withDescription(assetDescription: { text: string }): _ChangeState {
     return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 }
@@ -120,7 +120,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [fields, setFields] = React.useState<TextFields>({
-    assetDescription: dirent?.props?.assetDescription ?? '',
+    assetDescription: dirent?.props?.assetDescription ?? { text: '' },
     urlValue: linkProps?.urlValue ?? '',
     intlValues: linkProps?.intlValues ?? {},
   });
@@ -138,11 +138,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     devMode: (linkProps?.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (linkProps?.configOptions ?? []).includes('DISABLED_MODE'),
     articles: linkProps?.articles ?? [],
-    assetDescription: dirent?.props?.assetDescription ?? ''
+    assetDescription: dirent?.props?.assetDescription ?? { text: '' }
   }));
 
   const isChangesPresent = state.isChanged
-    || fields.assetDescription !== state.assetDescription
+    || fields.assetDescription.text !== state.assetDescription.text
     || fields.urlValue !== state.urlValue
     || Object.entries(fields.intlValues).some(([locale, val]) => val !== (state.intlValues[locale] ?? ''));
 
@@ -161,7 +161,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: value }));
+    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
   }
 
   function onChangeArticles(value: string[]) {
@@ -194,7 +194,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   function onCancel() {
     setFields({
-      assetDescription: dirent?.props?.assetDescription ?? '',
+      assetDescription: dirent?.props?.assetDescription ?? { text: '' },
       urlValue: linkProps?.urlValue ?? '',
       intlValues: linkProps?.intlValues ?? {},
     });

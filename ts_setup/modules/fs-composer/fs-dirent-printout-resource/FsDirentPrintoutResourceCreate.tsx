@@ -68,7 +68,7 @@ export const FsDirentPrintoutResourceCreate: React.FC<FsDirentPrintoutResourceCr
           multiline
           minRows={2}
           placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
-          value={ownerState.assetDescription}
+          value={ownerState.assetDescription.text}
           onChange={ownerState.onChangeDescription}
           onBlur={ownerState.onBlurDescription}
         />

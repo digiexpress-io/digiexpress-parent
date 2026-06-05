@@ -5,7 +5,7 @@ import { useFsNav } from '@dxs-ts/fs-nav';
 
 interface _TextFields {
   content: string;
-  assetDescription: string;
+  assetDescription: { text: string };
 }
 
 export interface CreateOwnerState {
@@ -15,7 +15,7 @@ export interface CreateOwnerState {
   serviceId: string;
   localeId: string;
   content: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   labels: string[];
   labelOptions: string[];
   printoutOptions: Fs.SelectOption[];
@@ -37,7 +37,7 @@ type _CreateStateProps = {
   serviceId: string;
   localeId: string;
   content: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   labels: string[];
 }
 
@@ -94,7 +94,7 @@ class _CreateState implements FsuCreateChange {
   withContent(content: string): _CreateState {
     return new _CreateState({ ...this._current, content }, this._origin);
   }
-  withDescription(assetDescription: string): _CreateState {
+  withDescription(assetDescription: { text: string }): _CreateState {
     return new _CreateState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _CreateState {
@@ -102,14 +102,14 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _initFields: _TextFields = { content: '', assetDescription: '' };
+const _initFields: _TextFields = { content: '', assetDescription: { text: '' } };
 
 const _initProps: _CreateStateProps = {
   bodyType: 'PRINTOUT_PAGE',
   serviceId: '',
   localeId: '',
   content: '',
-  assetDescription: '',
+  assetDescription: { text: '' },
   labels: [],
 };
 
@@ -148,7 +148,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withContent(fields.content));
   }
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: value }));
+    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
   }
   function onBlurDescription() {
     setState(prev => prev.withDescription(fields.assetDescription));

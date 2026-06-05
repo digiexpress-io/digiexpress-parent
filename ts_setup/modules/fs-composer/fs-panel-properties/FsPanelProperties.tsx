@@ -69,7 +69,7 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
 
         <div className={classes.propertyRow}>
           <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.description' })}</Typography>
-          <Typography className={classes.propertyValue}>{description}</Typography>
+          <Typography className={classes.propertyValue}>{description?.text}</Typography>
         </div>
 
 

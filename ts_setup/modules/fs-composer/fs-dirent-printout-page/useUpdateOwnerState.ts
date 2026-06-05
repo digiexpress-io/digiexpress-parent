@@ -6,7 +6,7 @@ type _ChangeStateProps = {
   pageId: string;
   bodyType: Fs.BodyType;
   content: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   labels: string[];
 }
 
@@ -55,7 +55,7 @@ class _ChangeState implements FsuChange {
   withContent(content: string): _ChangeState {
     return new _ChangeState({ ...this._current, content }, this._origin);
   }
-  withDescription(assetDescription: string): _ChangeState {
+  withDescription(assetDescription: { text: string }): _ChangeState {
     return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _ChangeState {
@@ -65,7 +65,7 @@ class _ChangeState implements FsuChange {
 
 interface _TextFields {
   content: string;
-  assetDescription: string;
+  assetDescription: { text: string };
 }
 
 export interface UpdateOwnerState {
@@ -73,7 +73,7 @@ export interface UpdateOwnerState {
   isChanged: boolean;
   isExpanded: boolean;
   content: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   labels: string[];
   labelOptions: string[];
   connectedResourceNames: string[];
@@ -98,7 +98,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     pageId: props.direntId,
     bodyType: dirent.type,
     content: pageProps.content ?? '',
-    assetDescription: pageProps.assetDescription ?? '',
+    assetDescription: pageProps.assetDescription ?? { text: '' },
     labels: (pageProps.labels ?? []).map(l => l.value),
   }));
 
@@ -107,7 +107,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [fields, setFields] = React.useState<_TextFields>({
     content: pageProps.content ?? '',
-    assetDescription: pageProps.assetDescription ?? '',
+    assetDescription: pageProps.assetDescription ?? { text: '' },
   });
 
   const connectedResourceNames = Object.values(selectOptions.direntProps)
@@ -118,7 +118,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const isChangesPresent = state.isChanged
     || fields.content !== state.content
-    || fields.assetDescription !== state.assetDescription;
+    || fields.assetDescription.text !== state.assetDescription.text;
 
   function onChangeContent(v: string) {
     setFields(prev => ({ ...prev, content: v }));
@@ -127,7 +127,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withContent(fields.content));
   }
   function onChangeDescription(v: string) {
-    setFields(prev => ({ ...prev, assetDescription: v }));
+    setFields(prev => ({ ...prev, assetDescription: { text: v } }));
   }
   function onBlurDescription() {
     setState(prev => prev.withDescription(fields.assetDescription));
@@ -141,7 +141,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onCancel() {
     setFields({
       content: pageProps.content ?? '',
-      assetDescription: pageProps.assetDescription ?? '',
+      assetDescription: pageProps.assetDescription ?? { text: '' },
     });
     setIsExpanded(false);
     cancel(props.direntId);

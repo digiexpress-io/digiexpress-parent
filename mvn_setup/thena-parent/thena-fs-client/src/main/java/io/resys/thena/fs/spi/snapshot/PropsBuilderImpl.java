@@ -74,6 +74,7 @@ public class PropsBuilderImpl implements PropsBuilder {
   public void build() {
     RepoAssert.isTrue(
         (
+          propsDescription.isNewValueSet() ||
           propsComments.isNewValueSet() || 
           propsLabels.isNewValueSet() || 
           propsFlags.isNewValueSet() ||

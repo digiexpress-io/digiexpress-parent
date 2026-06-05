@@ -73,7 +73,7 @@ export const FsDirentArticleLinkUpdate: React.FC<FsDirentArticleLinkUpdateProps>
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
             <FsDirentTextField
-              value={ownerState.assetDescription}
+              value={ownerState.assetDescription.text}
               placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
               onChange={ownerState.onChangeDescription}
               multiline minRows={2} maxRows={5}

@@ -9,7 +9,7 @@ import {
 import { useFsNav } from '@dxs-ts/fs-nav';
 
 export interface TextFields {
-  assetDescription: string;
+  assetDescription: { text: string };
   urlValue: string;
   intlValues: Record<string, string>;
 }
@@ -25,7 +25,7 @@ export interface CreateOwnerState {
   articles: string[];
   tagLabels: string[];
   configOptions: Fs.ConfigOption[];
-  assetDescription: string;
+  assetDescription: { text: string };
   onChangeContentType: (value: string) => void;
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
@@ -51,7 +51,7 @@ type _CreateStateProps = {
   devMode: boolean;
   disabledMode: boolean;
   articles: string[];
-  assetDescription: string;
+  assetDescription: { text: string };
 }
 
 class _CreateState implements FsuCreateChange {
@@ -109,7 +109,7 @@ class _CreateState implements FsuCreateChange {
   withConfigOptions(configOptions: Fs.ConfigOption[]): _CreateState {
     return new _CreateState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
   }
-  withDescription(assetDescription: string): _CreateState {
+  withDescription(assetDescription: { text: string }): _CreateState {
     return new _CreateState({ ...this._current, assetDescription }, this._origin);
   }
 }
@@ -124,10 +124,10 @@ const _initProps: _CreateStateProps = {
   devMode: false,
   disabledMode: false,
   articles: [],
-  assetDescription: '',
+  assetDescription: { text: '' },
 };
 
-const _emptyFields: TextFields = { assetDescription: '', urlValue: '', intlValues: {} };
+const _emptyFields: TextFields = { assetDescription: { text: '' }, urlValue: '', intlValues: {} };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
@@ -143,7 +143,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
 
   const isChangesPresent = state.isChanged
-    || fields.assetDescription !== state.assetDescription
+    || fields.assetDescription.text !== state.assetDescription.text
     || fields.urlValue !== state.urlValue
     || Object.entries(fields.intlValues).some(([locale, val]) => val !== (state.intlValues[locale] ?? ''));
 
@@ -160,7 +160,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: value }));
+    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
   }
 
   function onChangeArticles(value: string[]) {

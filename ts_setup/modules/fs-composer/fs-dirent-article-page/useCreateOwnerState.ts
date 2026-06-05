@@ -6,7 +6,7 @@ import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 
 export interface TextFields {
   content: string;
-  assetDescription: string;
+  assetDescription: { text: string };
 }
 
 export interface CreateOwnerState {
@@ -14,7 +14,7 @@ export interface CreateOwnerState {
   articleId: string;
   locale: string;
   content: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   configOptions: Fs.ConfigOption[];
   labels: string[];
   labelOptions: string[];
@@ -41,7 +41,7 @@ type _CreateStateProps = {
   articleId: string;
   locale: string;
   content: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   configOptions: Fs.ConfigOption[];
   labels: string[];
   devMode: boolean;
@@ -90,7 +90,7 @@ class _CreateState implements FsuCreateChange {
   withContent(content: string): _CreateState {
     return new _CreateState({ ...this._current, content }, this._origin);
   }
-  withDescription(assetDescription: string): _CreateState {
+  withDescription(assetDescription: { text: string }): _CreateState {
     return new _CreateState({ ...this._current, assetDescription }, this._origin);
   }
   withConfigOptions(configOptions: Fs.ConfigOption[]): _CreateState {
@@ -106,14 +106,14 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _initFields: TextFields = { content: '', assetDescription: '' };
+const _initFields: TextFields = { content: '', assetDescription: { text: '' } };
 
 const _initProps: _CreateStateProps = {
   bodyType: 'ARTICLE_PAGE',
   articleId: '',
   locale: '',
   content: '',
-  assetDescription: '',
+  assetDescription: { text: '' },
   configOptions: [],
   labels: [],
   devMode: false,
@@ -151,7 +151,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   const isChangesPresent = state.isChanged
     || fields.content !== state.content
-    || fields.assetDescription !== state.assetDescription;
+    || fields.assetDescription.text !== state.assetDescription.text;
 
   function onChangeArticle(value: string) {
     setState(prev => prev.withArticle(value));
@@ -172,7 +172,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: value }));
+    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
   }
 
   function onChangeConfigOptions(value: string[]) {
