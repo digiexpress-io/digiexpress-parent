@@ -15,7 +15,6 @@ export interface TaskTransferEditProps {
 export const TaskTransferEditDialog: React.FC<TaskTransferEditProps> = ({ task, open, onClose }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
-  const [title, setTitle] = React.useState<string>(task.transferredId ?? '');
   const [error, setError] = React.useState<Error | undefined>();
   const [isSaving, setSaving] = React.useState(false);
   const backend = useTaskBackend();
@@ -23,7 +22,7 @@ export const TaskTransferEditDialog: React.FC<TaskTransferEditProps> = ({ task, 
   function handleOnTransfer() {
     setSaving(true)
     backend.persistence
-      .createOnTaskTransfer(task, { transferTitle: title })
+      .createOnTaskTransfer(task, { transferTitle: '' })
       .then(() => setSaving(false))
       .then(() => onClose())
       .catch((error: any) => {
@@ -50,30 +49,18 @@ export const TaskTransferEditDialog: React.FC<TaskTransferEditProps> = ({ task, 
           }
           <Grid2 container display='flex' alignItems='center'>
             <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
-              <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.transfer.create.docTitle' })}</Typography>
+              <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.transfer.create.journalNumber' })}</Typography>
             </Grid2>
             <Grid2 size={{ md: 7, lg: 7, xl: 7 }}>
-              <StyledTextField
-                fullWidth
-                placeholder={intl.formatMessage({ id: 'task.transfer.create.docTitle.placeholder' })}
-                onChange={(e: any) => setTitle(e.target.value)}
-                value={title ?? ''}
-              />
+              <Typography>{task.transferredId ?? ''}</Typography>
             </Grid2>
           </Grid2>
-
-          {task.transferredId && (
-            <>
-              <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'task.transfer.props.title' })}</Typography>
-              <div>{JSON.stringify(task.transferredProps ?? {}, null, 2)} </div>
-            </>
-          )}
 
         </DialogContent>
 
         <DialogActions>
           <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-          <Button variant='contained' onClick={handleOnTransfer} disabled={!title || isSaving}>
+          <Button variant='contained' onClick={handleOnTransfer} disabled={isSaving}>
             {
               task.transferredId ? intl.formatMessage({ id: 'button.republish' }) : intl.formatMessage({ id: 'button.publish' })
             }

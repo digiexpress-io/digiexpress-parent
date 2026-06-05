@@ -38,9 +38,6 @@ export const tenant_features = [
   'cockpits',
 
   'eveli_tree',
-
-  'task_transfer_debug',
-  'task_transfer_files'
 ] as const;
 
 export type TenantFeature = typeof tenant_features[number];

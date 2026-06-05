@@ -40,9 +40,6 @@ export const EveliFeatureMapping = {
 
   'PROFILE_ENABLED': oneOf(['user_profile']),
 
-  'TASK_TRANSFER_DEBUG': oneOf(['task_transfer_debug']),
-  'TASK_TRANSFER_FILES': oneOf(['task_transfer_files']),
-
   'SMART_TABLES': oneOf(['smart_tables']),
   
   'SMART_TASK': oneOf(['smart_task']),

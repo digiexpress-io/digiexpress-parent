@@ -71,6 +71,7 @@ task.transfer.published,Task detail,Document transfer,Asiakirjan siirto,Dokument
 task.transfer.create.title,Task detail,Document transfer,Asiakirjan siirto,Dokumentöverföring,
 task.transfer.create.journalNumber,Task detail,Journal number,Diaarinumero,Diarienummer,
 task.transfer.create.files,Task detail,Transferred documents,Siirretyt asiakirjat,Överförda handlingar,
+task.transfer.create.receivedFiles,Task detail, Received documents, Vastaanotetut asiakirjat, Mottagna handlingar
 task.transfer.button.transfer,Task detail,Transfer documents,Siirtää,Överföra,
 task.transfer.button.retransfer,Task detail,Retransfer documents,Siirtää uudelleen,Överföra igen,
 task.transfer.create.docTitle,TaskComposerV2,Document title,Asiakirjan otsikko,Dokumenttitel,
