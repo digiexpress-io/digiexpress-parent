@@ -27,6 +27,8 @@ import java.time.ZoneId;
 import java.util.Optional;
 
 import io.resys.limaone.model.Description;
+import io.resys.limaone.model.DescriptionLabels;
+import io.resys.limaone.model.ImmutableDescription;
 import io.resys.limaone.model.ImmutableDialobFormMeta;
 import io.resys.limaone.model.Model.Body;
 import io.resys.limaone.model.Model.BodyType;
@@ -52,6 +54,7 @@ public class NodeAndBody {
   private final Optional<Body> body;
   
   private Optional<Description> description;
+  private Optional<DescriptionLabels> labels;
   
   public Optional<Description> getDescription() {
     
@@ -62,17 +65,40 @@ public class NodeAndBody {
       }
       
       final var nodeProps = getValue().getTransitives().getProps();
-      if(nodeProps.getPropsLabels().isEmpty()) {
+      if(nodeProps.getPropsDescription().isEmpty()) {
         description =  Optional.empty();
         return description;
       }
       
-      description = nodeProps.getPropsLabels().map(e -> e.mapTo(Description.class));
+      description = nodeProps.getPropsDescription()
+          .map(text -> ImmutableDescription.builder().text(text).build());
       return description;
     }
     
     
     return description;
+  }
+  
+  public Optional<DescriptionLabels> getLabels() {
+    
+    if(labels == null) {
+      if(getValue().getTransitives() == null || getValue().getTransitives().getProps() == null) {
+        labels =  Optional.empty();
+        return labels;
+      }
+      
+      final var nodeProps = getValue().getTransitives().getProps();
+      if(nodeProps.getPropsLabels().isEmpty()) {
+        labels =  Optional.empty();
+        return labels;
+      }
+      
+      labels = nodeProps.getPropsLabels().map(e -> e.mapTo(DescriptionLabels.class));
+      return labels;
+    }
+    
+    
+    return labels;
   }
   
   @SuppressWarnings("unchecked")

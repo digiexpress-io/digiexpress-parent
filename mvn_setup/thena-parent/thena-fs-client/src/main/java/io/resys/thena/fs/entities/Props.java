@@ -38,6 +38,7 @@ import jakarta.annotation.Nullable;
 public interface Props extends Entity {
   
   UUID getId();
+  Optional<String> getPropsDescription();
   Optional<JsonObject> getPropsLabels();
   Optional<JsonObject> getPropsComments();
   Optional<JsonObject> getPropsPermissions();
@@ -61,14 +62,16 @@ public interface Props extends Entity {
   }
   
   
-  // H(props) = μ(props_labels ⊕ props_comments ⊕ props_permissions ⊕ props_flags)
+  // H(props) = μ(props_description ⊕ props_labels ⊕ props_comments ⊕ props_permissions ⊕ props_flags)
   public static ImmutableProps.Builder newInstance(
+      String description,
       JsonObject labels, 
       JsonObject comments, 
       JsonObject permissions, 
       JsonObject flags
     ) {
     final var content = Entity.uuid();
+    content.append(description != null ? description : "null");
     content.append(labels != null ? Blob.canonicalizeJson(labels) : "null");
     content.append(comments != null ? Blob.canonicalizeJson(comments) : "null");
     content.append(permissions != null ? Blob.canonicalizeJson(permissions) : "null");
@@ -76,6 +79,7 @@ public interface Props extends Entity {
     
     return ImmutableProps.builder()
         .id(content.build())
+        .propsDescription(Optional.ofNullable(description))
         .propsLabels(Optional.ofNullable(labels))
         .propsComments(Optional.ofNullable(comments))
         .propsPermissions(Optional.ofNullable(permissions))

@@ -9,7 +9,7 @@ type _ChangeStateProps = {
   bodyType: Fs.BodyType;
   locale: string;
   content: string;
-  description: string;
+  assetDescription: string;
   configOptions: Fs.ConfigOption[];
   labels: string[];
   devMode: boolean;
@@ -28,7 +28,7 @@ class _ChangeState implements FsuChange {
   get id() { return this._current.pageId; }
   get locale() { return this._current.locale; }
   get content() { return this._current.content; }
-  get description() { return this._current.description; }
+  get assetDescription() { return this._current.assetDescription; }
 
   get configOptions() { return this._current.configOptions; }
   get labels() { return this._current.labels; }
@@ -47,8 +47,8 @@ class _ChangeState implements FsuChange {
     return new _ChangeState({ ...this._current, content }, this._origin);
   }
 
-  withDescription(description: string): _ChangeState {
-    return new _ChangeState({ ...this._current, description }, this._origin);
+  withDescription(assetDescription: string): _ChangeState {
+    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
@@ -62,7 +62,7 @@ class _ChangeState implements FsuChange {
 
 export interface TextFields {
   content: string;
-  description: string;
+  assetDescription: string;
 }
 
 export interface UpdateOwnerState {
@@ -72,7 +72,7 @@ export interface UpdateOwnerState {
   id: string;
   articleName: string;
   locale: string;
-  description: string;
+  assetDescription: string;
   configOptions: Fs.ConfigOption[];
   labels: string[];
   labelOptions: string[];
@@ -105,7 +105,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     bodyType: dirent.type,
     locale: pageProps.localeCode,
     content: pageProps.content ?? '',
-    description: pageProps.description ?? '',
+    assetDescription: pageProps.assetDescription ?? '',
     configOptions: (pageProps.configOptions ?? []) as Fs.ConfigOption[],
     labels: (pageProps.labels ?? []).map(l => l.value),
     devMode: (pageProps.configOptions ?? []).includes('DEV_MODE'),
@@ -116,7 +116,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<TextFields>({
     content: pageProps.content ?? '',
-    description: pageProps.description ?? '',
+    assetDescription: pageProps.assetDescription ?? '',
   });
   const contentDebounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [isExpanded, setIsExpanded] = React.useState(false);
@@ -145,7 +145,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, description: value }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onChangeConfigOptions(value: string[]) {
@@ -168,7 +168,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.description));
+    setState(prev => prev.withDescription(fields.assetDescription));
   }
 
   function onCancel() {
@@ -177,13 +177,13 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     }
     setFields({
       content: pageProps.content ?? '',
-      description: pageProps.description ?? '',
+      assetDescription: pageProps.assetDescription ?? '',
     });
     cancel(props.direntId);
   }
 
   const changes = state.isChanged
-    || fields.description !== state.description
+    || fields.assetDescription !== state.assetDescription
     || fields.content !== state.content;
 
   return ({
@@ -193,7 +193,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     id: state.id,
     content: fields.content,
     locale: state.locale,
-    description: fields.description,
+    assetDescription: fields.assetDescription,
     articleName,
     configOptions: state.configOptions,
     labels: state.labels,

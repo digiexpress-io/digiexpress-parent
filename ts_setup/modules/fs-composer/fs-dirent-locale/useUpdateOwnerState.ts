@@ -9,7 +9,7 @@ type _ChangeStateProps = {
   value: string;
   enabled: boolean;
   disabledMode: boolean;
-  description: string;
+  assetDescription: string;
   configOptions: Fs.ConfigOption[];
 }
 
@@ -24,7 +24,7 @@ class _ChangeState implements FsuChange {
 
   get id() { return this._current.localeId; }
   get bodyType() { return this._current.bodyType; }
-  get description() { return this._current.description; }
+  get assetDescription() { return this._current.assetDescription; }
   get configOptions() { return this._current.configOptions; }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
@@ -32,8 +32,8 @@ class _ChangeState implements FsuChange {
     return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
   }
 
-  withDescription(description: string): _ChangeState {
-    return new _ChangeState({ ...this._current, description }, this._origin);
+  withDescription(assetDescription: string): _ChangeState {
+    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
@@ -48,7 +48,7 @@ class _ChangeState implements FsuChange {
 
 
 export interface TextFields {
-  description: string;
+  assetDescription: string;
   configOptions: Fs.ConfigOption[];
 }
 
@@ -57,7 +57,7 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   id: string;
   localeCode: string;
-  description: string;
+  assetDescription: string;
   configOptions: Fs.ConfigOption[];
   isChanged: boolean;
   onChangeDescription: (value: string) => void;
@@ -80,19 +80,19 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     value: languageProps.localeCode,
     enabled: !(languageProps.configOptions ?? []).includes('DISABLED_MODE'),
     disabledMode: (languageProps.configOptions ?? []).includes('DISABLED_MODE'),
-    description: languageProps.description ?? '',
+    assetDescription: languageProps.assetDescription ?? '',
     configOptions: (languageProps.configOptions ?? []) as Fs.ConfigOption[],
   }));
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
   const [fields, setFields] = React.useState<TextFields>({
-    description: languageProps.description ?? '',
+    assetDescription: languageProps.assetDescription ?? '',
     configOptions: (languageProps.configOptions ?? []) as Fs.ConfigOption[],
   });
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, description: value }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onChangeConfigOptions(value: string[]) {
@@ -102,19 +102,19 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.description));
+    setState(prev => prev.withDescription(fields.assetDescription));
   }
 
   function onCancel() {
     setFields({
-      description: languageProps.description ?? '',
+      assetDescription: languageProps.assetDescription ?? '',
       configOptions: (languageProps.configOptions ?? []) as Fs.ConfigOption[],
     });
     cancel(props.direntId);
   }
 
   const changes = state.isChanged
-    || fields.description !== state.description
+    || fields.assetDescription !== state.assetDescription
     || JSON.stringify(fields.configOptions) !== JSON.stringify(state.configOptions);
 
   return ({
@@ -122,7 +122,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     dirent,
     id: state.id,
     localeCode: languageProps.localeCode,
-    description: fields.description,
+    assetDescription: fields.assetDescription,
     configOptions: fields.configOptions,
     isChanged: changes,
     onChangeDescription,

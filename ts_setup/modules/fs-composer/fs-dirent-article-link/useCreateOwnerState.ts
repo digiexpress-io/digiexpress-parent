@@ -9,7 +9,7 @@ import {
 import { useFsNav } from '@dxs-ts/fs-nav';
 
 export interface TextFields {
-  description: string;
+  assetDescription: string;
   urlValue: string;
   intlValues: Record<string, string>;
 }
@@ -25,7 +25,7 @@ export interface CreateOwnerState {
   articles: string[];
   tagLabels: string[];
   configOptions: Fs.ConfigOption[];
-  description: string;
+  assetDescription: string;
   onChangeContentType: (value: string) => void;
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
@@ -51,7 +51,7 @@ type _CreateStateProps = {
   devMode: boolean;
   disabledMode: boolean;
   articles: string[];
-  description: string;
+  assetDescription: string;
 }
 
 class _CreateState implements FsuCreateChange {
@@ -70,7 +70,7 @@ class _CreateState implements FsuCreateChange {
   get tagLabels() { return this._current.tagLabels; }
   get configOptions() { return this._current.configOptions; }
   get articles() { return this._current.articles; }
-  get description() { return this._current.description; }
+  get assetDescription() { return this._current.assetDescription; }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
@@ -83,7 +83,7 @@ class _CreateState implements FsuCreateChange {
         articles: this._current.articles,
         devMode: this._current.devMode,
         disabledMode: this._current.disabledMode,
-        description: this._current.description,
+        assetDescription: this._current.assetDescription,
         tagLabels: this._current.tagLabels,
       }
     };
@@ -109,8 +109,8 @@ class _CreateState implements FsuCreateChange {
   withConfigOptions(configOptions: Fs.ConfigOption[]): _CreateState {
     return new _CreateState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
   }
-  withDescription(description: string): _CreateState {
-    return new _CreateState({ ...this._current, description }, this._origin);
+  withDescription(assetDescription: string): _CreateState {
+    return new _CreateState({ ...this._current, assetDescription }, this._origin);
   }
 }
 
@@ -124,10 +124,10 @@ const _initProps: _CreateStateProps = {
   devMode: false,
   disabledMode: false,
   articles: [],
-  description: '',
+  assetDescription: '',
 };
 
-const _emptyFields: TextFields = { description: '', urlValue: '', intlValues: {} };
+const _emptyFields: TextFields = { assetDescription: '', urlValue: '', intlValues: {} };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
@@ -143,7 +143,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
 
   const isChangesPresent = state.isChanged
-    || fields.description !== state.description
+    || fields.assetDescription !== state.assetDescription
     || fields.urlValue !== state.urlValue
     || Object.entries(fields.intlValues).some(([locale, val]) => val !== (state.intlValues[locale] ?? ''));
 
@@ -160,7 +160,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, description: value }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onChangeArticles(value: string[]) {
@@ -188,7 +188,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.description));
+    setState(prev => prev.withDescription(fields.assetDescription));
   }
 
   async function onSave() {
@@ -215,7 +215,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     articles: state.articles,
     tagLabels: state.tagLabels,
     configOptions: state.configOptions,
-    description: fields.description,
+    assetDescription: fields.assetDescription,
     isExpanded,
     onChangeContentType,
     onChangeUrlValue,

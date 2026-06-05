@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.Article;
 import io.resys.limaone.model.Description;
+import io.resys.limaone.model.DescriptionLabels;
 import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
@@ -54,5 +55,6 @@ public interface NewArticle {
     @Nullable Boolean getAuthOnly();
     
     @Nullable Description getAssetDescription();
+    @Nullable DescriptionLabels getAssetLabels();
   }
 }

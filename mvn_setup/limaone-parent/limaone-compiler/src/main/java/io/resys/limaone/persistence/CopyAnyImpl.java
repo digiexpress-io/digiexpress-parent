@@ -69,7 +69,7 @@ public class CopyAnyImpl extends AuthoringTemplate<CopyAnyImpl, Model<?>> implem
         .docsId(props.getIdOfObjectToCopy())
         .build(nextWorld -> {
           final var body = internalBuild(nextWorld);
-          return nextWorld.newModel(props.getNewObjectName(), body, null);
+          return nextWorld.newModel(props.getNewObjectName(), body, null, null);
         });
   }
   

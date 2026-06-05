@@ -7,7 +7,7 @@ type _ChangeStateProps = {
   workflowId: string;
   bodyType: Fs.BodyType;
   value: string;
-  description: string;
+  assetDescription: string;
   formName: string;
   formTag: string;
   flowName: string;
@@ -31,7 +31,7 @@ class _ChangeState implements FsuChange {
   get id() { return this._current.workflowId; }
   get bodyType() { return this._current.bodyType; }
   get value() { return this._current.value; }
-  get description() { return this._current.description; }
+  get assetDescription() { return this._current.assetDescription; }
   get intlValues() { return this._current.intlValues; }
   get validityStart() { return this._current.validityStart; }
   get validityEnd() { return this._current.validityEnd; }
@@ -46,7 +46,7 @@ class _ChangeState implements FsuChange {
       changes: {
         workflowId: c.workflowId,
         value: c.value,
-        description: c.description || undefined,
+        assetDescription: c.assetDescription || undefined,
         formName: c.formName || undefined,
         formTag: c.formTag || undefined,
         flowName: c.flowName || undefined,
@@ -68,8 +68,8 @@ class _ChangeState implements FsuChange {
     return new _ChangeState({ ...this._current, value }, this._origin);
   }
 
-  withDescription(description: string): _ChangeState {
-    return new _ChangeState({ ...this._current, description }, this._origin);
+  withDescription(assetDescription: string): _ChangeState {
+    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 
   withFormName(formName: string): _ChangeState {
@@ -112,7 +112,7 @@ class _ChangeState implements FsuChange {
 
 export interface TextFields {
   name: string;
-  description: string;
+  assetDescription: string;
   formName: string;
   formTag: string;
   flowName: string;
@@ -129,7 +129,7 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   id: string;
   name: string;
-  description: string;
+  assetDescription: string;
   dialobFormName: string;
   dialobFormTag: string;
   flowName: string;
@@ -172,7 +172,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     workflowId: props.direntId,
     bodyType: dirent.type,
     value: dirent.name ?? '',
-    description: workflowProps.description ?? '',
+    assetDescription: workflowProps.assetDescription ?? '',
     formName: workflowProps.dialobFormName ?? '',
     formTag: workflowProps.dialobFormTag ?? '',
     flowName: workflowProps.flowName ?? '',
@@ -188,7 +188,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<TextFields>({
     name: dirent.name ?? '',
-    description: workflowProps.description ?? '',
+    assetDescription: workflowProps.assetDescription ?? '',
     formName: workflowProps.dialobFormName ?? '',
     formTag: workflowProps.dialobFormTag ?? '',
     flowName: workflowProps.flowName ?? '',
@@ -209,7 +209,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, description: value }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onChangeIntlValues(locale: string, value: string) {
@@ -264,7 +264,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.description));
+    setState(prev => prev.withDescription(fields.assetDescription));
   }
 
   function onBlurIntlValues(locale: string) {
@@ -278,7 +278,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onCancel() {
     setFields({
       name: dirent.name ?? '',
-      description: workflowProps.description ?? '',
+      assetDescription: workflowProps.assetDescription ?? '',
       formName: workflowProps.dialobFormName ?? '',
       formTag: workflowProps.dialobFormTag ?? '',
       flowName: workflowProps.flowName ?? '',
@@ -294,7 +294,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const changes = state.isChanged
     || fields.name !== state.value
-    || fields.description !== state.description
+    || fields.assetDescription !== state.assetDescription
     || JSON.stringify(fields.intlValues) !== JSON.stringify(state.intlValues);
 
   return ({
@@ -302,7 +302,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     dirent,
     id: state.id,
     name: fields.name,
-    description: fields.description,
+    assetDescription: fields.assetDescription,
     dialobFormName: fields.formName,
     dialobFormTag: fields.formTag,
     flowName: fields.flowName,

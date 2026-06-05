@@ -45,7 +45,7 @@ public class Props_PrintoutResourceBuilder {
       .printoutPageIds(resource.getPrintoutPageIds())
       .externalLocation(resource.getExternalLocation())
       .description(node.getDescription().map(e -> e.getText()).orElse(null))
-      .labels(node.getDescription().map(e -> e.getLabels()).orElse(Collections.emptyList()))
+      .labels(node.getLabels().map(e -> e.getValues()).orElse(Collections.emptyList()))
       .build();
   }
   

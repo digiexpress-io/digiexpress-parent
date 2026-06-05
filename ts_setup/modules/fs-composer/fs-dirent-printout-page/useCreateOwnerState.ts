@@ -5,7 +5,7 @@ import { useFsNav } from '@dxs-ts/fs-nav';
 
 interface _TextFields {
   content: string;
-  description: string;
+  assetDescription: string;
 }
 
 export interface CreateOwnerState {
@@ -15,7 +15,7 @@ export interface CreateOwnerState {
   serviceId: string;
   localeId: string;
   content: string;
-  description: string;
+  assetDescription: string;
   labels: string[];
   labelOptions: string[];
   printoutOptions: Fs.SelectOption[];
@@ -37,7 +37,7 @@ type _CreateStateProps = {
   serviceId: string;
   localeId: string;
   content: string;
-  description: string;
+  assetDescription: string;
   labels: string[];
 }
 
@@ -62,8 +62,8 @@ class _CreateState implements FsuCreateChange {
   get content() {
     return this._current.content;
   }
-  get description() {
-    return this._current.description;
+  get assetDescription() {
+    return this._current.assetDescription;
   }
   get labels() {
     return this._current.labels;
@@ -79,7 +79,7 @@ class _CreateState implements FsuCreateChange {
         serviceId: this._current.serviceId,
         localeId: this._current.localeId,
         content: this._current.content || undefined,
-        description: this._current.description || undefined,
+        assetDescription: this._current.assetDescription || undefined,
         labels: this._current.labels.length ? this._current.labels : undefined,
       }
     };
@@ -94,22 +94,22 @@ class _CreateState implements FsuCreateChange {
   withContent(content: string): _CreateState {
     return new _CreateState({ ...this._current, content }, this._origin);
   }
-  withDescription(description: string): _CreateState {
-    return new _CreateState({ ...this._current, description }, this._origin);
+  withDescription(assetDescription: string): _CreateState {
+    return new _CreateState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _CreateState {
     return new _CreateState({ ...this._current, labels }, this._origin);
   }
 }
 
-const _initFields: _TextFields = { content: '', description: '' };
+const _initFields: _TextFields = { content: '', assetDescription: '' };
 
 const _initProps: _CreateStateProps = {
   bodyType: 'PRINTOUT_PAGE',
   serviceId: '',
   localeId: '',
   content: '',
-  description: '',
+  assetDescription: '',
   labels: [],
 };
 
@@ -148,10 +148,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withContent(fields.content));
   }
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, description: value }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.description));
+    setState(prev => prev.withDescription(fields.assetDescription));
   }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
@@ -182,7 +182,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     serviceId: state.serviceId,
     localeId: state.localeId,
     content: fields.content,
-    description: fields.description,
+    assetDescription: fields.assetDescription,
     labels: state.labels,
     labelOptions: selectOptions.labels,
     printoutOptions: selectOptions.printouts,

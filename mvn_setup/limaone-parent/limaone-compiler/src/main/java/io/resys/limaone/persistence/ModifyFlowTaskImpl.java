@@ -65,7 +65,7 @@ public class ModifyFlowTaskImpl extends AuthoringTemplate<ModifyFlowTaskImpl, Mo
       .build(nextWorld -> {
         final ModelWorld world = nextWorld.getCurrentWorld();
         final var body = internalBuild(world);
-        return nextWorld.mergeModel(props.getFlowTaskId(), body.getTaskName(), body, props.getAssetDescription());
+        return nextWorld.mergeModel(props.getFlowTaskId(), body.getTaskName(), body, props.getAssetDescription(), props.getAssetLabels());
       });
   }
   

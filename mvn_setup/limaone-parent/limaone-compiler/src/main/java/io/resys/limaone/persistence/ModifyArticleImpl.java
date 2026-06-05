@@ -71,7 +71,7 @@ public class ModifyArticleImpl extends AuthoringTemplate<ModifyArticleImpl, Mode
       .docs(BodyType.ARTICLE, BodyType.ARTICLE_LINK, BodyType.ARTICLE_WORKFLOW)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld);
-        return nextWorld.mergeModel(props.getArticleId(), body.getName(), body, props.getAssetDescription());
+        return nextWorld.mergeModel(props.getArticleId(), body.getName(), body, props.getAssetDescription(), props.getAssetLabels());
       });
   }
   
@@ -113,7 +113,7 @@ public class ModifyArticleImpl extends AuthoringTemplate<ModifyArticleImpl, Mode
                   .addArticles(props.getArticleId())
                   .build())
               .build(); 
-          nextWorld.mergeModel(newLink.getId(), newLink.getBody().getValue(), newLink.getBody(), null);
+          nextWorld.mergeModel(newLink.getId(), newLink.getBody().getValue(), newLink.getBody(), null, null);
         }
         
         // remove link
@@ -127,7 +127,7 @@ public class ModifyArticleImpl extends AuthoringTemplate<ModifyArticleImpl, Mode
                   .build())
               .build();
           
-          nextWorld.mergeModel(newLink.getId(), newLink.getBody().getValue(), newLink.getBody(), null);
+          nextWorld.mergeModel(newLink.getId(), newLink.getBody().getValue(), newLink.getBody(), null, null);
         }
       }
     }
@@ -153,7 +153,7 @@ public class ModifyArticleImpl extends AuthoringTemplate<ModifyArticleImpl, Mode
                   .addArticles(props.getArticleId())
                   .build())
               .build(); 
-          nextWorld.mergeModel(newWorkflow.getId(), newWorkflow.getBody().getValue(), newWorkflow.getBody(), null);
+          nextWorld.mergeModel(newWorkflow.getId(), newWorkflow.getBody().getValue(), newWorkflow.getBody(), null, null);
         }
         
         // remove link
@@ -166,7 +166,7 @@ public class ModifyArticleImpl extends AuthoringTemplate<ModifyArticleImpl, Mode
                   .articles(articles)
                   .build())
               .build();
-          nextWorld.mergeModel(newWorkflow.getId(), newWorkflow.getBody().getValue(), newWorkflow.getBody(), null);
+          nextWorld.mergeModel(newWorkflow.getId(), newWorkflow.getBody().getValue(), newWorkflow.getBody(), null, null);
         }
       }
     }

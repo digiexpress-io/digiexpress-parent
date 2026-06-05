@@ -85,7 +85,7 @@ public class DeletePrintoutPageImpl extends AuthoringTemplate<DeletePrintoutPage
               .from(resource.getBody())
               .printoutPageIds(remaining)
               .build();
-          nextWorld.mergeModel(resource.getId(), updated.getResourceName(), updated, null);
+          nextWorld.mergeModel(resource.getId(), updated.getResourceName(), updated, null, null);
         }
 
         return nextWorld.deleteModel(pageId, page.getBody());

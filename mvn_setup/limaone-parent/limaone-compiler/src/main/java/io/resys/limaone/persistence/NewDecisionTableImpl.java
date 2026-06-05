@@ -65,7 +65,7 @@ public class NewDecisionTableImpl extends AuthoringTemplate<NewDecisionTableImpl
       .author(getAuthor())
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body.getName(), body, props.getAssetDescription());
+        return nextWorld.newModel(body.getName(), body, props.getAssetDescription(), props.getAssetLabels());
       });
   }
   

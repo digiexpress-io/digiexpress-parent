@@ -12,7 +12,7 @@ type _ChangeStateProps = {
   printoutId: string;
   bodyType: Fs.BodyType;
   serviceName: string;
-  description: string;
+  assetDescription: string;
   labels: string[];
   orchestratorName: string;
   intlValues: Record<string, string>;
@@ -36,8 +36,8 @@ class _ChangeState implements FsuChange {
   get serviceName() {
     return this._current.serviceName;
   }
-  get description() {
-    return this._current.description;
+  get assetDescription() {
+    return this._current.assetDescription;
   }
   get labels() {
     return this._current.labels;
@@ -60,7 +60,7 @@ class _ChangeState implements FsuChange {
       changes: {
         serviceId: c.printoutId,
         serviceName: c.serviceName || undefined,
-        description: c.description || undefined,
+        assetDescription: c.assetDescription || undefined,
         tagLabels: c.labels.length ? c.labels : undefined,
         orchestratorName: c.orchestratorName || undefined,
         localeLabels: Object.entries(c.intlValues).map(([locale, labelValue]) => ({ locale, labelValue })),
@@ -71,8 +71,8 @@ class _ChangeState implements FsuChange {
   withServiceName(serviceName: string): _ChangeState {
     return new _ChangeState({ ...this._current, serviceName }, this._origin);
   }
-  withDescription(description: string): _ChangeState {
-    return new _ChangeState({ ...this._current, description }, this._origin);
+  withDescription(assetDescription: string): _ChangeState {
+    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _ChangeState {
     return new _ChangeState({ ...this._current, labels }, this._origin);
@@ -90,14 +90,14 @@ class _ChangeState implements FsuChange {
 
 interface _TextFields {
   serviceName: string;
-  description: string;
+  assetDescription: string;
 }
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
   serviceName: string;
-  description: string;
+  assetDescription: string;
   labels: string[];
   labelOptions: string[];
   orchestratorName: string;
@@ -124,7 +124,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     printoutId: props.direntId,
     bodyType: dirent.type,
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-    description: printoutProps.description ?? '',
+    assetDescription: printoutProps.assetDescription ?? '',
     labels: (printoutProps.labels ?? []).map(l => l.value),
     orchestratorName: printoutProps.orchestratorName ?? '',
     intlValues: printoutProps.intlValues ?? {},
@@ -134,12 +134,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<_TextFields>({
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-    description: printoutProps.description ?? '',
+    assetDescription: printoutProps.assetDescription ?? '',
   });
 
   const isChangesPresent = state.isChanged
     || fields.serviceName !== state.serviceName
-    || fields.description !== state.description;
+    || fields.assetDescription !== state.assetDescription;
 
   const connectedPages: ConnectedPage[] = Object.values(selectOptions.direntProps)
     .filter(p => p.type === 'PRINTOUT_PAGE' && (p as Fs.PrintoutPageProps).serviceId === props.direntId)
@@ -156,10 +156,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withServiceName(fields.serviceName));
   }
   function onChangeDescription(v: string) {
-    setFields(prev => ({ ...prev, description: v }));
+    setFields(prev => ({ ...prev, assetDescription: v }));
   }
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.description));
+    setState(prev => prev.withDescription(fields.assetDescription));
   }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
@@ -170,7 +170,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onCancel() {
     setFields({
       serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-      description: printoutProps.description ?? '',
+      assetDescription: printoutProps.assetDescription ?? '',
     });
     cancel(props.direntId);
   }
@@ -179,7 +179,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isDarkMode,
     isChanged: isChangesPresent,
     serviceName: fields.serviceName,
-    description: fields.description,
+    assetDescription: fields.assetDescription,
     labels: state.labels,
     labelOptions: selectOptions.labels,
     orchestratorName: state.orchestratorName,

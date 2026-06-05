@@ -73,7 +73,7 @@ public class ModifyArticlePageImpl extends AuthoringTemplate<ModifyArticlePageIm
       .docs(BodyType.LOCALE, BodyType.ARTICLE, BodyType.ARTICLE_PAGE)
       .build(nextWorld -> {
         final var body = internalBuild(props, nextWorld);
-        return nextWorld.mergeModel(props.getPageId(), props.getPageId(), body, props.getAssetDescription());
+        return nextWorld.mergeModel(props.getPageId(), props.getPageId(), body, props.getAssetDescription(), props.getAssetLabels());
       });
   }
 
@@ -97,7 +97,7 @@ public class ModifyArticlePageImpl extends AuthoringTemplate<ModifyArticlePageIm
           var nextWorld = start;
           for(final var props : this.allProps) {
             final var body = internalBuild(props, nextWorld);
-            final var model = nextWorld.mergeModel(props.getPageId(), props.getPageId(), body, props.getAssetDescription());
+            final var model = nextWorld.mergeModel(props.getPageId(), props.getPageId(), body, props.getAssetDescription(), props.getAssetLabels());
             result.add(model);
           }
           

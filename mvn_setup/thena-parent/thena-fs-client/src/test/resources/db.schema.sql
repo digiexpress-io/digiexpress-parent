@@ -28,6 +28,7 @@ COMMENT ON COLUMN blob.blob_class IS 'Classifier for mapping specific applicatio
 COMMENT ON COLUMN blob.blob_value IS 'File content stored as JSONB for structured data support';
 CREATE TABLE props (
   props_id UUID PRIMARY KEY,
+  props_description TEXT,
   props_labels JSONB,
   props_comments JSONB,
   props_permissions JSONB,
@@ -35,6 +36,7 @@ CREATE TABLE props (
 );
 COMMENT ON TABLE props IS 'Versioned metadata for files and directories. Content-addressable properties that can be attached to filesystem nodes.';
 COMMENT ON COLUMN props.props_id IS 'Content hash of the properties, enabling deduplication of identical metadata sets';
+COMMENT ON COLUMN props.props_description IS 'User-defined text in any format, intended for documentation';
 COMMENT ON COLUMN props.props_labels IS 'User-defined labels and tags in JSONB format';
 COMMENT ON COLUMN props.props_comments IS 'Comments and annotations in JSONB format';
 COMMENT ON COLUMN props.props_permissions IS 'Access control and permission settings in JSONB format';

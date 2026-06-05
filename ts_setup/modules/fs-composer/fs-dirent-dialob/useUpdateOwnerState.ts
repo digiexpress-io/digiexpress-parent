@@ -8,7 +8,7 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   technicalName: string;
   formName: string;
-  description: string;
+  assetDescription: string;
   isExpanded: boolean;
   onChangeTechnicalName: (value: string) => void;
   onChangeFormName: (value: string) => void;
@@ -25,7 +25,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [technicalName, setTechnicalName] = React.useState(dialobProps?.formTechnicalId ?? dirent?.id ?? '');
   const [formName, setFormName] = React.useState(dialobProps?.formName ?? dirent?.name ?? '');
-  const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
+  const [assetDescription, setDescription] = React.useState(dirent?.props?.assetDescription ?? '');
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   function onChangeTechnicalName(value: string) {
@@ -49,7 +49,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     dirent,
     technicalName,
     formName,
-    description,
+    assetDescription,
     isExpanded,
     onChangeTechnicalName,
     onChangeFormName,

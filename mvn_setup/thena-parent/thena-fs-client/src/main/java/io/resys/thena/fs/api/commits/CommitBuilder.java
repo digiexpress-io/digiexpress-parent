@@ -371,6 +371,16 @@ public interface CommitBuilder {
    * Provides structured metadata storage for custom application needs.
    */
   interface PropsBuilder {
+    
+    /**
+     * Sets human readable description for the item.
+     * Used for documentation purposes.
+     * 
+     * @param description any length and any format TEXT.
+     * @return builder for method chaining
+     */
+    PropsBuilder propsDescription(@Nullable String description);
+    
     /**
      * Sets classification labels for the item.
      * Used for categorization, tagging, and organizational purposes.

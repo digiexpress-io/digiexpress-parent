@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.immutables.value.Value;
 
-import io.resys.limaone.model.Description;
+import io.resys.limaone.model.DescriptionLabels.DescriptionLabel;
 import io.resys.limaone.model.Model.BodyType;
 import jakarta.annotation.Nullable;
 
@@ -38,7 +38,7 @@ public interface WorldFsProps {
   Boolean getLocked();
   
   @Nullable String getDescription();
-  List<Description.DescriptionLabel> getLabels();
+  List<DescriptionLabel> getLabels();
   
   
   List<ConfigOption> getConfigOptions();

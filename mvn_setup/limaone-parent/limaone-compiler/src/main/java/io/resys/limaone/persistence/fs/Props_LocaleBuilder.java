@@ -44,7 +44,7 @@ public class Props_LocaleBuilder {
     return builder
         .localeCode(locale.getValue())
         .description(node.getDescription().map(e -> e.getText()).orElse(null))
-        .labels(node.getDescription().map(e -> e.getLabels()).orElse(Collections.emptyList()))
+        .labels(node.getLabels().map(e -> e.getValues()).orElse(Collections.emptyList()))
         .id(node.getObjectId())
         .type(node.getBodyType())
         .locked(false)

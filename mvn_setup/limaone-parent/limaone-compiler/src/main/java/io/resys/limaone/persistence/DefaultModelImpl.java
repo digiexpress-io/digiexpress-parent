@@ -72,7 +72,7 @@ public class DefaultModelImpl implements DefaultModel {
       .findFirst();
     
     if(prev.isEmpty()) {
-      next.newModel(body.getName(), body, null);
+      next.newModel(body.getName(), body, null, null);
       return;
     }
     
@@ -82,7 +82,7 @@ public class DefaultModelImpl implements DefaultModel {
     
     next.mergeModel(
         prev.get().getId(), 
-        prev.get().getBody().getName(), body, null);
+        prev.get().getBody().getName(), body, null, null);
   }
   
   private void visitBody(NextWorld next, Flow flow) {
@@ -91,7 +91,7 @@ public class DefaultModelImpl implements DefaultModel {
         .findFirst();
 
     if(prev.isEmpty()) {
-      next.newModel(flow.getFlowName(), flow, null);
+      next.newModel(flow.getFlowName(), flow, null, null);
       return;
     }
     
@@ -101,7 +101,7 @@ public class DefaultModelImpl implements DefaultModel {
     
     next.mergeModel(
         prev.get().getId(), 
-        prev.get().getBody().getFlowName(), flow, null);
+        prev.get().getBody().getFlowName(), flow, null, null);
   }
 
   public Flow events_flow() {

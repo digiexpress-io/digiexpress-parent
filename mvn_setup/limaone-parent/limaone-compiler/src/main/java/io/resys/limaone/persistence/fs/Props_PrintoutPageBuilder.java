@@ -44,7 +44,7 @@ public class Props_PrintoutPageBuilder {
           .serviceId(page.getServiceId())
           .templateIds(page.getPrintoutPageIds())
           .description(node.getDescription().map(e -> e.getText()).orElse(null))
-          .labels(node.getDescription().map(e -> e.getLabels()).orElse(Collections.emptyList()))
+          .labels(node.getLabels().map(e -> e.getValues()).orElse(Collections.emptyList()))
         .build();
   }
   

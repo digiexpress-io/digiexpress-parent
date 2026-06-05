@@ -20,18 +20,27 @@ package io.resys.limaone.model;
  * #L%
  */
 
+import java.util.List;
+
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
-@JsonSerialize(as = ImmutableDescription.class)
-@JsonDeserialize(as = ImmutableDescription.class)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public interface Description {
-  @Nullable String getText();
+@JsonSerialize(as = ImmutableDescriptionLabels.class)
+@JsonDeserialize(as = ImmutableDescriptionLabels.class)
+public interface DescriptionLabels {
+  
+  List<DescriptionLabel> getValues();
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableDescriptionLabel.class)
+  @JsonDeserialize(as = ImmutableDescriptionLabel.class)
+  public interface DescriptionLabel {
+    String getKey();
+    @Nullable String getText();
+  }
 }

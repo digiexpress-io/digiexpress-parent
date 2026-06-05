@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.ArticleLink;
 import io.resys.limaone.model.Description;
+import io.resys.limaone.model.DescriptionLabels;
 import io.resys.limaone.model.LocaleLabel;
 import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
@@ -51,6 +52,7 @@ public interface ModifyArticleLink {
     String getValue();
     String getType();
     @Nullable Description getAssetDescription();
+    @Nullable DescriptionLabels getAssetLabels();
     @Nullable List<LocaleLabel> getLabels();
     @Nullable List<String> getArticles();
     @Nullable Boolean getDevMode();

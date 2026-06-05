@@ -60,7 +60,7 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
 
   const labels = (dirent.props?.labels ?? []).map(l => l.value);
   const comments = dirent.props?.comments ?? [];
-  const description = dirent.props?.description;
+  const description = dirent.props?.assetDescription;
 
   return (
     <FsPanel title={intl.formatMessage({ id: 'fs.properties.title.direntName' }, { direntName: displayName })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={true}>

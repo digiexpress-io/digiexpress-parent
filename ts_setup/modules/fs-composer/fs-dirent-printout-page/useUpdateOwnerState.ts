@@ -6,7 +6,7 @@ type _ChangeStateProps = {
   pageId: string;
   bodyType: Fs.BodyType;
   content: string;
-  description: string;
+  assetDescription: string;
   labels: string[];
 }
 
@@ -28,8 +28,8 @@ class _ChangeState implements FsuChange {
   get content() {
     return this._current.content;
   }
-  get description() {
-    return this._current.description;
+  get assetDescription() {
+    return this._current.assetDescription;
   }
   get labels() {
     return this._current.labels;
@@ -46,7 +46,7 @@ class _ChangeState implements FsuChange {
       changes: {
         pageId: c.pageId,
         content: c.content || undefined,
-        description: c.description || undefined,
+        assetDescription: c.assetDescription || undefined,
         labels: c.labels.length ? c.labels : undefined,
       },
     };
@@ -55,8 +55,8 @@ class _ChangeState implements FsuChange {
   withContent(content: string): _ChangeState {
     return new _ChangeState({ ...this._current, content }, this._origin);
   }
-  withDescription(description: string): _ChangeState {
-    return new _ChangeState({ ...this._current, description }, this._origin);
+  withDescription(assetDescription: string): _ChangeState {
+    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _ChangeState {
     return new _ChangeState({ ...this._current, labels }, this._origin);
@@ -65,7 +65,7 @@ class _ChangeState implements FsuChange {
 
 interface _TextFields {
   content: string;
-  description: string;
+  assetDescription: string;
 }
 
 export interface UpdateOwnerState {
@@ -73,7 +73,7 @@ export interface UpdateOwnerState {
   isChanged: boolean;
   isExpanded: boolean;
   content: string;
-  description: string;
+  assetDescription: string;
   labels: string[];
   labelOptions: string[];
   connectedResourceNames: string[];
@@ -98,7 +98,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     pageId: props.direntId,
     bodyType: dirent.type,
     content: pageProps.content ?? '',
-    description: pageProps.description ?? '',
+    assetDescription: pageProps.assetDescription ?? '',
     labels: (pageProps.labels ?? []).map(l => l.value),
   }));
 
@@ -107,7 +107,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [fields, setFields] = React.useState<_TextFields>({
     content: pageProps.content ?? '',
-    description: pageProps.description ?? '',
+    assetDescription: pageProps.assetDescription ?? '',
   });
 
   const connectedResourceNames = Object.values(selectOptions.direntProps)
@@ -118,7 +118,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const isChangesPresent = state.isChanged
     || fields.content !== state.content
-    || fields.description !== state.description;
+    || fields.assetDescription !== state.assetDescription;
 
   function onChangeContent(v: string) {
     setFields(prev => ({ ...prev, content: v }));
@@ -127,10 +127,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withContent(fields.content));
   }
   function onChangeDescription(v: string) {
-    setFields(prev => ({ ...prev, description: v }));
+    setFields(prev => ({ ...prev, assetDescription: v }));
   }
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.description));
+    setState(prev => prev.withDescription(fields.assetDescription));
   }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
@@ -141,7 +141,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onCancel() {
     setFields({
       content: pageProps.content ?? '',
-      description: pageProps.description ?? '',
+      assetDescription: pageProps.assetDescription ?? '',
     });
     setIsExpanded(false);
     cancel(props.direntId);
@@ -152,7 +152,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isChanged: isChangesPresent,
     isExpanded,
     content: fields.content,
-    description: fields.description,
+    assetDescription: fields.assetDescription,
     labels: state.labels,
     labelOptions: selectOptions.labels,
     connectedResourceNames,

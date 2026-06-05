@@ -6,14 +6,14 @@ import { FsDirentSelectMultiOption } from '../fs-dirent-select-multi';
 
 interface _TextFields {
   resourceName: string;
-  description: string;
+  assetDescription: string;
 }
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
   resourceName: string;
-  description: string;
+  assetDescription: string;
   labels: string[];
   labelOptions: string[];
   contentType: string;
@@ -36,7 +36,7 @@ export interface CreateOwnerState {
 type _CreateStateProps = {
   bodyType: Fs.BodyType;
   resourceName: string;
-  description: string;
+  assetDescription: string;
   labels: string[];
   contentType: string;
   uploadBody: string;
@@ -58,8 +58,8 @@ class _CreateState implements FsuCreateChange {
   get resourceName() {
     return this._current.resourceName;
   }
-  get description() {
-    return this._current.description;
+  get assetDescription() {
+    return this._current.assetDescription;
   }
   get labels() {
     return this._current.labels;
@@ -83,7 +83,7 @@ class _CreateState implements FsuCreateChange {
       bodyType: c.bodyType,
       changes: {
         resourceName: c.resourceName || undefined,
-        description: c.description || undefined,
+        assetDescription: c.assetDescription || undefined,
         labels: c.labels.length ? c.labels : undefined,
         contentType: c.contentType || undefined,
         uploadBody: c.uploadBody || undefined,
@@ -95,8 +95,8 @@ class _CreateState implements FsuCreateChange {
   withResourceName(resourceName: string): _CreateState {
     return new _CreateState({ ...this._current, resourceName }, this._origin);
   }
-  withDescription(description: string): _CreateState {
-    return new _CreateState({ ...this._current, description }, this._origin);
+  withDescription(assetDescription: string): _CreateState {
+    return new _CreateState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _CreateState {
     return new _CreateState({ ...this._current, labels }, this._origin);
@@ -120,7 +120,7 @@ const _contentTypeOptions: Fs.SelectOption[] = [
 const _initProps: _CreateStateProps = {
   bodyType: 'PRINTOUT_RESOURCE',
   resourceName: '',
-  description: '',
+  assetDescription: '',
   labels: [],
   contentType: 'image/*',
   uploadBody: '',
@@ -135,7 +135,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   const [fields, setFields] = React.useState<_TextFields>({
     resourceName: _initProps.resourceName,
-    description: _initProps.description,
+    assetDescription: _initProps.assetDescription,
   });
   const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
 
@@ -152,7 +152,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   const isChangesPresent = state.isChanged
     || fields.resourceName !== state.resourceName
-    || fields.description !== state.description;
+    || fields.assetDescription !== state.assetDescription;
 
   function onChangeResourceName(v: string) {
     setFields(prev => ({ ...prev, resourceName: v }));
@@ -161,10 +161,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withResourceName(fields.resourceName));
   }
   function onChangeDescription(v: string) {
-    setFields(prev => ({ ...prev, description: v }));
+    setFields(prev => ({ ...prev, assetDescription: v }));
   }
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.description));
+    setState(prev => prev.withDescription(fields.assetDescription));
   }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
@@ -189,7 +189,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onCancel() {
-    setFields({ resourceName: _initProps.resourceName, description: _initProps.description });
+    setFields({ resourceName: _initProps.resourceName, assetDescription: _initProps.assetDescription });
     setStateRaw(new _CreateState(_initProps));
   }
 
@@ -197,7 +197,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     isDarkMode,
     isChanged: isChangesPresent,
     resourceName: fields.resourceName,
-    description: fields.description,
+    assetDescription: fields.assetDescription,
     labels: state.labels,
     labelOptions: selectOptions.labels,
     contentType: state.contentType,

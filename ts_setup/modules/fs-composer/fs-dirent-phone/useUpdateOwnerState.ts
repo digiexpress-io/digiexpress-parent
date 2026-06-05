@@ -9,7 +9,7 @@ export interface UpdateOwnerState {
   //phoneValue: string;
   intlValues: Record<string, string>;
   configOptions: Fs.ConfigOption[];
-  description: string;
+  assetDescription: string;
   isExpanded: boolean;
   onChangePhoneValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
@@ -31,7 +31,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [configOptions, setConfigOptions] = React.useState<Fs.ConfigOption[]>(
     (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[]
   );
-  const [description, setDescription] = React.useState(dirent?.props?.description ?? '');
+  const [assetDescription, setDescription] = React.useState(dirent?.props?.assetDescription ?? '');
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   function onChangePhoneValue(value: string) {
@@ -61,7 +61,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     //phoneValue,
     intlValues,
     configOptions,
-    description,
+    assetDescription,
     isExpanded,
     onChangePhoneValue,
     onChangeIntlValue,

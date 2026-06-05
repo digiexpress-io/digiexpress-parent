@@ -84,7 +84,7 @@ public class NewPrintoutResourceImpl extends AuthoringTemplate<NewPrintoutResour
       .docs(BodyType.PRINTOUT_RESOURCE)
       .build(nextWorld -> {
         final var body = internalBuildScript(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body.getResourceName(), body, props.getAssetDescription());
+        return nextWorld.newModel(body.getResourceName(), body, props.getAssetDescription(), props.getAssetLabels());
       });
   }
 
@@ -96,7 +96,7 @@ public class NewPrintoutResourceImpl extends AuthoringTemplate<NewPrintoutResour
       .docs(BodyType.PRINTOUT_RESOURCE)
       .build(nextWorld -> {
         final var body = internalBuildImage(nextWorld.getCurrentWorld(), externalLocation);
-        return nextWorld.newModel(body.getResourceName(), body, props.getAssetDescription());
+        return nextWorld.newModel(body.getResourceName(), body, props.getAssetDescription(), props.getAssetLabels());
       });
   }
 

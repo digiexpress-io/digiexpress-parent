@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.Description;
+import io.resys.limaone.model.DescriptionLabels;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.PrintoutResource;
 import io.smallrye.mutiny.Uni;
@@ -53,5 +54,6 @@ public interface ModifyPrintoutResource {
     @Nullable List<String> getPrintoutPageIds();
     
     @Nullable Description getAssetDescription();
+    @Nullable DescriptionLabels getAssetLabels();
   }
 }

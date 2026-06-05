@@ -30,6 +30,7 @@ import io.resys.limaone.authoring.Authoring.WorldIndexQuery;
 import io.resys.limaone.authoring.Authoring.WorldQuery;
 import io.resys.limaone.authoring.Authoring.WorldRefQuery;
 import io.resys.limaone.model.Description;
+import io.resys.limaone.model.DescriptionLabels;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
@@ -68,8 +69,10 @@ public interface ModelWorldDb {
     // model state at current commit
     ModelWorld getCurrentWorld();
     
-    <T extends Model.Body> Model<T> newModel(String fileName, T body, @Nullable Description desc);
-    <T extends Model.Body> Model<T> mergeModel(String id, String fileName, T body, @Nullable Description desc);
+    <T extends Model.Body> Model<T> newModel(String fileName, T body, @Nullable Description desc, @Nullable DescriptionLabels labels);
+    <T extends Model.Body> Model<T> mergeModel(String id, String fileName, T body, @Nullable Description desc, @Nullable DescriptionLabels labels);
+    
+    
     <T extends Model.Body> Model<T> deleteModel(String id, T body);
   }
 

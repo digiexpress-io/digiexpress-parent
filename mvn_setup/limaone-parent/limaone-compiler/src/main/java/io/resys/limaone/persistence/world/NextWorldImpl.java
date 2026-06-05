@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import io.resys.limaone.model.Deployment;
 import io.resys.limaone.model.Description;
+import io.resys.limaone.model.DescriptionLabels;
 import io.resys.limaone.model.ImmutableModel;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.Body;
@@ -34,6 +35,8 @@ import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.persistence.ModelWorldDb.NextWorld;
 import io.resys.thena.fs.api.commits.CommitBuilder;
+import io.resys.thena.fs.api.commits.CommitBuilder.PropsBuilder;
+import io.resys.thena.fs.entities.Props;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
@@ -112,7 +115,7 @@ public class NextWorldImpl implements NextWorld {
   }
 
   @Override
-  public <T extends Body> Model<T> newModel(String name, T body, @Nullable Description desc) {
+  public <T extends Body> Model<T> newModel(String name, T body, @Nullable Description desc, @Nullable DescriptionLabels labels) {
     final var id = OidUtils.genUUID();   
     if(body.getBodyType() == BodyType.DEPLOYMENT) {
       
@@ -130,6 +133,12 @@ public class NextWorldImpl implements NextWorld {
     changes++;
     append("created new file: " + name);
     this.commitBuilder.newFile(newFile -> {
+      
+
+      if(desc != null || labels != null) {
+        newFile.fileProps(newProps -> addProps(desc, labels, newProps, Optional.empty()));
+      }
+      
       newFile
         .fileId(id)
         .fileName(getFileName(name, body))
@@ -151,7 +160,7 @@ public class NextWorldImpl implements NextWorld {
   
   @SuppressWarnings("unchecked")
   @Override
-  public <T extends Body> Model<T> mergeModel(String id, String name, T body, @Nullable Description desc) {
+  public <T extends Body> Model<T> mergeModel(String id, String name, T body, @Nullable Description desc, @Nullable DescriptionLabels labels) {
     if(body.getBodyType() == BodyType.DEPLOYMENT) {
       
       RepoAssert.isTrue(newDeployment.isEmpty() && updateDeployment.isEmpty(), () -> "No point in creating more then one tag in one tx!");
@@ -172,6 +181,11 @@ public class NextWorldImpl implements NextWorld {
     changes++;
     append("updated file: " + name);
     this.commitBuilder.mergeFile(id, (node, mergeFile) -> {
+      
+      if(desc != null || labels != null) {
+        mergeFile.fileProps((prev, mergeProps) -> addProps(desc, labels, mergeProps, prev));
+      }
+      
       mergeFile
         .fileName(getFileName(name, body))
         .fileValue(JsonObject.mapFrom(body))
@@ -211,4 +225,18 @@ public class NextWorldImpl implements NextWorld {
   private String getFileName(String name, Model.Body body) {
     return name;
   }
+  
+  private void addProps(@Nullable Description desc, @Nullable DescriptionLabels labels, PropsBuilder propsBuilder, Optional<Props> previousProps) {
+    
+    if(labels != null) {
+      propsBuilder.propsLabels(JsonObject.mapFrom(labels));
+    }
+    
+    if(desc != null) {
+      propsBuilder.propsDescription(desc.getText());
+    }
+      
+    propsBuilder.build();
+  }
+  
 }

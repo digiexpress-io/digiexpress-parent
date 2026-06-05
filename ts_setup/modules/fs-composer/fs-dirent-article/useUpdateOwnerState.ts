@@ -11,7 +11,7 @@ import {
 export interface TextFields {
   name: string;
   orderNumber: string;
-  description: string;
+  assetDescription: string;
 }
 
 export interface UpdateOwnerState {
@@ -23,7 +23,7 @@ export interface UpdateOwnerState {
   name: string;
   orderNumber: string;
   configOptions: Fs.ConfigOption[];
-  description: string;
+  assetDescription: string;
   labels: string[];
   comments: string;
   isExpanded: boolean;
@@ -45,7 +45,7 @@ type _ChangeStateProps = {
   bodyType: Fs.BodyType;
   name: string;
   order: number;
-  description: string;
+  assetDescription: string;
   labels: string[];
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
@@ -64,7 +64,7 @@ class _ChangeState implements FsuChange {
   get id() { return this._current.articleId; }
   get name() { return this._current.name; }
   get orderNumber() { return String(this._current.order); }
-  get description() { return this._current.description; }
+  get assetDescription() { return this._current.assetDescription; }
   get labels() { return this._current.labels; }
   get configOptions() { return this._current.configOptions; }
 
@@ -83,8 +83,8 @@ class _ChangeState implements FsuChange {
   withOrder(order: string): _ChangeState {
     return new _ChangeState({ ...this._current, order: parseInt(order) || 0 }, this._origin);
   }
-  withDescription(description: string): _ChangeState {
-    return new _ChangeState({ ...this._current, description }, this._origin);
+  withDescription(assetDescription: string): _ChangeState {
+    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _ChangeState {
     return new _ChangeState({ ...this._current, labels }, this._origin);
@@ -113,7 +113,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     bodyType: dirent!.type,
     name: getDirentName(props.direntId) ?? '',
     order: articleProps?.orderNumber ?? 0,
-    description: articleProps?.description ?? '',
+    assetDescription: articleProps?.assetDescription ?? '',
     labels: (articleProps?.labels ?? []).map(l => l.value),
     configOptions: (articleProps?.configOptions ?? []) as Fs.ConfigOption[],
     devMode: (articleProps?.configOptions ?? []).includes('DEV_MODE'),
@@ -127,7 +127,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [fields, setFields] = React.useState<TextFields>({
     name: getDirentName(props.direntId) ?? '',
     orderNumber: String(articleProps?.orderNumber ?? 0),
-    description: articleProps?.description ?? '',
+    assetDescription: articleProps?.assetDescription ?? '',
   });
 
   function onChangeName(value: string) {
@@ -137,7 +137,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setFields(prev => ({ ...prev, orderNumber: value }));
   }
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, description: value }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
@@ -159,14 +159,14 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withOrder(fields.orderNumber));
   }
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.description));
+    setState(prev => prev.withDescription(fields.assetDescription));
   }
 
   function onCancel() {
     setFields({
       name: getDirentName(props.direntId) ?? '',
       orderNumber: String(articleProps?.orderNumber ?? 0),
-      description: articleProps?.description ?? '',
+      assetDescription: articleProps?.assetDescription ?? '',
     });
     cancel(props.direntId);
   }
@@ -174,7 +174,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const changes = state.isChanged
     || fields.name !== state.name
     || fields.orderNumber !== state.orderNumber
-    || fields.description !== state.description;
+    || fields.assetDescription !== state.assetDescription;
 
   return ({
     isDarkMode,
@@ -184,7 +184,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isChanged: changes,
     name: fields.name,
     orderNumber: fields.orderNumber,
-    description: fields.description,
+    assetDescription: fields.assetDescription,
     labels: state.labels,
     configOptions: state.configOptions,
     comments,

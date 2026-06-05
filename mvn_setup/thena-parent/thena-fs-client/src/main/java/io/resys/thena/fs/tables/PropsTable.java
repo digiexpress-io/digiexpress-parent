@@ -37,6 +37,7 @@ import io.vertx.mutiny.sqlclient.Row;
   ddl = """
     CREATE TABLE {props} (
       props_id UUID PRIMARY KEY,
+      props_description TEXT,
       props_labels JSONB,
       props_comments JSONB,
       props_permissions JSONB,
@@ -45,6 +46,7 @@ import io.vertx.mutiny.sqlclient.Row;
     
     COMMENT ON TABLE {props} IS 'Versioned metadata for files and directories. Content-addressable properties that can be attached to filesystem nodes.';
     COMMENT ON COLUMN {props}.props_id IS 'Content hash of the properties, enabling deduplication of identical metadata sets';
+    COMMENT ON COLUMN {props}.props_description IS 'User-defined text in any format, intended for documentation';
     COMMENT ON COLUMN {props}.props_labels IS 'User-defined labels and tags in JSONB format';
     COMMENT ON COLUMN {props}.props_comments IS 'Comments and annotations in JSONB format';
     COMMENT ON COLUMN {props}.props_permissions IS 'Access control and permission settings in JSONB format';
@@ -77,8 +79,8 @@ public interface PropsTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {props}
-      (props_id, props_labels, props_comments, props_permissions, props_flags)
-      VALUES($1, $2, $3, $4, $5)
+      (props_id, props_description, props_labels, props_comments, props_permissions, props_flags)
+      VALUES($1, $2, $3, $4, $5, $6)
       ON CONFLICT (props_id) DO NOTHING
     """,
     propsMapper = PropsInsertMapper.class
@@ -96,6 +98,7 @@ public interface PropsTable {
     public Props apply(Row row) {
       return ImmutableProps.builder()
           .id(row.getUUID("props_id"))
+          .propsDescription(Optional.ofNullable(row.getString("props_description")))
           .propsLabels(Optional.ofNullable(row.getJsonObject("props_labels")))
           .propsComments(Optional.ofNullable(row.getJsonObject("props_comments")))
           .propsPermissions(Optional.ofNullable(row.getJsonObject("props_permissions")))
@@ -109,6 +112,7 @@ public interface PropsTable {
     public io.vertx.mutiny.sqlclient.Tuple apply(Props props) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         props.getId(),
+        props.getPropsDescription().orElse(null),
         props.getPropsLabels().orElse(null),
         props.getPropsComments().orElse(null),
         props.getPropsPermissions().orElse(null),

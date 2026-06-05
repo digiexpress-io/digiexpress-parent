@@ -7,7 +7,7 @@ type _ChangeStateProps = {
   resourceId: string;
   bodyType: Fs.BodyType;
   resourceName: string;
-  description: string;
+  assetDescription: string;
   labels: string[];
   contentType: string;
   uploadBody: string;
@@ -32,8 +32,8 @@ class _ChangeState implements FsuChange {
   get resourceName() {
     return this._current.resourceName;
   }
-  get description() {
-    return this._current.description;
+  get assetDescription() {
+    return this._current.assetDescription;
   }
   get labels() {
     return this._current.labels;
@@ -59,7 +59,7 @@ class _ChangeState implements FsuChange {
       changes: {
         resourceId: c.resourceId,
         resourceName: c.resourceName || undefined,
-        description: c.description || undefined,
+        assetDescription: c.assetDescription || undefined,
         labels: c.labels.length ? c.labels : undefined,
         uploadBody: c.uploadBody || undefined,
         printoutPageIds: c.printoutPageIds,
@@ -70,8 +70,8 @@ class _ChangeState implements FsuChange {
   withResourceName(resourceName: string): _ChangeState {
     return new _ChangeState({ ...this._current, resourceName }, this._origin);
   }
-  withDescription(description: string): _ChangeState {
-    return new _ChangeState({ ...this._current, description }, this._origin);
+  withDescription(assetDescription: string): _ChangeState {
+    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _ChangeState {
     return new _ChangeState({ ...this._current, labels }, this._origin);
@@ -86,14 +86,14 @@ class _ChangeState implements FsuChange {
 
 interface _TextFields {
   resourceName: string;
-  description: string;
+  assetDescription: string;
 }
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
   resourceName: string;
-  description: string;
+  assetDescription: string;
   labels: string[];
   labelOptions: string[];
   contentType: string;
@@ -122,7 +122,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     resourceId: props.direntId,
     bodyType: dirent.type,
     resourceName: resourceProps.resourceName ?? dirent.name ?? '',
-    description: resourceProps.description ?? '',
+    assetDescription: resourceProps.assetDescription ?? '',
     labels: (resourceProps.labels ?? []).map(l => l.value),
     contentType: resourceProps.contentType ?? '',
     uploadBody: '',
@@ -133,7 +133,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [fields, setFields] = React.useState<_TextFields>({
     resourceName: resourceProps.resourceName ?? dirent.name ?? '',
-    description: resourceProps.description ?? '',
+    assetDescription: resourceProps.assetDescription ?? '',
   });
 
   const printoutPageOptions: FsDirentSelectMultiOption[] = Object.values(selectOptions.direntProps)
@@ -147,7 +147,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const isChangesPresent = state.isChanged
     || fields.resourceName !== state.resourceName
-    || fields.description !== state.description;
+    || fields.assetDescription !== state.assetDescription;
 
   function onChangeResourceName(v: string) {
     setFields(prev => ({ ...prev, resourceName: v }));
@@ -156,10 +156,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withResourceName(fields.resourceName));
   }
   function onChangeDescription(v: string) {
-    setFields(prev => ({ ...prev, description: v }));
+    setFields(prev => ({ ...prev, assetDescription: v }));
   }
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.description));
+    setState(prev => prev.withDescription(fields.assetDescription));
   }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
@@ -173,7 +173,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onCancel() {
     setFields({
       resourceName: resourceProps.resourceName ?? dirent.name ?? '',
-      description: resourceProps.description ?? '',
+      assetDescription: resourceProps.assetDescription ?? '',
     });
     cancel(props.direntId);
   }
@@ -182,7 +182,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isDarkMode,
     isChanged: isChangesPresent,
     resourceName: fields.resourceName,
-    description: fields.description,
+    assetDescription: fields.assetDescription,
     labels: state.labels,
     labelOptions: selectOptions.labels,
     contentType: state.contentType,

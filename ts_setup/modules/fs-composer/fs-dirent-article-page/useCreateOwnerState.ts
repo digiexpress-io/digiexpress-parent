@@ -6,7 +6,7 @@ import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 
 export interface TextFields {
   content: string;
-  description: string;
+  assetDescription: string;
 }
 
 export interface CreateOwnerState {
@@ -14,7 +14,7 @@ export interface CreateOwnerState {
   articleId: string;
   locale: string;
   content: string;
-  description: string;
+  assetDescription: string;
   configOptions: Fs.ConfigOption[];
   labels: string[];
   labelOptions: string[];
@@ -41,7 +41,7 @@ type _CreateStateProps = {
   articleId: string;
   locale: string;
   content: string;
-  description: string;
+  assetDescription: string;
   configOptions: Fs.ConfigOption[];
   labels: string[];
   devMode: boolean;
@@ -61,7 +61,7 @@ class _CreateState implements FsuCreateChange {
   get articleId() { return this._current.articleId; }
   get locale() { return this._current.locale; }
   get content() { return this._current.content; }
-  get description() { return this._current.description; }
+  get assetDescription() { return this._current.assetDescription; }
   get configOptions() { return this._current.configOptions; }
   get labels() { return this._current.labels; }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
@@ -73,7 +73,7 @@ class _CreateState implements FsuCreateChange {
         articleId: this._current.articleId,
         locale: this._current.locale,
         content: this._current.content,
-        description: this._current.description,
+        assetDescription: this._current.assetDescription,
         labels: this._current.labels.length ? this._current.labels : undefined,
         devMode: this._current.devMode,
         disabledMode: this._current.disabledMode,
@@ -90,8 +90,8 @@ class _CreateState implements FsuCreateChange {
   withContent(content: string): _CreateState {
     return new _CreateState({ ...this._current, content }, this._origin);
   }
-  withDescription(description: string): _CreateState {
-    return new _CreateState({ ...this._current, description }, this._origin);
+  withDescription(assetDescription: string): _CreateState {
+    return new _CreateState({ ...this._current, assetDescription }, this._origin);
   }
   withConfigOptions(configOptions: Fs.ConfigOption[]): _CreateState {
     return new _CreateState({
@@ -106,14 +106,14 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _initFields: TextFields = { content: '', description: '' };
+const _initFields: TextFields = { content: '', assetDescription: '' };
 
 const _initProps: _CreateStateProps = {
   bodyType: 'ARTICLE_PAGE',
   articleId: '',
   locale: '',
   content: '',
-  description: '',
+  assetDescription: '',
   configOptions: [],
   labels: [],
   devMode: false,
@@ -151,7 +151,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   const isChangesPresent = state.isChanged
     || fields.content !== state.content
-    || fields.description !== state.description;
+    || fields.assetDescription !== state.assetDescription;
 
   function onChangeArticle(value: string) {
     setState(prev => prev.withArticle(value));
@@ -172,7 +172,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, description: value }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onChangeConfigOptions(value: string[]) {
@@ -195,7 +195,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.description));
+    setState(prev => prev.withDescription(fields.assetDescription));
   }
 
   async function onSave() {
@@ -220,7 +220,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     articleId: state.articleId,
     locale: state.locale,
     content: fields.content,
-    description: fields.description,
+    assetDescription: fields.assetDescription,
     configOptions: state.configOptions,
     labels: state.labels,
     labelOptions: selectOptions.labels,

@@ -65,7 +65,7 @@ public class NewFlowTaskImpl extends AuthoringTemplate<NewFlowTaskImpl, Model<Fl
       .author(getAuthor())
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body.getTaskName(), body, props.getAssetDescription());
+        return nextWorld.newModel(body.getTaskName(), body, props.getAssetDescription(), props.getAssetLabels());
       });
   }
   

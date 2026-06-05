@@ -65,7 +65,7 @@ public class ModifyPrintoutImpl extends AuthoringTemplate<ModifyPrintoutImpl, Mo
       .docs(BodyType.PRINTOUT, BodyType.LOCALE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld);
-        return nextWorld.mergeModel(props.getServiceId(), body.getServiceName(), body, props.getAssetDescription());
+        return nextWorld.mergeModel(props.getServiceId(), body.getServiceName(), body, props.getAssetDescription(), props.getAssetLabels());
       });
   }
 

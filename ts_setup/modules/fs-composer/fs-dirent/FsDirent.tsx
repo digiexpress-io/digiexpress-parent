@@ -53,11 +53,11 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
         </ListItemIcon>
 
         <Tooltip
-          title={ownerState.dirent.props?.description ?? ''}
+          title={ownerState.dirent.props?.assetDescription ?? ''}
           arrow
           enterDelay={700}
           placement="top"
-          disableHoverListener={!ownerState.dirent.props?.description}
+          disableHoverListener={!ownerState.dirent.props?.assetDescription}
           slotProps={{ popper: { modifiers: [{ name: 'offset', options: { offset: [0, -12] } }] } }}
         >
           <span>

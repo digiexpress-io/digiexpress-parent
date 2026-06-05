@@ -32,6 +32,7 @@ import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.DecisionTable;
 import io.resys.limaone.model.DecisionTable.DecisionStatement;
 import io.resys.limaone.model.Description;
+import io.resys.limaone.model.DescriptionLabels;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.smallrye.mutiny.Uni;
@@ -53,5 +54,6 @@ public interface ModifyDecisionTable {
     List<DecisionStatement> getNodes();
     
     @Nullable Description getAssetDescription();
+    @Nullable DescriptionLabels getAssetLabels();
   }
 }

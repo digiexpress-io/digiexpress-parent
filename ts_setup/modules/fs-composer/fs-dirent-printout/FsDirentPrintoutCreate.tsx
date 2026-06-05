@@ -39,7 +39,7 @@ export const FsDirentPrintoutCreate: React.FC<FsDirentPrintoutCreateProps> = (_p
         <FsDirentTextField
           multiline minRows={2} maxRows={5}
           placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
-          value={ownerState.description}
+          value={ownerState.assetDescription}
           onChange={ownerState.onChangeDescription}
           onBlur={ownerState.onBlurDescription}
         />

@@ -72,7 +72,7 @@ public class DeleteArticleWorkflowImpl extends AuthoringTemplate<DeleteArticleWo
           return noChanges;
         }
         final var body = raw.get();
-        return nextWorld.mergeModel(props.getWorkflowId(), body.getValue(), body, null);
+        return nextWorld.mergeModel(props.getWorkflowId(), body.getValue(), body, null, null);
       });
   }
   

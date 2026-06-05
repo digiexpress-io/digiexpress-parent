@@ -34,13 +34,18 @@ import lombok.Value;
 public class PropsBuilderImpl implements PropsBuilder {
   private final Optional<Props> lock;
   
+  private MutableField<String> propsDescription = new MutableField<String>();
   private MutableField<JsonObject> propsLabels = new MutableField<JsonObject>();
   private MutableField<JsonObject> propsComments = new MutableField<JsonObject>();
   private MutableField<JsonObject> propsPermissions = new MutableField<JsonObject>();
   private MutableField<JsonObject> propsFlags = new MutableField<JsonObject>();
   private boolean validated = false;
 
-  
+  @Override
+  public PropsBuilder propsDescription(String description) {
+    this.propsDescription.withNewValue(description);
+    return this;
+  }
   @Override
   public PropsBuilder propsLabels(JsonObject labels) {
     this.propsLabels.withNewValue(labels);
@@ -82,6 +87,7 @@ public class PropsBuilderImpl implements PropsBuilder {
     RepoAssert.isTrue(validated, () -> "build() method must be called before close()");
     
     final var props = Props.newInstance(
+        this.propsDescription.orElse(lock.flatMap(Props::getPropsDescription).orElse(null)),
         this.propsLabels.orElse(lock.flatMap(Props::getPropsLabels).orElse(null)),
         this.propsComments.orElse(lock.flatMap(Props::getPropsComments).orElse(null)),
         this.propsPermissions.orElse(lock.flatMap(Props::getPropsPermissions).orElse(null)),
@@ -91,7 +97,7 @@ public class PropsBuilderImpl implements PropsBuilder {
     return new NewPropsResult(props);
   }
   
-
+  
   @Value
   public static class NewPropsResult {
     Props props;

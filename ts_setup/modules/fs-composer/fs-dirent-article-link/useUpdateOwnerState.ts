@@ -8,7 +8,7 @@ import {
 } from '@dxs-ts/fs-api';
 
 export interface TextFields {
-  description: string;
+  assetDescription: string;
   urlValue: string;
   intlValues: Record<string, string>;
 }
@@ -27,7 +27,7 @@ export interface UpdateOwnerState {
   articles: string[];
   tagLabels: string[];
   configOptions: Fs.ConfigOption[];
-  description: string;
+  assetDescription: string;
   onChangeContentType: (value: string) => void;
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
@@ -53,7 +53,7 @@ type _ChangeStateProps = {
   devMode: boolean;
   disabledMode: boolean;
   articles: string[];
-  description: string;
+  assetDescription: string;
 }
 
 class _ChangeState implements FsuChange {
@@ -72,7 +72,7 @@ class _ChangeState implements FsuChange {
   get tagLabels() { return this._current.tagLabels; }
   get configOptions() { return this._current.configOptions; }
   get articles() { return this._current.articles; }
-  get description() { return this._current.description; }
+  get assetDescription() { return this._current.assetDescription; }
 
   getCurrentProps(): { bodyType: Fs.BodyType, id: string, changes: Record<string, any> } {
     return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
@@ -105,8 +105,8 @@ class _ChangeState implements FsuChange {
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
     return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
   }
-  withDescription(description: string): _ChangeState {
-    return new _ChangeState({ ...this._current, description }, this._origin);
+  withDescription(assetDescription: string): _ChangeState {
+    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 }
 
@@ -120,7 +120,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [fields, setFields] = React.useState<TextFields>({
-    description: dirent?.props?.description ?? '',
+    assetDescription: dirent?.props?.assetDescription ?? '',
     urlValue: linkProps?.urlValue ?? '',
     intlValues: linkProps?.intlValues ?? {},
   });
@@ -138,11 +138,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     devMode: (linkProps?.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (linkProps?.configOptions ?? []).includes('DISABLED_MODE'),
     articles: linkProps?.articles ?? [],
-    description: dirent?.props?.description ?? ''
+    assetDescription: dirent?.props?.assetDescription ?? ''
   }));
 
   const isChangesPresent = state.isChanged
-    || fields.description !== state.description
+    || fields.assetDescription !== state.assetDescription
     || fields.urlValue !== state.urlValue
     || Object.entries(fields.intlValues).some(([locale, val]) => val !== (state.intlValues[locale] ?? ''));
 
@@ -161,7 +161,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, description: value }));
+    setFields(prev => ({ ...prev, assetDescription: value }));
   }
 
   function onChangeArticles(value: string[]) {
@@ -189,12 +189,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.description));
+    setState(prev => prev.withDescription(fields.assetDescription));
   }
 
   function onCancel() {
     setFields({
-      description: dirent?.props?.description ?? '',
+      assetDescription: dirent?.props?.assetDescription ?? '',
       urlValue: linkProps?.urlValue ?? '',
       intlValues: linkProps?.intlValues ?? {},
     });
@@ -214,7 +214,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     articles: state.articles,
     tagLabels: state.tagLabels,
     configOptions: state.configOptions,
-    description: fields.description,
+    assetDescription: fields.assetDescription,
     isExpanded,
     onChangeContentType,
     onChangeUrlValue,

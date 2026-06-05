@@ -65,7 +65,7 @@ public class ModifyDeploymentImpl extends AuthoringTemplate<ModifyDeploymentImpl
       .docs(BodyType.DEPLOYMENT)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld);
-        return nextWorld.mergeModel(props.getId(), body.getName(), body, null);
+        return nextWorld.mergeModel(props.getId(), body.getName(), body, null, null);
       });
   }
   

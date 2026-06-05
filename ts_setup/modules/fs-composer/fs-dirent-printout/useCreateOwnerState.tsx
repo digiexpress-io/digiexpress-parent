@@ -6,14 +6,14 @@ import React from 'react';
 
   interface _TextFields {
     serviceName: string;
-    description: string;
+    assetDescription: string;
   }
 
   export interface CreateOwnerState {
     isDarkMode: boolean;
     isChanged: boolean;
     serviceName: string;
-    description: string;
+    assetDescription: string;
     labels: string[];
     labelOptions: string[];
     orchestratorName: string;
@@ -31,7 +31,7 @@ import React from 'react';
   type _CreateStateProps = {
     bodyType: Fs.BodyType;
     serviceName: string;
-    description: string;
+    assetDescription: string;
     labels: string[];
     orchestratorName: string;
   }
@@ -51,8 +51,8 @@ import React from 'react';
     get serviceName() {
       return this._current.serviceName;
     }
-    get description() {
-      return this._current.description;
+    get assetDescription() {
+      return this._current.assetDescription;
     }
     get labels() {
       return this._current.labels;
@@ -70,7 +70,7 @@ import React from 'react';
         bodyType: c.bodyType,
         changes: {
           serviceName: c.serviceName || undefined,
-          description: c.description || undefined,
+          assetDescription: c.assetDescription || undefined,
           tagLabels: c.labels.length ? c.labels : undefined,
           orchestratorName: c.orchestratorName || undefined,
           localeLabels: [],
@@ -81,8 +81,8 @@ import React from 'react';
     withServiceName(serviceName: string): _CreateState {
       return new _CreateState({ ...this._current, serviceName }, this._origin);
     }
-    withDescription(description: string): _CreateState {
-      return new _CreateState({ ...this._current, description }, this._origin);
+    withDescription(assetDescription: string): _CreateState {
+      return new _CreateState({ ...this._current, assetDescription }, this._origin);
     }
     withLabels(labels: string[]): _CreateState {
       return new _CreateState({ ...this._current, labels }, this._origin);
@@ -95,7 +95,7 @@ import React from 'react';
   const _initProps: _CreateStateProps = {
     bodyType: 'PRINTOUT',
     serviceName: '',
-    description: '',
+    assetDescription: '',
     labels: [],
     orchestratorName: '',
   };
@@ -108,7 +108,7 @@ import React from 'react';
 
     const [fields, setFields] = React.useState<_TextFields>({
       serviceName: _initProps.serviceName,
-      description: _initProps.description,
+      assetDescription: _initProps.assetDescription,
     });
     const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
 
@@ -116,7 +116,7 @@ import React from 'react';
 
     const isChangesPresent = state.isChanged
       || fields.serviceName !== state.serviceName
-      || fields.description !== state.description;
+      || fields.assetDescription !== state.assetDescription;
 
     function onChangeServiceName(v: string) {
       setFields(prev => ({ ...prev, serviceName: v }));
@@ -125,10 +125,10 @@ import React from 'react';
       setState(prev => prev.withServiceName(fields.serviceName));
     }
     function onChangeDescription(v: string) {
-      setFields(prev => ({ ...prev, description: v }));
+      setFields(prev => ({ ...prev, assetDescription: v }));
     }
     function onBlurDescription() {
-      setState(prev => prev.withDescription(fields.description));
+      setState(prev => prev.withDescription(fields.assetDescription));
     }
     function onChangeLabels(value: string[]) {
       setState(prev => prev.withLabels(value));
@@ -147,7 +147,7 @@ import React from 'react';
     }
 
     function onCancel() {
-      setFields({ serviceName: _initProps.serviceName, description: _initProps.description });
+      setFields({ serviceName: _initProps.serviceName, assetDescription: _initProps.assetDescription });
       setStateRaw(new _CreateState(_initProps));
     }
 
@@ -155,7 +155,7 @@ import React from 'react';
       isDarkMode,
       isChanged: isChangesPresent,
       serviceName: fields.serviceName,
-      description: fields.description,
+      assetDescription: fields.assetDescription,
       labels: state.labels,
       labelOptions: selectOptions.labels,
       orchestratorName: state.orchestratorName,

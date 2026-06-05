@@ -64,7 +64,7 @@ public class ModifyFlowImpl extends AuthoringTemplate<ModifyFlowImpl, Model<Flow
       .docs(BodyType.FLOW)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.mergeModel(props.getFlowId(), body.getFlowName(), body, props.getAssetDescription());
+        return nextWorld.mergeModel(props.getFlowId(), body.getFlowName(), body, props.getAssetDescription(), props.getAssetLabels());
       });
   }
   
