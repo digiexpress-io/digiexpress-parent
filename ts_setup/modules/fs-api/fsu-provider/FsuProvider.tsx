@@ -2,6 +2,7 @@ import React from 'react';
 
 import { FsuWorld, FsuChange, FsuCreateChange } from './FsuWorld';
 import { Fs } from '../fs-types';
+import { useFsDirent } from '../fs-provider';
 
 
 export interface FsuContextType {
@@ -23,30 +24,20 @@ const FsuContext = React.createContext<FsuContextType | undefined>(undefined);
 
 export interface FsuProviderProps {
   children: React.ReactNode;
-  pushChange: (change: FsuChange) => Promise<void>;
-  pushCreate: (change: FsuCreateChange) => Promise<Fs.DirentBase>;
 }
 
 export const FsuProvider: React.FC<FsuProviderProps> = (props) => {
+  const fs = useFsDirent();
+
   const [fsu, setFsu] = React.useState<FsuWorld>(() => new FsuWorld());
-  const pendingRef = React.useRef<FsuWorld>(fsu);
-  pendingRef.current = fsu;
-
-  React.useEffect(() => {
-    if (pendingRef.current !== fsu) {
-      setFsu(pendingRef.current);
-    }
-  });
-
   const contextValue: FsuContextType = React.useMemo(() => {
-
     function withNewChange<T extends FsuChange>(id: string, init: () => T) {
-      if (pendingRef.current.isChange(id)) {
-        return pendingRef.current.getChange(id) as T;
+      if (fsu.isChange(id)) {
+        return fsu.getChange(id) as T;
       }
 
-      const [world] = pendingRef.current.withNewChange(init);
-      pendingRef.current = world;
+      const [world] = fsu.withNewChange(init)
+      setFsu(world);
       return world.getChange(id) as T;
     }
 
@@ -64,11 +55,11 @@ export const FsuProvider: React.FC<FsuProviderProps> = (props) => {
       isChange: (id) => fsu.isChange(id),
       push: async (changeId) => {
         const change = fsu.getChange(changeId);
-        await props.pushChange(change);
+        await fs.updateDirent(change);
         setFsu(prev => prev.clearChange(changeId));
       },
       pushCreate: async (change) => {
-        return props.pushCreate(change);
+        return fs.createDirent(change);
       },
       cancel: (changeId) => {
         setFsu(prev => prev.clearChange(changeId));

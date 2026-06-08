@@ -7,12 +7,6 @@ import {
   FsuChange
 } from '@dxs-ts/fs-api';
 
-export interface TextFields {
-  assetDescription: string;
-  urlValue: string;
-  intlValues: Record<string, string>;
-}
-
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   isLoading: boolean;
@@ -36,9 +30,6 @@ export interface UpdateOwnerState {
   onChangeConfigOptions: (value: string[]) => void;
   onChangeDescription: (value: string) => void;
   onToggleExpanded: () => void;
-  onBlurDescription: () => void;
-  onBlurIntlValue: (locale: string) => void;
-  onBlurUrlValue: () => void;
   onCancel: () => void;
 }
 
@@ -119,13 +110,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const linkProps = dirent?.type === 'ARTICLE_LINK' ? dirent.props as Fs.LinkProps : undefined;
 
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [fields, setFields] = React.useState<TextFields>({
-    assetDescription: linkProps?.assetDescription ?? '',
-    urlValue: linkProps?.urlValue ?? '',
-    intlValues: linkProps?.intlValues ?? {},
-  });
   const locales = selectOptions.languages;
-
+  console.log("dskjfh");
 
   const state = withNewChange(props.direntId, () => new _ChangeState({
     linkId: props.direntId,
@@ -141,10 +127,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     assetDescription: { text: linkProps?.assetDescription ?? '' }
   }));
 
-  const isChangesPresent = state.isChanged
-  // || fields.assetDescription !== state.assetDescription.text
-    || fields.urlValue !== state.urlValue
-    || Object.entries(fields.intlValues).some(([locale, val]) => val !== (state.intlValues[locale] ?? ''));
+  const isChangesPresent = state.isChanged;
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
@@ -153,15 +136,16 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeUrlValue(value: string) {
-    setFields(prev => ({ ...prev, urlValue: value }));
+    setState(prev => prev.withUrlValue(value)) 
   }
 
   function onChangeIntlValue(locale: string, value: string) {
-    setFields(prev => ({ ...prev, intlValues: { ...prev.intlValues, [locale]: value } }));
+    setState(prev => prev.withIntlValue(locale, value)) 
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: value }));
+    console.log(value)
+    setState(prev => prev.withDescription({ text: value }));
   }
 
   function onChangeArticles(value: string[]) {
@@ -180,24 +164,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setIsExpanded(prev => !prev);
   }
 
-  function onBlurUrlValue() {
-    setState(prev => prev.withUrlValue(fields.urlValue));
-  }
-
-  function onBlurIntlValue(locale: string) {
-    setState(prev => prev.withIntlValue(locale, fields.intlValues[locale] ?? ''));
-  }
-
-  function onBlurDescription() {
-    setState(prev => prev.withDescription({ text: fields.assetDescription }));
-  }
 
   function onCancel() {
-    setFields({
-      assetDescription: linkProps?.assetDescription ?? '',
-      urlValue: linkProps?.urlValue ?? '',
-      intlValues: linkProps?.intlValues ?? {},
-    });
+    // todo
     cancel(props.direntId);
   }
 
@@ -209,23 +178,20 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     id: state.id,
     isChanged: isChangesPresent,
     contentType: state.contentType,
-    urlValue: fields.urlValue,
-    intlValues: fields.intlValues,
+    urlValue: state.urlValue,
+    intlValues: state.intlValues,
     articles: state.articles,
     tagLabels: state.tagLabels,
     configOptions: state.configOptions,
-    assetDescription: fields.assetDescription,
+    assetDescription: state.assetDescription?.text,
     isExpanded,
     onChangeContentType,
     onChangeUrlValue,
-    onBlurUrlValue,
     onChangeIntlValue,
-    onBlurIntlValue,
     onChangeArticles,
     onChangeLabels,
     onChangeConfigOptions,
     onChangeDescription,
-    onBlurDescription,
     onToggleExpanded,
     onCancel,
   });

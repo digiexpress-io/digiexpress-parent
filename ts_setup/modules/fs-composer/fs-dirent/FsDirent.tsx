@@ -18,9 +18,10 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
 
   const isExpanded = useFsExpanded();
   const expanded = isExpanded(props.dirent.id) ?? false;
-  const { isChange, getChange } = useFsu();
-  const isUnsavedChanges = isChange(props.dirent.id) && getChange(props.dirent.id).isChanged;
+  //FSU:::boken const { isChange, getChange } = useFsu();
+  //const isUnsavedChanges = isChange(props.dirent.id) && getChange(props.dirent.id).isChanged;
 
+  const isUnsavedChanges = false;
 
   function handleClick() {
     if (ownerState.isChildren) {
@@ -29,7 +30,6 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
       ownerState.openAsset(ownerState.dirent);
     }
   }
-
 
   return (<>
     <FsDirentRoot className={classes.root + `${ownerState.showError ? 'error' : ''} ${ownerState.isActive ? 'active' : ''}`} ownerState={ownerState}

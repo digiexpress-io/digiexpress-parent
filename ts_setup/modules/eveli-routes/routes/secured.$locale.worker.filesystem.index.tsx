@@ -4,7 +4,7 @@ import { EveliSetup } from '../eveli-setup';
 import { FsSetup, FsThemeProvider } from '@dxs-ts/fs-composer';
 import { EveliApp } from '../eveli-app';
 import { FsDirentProvider, FsDirentProviderProps } from '@dxs-ts/fs-api';
-import { FsSearchProvider } from '../../fs-composer/fs-search';
+
 import { parseFsSearchParams, FsRouteSearchParams, FsNavProvider } from '@dxs-ts/fs-nav';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
@@ -16,6 +16,8 @@ export const Route = createFileRoute('/secured/$locale/worker/filesystem/')({
 const MergedToolbar: React.FC = () => {
   return (<EveliSetup.Toolbar />);
 };
+
+
 
 function Component() {
   const { getDirents } = useFetch('worker/rest/api/assets/fs.GET', {});
@@ -39,16 +41,13 @@ function Component() {
   return (
     <FsDirentProvider persistenceUnit={persistenceUnit}>
       <FsThemeProvider>
-        <FsNavProvider>
-          <FsSearchProvider>
-            <EveliApp
-              main={FsSetup.Main}
-              secondary={FsSetup.Secondary}
-              toolbar={MergedToolbar}
-              drawerWidth={450}
-            />
-          </FsSearchProvider>
-        </FsNavProvider>
+        <EveliApp
+          main={FsSetup.Main}
+          secondary={FsSetup.Secondary}
+          toolbar={MergedToolbar}
+          wrapper={FsNavProvider}
+          drawerWidth={450}
+        />
       </FsThemeProvider>
     </FsDirentProvider>
   );

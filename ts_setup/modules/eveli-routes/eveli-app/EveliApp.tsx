@@ -49,6 +49,8 @@ export interface ContainerProps {
   toolbar: React.FC;
   tabs?: React.FC;
 
+  wrapper?: React.FC<{ children: any }>;
+
   toolbarHeight?: Partial<EveliShellToolbarHeightOptions>;
   drawerWidth?: number;
   drawerOpen?: boolean;
@@ -56,8 +58,14 @@ export interface ContainerProps {
   children?: React.ReactNode
 };
 
+const FailSafeWrapper: React.FC<{ children: any }> = (props) => {
+  return (<>{props.children}</>)
+}
+
 export const EveliApp: React.FC<ContainerProps> = (components) => {
   const { main: UserContent, tabs: UserTabs, contentOnly } = components;
+  const Wrapper = components.wrapper ?? FailSafeWrapper;
+
 
   return (
     <IconbarProvider>
@@ -66,18 +74,20 @@ export const EveliApp: React.FC<ContainerProps> = (components) => {
         toolbarHeight={components.toolbarHeight} 
         drawerWidth={components.drawerWidth} >
         
-        {!contentOnly && (<ToggleDrawer {...components} />)}
+        <Wrapper>
+          {!contentOnly && (<ToggleDrawer {...components} />)}
 
-        {!contentOnly && (
-        <AppBar position='fixed' className={EveliShellClassName}>
-          {UserTabs ? <UserTabs /> : <></>}
-          </AppBar>)}
+          {!contentOnly && (
+            <AppBar position='fixed' className={EveliShellClassName}>
+              {UserTabs ? <UserTabs /> : <></>}
+            </AppBar>)}
 
-        <main role='main'>
-          <MuiContainer><UserContent /></MuiContainer>
-        </main>
+          <main role='main'>
+            <MuiContainer><UserContent /></MuiContainer>
+          </main>
 
-        <>{components.children}</>
+          <>{components.children}</>
+        </Wrapper>
       </EveliShell>
     </IconbarProvider>);
 }

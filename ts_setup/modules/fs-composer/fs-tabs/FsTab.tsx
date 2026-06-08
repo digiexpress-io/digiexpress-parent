@@ -14,8 +14,10 @@ export interface FsTabItemProps {
 
 export const FsTab: React.FC<FsTabItemProps> = ({ ownerState, className, index }) => {
   const tab = ownerState.tabs[index];
-  const { isChange, getChange } = useFsu();
-  const isChanged = isChange(tab.id) && getChange(tab.id).isChanged;
+  //FSU:::boken const  const { isChange, getChange } = useFsu();
+  // const isChanged = isChange(tab.id) && getChange(tab.id).isChanged;
+
+  const isChanged = false;
 
   return (
     <Tooltip title={tab.name} arrow enterDelay={700} placement="bottom">

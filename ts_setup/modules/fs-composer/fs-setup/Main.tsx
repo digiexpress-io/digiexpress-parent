@@ -5,9 +5,11 @@ import { FsTabs } from '../fs-tabs';
 import { FsBreadcrumb } from '../fs-breadcrumb';
 import { FsMain } from '../fs-main';
 import { FsColors } from '../fs-theme';
+import { FsuProvider } from '@dxs-ts/fs-api';
 
 const Main: React.FC<{}> = () => {
   const { isDarkMode } = useFsTheme();
+
 
   return (
     <Box sx={{
@@ -20,7 +22,10 @@ const Main: React.FC<{}> = () => {
       <FsTabs />
       <FsBreadcrumb />
       <Box sx={{ flex: 1, overflow: 'hidden' }}>
-        <FsMain />
+        <FsuProvider>
+          <FsMain />
+        </FsuProvider>
+
       </Box>
     </Box>)
 }

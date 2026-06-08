@@ -36,6 +36,7 @@ export class FsuWorld {
     if (change) {
       return change;
     }
+    console.log("cant find change", id, this._changes)
     throw new Error("Change not created!");
   }
 
