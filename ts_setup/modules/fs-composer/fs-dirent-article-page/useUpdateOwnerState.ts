@@ -3,11 +3,6 @@ import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 
-export interface TextFields {
-  content: string;
-  assetDescription: string;
-}
-
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
@@ -25,9 +20,7 @@ export interface UpdateOwnerState {
   isExpanded: boolean;
   onChangeLocale: (value: string) => void;
   onChangeContent: (value: string) => void;
-  onBlurContent: () => void;
   onChangeDescription: (value: string) => void;
-  onBlurDescription: () => void;
   onChangeConfigOptions: (value: string[]) => void;
   onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
@@ -40,7 +33,7 @@ type _ChangeStateProps = {
   bodyType: Fs.BodyType;
   locale: string;
   content: string;
-  assetDescription: string;
+  assetDescription: { text: string };
   configOptions: Fs.ConfigOption[];
   labels: string[];
   devMode: boolean;
@@ -69,27 +62,26 @@ class _ChangeState implements FsuChange {
   getCurrentProps(): { bodyType: Fs.BodyType; id: string; changes: Record<string, any> } {
     return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
   }
-
   withLocale(locale: string): _ChangeState {
     return new _ChangeState({ ...this._current, locale }, this._origin);
   }
-
   withContent(content: string): _ChangeState {
     return new _ChangeState({ ...this._current, content }, this._origin);
   }
-
-  withDescription(assetDescription: string): _ChangeState {
+  withDescription(assetDescription: { text: string }): _ChangeState {
     return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
-
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
-    return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
+    return new _ChangeState({
+      ...this._current, configOptions,
+      devMode: configOptions.includes('DEV_MODE'),
+      disabledMode: configOptions.includes('DISABLED_MODE')
+    }, this._origin);
   }
   withLabels(labels: string[]): _ChangeState {
     return new _ChangeState({ ...this._current, labels }, this._origin);
   }
 }
-
 
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
@@ -99,28 +91,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const dirent = getDirent(props.direntId)!;
   const pageProps = dirent.props as Fs.PageProps;
-
-  const state = withNewChange(props.direntId, () => new _ChangeState({
-    pageId: props.direntId,
-    bodyType: dirent.type,
-    locale: pageProps.localeCode,
-    content: pageProps.content ?? '',
-    assetDescription: pageProps.assetDescription ?? '',
-    configOptions: (pageProps.configOptions ?? []) as Fs.ConfigOption[],
-    labels: (pageProps.labels ?? []).map(l => l.value),
-    devMode: (pageProps.configOptions ?? []).includes('DEV_MODE'),
-    disabledMode: (pageProps.configOptions ?? []).includes('DISABLED_MODE'),
-  }));
-
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
-
-  const [fields, setFields] = React.useState<TextFields>({
-    content: pageProps.content ?? '',
-    assetDescription: pageProps.assetDescription ?? '',
-  });
-  const contentDebounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const [isExpanded, setIsExpanded] = React.useState(false);
-
   const articleName = getDirentName(pageProps.articleId) ?? '';
   const usedLocaleIds = Object.values(selectOptions.direntProps)
     .filter(p => p.type === 'ARTICLE_PAGE' && p.id !== props.direntId && (p as Fs.PageProps).articleId === pageProps.articleId)
@@ -130,70 +100,54 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   );
   const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('ARTICLE_PAGE');
 
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
+  const state = withNewChange(props.direntId, () => new _ChangeState({
+    pageId: props.direntId,
+    bodyType: dirent.type,
+    locale: pageProps.localeCode,
+    content: pageProps.content ?? '',
+    assetDescription: { text: pageProps.assetDescription ?? '' },
+    configOptions: (pageProps.configOptions ?? []) as Fs.ConfigOption[],
+    labels: (pageProps.labels ?? []).map(l => l.value),
+    devMode: (pageProps.configOptions ?? []).includes('DEV_MODE'),
+    disabledMode: (pageProps.configOptions ?? []).includes('DISABLED_MODE'),
+  }));
+
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+
   function onChangeLocale(value: string) {
     setState(prev => prev.withLocale(value));
   }
-
   function onChangeContent(value: string) {
-    setFields(prev => ({ ...prev, content: value }));
-    if (contentDebounceRef.current) {
-      clearTimeout(contentDebounceRef.current);
-    }
-    contentDebounceRef.current = setTimeout(() => {
-      setState(prev => prev.withContent(value));
-    }, 300);
+    setState(prev => prev.withContent(value))
   }
-
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: value }));
+    setState(prev => prev.withDescription({ text: value }));
   }
-
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
-
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
   }
-
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
-
-  function onBlurContent() {
-    if (contentDebounceRef.current) {
-      clearTimeout(contentDebounceRef.current);
-    }
-    setState(prev => prev.withContent(fields.content));
-  }
-
-  function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.assetDescription));
-  }
-
   function onCancel() {
-    if (contentDebounceRef.current) {
-      clearTimeout(contentDebounceRef.current);
-    }
-    setFields({
-      content: pageProps.content ?? '',
-      assetDescription: pageProps.assetDescription ?? '',
-    });
     cancel(props.direntId);
   }
 
-  const changes = state.isChanged
-    || fields.assetDescription !== state.assetDescription
-    || fields.content !== state.content;
+  const changes = state.isChanged;
 
   return ({
     isDarkMode,
     dirent,
     isLoading: !dirent,
     id: state.id,
-    content: fields.content,
+    content: state.content,
     locale: state.locale,
-    assetDescription: fields.assetDescription,
+    assetDescription: state.assetDescription.text,
     articleName,
     configOptions: state.configOptions,
     labels: state.labels,
@@ -208,8 +162,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeConfigOptions,
     onChangeLabels,
     onToggleExpanded,
-    onBlurContent,
-    onBlurDescription,
     onCancel,
   });
 };

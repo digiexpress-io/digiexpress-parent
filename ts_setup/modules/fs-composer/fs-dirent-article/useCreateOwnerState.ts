@@ -7,11 +7,6 @@ import {
 } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 
-export interface TextFields {
-  name: string;
-  orderNumber: string;
-  assetDescription: string;
-}
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
@@ -29,9 +24,6 @@ export interface CreateOwnerState {
   onChangeDescription: (value: string) => void;
   onChangeLabels: (value: string[]) => void;
   onChangeConfigOptions: (value: string[]) => void;
-  onBlurName: () => void;
-  onBlurOrderNumber: () => void;
-  onBlurDescription: () => void;
   onToggleExpanded: () => void;
   onSave: () => void;
   onCancel: () => void;
@@ -42,7 +34,7 @@ type _CreateStateProps = {
   name: string;
   parentId: string | undefined;
   order: number;
-  assetDescription: string;
+  assetDescription: { text: string };
   labels: string[];
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
@@ -87,7 +79,7 @@ class _CreateState implements FsuCreateChange {
   withOrder(order: string): _CreateState {
     return new _CreateState({ ...this._current, order: parseInt(order) || 0 }, this._origin);
   }
-  withDescription(assetDescription: string): _CreateState {
+  withDescription(assetDescription: { text: string }): _CreateState {
     return new _CreateState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _CreateState {
@@ -103,7 +95,6 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _initFields: TextFields = { name: '', orderNumber: '0', assetDescription: '' };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
@@ -117,36 +108,32 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const parentId = parentArticle?.id;
 
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [fields, setFields] = React.useState<TextFields>(_initFields);
-  const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState({
+
+  const _init: _CreateStateProps = {
     bodyType: 'ARTICLE',
     name: '',
     parentId,
     order: 0,
-    assetDescription: '',
+    assetDescription: { text: '' },
     labels: [],
     configOptions: [],
     devMode: false,
     authOnly: false,
-  }));
+  }
+  const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
+  const isChangesPresent = state.isChanged;
 
-  const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
-
-  const isChangesPresent = state.isChanged
-    || fields.name !== state.name
-    || fields.orderNumber !== state.orderNumber
-    || fields.assetDescription !== state.assetDescription;
 
   function onChangeName(value: string) {
-    setFields(prev => ({ ...prev, name: value }));
+    setState(prev => prev.withName(value));
   }
 
   function onChangeOrderNumber(value: string) {
-    setFields(prev => ({ ...prev, orderNumber: value }));
+    setState(prev => prev.withOrder(value));
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: value }));
+    setState(prev => prev.withDescription({ text: value }));
   }
 
   function onChangeLabels(value: string[]) {
@@ -161,18 +148,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setIsExpanded(prev => !prev);
   }
 
-  function onBlurName() {
-    setState(prev => prev.withName(fields.name));
-  }
-
-  function onBlurOrderNumber() {
-    setState(prev => prev.withOrder(fields.orderNumber));
-  }
-
-  function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.assetDescription));
-  }
-
   async function onSave() {
     try {
       const dirent = await pushCreate(state);
@@ -183,18 +158,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onCancel() {
-    setFields(_initFields);
-    setStateRaw(new _CreateState({
-      bodyType: 'ARTICLE',
-      name: '',
-      parentId,
-      order: 0,
-      assetDescription: '',
-      labels: [],
-      configOptions: [],
-      devMode: false,
-      authOnly: false,
-    }));
+    setState(new _CreateState(_init))
   }
 
   return ({
@@ -203,17 +167,14 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     parentArticlePath,
     isChanged: isChangesPresent,
     isExpanded,
-    name: fields.name,
-    orderNumber: fields.orderNumber,
-    assetDescription: fields.assetDescription,
+    name: state.name,
+    orderNumber: state.orderNumber,
+    assetDescription: state.assetDescription.text,
     labels: state.labels,
     configOptions: state.configOptions,
     onChangeName,
-    onBlurName,
     onChangeOrderNumber,
-    onBlurOrderNumber,
     onChangeDescription,
-    onBlurDescription,
     onChangeLabels,
     onChangeConfigOptions,
     onToggleExpanded,

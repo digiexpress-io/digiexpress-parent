@@ -39,21 +39,15 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField
-          required
-          value={ownerState.name}
+        <FsDirentTextField required value={ownerState.name}
           placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
           onChange={ownerState.onChangeName}
-          onBlur={ownerState.onBlurName}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.label' })}</Typography>
-        <FsDirentTextField
-          required
-          value={ownerState.orderNumber}
+        <FsDirentTextField required value={ownerState.orderNumber}
           placeholder={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.placeholder' })}
           onChange={ownerState.onChangeOrderNumber}
-          onBlur={ownerState.onBlurOrderNumber}
         />
 
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
@@ -64,11 +58,9 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-            <FsDirentTextField
-              value={ownerState.assetDescription}
+            <FsDirentTextField value={ownerState.assetDescription}
               placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
               onChange={ownerState.onChangeDescription}
-              onBlur={ownerState.onBlurDescription}
               multiline minRows={2} maxRows={5}
             />
 
@@ -79,10 +71,8 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
             <FsDirentTextFieldAutocomplete options={selectOptions.labels} value={ownerState.labels} onChange={ownerState.onChangeLabels} placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })} />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.commentsField.label' })}</Typography>
-            <FsDirentTextField
-              value={ownerState.comments}
+            <FsDirentTextField value={'todo'}
               placeholder={intl.formatMessage({ id: 'fs.dirent.article.commentsField.placeholder' })}
-              onChange={ownerState.onChangeComments}
               multiline minRows={2} maxRows={5}
             />
 

@@ -41,7 +41,6 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
           placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
           value={ownerState.name}
           onChange={ownerState.onChangeName}
-          onBlur={ownerState.onBlurName}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.label' })}</Typography>
@@ -50,7 +49,6 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
           placeholder={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.placeholder' })}
           value={ownerState.orderNumber}
           onChange={ownerState.onChangeOrderNumber}
-          onBlur={ownerState.onBlurOrderNumber}
         />
 
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
@@ -65,7 +63,6 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
               placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
               value={ownerState.assetDescription}
               onChange={ownerState.onChangeDescription}
-              onBlur={ownerState.onBlurDescription}
               multiline minRows={2} maxRows={5}
             />
 

@@ -4,10 +4,6 @@ import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 
-export interface TextFields {
-  content: string;
-  assetDescription: string;
-}
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
@@ -26,9 +22,7 @@ export interface CreateOwnerState {
   onChangeArticle: (value: string) => void;
   onChangeLocale: (value: string) => void;
   onChangeContent: (value: string) => void;
-  onBlurContent: () => void;
   onChangeDescription: (value: string) => void;
-  onBlurDescription: () => void;
   onChangeConfigOptions: (value: string[]) => void;
   onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
@@ -106,9 +100,8 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _initFields: TextFields = { content: '', assetDescription: '' };
 
-const _initProps: _CreateStateProps = {
+const _init: _CreateStateProps = {
   bodyType: 'ARTICLE_PAGE',
   articleId: '',
   locale: '',
@@ -127,75 +120,45 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const { openAsset } = useFsNav();
 
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [fields, setFields] = React.useState<TextFields>(_initFields);
-  const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
-  const contentDebounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
-  const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
+  const usedLocaleIds = state.articleId ? Object.values(selectOptions.direntProps)
+    .filter(p => p.type === 'ARTICLE_PAGE' && (p as Fs.PageProps).articleId === state.articleId)
+    .map(p => (p as Fs.PageProps).localeCode)
+    : [];
 
   const articleOptions: FsDirentSelectSingleOption[] = selectOptions.articles.map(item => ({
     value: item.value,
     label: getDirentName(item.value) ?? item.label,
   }));
 
-  const usedLocaleIds = state.articleId
-    ? Object.values(selectOptions.direntProps)
-      .filter(p => p.type === 'ARTICLE_PAGE' && (p as Fs.PageProps).articleId === state.articleId)
-      .map(p => (p as Fs.PageProps).localeCode)
-    : [];
   const localeOptions: FsDirentSelectSingleOption[] = selectOptions.languages.filter(
     l => !usedLocaleIds.includes(l.value)
   );
 
   const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('ARTICLE_PAGE');
-
-  const isChangesPresent = state.isChanged
-    || fields.content !== state.content
-    || fields.assetDescription !== state.assetDescription.text;
+  const isChangesPresent = state.isChanged;
 
   function onChangeArticle(value: string) {
     setState(prev => prev.withArticle(value));
   }
-
   function onChangeLocale(value: string) {
     setState(prev => prev.withLocale(value));
   }
-
   function onChangeContent(value: string) {
-    setFields(prev => ({ ...prev, content: value }));
-    if (contentDebounceRef.current) {
-      clearTimeout(contentDebounceRef.current);
-    }
-    contentDebounceRef.current = setTimeout(() => {
-      setState(prev => prev.withContent(value));
-    }, 300);
+    setState(prev => prev.withContent(value));
   }
-
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: value }));
+    setState(prev => prev.withDescription({ text: value }));
   }
-
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
-
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
   }
-
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
-  }
-
-  function onBlurContent() {
-    if (contentDebounceRef.current) {
-      clearTimeout(contentDebounceRef.current);
-    }
-    setState(prev => prev.withContent(fields.content));
-  }
-
-  function onBlurDescription() {
-    setState(prev => prev.withDescription({ text: fields.assetDescription }));
   }
 
   async function onSave() {
@@ -208,19 +171,15 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onCancel() {
-    if (contentDebounceRef.current) {
-      clearTimeout(contentDebounceRef.current);
-    }
-    setFields(_initFields);
-    setStateRaw(new _CreateState(_initProps));
+    setState(new _CreateState(_init))
   }
 
   return ({
     isDarkMode,
     articleId: state.articleId,
     locale: state.locale,
-    content: fields.content,
-    assetDescription: fields.assetDescription,
+    content: state.content,
+    assetDescription: state.assetDescription.text,
     configOptions: state.configOptions,
     labels: state.labels,
     labelOptions: selectOptions.labels,
@@ -232,9 +191,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeArticle,
     onChangeLocale,
     onChangeContent,
-    onBlurContent,
     onChangeDescription,
-    onBlurDescription,
     onChangeConfigOptions,
     onChangeLabels,
     onToggleExpanded,

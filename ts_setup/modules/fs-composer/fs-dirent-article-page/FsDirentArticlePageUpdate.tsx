@@ -41,7 +41,7 @@ export const FsDirentArticlePageUpdate: React.FC<FsDirentArticlePageUpdateProps>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}</Typography>
         <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
-          <MDEditor preview="edit" value={ownerState.content} onChange={(val) => ownerState.onChangeContent(val ?? '')} textareaProps={{ onBlur: ownerState.onBlurContent }} />
+          <MDEditor preview="edit" value={ownerState.content} onChange={(val) => ownerState.onChangeContent(val ?? '')} />
         </div>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.articleField.label' })}</Typography>
@@ -58,11 +58,9 @@ export const FsDirentArticlePageUpdate: React.FC<FsDirentArticlePageUpdateProps>
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-            <FsDirentTextField
-              value={ownerState.assetDescription}
+            <FsDirentTextField value={ownerState.assetDescription}
               placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
               onChange={ownerState.onChangeDescription}
-              onBlur={ownerState.onBlurDescription}
               multiline
               minRows={2} maxRows={4}
             />

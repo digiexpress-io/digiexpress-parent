@@ -26,7 +26,7 @@ export const FsDirentArticlePageCreate: React.FC<FsDirentArticlePageCreateProps>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}</Typography>
         <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
-          <MDEditor preview="edit" value={ownerState.content} onChange={(val) => ownerState.onChangeContent(val ?? '')} textareaProps={{ onBlur: ownerState.onBlurContent }} />
+          <MDEditor preview="edit" value={ownerState.content} onChange={(val) => ownerState.onChangeContent(val ?? '')} />
         </div>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.page.articleField.label' })}</Typography>
@@ -47,7 +47,6 @@ export const FsDirentArticlePageCreate: React.FC<FsDirentArticlePageCreateProps>
               value={ownerState.assetDescription}
               placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
               onChange={ownerState.onChangeDescription}
-              onBlur={ownerState.onBlurDescription}
               multiline minRows={2} maxRows={4}
             />
 

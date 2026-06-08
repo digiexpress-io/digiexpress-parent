@@ -111,7 +111,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [isExpanded, setIsExpanded] = React.useState(false);
   const locales = selectOptions.languages;
-  console.log("dskjfh");
 
   const state = withNewChange(props.direntId, () => new _ChangeState({
     linkId: props.direntId,
@@ -144,7 +143,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onChangeDescription(value: string) {
-    console.log(value)
     setState(prev => prev.withDescription({ text: value }));
   }
 
