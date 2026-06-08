@@ -36,7 +36,6 @@ export const FsDirentArticleLinkCreate: React.FC<FsDirentArticleLinkCreateProps>
           value={ownerState.urlValue}
           placeholder={intl.formatMessage({ id: 'fs.dirent.link.urlValueField.placeholder' })}
           onChange={ownerState.onChangeUrlValue}
-          onBlur={ownerState.onBlurUrlValue}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.contentTypeField.label' })}</Typography>
@@ -46,7 +45,7 @@ export const FsDirentArticleLinkCreate: React.FC<FsDirentArticleLinkCreateProps>
         {ownerState.locales.map((locale) => (
           <div key={locale.value} className={classes.localeRow}>
             <Typography className={classes.localeLabel}>{intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}</Typography>
-            <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''} onChange={(value) => ownerState.onChangeIntlValue(locale.value, value)} onBlur={() => ownerState.onBlurIntlValue(locale.value)} />
+            <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''} onChange={(value) => ownerState.onChangeIntlValue(locale.value, value)} />
           </div>
         ))}
 
@@ -63,7 +62,6 @@ export const FsDirentArticleLinkCreate: React.FC<FsDirentArticleLinkCreateProps>
               placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
               onChange={ownerState.onChangeDescription}
               multiline minRows={2} maxRows={5}
-              onBlur={ownerState.onBlurDescription}
             />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>

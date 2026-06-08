@@ -8,12 +8,6 @@ import {
 } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 
-export interface TextFields {
-  assetDescription: string;
-  urlValue: string;
-  intlValues: Record<string, string>;
-}
-
 export interface CreateOwnerState {
   isDarkMode: boolean;
   locales: Fs.SelectOption[];
@@ -34,9 +28,6 @@ export interface CreateOwnerState {
   onChangeConfigOptions: (value: string[]) => void;
   onChangeDescription: (value: string) => void;
   onToggleExpanded: () => void;
-  onBlurDescription: () => void;
-  onBlurIntlValue: (locale: string) => void;
-  onBlurUrlValue: () => void;
   onSave: () => void;
   onCancel: () => void;
 }
@@ -114,7 +105,7 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _initProps: _CreateStateProps = {
+const _init: _CreateStateProps = {
   bodyType: 'ARTICLE_LINK',
   type: 'internal',
   value: '',
@@ -127,7 +118,6 @@ const _initProps: _CreateStateProps = {
   assetDescription: { text: '' },
 };
 
-const _emptyFields: TextFields = { assetDescription: '', urlValue: '', intlValues: {} };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
@@ -136,31 +126,25 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const { openAsset } = useFsNav();
 
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [fields, setFields] = React.useState<TextFields>(_emptyFields);
-  const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
+  const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
   const locales = selectOptions.languages;
 
-  const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
-
-  const isChangesPresent = state.isChanged
-    || fields.assetDescription !== state.assetDescription.text
-    || fields.urlValue !== state.urlValue
-    || Object.entries(fields.intlValues).some(([locale, val]) => val !== (state.intlValues[locale] ?? ''));
+  const isChangesPresent = state.isChanged;
 
   function onChangeContentType(value: string) {
     setState(prev => prev.withContentType(value as Fs.LinkType));
   }
 
   function onChangeUrlValue(value: string) {
-    setFields(prev => ({ ...prev, urlValue: value }));
+    setState(prev => prev.withUrlValue(value));
   }
 
   function onChangeIntlValue(locale: string, value: string) {
-    setFields(prev => ({ ...prev, intlValues: { ...prev.intlValues, [locale]: value } }));
+    setState(prev => prev.withIntlValue(locale, value));
   }
 
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: value }));
+    setState(prev => prev.withDescription({ text: value }));
   }
 
   function onChangeArticles(value: string[]) {
@@ -179,17 +163,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setIsExpanded(prev => !prev);
   }
 
-  function onBlurUrlValue() {
-    setState(prev => prev.withUrlValue(fields.urlValue));
-  }
-
-  function onBlurIntlValue(locale: string) {
-    setState(prev => prev.withIntlValue(locale, fields.intlValues[locale] ?? ''));
-  }
-
-  function onBlurDescription() {
-    setState(prev => prev.withDescription({ text: fields.assetDescription }));
-  }
 
   async function onSave() {
     try {
@@ -201,8 +174,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onCancel() {
-    setFields(_emptyFields);
-    setStateRaw(new _CreateState(_initProps));
+    setState(new _CreateState(_init))
   }
 
   return ({
@@ -210,23 +182,20 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     locales,
     isChanged: isChangesPresent,
     contentType: state.contentType,
-    urlValue: fields.urlValue,
-    intlValues: fields.intlValues,
+    urlValue: state.urlValue,
+    intlValues: state.intlValues,
     articles: state.articles,
     tagLabels: state.tagLabels,
     configOptions: state.configOptions,
-    assetDescription: fields.assetDescription,
+    assetDescription: state.assetDescription.text,
     isExpanded,
     onChangeContentType,
     onChangeUrlValue,
-    onBlurUrlValue,
     onChangeIntlValue,
-    onBlurIntlValue,
     onChangeArticles,
     onChangeLabels,
     onChangeConfigOptions,
     onChangeDescription,
-    onBlurDescription,
     onToggleExpanded,
     onSave,
     onCancel,
