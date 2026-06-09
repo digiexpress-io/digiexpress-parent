@@ -36,8 +36,8 @@ export const FsDirentTemplateUpdate: React.FC<FsDirentTemplateUpdateProps> = (pr
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel />
-          <FsDirentButtonSave />
+          <FsDirentButtonCancel onClick={ownerState.onCancel} />
+          <FsDirentButtonSave onClick={ownerState.onSave} disabled />
         </div>
 
       </div>

@@ -30,8 +30,8 @@ export const FsDirentTemplateCreate: React.FC<FsDirentTemplateCreateProps> = () 
         </div>
 
         <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel />
-          <FsDirentButtonSave />
+          <FsDirentButtonCancel onClick={ownerState.onCancel} />
+          <FsDirentButtonSave onClick={ownerState.onSave} disabled />
         </div>
 
       </div>

@@ -35,7 +35,7 @@ export const FsDirentFolderUpdate: React.FC<FsDirentFolderUpdateProps> = (props)
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />
           <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={() => push(ownerState.id)} disabled={!ownerState.isChanged} />
+          <FsDirentButtonSave onClick={() => push(ownerState.id)} disabled />
         </div>
 
       </div>

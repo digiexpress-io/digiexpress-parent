@@ -30,7 +30,7 @@ export const FsDirentFolderCreate: React.FC<FsDirentFolderCreateProps> = (props)
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={ownerState.onSave} />
+          <FsDirentButtonSave onClick={ownerState.onSave} disabled />
         </div>
 
       </div>
