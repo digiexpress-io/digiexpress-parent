@@ -5,21 +5,14 @@ import { useFsTheme } from '../fs-theme';
 export interface CreateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
-  isExpanded: boolean;
   serviceId: string;
   localeId: string;
   content: string;
-  assetDescription: { text: string };
-  labels: string[];
-  labelOptions: string[];
   printoutOptions: Fs.SelectOption[];
   localeOptions: Fs.SelectOption[];
   onChangeServiceId: (value: string) => void;
   onChangeLocaleId: (value: string) => void;
   onChangeContent: (value: string) => void;
-  onChangeDescription: (value: string) => void;
-  onChangeLabels: (value: string[]) => void;
-  onToggleExpanded: () => void;
 }
 
 type _CreateStateProps = {
@@ -27,8 +20,6 @@ type _CreateStateProps = {
   serviceId: string;
   localeId: string;
   content: string;
-  assetDescription: { text: string };
-  labels: string[];
 }
 
 class _CreateState implements FsuCreateChange {
@@ -52,12 +43,6 @@ class _CreateState implements FsuCreateChange {
   get content() {
     return this._current.content;
   }
-  get assetDescription() {
-    return this._current.assetDescription;
-  }
-  get labels() {
-    return this._current.labels;
-  }
   get isChanged(): boolean {
     return !!this._current.serviceId && !!this._current.localeId;
   }
@@ -69,8 +54,6 @@ class _CreateState implements FsuCreateChange {
         serviceId: this._current.serviceId,
         localeId: this._current.localeId,
         content: this._current.content || undefined,
-        assetDescription: this._current.assetDescription || undefined,
-        labels: this._current.labels.length ? this._current.labels : undefined,
       }
     };
   }
@@ -84,28 +67,19 @@ class _CreateState implements FsuCreateChange {
   withContent(content: string): _CreateState {
     return new _CreateState({ ...this._current, content }, this._origin);
   }
-  withDescription(assetDescription: { text: string }): _CreateState {
-    return new _CreateState({ ...this._current, assetDescription }, this._origin);
-  }
-  withLabels(labels: string[]): _CreateState {
-    return new _CreateState({ ...this._current, labels }, this._origin);
-  }
 }
 
 const _init: _CreateStateProps = {
   bodyType: 'PRINTOUT_PAGE',
   serviceId: '',
   localeId: '',
-  content: '',
-  assetDescription: { text: '' },
-  labels: [],
+  content: ''
 };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { selectOptions } = useFsDirent();
 
-  const [isExpanded, setIsExpanded] = React.useState(false);
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
   const usedLocaleIds = state.serviceId
@@ -127,33 +101,17 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   function onChangeContent(value: string) {
     setState(prev => prev.withContent(value));
   }
-  function onChangeDescription(value: string) {
-    setState(prev => prev.withDescription({ text: value }));
-  }
-  function onChangeLabels(value: string[]) {
-    setState(prev => prev.withLabels(value));
-  }
-  function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
-  }
 
   return {
     isDarkMode,
     isChanged: state.isChanged,
-    isExpanded,
     serviceId: state.serviceId,
     localeId: state.localeId,
     content: state.content,
-    assetDescription: state.assetDescription,
-    labels: state.labels,
-    labelOptions: selectOptions.labels,
     printoutOptions: selectOptions.printouts,
     localeOptions,
     onChangeServiceId,
     onChangeLocaleId,
-    onChangeContent,
-    onChangeDescription,
-    onChangeLabels,
-    onToggleExpanded,
+    onChangeContent
   };
 };

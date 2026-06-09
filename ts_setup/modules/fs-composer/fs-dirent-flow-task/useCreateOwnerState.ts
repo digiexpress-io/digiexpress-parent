@@ -5,12 +5,8 @@ import { Fs, FsuCreateChange } from '@dxs-ts/fs-api';
 export interface CreateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
-  isExpanded: boolean;
   name: string;
-  tagLabels: string[];
   onChangeName: (value: string) => void;
-  onChangeLabels: (value: string[]) => void;
-  onToggleExpanded: () => void;
 }
 
 type _CreateStateProps = {
@@ -30,7 +26,6 @@ class _CreateState implements FsuCreateChange {
 
   get bodyType() { return this._current.bodyType; }
   get name() { return this._current.name; }
-  get tagLabels() { return this._current.tagLabels; }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
@@ -38,16 +33,12 @@ class _CreateState implements FsuCreateChange {
       bodyType: this._current.bodyType,
       changes: {
         name: this._current.name || undefined,
-        tagLabels: this._current.tagLabels,
       },
     };
   }
 
   withName(name: string): _CreateState {
     return new _CreateState({ ...this._current, name }, this._origin);
-  }
-  withTagLabels(tagLabels: string[]): _CreateState {
-    return new _CreateState({ ...this._current, tagLabels }, this._origin);
   }
 }
 
@@ -56,29 +47,16 @@ const _init: _CreateStateProps = { bodyType: 'FLOW_TASK', name: '', tagLabels: [
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
 
-  const [isExpanded, setIsExpanded] = React.useState(false);
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
   function onChangeName(value: string) {
     setState(prev => prev.withName(value));
   }
 
-  function onChangeLabels(value: string[]) {
-    setState(prev => prev.withTagLabels(value));
-  }
-
-  function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
-  }
-
   return ({
     isDarkMode,
     isChanged: state.isChanged,
-    isExpanded,
     name: state.name,
-    tagLabels: state.tagLabels,
-    onChangeName,
-    onChangeLabels,
-    onToggleExpanded,
+    onChangeName
   });
 };

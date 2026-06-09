@@ -52,21 +52,6 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourceUp
           onChange={ownerState.onChangePrintoutPageIds}
         />
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-        <FsDirentTextField multiline minRows={2}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
-          value={ownerState.assetDescription}
-          onChange={ownerState.onChangeDescription}
-        />
-
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
-        <FsDirentTextFieldAutocomplete
-          options={ownerState.labelOptions}
-          value={ownerState.labels}
-          onChange={ownerState.onChangeLabels}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })}
-        />
-
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.label' })}</Typography>
         <input
           ref={fileInputRef}

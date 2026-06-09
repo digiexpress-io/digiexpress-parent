@@ -9,10 +9,6 @@ export interface FsDirentPrintoutPageClasses {
   title: string;
   formContainer: string;
   label: string;
-  expandToggle: string;
-  expandToggleIcon: string;
-  expandToggleIconOpen: string;
-  optionalFields: string;
   resourceList: string;
 }
 
@@ -24,10 +20,6 @@ export const useUtilityClasses = () => {
     title: ['title'],
     formContainer: ['formContainer'],
     label: ['label'],
-    expandToggle: ['expandToggle'],
-    expandToggleIcon: ['expandToggleIcon'],
-    expandToggleIconOpen: ['expandToggleIconOpen'],
-    optionalFields: ['optionalFields'],
     resourceList: ['resourceList'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -61,34 +53,10 @@ export const FsDirentPrintoutPageRoot = styled('div', {
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
   },
 
-  [`& .${MUI_NAME}-expandToggle`]: {
-    ...theme.typography.subtitle2,
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(0.5),
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-  },
-
-  [`& .${MUI_NAME}-expandToggleIcon`]: {
-    transition: 'transform 0.2s',
-  },
-
-  [`& .${MUI_NAME}-expandToggleIconOpen`]: {
-    transition: 'transform 0.2s',
-    transform: 'rotate(180deg)',
-  },
-
   [`& .${MUI_NAME}-resourceList`]: {
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(0.5),
   },
 
-  [`& .${MUI_NAME}-optionalFields`]: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1.5),
-    paddingTop: theme.spacing(1),
-  },
 }));

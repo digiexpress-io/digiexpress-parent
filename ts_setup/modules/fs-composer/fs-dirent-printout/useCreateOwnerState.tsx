@@ -7,22 +7,15 @@ import React from 'react';
     isDarkMode: boolean;
     isChanged: boolean;
     serviceName: string;
-    assetDescription: string;
-    labels: string[];
-    labelOptions: string[];
     orchestratorName: string;
     flows: Fs.SelectOption[];
     onChangeServiceName: (value: string) => void;
-    onChangeDescription: (value: string) => void;
-    onChangeLabels: (value: string[]) => void;
     onChangeOrchestratorName: (value: string) => void;
   }
 
   type _CreateStateProps = {
     bodyType: Fs.BodyType;
     serviceName: string;
-    assetDescription: { text: string };
-    labels: string[];
     orchestratorName: string;
   }
 
@@ -41,12 +34,6 @@ import React from 'react';
     get serviceName() {
       return this._current.serviceName;
     }
-    get assetDescription() {
-      return this._current.assetDescription;
-    }
-    get labels() {
-      return this._current.labels;
-    }
     get orchestratorName() {
       return this._current.orchestratorName;
     }
@@ -60,8 +47,6 @@ import React from 'react';
         bodyType: c.bodyType,
         changes: {
           serviceName: c.serviceName || undefined,
-          assetDescription: c.assetDescription || undefined,
-          tagLabels: c.labels.length ? c.labels : undefined,
           orchestratorName: c.orchestratorName || undefined,
           localeLabels: [],
         },
@@ -71,12 +56,6 @@ import React from 'react';
     withServiceName(serviceName: string): _CreateState {
       return new _CreateState({ ...this._current, serviceName }, this._origin);
     }
-    withDescription(assetDescription: { text: string }): _CreateState {
-      return new _CreateState({ ...this._current, assetDescription }, this._origin);
-    }
-    withLabels(labels: string[]): _CreateState {
-      return new _CreateState({ ...this._current, labels }, this._origin);
-    }
     withOrchestratorName(orchestratorName: string): _CreateState {
       return new _CreateState({ ...this._current, orchestratorName }, this._origin);
     }
@@ -85,8 +64,6 @@ import React from 'react';
   const _init: _CreateStateProps = {
     bodyType: 'PRINTOUT',
     serviceName: '',
-    assetDescription: { text: '' },
-    labels: [],
     orchestratorName: '',
   };
 
@@ -99,12 +76,6 @@ import React from 'react';
     function onChangeServiceName(value: string) {
       setState(prev => prev.withServiceName(value));
     }
-    function onChangeDescription(value: string) {
-      setState(prev => prev.withDescription({ text: value }));
-    }
-    function onChangeLabels(value: string[]) {
-      setState(prev => prev.withLabels(value));
-    }
     function onChangeOrchestratorName(value: string) {
       setState(prev => prev.withOrchestratorName(value));
     }
@@ -113,14 +84,9 @@ import React from 'react';
       isDarkMode,
       isChanged: state.isChanged,
       serviceName: state.serviceName,
-      assetDescription: state.assetDescription.text,
-      labels: state.labels,
-      labelOptions: selectOptions.labels,
       orchestratorName: state.orchestratorName,
       flows: selectOptions.flows,
       onChangeServiceName,
-      onChangeDescription,
-      onChangeLabels,
       onChangeOrchestratorName,
     };
   };

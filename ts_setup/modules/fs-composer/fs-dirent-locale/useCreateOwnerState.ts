@@ -1,7 +1,6 @@
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
-import { Fs, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { Fs, FsuCreateChange } from '@dxs-ts/fs-api';
 
 export interface TextFields {
   locale: string;
@@ -12,9 +11,6 @@ export interface CreateOwnerState {
   locale: string;
   isChanged: boolean;
   onChangeLocale: (value: string) => void;
-  onBlurLocale: () => void;
-  onSave: () => void;
-  onCancel: () => void;
 }
 
 type _CreateStateProps = {
@@ -47,49 +43,24 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _initFields: _CreateStateProps = { bodyType: 'LOCALE', locale: '' };
+const _init: _CreateStateProps = { bodyType: 'LOCALE', locale: '' };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { pushCreate } = useFsu();
-  const { openAsset } = useFsNav();
 
-  const [fields, setFields] = React.useState<TextFields>(_initFields);
-  const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initFields));
+  const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
-  const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
 
-  const isChangesPresent = state.isChanged || fields.locale !== state.locale;
+  const isChangesPresent = state.isChanged;
 
   function onChangeLocale(value: string) {
-    setFields(prev => ({ ...prev, locale: value }));
-  }
-
-  function onBlurLocale() {
-    setState(prev => prev.withLocale(fields.locale));
-  }
-
-  async function onSave() {
-    try {
-      const dirent = await pushCreate(state);
-      openAsset(dirent);
-    } catch {
-      // error snackbar already shown by handlePushCreate
-    }
-  }
-
-  function onCancel() {
-    setFields(_initFields);
-    setStateRaw(new _CreateState(_initFields));
+    setState(prev => prev.withLocale(value));
   }
 
   return ({
+    locale: state.locale,
     isDarkMode,
-    locale: fields.locale,
     isChanged: isChangesPresent,
-    onChangeLocale,
-    onBlurLocale,
-    onSave,
-    onCancel,
+    onChangeLocale
   });
 };

@@ -5,7 +5,6 @@ import { OwnerState } from './useOwnerState';
 import { FsDirentArticle } from '../fs-dirent-article';
 import { FsDirentFolder } from '../fs-dirent-folder';
 import { FsDirentArticleLink } from '../fs-dirent-article-link';
-import { FsDirentPhone } from '../fs-dirent-phone';
 import { FsDirentArticleWorkflow } from '../fs-dirent-article-workflow';
 import { FsDirentLocale } from '../fs-dirent-locale';
 import { FsDirentArticlePage } from '../fs-dirent-article-page';

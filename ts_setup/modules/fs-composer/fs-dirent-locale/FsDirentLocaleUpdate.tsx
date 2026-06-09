@@ -1,11 +1,8 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsDirent, useFsu } from '@dxs-ts/fs-api';
+import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
-import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentLocaleRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
@@ -18,7 +15,6 @@ export const FsDirentLocaleUpdate: React.FC<FsDirentLocaleUpdateProps> = (props)
   const ownerState = useUpdateOwnerState(props);
 
   const { getConfigOptionsForType } = useFsDirent();
-  const { push } = useFsu();
   const configOptions = getConfigOptionsForType('LOCALE');
 
   return (
@@ -33,23 +29,8 @@ export const FsDirentLocaleUpdate: React.FC<FsDirentLocaleUpdateProps> = (props)
           disabled
         />
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-        <FsDirentTextField
-          value={ownerState.assetDescription}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
-          onChange={ownerState.onChangeDescription}
-          onBlur={ownerState.onBlurDescription}
-          multiline minRows={2} maxRows={4}
-        />
-
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
         <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
-
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={() => push(ownerState.id)} />
-        </div>
 
       </div>
     </FsDirentLocaleRoot>

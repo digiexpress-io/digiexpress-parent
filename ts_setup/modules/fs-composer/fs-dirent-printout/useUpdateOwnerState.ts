@@ -11,10 +11,19 @@ type _ChangeStateProps = {
   printoutId: string;
   bodyType: Fs.BodyType;
   serviceName: string;
-  assetDescription: { text: string };
-  labels: string[];
   orchestratorName: string;
   intlValues: Record<string, string>;
+}
+
+export interface UpdateOwnerState {
+  isDarkMode: boolean;
+  isChanged: boolean;
+  serviceName: string;
+  orchestratorName: string;
+  flows: Fs.SelectOption[];
+  connectedPages: ConnectedPage[];
+  onChangeServiceName: (value: string) => void;
+  onChangeOrchestratorName: (value: string) => void;
 }
 
 class _ChangeState implements FsuChange {
@@ -35,12 +44,6 @@ class _ChangeState implements FsuChange {
   get serviceName() {
     return this._current.serviceName;
   }
-  get assetDescription() {
-    return this._current.assetDescription;
-  }
-  get labels() {
-    return this._current.labels;
-  }
   get orchestratorName() {
     return this._current.orchestratorName;
   }
@@ -59,8 +62,6 @@ class _ChangeState implements FsuChange {
       changes: {
         serviceId: c.printoutId,
         serviceName: c.serviceName || undefined,
-        assetDescription: c.assetDescription || undefined,
-        tagLabels: c.labels.length ? c.labels : undefined,
         orchestratorName: c.orchestratorName || undefined,
         localeLabels: Object.entries(c.intlValues).map(([locale, labelValue]) => ({ locale, labelValue })),
       },
@@ -69,12 +70,6 @@ class _ChangeState implements FsuChange {
 
   withServiceName(serviceName: string): _ChangeState {
     return new _ChangeState({ ...this._current, serviceName }, this._origin);
-  }
-  withDescription(assetDescription: { text: string }): _ChangeState {
-    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
-  }
-  withLabels(labels: string[]): _ChangeState {
-    return new _ChangeState({ ...this._current, labels }, this._origin);
   }
   withOrchestratorName(orchestratorName: string): _ChangeState {
     return new _ChangeState({ ...this._current, orchestratorName }, this._origin);
@@ -87,21 +82,6 @@ class _ChangeState implements FsuChange {
   }
 }
 
-export interface UpdateOwnerState {
-  isDarkMode: boolean;
-  isChanged: boolean;
-  serviceName: string;
-  assetDescription: string;
-  labels: string[];
-  labelOptions: string[];
-  orchestratorName: string;
-  flows: Fs.SelectOption[];
-  connectedPages: ConnectedPage[];
-  onChangeServiceName: (value: string) => void;
-  onChangeDescription: (value: string) => void;
-  onChangeLabels: (value: string[]) => void;
-  onChangeOrchestratorName: (value: string) => void;
-}
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
@@ -115,8 +95,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     printoutId: props.direntId,
     bodyType: dirent.type,
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-    assetDescription: { text: printoutProps.assetDescription ?? '' },
-    labels: (printoutProps.labels ?? []).map(l => l.value),
     orchestratorName: printoutProps.orchestratorName ?? '',
     intlValues: printoutProps.intlValues ?? {},
   }));
@@ -134,12 +112,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeServiceName(value: string) {
     setState(prev => prev.withServiceName(value));
   }
-  function onChangeDescription(value: string) {
-    setState(prev => prev.withDescription({ text: value }));
-  }
-  function onChangeLabels(value: string[]) {
-    setState(prev => prev.withLabels(value));
-  }
   function onChangeOrchestratorName(value: string) {
     setState(prev => prev.withOrchestratorName(value));
   }
@@ -147,15 +119,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isDarkMode,
     isChanged: state.isChanged,
     serviceName: state.serviceName,
-    assetDescription: state.assetDescription?.text,
-    labels: state.labels,
-    labelOptions: selectOptions.labels,
     orchestratorName: state.orchestratorName,
     flows: selectOptions.flows,
     connectedPages,
     onChangeServiceName,
-    onChangeDescription,
-    onChangeLabels,
     onChangeOrchestratorName,
   };
 };

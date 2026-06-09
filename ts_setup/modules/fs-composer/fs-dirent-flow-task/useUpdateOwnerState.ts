@@ -12,19 +12,14 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   id: string;
   isChanged: boolean;
-  isExpanded: boolean;
   taskValue: string;
-  tagLabels: string[];
   onChangeTaskValue: (value: string) => void;
-  onChangeLabels: (value: string[]) => void;
-  onToggleExpanded: () => void;
 }
 
 type _ChangeStateProps = {
   flowTaskId: string;
   bodyType: Fs.BodyType;
   flowTaskValue: string;
-  tagLabels: string[];
 }
 
 class _ChangeState implements FsuChange {
@@ -39,7 +34,6 @@ class _ChangeState implements FsuChange {
   get id() { return this._current.flowTaskId; }
   get bodyType() { return this._current.bodyType; }
   get flowTaskValue() { return this._current.flowTaskValue; }
-  get tagLabels() { return this._current.tagLabels; }
 
   get isChanged(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
@@ -52,16 +46,12 @@ class _ChangeState implements FsuChange {
       changes: {
         flowTaskId: this.id,
         flowTaskValue: this._current.flowTaskValue,
-        tagLabels: this._current.tagLabels,
       },
     };
   }
 
   withFlowTaskValue(flowTaskValue: string): _ChangeState {
     return new _ChangeState({ ...this._current, flowTaskValue }, this._origin);
-  }
-  withTagLabels(tagLabels: string[]): _ChangeState {
-    return new _ChangeState({ ...this._current, tagLabels }, this._origin);
   }
 }
 
@@ -76,37 +66,24 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const dirent = getDirent(props.direntId);
   const flowTaskProps = dirent?.props as Fs.FlowTaskProps | undefined;
 
-  const [isExpanded, setIsExpanded] = React.useState(false);
 
   const state = withNewChange(props.direntId, () => new _ChangeState({
     flowTaskId: props.direntId,
     bodyType: flowTaskProps!.type,
     flowTaskValue: flowTaskProps?.taskValue ?? '',
-    tagLabels: (flowTaskProps?.labels ?? []).map(l => l.value),
   }));
 
   function onChangeTaskValue(value: string) {
     setState(prev => prev.withFlowTaskValue(value));
   }
 
-  function onChangeLabels(value: string[]) {
-    setState(prev => prev.withTagLabels(value));
-  }
-
-  function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
-  }
 
   return {
     isDarkMode,
     dirent,
     id: state.id,
     isChanged: state.isChanged,
-    isExpanded,
     taskValue: state.flowTaskValue,
-    tagLabels: state.tagLabels,
     onChangeTaskValue,
-    onChangeLabels,
-    onToggleExpanded,
   };
 };

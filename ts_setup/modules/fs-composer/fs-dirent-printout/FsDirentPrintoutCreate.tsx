@@ -3,7 +3,6 @@ import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
-import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { useUtilityClasses, FsDirentPrintoutRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentPrintoutCreateProps } from './FsDirentPrintoutProps';
@@ -30,21 +29,6 @@ export const FsDirentPrintoutCreate: React.FC<FsDirentPrintoutCreateProps> = (_p
           value={ownerState.orchestratorName}
           onChange={ownerState.onChangeOrchestratorName}
         />
-
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-        <FsDirentTextField multiline minRows={2} maxRows={5}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
-          value={ownerState.assetDescription}
-          onChange={ownerState.onChangeDescription}
-        />
-
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
-        <FsDirentTextFieldAutocomplete options={ownerState.labelOptions}
-          value={ownerState.labels}
-          onChange={ownerState.onChangeLabels}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })}
-        />
-
 
       </div>
     </FsDirentPrintoutRoot>
