@@ -32,7 +32,8 @@ export const FsDirentRenameRoot = styled('div', {
   flexDirection: 'column',
 
   [`& .${MUI_NAME}-title`]: {
-    ...theme.typography.caption,
+    ...theme.typography.subtitle2,
+    fontWeight: 500,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     marginBottom: theme.spacing(1),
   },

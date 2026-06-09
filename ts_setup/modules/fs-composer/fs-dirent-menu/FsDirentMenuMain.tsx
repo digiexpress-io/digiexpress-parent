@@ -1,9 +1,9 @@
 import React from 'react';
-import { MenuItem, Divider, Typography, Box, Chip } from '@mui/material';
+import { MenuItem, Divider, Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
-import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
+import { useUtilityClasses } from './useUtilityClasses';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentMenuDeleteDialog } from './FsDirentMenuDeleteDialog';
 
@@ -34,7 +34,6 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
   }
 
   function handleCopy() {
-    console.log('Copy:', dirent?.name);
     props.onClose();
   }
 
@@ -80,8 +79,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
 
       <Divider className={classes.divider} />
 
-      <MenuItem disableRipple
-        className={props.openSubmenu === 'new' ? classes.menuItemActive : classes.menuItem}
+      <MenuItem disableRipple className={props.openSubmenu === 'new' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('new')}
       >
         <FsIcon icon={FsIcons.New} small />
@@ -95,17 +93,9 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.edit' })}
       </MenuItem>
 
-      <MenuItem disableRipple
-        className={dirent?.props?.locked ? classes.menuItemLocked : classes.menuItemUnlocked}
-        onClick={handleLock}
-      >
+      <MenuItem disableRipple className={dirent?.props?.locked ? classes.menuItemLocked : classes.menuItemUnlocked} onClick={handleLock}>
         {dirent?.props?.locked ? (<FsIcon icon={FsIcons.Locked} small />) : (<FsIcon icon={FsIcons.Unlocked} small />)}
         {dirent?.props?.locked ? intl.formatMessage({ id: 'fs.direntMenu.menuItem.unlock' }) : intl.formatMessage({ id: 'fs.direntMenu.menuItem.lock' })}
-      </MenuItem>
-
-      <MenuItem disableRipple className={classes.menuItem} onClick={handleCopy}>
-        <FsIcon icon={FsIcons.Copy} small />
-        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.copy' })}
       </MenuItem>
 
       <MenuItem disableRipple

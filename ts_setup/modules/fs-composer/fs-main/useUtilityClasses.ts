@@ -58,7 +58,7 @@ export const FsMainRoot = styled('div', {
       flex: 1,
       minWidth: 0,
       padding: theme.spacing(2),
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+      backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.background,
       color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
       overflow: 'auto'
     },
