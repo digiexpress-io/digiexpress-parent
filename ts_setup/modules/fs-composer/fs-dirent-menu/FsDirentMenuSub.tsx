@@ -4,6 +4,8 @@ import { Fs } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 import { FsDirentMenuNew } from '../fs-dirent-menu-new';
 import { FsDirentRename } from '../fs-dirent-rename';
+import { FsDirentLabels } from '../fs-dirent-labels';
+import { FsDirentDescription } from '../fs-dirent-description';
 
 
 export interface FsDirentMenuSubProps {
@@ -25,6 +27,8 @@ export const FsDirentMenuSub: React.FC<FsDirentMenuSubProps> = React.memo((props
       <Box className={classes.sectionSub}>
         {props.openSubmenu === 'rename' && <FsDirentRename dirent={props.dirent} />}
         {props.openSubmenu === 'new' && <FsDirentMenuNew dirent={props.dirent} onClose={props.onClose} />}
+        {props.openSubmenu === 'description' && props.dirent && <FsDirentDescription dirent={props.dirent} />}
+        {props.openSubmenu === 'labels' && props.dirent && <FsDirentLabels dirent={props.dirent} />}
       </Box>
     </>
   );

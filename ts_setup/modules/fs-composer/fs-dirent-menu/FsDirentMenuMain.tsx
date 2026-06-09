@@ -123,6 +123,26 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.duplicate' })}
       </MenuItem>
 
+      <MenuItem disableRipple
+        className={props.openSubmenu === 'description' ? classes.menuItemActive : classes.menuItem}
+        onClick={() => handleSubmenuToggle('description')}
+      >
+        <FsIcon icon={FsIcons.Form} small />
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.description' })}
+        <Box flex={1} />
+        <FsIcon icon={FsIcons.ChevronRight} small />
+      </MenuItem>
+
+      <MenuItem disableRipple
+        className={props.openSubmenu === 'labels' ? classes.menuItemActive : classes.menuItem}
+        onClick={() => handleSubmenuToggle('labels')}
+      >
+        <FsIcon icon={FsIcons.Label} small />
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.labels' })}
+        <Box flex={1} />
+        <FsIcon icon={FsIcons.ChevronRight} small />
+      </MenuItem>
+
       <MenuItem disableRipple className={classes.menuItemDelete} onClick={handleDelete}>
         <FsIcon icon={FsIcons.Delete} small />
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.delete' })}

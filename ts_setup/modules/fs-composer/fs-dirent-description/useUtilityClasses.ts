@@ -3,27 +3,27 @@ import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
 
-const MUI_NAME = 'FsDirentLabels';
+const MUI_NAME = 'FsDirentDescription';
 
-export interface FsDirentLabelsClasses {
+export interface FsDirentDescriptionClasses {
   root: string;
   textField: string;
   title: string;
 }
 
-export type FsDirentLabelsClassKey = keyof FsDirentLabelsClasses;
+export type FsDirentDescriptionClassKey = keyof FsDirentDescriptionClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
     textField: ['textField'],
-    title: ['title']
+    title: ['title'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsDirentLabelsRoot = styled('div', {
+export const FsDirentDescriptionRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
