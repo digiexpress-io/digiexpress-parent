@@ -1,6 +1,7 @@
 import React from 'react';
 import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 export interface ConnectedPage {
   id: string;
@@ -17,6 +18,7 @@ type _ChangeStateProps = {
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
+  assetPath: string | undefined;
   isChanged: boolean;
   serviceName: string;
   orchestratorName: string;
@@ -85,6 +87,7 @@ class _ChangeState implements FsuChange {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
+  const { activeTabPath } = useFsNav();
   const { getDirent, selectOptions } = useFsDirent();
   const { withNewChange, withChange } = useFsu();
 
@@ -117,6 +120,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
   return {
     isDarkMode,
+    assetPath: activeTabPath,
     isChanged: state.isChanged,
     serviceName: state.serviceName,
     orchestratorName: state.orchestratorName,

@@ -25,7 +25,7 @@ export const FsDirentArticleWorkflowUpdate: React.FC<FsDirentArticleWorkflowUpda
 
   return (
     <FsDirentArticleWorkflowRoot className={classes.root} ownerState={ownerState}>
-      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.edit' })}</Typography>
+      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>

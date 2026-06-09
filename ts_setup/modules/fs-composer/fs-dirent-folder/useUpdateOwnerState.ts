@@ -1,5 +1,6 @@
 import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 type _ChangeStateProps = {
   folderId: string;
@@ -46,6 +47,7 @@ class _ChangeState implements FsuChange {
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
+  assetPath: string | undefined;
   isChanged: boolean;
   id: string;
   dirent: Fs.DirentBase | undefined;
@@ -56,6 +58,7 @@ export interface UpdateOwnerState {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
+  const { activeTabPath } = useFsNav();
   const { getDirent } = useFsDirent();
   const { withNewChange, withChange } = useFsu();
 
@@ -76,6 +79,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   return ({
     isDarkMode,
+    assetPath: activeTabPath,
     isChanged: state.isChanged,
     id: state.id,
     dirent: folder,

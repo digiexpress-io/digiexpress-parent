@@ -15,7 +15,6 @@ export const FsDirentFlowTaskCreate: React.FC<FsDirentFlowTaskCreateProps> = () 
 
   return (
     <FsDirentFlowTaskRoot className={classes.root} ownerState={ownerState}>
-      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.flow_task.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.flow_task.taskNameField.label' })}</Typography>

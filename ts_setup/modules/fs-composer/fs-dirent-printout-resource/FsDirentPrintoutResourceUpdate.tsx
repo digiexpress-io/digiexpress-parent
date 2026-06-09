@@ -35,7 +35,7 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourceUp
 
   return (
     <FsDirentPrintoutResourceRoot className={classes.root} ownerState={ownerState}>
-      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.sectionTitle.edit' })}</Typography>
+      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>

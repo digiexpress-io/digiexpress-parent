@@ -20,7 +20,6 @@ export const FsDirentFlowUpdate: React.FC<FsDirentFlowUpdateProps> = (props) => 
   return (
     <FsDirentFlowRoot className={classes.root} ownerState={ownerState}>
       <div className={classes.formContainer}>
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.flow.contentField.label' })}</Typography>
         <div className={classes.editor}>
           <MonacoReact
             height="100%"

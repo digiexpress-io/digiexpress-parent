@@ -14,7 +14,7 @@ export const FsDirentFolderUpdate: React.FC<FsDirentFolderUpdateProps> = (props)
 
   return (
     <FsDirentFolderRoot className={classes.root} ownerState={ownerState}>
-      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.folder.sectionTitle.edit' })}</Typography>
+      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.folder.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.folder.locationField.label' })}</Typography>

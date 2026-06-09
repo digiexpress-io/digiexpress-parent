@@ -1,9 +1,11 @@
 import React from 'react';
 import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
+  assetPath: string | undefined;
   dirent: Fs.DirentBase | undefined;
   id: string;
   dialobFormName: string;
@@ -120,6 +122,7 @@ class _ChangeState implements FsuChange {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
+  const { activeTabPath } = useFsNav();
   const { getDirent, selectOptions } = useFsDirent();
   const { withNewChange, withChange } = useFsu();
 
@@ -181,6 +184,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
   return ({
     isDarkMode,
+    assetPath: activeTabPath,
     dirent,
     id: state.id,
     dialobFormName: state.formName,
