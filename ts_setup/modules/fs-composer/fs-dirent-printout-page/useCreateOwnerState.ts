@@ -3,11 +3,6 @@ import { Fs, useFsDirent, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
 
-interface _TextFields {
-  content: string;
-  assetDescription: { text: string };
-}
-
 export interface CreateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
@@ -23,9 +18,7 @@ export interface CreateOwnerState {
   onChangeServiceId: (value: string) => void;
   onChangeLocaleId: (value: string) => void;
   onChangeContent: (value: string) => void;
-  onBlurContent: () => void;
   onChangeDescription: (value: string) => void;
-  onBlurDescription: () => void;
   onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
   onSave: () => void;
@@ -102,9 +95,7 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _initFields: _TextFields = { content: '', assetDescription: { text: '' } };
-
-const _initProps: _CreateStateProps = {
+const _init: _CreateStateProps = {
   bodyType: 'PRINTOUT_PAGE',
   serviceId: '',
   localeId: '',
@@ -119,11 +110,8 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const { pushCreate } = useFsu();
   const { openAsset } = useFsNav();
 
-  const [fields, setFields] = React.useState<_TextFields>(_initFields);
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
-
-  const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
+  const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
   const usedLocaleIds = state.serviceId
     ? Object.values(selectOptions.direntProps)
@@ -142,16 +130,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withLocaleId(value));
   }
   function onChangeContent(value: string) {
-    setFields(prev => ({ ...prev, content: value }));
-  }
-  function onBlurContent() {
-    setState(prev => prev.withContent(fields.content));
+    setState(prev => prev.withContent(value));
   }
   function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: { text: value } }));
-  }
-  function onBlurDescription() {
-    setState(prev => prev.withDescription(fields.assetDescription));
+    setState(prev => prev.withDescription({ text: value }));
   }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
@@ -170,9 +152,8 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onCancel() {
-    setFields(_initFields);
     setIsExpanded(false);
-    setStateRaw(new _CreateState(_initProps));
+    setState(new _CreateState(_init));
   }
 
   return {
@@ -181,8 +162,8 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     isExpanded,
     serviceId: state.serviceId,
     localeId: state.localeId,
-    content: fields.content,
-    assetDescription: fields.assetDescription,
+    content: state.content,
+    assetDescription: state.assetDescription,
     labels: state.labels,
     labelOptions: selectOptions.labels,
     printoutOptions: selectOptions.printouts,
@@ -190,9 +171,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeServiceId,
     onChangeLocaleId,
     onChangeContent,
-    onBlurContent,
     onChangeDescription,
-    onBlurDescription,
     onChangeLabels,
     onToggleExpanded,
     onSave,

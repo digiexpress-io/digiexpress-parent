@@ -8,12 +8,14 @@ import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentFolderRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentFolderUpdateProps } from './FsDirentFolderProps';
+import { useFsu } from '@dxs-ts/fs-api';
 
 
 export const FsDirentFolderUpdate: React.FC<FsDirentFolderUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
+  const { push } = useFsu();
 
   return (
     <FsDirentFolderRoot className={classes.root} ownerState={ownerState}>
@@ -32,8 +34,8 @@ export const FsDirentFolderUpdate: React.FC<FsDirentFolderUpdateProps> = (props)
 
         <div className={classes.buttonContainer}>
           <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel />
-          <FsDirentButtonSave />
+          <FsDirentButtonCancel onClick={ownerState.onCancel} />
+          <FsDirentButtonSave onClick={() => push(ownerState.id)} disabled={!ownerState.isChanged} />
         </div>
 
       </div>

@@ -22,11 +22,7 @@ export const FsDirentPrintoutPageCreate: React.FC<FsDirentPrintoutPageCreateProp
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.serviceIdField.label' })}</Typography>
-        <FsDirentSelectSingle
-          options={ownerState.printoutOptions}
-          value={ownerState.serviceId}
-          onChange={ownerState.onChangeServiceId}
-        />
+        <FsDirentSelectSingle options={ownerState.printoutOptions} value={ownerState.serviceId} onChange={ownerState.onChangeServiceId} />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.localeIdField.label' })}</Typography>
         <FsDirentSelectSingle
@@ -36,13 +32,10 @@ export const FsDirentPrintoutPageCreate: React.FC<FsDirentPrintoutPageCreateProp
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.contentField.label' })}</Typography>
-        <FsDirentTextField
-          multiline
-          minRows={4}
+        <FsDirentTextField multiline minRows={4}
           placeholder={intl.formatMessage({ id: 'fs.dirent.printoutPage.contentField.placeholder' })}
           value={ownerState.content}
           onChange={ownerState.onChangeContent}
-          onBlur={ownerState.onBlurContent}
         />
 
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
@@ -53,14 +46,10 @@ export const FsDirentPrintoutPageCreate: React.FC<FsDirentPrintoutPageCreateProp
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-            <FsDirentTextField
-              multiline
-              minRows={2}
-              maxRows={5}
+            <FsDirentTextField multiline minRows={2} maxRows={5}
               placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
               value={ownerState.assetDescription.text}
               onChange={ownerState.onChangeDescription}
-              onBlur={ownerState.onBlurDescription}
             />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>

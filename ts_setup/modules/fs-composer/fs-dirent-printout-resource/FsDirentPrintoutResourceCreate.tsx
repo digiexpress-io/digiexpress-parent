@@ -41,12 +41,9 @@ export const FsDirentPrintoutResourceCreate: React.FC<FsDirentPrintoutResourceCr
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField
-          required
-          placeholder={intl.formatMessage({ id: 'fs.dirent.printoutResource.nameField.placeholder' })}
+        <FsDirentTextField required placeholder={intl.formatMessage({ id: 'fs.dirent.printoutResource.nameField.placeholder' })}
           value={ownerState.resourceName}
           onChange={ownerState.onChangeResourceName}
-          onBlur={ownerState.onBlurResourceName}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.contentTypeField.label' })}</Typography>
@@ -64,13 +61,10 @@ export const FsDirentPrintoutResourceCreate: React.FC<FsDirentPrintoutResourceCr
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-        <FsDirentTextField
-          multiline
-          minRows={2}
+        <FsDirentTextField multiline minRows={2}
           placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
           value={ownerState.assetDescription}
           onChange={ownerState.onChangeDescription}
-          onBlur={ownerState.onBlurDescription}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
@@ -82,9 +76,7 @@ export const FsDirentPrintoutResourceCreate: React.FC<FsDirentPrintoutResourceCr
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.label' })}</Typography>
-        <input
-          ref={fileInputRef}
-          type='file'
+        <input ref={fileInputRef} type='file'
           accept={ownerState.contentType === 'image/*' ? 'image/*' : 'text/*'}
           style={{ display: 'none' }}
           onChange={handleFileChange}

@@ -63,11 +63,6 @@ class _ChangeState implements FsuChange {
   }
 }
 
-interface _TextFields {
-  content: string;
-  assetDescription: string;
-}
-
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
@@ -77,10 +72,8 @@ export interface UpdateOwnerState {
   labels: string[];
   labelOptions: string[];
   connectedResourceNames: string[];
-  onChangeContent: (v: string) => void;
-  onBlurContent: () => void;
-  onChangeDescription: (v: string) => void;
-  onBlurDescription: () => void;
+  onChangeContent: (value: string) => void;
+  onChangeDescription: (value: string) => void;
   onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
   onCancel: () => void;
@@ -105,10 +98,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [fields, setFields] = React.useState<_TextFields>({
-    content: pageProps.content ?? '',
-    assetDescription: pageProps.assetDescription ?? ''
-  });
 
   const connectedResourceNames = Object.values(selectOptions.direntProps)
     .filter(p => p.type === 'PRINTOUT_RESOURCE')
@@ -116,21 +105,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     .filter(p => p.printoutPageIds.includes(props.direntId))
     .map(p => p.resourceName);
 
-  const isChangesPresent = state.isChanged
-    || fields.content !== state.content
-    || fields.assetDescription !== state.assetDescription.text;
-
-  function onChangeContent(v: string) {
-    setFields(prev => ({ ...prev, content: v }));
+  function onChangeContent(value: string) {
+    setState(prev => prev.withContent(value));
   }
-  function onBlurContent() {
-    setState(prev => prev.withContent(fields.content));
-  }
-  function onChangeDescription(v: string) {
-    setFields(prev => ({ ...prev, assetDescription: v }));
-  }
-  function onBlurDescription() {
-    setState(prev => prev.withDescription({ text: fields.assetDescription }));
+  function onChangeDescription(value: string) {
+    setState(prev => prev.withDescription({ text: value }));
   }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
@@ -139,27 +118,20 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setIsExpanded(prev => !prev);
   }
   function onCancel() {
-    setFields({
-      content: pageProps.content ?? '',
-      assetDescription: pageProps.assetDescription ?? ''
-    });
-    setIsExpanded(false);
     cancel(props.direntId);
   }
 
   return {
     isDarkMode,
-    isChanged: isChangesPresent,
+    isChanged: state.isChanged,
     isExpanded,
-    content: fields.content,
-    assetDescription: fields.assetDescription,
+    content: state.content,
+    assetDescription: state.assetDescription.text,
     labels: state.labels,
     labelOptions: selectOptions.labels,
     connectedResourceNames,
     onChangeContent,
-    onBlurContent,
     onChangeDescription,
-    onBlurDescription,
     onChangeLabels,
     onToggleExpanded,
     onCancel,

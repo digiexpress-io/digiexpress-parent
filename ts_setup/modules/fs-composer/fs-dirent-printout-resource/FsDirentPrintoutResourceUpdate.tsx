@@ -44,12 +44,9 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourceUp
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField
-          required
-          placeholder={intl.formatMessage({ id: 'fs.dirent.printoutResource.nameField.placeholder' })}
+        <FsDirentTextField required placeholder={intl.formatMessage({ id: 'fs.dirent.printoutResource.nameField.placeholder' })}
           value={ownerState.resourceName}
           onChange={ownerState.onChangeResourceName}
-          onBlur={ownerState.onBlurResourceName}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.printoutPagesField.label' })}</Typography>
@@ -60,13 +57,10 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourceUp
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-        <FsDirentTextField
-          multiline
-          minRows={2}
+        <FsDirentTextField multiline minRows={2}
           placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
           value={ownerState.assetDescription}
           onChange={ownerState.onChangeDescription}
-          onBlur={ownerState.onBlurDescription}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>

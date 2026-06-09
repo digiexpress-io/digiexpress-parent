@@ -23,13 +23,10 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageUpdateProp
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.contentField.label' })}</Typography>
-        <FsDirentTextField
-          multiline
-          minRows={4}
+        <FsDirentTextField multiline minRows={4}
           placeholder={intl.formatMessage({ id: 'fs.dirent.printoutPage.contentField.placeholder' })}
           value={ownerState.content}
           onChange={ownerState.onChangeContent}
-          onBlur={ownerState.onBlurContent}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.printoutResourcesField.label' })}</Typography>
@@ -53,14 +50,10 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageUpdateProp
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-            <FsDirentTextField
-              multiline
-              minRows={2}
-              maxRows={5}
+            <FsDirentTextField multiline minRows={2} maxRows={5}
               placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
               value={ownerState.assetDescription}
               onChange={ownerState.onChangeDescription}
-              onBlur={ownerState.onBlurDescription}
             />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>

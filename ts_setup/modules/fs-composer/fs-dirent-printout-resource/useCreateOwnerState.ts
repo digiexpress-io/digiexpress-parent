@@ -4,11 +4,6 @@ import { Fs, useFsDirent, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsDirentSelectMultiOption } from '../fs-dirent-select-multi';
 
-interface _TextFields {
-  resourceName: string;
-  assetDescription: string;
-}
-
 export interface CreateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
@@ -21,13 +16,11 @@ export interface CreateOwnerState {
   printoutPageIds: string[];
   contentTypeOptions: Fs.SelectOption[];
   printoutPageOptions: FsDirentSelectMultiOption[];
-  onChangeResourceName: (v: string) => void;
-  onBlurResourceName: () => void;
-  onChangeDescription: (v: string) => void;
-  onBlurDescription: () => void;
+  onChangeResourceName: (value: string) => void;
+  onChangeDescription: (value: string) => void;
   onChangeLabels: (value: string[]) => void;
-  onChangeContentType: (v: string) => void;
-  onChangeUploadBody: (body: string) => void;
+  onChangeContentType: (value: string) => void;
+  onChangeUploadBody: (value: string) => void;
   onChangePrintoutPageIds: (value: string[]) => void;
   onSave: () => void;
   onCancel: () => void;
@@ -117,7 +110,7 @@ const _contentTypeOptions: Fs.SelectOption[] = [
   { value: 'text/*', label: 'Text' },
 ];
 
-const _initProps: _CreateStateProps = {
+const _init: _CreateStateProps = {
   bodyType: 'PRINTOUT_RESOURCE',
   resourceName: '',
   assetDescription: { text: '' },
@@ -133,13 +126,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const { pushCreate } = useFsu();
   const { openAsset } = useFsNav();
 
-  const [fields, setFields] = React.useState<_TextFields>({
-    resourceName: _initProps.resourceName,
-    assetDescription: _initProps.assetDescription.text,
-  });
-  const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
-
-  const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
+  const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
   const printoutPageOptions: FsDirentSelectMultiOption[] = Object.values(selectOptions.direntProps)
     .filter(p => p.type === 'PRINTOUT_PAGE')
@@ -150,30 +137,20 @@ export const useCreateOwnerState = (): CreateOwnerState => {
       return { value: pageProps.id, label: `${printoutLabel} / ${localeName}` };
     });
 
-  const isChangesPresent = state.isChanged
-    || fields.resourceName !== state.resourceName
-    || fields.assetDescription !== state.assetDescription.text;
-
-  function onChangeResourceName(v: string) {
-    setFields(prev => ({ ...prev, resourceName: v }));
+  function onChangeResourceName(value: string) {
+    setState(prev => prev.withResourceName(value));
   }
-  function onBlurResourceName() {
-    setState(prev => prev.withResourceName(fields.resourceName));
-  }
-  function onChangeDescription(v: string) {
-    setFields(prev => ({ ...prev, assetDescription: v }));
-  }
-  function onBlurDescription() {
-    setState(prev => prev.withDescription({ text: fields.assetDescription }));
+  function onChangeDescription(value: string) {
+    setState(prev => prev.withDescription({ text: value }));
   }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
   }
-  function onChangeContentType(v: string) {
-    setState(prev => prev.withContentType(v));
+  function onChangeContentType(value: string) {
+    setState(prev => prev.withContentType(value));
   }
-  function onChangeUploadBody(body: string) {
-    setState(prev => prev.withUploadBody(body));
+  function onChangeUploadBody(value: string) {
+    setState(prev => prev.withUploadBody(value));
   }
   function onChangePrintoutPageIds(value: string[]) {
     setState(prev => prev.withPrintoutPageIds(value));
@@ -189,15 +166,14 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onCancel() {
-    setFields({ resourceName: _initProps.resourceName, assetDescription: _initProps.assetDescription.text });
-    setStateRaw(new _CreateState(_initProps));
+    setState(new _CreateState(_init));
   }
 
   return {
     isDarkMode,
-    isChanged: isChangesPresent,
-    resourceName: fields.resourceName,
-    assetDescription: fields.assetDescription,
+    isChanged: state.isChanged,
+    resourceName: state.resourceName,
+    assetDescription: state.assetDescription.text,
     labels: state.labels,
     labelOptions: selectOptions.labels,
     contentType: state.contentType,
@@ -206,9 +182,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     contentTypeOptions: _contentTypeOptions,
     printoutPageOptions,
     onChangeResourceName,
-    onBlurResourceName,
     onChangeDescription,
-    onBlurDescription,
     onChangeLabels,
     onChangeContentType,
     onChangeUploadBody,
