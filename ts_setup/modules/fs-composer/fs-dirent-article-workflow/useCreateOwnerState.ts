@@ -14,7 +14,6 @@ export interface CreateOwnerState {
   articles: string[];
   intlValues: Record<string, string>;
   configOptions: Fs.ConfigOption[];
-  tagLabels: string[];
   validityStart: string;
   validityEnd: string;
   locales: Fs.SelectOption[];
@@ -25,7 +24,6 @@ export interface CreateOwnerState {
   onChangeArticles: (v: string[]) => void;
   onChangeIntlValues: (locale: string, value: string) => void;
   onChangeConfigOptions: (v: string[]) => void;
-  onChangeLabels: (v: string[]) => void;
   onChangeValidityStart: (date: Date | undefined) => void;
   onChangeValidityEnd: (date: Date | undefined) => void;
   onToggleExpanded: () => void;
@@ -40,7 +38,6 @@ type _CreateStateProps = {
   articles: string[];
   intlValues: Record<string, string>;
   configOptions: Fs.ConfigOption[];
-  tagLabels: string[];
   validityStart: string;
   validityEnd: string;
 }
@@ -62,7 +59,6 @@ class _CreateState implements FsuCreateChange {
   get articles() { return this._current.articles; }
   get intlValues() { return this._current.intlValues; }
   get configOptions() { return this._current.configOptions; }
-  get tagLabels() { return this._current.tagLabels; }
   get validityStart() { return this._current.validityStart; }
   get validityEnd() { return this._current.validityEnd; }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
@@ -78,7 +74,6 @@ class _CreateState implements FsuCreateChange {
         formId: current.formName,
         flowName: current.flowName,
         articles: current.articles,
-        labels: Object.entries(current.intlValues).map(([locale, labelValue]) => ({ locale, labelValue })),
         startDate: current.validityStart || undefined,
         endDate: current.validityEnd || undefined,
         disabled: current.configOptions.includes('DISABLED_MODE') || undefined,
@@ -110,9 +105,6 @@ class _CreateState implements FsuCreateChange {
   withConfigOptions(configOptions: Fs.ConfigOption[]): _CreateState {
     return new _CreateState({ ...this._current, configOptions }, this._origin);
   }
-  withTagLabels(tagLabels: string[]): _CreateState {
-    return new _CreateState({ ...this._current, tagLabels }, this._origin);
-  }
   withValidityStart(validityStart: string): _CreateState {
     return new _CreateState({ ...this._current, validityStart }, this._origin);
   }
@@ -130,7 +122,6 @@ const _init: _CreateStateProps = {
   articles: [],
   intlValues: {},
   configOptions: [],
-  tagLabels: [],
   validityStart: '',
   validityEnd: '',
 };
@@ -165,9 +156,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   function onChangeConfigOptions(values: string[]) {
     setState(prev => prev.withConfigOptions(values as Fs.ConfigOption[]));
   }
-  function onChangeLabels(v: string[]) {
-    setState(prev => prev.withTagLabels(v));
-  }
   function onChangeValidityStart(date: Date | undefined) {
     const iso = date ? date.toISOString() : '';
     setState(prev => prev.withValidityStart(iso));
@@ -191,7 +179,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     articles: state.articles,
     intlValues: state.intlValues,
     configOptions: state.configOptions,
-    tagLabels: state.tagLabels,
     validityStart: state.validityStart,
     validityEnd: state.validityEnd,
     locales: selectOptions.languages,
@@ -202,7 +189,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeArticles,
     onChangeIntlValues,
     onChangeConfigOptions,
-    onChangeLabels,
     onChangeValidityStart,
     onChangeValidityEnd,
     onToggleExpanded,

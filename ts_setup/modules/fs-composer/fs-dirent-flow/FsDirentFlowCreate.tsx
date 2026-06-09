@@ -24,14 +24,6 @@ export const FsDirentFlowCreate: React.FC<FsDirentFlowCreateProps> = () => {
             onChange={ownerState.onChangeName}
           />
 
-          <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-          <FsDirentTextField value={ownerState.desc}
-            placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
-            onChange={ownerState.onChangeDesc}
-            multiline minRows={2} maxRows={4}
-          />
-
-
         </div>
       </FsDirentFlowRoot>
     );

@@ -3,24 +3,19 @@ import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MonacoReact from '@monaco-editor/react';
 import { FsIcon, FsIcons } from '../fs-theme';
-import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { useUtilityClasses, FsDirentFlowRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentFlowUpdateProps } from './FsDirentFlowProps';
 import { useFsDirent } from '@dxs-ts/fs-api';
 
 
-
 export const FsDirentFlowUpdate: React.FC<FsDirentFlowUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { selectOptions, getConfigOptionsForType } = useFsDirent();
+  const { getConfigOptionsForType } = useFsDirent();
   const configOptions = getConfigOptionsForType('FLOW');
-
-  console.log("->", ownerState.content);
 
   return (
     <FsDirentFlowRoot className={classes.root} ownerState={ownerState}>
@@ -46,16 +41,6 @@ export const FsDirentFlowUpdate: React.FC<FsDirentFlowUpdateProps> = (props) => 
 
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-            <FsDirentTextField value={ownerState.assetDescription}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
-              onChange={ownerState.onChangeDescription}
-              multiline minRows={2} maxRows={5}
-            />
-
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
-            <FsDirentTextFieldAutocomplete options={selectOptions.labels} value={ownerState.tagLabels} onChange={ownerState.onChangeLabels} placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })} />
-
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
           </div>

@@ -1,13 +1,7 @@
 import React from 'react';
-import { Typography, Collapse } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsDirent } from '@dxs-ts/fs-api';
-import { FsIcon, FsIcons } from '../fs-theme';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
-import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
-import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { useUtilityClasses, FsDirentDialobRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentDialobUpdateProps } from './FsDirentDialobProps';
@@ -16,8 +10,6 @@ export const FsDirentDialobUpdate: React.FC<FsDirentDialobUpdateProps> = (props)
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { selectOptions } = useFsDirent();
-  const [labels, setLabels] = React.useState<string[]>((ownerState.dirent?.props?.labels ?? []).map(l => l.value));
 
   return (
     <FsDirentDialobRoot className={classes.root} ownerState={ownerState}>
@@ -37,37 +29,6 @@ export const FsDirentDialobUpdate: React.FC<FsDirentDialobUpdateProps> = (props)
           placeholder={intl.formatMessage({ id: 'fs.dirent.dialob.formNameField.placeholder' })}
           onChange={ownerState.onChangeFormName}
         />
-
-        <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
-          {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.expandToggle.hide' : 'fs.dirent.expandToggle.show' })}
-          <FsIcon icon={FsIcons.ExpandMore} small className={ownerState.isExpanded ? classes.expandToggleIconOpen : classes.expandToggleIcon} />
-        </div>
-
-        <Collapse in={ownerState.isExpanded}>
-          <div className={classes.optionalFields}>
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-            <FsDirentTextField
-              value={ownerState.assetDescription}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
-              onChange={ownerState.onChangeDescription}
-              multiline minRows={2} maxRows={5}
-            />
-
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
-            <FsDirentTextFieldAutocomplete
-              options={selectOptions.labels}
-              value={labels}
-              onChange={setLabels}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })}
-            />
-          </div>
-        </Collapse>
-
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel />
-          <FsDirentButtonSave />
-        </div>
 
       </div>
     </FsDirentDialobRoot>

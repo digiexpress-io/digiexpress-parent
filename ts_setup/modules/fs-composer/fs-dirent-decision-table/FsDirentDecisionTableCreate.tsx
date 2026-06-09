@@ -23,16 +23,6 @@ export const FsDirentDecisionTableCreate: React.FC<FsDirentDecisionTableCreatePr
           value={ownerState.name}
           onChange={ownerState.onChangeName}
         />
-
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-        <FsDirentTextField placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
-          multiline
-          minRows={2}
-          value={ownerState.desc}
-          onChange={ownerState.onChangeDesc}
-        />
-
-
       </div>
     </FsDirentDecisionTableRoot>
   );

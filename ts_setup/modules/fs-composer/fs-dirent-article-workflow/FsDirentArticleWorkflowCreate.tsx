@@ -8,7 +8,6 @@ import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { FsDirentArticleWorkflowCreateProps } from './FsDirentArticleWorkflowProps';
 
 import { useUtilityClasses, FsDirentArticleWorkflowRoot } from './useUtilityClasses';
@@ -71,9 +70,6 @@ export const FsDirentArticleWorkflowCreate: React.FC<FsDirentArticleWorkflowCrea
 
               <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityEndField.label' })}</Typography>
               <DatePicker value={ownerState.validityEnd ? new Date(ownerState.validityEnd) : null} onChange={(d) => ownerState.onChangeValidityEnd(d ?? undefined)} fullWidth size='small' />
-
-              <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
-              <FsDirentTextFieldAutocomplete options={selectOptions.labels} value={ownerState.tagLabels} onChange={ownerState.onChangeLabels} placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })} />
 
               <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.articlesField.label' })}</Typography>
               <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
