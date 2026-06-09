@@ -1,10 +1,6 @@
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
-import {
-  Fs,
-  useFsu,
-  FsuCreateChange,
-} from '@dxs-ts/fs-api';
+import { Fs, FsuCreateChange } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 
 
@@ -16,13 +12,9 @@ export interface CreateOwnerState {
   isExpanded: boolean;
   name: string;
   orderNumber: string;
-  assetDescription: string;
-  labels: string[];
   configOptions: Fs.ConfigOption[];
   onChangeName: (value: string) => void;
   onChangeOrderNumber: (value: string) => void;
-  onChangeDescription: (value: string) => void;
-  onChangeLabels: (value: string[]) => void;
   onChangeConfigOptions: (value: string[]) => void;
   onToggleExpanded: () => void;
 }
@@ -32,8 +24,6 @@ type _CreateStateProps = {
   name: string;
   parentId: string | undefined;
   order: number;
-  assetDescription: { text: string };
-  labels: string[];
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
   authOnly: boolean;
@@ -51,8 +41,6 @@ class _CreateState implements FsuCreateChange {
   get bodyType() { return this._current.bodyType; }
   get name() { return this._current.name; }
   get orderNumber() { return String(this._current.order); }
-  get assetDescription() { return this._current.assetDescription; }
-  get labels() { return this._current.labels; }
   get configOptions() { return this._current.configOptions; }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
@@ -63,8 +51,6 @@ class _CreateState implements FsuCreateChange {
         name: this._current.name,
         parentId: this._current.parentId,
         order: this._current.order,
-        assetDescription: this._current.assetDescription,
-        labels: this._current.labels,
         devMode: this._current.devMode,
         authOnly: this._current.authOnly,
       }
@@ -76,12 +62,6 @@ class _CreateState implements FsuCreateChange {
   }
   withOrder(order: string): _CreateState {
     return new _CreateState({ ...this._current, order: parseInt(order) || 0 }, this._origin);
-  }
-  withDescription(assetDescription: { text: string }): _CreateState {
-    return new _CreateState({ ...this._current, assetDescription }, this._origin);
-  }
-  withLabels(labels: string[]): _CreateState {
-    return new _CreateState({ ...this._current, labels }, this._origin);
   }
   withConfigOptions(configOptions: Fs.ConfigOption[]): _CreateState {
     return new _CreateState({
@@ -111,8 +91,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     name: '',
     parentId,
     order: 0,
-    assetDescription: { text: '' },
-    labels: [],
     configOptions: [],
     devMode: false,
     authOnly: false,
@@ -127,13 +105,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   function onChangeOrderNumber(value: string) {
     setState(prev => prev.withOrder(value));
   }
-  function onChangeDescription(value: string) {
-    setState(prev => prev.withDescription({ text: value }));
-  }
-  function onChangeLabels(value: string[]) {
-    setState(prev => prev.withLabels(value));
-  }
-
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
@@ -149,13 +120,9 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     isExpanded,
     name: state.name,
     orderNumber: state.orderNumber,
-    assetDescription: state.assetDescription.text,
-    labels: state.labels,
     configOptions: state.configOptions,
     onChangeName,
     onChangeOrderNumber,
-    onChangeDescription,
-    onChangeLabels,
     onChangeConfigOptions,
     onToggleExpanded
   });

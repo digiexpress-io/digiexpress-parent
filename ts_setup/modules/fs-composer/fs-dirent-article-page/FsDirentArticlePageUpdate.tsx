@@ -7,7 +7,6 @@ import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentTextField } from '../fs-dirent-text-field';
-import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { FsDirentLoader } from '../fs-dirent-loader';
 import { useUtilityClasses, FsDirentArticlePageRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
@@ -52,24 +51,8 @@ export const FsDirentArticlePageUpdate: React.FC<FsDirentArticlePageUpdateProps>
 
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-            <FsDirentTextField value={ownerState.assetDescription}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
-              onChange={ownerState.onChangeDescription}
-              multiline
-              minRows={2} maxRows={4}
-            />
-
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={ownerState.availableConfigOptions} value={ownerState.configOptions as string[]} onChange={ownerState.onChangeConfigOptions} />
-
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
-            <FsDirentTextFieldAutocomplete
-              options={ownerState.labelOptions}
-              value={ownerState.labels}
-              onChange={ownerState.onChangeLabels}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })}
-            />
           </div>
         </Collapse>
 

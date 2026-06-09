@@ -9,10 +9,7 @@ export interface CreateOwnerState {
   articleId: string;
   locale: string;
   content: string;
-  assetDescription: string;
   configOptions: Fs.ConfigOption[];
-  labels: string[];
-  labelOptions: string[];
   availableConfigOptions: Fs.SelectOption[];
   articleOptions: FsDirentSelectSingleOption[];
   localeOptions: FsDirentSelectSingleOption[];
@@ -21,9 +18,7 @@ export interface CreateOwnerState {
   onChangeArticle: (value: string) => void;
   onChangeLocale: (value: string) => void;
   onChangeContent: (value: string) => void;
-  onChangeDescription: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
-  onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
 }
 
@@ -32,9 +27,7 @@ type _CreateStateProps = {
   articleId: string;
   locale: string;
   content: string;
-  assetDescription: { text: string };
   configOptions: Fs.ConfigOption[];
-  labels: string[];
   devMode: boolean;
   disabledMode: boolean;
 }
@@ -52,9 +45,7 @@ class _CreateState implements FsuCreateChange {
   get articleId() { return this._current.articleId; }
   get locale() { return this._current.locale; }
   get content() { return this._current.content; }
-  get assetDescription() { return this._current.assetDescription; }
   get configOptions() { return this._current.configOptions; }
-  get labels() { return this._current.labels; }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
@@ -64,8 +55,6 @@ class _CreateState implements FsuCreateChange {
         articleId: this._current.articleId,
         locale: this._current.locale,
         content: this._current.content,
-        assetDescription: this._current.assetDescription,
-        labels: this._current.labels.length ? this._current.labels : undefined,
         devMode: this._current.devMode,
         disabledMode: this._current.disabledMode,
       }
@@ -81,9 +70,6 @@ class _CreateState implements FsuCreateChange {
   withContent(content: string): _CreateState {
     return new _CreateState({ ...this._current, content }, this._origin);
   }
-  withDescription(assetDescription: { text: string }): _CreateState {
-    return new _CreateState({ ...this._current, assetDescription }, this._origin);
-  }
   withConfigOptions(configOptions: Fs.ConfigOption[]): _CreateState {
     return new _CreateState({
       ...this._current,
@@ -91,9 +77,6 @@ class _CreateState implements FsuCreateChange {
       devMode: configOptions.includes('DEV_MODE'),
       disabledMode: configOptions.includes('DISABLED_MODE'),
     }, this._origin);
-  }
-  withLabels(labels: string[]): _CreateState {
-    return new _CreateState({ ...this._current, labels }, this._origin);
   }
 }
 
@@ -103,9 +86,7 @@ const _init: _CreateStateProps = {
   articleId: '',
   locale: '',
   content: '',
-  assetDescription: { text: '' },
   configOptions: [],
-  labels: [],
   devMode: false,
   disabledMode: false,
 };
@@ -143,14 +124,8 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   function onChangeContent(value: string) {
     setState(prev => prev.withContent(value));
   }
-  function onChangeDescription(value: string) {
-    setState(prev => prev.withDescription({ text: value }));
-  }
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
-  }
-  function onChangeLabels(value: string[]) {
-    setState(prev => prev.withLabels(value));
   }
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
@@ -161,10 +136,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     articleId: state.articleId,
     locale: state.locale,
     content: state.content,
-    assetDescription: state.assetDescription.text,
     configOptions: state.configOptions,
-    labels: state.labels,
-    labelOptions: selectOptions.labels,
     availableConfigOptions,
     articleOptions,
     localeOptions,
@@ -173,9 +145,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeArticle,
     onChangeLocale,
     onChangeContent,
-    onChangeDescription,
     onChangeConfigOptions,
-    onChangeLabels,
     onToggleExpanded,
   });
 };

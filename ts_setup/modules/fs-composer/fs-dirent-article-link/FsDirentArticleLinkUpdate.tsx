@@ -65,17 +65,6 @@ export const FsDirentArticleLinkUpdate: React.FC<FsDirentArticleLinkUpdateProps>
 
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-            <FsDirentTextField
-              value={ownerState.assetDescription}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
-              onChange={ownerState.onChangeDescription}
-              multiline minRows={2} maxRows={5}
-            />
-
-            <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
-            <FsDirentTextFieldAutocomplete options={selectOptions.labels} value={ownerState.tagLabels} onChange={ownerState.onChangeLabels} placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })} />
-
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.articlesField.label' })}</Typography>
             <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
 

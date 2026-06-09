@@ -19,16 +19,12 @@ export interface UpdateOwnerState {
   urlValue: string;
   intlValues: Record<string, string>;
   articles: string[];
-  tagLabels: string[];
   configOptions: Fs.ConfigOption[];
-  assetDescription: string;
   onChangeContentType: (value: string) => void;
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
   onChangeArticles: (value: string[]) => void;
-  onChangeLabels: (value: string[]) => void;
   onChangeConfigOptions: (value: string[]) => void;
-  onChangeDescription: (value: string) => void;
   onToggleExpanded: () => void;
 }
 
@@ -38,12 +34,10 @@ type _ChangeStateProps = {
   type: Fs.LinkType;
   value: string;
   labels: { locale: string; labelValue: string }[];
-  tagLabels: string[];
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
   disabledMode: boolean;
   articles: string[];
-  assetDescription: { text: string };
 }
 
 class _ChangeState implements FsuChange {
@@ -59,22 +53,18 @@ class _ChangeState implements FsuChange {
   get contentType() { return this._current.type; }
   get urlValue() { return this._current.value; }
   get intlValues() { return Object.fromEntries(this._current.labels.map(l => [l.locale, l.labelValue])); }
-  get tagLabels() { return this._current.tagLabels; }
   get configOptions() { return this._current.configOptions; }
   get articles() { return this._current.articles; }
-  get assetDescription() { return this._current.assetDescription; }
 
   getCurrentProps(): { bodyType: Fs.BodyType, id: string, changes: Record<string, any> } {
     return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
   }
-
   get bodyType() {
     return this._origin.bodyType;
   }
   get isChanged(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
-
   withContentType(contentType: Fs.LinkType): _ChangeState {
     return new _ChangeState({ ...this._current, type: contentType }, this._origin);
   }
@@ -86,17 +76,11 @@ class _ChangeState implements FsuChange {
     labels.push({ locale, labelValue: value });
     return new _ChangeState({ ...this._current, labels }, this._origin);
   }
-  withTagLabels(tagLabels: string[]): _ChangeState {
-    return new _ChangeState({ ...this._current, tagLabels }, this._origin);
-  }
   withArticles(articles: string[]): _ChangeState {
     return new _ChangeState({ ...this._current, articles }, this._origin);
   }
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
     return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
-  }
-  withDescription(assetDescription: { text: string }): _ChangeState {
-    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 }
 
@@ -117,12 +101,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     type: linkProps?.contentType ?? 'internal',
     value: linkProps?.urlValue ?? '',
     labels: Object.entries(linkProps?.intlValues ?? {}).map(([locale, labelValue]) => ({ locale, labelValue })),
-    tagLabels: (linkProps?.labels ?? []).map(l => l.value),
     configOptions: (linkProps?.configOptions ?? []) as Fs.ConfigOption[],
     devMode: (linkProps?.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (linkProps?.configOptions ?? []).includes('DISABLED_MODE'),
     articles: linkProps?.articles ?? [],
-    assetDescription: { text: linkProps?.assetDescription ?? '' }
   }));
 
   const isChangesPresent = state.isChanged;
@@ -132,31 +114,18 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeContentType(value: string) {
     setState(prev => prev.withContentType(value as Fs.LinkType));
   }
-
   function onChangeUrlValue(value: string) {
     setState(prev => prev.withUrlValue(value)) 
   }
-
   function onChangeIntlValue(locale: string, value: string) {
     setState(prev => prev.withIntlValue(locale, value)) 
   }
-
-  function onChangeDescription(value: string) {
-    setState(prev => prev.withDescription({ text: value }));
-  }
-
   function onChangeArticles(value: string[]) {
     setState(prev => prev.withArticles(value));
   }
-
-  function onChangeLabels(value: string[]) {
-    setState(prev => prev.withTagLabels(value));
-  }
-
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
-
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
@@ -173,17 +142,13 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     urlValue: state.urlValue,
     intlValues: state.intlValues,
     articles: state.articles,
-    tagLabels: state.tagLabels,
     configOptions: state.configOptions,
-    assetDescription: state.assetDescription?.text,
     isExpanded,
     onChangeContentType,
     onChangeUrlValue,
     onChangeIntlValue,
     onChangeArticles,
-    onChangeLabels,
     onChangeConfigOptions,
-    onChangeDescription,
     onToggleExpanded,
   });
 };

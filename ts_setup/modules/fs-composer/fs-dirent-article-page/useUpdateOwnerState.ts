@@ -10,19 +10,14 @@ export interface UpdateOwnerState {
   id: string;
   articleName: string;
   locale: string;
-  assetDescription: string;
   configOptions: Fs.ConfigOption[];
-  labels: string[];
-  labelOptions: string[];
   availableConfigOptions: Fs.SelectOption[];
   localeOptions: FsDirentSelectSingleOption[];
   isChanged: boolean;
   isExpanded: boolean;
   onChangeLocale: (value: string) => void;
   onChangeContent: (value: string) => void;
-  onChangeDescription: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
-  onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
   content: string;
 }
@@ -32,9 +27,7 @@ type _ChangeStateProps = {
   bodyType: Fs.BodyType;
   locale: string;
   content: string;
-  assetDescription: { text: string };
   configOptions: Fs.ConfigOption[];
-  labels: string[];
   devMode: boolean;
   disabledMode: boolean;
 }
@@ -51,10 +44,8 @@ class _ChangeState implements FsuChange {
   get id() { return this._current.pageId; }
   get locale() { return this._current.locale; }
   get content() { return this._current.content; }
-  get assetDescription() { return this._current.assetDescription; }
 
   get configOptions() { return this._current.configOptions; }
-  get labels() { return this._current.labels; }
   get bodyType() { return this._origin.bodyType; }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
@@ -67,18 +58,12 @@ class _ChangeState implements FsuChange {
   withContent(content: string): _ChangeState {
     return new _ChangeState({ ...this._current, content }, this._origin);
   }
-  withDescription(assetDescription: { text: string }): _ChangeState {
-    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
-  }
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
     return new _ChangeState({
       ...this._current, configOptions,
       devMode: configOptions.includes('DEV_MODE'),
       disabledMode: configOptions.includes('DISABLED_MODE')
     }, this._origin);
-  }
-  withLabels(labels: string[]): _ChangeState {
-    return new _ChangeState({ ...this._current, labels }, this._origin);
   }
 }
 
@@ -100,9 +85,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     bodyType: dirent.type,
     locale: pageProps.localeCode,
     content: pageProps.content ?? '',
-    assetDescription: { text: pageProps.assetDescription ?? '' },
     configOptions: (pageProps.configOptions ?? []) as Fs.ConfigOption[],
-    labels: (pageProps.labels ?? []).map(l => l.value),
     devMode: (pageProps.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (pageProps.configOptions ?? []).includes('DISABLED_MODE'),
   }));
@@ -123,14 +106,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeContent(value: string) {
     setState(prev => prev.withContent(value))
   }
-  function onChangeDescription(value: string) {
-    setState(prev => prev.withDescription({ text: value }));
-  }
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
-  }
-  function onChangeLabels(value: string[]) {
-    setState(prev => prev.withLabels(value));
   }
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
@@ -144,20 +121,15 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     id: state.id,
     content: state.content,
     locale: state.locale,
-    assetDescription: state.assetDescription.text,
     articleName,
     configOptions: state.configOptions,
-    labels: state.labels,
-    labelOptions: selectOptions.labels,
     availableConfigOptions,
     localeOptions,
     isChanged: changes,
     isExpanded,
     onChangeLocale,
     onChangeContent,
-    onChangeDescription,
     onChangeConfigOptions,
-    onChangeLabels,
     onToggleExpanded,
   });
 };
