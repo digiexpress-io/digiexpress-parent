@@ -21,11 +21,9 @@ export const FsDirentPrintoutCreate: React.FC<FsDirentPrintoutCreateProps> = (_p
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField required
-          placeholder={intl.formatMessage({ id: 'fs.dirent.printout.nameField.placeholder' })}
+        <FsDirentTextField required placeholder={intl.formatMessage({ id: 'fs.dirent.printout.nameField.placeholder' })}
           value={ownerState.serviceName}
           onChange={ownerState.onChangeServiceName}
-          onBlur={ownerState.onBlurServiceName}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printout.orchestratorNameField.label' })}</Typography>
@@ -36,17 +34,14 @@ export const FsDirentPrintoutCreate: React.FC<FsDirentPrintoutCreateProps> = (_p
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-        <FsDirentTextField
-          multiline minRows={2} maxRows={5}
+        <FsDirentTextField multiline minRows={2} maxRows={5}
           placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
           value={ownerState.assetDescription}
           onChange={ownerState.onChangeDescription}
-          onBlur={ownerState.onBlurDescription}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.labelsField.label' })}</Typography>
-        <FsDirentTextFieldAutocomplete
-          options={ownerState.labelOptions}
+        <FsDirentTextFieldAutocomplete options={ownerState.labelOptions}
           value={ownerState.labels}
           onChange={ownerState.onChangeLabels}
           placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })}

@@ -4,7 +4,7 @@ import {
   Fs,
   useFsDirent,
   useFsu,
-  FsuChange
+  FsuChange,
 } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
@@ -52,6 +52,7 @@ class _ChangeState implements FsuChange {
   get flowValue() { return this._current.flowValue; }
   get tagLabels() { return this._current.tagLabels; }
 
+
   get isChanged(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
@@ -84,54 +85,43 @@ class _ChangeState implements FsuChange {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { getDirent, fetchDirentBody } = useFsDirent();
+  const { getDirent } = useFsDirent();
   const { withNewChange, withChange, cancel } = useFsu();
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
   const dirent = getDirent(props.direntId);
+  const flowProps = dirent?.props as Fs.FlowProps | undefined;
 
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const state = withNewChange(props.direntId, () => new _ChangeState({
     flowId: props.direntId,
-    bodyType: dirent!.type,
-    flowValue: '',
-    assetDescription: { text: dirent?.props?.assetDescription ?? '' },
-    configOptions: (dirent?.props?.configOptions ?? []) as Fs.ConfigOption[],
-    devMode: (dirent?.props?.configOptions ?? []).includes('DEV_MODE'),
-    disabledMode: (dirent?.props?.configOptions ?? []).includes('DISABLED_MODE'),
-    tagLabels: (dirent?.props?.labels ?? []).map(l => l.value),
+    bodyType: flowProps!.type,
+    flowValue: flowProps?.content ?? '',
+    assetDescription: { text: flowProps?.assetDescription ?? '' },
+    configOptions: (flowProps?.configOptions ?? []) as Fs.ConfigOption[],
+    devMode: (flowProps?.configOptions ?? []).includes('DEV_MODE'),
+    disabledMode: (flowProps?.configOptions ?? []).includes('DISABLED_MODE'),
+    tagLabels: (flowProps?.labels ?? []).map(l => l.value),
   }));
 
-  React.useEffect(() => {
-    fetchDirentBody(props.direntId, 'FLOW').then((body) => {
-      const wb = body as Fs.WrenchBody;
-      const yaml = wb.flows[props.direntId]?.ast?.parseTree?.value ?? '';
-      setState(prev => prev.withFlowValue(yaml));
-    });
-  }, [props.direntId]);
 
   function onChangeContent(value: string) {
     setState(prev => prev.withFlowValue(value));
   }
-
   function onChangeDescription(value: string) {
     setState(prev => prev.withDescription({ text: value }));
   }
-
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
-
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withTagLabels(value));
   }
-
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
-
   function onCancel() {
     cancel(props.direntId);
   }

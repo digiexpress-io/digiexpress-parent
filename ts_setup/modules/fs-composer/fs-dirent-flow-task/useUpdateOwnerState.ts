@@ -69,30 +69,22 @@ class _ChangeState implements FsuChange {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { getDirent, fetchDirentBody } = useFsDirent();
+  const { getDirent } = useFsDirent();
   const { withNewChange, withChange, cancel } = useFsu();
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
   const dirent = getDirent(props.direntId);
-  const flowTaskProps = dirent?.type === 'FLOW_TASK' ? dirent.props as Fs.FlowTaskProps : undefined;
+  const flowTaskProps = dirent?.props as Fs.FlowTaskProps | undefined;
 
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const state = withNewChange(props.direntId, () => new _ChangeState({
     flowTaskId: props.direntId,
-    bodyType: dirent!.type,
-    flowTaskValue: '',
+    bodyType: flowTaskProps!.type,
+    flowTaskValue: flowTaskProps?.taskValue ?? '',
     tagLabels: (flowTaskProps?.labels ?? []).map(l => l.value),
   }));
-
-  React.useEffect(() => {
-    fetchDirentBody(props.direntId, 'FLOW_TASK').then((body) => {
-      const wb = body as Fs.WrenchBody;
-      const yaml = wb.services[props.direntId]?.ast?.value ?? '';
-      setState(prev => prev.withFlowTaskValue(yaml));
-    });
-  }, [props.direntId]);
 
   function onChangeTaskValue(value: string) {
     setState(prev => prev.withFlowTaskValue(value));

@@ -7,7 +7,6 @@ export interface ConnectedPage {
   localeName: string;
 }
 
-
 type _ChangeStateProps = {
   printoutId: string;
   bodyType: Fs.BodyType;
@@ -88,11 +87,6 @@ class _ChangeState implements FsuChange {
   }
 }
 
-interface _TextFields {
-  serviceName: string;
-  assetDescription: string;
-}
-
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
@@ -103,12 +97,10 @@ export interface UpdateOwnerState {
   orchestratorName: string;
   flows: Fs.SelectOption[];
   connectedPages: ConnectedPage[];
-  onChangeServiceName: (v: string) => void;
-  onBlurServiceName: () => void;
-  onChangeDescription: (v: string) => void;
-  onBlurDescription: () => void;
+  onChangeServiceName: (value: string) => void;
+  onChangeDescription: (value: string) => void;
   onChangeLabels: (value: string[]) => void;
-  onChangeOrchestratorName: (v: string) => void;
+  onChangeOrchestratorName: (value: string) => void;
   onCancel: () => void;
 }
 
@@ -132,15 +124,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
-  const [fields, setFields] = React.useState<_TextFields>({
-    serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-    assetDescription: printoutProps.assetDescription ?? '',
-  });
-
-  const isChangesPresent = state.isChanged
-    || fields.serviceName !== state.serviceName
-    || fields.assetDescription !== state.assetDescription.text;
-
   const connectedPages: ConnectedPage[] = Object.values(selectOptions.direntProps)
     .filter(p => p.type === 'PRINTOUT_PAGE' && (p as Fs.PrintoutPageProps).serviceId === props.direntId)
     .map(p => {
@@ -149,46 +132,34 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
       return { id: p.id, localeName };
     });
 
-  function onChangeServiceName(v: string) {
-    setFields(prev => ({ ...prev, serviceName: v }));
+  function onChangeServiceName(value: string) {
+    setState(prev => prev.withServiceName(value));
   }
-  function onBlurServiceName() {
-    setState(prev => prev.withServiceName(fields.serviceName));
-  }
-  function onChangeDescription(v: string) {
-    setFields(prev => ({ ...prev, assetDescription: v }));
-  }
-  function onBlurDescription() {
-    setState(prev => prev.withDescription({ text: fields.assetDescription }));
+  function onChangeDescription(value: string) {
+    setState(prev => prev.withDescription({ text: value }));
   }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
   }
-  function onChangeOrchestratorName(v: string) {
-    setState(prev => prev.withOrchestratorName(v));
+  function onChangeOrchestratorName(value: string) {
+    setState(prev => prev.withOrchestratorName(value));
   }
   function onCancel() {
-    setFields({
-      serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
-      assetDescription: printoutProps.assetDescription ?? '',
-    });
     cancel(props.direntId);
   }
 
   return {
     isDarkMode,
-    isChanged: isChangesPresent,
-    serviceName: fields.serviceName,
-    assetDescription: fields.assetDescription,
+    isChanged: state.isChanged,
+    serviceName: state.serviceName,
+    assetDescription: state.assetDescription?.text,
     labels: state.labels,
     labelOptions: selectOptions.labels,
     orchestratorName: state.orchestratorName,
     flows: selectOptions.flows,
     connectedPages,
     onChangeServiceName,
-    onBlurServiceName,
     onChangeDescription,
-    onBlurDescription,
     onChangeLabels,
     onChangeOrchestratorName,
     onCancel,

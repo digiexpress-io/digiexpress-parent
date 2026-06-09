@@ -53,7 +53,11 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _init: _CreateStateProps = { bodyType: 'FLOW', name: '', desc: '' };
+const _init: _CreateStateProps = {
+  bodyType: 'FLOW',
+  name: '',
+  desc: ''
+};
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();

@@ -4,11 +4,6 @@ import React from 'react';
   import { useFsNav } from '@dxs-ts/fs-nav';
 
 
-  interface _TextFields {
-    serviceName: string;
-    assetDescription: string;
-  }
-
   export interface CreateOwnerState {
     isDarkMode: boolean;
     isChanged: boolean;
@@ -18,12 +13,10 @@ import React from 'react';
     labelOptions: string[];
     orchestratorName: string;
     flows: Fs.SelectOption[];
-    onChangeServiceName: (v: string) => void;
-    onBlurServiceName: () => void;
-    onChangeDescription: (v: string) => void;
-    onBlurDescription: () => void;
+    onChangeServiceName: (value: string) => void;
+    onChangeDescription: (value: string) => void;
     onChangeLabels: (value: string[]) => void;
-    onChangeOrchestratorName: (v: string) => void;
+    onChangeOrchestratorName: (value: string) => void;
     onSave: () => void;
     onCancel: () => void;
   }
@@ -31,7 +24,7 @@ import React from 'react';
   type _CreateStateProps = {
     bodyType: Fs.BodyType;
     serviceName: string;
-    assetDescription: string;
+    assetDescription: { text: string };
     labels: string[];
     orchestratorName: string;
   }
@@ -81,7 +74,7 @@ import React from 'react';
     withServiceName(serviceName: string): _CreateState {
       return new _CreateState({ ...this._current, serviceName }, this._origin);
     }
-    withDescription(assetDescription: string): _CreateState {
+    withDescription(assetDescription: { text: string }): _CreateState {
       return new _CreateState({ ...this._current, assetDescription }, this._origin);
     }
     withLabels(labels: string[]): _CreateState {
@@ -92,10 +85,10 @@ import React from 'react';
     }
   }
 
-  const _initProps: _CreateStateProps = {
+  const _init: _CreateStateProps = {
     bodyType: 'PRINTOUT',
     serviceName: '',
-    assetDescription: '',
+    assetDescription: { text: '' },
     labels: [],
     orchestratorName: '',
   };
@@ -106,35 +99,19 @@ import React from 'react';
     const { openAsset } = useFsNav();
     const { selectOptions } = useFsDirent();
 
-    const [fields, setFields] = React.useState<_TextFields>({
-      serviceName: _initProps.serviceName,
-      assetDescription: _initProps.assetDescription,
-    });
-    const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
+    const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
-    const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
-
-    const isChangesPresent = state.isChanged
-      || fields.serviceName !== state.serviceName
-      || fields.assetDescription !== state.assetDescription;
-
-    function onChangeServiceName(v: string) {
-      setFields(prev => ({ ...prev, serviceName: v }));
+    function onChangeServiceName(value: string) {
+      setState(prev => prev.withServiceName(value));
     }
-    function onBlurServiceName() {
-      setState(prev => prev.withServiceName(fields.serviceName));
-    }
-    function onChangeDescription(v: string) {
-      setFields(prev => ({ ...prev, assetDescription: v }));
-    }
-    function onBlurDescription() {
-      setState(prev => prev.withDescription(fields.assetDescription));
+    function onChangeDescription(value: string) {
+      setState(prev => prev.withDescription({ text: value }));
     }
     function onChangeLabels(value: string[]) {
       setState(prev => prev.withLabels(value));
     }
-    function onChangeOrchestratorName(v: string) {
-      setState(prev => prev.withOrchestratorName(v));
+    function onChangeOrchestratorName(value: string) {
+      setState(prev => prev.withOrchestratorName(value));
     }
 
     async function onSave() {
@@ -147,23 +124,20 @@ import React from 'react';
     }
 
     function onCancel() {
-      setFields({ serviceName: _initProps.serviceName, assetDescription: _initProps.assetDescription });
-      setStateRaw(new _CreateState(_initProps));
+      setState(new _CreateState(_init));
     }
 
     return {
       isDarkMode,
-      isChanged: isChangesPresent,
-      serviceName: fields.serviceName,
-      assetDescription: fields.assetDescription,
+      isChanged: state.isChanged,
+      serviceName: state.serviceName,
+      assetDescription: state.assetDescription.text,
       labels: state.labels,
       labelOptions: selectOptions.labels,
       orchestratorName: state.orchestratorName,
       flows: selectOptions.flows,
       onChangeServiceName,
-      onBlurServiceName,
       onChangeDescription,
-      onBlurDescription,
       onChangeLabels,
       onChangeOrchestratorName,
       onSave,
