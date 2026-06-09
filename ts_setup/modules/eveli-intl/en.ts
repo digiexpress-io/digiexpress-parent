@@ -1608,6 +1608,7 @@ export const en = {
   'fs.direntMenu.menuItem.unlock': 'Unlock',
   'fs.direntMenu.menuItem.labels': 'Labels',
   'fs.direntMenu.menuItem.description': 'Description',
+  'fs.direntMenu.menuItem.copy': 'Copy',
   'fs.direntMenu.menuItem.rename': 'Rename',
   'fs.direntMenu.menuItem.delete': 'Delete',
   'fs.direntMenu.menuItem.duplicate': 'Duplicate',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { FsMainDefaultBackground } from './FsMainDefaultBackground';
 import { FsTab } from '@dxs-ts/fs-nav';
 import { OwnerState } from './useOwnerState';
 import { FsDirentArticle } from '../fs-dirent-article';
@@ -44,7 +44,6 @@ function resolveTab(tab: FsTab | undefined): { tabType: string; tabId: string } 
 }
 
 export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
-  const intl = useIntl();
   const activeTab = ownerState.openTabs[ownerState.activeTabIndex];
   const { tabType, tabId } = resolveTab(activeTab);
 
@@ -64,7 +63,7 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
     case 'DIALOB_FORM_META': return (activeTab && (<div key={tabId} className={className}><FsDirentDialob tab={activeTab} /></div>));
     case 'LOCALE': return (activeTab && (<div key={tabId} className={className}><FsDirentLocale tab={activeTab} /></div>));
     case 'ARTICLE_PAGE': return (activeTab && (<div key={tabId} className={className}><FsDirentArticlePage tab={activeTab} /></div>));
-    default: return (<div className={className}>{intl.formatMessage({ id: 'fs.main.message.noAssetSelected' })}</div>);
+    default: return (<FsMainDefaultBackground />);
   }
 };
 

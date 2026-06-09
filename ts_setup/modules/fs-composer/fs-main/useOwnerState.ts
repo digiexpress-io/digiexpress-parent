@@ -64,12 +64,15 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
   const { allChanges } = useFsu();
   const unsavedCount = allChanges.filter(c => c.isChanged).length;
   const activeDirentEntry = activeDirent ? getDirent(activeDirent.id) : undefined;
-  const [isRightPanelOpen, setIsRightPanelOpen] = React.useState(true);
+  const [isRightPanelOpen, setIsRightPanelOpen] = React.useState(!!activeDirent);
   const [selectedView, setSelectedView] = React.useState<Fs.SecondaryView | undefined>();
 
   React.useEffect(() => {
     if (activeDirent) {
+      setIsRightPanelOpen(true);
       setSelectedView(activeDirent.type === 'ARTICLE_PAGE' || activeDirent.type === 'FLOW' || activeDirent.type === 'ARTICLE_TEMPLATE' ? 'preview' : 'properties');
+    } else {
+      setIsRightPanelOpen(false);
     }
   }, [activeDirent?.id]);
 
