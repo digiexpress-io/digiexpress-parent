@@ -106,7 +106,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     tagLabels: (flowProps?.labels ?? []).map(l => l.value),
   }));
 
-
   function onChangeContent(value: string) {
     setState(prev => prev.withFlowValue(value));
   }

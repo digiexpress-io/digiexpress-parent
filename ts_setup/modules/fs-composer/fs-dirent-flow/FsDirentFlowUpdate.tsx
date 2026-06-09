@@ -24,6 +24,8 @@ export const FsDirentFlowUpdate: React.FC<FsDirentFlowUpdateProps> = (props) => 
   const { selectOptions, getConfigOptionsForType } = useFsDirent();
   const configOptions = getConfigOptionsForType('FLOW');
 
+  console.log("->", ownerState.content);
+
   return (
     <FsDirentFlowRoot className={classes.root} ownerState={ownerState}>
       <div className={classes.formContainer}>
