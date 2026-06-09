@@ -7,7 +7,6 @@ import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { FsDirentArticleWorkflowUpdateProps } from './FsDirentArticleWorkflowProps';
 import { useUtilityClasses, FsDirentArticleWorkflowRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';

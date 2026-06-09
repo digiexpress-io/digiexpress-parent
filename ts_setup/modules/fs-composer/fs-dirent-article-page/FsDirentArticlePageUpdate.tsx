@@ -7,7 +7,6 @@ import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentTextField } from '../fs-dirent-text-field';
-import { FsDirentLoader } from '../fs-dirent-loader';
 import { useUtilityClasses, FsDirentArticlePageRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentArticlePageUpdateProps } from './FsDirentArticlePageProps';
@@ -17,16 +16,6 @@ export const FsDirentArticlePageUpdate: React.FC<FsDirentArticlePageUpdateProps>
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-
-  const [isLoading, setIsLoading] = React.useState(true);
-  React.useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 300);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (ownerState.isLoading || isLoading) {
-    return <FsDirentLoader />;
-  }
 
   return (
     <FsDirentArticlePageRoot className={classes.root} ownerState={ownerState}>

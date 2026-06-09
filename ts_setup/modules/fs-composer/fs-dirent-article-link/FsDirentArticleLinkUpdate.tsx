@@ -1,12 +1,10 @@
 import React from 'react';
 import { Typography, Collapse } from '@mui/material';
-import { FsDirentLoader } from '../fs-dirent-loader';
 import { useIntl } from 'react-intl';
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
-import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentArticleLinkRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
@@ -24,15 +22,6 @@ export const FsDirentArticleLinkUpdate: React.FC<FsDirentArticleLinkUpdateProps>
     label: intl.formatMessage({ id: `fs.dirent.link.contentType.${v}` }),
   }));
 
-  const [isLoading, setIsLoading] = React.useState(true);
-  React.useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 300);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (ownerState.isLoading || isLoading) {
-    return <FsDirentLoader />;
-  }
 
   return (
     <FsDirentArticleLinkRoot className={classes.root} ownerState={ownerState}>

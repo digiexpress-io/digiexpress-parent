@@ -4,10 +4,7 @@ import { useIntl } from 'react-intl';
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
-import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentArticleCreateProps } from './FsDirentArticleProps';
@@ -17,7 +14,7 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
-  const { getConfigOptionsForType, selectOptions } = useFsDirent();
+  const { getConfigOptionsForType } = useFsDirent();
   const configOptions = getConfigOptionsForType('ARTICLE');
 
   return (
