@@ -31,16 +31,15 @@ type _ChangeStateProps = {
 class _ChangeState implements FsuChange {
   private _origin: _ChangeStateProps;
   private _current: _ChangeStateProps;
-  private _liveContent: React.MutableRefObject<string>;
 
-  constructor(props: _ChangeStateProps, liveContent: React.MutableRefObject<string>, origin?: _ChangeStateProps) {
+  constructor(props: _ChangeStateProps, origin?: _ChangeStateProps) {
     this._current = props;
     this._origin = origin ?? props;
-    this._liveContent = liveContent;
   }
 
   get id() { return this._current.flowTaskId; }
   get bodyType() { return this._current.bodyType; }
+  get flowTaskValue() { return this._current.flowTaskValue; }
   get tagLabels() { return this._current.tagLabels; }
 
   get isChanged(): boolean {
@@ -53,17 +52,17 @@ class _ChangeState implements FsuChange {
       id: this.id,
       changes: {
         flowTaskId: this.id,
-        flowTaskValue: this._liveContent.current,
+        flowTaskValue: this._current.flowTaskValue,
         tagLabels: this._current.tagLabels,
       },
     };
   }
 
   withFlowTaskValue(flowTaskValue: string): _ChangeState {
-    return new _ChangeState({ ...this._current, flowTaskValue }, this._liveContent, this._origin);
+    return new _ChangeState({ ...this._current, flowTaskValue }, this._origin);
   }
   withTagLabels(tagLabels: string[]): _ChangeState {
-    return new _ChangeState({ ...this._current, tagLabels }, this._liveContent, this._origin);
+    return new _ChangeState({ ...this._current, tagLabels }, this._origin);
   }
 }
 
@@ -73,51 +72,30 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { getDirent, fetchDirentBody } = useFsDirent();
   const { withNewChange, withChange, cancel } = useFsu();
 
-  const withChangeRef = React.useRef(withChange);
-  withChangeRef.current = withChange;
-
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChangeRef.current(props.direntId, callback);
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
   const dirent = getDirent(props.direntId);
   const flowTaskProps = dirent?.type === 'FLOW_TASK' ? dirent.props as Fs.FlowTaskProps : undefined;
 
   const [isExpanded, setIsExpanded] = React.useState(false);
 
-  const originalContentRef = React.useRef<string>('');
-  const liveContentRef = React.useRef<string>('');
-  const debounceRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const [taskValue, setTaskValue] = React.useState('');
-
-  const state = withNewChange(props.direntId, () => new _ChangeState(
-    {
-      flowTaskId: props.direntId,
-      bodyType: dirent!.type,
-      flowTaskValue: liveContentRef.current,
-      tagLabels: (flowTaskProps?.labels ?? []).map(l => l.value),
-    },
-    liveContentRef,
-  ));
+  const state = withNewChange(props.direntId, () => new _ChangeState({
+    flowTaskId: props.direntId,
+    bodyType: dirent!.type,
+    flowTaskValue: '',
+    tagLabels: (flowTaskProps?.labels ?? []).map(l => l.value),
+  }));
 
   React.useEffect(() => {
     fetchDirentBody(props.direntId, 'FLOW_TASK').then((body) => {
       const wb = body as Fs.WrenchBody;
       const yaml = wb.services[props.direntId]?.ast?.value ?? '';
-      originalContentRef.current = yaml;
-      liveContentRef.current = yaml;
-      setTaskValue(yaml);
-      cancel(props.direntId);
+      setState(prev => prev.withFlowTaskValue(yaml));
     });
   }, [props.direntId]);
 
   function onChangeTaskValue(value: string) {
-    liveContentRef.current = value;
-    setTaskValue(value);
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
-    debounceRef.current = setTimeout(() => {
-      setState(prev => prev.withFlowTaskValue(value));
-    }, 500);
+    setState(prev => prev.withFlowTaskValue(value));
   }
 
   function onChangeLabels(value: string[]) {
@@ -129,9 +107,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   function onCancel() {
-    const original = originalContentRef.current;
-    liveContentRef.current = original;
-    setTaskValue(original);
     cancel(props.direntId);
   }
 
@@ -141,7 +116,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     id: state.id,
     isChanged: state.isChanged,
     isExpanded,
-    taskValue,
+    taskValue: state.flowTaskValue,
     tagLabels: state.tagLabels,
     onChangeTaskValue,
     onChangeLabels,

@@ -20,20 +20,16 @@ export const FsDirentFlowCreate: React.FC<FsDirentFlowCreateProps> = () => {
         <div className={classes.formContainer}>
 
           <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-          <FsDirentTextField
-            required
+          <FsDirentTextField required
             value={ownerState.name}
             placeholder={intl.formatMessage({ id: 'fs.dirent.flow.nameField.placeholder' })}
             onChange={ownerState.onChangeName}
-            onBlur={ownerState.onBlurName}
           />
 
           <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-          <FsDirentTextField
-            value={ownerState.desc}
+          <FsDirentTextField value={ownerState.desc}
             placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
             onChange={ownerState.onChangeDesc}
-            onBlur={ownerState.onBlurDesc}
             multiline minRows={2} maxRows={4}
           />
 

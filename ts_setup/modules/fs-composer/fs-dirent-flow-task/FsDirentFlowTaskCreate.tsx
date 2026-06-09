@@ -24,12 +24,10 @@ export const FsDirentFlowTaskCreate: React.FC<FsDirentFlowTaskCreateProps> = () 
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.flow_task.taskNameField.label' })}</Typography>
-        <FsDirentTextField
-          required
+        <FsDirentTextField required
           value={ownerState.name}
           placeholder={intl.formatMessage({ id: 'fs.dirent.flow_task.taskNameField.placeholder' })}
           onChange={ownerState.onChangeName}
-          onBlur={ownerState.onBlurName}
         />
 
         <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>

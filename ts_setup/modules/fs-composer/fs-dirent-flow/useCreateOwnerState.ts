@@ -3,20 +3,13 @@ import { useFsTheme } from '../fs-theme';
 import { Fs, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 
-export interface TextFields {
-  name: string;
-  desc: string;
-}
-
 export interface CreateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
   name: string;
   desc: string;
   onChangeName: (value: string) => void;
-  onBlurName: () => void;
   onChangeDesc: (value: string) => void;
-  onBlurDesc: () => void;
   onSave: () => void;
   onCancel: () => void;
 }
@@ -60,36 +53,21 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _emptyProps: _CreateStateProps = { bodyType: 'FLOW', name: '', desc: '' };
+const _init: _CreateStateProps = { bodyType: 'FLOW', name: '', desc: '' };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { pushCreate } = useFsu();
   const { openAsset } = useFsNav();
 
-  const [fields, setFields] = React.useState<TextFields>({ name: _emptyProps.name, desc: _emptyProps.desc });
-  const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_emptyProps));
-
-  const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
-
-  const isChangesPresent = state.isChanged
-    || fields.name !== state.name
-    || fields.desc !== state.desc;
+  const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
   function onChangeName(value: string) {
-    setFields(prev => ({ ...prev, name: value }));
-  }
-
-  function onBlurName() {
-    setState(prev => prev.withName(fields.name));
+    setState(prev => prev.withName(value));
   }
 
   function onChangeDesc(value: string) {
-    setFields(prev => ({ ...prev, desc: value }));
-  }
-
-  function onBlurDesc() {
-    setState(prev => prev.withDesc(fields.desc));
+    setState(prev => prev.withDesc(value));
   }
 
   async function onSave() {
@@ -102,19 +80,16 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onCancel() {
-    setFields({ name: _emptyProps.name, desc: _emptyProps.desc });
-    setStateRaw(new _CreateState(_emptyProps));
+    setState(new _CreateState(_init));
   }
 
   return ({
     isDarkMode,
-    isChanged: isChangesPresent,
-    name: fields.name,
-    desc: fields.desc,
+    isChanged: state.isChanged,
+    name: state.name,
+    desc: state.desc,
     onChangeName,
-    onBlurName,
     onChangeDesc,
-    onBlurDesc,
     onSave,
     onCancel,
   });

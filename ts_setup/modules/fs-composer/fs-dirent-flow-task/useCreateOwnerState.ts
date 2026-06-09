@@ -10,7 +10,6 @@ export interface CreateOwnerState {
   name: string;
   tagLabels: string[];
   onChangeName: (value: string) => void;
-  onBlurName: () => void;
   onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
   onSave: () => void;
@@ -55,7 +54,7 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _initProps: _CreateStateProps = { bodyType: 'FLOW_TASK', name: '', tagLabels: [] };
+const _init: _CreateStateProps = { bodyType: 'FLOW_TASK', name: '', tagLabels: [] };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
@@ -63,19 +62,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const { openAsset } = useFsNav();
 
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [name, setName] = React.useState('');
-  const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
-
-  const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
-
-  const isChangesPresent = state.isChanged || name !== state.name;
+  const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
   function onChangeName(value: string) {
-    setName(value);
-  }
-
-  function onBlurName() {
-    setState(prev => prev.withName(name));
+    setState(prev => prev.withName(value));
   }
 
   function onChangeLabels(value: string[]) {
@@ -96,19 +86,16 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onCancel() {
-    setName('');
-    setIsExpanded(false);
-    setStateRaw(new _CreateState(_initProps));
+    setState(new _CreateState(_init));
   }
 
   return ({
     isDarkMode,
-    isChanged: isChangesPresent,
+    isChanged: state.isChanged,
     isExpanded,
-    name,
+    name: state.name,
     tagLabels: state.tagLabels,
     onChangeName,
-    onBlurName,
     onChangeLabels,
     onToggleExpanded,
     onSave,
