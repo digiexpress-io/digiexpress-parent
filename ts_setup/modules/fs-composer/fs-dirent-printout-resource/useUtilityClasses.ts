@@ -9,7 +9,6 @@ export interface FsDirentPrintoutResourceClasses {
   title: string;
   formContainer: string;
   label: string;
-  buttonContainer: string;
 }
 
 export type FsDirentPrintoutResourceClassKey = keyof FsDirentPrintoutResourceClasses;
@@ -20,7 +19,6 @@ export const useUtilityClasses = () => {
     title: ['title'],
     formContainer: ['formContainer'],
     label: ['label'],
-    buttonContainer: ['buttonContainer'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -53,10 +51,4 @@ export const FsDirentPrintoutResourceRoot = styled('div', {
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
   },
 
-  [`& .${MUI_NAME}-buttonContainer`]: {
-    display: 'flex',
-    gap: '12px',
-    marginTop: '16px',
-    justifyContent: 'flex-end',
-  },
 }));

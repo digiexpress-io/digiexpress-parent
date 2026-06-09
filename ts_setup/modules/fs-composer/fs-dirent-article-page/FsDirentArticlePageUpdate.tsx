@@ -6,12 +6,8 @@ import MDEditor from '@uiw/react-md-editor';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
-import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
-import { useFsu } from '@dxs-ts/fs-api';
 import { FsDirentLoader } from '../fs-dirent-loader';
 import { useUtilityClasses, FsDirentArticlePageRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
@@ -22,7 +18,6 @@ export const FsDirentArticlePageUpdate: React.FC<FsDirentArticlePageUpdateProps>
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { push } = useFsu();
 
   const [isLoading, setIsLoading] = React.useState(true);
   React.useEffect(() => {
@@ -78,11 +73,6 @@ export const FsDirentArticlePageUpdate: React.FC<FsDirentArticlePageUpdateProps>
           </div>
         </Collapse>
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={() => push(ownerState.id)} />
-        </div>
 
       </div>
     </FsDirentArticlePageRoot>

@@ -1,8 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
@@ -47,10 +45,6 @@ export const FsDirentPrintoutCreate: React.FC<FsDirentPrintoutCreateProps> = (_p
           placeholder={intl.formatMessage({ id: 'fs.dirent.labelsField.placeholder' })}
         />
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isChanged} />
-        </div>
 
       </div>
     </FsDirentPrintoutRoot>

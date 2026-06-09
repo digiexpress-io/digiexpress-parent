@@ -9,7 +9,6 @@ export interface FsDirentPrintoutPageClasses {
   title: string;
   formContainer: string;
   label: string;
-  buttonContainer: string;
   expandToggle: string;
   expandToggleIcon: string;
   expandToggleIconOpen: string;
@@ -25,7 +24,6 @@ export const useUtilityClasses = () => {
     title: ['title'],
     formContainer: ['formContainer'],
     label: ['label'],
-    buttonContainer: ['buttonContainer'],
     expandToggle: ['expandToggle'],
     expandToggleIcon: ['expandToggleIcon'],
     expandToggleIconOpen: ['expandToggleIconOpen'],
@@ -61,13 +59,6 @@ export const FsDirentPrintoutPageRoot = styled('div', {
     ...theme.typography.subtitle2,
     fontWeight: 500,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-  },
-
-  [`& .${MUI_NAME}-buttonContainer`]: {
-    display: 'flex',
-    gap: '12px',
-    marginTop: '16px',
-    justifyContent: 'flex-end',
   },
 
   [`& .${MUI_NAME}-expandToggle`]: {

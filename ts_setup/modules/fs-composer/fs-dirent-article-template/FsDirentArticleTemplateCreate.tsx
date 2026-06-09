@@ -2,8 +2,6 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MonacoReact from '@monaco-editor/react';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { useUtilityClasses, FsDirentArticleTemplateRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentArticleTemplateCreateProps } from './FsDirentArticleTemplateProps';
@@ -27,11 +25,6 @@ export const FsDirentArticleTemplateCreate: React.FC<FsDirentArticleTemplateCrea
               minimap: { enabled: false },
             }}
           />
-        </div>
-
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={ownerState.onSave} disabled />
         </div>
 
       </div>

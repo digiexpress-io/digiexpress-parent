@@ -15,7 +15,6 @@ export interface UpdateOwnerState {
   wrenchBody: Fs.WrenchBody | undefined;
   decision: Fs.DecisionAst | undefined;
   onChangeCommands: (commands: Fs.AstCommand[]) => void;
-  onCancel: () => void;
 }
 
 type _ChangeStateProps = {
@@ -106,12 +105,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     });
   }, [commands, props.direntId, applyTransientChanges, withChange, push]);
 
-  function onCancel() {
-    setCommands(initialCommands);
-    setDecision(initialDecision);
-    cancel(props.direntId);
-  }
-
   return {
     isDarkMode,
     dirent,
@@ -120,6 +113,5 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     wrenchBody,
     decision,
     onChangeCommands,
-    onCancel,
   };
 };

@@ -10,7 +10,6 @@ import { generateUtilityClass, styled } from '@mui/material';
     formContainer: string;
     label: string;
     pageList: string;
-    buttonContainer: string;
   }
 
   export type FsDirentPrintoutClassKey = keyof FsDirentPrintoutClasses;
@@ -22,7 +21,6 @@ import { generateUtilityClass, styled } from '@mui/material';
       formContainer: ['formContainer'],
       label: ['label'],
       pageList: ['pageList'],
-      buttonContainer: ['buttonContainer'],
     };
     const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
     return composeClasses(slots, getUtilityClass, {});
@@ -61,10 +59,4 @@ import { generateUtilityClass, styled } from '@mui/material';
       gap: theme.spacing(0.5),
     },
 
-    [`& .${MUI_NAME}-buttonContainer`]: {
-      display: 'flex',
-      gap: '12px',
-      marginTop: '16px',
-      justifyContent: 'flex-end',
-    },
   }));

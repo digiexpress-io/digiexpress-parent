@@ -51,14 +51,12 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   content: string;
   onChangeContent: (value: string) => void;
-  onSave: () => void;
-  onCancel: () => void;
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent } = useFsDirent();
-  const { withNewChange, withChange, cancel, push } = useFsu();
+  const { withNewChange, withChange } = useFsu();
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
@@ -75,14 +73,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withContent(value));
   }
 
-  function onSave() {
-    push(props.direntId);
-  }
-
-  function onCancel() {
-    cancel(props.direntId);
-  }
-
   return ({
     isDarkMode,
     isChanged: state.isChanged,
@@ -90,7 +80,5 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     dirent,
     content: state.content,
     onChangeContent,
-    onSave,
-    onCancel,
   });
 };

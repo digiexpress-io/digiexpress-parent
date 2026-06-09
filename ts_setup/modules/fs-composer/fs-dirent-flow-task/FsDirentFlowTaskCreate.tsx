@@ -4,8 +4,6 @@ import { useIntl } from 'react-intl';
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentFlowTaskRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
@@ -47,10 +45,6 @@ export const FsDirentFlowTaskCreate: React.FC<FsDirentFlowTaskCreateProps> = () 
           </div>
         </Collapse>
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={ownerState.onSave} />
-        </div>
 
       </div>
     </FsDirentFlowTaskRoot>

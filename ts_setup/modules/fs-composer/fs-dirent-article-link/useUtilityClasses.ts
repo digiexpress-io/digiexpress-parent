@@ -18,7 +18,6 @@ export interface FsDirentArticleLinkClasses {
   sectionTitle: string;
   sectionBox: string;
   sectionContent: string;
-  buttonContainer: string;
   helperText: string;
 }
 
@@ -39,7 +38,6 @@ export const useUtilityClasses = () => {
     sectionTitle: ['sectionTitle'],
     sectionBox: ['sectionBox'],
     sectionContent: ['sectionContent'],
-    buttonContainer: ['buttonContainer'],
     helperText: ['helperText'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -142,13 +140,6 @@ export const FsDirentArticleLinkRoot = styled('div', {
     ...theme.typography.caption,
     color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
     marginTop: theme.spacing(-1),
-  },
-
-  [`& .${MUI_NAME}-buttonContainer`]: {
-    display: 'flex',
-    gap: '12px',
-    marginTop: '16px',
-    justifyContent: 'flex-end',
   },
 
 }));

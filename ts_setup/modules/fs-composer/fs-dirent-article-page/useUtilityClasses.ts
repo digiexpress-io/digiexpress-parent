@@ -13,7 +13,6 @@ export interface FsDirentArticlePageClasses {
   expandToggleIconOpen: string;
   optionalFields: string;
   label: string;
-  buttonContainer: string;
 }
 
 export type FsDirentArticlePageClassKey = keyof FsDirentArticlePageClasses;
@@ -28,7 +27,6 @@ export const useUtilityClasses = () => {
     expandToggleIconOpen: ['expandToggleIconOpen'],
     optionalFields: ['optionalFields'],
     label: ['label'],
-    buttonContainer: ['buttonContainer'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -94,11 +92,5 @@ export const FsDirentArticlePageRoot = styled('div', {
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
   },
 
-  [`& .${MUI_NAME}-buttonContainer`]: {
-    display: 'flex',
-    gap: '12px',
-    marginTop: '16px',
-    justifyContent: 'flex-end',
-  },
 
 }));

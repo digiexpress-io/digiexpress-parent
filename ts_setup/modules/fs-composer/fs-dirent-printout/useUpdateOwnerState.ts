@@ -101,13 +101,12 @@ export interface UpdateOwnerState {
   onChangeDescription: (value: string) => void;
   onChangeLabels: (value: string[]) => void;
   onChangeOrchestratorName: (value: string) => void;
-  onCancel: () => void;
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, selectOptions } = useFsDirent();
-  const { withNewChange, withChange, cancel } = useFsu();
+  const { withNewChange, withChange } = useFsu();
 
   const dirent = getDirent(props.direntId)!;
   const printoutProps = dirent.props as Fs.PrintoutProps;
@@ -144,10 +143,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeOrchestratorName(value: string) {
     setState(prev => prev.withOrchestratorName(value));
   }
-  function onCancel() {
-    cancel(props.direntId);
-  }
-
   return {
     isDarkMode,
     isChanged: state.isChanged,
@@ -162,6 +157,5 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeDescription,
     onChangeLabels,
     onChangeOrchestratorName,
-    onCancel,
   };
 };

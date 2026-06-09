@@ -24,7 +24,6 @@ export interface UpdateOwnerState {
   onChangeConfigOptions: (value: string[]) => void;
   onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
-  onCancel: () => void;
   content: string;
 }
 
@@ -87,7 +86,7 @@ class _ChangeState implements FsuChange {
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, getDirentName, selectOptions, getConfigOptionsForType } = useFsDirent();
-  const { withNewChange, withChange, cancel } = useFsu();
+  const { withNewChange, withChange } = useFsu();
 
   const [isExpanded, setIsExpanded] = React.useState(false);
 
@@ -136,10 +135,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
-  function onCancel() {
-    cancel(props.direntId);
-  }
-
   const changes = state.isChanged;
 
   return ({
@@ -164,6 +159,5 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeConfigOptions,
     onChangeLabels,
     onToggleExpanded,
-    onCancel,
   });
 };

@@ -6,13 +6,10 @@ import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
-import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { useUtilityClasses, FsDirentFlowRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentFlowUpdateProps } from './FsDirentFlowProps';
-import { useFsu, useFsDirent } from '@dxs-ts/fs-api';
+import { useFsDirent } from '@dxs-ts/fs-api';
 
 
 
@@ -20,7 +17,6 @@ export const FsDirentFlowUpdate: React.FC<FsDirentFlowUpdateProps> = (props) => 
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { push } = useFsu();
   const { selectOptions, getConfigOptionsForType } = useFsDirent();
   const configOptions = getConfigOptionsForType('FLOW');
 
@@ -65,11 +61,6 @@ export const FsDirentFlowUpdate: React.FC<FsDirentFlowUpdateProps> = (props) => 
           </div>
         </Collapse>
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={() => push(ownerState.id)} />
-        </div>
 
       </div>
     </FsDirentFlowRoot>

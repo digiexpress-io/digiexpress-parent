@@ -2,11 +2,8 @@ import React from 'react';
 import { Typography, Divider, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { DatePicker } from '@dxs-ts/xui-datetime';
-import { useFsDirent, useFsu } from '@dxs-ts/fs-api';
+import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
-import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
@@ -21,7 +18,6 @@ export const FsDirentArticleWorkflowUpdate: React.FC<FsDirentArticleWorkflowUpda
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
   const { selectOptions, getConfigOptionsForType, getDirentName } = useFsDirent();
-  const { push } = useFsu();
   const dialobForms = selectOptions.dialobs;
   const flows = selectOptions.flows;
   const articles = selectOptions.articles.map(item => ({ value: item.value, label: getDirentName(item.value) ?? item.label }));
@@ -90,11 +86,6 @@ export const FsDirentArticleWorkflowUpdate: React.FC<FsDirentArticleWorkflowUpda
           </div>
         </Collapse>
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={() => push(ownerState.id)} />
-        </div>
 
       </div>
     </FsDirentArticleWorkflowRoot>

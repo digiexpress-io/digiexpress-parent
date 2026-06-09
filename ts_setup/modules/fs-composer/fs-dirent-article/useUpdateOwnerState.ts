@@ -26,7 +26,6 @@ export interface UpdateOwnerState {
   onChangeLabels: (value: string[]) => void;
   onChangeComments: (value: string) => void;
   onToggleExpanded: () => void;
-  onCancel: () => void;
 }
 
 type _ChangeStateProps = {
@@ -65,7 +64,6 @@ class _ChangeState implements FsuChange {
   getCurrentProps(): { bodyType: Fs.BodyType; id: string; changes: Record<string, any> } {
     return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
   }
-
   withName(name: string): _ChangeState {
     return new _ChangeState({ ...this._current, name }, this._origin);
   }
@@ -92,7 +90,7 @@ class _ChangeState implements FsuChange {
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, getDirentName } = useFsDirent();
-  const { withNewChange, withChange, cancel } = useFsu();
+  const { withNewChange, withChange } = useFsu();
 
   const dirent = getDirent(props.direntId);
   const articleProps = dirent?.type === 'ARTICLE' ? dirent.props as Fs.ArticleProps : undefined;
@@ -137,12 +135,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
 
-  function onCancel() {
-    cancel(props.direntId);
-  }
-
-
-
   return ({
     isDarkMode,
     dirent,
@@ -162,6 +154,5 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeLabels,
     onChangeComments,
     onToggleExpanded,
-    onCancel,
   });
 };

@@ -7,20 +7,15 @@ import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
-import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentArticleLinkRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentArticleLinkUpdateProps } from './FsDirentArticleLinkProps';
-import { useFsu } from '@dxs-ts/fs-api';
 
 export const FsDirentArticleLinkUpdate: React.FC<FsDirentArticleLinkUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { push } = useFsu();
   const { selectOptions, getConfigOptionsForType, getDirentName } = useFsDirent();
   const articles = selectOptions.articles.map(item => ({ value: item.value, label: getDirentName(item.value) ?? item.label }));
   const configOptions = getConfigOptionsForType('ARTICLE_LINK');
@@ -89,11 +84,6 @@ export const FsDirentArticleLinkUpdate: React.FC<FsDirentArticleLinkUpdateProps>
           </div>
         </Collapse>
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={() => push(ownerState.id)} />
-        </div>
 
       </div>
     </FsDirentArticleLinkRoot>

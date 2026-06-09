@@ -1,8 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentFlowRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
@@ -33,10 +31,6 @@ export const FsDirentFlowCreate: React.FC<FsDirentFlowCreateProps> = () => {
             multiline minRows={2} maxRows={4}
           />
 
-          <div className={classes.buttonContainer}>
-            <FsDirentButtonCancel onClick={ownerState.onCancel} />
-            <FsDirentButtonSave onClick={ownerState.onSave} />
-          </div>
 
         </div>
       </FsDirentFlowRoot>

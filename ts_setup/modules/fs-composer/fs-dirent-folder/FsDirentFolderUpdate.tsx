@@ -1,21 +1,16 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
-import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentFolderRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentFolderUpdateProps } from './FsDirentFolderProps';
-import { useFsu } from '@dxs-ts/fs-api';
 
 
 export const FsDirentFolderUpdate: React.FC<FsDirentFolderUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { push } = useFsu();
 
   return (
     <FsDirentFolderRoot className={classes.root} ownerState={ownerState}>
@@ -32,11 +27,6 @@ export const FsDirentFolderUpdate: React.FC<FsDirentFolderUpdateProps> = (props)
           onChange={ownerState.onChangeName}
         />
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={() => push(ownerState.id)} disabled />
-        </div>
 
       </div>
     </FsDirentFolderRoot>

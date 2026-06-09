@@ -52,13 +52,12 @@ export interface UpdateOwnerState {
   location: string;
   name: string;
   onChangeName: (value: string) => void;
-  onCancel: () => void;
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent } = useFsDirent();
-  const { withNewChange, withChange, cancel } = useFsu();
+  const { withNewChange, withChange } = useFsu();
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
@@ -75,10 +74,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withName(value));
   }
 
-  function onCancel() {
-    cancel(props.direntId);
-  }
-
   return ({
     isDarkMode,
     isChanged: state.isChanged,
@@ -87,6 +82,5 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     location: dirent?.fullPath ?? '',
     name: state.name,
     onChangeName,
-    onCancel,
   });
 };

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
-import { Fs, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { Fs, FsuCreateChange } from '@dxs-ts/fs-api';
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
@@ -12,8 +11,6 @@ export interface CreateOwnerState {
   onChangeName: (value: string) => void;
   onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
-  onSave: () => void;
-  onCancel: () => void;
 }
 
 type _CreateStateProps = {
@@ -58,8 +55,6 @@ const _init: _CreateStateProps = { bodyType: 'FLOW_TASK', name: '', tagLabels: [
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { pushCreate } = useFsu();
-  const { openAsset } = useFsNav();
 
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
@@ -76,19 +71,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setIsExpanded(prev => !prev);
   }
 
-  async function onSave() {
-    try {
-      const dirent = await pushCreate(state);
-      openAsset(dirent);
-    } catch {
-      // error snackbar already shown by handlePushCreate
-    }
-  }
-
-  function onCancel() {
-    setState(new _CreateState(_init));
-  }
-
   return ({
     isDarkMode,
     isChanged: state.isChanged,
@@ -98,7 +80,5 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeName,
     onChangeLabels,
     onToggleExpanded,
-    onSave,
-    onCancel,
   });
 };

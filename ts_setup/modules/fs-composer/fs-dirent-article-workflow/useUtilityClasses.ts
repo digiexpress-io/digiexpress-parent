@@ -16,7 +16,6 @@ export interface FsDirentArticleWorkflowClasses {
   localeLabel: string;
   localeRow: string;
   sectionTitle: string;
-  buttonContainer: string;
 }
 
 export type FsDirentArticleWorkflowClassKey = keyof FsDirentArticleWorkflowClasses;
@@ -34,7 +33,6 @@ export const useUtilityClasses = () => {
     localeLabel: ['localeLabel'],
     localeRow: ['localeRow'],
     sectionTitle: ['sectionTitle'],
-    buttonContainer: ['buttonContainer'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -131,10 +129,4 @@ export const FsDirentArticleWorkflowRoot = styled('div', {
     },
   },
 
-  [`& .${MUI_NAME}-buttonContainer`]: {
-    display: 'flex',
-    gap: '12px',
-    marginTop: '16px',
-    justifyContent: 'flex-end',
-  },
 }));

@@ -5,8 +5,6 @@ import { useIntl } from 'react-intl';
 import { DatePicker } from '@dxs-ts/xui-datetime';
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
@@ -85,10 +83,6 @@ export const FsDirentArticleWorkflowCreate: React.FC<FsDirentArticleWorkflowCrea
             </div>
           </Collapse>
 
-          <div className={classes.buttonContainer}>
-            <FsDirentButtonCancel onClick={ownerState.onCancel} />
-            <FsDirentButtonSave onClick={ownerState.onSave} />
-          </div>
 
         </div>
       </FsDirentArticleWorkflowRoot>

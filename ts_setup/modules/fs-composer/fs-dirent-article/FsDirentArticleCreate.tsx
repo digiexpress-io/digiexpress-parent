@@ -85,11 +85,6 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
           </div>
         </Collapse>
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={ownerState.onSave} />
-        </div>
-
       </div>
     </FsDirentArticleRoot>
   );

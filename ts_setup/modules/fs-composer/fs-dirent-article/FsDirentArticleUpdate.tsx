@@ -83,12 +83,6 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
           </div>
         </Collapse>
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonDelete assetId={props.direntId} />
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={() => push(ownerState.id)} />
-        </div>
-
       </div>
     </FsDirentArticleRoot>
   );

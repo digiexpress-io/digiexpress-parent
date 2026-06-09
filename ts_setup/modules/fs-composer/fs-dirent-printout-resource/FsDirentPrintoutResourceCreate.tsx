@@ -1,8 +1,6 @@
 import React from 'react';
 import { Typography, Button } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
@@ -86,10 +84,6 @@ export const FsDirentPrintoutResourceCreate: React.FC<FsDirentPrintoutResourceCr
           {intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.button' })}
         </Button>
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isChanged} />
-        </div>
 
       </div>
     </FsDirentPrintoutResourceRoot>

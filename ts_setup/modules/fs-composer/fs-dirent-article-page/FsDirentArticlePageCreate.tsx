@@ -5,8 +5,6 @@ import MDEditor from '@uiw/react-md-editor';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { useUtilityClasses, FsDirentArticlePageRoot } from './useUtilityClasses';
@@ -63,10 +61,6 @@ export const FsDirentArticlePageCreate: React.FC<FsDirentArticlePageCreateProps>
           </div>
         </Collapse>
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={ownerState.onSave} />
-        </div>
 
       </div>
     </FsDirentArticlePageRoot>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
-import { Fs, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { Fs, FsuCreateChange } from '@dxs-ts/fs-api';
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
@@ -10,8 +9,6 @@ export interface CreateOwnerState {
   desc: string;
   onChangeName: (value: string) => void;
   onChangeDesc: (value: string) => void;
-  onSave: () => void;
-  onCancel: () => void;
 }
 
 type _CreateStateProps = {
@@ -61,8 +58,6 @@ const _init: _CreateStateProps = {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { pushCreate } = useFsu();
-  const { openAsset } = useFsNav();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
@@ -74,19 +69,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withDesc(value));
   }
 
-  async function onSave() {
-    try {
-      const dirent = await pushCreate(state);
-      openAsset(dirent);
-    } catch {
-      // error snackbar already shown by handlePushCreate
-    }
-  }
-
-  function onCancel() {
-    setState(new _CreateState(_init));
-  }
-
   return ({
     isDarkMode,
     isChanged: state.isChanged,
@@ -94,7 +76,5 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     desc: state.desc,
     onChangeName,
     onChangeDesc,
-    onSave,
-    onCancel,
   });
 };

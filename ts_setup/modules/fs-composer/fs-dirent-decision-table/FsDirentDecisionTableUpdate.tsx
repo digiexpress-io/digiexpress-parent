@@ -4,7 +4,6 @@ import { useIntl } from 'react-intl';
 import { FsIcon, FsIcons } from '../fs-theme';
 
 import { Fs } from '@dxs-ts/fs-api';
-import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
 import { useUtilityClasses, FsDirentDecisionTableRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentDecisionTableUpdateProps } from './FsDirentDecisionTableProps';
@@ -71,9 +70,6 @@ export const FsDirentDecisionTableUpdate: React.FC<FsDirentDecisionTableUpdatePr
         </>
       )}
 
-      <div className={classes.buttonContainer}>
-        <FsDirentButtonDelete assetId={props.direntId} />
-      </div>
     </FsDirentDecisionTableRoot>
   );
 };

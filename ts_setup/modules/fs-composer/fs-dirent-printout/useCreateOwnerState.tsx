@@ -1,7 +1,6 @@
 import React from 'react';
   import { useFsTheme } from '../fs-theme';
-  import { Fs, useFsDirent, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
-  import { useFsNav } from '@dxs-ts/fs-nav';
+  import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 
 
   export interface CreateOwnerState {
@@ -17,8 +16,6 @@ import React from 'react';
     onChangeDescription: (value: string) => void;
     onChangeLabels: (value: string[]) => void;
     onChangeOrchestratorName: (value: string) => void;
-    onSave: () => void;
-    onCancel: () => void;
   }
 
   type _CreateStateProps = {
@@ -95,8 +92,6 @@ import React from 'react';
 
   export const useCreateOwnerState = (): CreateOwnerState => {
     const { isDarkMode } = useFsTheme();
-    const { pushCreate } = useFsu();
-    const { openAsset } = useFsNav();
     const { selectOptions } = useFsDirent();
 
     const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
@@ -114,19 +109,6 @@ import React from 'react';
       setState(prev => prev.withOrchestratorName(value));
     }
 
-    async function onSave() {
-      try {
-        const dirent = await pushCreate(state);
-        openAsset(dirent);
-      } catch {
-        // error snackbar already shown by handlePushCreate
-      }
-    }
-
-    function onCancel() {
-      setState(new _CreateState(_init));
-    }
-
     return {
       isDarkMode,
       isChanged: state.isChanged,
@@ -140,7 +122,5 @@ import React from 'react';
       onChangeDescription,
       onChangeLabels,
       onChangeOrchestratorName,
-      onSave,
-      onCancel,
     };
   };

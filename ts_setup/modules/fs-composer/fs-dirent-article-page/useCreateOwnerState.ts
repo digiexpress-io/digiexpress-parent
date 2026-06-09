@@ -1,7 +1,6 @@
 import React from 'react';
-import { Fs, useFsDirent, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
-import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 
 
@@ -26,8 +25,6 @@ export interface CreateOwnerState {
   onChangeConfigOptions: (value: string[]) => void;
   onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
-  onSave: () => void;
-  onCancel: () => void;
 }
 
 type _CreateStateProps = {
@@ -116,8 +113,6 @@ const _init: _CreateStateProps = {
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { selectOptions, getDirentName, getConfigOptionsForType } = useFsDirent();
-  const { pushCreate } = useFsu();
-  const { openAsset } = useFsNav();
 
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
@@ -161,19 +156,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setIsExpanded(prev => !prev);
   }
 
-  async function onSave() {
-    try {
-      const dirent = await pushCreate(state);
-      openAsset(dirent);
-    } catch {
-      // error snackbar already shown by handlePushCreate
-    }
-  }
-
-  function onCancel() {
-    setState(new _CreateState(_init))
-  }
-
   return ({
     isDarkMode,
     articleId: state.articleId,
@@ -195,7 +177,5 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeConfigOptions,
     onChangeLabels,
     onToggleExpanded,
-    onSave,
-    onCancel,
   });
 };

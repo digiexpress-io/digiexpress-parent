@@ -18,7 +18,6 @@ export interface UpdateOwnerState {
   onChangeTaskValue: (value: string) => void;
   onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
-  onCancel: () => void;
 }
 
 type _ChangeStateProps = {
@@ -70,7 +69,7 @@ class _ChangeState implements FsuChange {
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent } = useFsDirent();
-  const { withNewChange, withChange, cancel } = useFsu();
+  const { withNewChange, withChange } = useFsu();
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
@@ -98,10 +97,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setIsExpanded(prev => !prev);
   }
 
-  function onCancel() {
-    cancel(props.direntId);
-  }
-
   return {
     isDarkMode,
     dirent,
@@ -113,6 +108,5 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeTaskValue,
     onChangeLabels,
     onToggleExpanded,
-    onCancel,
   };
 };

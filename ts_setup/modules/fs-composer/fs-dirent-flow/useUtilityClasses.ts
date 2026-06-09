@@ -17,7 +17,6 @@ export interface FsDirentFlowClasses {
   sectionBox: string;
   sectionContent: string;
   editor: string;
-  buttonContainer: string;
 }
 
 export type FsDirentFlowClassKey = keyof FsDirentFlowClasses;
@@ -36,7 +35,6 @@ export const useUtilityClasses = () => {
     sectionBox: ['sectionBox'],
     sectionContent: ['sectionContent'],
     editor: ['editor'],
-    buttonContainer: ['buttonContainer'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -129,11 +127,5 @@ export const FsDirentFlowRoot = styled('div', {
     overflow: 'hidden',
   },
 
-  [`& .${MUI_NAME}-buttonContainer`]: {
-    display: 'flex',
-    gap: '12px',
-    marginTop: '16px',
-    justifyContent: 'flex-end',
-  },
 
 }));

@@ -1,8 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentDecisionTableRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
@@ -34,10 +32,6 @@ export const FsDirentDecisionTableCreate: React.FC<FsDirentDecisionTableCreatePr
           onChange={ownerState.onChangeDesc}
         />
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isChanged} />
-        </div>
 
       </div>
     </FsDirentDecisionTableRoot>

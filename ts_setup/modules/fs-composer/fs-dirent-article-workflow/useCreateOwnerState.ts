@@ -1,8 +1,7 @@
 
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
-import { Fs, useFsDirent, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
@@ -30,8 +29,6 @@ export interface CreateOwnerState {
   onChangeValidityStart: (date: Date | undefined) => void;
   onChangeValidityEnd: (date: Date | undefined) => void;
   onToggleExpanded: () => void;
-  onSave: () => void;
-  onCancel: () => void;
 }
 
 type _CreateStateProps = {
@@ -140,8 +137,6 @@ const _init: _CreateStateProps = {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { pushCreate } = useFsu();
-  const { openAsset } = useFsNav();
   const { selectOptions } = useFsDirent();
 
   const [isExpanded, setIsExpanded] = React.useState(false);
@@ -185,19 +180,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setIsExpanded(prev => !prev);
   }
 
-  async function onSave() {
-    try {
-      const dirent = await pushCreate(state);
-      openAsset(dirent);
-    } catch {
-      // error snackbar already shown by handlePushCreate
-    }
-  }
-
-  function onCancel() {
-    setState(new _CreateState(_init));
-  }
-
   return ({
     isDarkMode,
     isChanged: isChangesPresent,
@@ -224,7 +206,5 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeValidityStart,
     onChangeValidityEnd,
     onToggleExpanded,
-    onSave,
-    onCancel,
   });
 };

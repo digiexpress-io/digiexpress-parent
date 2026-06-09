@@ -10,7 +10,6 @@ export interface FsDirentFlowTaskClasses {
   formContainer: string;
   label: string;
   editor: string;
-  buttonContainer: string;
   expandToggle: string;
   expandToggleIcon: string;
   expandToggleIconOpen: string;
@@ -26,7 +25,6 @@ export const useUtilityClasses = () => {
     formContainer: ['formContainer'],
     label: ['label'],
     editor: ['editor'],
-    buttonContainer: ['buttonContainer'],
     expandToggle: ['expandToggle'],
     expandToggleIcon: ['expandToggleIcon'],
     expandToggleIconOpen: ['expandToggleIconOpen'],
@@ -68,13 +66,6 @@ export const FsDirentFlowTaskRoot = styled('div', {
     height: '500px',
     border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
     borderRadius: '4px',
-  },
-
-  [`& .${MUI_NAME}-buttonContainer`]: {
-    display: 'flex',
-    gap: '12px',
-    marginTop: '16px',
-    justifyContent: 'flex-end',
   },
 
   [`& .${MUI_NAME}-expandToggle`]: {

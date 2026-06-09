@@ -76,13 +76,12 @@ export interface UpdateOwnerState {
   onChangeDescription: (value: string) => void;
   onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
-  onCancel: () => void;
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, selectOptions } = useFsDirent();
-  const { withNewChange, withChange, cancel } = useFsu();
+  const { withNewChange, withChange } = useFsu();
 
   const dirent = getDirent(props.direntId)!;
   const pageProps = dirent.props as Fs.PrintoutPageProps;
@@ -117,10 +116,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
-  function onCancel() {
-    cancel(props.direntId);
-  }
-
   return {
     isDarkMode,
     isChanged: state.isChanged,
@@ -134,6 +129,5 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeDescription,
     onChangeLabels,
     onToggleExpanded,
-    onCancel,
   };
 };

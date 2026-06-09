@@ -9,7 +9,6 @@ export interface FsDirentDecisionTableClasses {
   title: string;
   formContainer: string;
   label: string;
-  buttonContainer: string;
 }
 
 export type FsDirentDecisionTableClassKey = keyof FsDirentDecisionTableClasses;
@@ -20,7 +19,6 @@ export const useUtilityClasses = () => {
     title: ['title'],
     formContainer: ['formContainer'],
     label: ['label'],
-    buttonContainer: ['buttonContainer'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -52,9 +50,4 @@ export const FsDirentDecisionTableRoot = styled('div', {
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
   },
 
-  [`& .${MUI_NAME}-buttonContainer`]: {
-    display: 'flex',
-    gap: theme.spacing(1),
-    justifyContent: 'flex-end',
-  },
 }));

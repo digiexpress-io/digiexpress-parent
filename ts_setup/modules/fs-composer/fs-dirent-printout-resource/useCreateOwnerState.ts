@@ -1,7 +1,6 @@
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
-import { Fs, useFsDirent, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
-import { useFsNav } from '@dxs-ts/fs-nav';
+import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 import { FsDirentSelectMultiOption } from '../fs-dirent-select-multi';
 
 export interface CreateOwnerState {
@@ -22,8 +21,6 @@ export interface CreateOwnerState {
   onChangeContentType: (value: string) => void;
   onChangeUploadBody: (value: string) => void;
   onChangePrintoutPageIds: (value: string[]) => void;
-  onSave: () => void;
-  onCancel: () => void;
 }
 
 type _CreateStateProps = {
@@ -123,8 +120,6 @@ const _init: _CreateStateProps = {
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { selectOptions, getDirentName } = useFsDirent();
-  const { pushCreate } = useFsu();
-  const { openAsset } = useFsNav();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
@@ -156,19 +151,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withPrintoutPageIds(value));
   }
 
-  async function onSave() {
-    try {
-      const dirent = await pushCreate(state);
-      openAsset(dirent);
-    } catch {
-      // error snackbar already shown by pushCreate
-    }
-  }
-
-  function onCancel() {
-    setState(new _CreateState(_init));
-  }
-
   return {
     isDarkMode,
     isChanged: state.isChanged,
@@ -187,7 +169,5 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeContentType,
     onChangeUploadBody,
     onChangePrintoutPageIds,
-    onSave,
-    onCancel,
   };
 };

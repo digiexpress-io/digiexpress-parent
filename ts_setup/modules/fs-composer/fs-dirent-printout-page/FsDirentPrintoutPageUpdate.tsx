@@ -1,9 +1,6 @@
 import React from 'react';
 import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsu } from '@dxs-ts/fs-api';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
 import { FsIcon, FsIcons } from '../fs-theme';
@@ -13,7 +10,6 @@ import { FsDirentPrintoutPageUpdateProps } from './FsDirentPrintoutPageProps';
 
 export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageUpdateProps> = ({ direntId }) => {
   const intl = useIntl();
-  const { push } = useFsu();
   const ownerState = useUpdateOwnerState({ direntId });
   const classes = useUtilityClasses();
 
@@ -66,10 +62,6 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageUpdateProp
           </div>
         </Collapse>
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={() => push(direntId)} disabled={!ownerState.isChanged} />
-        </div>
 
       </div>
     </FsDirentPrintoutPageRoot>

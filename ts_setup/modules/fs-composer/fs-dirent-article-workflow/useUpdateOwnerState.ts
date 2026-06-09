@@ -144,13 +144,12 @@ export interface UpdateOwnerState {
   onChangeIntlValues: (locale: string, value: string) => void;
   onChangeLabels: (value: string[]) => void;
   onToggleExpanded: () => void;
-  onCancel: () => void;
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, selectOptions } = useFsDirent();
-  const { withNewChange, withChange, cancel } = useFsu();
+  const { withNewChange, withChange } = useFsu();
 
   const dirent = getDirent(props.direntId)!;
   const workflowProps = dirent.props as Fs.WorkflowProps;
@@ -216,10 +215,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
-  function onCancel() {
-    cancel(props.direntId);
-  }
-
   return ({
     isDarkMode,
     dirent,
@@ -249,6 +244,5 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeLabels,
     onChangeIntlValues,
     onToggleExpanded,
-    onCancel,
   });
 };

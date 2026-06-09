@@ -10,7 +10,6 @@ export interface FsDirentArticleTemplateClasses {
   formContainer: string;
   label: string;
   editor: string;
-  buttonContainer: string;
 }
 
 export type FsDirentArticleTemplateClassKey = keyof FsDirentArticleTemplateClasses;
@@ -22,7 +21,6 @@ export const useUtilityClasses = () => {
     formContainer: ['formContainer'],
     label: ['label'],
     editor: ['editor'],
-    buttonContainer: ['buttonContainer'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -61,13 +59,6 @@ export const FsDirentArticleTemplateRoot = styled('div', {
     border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
     borderRadius: '4px',
     overflow: 'hidden',
-  },
-
-  [`& .${MUI_NAME}-buttonContainer`]: {
-    display: 'flex',
-    gap: '12px',
-    marginTop: '16px',
-    justifyContent: 'flex-end',
   },
 
 }));

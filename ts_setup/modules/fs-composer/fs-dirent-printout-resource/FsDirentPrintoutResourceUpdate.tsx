@@ -1,9 +1,6 @@
 import React from 'react';
 import { Typography, Button } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsu } from '@dxs-ts/fs-api';
-import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
-import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentTextFieldAutocomplete } from '../fs-dirent-textfield-autocomplete';
@@ -13,7 +10,6 @@ import { FsDirentPrintoutResourceUpdateProps } from './FsDirentPrintoutResourceP
 
 export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourceUpdateProps> = ({ direntId }) => {
   const intl = useIntl();
-  const { push } = useFsu();
   const ownerState = useUpdateOwnerState({ direntId });
   const classes = useUtilityClasses();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -92,10 +88,6 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourceUp
           />
         )}
 
-        <div className={classes.buttonContainer}>
-          <FsDirentButtonCancel onClick={ownerState.onCancel} />
-          <FsDirentButtonSave onClick={() => push(direntId)} disabled={!ownerState.isChanged} />
-        </div>
 
       </div>
     </FsDirentPrintoutResourceRoot>

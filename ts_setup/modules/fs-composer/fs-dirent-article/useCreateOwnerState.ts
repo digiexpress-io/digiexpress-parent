@@ -25,8 +25,6 @@ export interface CreateOwnerState {
   onChangeLabels: (value: string[]) => void;
   onChangeConfigOptions: (value: string[]) => void;
   onToggleExpanded: () => void;
-  onSave: () => void;
-  onCancel: () => void;
 }
 
 type _CreateStateProps = {
@@ -98,8 +96,7 @@ class _CreateState implements FsuCreateChange {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { pushCreate } = useFsu();
-  const { openAsset, activeTabPath, openTabs, activeTabIndex } = useFsNav();
+  const { activeTabPath, openTabs, activeTabIndex } = useFsNav();
 
   const activeTab = openTabs[activeTabIndex];
   const parentFolder = activeTab?.type === 'create' ? activeTab.parentFolder : undefined;
@@ -127,15 +124,12 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   function onChangeName(value: string) {
     setState(prev => prev.withName(value));
   }
-
   function onChangeOrderNumber(value: string) {
     setState(prev => prev.withOrder(value));
   }
-
   function onChangeDescription(value: string) {
     setState(prev => prev.withDescription({ text: value }));
   }
-
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
   }
@@ -143,22 +137,8 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
-
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
-  }
-
-  async function onSave() {
-    try {
-      const dirent = await pushCreate(state);
-      openAsset(dirent);
-    } catch {
-      // error snackbar already shown by handlePushCreate
-    }
-  }
-
-  function onCancel() {
-    setState(new _CreateState(_init))
   }
 
   return ({
@@ -177,8 +157,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeDescription,
     onChangeLabels,
     onChangeConfigOptions,
-    onToggleExpanded,
-    onSave,
-    onCancel,
+    onToggleExpanded
   });
 };

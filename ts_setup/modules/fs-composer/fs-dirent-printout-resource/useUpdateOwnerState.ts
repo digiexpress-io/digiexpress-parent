@@ -100,13 +100,12 @@ export interface UpdateOwnerState {
   onChangeLabels: (value: string[]) => void;
   onChangeUploadBody: (value: string) => void;
   onChangePrintoutPageIds: (value: string[]) => void;
-  onCancel: () => void;
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, selectOptions, getDirentName } = useFsDirent();
-  const { withNewChange, withChange, cancel } = useFsu();
+  const { withNewChange, withChange } = useFsu();
 
   const dirent = getDirent(props.direntId)!;
   const resourceProps = dirent.props as Fs.PrintoutResourceProps;
@@ -148,10 +147,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangePrintoutPageIds(value: string[]) {
     setState(prev => prev.withPrintoutPageIds(value));
   }
-  function onCancel() {
-    cancel(props.direntId);
-  }
-
   return {
     isDarkMode,
     isChanged: state.isChanged,
@@ -168,6 +163,5 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeLabels,
     onChangeUploadBody,
     onChangePrintoutPageIds,
-    onCancel,
   };
 };

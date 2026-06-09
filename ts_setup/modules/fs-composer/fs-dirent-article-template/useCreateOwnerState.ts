@@ -1,7 +1,6 @@
 import React from 'react';
-import { Fs, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
+import { Fs, FsuCreateChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
-import { useFsNav } from '@dxs-ts/fs-nav';
 
 type _CreateStateProps = {
   bodyType: Fs.BodyType;
@@ -51,14 +50,10 @@ export interface CreateOwnerState {
   isChanged: boolean;
   name: string;
   onChangeName: (value: string) => void;
-  onSave: () => void;
-  onCancel: () => void;
 }
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { pushCreate } = useFsu();
-  const { openAsset } = useFsNav();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
@@ -66,25 +61,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withName(value));
   }
 
-  async function onSave() {
-    try {
-      const dirent = await pushCreate(state);
-      openAsset(dirent);
-    } catch {
-      // error snackbar already shown by pushCreate
-    }
-  }
-
-  function onCancel() {
-    setState(new _CreateState(_init));
-  }
-
   return ({
     isDarkMode,
     isChanged: state.isChanged,
     name: state.name,
     onChangeName,
-    onSave,
-    onCancel,
   });
 };
