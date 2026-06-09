@@ -34,12 +34,9 @@ export const FsDirentArticleWorkflowCreate: React.FC<FsDirentArticleWorkflowCrea
         <div className={classes.formContainer}>
 
           <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-          <FsDirentTextField
-            required
-            value={ownerState.value}
+          <FsDirentTextField required value={ownerState.value}
             placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })}
             onChange={ownerState.onChangeValue}
-            onBlur={ownerState.onBlurValue}
           />
 
           <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobFormField.label' })}</Typography>
@@ -58,10 +55,8 @@ export const FsDirentArticleWorkflowCreate: React.FC<FsDirentArticleWorkflowCrea
           {ownerState.locales.map((locale) => (
             <div key={locale.value} className={classes.localeRow}>
               <Typography className={classes.localeLabel}>{intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}</Typography>
-              <FsDirentTextField
-                value={ownerState.intlValues[locale.value] ?? ''}
+              <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''}
                 onChange={(value) => ownerState.onChangeIntlValues(locale.value, value)}
-                onBlur={() => ownerState.onBlurIntlValues(locale.value)}
               />
             </div>
           ))}

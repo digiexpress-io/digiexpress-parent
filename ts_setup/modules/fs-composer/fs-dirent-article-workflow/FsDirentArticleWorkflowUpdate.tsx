@@ -34,11 +34,8 @@ export const FsDirentArticleWorkflowUpdate: React.FC<FsDirentArticleWorkflowUpda
       <div className={classes.formContainer}>
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField required
-          value={ownerState.name}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })}
+        <FsDirentTextField required value={ownerState.flowName} placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })}
           onChange={ownerState.onChangeName}
-          onBlur={ownerState.onBlurName}
         />
 
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobFormField.label' })}</Typography>
@@ -59,7 +56,6 @@ export const FsDirentArticleWorkflowUpdate: React.FC<FsDirentArticleWorkflowUpda
             <Typography className={classes.localeLabel}>{intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}</Typography>
             <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''}
               onChange={(value) => ownerState.onChangeIntlValues(locale.value, value)}
-              onBlur={() => ownerState.onBlurIntlValues(locale.value)}
             />
           </div>
         ))}
@@ -72,11 +68,9 @@ export const FsDirentArticleWorkflowUpdate: React.FC<FsDirentArticleWorkflowUpda
         <Collapse in={ownerState.isExpanded}>
           <div className={classes.optionalFields}>
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-            <FsDirentTextField
-              value={ownerState.assetDescription}
+            <FsDirentTextField value={ownerState.assetDescription}
               placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}
               onChange={ownerState.onChangeDescription}
-              onBlur={ownerState.onBlurDescription}
             />
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityStartField.label' })}</Typography>

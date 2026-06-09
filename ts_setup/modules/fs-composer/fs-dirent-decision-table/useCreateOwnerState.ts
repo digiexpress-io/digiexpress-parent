@@ -10,16 +10,9 @@ export interface CreateOwnerState {
   desc: string;
   isChanged: boolean;
   onChangeName: (v: string) => void;
-  onBlurName: () => void;
   onChangeDesc: (v: string) => void;
-  onBlurDesc: () => void;
   onSave: () => Promise<void>;
   onCancel: () => void;
-}
-
-type TextFields = {
-  name: string;
-  desc: string;
 }
 
 type _CreateStateProps = {
@@ -51,12 +44,12 @@ class _CreateState implements FsuCreateChange {
   }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
-    const c = this._current;
+    const current = this._current;
     return {
-      bodyType: c.bodyType,
+      bodyType: current.bodyType,
       changes: {
-        name: c.name || undefined,
-        desc: c.desc || undefined,
+        name: current.name || undefined,
+        desc: current.desc || undefined,
         nodes: [],
       },
     };
@@ -70,44 +63,42 @@ class _CreateState implements FsuCreateChange {
   }
   }
 
-const _initProps: _CreateStateProps = { bodyType: 'DECISION_TABLE', name: '', desc: '' };
+const _init: _CreateStateProps = { bodyType: 'DECISION_TABLE', name: '', desc: '' };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
     const { pushCreate } = useFsu();
     const { openAsset } = useFsNav();
 
-    const [fields, setFields] = React.useState<TextFields>({ name: _initProps.name, desc: _initProps.desc });
-    const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
+  const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
-    function setState(updater: (prev: _CreateState) => _CreateState) {
-      setStateRaw(prev => updater(prev));
-    }
+  function onChangeName(v: string) {
+    setState(prev => prev.withName(v));
+  }
+  function onChangeDesc(v: string) {
+    setState(prev => prev.withDesc(v));
+  }
 
-    const onChangeName = (v: string) => setFields(prev => ({ ...prev, name: v }));
-    const onBlurName = () => setState(prev => prev.withName(fields.name));
-    const onChangeDesc = (v: string) => setFields(prev => ({ ...prev, desc: v }));
-    const onBlurDesc = () => setState(prev => prev.withDesc(fields.desc));
-
-    const onSave = async () => {
+  async function onSave() {
+    try {
       const dirent = await pushCreate(state);
       openAsset(dirent);
-    };
+    } catch {
+      // error snackbar already shown by pushCreate
+    }
+  }
 
-    const onCancel = () => {
-      setFields({ name: _initProps.name, desc: _initProps.desc });
-      setStateRaw(new _CreateState(_initProps));
-    };
+  function onCancel() {
+    setState(new _CreateState(_init));
+  }
 
     return {
       isDarkMode,
-      name: fields.name,
-      desc: fields.desc,
+      name: state.name,
+      desc: state.desc,
       isChanged: state.isChanged,
       onChangeName,
-      onBlurName,
       onChangeDesc,
-      onBlurDesc,
       onSave,
       onCancel,
     };

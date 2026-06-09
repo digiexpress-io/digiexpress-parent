@@ -35,7 +35,12 @@ class _ChangeState implements FsuChange {
   get intlValues() { return this._current.intlValues; }
   get validityStart() { return this._current.validityStart; }
   get validityEnd() { return this._current.validityEnd; }
+  get flowName() { return this._current.flowName }
+  get articles() { return this._current.articles }
+  get formTag() { return this._current.formTag }
+  get formName() { return this._current.formName }
   get tagLabels() { return this._current.tagLabels; }
+  get configOptions() { return this._current.configOptions }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; id: string; changes: Record<string, any> } {
@@ -110,25 +115,10 @@ class _ChangeState implements FsuChange {
 }
 
 
-export interface TextFields {
-  name: string;
-  assetDescription: string;
-  formName: string;
-  formTag: string;
-  flowName: string;
-  validityStart: string;
-  validityEnd: string;
-  articles: string[];
-  intlValues: Record<string, string>;
-  configOptions: Fs.ConfigOption[];
-  tagLabels: string[];
-}
-
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
   id: string;
-  name: string;
   assetDescription: string;
   dialobFormName: string;
   dialobFormTag: string;
@@ -153,9 +143,6 @@ export interface UpdateOwnerState {
   onChangeConfigOptions: (value: string[]) => void;
   onChangeIntlValues: (locale: string, value: string) => void;
   onChangeLabels: (value: string[]) => void;
-  onBlurIntlValues: (locale: string) => void;
-  onBlurName: () => void;
-  onBlurDescription: () => void;
   onToggleExpanded: () => void;
   onCancel: () => void;
 }
@@ -163,10 +150,13 @@ export interface UpdateOwnerState {
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, selectOptions } = useFsDirent();
-  const { withNewChange, withChange, cancel, isChange } = useFsu();
+  const { withNewChange, withChange, cancel } = useFsu();
 
   const dirent = getDirent(props.direntId)!;
   const workflowProps = dirent.props as Fs.WorkflowProps;
+  const locales = selectOptions.languages;
+
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   const state = withNewChange(props.direntId, () => new _ChangeState({
     workflowId: props.direntId,
@@ -185,136 +175,68 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }));
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
-
-  const [fields, setFields] = React.useState<TextFields>({
-    name: dirent.name ?? '',
-    assetDescription: workflowProps.assetDescription ?? '',
-    formName: workflowProps.dialobFormName ?? '',
-    formTag: workflowProps.dialobFormTag ?? '',
-    flowName: workflowProps.flowName ?? '',
-    validityStart: workflowProps.validityStart ?? '',
-    validityEnd: workflowProps.validityEnd ?? '',
-    articles: (workflowProps.articles ?? []),
-    intlValues: (workflowProps.intlValues ?? {}),
-    configOptions: (workflowProps.configOptions ?? []) as Fs.ConfigOption[],
-    tagLabels: (workflowProps.labels ?? []).map((l: any) => l.value),
-  });
-
-  const [isExpanded, setIsExpanded] = React.useState(false);
-
-  const locales = selectOptions.languages;
+  const isChangesPresent = state.isChanged;
 
   function onChangeName(value: string) {
-    setFields(prev => ({ ...prev, name: value }));
-  }
-
-  function onChangeDescription(value: string) {
-    setFields(prev => ({ ...prev, assetDescription: value }));
-  }
-
-  function onChangeIntlValues(locale: string, value: string) {
-    setFields(prev => ({ ...prev, intlValues: { ...prev.intlValues, [locale]: value } }));
-  }
-
-  function onChangeDialobFormName(value: string) {
-    setFields(prev => ({ ...prev, formName: value }));
-    setState(prev => prev.withFormName(value));
-  }
-
-  function onChangeDialobFormTag(value: string) {
-    setFields(prev => ({ ...prev, formTag: value }));
-    setState(prev => prev.withFormTag(value));
-  }
-
-  function onChangeFlowName(value: string) {
-    setFields(prev => ({ ...prev, flowName: value }));
     setState(prev => prev.withFlowName(value));
   }
-
+  function onChangeDescription(value: string) {
+    setState(prev => prev.withDescription({ text: value }));
+  }
+  function onChangeIntlValues(locale: string, value: string) {
+    setState(prev => prev.withIntlValues(locale, value));
+  }
+  function onChangeDialobFormName(value: string) {
+    setState(prev => prev.withFormName(value));
+  }
+  function onChangeDialobFormTag(value: string) {
+    setState(prev => prev.withFormTag(value));
+  }
+  function onChangeFlowName(value: string) {
+    setState(prev => prev.withFlowName(value));
+  }
   function onChangeValidityStart(date: Date | undefined) {
     const iso = date ? date.toISOString() : '';
-    setFields(prev => ({ ...prev, validityStart: iso }));
     setState(prev => prev.withValidityStart(iso));
   }
-
   function onChangeValidityEnd(date: Date | undefined) {
     const iso = date ? date.toISOString() : '';
-    setFields(prev => ({ ...prev, validityEnd: iso }));
     setState(prev => prev.withValidityEnd(iso));
   }
-
   function onChangeArticles(value: string[]) {
-    setFields(prev => ({ ...prev, articles: value }));
     setState(prev => prev.withArticles(value));
   }
-
   function onChangeConfigOptions(value: string[]) {
     const opts = value as Fs.ConfigOption[];
-    setFields(prev => ({ ...prev, configOptions: opts }));
     setState(prev => prev.withConfigOptions(opts));
   }
-
   function onChangeLabels(value: string[]) {
-    setFields(prev => ({ ...prev, tagLabels: value }));
     setState(prev => prev.withTagLabels(value));
   }
-
-  function onBlurName() {
-    setState(prev => prev.withValue(fields.name));
-  }
-
-  function onBlurDescription() {
-    setState(prev => prev.withDescription({ text: fields.assetDescription }));
-  }
-
-  function onBlurIntlValues(locale: string) {
-    setState(prev => prev.withIntlValues(locale, fields.intlValues[locale] ?? ''));
-  }
-
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
-
   function onCancel() {
-    setFields({
-      name: dirent.name ?? '',
-      assetDescription: workflowProps.assetDescription ?? '',
-      formName: workflowProps.dialobFormName ?? '',
-      formTag: workflowProps.dialobFormTag ?? '',
-      flowName: workflowProps.flowName ?? '',
-      validityStart: workflowProps.validityStart ?? '',
-      validityEnd: workflowProps.validityEnd ?? '',
-      articles: (workflowProps.articles ?? []),
-      intlValues: (workflowProps.intlValues ?? {}),
-      configOptions: (workflowProps.configOptions ?? []) as Fs.ConfigOption[],
-      tagLabels: (workflowProps.labels ?? []).map((l: any) => l.value),
-    });
     cancel(props.direntId);
   }
-
-  const changes = state.isChanged
-    || fields.name !== state.value
-    || fields.assetDescription !== state.assetDescription.text
-    || JSON.stringify(fields.intlValues) !== JSON.stringify(state.intlValues);
 
   return ({
     isDarkMode,
     dirent,
     id: state.id,
-    name: fields.name,
-    assetDescription: fields.assetDescription,
-    dialobFormName: fields.formName,
-    dialobFormTag: fields.formTag,
-    flowName: fields.flowName,
-    validityStart: fields.validityStart,
-    validityEnd: fields.validityEnd,
-    articles: fields.articles,
-    configOptions: fields.configOptions,
-    tagLabels: fields.tagLabels,
-    intlValues: fields.intlValues,
+    assetDescription: state.assetDescription.text,
+    dialobFormName: state.formName,
+    dialobFormTag: state.formTag,
+    flowName: state.flowName,
+    validityStart: state.validityStart,
+    validityEnd: state.validityEnd,
+    articles: state.articles,
+    configOptions: state.configOptions,
+    tagLabels: state.tagLabels,
+    intlValues: state.intlValues,
     locales,
     isExpanded,
-    isChanged: changes,
+    isChanged: isChangesPresent,
     onChangeName,
     onChangeDescription,
     onChangeDialobFormName,
@@ -326,9 +248,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeConfigOptions,
     onChangeLabels,
     onChangeIntlValues,
-    onBlurName,
-    onBlurDescription,
-    onBlurIntlValues,
     onToggleExpanded,
     onCancel,
   });

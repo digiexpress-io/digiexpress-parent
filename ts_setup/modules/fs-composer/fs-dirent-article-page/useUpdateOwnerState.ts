@@ -89,18 +89,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { getDirent, getDirentName, selectOptions, getConfigOptionsForType } = useFsDirent();
   const { withNewChange, withChange, cancel } = useFsu();
 
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
   const dirent = getDirent(props.direntId)!;
   const pageProps = dirent.props as Fs.PageProps;
   const articleName = getDirentName(pageProps.articleId) ?? '';
-  const usedLocaleIds = Object.values(selectOptions.direntProps)
-    .filter(p => p.type === 'ARTICLE_PAGE' && p.id !== props.direntId && (p as Fs.PageProps).articleId === pageProps.articleId)
-    .map(p => (p as Fs.PageProps).localeCode);
-  const localeOptions: FsDirentSelectSingleOption[] = selectOptions.languages.filter(
-    l => !usedLocaleIds.includes(l.value) || l.value === state.locale
-  );
   const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('ARTICLE_PAGE');
-
-  const [isExpanded, setIsExpanded] = React.useState(false);
 
   const state = withNewChange(props.direntId, () => new _ChangeState({
     pageId: props.direntId,
@@ -113,6 +107,14 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     devMode: (pageProps.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (pageProps.configOptions ?? []).includes('DISABLED_MODE'),
   }));
+
+  const usedLocaleIds = Object.values(selectOptions.direntProps)
+    .filter(p => p.type === 'ARTICLE_PAGE' && p.id !== props.direntId && (p as Fs.PageProps).articleId === pageProps.articleId)
+    .map(p => (p as Fs.PageProps).localeCode);
+  const localeOptions: FsDirentSelectSingleOption[] = selectOptions.languages.filter(
+    l => !usedLocaleIds.includes(l.value) || l.value === state.locale
+  );
+
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 

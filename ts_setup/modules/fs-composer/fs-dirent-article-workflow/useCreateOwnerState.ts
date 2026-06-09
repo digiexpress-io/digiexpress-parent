@@ -4,11 +4,6 @@ import { useFsTheme } from '../fs-theme';
 import { Fs, useFsDirent, useFsu, FsuCreateChange } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 
-export interface TextFields {
-  value: string;
-  intlValues: Record<string, string>;
-}
-
 export interface CreateOwnerState {
   isDarkMode: boolean;
   isChanged: boolean;
@@ -25,13 +20,11 @@ export interface CreateOwnerState {
   validityEnd: string;
   locales: Fs.SelectOption[];
   onChangeValue: (v: string) => void;
-  onBlurValue: () => void;
   onChangeFormName: (v: string) => void;
   onChangeFormTag: (v: string) => void;
   onChangeFlowName: (v: string) => void;
   onChangeArticles: (v: string[]) => void;
   onChangeIntlValues: (locale: string, value: string) => void;
-  onBlurIntlValues: (locale: string) => void;
   onChangeConfigOptions: (v: string[]) => void;
   onChangeLabels: (v: string[]) => void;
   onChangeValidityStart: (date: Date | undefined) => void;
@@ -78,23 +71,23 @@ class _CreateState implements FsuCreateChange {
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
-    const c = this._current;
+    const current = this._current;
     return {
-      bodyType: c.bodyType,
+      bodyType: current.bodyType,
       changes: {
-        value: c.value,
-        formName: c.formName,
-        formTag: c.formTag,
-        formId: c.formName,
-        flowName: c.flowName,
-        articles: c.articles,
-        labels: Object.entries(c.intlValues).map(([locale, labelValue]) => ({ locale, labelValue })),
-        startDate: c.validityStart || undefined,
-        endDate: c.validityEnd || undefined,
-        disabled: c.configOptions.includes('DISABLED_MODE') || undefined,
-        devMode: c.configOptions.includes('DEV_MODE') || undefined,
-        anon: c.configOptions.includes('ANONYMOUS_MODE') || undefined,
-        assignable: c.configOptions.includes('ASSIGNABLE_MODE') || undefined,
+        value: current.value,
+        formName: current.formName,
+        formTag: current.formTag,
+        formId: current.formName,
+        flowName: current.flowName,
+        articles: current.articles,
+        labels: Object.entries(current.intlValues).map(([locale, labelValue]) => ({ locale, labelValue })),
+        startDate: current.validityStart || undefined,
+        endDate: current.validityEnd || undefined,
+        disabled: current.configOptions.includes('DISABLED_MODE') || undefined,
+        devMode: current.configOptions.includes('DEV_MODE') || undefined,
+        anon: current.configOptions.includes('ANONYMOUS_MODE') || undefined,
+        assignable: current.configOptions.includes('ASSIGNABLE_MODE') || undefined,
       },
     };
   }
@@ -131,7 +124,7 @@ class _CreateState implements FsuCreateChange {
   }
 }
 
-const _initProps: _CreateStateProps = {
+const _init: _CreateStateProps = {
   bodyType: 'ARTICLE_WORKFLOW',
   value: '',
   formName: '',
@@ -152,20 +145,12 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const { selectOptions } = useFsDirent();
 
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [fields, setFields] = React.useState<TextFields>({ value: _initProps.value, intlValues: _initProps.intlValues });
-  const [state, setStateRaw] = React.useState<_CreateState>(() => new _CreateState(_initProps));
+  const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
-  const setState = (cb: (prev: _CreateState) => _CreateState) => setStateRaw(cb);
+  const isChangesPresent = state.isChanged;
 
-  const isChangesPresent = state.isChanged
-    || fields.value !== state.value
-    || JSON.stringify(fields.intlValues) !== JSON.stringify(state.intlValues);
-
-  function onChangeValue(v: string) {
-    setFields(prev => ({ ...prev, value: v }));
-  }
-  function onBlurValue() {
-    setState(prev => prev.withValue(fields.value));
+  function onChangeValue(value: string) {
+    setState(prev => prev.withValue(value));
   }
   function onChangeFormName(v: string) {
     setState(prev => prev.withFormName(v));
@@ -180,13 +165,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withArticles(v));
   }
   function onChangeIntlValues(locale: string, value: string) {
-    setFields(prev => ({ ...prev, intlValues: { ...prev.intlValues, [locale]: value } }));
+    setState(prev => prev.withIntlValues(locale, value));
   }
-  function onBlurIntlValues(locale: string) {
-    setState(prev => prev.withIntlValues(locale, fields.intlValues[locale] ?? ''));
-  }
-  function onChangeConfigOptions(v: string[]) {
-    setState(prev => prev.withConfigOptions(v as Fs.ConfigOption[]));
+  function onChangeConfigOptions(values: string[]) {
+    setState(prev => prev.withConfigOptions(values as Fs.ConfigOption[]));
   }
   function onChangeLabels(v: string[]) {
     setState(prev => prev.withTagLabels(v));
@@ -213,34 +195,30 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   function onCancel() {
-    setFields({ value: _initProps.value, intlValues: _initProps.intlValues });
-    setStateRaw(new _CreateState(_initProps));
-    setIsExpanded(false);
+    setState(new _CreateState(_init));
   }
 
   return ({
     isDarkMode,
     isChanged: isChangesPresent,
     isExpanded,
-    value: fields.value,
+    value: state.value,
     formName: state.formName,
     formTag: state.formTag,
     flowName: state.flowName,
     articles: state.articles,
-    intlValues: fields.intlValues,
+    intlValues: state.intlValues,
     configOptions: state.configOptions,
     tagLabels: state.tagLabels,
     validityStart: state.validityStart,
     validityEnd: state.validityEnd,
     locales: selectOptions.languages,
     onChangeValue,
-    onBlurValue,
     onChangeFormName,
     onChangeFormTag,
     onChangeFlowName,
     onChangeArticles,
     onChangeIntlValues,
-    onBlurIntlValues,
     onChangeConfigOptions,
     onChangeLabels,
     onChangeValidityStart,

@@ -59,12 +59,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { getDirent, fetchDirentBody, applyTransientChanges } = useFsDirent();
   const { withNewChange, withChange, cancel, push } = useFsu();
 
-  const withChangeRef = React.useRef(withChange);
-  withChangeRef.current = withChange;
-
-  const pushRef = React.useRef(push);
-  pushRef.current = push;
-
   const dirent = getDirent(props.direntId);
 
   const [wrenchBody, setWrenchBody] = React.useState<Fs.WrenchBody | undefined>(undefined);
@@ -73,10 +67,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [initialCommands, setInitialCommands] = React.useState<Fs.AstCommand[]>([]);
   const [initialDecision, setInitialDecision] = React.useState<Fs.DecisionAst | undefined>(undefined);
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChangeRef.current(props.direntId, callback);
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
 
-  // Factory uses current commands — after body loads, cancel() clears FsuWorld so withNewChange
-  // re-runs the factory with loaded commands as _origin (React 18 batches setCommands + cancel).
   const state = withNewChange(props.direntId, () => new _ChangeState({
     decisionTableId: props.direntId,
     bodyType: dirent!.type,
@@ -84,17 +76,18 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }));
 
   React.useEffect(() => {
-    fetchDirentBody(props.direntId, 'DECISION_TABLE').then((body) => {
-      const wb = body as Fs.WrenchBody;
-      const loaded = wb.decisions[props.direntId]?.commands ?? [];
-      const loadedDecision = wb.decisions[props.direntId]?.ast;
-      setWrenchBody(wb);
-      setDecision(loadedDecision);
-      setCommands(loaded);
-      setInitialCommands(loaded);
-      setInitialDecision(loadedDecision);
-      cancel(props.direntId);
-    });
+    fetchDirentBody(props.direntId, 'DECISION_TABLE')
+      .then((body) => {
+        const wb = body as Fs.WrenchBody;
+        const loaded = wb.decisions[props.direntId]?.commands ?? [];
+        const loadedDecision = wb.decisions[props.direntId]?.ast;
+        setWrenchBody(wb);
+        setDecision(loadedDecision);
+        setCommands(loaded);
+        setInitialCommands(loaded);
+        setInitialDecision(loadedDecision);
+        cancel(props.direntId);
+      });
   }, [props.direntId]);
 
   const onChangeCommands = React.useCallback((newCommands: Fs.AstCommand[]) => {
@@ -109,9 +102,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     }).then((body) => {
       const wb = body as Fs.WrenchAstBody<Fs.DecisionAst>;
       setDecision(wb.ast);
-      pushRef.current(props.direntId);
+      push(props.direntId);
     });
-  }, [commands, props.direntId, applyTransientChanges]);
+  }, [commands, props.direntId, applyTransientChanges, withChange, push]);
 
   function onCancel() {
     setCommands(initialCommands);

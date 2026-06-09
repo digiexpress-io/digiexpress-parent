@@ -7,11 +7,6 @@ import {
   FsuChange
 } from '@dxs-ts/fs-api';
 
-export interface TextFields {
-  content: string;
-  assetDescription: string;
-}
-
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
@@ -45,14 +40,10 @@ type _ChangeStateProps = {
 class _ChangeState implements FsuChange {
   private _origin: _ChangeStateProps;
   private _current: _ChangeStateProps;
-  // Holds a pointer to the ref object — dereferenced at save time so getCurrentProps()
-  // always returns the latest editor content regardless of when this instance was created.
-  private _liveContent: React.MutableRefObject<string>;
 
-  constructor(props: _ChangeStateProps, liveContent: React.MutableRefObject<string>, origin?: _ChangeStateProps) {
+  constructor(props: _ChangeStateProps, origin?: _ChangeStateProps) {
     this._current = props;
     this._origin = origin ?? props;
-    this._liveContent = liveContent;
   }
 
   get id() { return this._current.flowId; }
