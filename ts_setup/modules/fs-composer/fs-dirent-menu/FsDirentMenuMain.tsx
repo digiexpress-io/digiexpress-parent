@@ -88,6 +88,8 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
         <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
 
+      <Divider className={classes.divider} />
+
       <MenuItem disableRipple className={classes.menuItem} onClick={handleEdit}>
         <FsIcon icon={FsIcons.Edit} small />
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.edit' })}
@@ -97,6 +99,13 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
         {dirent?.props?.locked ? (<FsIcon icon={FsIcons.Locked} small />) : (<FsIcon icon={FsIcons.Unlocked} small />)}
         {dirent?.props?.locked ? intl.formatMessage({ id: 'fs.direntMenu.menuItem.unlock' }) : intl.formatMessage({ id: 'fs.direntMenu.menuItem.lock' })}
       </MenuItem>
+
+      <MenuItem disableRipple className={classes.menuItem} onClick={handleDuplicate}>
+        <FsIcon icon={FsIcons.Copy} small />
+        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.duplicate' })}
+      </MenuItem>
+
+      <Divider className={classes.divider} />
 
       <MenuItem disableRipple
         className={props.openSubmenu === 'rename' ? classes.menuItemActive : classes.menuItem}
@@ -108,16 +117,11 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
         <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
 
-      <MenuItem disableRipple className={classes.menuItem} onClick={handleDuplicate}>
-        <FsIcon icon={FsIcons.Copy} small />
-        {intl.formatMessage({ id: 'fs.direntMenu.menuItem.duplicate' })}
-      </MenuItem>
-
       <MenuItem disableRipple
         className={props.openSubmenu === 'description' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('description')}
       >
-        <FsIcon icon={FsIcons.Form} small />
+        <FsIcon icon={FsIcons.Description} small />
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.description' })}
         <Box flex={1} />
         <FsIcon icon={FsIcons.ChevronRight} small />
@@ -132,6 +136,8 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
         <Box flex={1} />
         <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
+
+      <Divider className={classes.divider} />
 
       <MenuItem disableRipple className={classes.menuItemDelete} onClick={handleDelete}>
         <FsIcon icon={FsIcons.Delete} small />

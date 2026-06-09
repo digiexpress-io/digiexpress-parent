@@ -84,6 +84,7 @@ import {
   // Unsaved indicator
   FiberManualRecord,
   LabelOutlined as LabelIcon,
+  NotesOutlined,
 } from '@mui/icons-material';
 import { SvgIconProps, Tooltip } from '@mui/material';
 
@@ -173,6 +174,7 @@ export const FsIcons = {
   Unsaved: FiberManualRecord,
 
   Label: LabelIcon,
+  Description: NotesOutlined,
 };
 
 export interface FsIconProps {

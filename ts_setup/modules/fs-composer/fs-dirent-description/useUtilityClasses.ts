@@ -2,7 +2,6 @@ import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
-import { textAlign } from '@mui/system';
 
 const MUI_NAME = 'FsDirentDescription';
 
@@ -10,7 +9,6 @@ export interface FsDirentDescriptionClasses {
   root: string;
   textField: string;
   title: string;
-  buttonContainer: string;
 }
 
 export type FsDirentDescriptionClassKey = keyof FsDirentDescriptionClasses;
@@ -20,7 +18,6 @@ export const useUtilityClasses = () => {
     root: ['root'],
     textField: ['textField'],
     title: ['title'],
-    buttonContainer: ['buttonContainer'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -40,14 +37,6 @@ export const FsDirentDescriptionRoot = styled('div', {
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     marginBottom: theme.spacing(1),
     textAlign: 'center'
-  },
-
-  [`& .${MUI_NAME}-buttonContainer`]: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    justifyContent: 'center'
   },
 
   [`& .${MUI_NAME}-textField`]: {
