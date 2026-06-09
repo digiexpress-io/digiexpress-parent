@@ -8,8 +8,6 @@ import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentArticleUpdateProps } from './FsDirentArticleProps';
-
-
 export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
@@ -19,9 +17,9 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (prop
 
   return (
     <FsDirentArticleRoot className={classes.root} ownerState={ownerState}>
-      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.article.sectionTitle.edit' })}</Typography>
-      <div className={classes.formContainer}>
+      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.article.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
 
+      <div className={classes.formContainer}>
         <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
         <FsDirentTextField required value={ownerState.name}
           placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}

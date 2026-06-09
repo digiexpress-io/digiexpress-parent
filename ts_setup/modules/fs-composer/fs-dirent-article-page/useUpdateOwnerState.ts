@@ -1,12 +1,13 @@
 import React from 'react';
 import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
+import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
+  assetPath: string | undefined;
   dirent: Fs.DirentBase | undefined;
-  isLoading: boolean;
   id: string;
   articleName: string;
   locale: string;
@@ -70,6 +71,7 @@ class _ChangeState implements FsuChange {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
+  const { activeTabPath } = useFsNav();
   const { getDirent, getDirentName, selectOptions, getConfigOptionsForType } = useFsDirent();
   const { withNewChange, withChange } = useFsu();
 
@@ -116,8 +118,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   return ({
     isDarkMode,
+    assetPath: activeTabPath,
     dirent,
-    isLoading: !dirent,
     id: state.id,
     content: state.content,
     locale: state.locale,

@@ -2,7 +2,6 @@ import React from 'react';
 import { useFsTheme } from '../fs-theme';
 import { Box } from '@mui/material';
 import { FsTabs } from '../fs-tabs';
-import { FsBreadcrumb } from '../fs-breadcrumb';
 import { FsMain } from '../fs-main';
 import { FsColors } from '../fs-theme';
 import { FsuProvider } from '@dxs-ts/fs-api';
@@ -20,7 +19,6 @@ const Main: React.FC<{}> = () => {
       color: isDarkMode ? FsColors.dark.text : FsColors.light.text
     }}>
       <FsTabs />
-      <FsBreadcrumb />
       <Box sx={{ flex: 1, overflow: 'hidden' }}>
         <FsuProvider>
           <FsMain />

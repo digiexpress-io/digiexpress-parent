@@ -1429,7 +1429,7 @@ export const en = {
   'fs.direntCreate.sectionTitle.createNew': 'Create new asset',
   'fs.direntCreate.sectionTitle.sharing': 'Sharing and permissions',
   'fs.dirent.article.sectionTitle.createNew': 'Create new article',
-  'fs.dirent.article.sectionTitle.edit': 'Edit article',
+  'fs.dirent.article.sectionTitle.edit': 'Edit article: {name}',
   'fs.dirent.article.sectionTitle.sharing': 'Sharing and permissions',
   'fs.dirent.nameField.label': 'Name',
   'fs.dirent.article.nameField.placeholder': 'Enter article name',
