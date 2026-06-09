@@ -4,18 +4,18 @@ import { useIntl } from 'react-intl';
 import MonacoReact from '@monaco-editor/react';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
-import { useUtilityClasses, FsDirentTemplateRoot } from './useUtilityClasses';
+import { useUtilityClasses, FsDirentArticleTemplateRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
-import { FsDirentTemplateCreateProps } from './FsDirentTemplateProps';
+import { FsDirentArticleTemplateCreateProps } from './FsDirentArticleTemplateProps';
 
 
-export const FsDirentTemplateCreate: React.FC<FsDirentTemplateCreateProps> = () => {
+export const FsDirentArticleTemplateCreate: React.FC<FsDirentArticleTemplateCreateProps> = () => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentTemplateRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentArticleTemplateRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.template.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 
@@ -35,6 +35,6 @@ export const FsDirentTemplateCreate: React.FC<FsDirentTemplateCreateProps> = () 
         </div>
 
       </div>
-    </FsDirentTemplateRoot>
+    </FsDirentArticleTemplateRoot>
   );
 };

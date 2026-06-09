@@ -14,7 +14,7 @@ import { FsDirentDialob } from '../fs-dirent-dialob';
 import { FsDirentPrintout } from '../fs-dirent-printout';
 import { FsDirentPrintoutResource } from '../fs-dirent-printout-resource';
 import { FsDirentPrintoutPage } from '../fs-dirent-printout-page';
-import { FsDirentTemplate } from '../fs-dirent-template';
+import { FsDirentArticleTemplate } from '../fs-dirent-article-template';
 import { FsDirentFlowTask } from '../fs-dirent-flow-task';
 import { FsDirentDecisionTable } from '../fs-dirent-decision-table';
 
@@ -60,7 +60,7 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
     case 'PRINTOUT': return (activeTab && (<div key={tabId} className={className}><FsDirentPrintout tab={activeTab} /></div>));
     case 'PRINTOUT_RESOURCE': return (activeTab && (<div key={tabId} className={className}><FsDirentPrintoutResource tab={activeTab} /></div>));
     case 'PRINTOUT_PAGE': return (activeTab && (<div key={tabId} className={className}><FsDirentPrintoutPage tab={activeTab} /></div>));
-    case 'ARTICLE_TEMPLATE': return (activeTab && (<div key={tabId} className={className}><FsDirentTemplate tab={activeTab} /></div>));
+    case 'ARTICLE_TEMPLATE': return (activeTab && (<div key={tabId} className={className}><FsDirentArticleTemplate tab={activeTab} /></div>));
     case 'DIALOB_FORM': return (activeTab && (<div key={tabId} className={className}><FsDirentDialob tab={activeTab} /></div>));
     case 'DIALOB_FORM_META': return (activeTab && (<div key={tabId} className={className}><FsDirentDialob tab={activeTab} /></div>));
     case 'LOCALE': return (activeTab && (<div key={tabId} className={className}><FsDirentLocale tab={activeTab} /></div>));

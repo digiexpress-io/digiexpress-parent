@@ -5,18 +5,18 @@ import MonacoReact from '@monaco-editor/react';
 import { FsDirentButtonCancel } from '../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentButtonDelete } from '../fs-dirent-button-delete';
-import { useUtilityClasses, FsDirentTemplateRoot } from './useUtilityClasses';
+import { useUtilityClasses, FsDirentArticleTemplateRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
-import { FsDirentTemplateUpdateProps } from './FsDirentTemplateProps';
+import { FsDirentArticleTemplateUpdateProps } from './FsDirentArticleTemplateProps';
 
 
-export const FsDirentTemplateUpdate: React.FC<FsDirentTemplateUpdateProps> = (props) => {
+export const FsDirentArticleTemplateUpdate: React.FC<FsDirentArticleTemplateUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentTemplateRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentArticleTemplateRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.template.sectionTitle.edit' })}</Typography>
       <div className={classes.formContainer}>
 
@@ -41,6 +41,6 @@ export const FsDirentTemplateUpdate: React.FC<FsDirentTemplateUpdateProps> = (pr
         </div>
 
       </div>
-    </FsDirentTemplateRoot>
+    </FsDirentArticleTemplateRoot>
   );
 };
