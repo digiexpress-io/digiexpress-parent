@@ -22,6 +22,7 @@ package io.digiexpress.eveli.client.web.resources.assets;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -119,7 +120,7 @@ public class AssetsStencilController {
   }
   @DeleteMapping("/links/{id}") 
   public Uni<Model<?>> deleteLink(@PathVariable("id") String linkId, @RequestParam(name = "articleId", required = false) String articleId) {
-    if(articleId == null || articleId.isEmpty()) {
+    if(StringUtils.isNotEmpty(articleId)) {
       return composer.deleteModel()
           .deleteArticleLink().props(props -> props.articleId(articleId).linkId(linkId)).build()
           .map(model -> model);
@@ -141,7 +142,7 @@ public class AssetsStencilController {
       @PathVariable("id") String linkId,  
       @RequestParam(name = "articleId", required = false) String articleId) {
     
-    if(articleId == null || articleId.isEmpty()) {
+    if(StringUtils.isNotEmpty(articleId)) {
       return composer.deleteModel().deleteArticleWorkflow()
           .props(props -> props.articleId(articleId).workflowId(linkId)).build()
           .map(model -> model);
