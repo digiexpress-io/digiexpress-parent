@@ -101,7 +101,7 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
         {renderTypeSpecificRows(dirent)}
 
         {dirent.type === 'ARTICLE' && (
-          <FsPropertiesArticle dirent={dirent} children={dirent.children} />
+          <FsPropertiesArticle direntId={dirent.id} />
         )}
 
         {dirent.type === 'PRINTOUT' && (

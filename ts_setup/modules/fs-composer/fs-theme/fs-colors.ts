@@ -44,7 +44,7 @@ export const FsColors = {
   direntTypes: {
     dark: {
       folder: '#e8e5e5',       // Neutral gray for containers
-      content: '#dcdcaa',      // Yellow for content (articles)
+      article: '#dcdcaa',      // Yellow for content (articles)
       service: '#4ec9b0',      // Teal for services/systems (same as semantic.primary)
       form: '#9cdcfe',         // Light blue for forms/dialobs (same as semantic.info)
       flow: '#c586c0',         // Purple for workflows
@@ -58,7 +58,7 @@ export const FsColors = {
     },
     light: {
       folder: '#333333',       // Dark gray for containers (same as text)
-      content: '#8b008b',      // Dark magenta for content (articles and flows merged)
+      article: '#8b008b',      // Dark magenta for content (articles and flows merged)
       service: '#1f5f3f',      // Dark green for services/systems
       form: '#0056b3',         // Dark blue for forms/dialobs
       flow: '#8b008b',         // Dark magenta for workflows (merged with content)
@@ -85,7 +85,7 @@ export function getDirentColor(direntType: Fs.BodyType, isDarkTheme: boolean) {
     case 'FOLDER':
       return colors.folder;
     case 'ARTICLE':
-      return colors.content;
+      return colors.article;
     case 'ARTICLE_WORKFLOW':
       return colors.service;
     case 'DIALOB_FORM':

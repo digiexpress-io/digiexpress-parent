@@ -8,16 +8,17 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesArticleProps {
-  dirent: Fs.DirentBase;
-  children: Fs.DirentBase[];
+  direntId: string;
 }
 
-export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent }) => {
+export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ direntId }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const { getParentDirent, getDirentName, selectOptions, getDirent } = useFsDirent();
 
-  if (dirent.type !== 'ARTICLE') {
+  const dirent = getDirent(direntId);
+
+  if (!dirent || dirent.type !== 'ARTICLE') {
     return undefined;
   }
 
