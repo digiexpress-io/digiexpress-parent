@@ -157,7 +157,7 @@ public class Authoring_1_Test extends DbSupport {
     
     authoring.deleteModel()
       .deleteAny()
-      .props(props -> props.id(template1.getId()).bodyType(Model.BodyType.ARTICLE_TEMPLATE))
+      .props(props -> props.id(template1.getId()))
       .buildSync();
 
     authoring.deleteModel()

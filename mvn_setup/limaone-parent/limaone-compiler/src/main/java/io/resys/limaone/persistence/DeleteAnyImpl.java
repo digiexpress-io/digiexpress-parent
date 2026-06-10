@@ -21,6 +21,7 @@ package io.resys.limaone.persistence;
  */
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import io.resys.limaone.authoring.DeleteAny;
@@ -57,22 +58,23 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
 
   @Override
   public Uni<Model<?>> build() {
-    final BodyType[] docsToLoad = switch (props.getBodyType()) {
-      case LOCALE -> new BodyType[] { BodyType.LOCALE, BodyType.ARTICLE, BodyType.ARTICLE_LINK, BodyType.ARTICLE_WORKFLOW, BodyType.ARTICLE_PAGE };
-      case ARTICLE -> new BodyType[] { BodyType.ARTICLE, BodyType.ARTICLE_PAGE, BodyType.ARTICLE_LINK, BodyType.ARTICLE_WORKFLOW };
-      case ARTICLE_LINK -> new BodyType[] { BodyType.ARTICLE_LINK, BodyType.ARTICLE };
-      case ARTICLE_WORKFLOW -> new BodyType[] { BodyType.ARTICLE_WORKFLOW, BodyType.ARTICLE };
-      case ARTICLE_PAGE -> new BodyType[] { BodyType.ARTICLE_PAGE };
-      case ARTICLE_TEMPLATE -> new BodyType[] { BodyType.ARTICLE_TEMPLATE };
-      case FLOW -> new BodyType[] { BodyType.FLOW };
-      case FLOW_TASK -> new BodyType[] { BodyType.FLOW_TASK };
-      case DECISION_TABLE -> new BodyType[] { BodyType.DECISION_TABLE };
-      case DEPLOYMENT -> new BodyType[] { BodyType.DEPLOYMENT };
-      case PRINTOUT -> new BodyType[] { BodyType.PRINTOUT, BodyType.PRINTOUT_PAGE };
-      case PRINTOUT_PAGE -> new BodyType[] { BodyType.PRINTOUT_PAGE, BodyType.PRINTOUT_RESOURCE };
-      case PRINTOUT_RESOURCE -> new BodyType[] { BodyType.PRINTOUT_RESOURCE };
-      default -> new BodyType[] { };
-    };
+    final BodyType[] docsToLoad = props.getBodyType() == null ? BodyType.values():
+      switch (props.getBodyType()) {
+        case LOCALE -> new BodyType[] { BodyType.LOCALE, BodyType.ARTICLE, BodyType.ARTICLE_LINK, BodyType.ARTICLE_WORKFLOW, BodyType.ARTICLE_PAGE };
+        case ARTICLE -> new BodyType[] { BodyType.ARTICLE, BodyType.ARTICLE_PAGE, BodyType.ARTICLE_LINK, BodyType.ARTICLE_WORKFLOW };
+        case ARTICLE_LINK -> new BodyType[] { BodyType.ARTICLE_LINK, BodyType.ARTICLE };
+        case ARTICLE_WORKFLOW -> new BodyType[] { BodyType.ARTICLE_WORKFLOW, BodyType.ARTICLE };
+        case ARTICLE_PAGE -> new BodyType[] { BodyType.ARTICLE_PAGE };
+        case ARTICLE_TEMPLATE -> new BodyType[] { BodyType.ARTICLE_TEMPLATE };
+        case FLOW -> new BodyType[] { BodyType.FLOW };
+        case FLOW_TASK -> new BodyType[] { BodyType.FLOW_TASK };
+        case DECISION_TABLE -> new BodyType[] { BodyType.DECISION_TABLE };
+        case DEPLOYMENT -> new BodyType[] { BodyType.DEPLOYMENT };
+        case PRINTOUT -> new BodyType[] { BodyType.PRINTOUT, BodyType.PRINTOUT_PAGE };
+        case PRINTOUT_PAGE -> new BodyType[] { BodyType.PRINTOUT_PAGE, BodyType.PRINTOUT_RESOURCE };
+        case PRINTOUT_RESOURCE -> new BodyType[] { BodyType.PRINTOUT_RESOURCE };
+        default -> new BodyType[] { };
+      };
     
     return config.getPersistence().worldBuilder()
       .createdAt(getCreatedAt())
@@ -88,7 +90,12 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
     Objects.requireNonNull(props, () -> "props must be defined");
     final ModelWorld world = nextWorld.getCurrentWorld();
     
-    return switch (props.getBodyType()) {
+    final var bodyType = Optional.ofNullable(props.getBodyType())
+        .or(() -> nextWorld.getCurrentWorld().findAnyObject(props.getId()).map(e -> e.getBodyType()))
+        .orElseThrow(() -> new AuthoringException(props, "Could not find entity for deletion by id: '" + props.getId() + "'!"));
+    
+    
+    return switch (bodyType) {
       case LOCALE -> {
         final var model = world.getLocales().get(props.getId());
         if(model == null) {
