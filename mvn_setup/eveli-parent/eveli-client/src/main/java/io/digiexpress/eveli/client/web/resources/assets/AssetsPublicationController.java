@@ -95,7 +95,8 @@ public class AssetsPublicationController {
     }
     
     final OffsetDateTime now = OffsetDateTime.now();
-    final OffsetDateTime liveDate = OffsetDateTime.of(publication.getLiveDate(), ZoneOffset.UTC);
+    final OffsetDateTime liveDate = publication.getLiveDate() != null ? 
+        OffsetDateTime.of(publication.getLiveDate(), ZoneOffset.UTC) : null;
     
     return authoring.newModel().newDeployment().props(props -> props
       .name(Optional.ofNullable(publication.getName()).orElse(now.toString()))
