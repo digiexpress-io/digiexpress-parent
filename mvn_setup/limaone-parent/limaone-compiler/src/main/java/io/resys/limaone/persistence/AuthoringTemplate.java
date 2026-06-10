@@ -25,16 +25,25 @@ import java.time.OffsetDateTime;
 import io.resys.limaone.authoring.Authoring.AuthorProps;
 import io.resys.limaone.persistence.AuthoringImpl.AuthoringConfig;
 import io.smallrye.mutiny.Uni;
-import lombok.RequiredArgsConstructor;
 
 
-@RequiredArgsConstructor
+
 public abstract class AuthoringTemplate<IMPL, MODEL> {
 
   protected final AuthoringConfig config;
+
   protected AuthorProps author;
+  protected String authorCached;
   abstract Uni<MODEL> build();
-  
+
+  public AuthoringTemplate(AuthoringConfig config) {
+    super();
+    this.config = config;
+    
+    // resolve/cache author 
+    getAuthor();
+  }
+
 
   @SuppressWarnings("unchecked")
   public IMPL author(AuthorProps author) {
@@ -44,6 +53,14 @@ public abstract class AuthoringTemplate<IMPL, MODEL> {
   
   
   protected String getAuthor() {
+    if(authorCached == null) {
+      authorCached = getAuthorFromImpl();
+    }
+    return authorCached;
+  }
+  
+  
+  private String getAuthorFromImpl() {
     if(author != null && author.getAuthor() != null) {
       return author.getAuthor();  
     }
