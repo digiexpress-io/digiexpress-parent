@@ -40,5 +40,5 @@ function _flow_task_help_view() {
   return (<>HELP MARKDOWN</>);
 }
 function _flow_task_icon(props: DirentWidgetIconProps) {
-  return <FsIcon icon={FsIcons.Assignment} {...props} />;
+  return <FsIcon icon={FsIcons.FlowTask} {...props} />;
 }

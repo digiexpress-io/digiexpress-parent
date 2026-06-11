@@ -101,7 +101,7 @@ export function createWidget(dirent: { type: Fs.BodyType }): DirentWidget {
     case 'PRINTOUT_PAGE': return PrintoutPageWidget;
     case 'FLOW_TASK': return FlowTaskWidget;
     case 'DECISION_TABLE': return DecisionTableWidget;
-    case 'DIALOB_FORM': return DialobFormWidget;
+    case 'DIALOB_FORM_META': return DialobFormWidget;
     case 'FOLDER': return FolderWidget;
     default: return _UN_IMPLEMENTED;
   }

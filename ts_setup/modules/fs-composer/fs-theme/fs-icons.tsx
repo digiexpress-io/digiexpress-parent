@@ -18,7 +18,6 @@ import {
   FolderOpen,
 
   // Document Type Icons
-  Article,
   ArticleOutlined,
   Description,
   PrintOutlined,
@@ -53,7 +52,6 @@ import {
   Close,
   Link,
   Language,
-  Build,
   Error,
   Warning,
   ErrorOutline,
@@ -85,6 +83,7 @@ import {
   FiberManualRecord,
   LabelOutlined as LabelIcon,
   NotesOutlined,
+  CodeOutlined,
 } from '@mui/icons-material';
 import { SvgIconProps, Tooltip } from '@mui/material';
 
@@ -145,7 +144,7 @@ export const FsIcons = {
   Close: Close,
   Link: Link,
   Language: Language,
-  Flow: Build,
+  Flow: AccountTree,
   Error: Error,
   Warning: Warning,
   ErrorOutline: ErrorOutline,
@@ -174,6 +173,7 @@ export const FsIcons = {
   Unsaved: FiberManualRecord,
 
   Label: LabelIcon,
+  FlowTask: CodeOutlined,
   Description: NotesOutlined,
 };
 

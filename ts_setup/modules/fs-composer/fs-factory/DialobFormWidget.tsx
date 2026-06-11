@@ -1,4 +1,3 @@
-import React from 'react';
 import { FsDirentDialobCreate, FsDirentDialobUpdate } from '../fs-dirent-dialob';
 import { FsPropertiesDialob } from '../fs-panel-properties/FsPropertiesDialob';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
@@ -27,7 +26,7 @@ export const DialobFormWidget: DirentWidget = {
     icon: 'iconDialobForm'
   },
   meta: {
-    type: 'DIALOB_FORM',
+    type: 'DIALOB_FORM_META',
     extension: '.dialob',
     configOptions: [],
   }
