@@ -6,15 +6,17 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesArticlePageProps {
-  dirent: Fs.DirentBase;
+  direntId: string;
 }
 
-export const FsPropertiesArticlePage: React.FC<FsPropertiesArticlePageProps> = ({ dirent }) => {
+export const FsPropertiesArticlePage: React.FC<FsPropertiesArticlePageProps> = ({ direntId }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { getDirentName } = useFsDirent();
+  const { getDirentName, getDirent } = useFsDirent();
 
-  if (dirent.type !== 'ARTICLE_PAGE') {
+  const dirent = getDirent(direntId);
+
+  if (!dirent || dirent.type !== 'ARTICLE_PAGE') {
     return undefined;
   }
 

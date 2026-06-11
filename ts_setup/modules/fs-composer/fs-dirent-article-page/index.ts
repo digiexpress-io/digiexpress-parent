@@ -1,2 +1,3 @@
-export { FsDirentArticlePage } from './FsDirentArticlePage';
+export * from './FsDirentArticlePageCreate';
+export * from './FsDirentArticlePageUpdate';
 export type { FsDirentArticlePageProps } from './FsDirentArticlePageProps';

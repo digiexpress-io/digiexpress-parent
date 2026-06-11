@@ -6,8 +6,10 @@ import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsDirentMenuNewProps } from './FsDirentMenuNewProps';
 import { useOwnerState } from './useOwnerState';
 import { useUtilityClasses, FsDirentMenuNewRoot } from './useUtilityClasses';
-import { FsIcon, FsIcons } from '../fs-theme';
+import { FsIcons } from '../fs-theme';
+import { createWidget } from '../fs-factory';
 
+// TODO FACTORY
 const DIRENT_TYPE_ICONS: { [key: string]: React.ElementType<SvgIconProps> } = {
   FOLDER: FsIcons.FolderClosed,
   ARTICLE: FsIcons.Article,
@@ -37,16 +39,22 @@ export const FsDirentMenuNew: React.FC<FsDirentMenuNewProps> = (props) => {
     openCreateTab(type, props.dirent);
     props.onClose();
   }
+  if (!props.dirent) {
+    return;
+  }
 
   return (
     <FsDirentMenuNewRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.direntNew.title' })}</Typography>
-      {creatableTypes.map((type) => (
-        <MenuItem key={type} className={classes.listItem} onClick={() => handleTypeClick(type)} disableRipple>
-          <FsIcon icon={DIRENT_TYPE_ICONS[type]} small />
-          {intl.formatMessage({ id: `fs.direntNew.type.${type.toLocaleLowerCase()}` })}
-        </MenuItem>
-      ))}
+      {creatableTypes.map((type) => {
+        const widget = createWidget({ type });
+        return (
+          <MenuItem key={type} className={classes.listItem} onClick={() => handleTypeClick(type)} disableRipple>
+            <widget.icons.dirent.Marker small />
+            {intl.formatMessage({ id: `fs.direntNew.type.${type.toLocaleLowerCase()}` })}
+          </MenuItem>
+        )
+      })}
     </FsDirentMenuNewRoot>
   );
 };

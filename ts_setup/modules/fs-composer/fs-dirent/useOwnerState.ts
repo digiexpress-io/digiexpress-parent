@@ -2,7 +2,6 @@ import React from 'react';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { FsDirentProps } from './FsDirentProps';
-import { FsDirentClasses } from './useUtilityClasses';
 
 export interface OwnerState {
 
@@ -13,7 +12,6 @@ export interface OwnerState {
   openAsset: (asset: Fs.DirentBase) => void;
 
   dirent: Fs.DirentBase;
-  direntIconClassName: keyof FsDirentClasses;
   level: number;
   searchTerm: string;
   children: Fs.DirentBase[];
@@ -29,12 +27,11 @@ export interface OwnerState {
 
 
 export const useOwnerState = (props: FsDirentProps): OwnerState => {
-  const { dirent: direntBase, level, onToggle, onContextMenu, searchTerm, openAsset, activeDirentId } = props;
+  const { dirent, level, onToggle, onContextMenu, searchTerm, openAsset, activeDirentId } = props;
   const { isDarkMode } = useFsTheme();
   const { isChildError, getDirent } = useFsDirent();
 
-  const dirent = getDirent(direntBase.id) ?? direntBase;
-  const children = (direntBase.children ?? [])
+  const children = (dirent.children ?? [])
     .map(c => {
       const full = getDirent(c.id);
       if (!full) {
@@ -46,20 +43,20 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
 
   const isChildren = children.length > 0;
   const configOptions = ((dirent?.props?.configOptions ?? []).length) > 0;
-  const childWithError = !!(isChildren && direntBase.children.some(child => {
+  const childWithError = !!(isChildren && dirent.children.some(child => {
     const d = getDirent(child.id);
     return d ? isChildError(d) : false;
   }));
+
   const showError = ((dirent?.props?.errors ?? []).length) > 0 || childWithError;
   return {
     dirent,
-    direntIconClassName: _getIconClassName(direntBase),
     level,
     searchTerm,
     configOptions,
 
     isDarkMode,
-    isActive: activeDirentId === direntBase.id,
+    isActive: activeDirentId === dirent.id,
     childWithError,
     showError,
 
@@ -74,19 +71,3 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
   };
 };
 
-
-function _getIconClassName(dirent: Fs.DirentBase): keyof FsDirentClasses {
-  switch (dirent.type) {
-    case 'FOLDER': return 'iconFolder';
-    case 'ARTICLE': return 'iconArticle';
-    case 'ARTICLE_WORKFLOW': return 'iconService';
-    case 'DIALOB_FORM': return 'iconDialob';
-    case 'FLOW': return 'iconFlow';
-    case 'ARTICLE_LINK': return 'iconLink';
-    case 'LOCALE': return 'iconLanguage';
-    case 'PRINTOUT': return 'iconPrintout';
-    case 'ARTICLE_TEMPLATE': return 'iconTemplate';
-    case 'ARTICLE_PAGE': return 'iconPage';
-    default: return 'iconFolder';
-  }
-}

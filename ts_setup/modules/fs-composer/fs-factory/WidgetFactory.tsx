@@ -1,14 +1,28 @@
 import React from 'react';
 import { Fs } from '@dxs-ts/fs-api';
-import { SvgIconProps } from '@mui/material';
+
 import { DeviceUnknown } from '@mui/icons-material';
 import { ArticleWidget } from './ArticleWidget';
+import { ArticleLinkWidget } from './ArticleLinkWidget';
+import { FolderWidget } from './FolderWidget';
+import { ArticlePageWidget } from './ArticlePageWidget';
+
+export interface DirentWidgetIconProps {
+  xsmall?: boolean;
+  small?: boolean;
+  medium?: boolean;
+  large?: boolean;
+  className?: string;
+  tooltip?: string;
+  color?: string;
+}
 
 
 export interface DirentWidget {
   classNames: {
     //  dirent: Content.tsx
     dirent: string;
+
     //      iconClassName -  FsDirent/useUtilityClasses: function _getIconClassName(dirent: Fs.DirentBase): keyof FsDirentClasses { /modules/fs-composer/fs-dirent/useOwnerState.ts
     icon: string
   };
@@ -30,8 +44,9 @@ export interface DirentWidget {
                             <FsIcon small icon={FsIcons.ChevronRight} className={classes.iconExpand} />}
                         </IconButton>
           */
-      Collapsed: React.ElementType<SvgIconProps>;      
-      Expanded: React.ElementType<SvgIconProps>;
+      Marker: React.ElementType<DirentWidgetIconProps>;
+      Collapsed: React.ElementType<DirentWidgetIconProps>;
+      Expanded: React.ElementType<DirentWidgetIconProps>;
     };
   };
 
@@ -44,7 +59,7 @@ export interface DirentWidget {
   };
   views: {
     // FsDirentArticle.tsx
-    CreateView: React.ElementType<{ direntId: string }>;
+    CreateView: React.ElementType;
     UpdateView: React.ElementType<{ direntId: string }>;
     PropertiesView: React.ElementType<{direntId: string}>;
     HelpView: React.ElementType<{direntId: string}>;
@@ -57,18 +72,22 @@ export interface DirentWidget {
     extension: string,
 
     // helpers.ts export function getConfigOptionsForType(type: Fs.BodyType): Fs.SelectOption[] {
-    configOptions: Fs.ConfigOption[]
+    configOptions: Fs.ConfigOption[],
   }
 };
 
 
-export function create(dirent: Fs.DirentBase): DirentWidget {
+export function createWidget(dirent: { type: Fs.BodyType }): DirentWidget {
   switch (dirent.type) {
     case 'ARTICLE': return ArticleWidget;
+    case 'ARTICLE_LINK': return ArticleLinkWidget;
+    case 'FOLDER': return FolderWidget;
+    case 'ARTICLE_PAGE': return ArticlePageWidget;
 
     default: return _UN_IMPLEMENTED;
   }
 }
+
 
 
 const _EMPTY_COLOR = "";
@@ -94,6 +113,7 @@ const _UN_IMPLEMENTED: DirentWidget = {
   },
   icons: {
     dirent: {
+      Marker: _EMPTY_ICON,
       Collapsed: _EMPTY_ICON,
       Expanded: _EMPTY_ICON,
     }

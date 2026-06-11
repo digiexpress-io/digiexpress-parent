@@ -1,20 +1,20 @@
 import React from 'react';
 import { useFsExpanded } from '@dxs-ts/fs-nav';
-import { Box, Collapse, IconButton, List, ListItem, ListItemIcon, Tooltip } from '@mui/material';
+import { Box, Collapse, IconButton, List, ListItemIcon, Tooltip } from '@mui/material';
 
 import { useUtilityClasses, FsDirentRoot } from './useUtilityClasses';
 import { FsIcons, FsIcon } from '../fs-theme';
 import { FsDirentProps } from './FsDirentProps';
 import { useOwnerState } from './useOwnerState';
 
-import { ConfigOptionIcons, FsDirentName, DirentDecorator, DirentIcon } from './Supports';
+import { ConfigOptionIcons, FsDirentName, DirentDecorator } from './Supports';
 import { FsDiffIndicator } from '../fs-diff-indicator';
-import { useFsu } from '@dxs-ts/fs-api';
+import { createWidget } from '../fs-factory';
 
 
 export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
   const ownerState = useOwnerState(props);
-  const classes = useUtilityClasses(ownerState.isDarkMode);
+  const classes = useUtilityClasses(ownerState.isDarkMode, ownerState.dirent);
 
   const isExpanded = useFsExpanded();
   const expanded = isExpanded(props.dirent.id) ?? false;
@@ -22,6 +22,7 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
   //const isUnsavedChanges = isChange(props.dirent.id) && getChange(props.dirent.id).isChanged;
 
   const isUnsavedChanges = false;
+  const widget = createWidget(ownerState.dirent)
 
   function handleClick() {
     if (ownerState.isChildren) {
@@ -30,6 +31,7 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
       ownerState.openAsset(ownerState.dirent);
     }
   }
+
 
   return (<>
     <FsDirentRoot className={classes.root + `${ownerState.showError ? 'error' : ''} ${ownerState.isActive ? 'active' : ''}`} ownerState={ownerState}
@@ -46,9 +48,11 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
         ) : (<Box sx={{ paddingLeft: 2 }} />)
         }
 
-        <ListItemIcon className={classes[ownerState.direntIconClassName]}>
+        <ListItemIcon className={classes.direntIcon}>
           <DirentDecorator dirent={ownerState.dirent}>
-            {isUnsavedChanges ? <FsDiffIndicator direntId={props.dirent.id} /> : <DirentIcon dirent={ownerState.dirent} />}
+            {isUnsavedChanges ? <FsDiffIndicator direntId={props.dirent.id} />
+              : (ownerState.dirent.props?.expanded ? <widget.icons.dirent.Expanded /> : <widget.icons.dirent.Collapsed />)
+            }
           </DirentDecorator>
         </ListItemIcon>
 

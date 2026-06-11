@@ -8,6 +8,8 @@ import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentArticleUpdateProps } from './FsDirentArticleProps';
+
+
 export const FsDirentArticleUpdate: React.FC<FsDirentArticleUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);

@@ -3,8 +3,9 @@ import { Box, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { SvgIconProps } from '@mui/material';
-import { FsIcon, FsIcons } from '../fs-theme';
+import { FsIcons } from '../fs-theme';
 import { useUtilityClasses } from './useUtilityClasses';
+import { createWidget } from '../fs-factory';
 
 
 export interface FsPropertiesArticleProps {
@@ -31,39 +32,44 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent
 
   return (
     <>
-    <div className={classes.propertyRow}>
-      <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.configOptionsEnabled' })}</Typography>
-      <div className={classes.propertyList}>
-        {configOptionsEnabled.map((option, index) => (
-          <Box key={index} className={classes.configOptionsListItem}>
-            {intl.formatMessage({ id: `fs.dirent.configOption.${option}` })}
-          </Box>
-        ))}
-      </div>
-    </div>
-    {associatedLinks.length > 0 && (
       <div className={classes.propertyRow}>
-        <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.associatedLinks' })}</Typography>
-        <ul className={classes.propertyBulletList}>
-          {associatedLinks.map((name, index) => <li key={index}><Typography className={classes.propertyValue}>{name}</Typography></li>)}
-        </ul>
+        <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.configOptionsEnabled' })}</Typography>
+        <div className={classes.propertyList}>
+          {configOptionsEnabled.map((option, index) => (
+            <Box key={index} className={classes.configOptionsListItem}>
+              {intl.formatMessage({ id: `fs.dirent.configOption.${option}` })}
+            </Box>
+          ))}
+        </div>
       </div>
-    )}
-    <div className={classes.propertyRow}>
-      <Typography className={classes.childPropertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
-      <div className={classes.childContainer}>
-        {descendants.map(({ dirent: child, depth }) => (
-          <Box key={child.id} className={classes.childRow} sx={{ paddingLeft: `${depth * 16}px` }}> {/* TODO remove sx */}
-            <FsIcon small icon={getTypeIcon(child.type)} />
-            <Typography className={classes.propertyValue}>{child.type === 'ARTICLE' ? getDirentName(child.id) : child.name}</Typography>
-          </Box>
-        ))}
+      {associatedLinks.length > 0 && (
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.associatedLinks' })}</Typography>
+          <ul className={classes.propertyBulletList}>
+            {associatedLinks.map((name, index) => <li key={index}><Typography className={classes.propertyValue}>{name}</Typography></li>)}
+          </ul>
+        </div>
+      )}
+      <div className={classes.propertyRow}>
+        <Typography className={classes.childPropertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
+        <div className={classes.childContainer}>
+          {descendants.map(({ dirent: child, depth }) => {
+            const widget = createWidget({ type: child.type });
+            return (
+              <Box key={child.id} className={classes.childRow} sx={{ paddingLeft: `${depth * 16}px` }}> {/* TODO remove sx */}
+                <widget.icons.dirent.Expanded small />
+                <Typography className={classes.propertyValue}>{child.type === 'ARTICLE' ? getDirentName(child.id) : child.name}</Typography>
+              </Box>
+            )
+          })}
+        </div>
       </div>
-    </div>
     </>
   );
 };
 
+
+// TODO FACTORY
 function getTypeIcon(type: Fs.BodyType): React.ElementType<SvgIconProps> {
   switch (type) {
     case 'FOLDER': return FsIcons.FolderClosed;

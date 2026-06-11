@@ -13,7 +13,6 @@ import { FsPropertiesDialob } from './FsPropertiesDialob';
 import { FsPropertiesLanguage } from './FsPropertiesLanguage';
 import { FsPropertiesPrintout } from './FsPropertiesPrintout';
 import { FsPropertiesLink } from './FsPropertiesLink';
-import { FsPropertiesPhone } from './FsPropertiesPhone';
 import { FsPropertiesTemplate } from './FsPropertiesTemplate';
 import { FsPropertiesPrintoutResource } from './FsPropertiesPrintoutResource';
 import { FsPropertiesPrintoutPage } from './FsPropertiesPrintoutPage';
@@ -28,12 +27,11 @@ function renderTypeSpecificRows(dirent: Fs.DirentBase): React.ReactNode {
     case 'DIALOB_FORM': return <FsPropertiesDialob dirent={dirent} />;
     case 'LOCALE': return <FsPropertiesLanguage dirent={dirent} />;
     case 'PRINTOUT': return null;
-    case 'ARTICLE_LINK': return <FsPropertiesLink dirent={dirent} />;
-    // case 'ARTICLE_LINK': return <FsPropertiesPhone dirent={direntProps} />;
+    case 'ARTICLE_LINK': return <FsPropertiesLink direntId={dirent.id} />;
     case 'ARTICLE_TEMPLATE': return <FsPropertiesTemplate dirent={dirent} />;
     case 'PRINTOUT_RESOURCE': return <FsPropertiesPrintoutResource dirent={dirent} />;
     case 'PRINTOUT_PAGE': return <FsPropertiesPrintoutPage dirent={dirent} />;
-    case 'ARTICLE_PAGE': return <FsPropertiesArticlePage dirent={dirent} />;
+    case 'ARTICLE_PAGE': return <FsPropertiesArticlePage direntId={dirent.id} />;
     default: return null;
   }
 }
@@ -66,12 +64,10 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
     <FsPanel title={intl.formatMessage({ id: 'fs.properties.title.direntName' }, { direntName: displayName })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={true}>
       <FsPanelPropertiesRoot className={classes.root} ownerState={ownerState}>
 
-
         <div className={classes.propertyRow}>
           <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.description' })}</Typography>
           <Typography className={classes.propertyValue}>{description}</Typography>
         </div>
-
 
         <div className={classes.propertyRow}>
           <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.labels' })}</Typography>

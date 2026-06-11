@@ -2,20 +2,20 @@ import React from 'react';
 import { Badge, Box, ListItemText, Typography } from '@mui/material';
 
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useFsNav } from '@dxs-ts/fs-nav';
 import { useFsTheme } from '../fs-theme';
 
 import { useUtilityClasses } from './useUtilityClasses';
-import { FsIcons, FsIcon, FsColors, getDirentColor } from '../fs-theme';
+import { FsIcons, FsIcon, FsColors } from '../fs-theme';
 
 import { OwnerState } from './useOwnerState';
 import { SearchResultHighlight } from '../fs-search';
+import { createWidget } from '../fs-factory';
 
 
 
 
 export const ConfigOptionIcons: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
-  const classes = useUtilityClasses(ownerState.isDarkMode);
+  const classes = useUtilityClasses(ownerState.isDarkMode, ownerState.dirent);
   const Align = React.useCallback((props: { children: React.ReactNode }) => <Box display='flex' alignItems='center'>{props.children}</Box>, []);
 
   if (!ownerState.configOptions) {
@@ -79,40 +79,6 @@ export const DirentDecorator = (props: { dirent: Fs.DirentBase, children: React.
 }
 
 
-export const DirentIcon = (props: { dirent: Fs.DirentBase }) => {
-  const { dirent } = props;
-  const { isExpanded } = useFsNav();
-  const expanded = isExpanded(dirent.id);
-  switch (dirent.type) {
-    case 'FOLDER':
-      return expanded ? <FsIcons.FolderOpen /> : <FsIcons.FolderClosed />;
-    case 'ARTICLE':
-      return <FsIcons.Article />;
-    case 'ARTICLE_WORKFLOW':
-      return expanded ? <FsIcons.SettingsOutlined /> : <FsIcons.Settings />;
-    case 'DIALOB_FORM':
-      return <FsIcons.Form />;
-    case 'FLOW':
-      return <FsIcons.Flow />;
-    case 'ARTICLE_LINK':
-      return (dirent.props as Fs.LinkProps)?.contentType === 'phone' ? <FsIcons.Phone /> : <FsIcons.Link />;
-    case 'LOCALE':
-      return <FsIcons.Language />;
-    case 'PRINTOUT':
-      return <FsIcons.Print />;
-    case 'PRINTOUT_RESOURCE':
-      return <FsIcons.Image />;
-    case 'PRINTOUT_PAGE':
-      return <FsIcons.Pdf />;
-    case 'UNKNOWN':
-      return <FsIcons.Article />;
-    case 'ARTICLE_PAGE':
-      return <FsIcons.Page />;
-    default:
-      return <FsIcons.Article />;
-  }
-}
-
 interface FsDirentNameProps {
   dirent: Fs.DirentBase;
   isDarkTheme: boolean;
@@ -122,7 +88,7 @@ interface FsDirentNameProps {
 
 export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   const { getParentDirent, getDirentName, getExtension } = useFsDirent();
-  const classes = useUtilityClasses(props.isDarkTheme);
+  const classes = useUtilityClasses(props.isDarkTheme, props.dirent);
   let displayName: string;
 
   if (props.dirent.type === 'ARTICLE') {
@@ -134,13 +100,15 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   }
   const extension = getExtension(props.dirent.type);
   const fullDisplayName = extension ? displayName + extension : displayName;
+  const widget = createWidget(props.dirent);
+
 
   return (
     <ListItemText className={classes.direntName} primary={<Typography variant='subtitle2'
       sx={{
         color: props.error ? (props.isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight)
           :
-          getDirentColor(props.dirent.type, props.isDarkTheme),
+          props.isDarkTheme ? widget.colors.direntDark : widget.colors.direntLight,
         fontWeight: props.isDarkTheme ? 400 : 500,
       }}
     >

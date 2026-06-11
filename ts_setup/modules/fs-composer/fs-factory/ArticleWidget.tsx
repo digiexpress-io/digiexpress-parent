@@ -1,27 +1,22 @@
-import React from 'react';
-import { FsDirentArticleCreate } from '../fs-dirent-article/FsDirentArticleCreate';
-import { FsDirentArticleUpdate } from '../fs-dirent-article/FsDirentArticleUpdate';
-import { FsPropertiesArticle } from '../fs-panel-properties/FsPropertiesArticle';
-import { FsColors, FsIcons } from '../fs-theme';
-import { DirentWidget } from './index';
+import { FsDirentArticleCreate, FsDirentArticleUpdate } from '../fs-dirent-article';
+import { FsColors, FsIcon, FsIcons } from '../fs-theme';
+import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
+import { FsPropertiesLink } from '../fs-panel-properties/FsPropertiesLink';
 
 
-// TODO
-const FsPanelHelpArticle: React.FC = () => {
-  return (<>HELP MARKDOWN</>);
-};
 
 export const ArticleWidget: DirentWidget = {
   views: {
     CreateView: FsDirentArticleCreate,
     UpdateView: FsDirentArticleUpdate,
-    PropertiesView: FsPropertiesArticle,
-    HelpView: FsPanelHelpArticle
+    PropertiesView: FsPropertiesLink,
+    HelpView: _article_help_view
   },
   icons: {
     dirent: {
-      Collapsed: FsIcons.Article,
-      Expanded: FsIcons.Article
+      Marker: _article_icon,
+      Collapsed: _article_icon,
+      Expanded: _article_icon
     }
   },
   colors: {
@@ -35,6 +30,14 @@ export const ArticleWidget: DirentWidget = {
   meta: {
     type: 'ARTICLE',
     extension: '.article',
-    configOptions: ['DEV_MODE', 'DISABLED_MODE']
+    configOptions: ['DEV_MODE', 'DISABLED_MODE'],
   }
 };
+
+// TODO
+function _article_help_view() {
+  return (<>HELP MARKDOWN</>);
+}
+function _article_icon(props: DirentWidgetIconProps) {
+  return <FsIcon icon={FsIcons.Article} {...props} />;
+}

@@ -6,15 +6,18 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesLinkProps {
-  dirent: Fs.DirentBase;
+  direntId: string;
 }
 
-export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ dirent }) => {
+export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ direntId }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { selectOptions, getDirentName } = useFsDirent();
+  const { selectOptions, getDirentName, getDirent } = useFsDirent();
 
-  if (dirent.type !== 'ARTICLE_LINK') {
+  const dirent = getDirent(direntId);
+
+
+  if (!dirent || dirent.type !== 'ARTICLE_LINK') {
     return undefined;
   }
 

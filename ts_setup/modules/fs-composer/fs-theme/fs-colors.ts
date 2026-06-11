@@ -3,8 +3,6 @@
 // ULTRA-CONSOLIDATED COLOR PALETTE (12 Unique Colors)
 // =============================================================================
 
-import { Fs } from "@dxs-ts/fs-api";
-
 export const FsColors = {
   // Base theme colors
   dark: {
@@ -78,39 +76,6 @@ export const FsColors = {
 // =============================================================================
 
 
-export function getDirentColor(direntType: Fs.BodyType, isDarkTheme: boolean) {
-  const colors = isDarkTheme ? FsColors.direntTypes.dark : FsColors.direntTypes.light;
-
-  switch (direntType) {
-    case 'FOLDER':
-      return colors.folder;
-    case 'ARTICLE':
-      return colors.article;
-    case 'ARTICLE_WORKFLOW':
-      return colors.service;
-    case 'DIALOB_FORM':
-      return colors.form;
-    case 'FLOW':
-      return colors.flow;
-    case 'ARTICLE_LINK':
-      return colors.link;
-    /* case 'UNKNOWN':
-      return colors.phone;
-    */
-    case 'ARTICLE_PAGE':
-      return colors.page;
-    case 'LOCALE':
-      return colors.language;
-    case 'PRINTOUT':
-      return colors.printout;
-    case 'ARTICLE_TEMPLATE':
-      return colors.document;
-    case 'UNKNOWN':
-      return colors.asset;
-    default:
-      return isDarkTheme ? FsColors.dark.text : FsColors.light.text;
-  }
-}
 
 export function getThemeColors(isDarkTheme: boolean) {
   return isDarkTheme ? FsColors.dark : FsColors.light;

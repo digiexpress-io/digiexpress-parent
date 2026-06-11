@@ -11,6 +11,7 @@ import { FsExplorerNoSearchResults } from './FsExplorerNoSearchResults';
 import { FsExplorerProps } from './FsExplorerProps';
 import { useOwnerState } from './useOwnerState';
 import { useUtilityClasses, FsExplorerRoot } from './useUtilityClasses';
+import { createWidget } from '../fs-factory';
 
 export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
   const intl = useIntl();
@@ -141,7 +142,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
     </FsExplorerRoot>
   );
 }
-
+// TODO FACTORY
 const TYPE_ICONS: Partial<Record<Fs.BodyType, React.ElementType<SvgIconProps>>> = {
   ARTICLE: FsIcons.Article,
   ARTICLE_WORKFLOW: FsIcons.Settings,
@@ -160,7 +161,8 @@ const TYPE_ICONS: Partial<Record<Fs.BodyType, React.ElementType<SvgIconProps>>> 
 const NewDirent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const intl = useIntl();
   const { openCreateTab } = useFsNav();
-  const { creatableTypes } = useFsDirent();
+  const { creatableTypes, } = useFsDirent();
+
 
   function handleTypeClick(type: Fs.BodyType) {
     openCreateTab(type, undefined);
@@ -169,8 +171,11 @@ const NewDirent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', p: 1, minWidth: 180 }}>
-      {creatableTypes.map((type) => (
-        <Box
+      {creatableTypes.map((type) => {
+        const widget = createWidget({ type });
+
+        return (
+          <Box
           key={type}
           onClick={() => handleTypeClick(type)}
           sx={{
@@ -183,10 +188,14 @@ const NewDirent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             '&:hover': { bgcolor: 'action.hover' }
           }}
         >
-          <FsIcon icon={TYPE_ICONS[type] ?? FsIcons.File} small />
+
+            <widget.icons.dirent.Collapsed small />
           <Typography variant='subtitle2'>{intl.formatMessage({ id: `fs.direntNew.type.${type.toLocaleLowerCase()}` })}</Typography>
         </Box>
-      ))}
+        )
+      })}
+
+
     </Box>
   );
 };
