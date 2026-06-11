@@ -14,8 +14,8 @@ import { createWidget } from '../fs-factory';
 export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(ownerState.isDarkMode, ownerState.dirent);
+  const expanded = props.setExpanded(props.dirent.id);
 
-  const { expanded, isExpanded } = props;
   //FSU:::boken const { isChange, getChange } = useFsu();
   //const isUnsavedChanges = isChange(props.dirent.id) && getChange(props.dirent.id).isChanged;
 
@@ -82,8 +82,7 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
               key={child.id}
               dirent={child}
               level={ownerState.level + 1}
-              expanded={isExpanded(child.id)}
-              isExpanded={isExpanded}
+              setExpanded={props.setExpanded}
               activeDirentId={props.activeDirentId}
               openAsset={props.openAsset}
               onToggle={ownerState.onToggle}

@@ -16,7 +16,7 @@ export const FsExplorer: React.FC = () => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const ownerState = useOwnerState();
-  const { openCreateTab, isExpanded } = useFsNav();
+  const { openCreateTab, isExpanded: setExpanded } = useFsNav();
   const [newFileAnchorEl, setNewFileAnchorEl] = React.useState<HTMLElement | null>(null);
 
   return (
@@ -122,8 +122,7 @@ export const FsExplorer: React.FC = () => {
               key={dirent.id}
               dirent={dirent}
               level={0}
-              expanded={isExpanded(dirent.id)}
-              isExpanded={isExpanded}
+              setExpanded={setExpanded}
               activeDirentId={ownerState.activeDirentId}
               openAsset={ownerState.openAsset}
               onToggle={ownerState.toggleDirent}
