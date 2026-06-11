@@ -5,15 +5,17 @@ import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
 export interface FsPropertiesPrintoutResourceProps {
-  dirent: Fs.DirentBase;
+  direntId: string;
 }
 
-export const FsPropertiesPrintoutResource: React.FC<FsPropertiesPrintoutResourceProps> = ({ dirent }) => {
+export const FsPropertiesPrintoutResource: React.FC<FsPropertiesPrintoutResourceProps> = ({ direntId }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { selectOptions } = useFsDirent();
+  const { selectOptions, getDirent } = useFsDirent();
 
-  if (dirent.type !== 'PRINTOUT_RESOURCE') {
+  const dirent = getDirent(direntId);
+
+  if (!dirent || dirent.type !== 'PRINTOUT_RESOURCE') {
     return undefined;
   }
 

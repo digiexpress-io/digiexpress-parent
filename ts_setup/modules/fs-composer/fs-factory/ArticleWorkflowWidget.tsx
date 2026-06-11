@@ -29,7 +29,7 @@ export const ArticleWorkflowWidget: DirentWidget = {
   },
   meta: {
     type: 'ARTICLE',
-    extension: '.article',
+    extension: '.article-workflow',
     configOptions: ['DEV_MODE', 'DISABLED_MODE'],
   }
 };

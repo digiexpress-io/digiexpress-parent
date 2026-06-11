@@ -1,12 +1,5 @@
-import { FsTab } from '@dxs-ts/fs-nav';
 
-
-export interface FsDirentArticleWorkflowCreateProps { }
-
-export interface FsDirentArticleWorkflowUpdateProps {
+export interface FsDirentArticleWorkflowProps {
   direntId: string;
 }
 
-export interface FsDirentArticleWorkflowProps {
-  tab: FsTab;
-}

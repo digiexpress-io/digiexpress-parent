@@ -1,2 +1,2 @@
-export { FsDirentDialob } from './FsDirentDialob';
-export type { FsDirentDialobProps } from './FsDirentDialobProps';
+export { FsDirentDialobCreate } from './FsDirentDialobCreate';
+export { FsDirentDialobUpdate } from './FsDirentDialobUpdate';

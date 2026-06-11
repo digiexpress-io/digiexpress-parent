@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, List, IconButton, Badge, Popover, SvgIconProps } from '@mui/material';
+import { Box, Typography, List, IconButton, Badge, Popover } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcons, FsIcon } from '../fs-theme';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
@@ -142,21 +142,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
     </FsExplorerRoot>
   );
 }
-// TODO FACTORY
-const TYPE_ICONS: Partial<Record<Fs.BodyType, React.ElementType<SvgIconProps>>> = {
-  ARTICLE: FsIcons.Article,
-  ARTICLE_WORKFLOW: FsIcons.Settings,
-  ARTICLE_LINK: FsIcons.Link,
-  ARTICLE_TEMPLATE: FsIcons.Pdf,
-  ARTICLE_PAGE: FsIcons.Page,
-  DIALOB_FORM: FsIcons.Form,
-  FLOW: FsIcons.Flow,
-  LOCALE: FsIcons.Language,
-  PRINTOUT: FsIcons.Print,
-  PRINTOUT_RESOURCE: FsIcons.Image,
-  PRINTOUT_PAGE: FsIcons.Page,
 
-};
 
 const NewDirent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const intl = useIntl();

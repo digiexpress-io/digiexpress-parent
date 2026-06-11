@@ -28,7 +28,7 @@ export const ArticlePageWidget: DirentWidget = {
   },
   meta: {
     type: 'ARTICLE_PAGE',
-    extension: '.articlePage',
+    extension: '.article-page',
     configOptions: ['DEV_MODE', 'DISABLED_MODE'],
   }
 };

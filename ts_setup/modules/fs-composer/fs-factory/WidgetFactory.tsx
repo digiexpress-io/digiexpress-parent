@@ -10,6 +10,12 @@ import { ArticleTemplateWidget } from './ArticleTemplateWidget';
 import { ArticleWorkflowWidget } from './ArticleWorkflowWidget';
 import { LocaleWidget } from './LocaleWidget';
 import { FlowWidget } from './FlowWidget';
+import { PrintoutWidget } from './PrintoutWidget';
+import { PrintoutResourceWidget } from './PrintoutResourceWidget';
+import { PrintoutPageWidget } from './PrintoutPageWidget';
+import { FlowTaskWidget } from './FlowTaskWidget';
+import { DecisionTableWidget } from './DecisionTableWidget';
+import { DialobFormWidget } from './DialobFormWidget';
 
 export interface DirentWidgetIconProps {
   xsmall?: boolean;
@@ -92,6 +98,12 @@ export function createWidget(dirent: { type: Fs.BodyType }): DirentWidget {
     case 'ARTICLE_WORKFLOW': return ArticleWorkflowWidget;
     case 'LOCALE': return LocaleWidget;
     case 'FLOW': return FlowWidget;
+    case 'PRINTOUT': return PrintoutWidget;
+    case 'PRINTOUT_RESOURCE': return PrintoutResourceWidget;
+    case 'PRINTOUT_PAGE': return PrintoutPageWidget;
+    case 'FLOW_TASK': return FlowTaskWidget;
+    case 'DECISION_TABLE': return DecisionTableWidget;
+    case 'DIALOB_FORM': return DialobFormWidget;
 
     default: return _UN_IMPLEMENTED;
   }

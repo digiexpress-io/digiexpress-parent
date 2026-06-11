@@ -7,19 +7,21 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesPrintoutProps {
-  dirent: Fs.DirentBase;
-  children: Fs.DirentBase[];
+  direntId: string;
 }
 
-export const FsPropertiesPrintout: React.FC<FsPropertiesPrintoutProps> = ({ dirent, children }) => {
+export const FsPropertiesPrintout: React.FC<FsPropertiesPrintoutProps> = ({ direntId }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { selectOptions } = useFsDirent();
+  const { selectOptions, getDirent } = useFsDirent();
 
-  if (dirent.type !== 'PRINTOUT') {
+  const dirent = getDirent(direntId);
+
+  if (!dirent || dirent.type !== 'PRINTOUT') {
     return undefined;
   }
 
+  const children = dirent.children ?? [];
   const printoutProps = dirent.props as Fs.PrintoutProps;
   const locales = Object.keys(printoutProps.intlValues ?? {}).map((localeId) => {
     const lang = selectOptions.languages.find((l) => l.value === localeId);

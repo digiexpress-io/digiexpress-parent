@@ -9,10 +9,10 @@ import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentArticlePageRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
-import { FsDirentArticlePageUpdateProps } from './FsDirentArticlePageProps';
+import { FsDirentArticlePageProps } from './FsDirentArticlePageProps';
 
 
-export const FsDirentArticlePageUpdate: React.FC<FsDirentArticlePageUpdateProps> = (props) => {
+export const FsDirentArticlePageUpdate: React.FC<FsDirentArticlePageProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();

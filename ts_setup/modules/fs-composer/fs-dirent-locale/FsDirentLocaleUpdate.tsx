@@ -6,10 +6,10 @@ import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentLocaleRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
-import { FsDirentLocaleUpdateProps } from './FsDirentLocaleProps';
+import { FsDirentLocaleProps } from './FsDirentLocaleProps';
 
 
-export const FsDirentLocaleUpdate: React.FC<FsDirentLocaleUpdateProps> = (props) => {
+export const FsDirentLocaleUpdate: React.FC<FsDirentLocaleProps> = (props) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const ownerState = useUpdateOwnerState(props);

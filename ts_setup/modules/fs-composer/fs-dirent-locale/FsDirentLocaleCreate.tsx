@@ -5,10 +5,9 @@ import { useIntl } from 'react-intl';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentLocaleRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
-import { FsDirentLocaleCreateProps } from './FsDirentLocaleProps';
 
 
-export const FsDirentLocaleCreate: React.FC<FsDirentLocaleCreateProps> = () => {
+export const FsDirentLocaleCreate: React.FC = () => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();

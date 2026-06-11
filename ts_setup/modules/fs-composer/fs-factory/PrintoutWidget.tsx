@@ -1,0 +1,41 @@
+import React from 'react';
+import { FsDirentPrintoutCreate, FsDirentPrintoutUpdate } from '../fs-dirent-printout';
+import { FsPropertiesPrintout } from '../fs-panel-properties/FsPropertiesPrintout';
+import { FsColors, FsIcon, FsIcons } from '../fs-theme';
+import { DirentWidget, DirentWidgetIconProps } from './index';
+
+export const PrintoutWidget: DirentWidget = {
+  views: {
+    CreateView: FsDirentPrintoutCreate,
+    UpdateView: FsDirentPrintoutUpdate,
+    PropertiesView: FsPropertiesPrintout,
+    HelpView: _printout_help_view
+  },
+  icons: {
+    dirent: {
+      Marker: _printout_icon,
+      Collapsed: _printout_icon,
+      Expanded: _printout_icon
+    }
+  },
+  colors: {
+    direntDark: FsColors.direntTypes.dark.printout,
+    direntLight: FsColors.direntTypes.light.printout
+  },
+  classNames: {
+    dirent: '',
+    icon: 'iconPrintout'
+  },
+  meta: {
+    type: 'PRINTOUT',
+    extension: '.printout',
+    configOptions: [],
+  }
+};
+
+function _printout_help_view() {
+  return (<>HELP MARKDOWN</>);
+}
+function _printout_icon(props: DirentWidgetIconProps) {
+  return <FsIcon icon={FsIcons.Print} {...props} />;
+}

@@ -4,10 +4,9 @@ import { useIntl } from 'react-intl';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentFlowTaskRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
-import { FsDirentFlowTaskCreateProps } from './FsDirentFlowTaskProps';
 
 
-export const FsDirentFlowTaskCreate: React.FC<FsDirentFlowTaskCreateProps> = () => {
+export const FsDirentFlowTaskCreate: React.FC = () => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();

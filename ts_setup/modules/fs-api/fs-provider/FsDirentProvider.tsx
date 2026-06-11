@@ -2,7 +2,6 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { useSnackbar } from 'notistack';
 import { Fs } from '../fs-types';
-import { ALL_TYPES } from './helpers';
 import { ItemReferencesEntry, FsWorld } from './FsWorld';
 import { FsuChange, FsuCreateChange } from '../fsu-provider';
 
@@ -25,6 +24,23 @@ export interface FsDirentContextType {
   deleteDirent(id: string, bodyType: Fs.BodyType): Promise<void>;
   createDirent(change: FsuCreateChange): Promise<Fs.DirentBase>;
 }
+
+const ALL_TYPES: Fs.BodyType[] = [
+  'ARTICLE',
+  'ARTICLE_PAGE',
+  'ARTICLE_LINK',
+  'ARTICLE_WORKFLOW',
+  'ARTICLE_TEMPLATE',
+  'FLOW',
+  'FLOW_TASK',
+  'DECISION_TABLE',
+  'LOCALE',
+  'PRINTOUT',
+  'PRINTOUT_PAGE',
+  'PRINTOUT_RESOURCE',
+  'FOLDER',
+  'DIALOB_FORM',
+];
 
 const FsDirentContext = React.createContext<FsDirentContextType | undefined>(undefined);
 

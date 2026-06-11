@@ -9,9 +9,8 @@ import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentArticleLinkRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
-import { FsDirentArticleLinkCreateProps } from './FsDirentArticleLinkProps';
 
-export const FsDirentArticleLinkCreate: React.FC<FsDirentArticleLinkCreateProps> = () => {
+export const FsDirentArticleLinkCreate: React.FC = () => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();

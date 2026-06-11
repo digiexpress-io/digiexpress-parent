@@ -5,9 +5,8 @@ import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { useUtilityClasses, FsDirentPrintoutPageRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
-import { FsDirentPrintoutPageCreateProps } from './FsDirentPrintoutPageProps';
 
-export const FsDirentPrintoutPageCreate: React.FC<FsDirentPrintoutPageCreateProps> = () => {
+export const FsDirentPrintoutPageCreate: React.FC = () => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();

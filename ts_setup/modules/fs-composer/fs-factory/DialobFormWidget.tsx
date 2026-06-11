@@ -1,0 +1,41 @@
+import React from 'react';
+import { FsDirentDialobCreate, FsDirentDialobUpdate } from '../fs-dirent-dialob';
+import { FsPropertiesDialob } from '../fs-panel-properties/FsPropertiesDialob';
+import { FsColors, FsIcon, FsIcons } from '../fs-theme';
+import { DirentWidget, DirentWidgetIconProps } from './index';
+
+export const DialobFormWidget: DirentWidget = {
+  views: {
+    CreateView: FsDirentDialobCreate,
+    UpdateView: FsDirentDialobUpdate,
+    PropertiesView: FsPropertiesDialob,
+    HelpView: _dialob_form_help_view
+  },
+  icons: {
+    dirent: {
+      Marker: _dialob_form_icon,
+      Collapsed: _dialob_form_icon,
+      Expanded: _dialob_form_icon
+    }
+  },
+  colors: {
+    direntDark: FsColors.direntTypes.dark.form,
+    direntLight: FsColors.direntTypes.light.form
+  },
+  classNames: {
+    dirent: '',
+    icon: 'iconDialobForm'
+  },
+  meta: {
+    type: 'DIALOB_FORM',
+    extension: '.dialob',
+    configOptions: [],
+  }
+};
+
+function _dialob_form_help_view() {
+  return (<>HELP MARKDOWN</>);
+}
+function _dialob_form_icon(props: DirentWidgetIconProps) {
+  return <FsIcon icon={FsIcons.Form} {...props} />;
+}

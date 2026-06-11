@@ -4,9 +4,9 @@ import { useIntl } from 'react-intl';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentPrintoutPageRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
-import { FsDirentPrintoutPageUpdateProps } from './FsDirentPrintoutPageProps';
+import { FsDirentPrintoutPageProps } from './FsDirentPrintoutPageProps';
 
-export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageUpdateProps> = ({ direntId }) => {
+export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = ({ direntId }) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState({ direntId });
   const classes = useUtilityClasses();

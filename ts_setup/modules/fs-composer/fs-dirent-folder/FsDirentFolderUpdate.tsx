@@ -4,10 +4,10 @@ import { useIntl } from 'react-intl';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentFolderRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
-import { FsDirentFolderUpdateProps } from './FsDirentFolderProps';
+import { FsDirentFolderProps } from './FsDirentFolderProps';
 
 
-export const FsDirentFolderUpdate: React.FC<FsDirentFolderUpdateProps> = (props) => {
+export const FsDirentFolderUpdate: React.FC<FsDirentFolderProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();

@@ -5,9 +5,9 @@ import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { useUtilityClasses, FsDirentPrintoutResourceRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
-import { FsDirentPrintoutResourceUpdateProps } from './FsDirentPrintoutResourceProps';
+import { FsDirentPrintoutResourceProps } from './FsDirentPrintoutResourceProps';
 
-export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourceUpdateProps> = ({ direntId }) => {
+export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourceProps> = ({ direntId }) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState({ direntId });
   const classes = useUtilityClasses();

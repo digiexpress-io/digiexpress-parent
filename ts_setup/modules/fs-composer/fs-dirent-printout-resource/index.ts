@@ -1,2 +1,2 @@
-export { FsDirentPrintoutResource } from './FsDirentPrintoutResource';
-export type { FsDirentPrintoutResourceProps } from './FsDirentPrintoutResourceProps';
+export { FsDirentPrintoutResourceCreate } from './FsDirentPrintoutResourceCreate';
+export { FsDirentPrintoutResourceUpdate } from './FsDirentPrintoutResourceUpdate';

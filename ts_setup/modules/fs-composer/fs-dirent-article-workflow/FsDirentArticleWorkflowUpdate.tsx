@@ -8,12 +8,12 @@ import { createWidget } from '../fs-factory';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentArticleWorkflowUpdateProps } from './FsDirentArticleWorkflowProps';
+import { FsDirentArticleWorkflowProps } from './FsDirentArticleWorkflowProps';
 import { useUtilityClasses, FsDirentArticleWorkflowRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 
 
-export const FsDirentArticleWorkflowUpdate: React.FC<FsDirentArticleWorkflowUpdateProps> = (props) => {
+export const FsDirentArticleWorkflowUpdate: React.FC<FsDirentArticleWorkflowProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();

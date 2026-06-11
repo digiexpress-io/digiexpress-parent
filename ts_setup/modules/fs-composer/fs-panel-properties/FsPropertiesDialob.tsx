@@ -6,15 +6,17 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesDialobProps {
-  dirent: Fs.DirentBase;
+  direntId: string;
 }
 
-export const FsPropertiesDialob: React.FC<FsPropertiesDialobProps> = ({ dirent }) => {
+export const FsPropertiesDialob: React.FC<FsPropertiesDialobProps> = ({ direntId }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { selectOptions } = useFsDirent();
+  const { selectOptions, getDirent } = useFsDirent();
 
-  if (dirent.type !== 'DIALOB_FORM') {
+  const dirent = getDirent(direntId);
+
+  if (!dirent || dirent.type !== 'DIALOB_FORM') {
     return undefined;
   }
 

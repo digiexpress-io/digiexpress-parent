@@ -4,10 +4,9 @@ import { useIntl } from 'react-intl';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentDecisionTableRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
-import { FsDirentDecisionTableCreateProps } from './FsDirentDecisionTableProps';
 
 
-export const FsDirentDecisionTableCreate: React.FC<FsDirentDecisionTableCreateProps> = (_props) => {
+export const FsDirentDecisionTableCreate: React.FC = (_props) => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();

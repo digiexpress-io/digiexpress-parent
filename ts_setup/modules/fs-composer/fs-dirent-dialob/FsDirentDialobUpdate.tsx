@@ -4,9 +4,9 @@ import { useIntl } from 'react-intl';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentDialobRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
-import { FsDirentDialobUpdateProps } from './FsDirentDialobProps';
+import { FsDirentDialobProps } from './FsDirentDialobProps';
 
-export const FsDirentDialobUpdate: React.FC<FsDirentDialobUpdateProps> = (props) => {
+export const FsDirentDialobUpdate: React.FC<FsDirentDialobProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();

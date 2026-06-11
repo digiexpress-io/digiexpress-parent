@@ -7,10 +7,9 @@ import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { useUtilityClasses, FsDirentArticlePageRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
-import { FsDirentArticlePageCreateProps } from './FsDirentArticlePageProps';
 
 
-export const FsDirentArticlePageCreate: React.FC<FsDirentArticlePageCreateProps> = () => {
+export const FsDirentArticlePageCreate: React.FC = () => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();

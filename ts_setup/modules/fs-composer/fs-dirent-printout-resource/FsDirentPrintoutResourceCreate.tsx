@@ -6,9 +6,8 @@ import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { useUtilityClasses, FsDirentPrintoutResourceRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
-import { FsDirentPrintoutResourceCreateProps } from './FsDirentPrintoutResourceProps';
 
-export const FsDirentPrintoutResourceCreate: React.FC<FsDirentPrintoutResourceCreateProps> = () => {
+export const FsDirentPrintoutResourceCreate: React.FC = () => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();

@@ -1,2 +1,2 @@
-export { FsDirentDecisionTable } from './FsDirentDecisionTable';
-export type { FsDirentDecisionTableProps } from './FsDirentDecisionTableProps';
+export { FsDirentDecisionTableCreate } from './FsDirentDecisionTableCreate';
+export { FsDirentDecisionTableUpdate } from './FsDirentDecisionTableUpdate';

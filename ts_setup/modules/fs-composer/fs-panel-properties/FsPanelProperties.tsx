@@ -24,13 +24,13 @@ function renderTypeSpecificRows(dirent: Fs.DirentBase): React.ReactNode {
   switch (dirent.type) {
     case 'ARTICLE': return null;
     case 'ARTICLE_WORKFLOW': return <FsPropertiesWorkflow direntId={dirent.id} />;
-    case 'DIALOB_FORM': return <FsPropertiesDialob dirent={dirent} />;
+    case 'DIALOB_FORM': return <FsPropertiesDialob direntId={dirent.id} />;
     case 'LOCALE': return <FsPropertiesLanguage direntId={dirent.id} />;
-    case 'PRINTOUT': return null;
+    case 'PRINTOUT': return <FsPropertiesPrintout direntId={dirent.id} />;
     case 'ARTICLE_LINK': return <FsPropertiesLink direntId={dirent.id} />;
     case 'ARTICLE_TEMPLATE': return <FsPropertiesTemplate direntId={dirent.id} />;
-    case 'PRINTOUT_RESOURCE': return <FsPropertiesPrintoutResource dirent={dirent} />;
-    case 'PRINTOUT_PAGE': return <FsPropertiesPrintoutPage dirent={dirent} />;
+    case 'PRINTOUT_RESOURCE': return <FsPropertiesPrintoutResource direntId={dirent.id} />;
+    case 'PRINTOUT_PAGE': return <FsPropertiesPrintoutPage direntId={dirent.id} />;
     case 'ARTICLE_PAGE': return <FsPropertiesArticlePage direntId={dirent.id} />;
     default: return null;
   }
@@ -98,10 +98,6 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
 
         {dirent.type === 'ARTICLE' && (
           <FsPropertiesArticle direntId={dirent.id} />
-        )}
-
-        {dirent.type === 'PRINTOUT' && (
-          <FsPropertiesPrintout dirent={dirent} children={dirent.children} />
         )}
 
       </FsPanelPropertiesRoot>

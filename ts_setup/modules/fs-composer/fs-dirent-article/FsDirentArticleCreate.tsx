@@ -7,10 +7,9 @@ import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
-import { FsDirentArticleCreateProps } from './FsDirentArticleProps';
 
 
-export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () => {
+export const FsDirentArticleCreate: React.FC = () => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();

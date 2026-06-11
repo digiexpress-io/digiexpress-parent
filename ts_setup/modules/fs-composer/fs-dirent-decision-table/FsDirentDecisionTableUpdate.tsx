@@ -6,7 +6,7 @@ import { FsIcon, FsIcons } from '../fs-theme';
 import { Fs } from '@dxs-ts/fs-api';
 import { useUtilityClasses, FsDirentDecisionTableRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
-import { FsDirentDecisionTableUpdateProps } from './FsDirentDecisionTableProps';
+import { FsDirentDecisionTableProps } from './FsDirentDecisionTableProps';
 import { DecisionTable, DecisionTableHeader, DecisionTableRow, DecisionTableCell } from './table';
 import { NameDescHitPolicyEdit, OrderEdit, HeaderEdit, UploadCSV, DownloadCSV, CellEdit } from './editors';
 
@@ -28,7 +28,7 @@ interface DecisionTableToolbarProps {
 }
 
 
-export const FsDirentDecisionTableUpdate: React.FC<FsDirentDecisionTableUpdateProps> = (props) => {
+export const FsDirentDecisionTableUpdate: React.FC<FsDirentDecisionTableProps> = (props) => {
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
   const [edit, setEdit] = React.useState<EditMode | undefined>();

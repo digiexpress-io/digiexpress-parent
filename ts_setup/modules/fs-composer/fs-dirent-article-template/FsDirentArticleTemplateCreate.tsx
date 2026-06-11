@@ -4,10 +4,9 @@ import { useIntl } from 'react-intl';
 import MonacoReact from '@monaco-editor/react';
 import { useUtilityClasses, FsDirentArticleTemplateRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
-import { FsDirentArticleTemplateCreateProps } from './FsDirentArticleTemplateProps';
 
 
-export const FsDirentArticleTemplateCreate: React.FC<FsDirentArticleTemplateCreateProps> = () => {
+export const FsDirentArticleTemplateCreate: React.FC = () => {
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();

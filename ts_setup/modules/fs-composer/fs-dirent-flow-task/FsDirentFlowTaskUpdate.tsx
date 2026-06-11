@@ -1,12 +1,11 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
 import MonacoReact from '@monaco-editor/react';
 import { useUtilityClasses, FsDirentFlowTaskRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
-import { FsDirentFlowTaskUpdateProps } from './FsDirentFlowTaskProps';
+import { FsDirentFlowTaskProps } from './FsDirentFlowTaskProps';
 
 
-export const FsDirentFlowTaskUpdate: React.FC<FsDirentFlowTaskUpdateProps> = (props) => {
+export const FsDirentFlowTaskUpdate: React.FC<FsDirentFlowTaskProps> = (props) => {
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
 

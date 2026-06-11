@@ -6,11 +6,11 @@ import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { useUtilityClasses, FsDirentFlowRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
-import { FsDirentFlowUpdateProps } from './FsDirentFlowProps';
+import { FsDirentFlowProps } from './FsDirentFlowProps';
 import { createWidget } from '../fs-factory';
 
 
-export const FsDirentFlowUpdate: React.FC<FsDirentFlowUpdateProps> = (props) => {
+export const FsDirentFlowUpdate: React.FC<FsDirentFlowProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
