@@ -7,8 +7,8 @@ import { FsPanel } from '../fs-panel';
 import { FsPanelPropertiesProps } from './FsPanelPropertiesProps';
 import { useOwnerState } from './useOwnerState';
 import { FsPanelPropertiesRoot, useUtilityClasses } from './useUtilityClasses';
-import { FsPropertiesArticle } from './FsPropertiesArticle';
 import { FsPropertiesWorkflow } from './FsPropertiesWorkflow';
+import { FsPropertiesArticle } from './FsPropertiesArticle';
 import { FsPropertiesDialob } from './FsPropertiesDialob';
 import { FsPropertiesLanguage } from './FsPropertiesLanguage';
 import { FsPropertiesPrintout } from './FsPropertiesPrintout';
@@ -23,12 +23,12 @@ import { FsPropertiesArticlePage } from './FsPropertiesArticlePage';
 function renderTypeSpecificRows(dirent: Fs.DirentBase): React.ReactNode {
   switch (dirent.type) {
     case 'ARTICLE': return null;
-    case 'ARTICLE_WORKFLOW': return <FsPropertiesWorkflow dirent={dirent} />;
+    case 'ARTICLE_WORKFLOW': return <FsPropertiesWorkflow direntId={dirent.id} />;
     case 'DIALOB_FORM': return <FsPropertiesDialob dirent={dirent} />;
-    case 'LOCALE': return <FsPropertiesLanguage dirent={dirent} />;
+    case 'LOCALE': return <FsPropertiesLanguage direntId={dirent.id} />;
     case 'PRINTOUT': return null;
     case 'ARTICLE_LINK': return <FsPropertiesLink direntId={dirent.id} />;
-    case 'ARTICLE_TEMPLATE': return <FsPropertiesTemplate dirent={dirent} />;
+    case 'ARTICLE_TEMPLATE': return <FsPropertiesTemplate direntId={dirent.id} />;
     case 'PRINTOUT_RESOURCE': return <FsPropertiesPrintoutResource dirent={dirent} />;
     case 'PRINTOUT_PAGE': return <FsPropertiesPrintoutPage dirent={dirent} />;
     case 'ARTICLE_PAGE': return <FsPropertiesArticlePage direntId={dirent.id} />;

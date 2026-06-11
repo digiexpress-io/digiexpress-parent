@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsDirent } from '@dxs-ts/fs-api';
+import { createWidget } from '../fs-factory';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentLocaleRoot } from './useUtilityClasses';
@@ -14,8 +14,10 @@ export const FsDirentLocaleUpdate: React.FC<FsDirentLocaleUpdateProps> = (props)
   const classes = useUtilityClasses();
   const ownerState = useUpdateOwnerState(props);
 
-  const { getConfigOptionsForType } = useFsDirent();
-  const configOptions = getConfigOptionsForType('LOCALE');
+  const configOptions = createWidget({ type: 'LOCALE' }).meta.configOptions.map(opt => ({
+    value: opt,
+    label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
+  }));
 
   return (
     <FsDirentLocaleRoot className={classes.root} ownerState={ownerState}>

@@ -87,7 +87,7 @@ interface FsDirentNameProps {
 }
 
 export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
-  const { getParentDirent, getDirentName, getExtension } = useFsDirent();
+  const { getParentDirent, getDirentName } = useFsDirent();
   const classes = useUtilityClasses(props.isDarkTheme, props.dirent);
   let displayName: string;
 
@@ -98,9 +98,10 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   } else {
     displayName = props.dirent.name;
   }
-  const extension = getExtension(props.dirent.type);
-  const fullDisplayName = extension ? displayName + extension : displayName;
   const widget = createWidget(props.dirent);
+
+
+  const fullDisplayName = widget.meta.extension ? displayName + widget.meta.extension : displayName;
 
 
   return (

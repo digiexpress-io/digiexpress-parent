@@ -1,8 +1,8 @@
 import React from 'react';
 import { Typography, Collapse, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
+import { createWidget } from '../fs-factory';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
@@ -14,8 +14,10 @@ export const FsDirentArticleCreate: React.FC<FsDirentArticleCreateProps> = () =>
   const intl = useIntl();
   const ownerState = useCreateOwnerState();
   const classes = useUtilityClasses();
-  const { getConfigOptionsForType } = useFsDirent();
-  const configOptions = getConfigOptionsForType('ARTICLE');
+  const configOptions = createWidget({ type: 'ARTICLE' }).meta.configOptions.map(opt => ({
+    value: opt,
+    label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
+  }));
 
   return (
     <FsDirentArticleRoot className={classes.root} ownerState={ownerState}>

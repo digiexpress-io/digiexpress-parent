@@ -7,15 +7,17 @@ import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { useUtilityClasses, FsDirentFlowRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentFlowUpdateProps } from './FsDirentFlowProps';
-import { useFsDirent } from '@dxs-ts/fs-api';
+import { createWidget } from '../fs-factory';
 
 
 export const FsDirentFlowUpdate: React.FC<FsDirentFlowUpdateProps> = (props) => {
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { getConfigOptionsForType } = useFsDirent();
-  const configOptions = getConfigOptionsForType('FLOW');
+  const configOptions = createWidget({ type: 'FLOW' }).meta.configOptions.map(opt => ({
+    value: opt,
+    label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
+  }));
 
   return (
     <FsDirentFlowRoot className={classes.root} ownerState={ownerState}>

@@ -6,6 +6,10 @@ import { ArticleWidget } from './ArticleWidget';
 import { ArticleLinkWidget } from './ArticleLinkWidget';
 import { FolderWidget } from './FolderWidget';
 import { ArticlePageWidget } from './ArticlePageWidget';
+import { ArticleTemplateWidget } from './ArticleTemplateWidget';
+import { ArticleWorkflowWidget } from './ArticleWorkflowWidget';
+import { LocaleWidget } from './LocaleWidget';
+import { FlowWidget } from './FlowWidget';
 
 export interface DirentWidgetIconProps {
   xsmall?: boolean;
@@ -81,8 +85,13 @@ export function createWidget(dirent: { type: Fs.BodyType }): DirentWidget {
   switch (dirent.type) {
     case 'ARTICLE': return ArticleWidget;
     case 'ARTICLE_LINK': return ArticleLinkWidget;
-    case 'FOLDER': return FolderWidget;
+    case 'ARTICLE_TEMPLATE': return ArticleTemplateWidget;
     case 'ARTICLE_PAGE': return ArticlePageWidget;
+
+    case 'FOLDER': return FolderWidget;
+    case 'ARTICLE_WORKFLOW': return ArticleWorkflowWidget;
+    case 'LOCALE': return LocaleWidget;
+    case 'FLOW': return FlowWidget;
 
     default: return _UN_IMPLEMENTED;
   }

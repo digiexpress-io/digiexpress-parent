@@ -1,8 +1,10 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
+import { createWidget } from '../fs-factory';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
@@ -72,7 +74,8 @@ class _ChangeState implements FsuChange {
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
-  const { getDirent, getDirentName, selectOptions, getConfigOptionsForType } = useFsDirent();
+  const intl = useIntl();
+  const { getDirent, getDirentName, selectOptions } = useFsDirent();
   const { withNewChange, withChange } = useFsu();
 
   const [isExpanded, setIsExpanded] = React.useState(false);
@@ -80,7 +83,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const dirent = getDirent(props.direntId)!;
   const pageProps = dirent.props as Fs.PageProps;
   const articleName = getDirentName(pageProps.articleId) ?? '';
-  const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('ARTICLE_PAGE');
+  const availableConfigOptions: Fs.SelectOption[] = createWidget({ type: 'ARTICLE_PAGE' }).meta.configOptions.map(opt => ({
+    value: opt,
+    label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
+  }));
 
   const state = withNewChange(props.direntId, () => new _ChangeState({
     pageId: props.direntId,

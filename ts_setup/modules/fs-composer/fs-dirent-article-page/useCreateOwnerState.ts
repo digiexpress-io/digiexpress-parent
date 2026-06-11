@@ -1,7 +1,9 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
+import { createWidget } from '../fs-factory';
 
 
 export interface CreateOwnerState {
@@ -93,7 +95,8 @@ const _init: _CreateStateProps = {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { selectOptions, getDirentName, getConfigOptionsForType } = useFsDirent();
+  const intl = useIntl();
+  const { selectOptions, getDirentName } = useFsDirent();
 
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
@@ -112,7 +115,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     l => !usedLocaleIds.includes(l.value)
   );
 
-  const availableConfigOptions: Fs.SelectOption[] = getConfigOptionsForType('ARTICLE_PAGE');
+  const availableConfigOptions: Fs.SelectOption[] = createWidget({ type: 'ARTICLE_PAGE' }).meta.configOptions.map(opt => ({
+    value: opt,
+    label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
+  }));
   const isChangesPresent = state.isChanged;
 
   function onChangeArticle(value: string) {

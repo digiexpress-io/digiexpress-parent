@@ -1,17 +1,24 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { Fs } from '@dxs-ts/fs-api';
+import { useFsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesTemplateProps {
-  dirent: Fs.DirentBase;
+  direntId: string;
 }
 
-export const FsPropertiesTemplate: React.FC<FsPropertiesTemplateProps> = ({ dirent }) => {
+export const FsPropertiesTemplate: React.FC<FsPropertiesTemplateProps> = ({ direntId }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
+  const { getDirent } = useFsDirent();
+
+  const dirent = getDirent(direntId);
+
+  if (!dirent) {
+    return;
+  }
 
   if (dirent.type !== 'ARTICLE_TEMPLATE') {
     return undefined;

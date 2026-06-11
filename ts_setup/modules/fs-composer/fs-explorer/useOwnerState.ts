@@ -46,7 +46,7 @@ export interface OwnerState {
 export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   const { isDarkMode, setIsDarkMode } = useFsTheme();
   const { openAsset, activeDirent } = useFsNav();
-  const { getDirent, dirents, getExtension } = useFsDirent();
+  const { getDirent, dirents } = useFsDirent();
   const { collapseAll, setExpanded, setExpandedBatch, isExpanded } = useFsNav();
   const { search } = useFsSearch();
 
@@ -60,7 +60,7 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   openAssetRef.current = openAsset;
 
   const filteredTreeData = React.useMemo(() => {
-    return filterTreeDirents(dirents, search.searchTerm, search.activeFilters, getDirent, getExtension);
+    return filterTreeDirents(dirents, search.searchTerm, search.activeFilters, getDirent);
   }, [dirents, search.searchTerm, search.activeFilters, getDirent]);
 
   React.useEffect(() => {

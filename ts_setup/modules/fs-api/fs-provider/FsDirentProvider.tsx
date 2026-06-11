@@ -2,9 +2,9 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { useSnackbar } from 'notistack';
 import { Fs } from '../fs-types';
-import { ALL_TYPES, getConfigOptionsForType, getExtension } from './helpers';
+import { ALL_TYPES } from './helpers';
 import { ItemReferencesEntry, FsWorld } from './FsWorld';
-import { FsuProvider, FsuChange, FsuCreateChange } from '../fsu-provider';
+import { FsuChange, FsuCreateChange } from '../fsu-provider';
 
 export type { ItemReferencesEntry };
 
@@ -14,8 +14,6 @@ export interface FsDirentContextType {
   selectOptions: Fs.SelectOptions;
   getParentDirent(childId: string): Fs.DirentBase | undefined;
   getDirentName: (id: string) => string | undefined;
-  getExtension: (type: Fs.BodyType) => string | undefined;
-  getConfigOptionsForType: (type: Fs.BodyType) => Fs.SelectOption[];
   getDirent: (id: string) => Fs.DirentBase | undefined;
   isChildError: (dirent: Fs.DirentBase) => boolean;
   findReferencesToDirent: (dirent: Fs.DirentBase) => ItemReferencesEntry[];
@@ -145,8 +143,6 @@ function _initCtx(initProps: {
       return dirents.isChildError(dirent);
     },
 
-    getExtension,
-    getConfigOptionsForType,
     getParentDirent: (childId) => dirents.getParentDirent(childId),
     getDirentName: (id) => dirents.getDirentName(id),
     fetchDirentBody: persistenceUnit.fetchDirentBody,

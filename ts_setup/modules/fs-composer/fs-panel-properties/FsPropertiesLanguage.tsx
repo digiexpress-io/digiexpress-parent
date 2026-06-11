@@ -1,17 +1,24 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { Fs } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface FsPropertiesLanguageProps {
-  dirent: Fs.DirentBase;
+  direntId: string;
 }
 
-export const FsPropertiesLanguage: React.FC<FsPropertiesLanguageProps> = ({ dirent }) => {
+export const FsPropertiesLanguage: React.FC<FsPropertiesLanguageProps> = ({ direntId }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
+  const { getDirent } = useFsDirent();
+
+  const dirent = getDirent(direntId);
+
+  if (!dirent) {
+    return;
+  }
 
   if (dirent.type !== 'LOCALE') {
     return undefined;

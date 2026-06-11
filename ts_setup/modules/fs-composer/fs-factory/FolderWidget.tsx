@@ -31,7 +31,7 @@ export const FolderWidget: DirentWidget = {
   },
   meta: {
     type: 'FOLDER',
-    extension: '.folder',
+    extension: '', // left empty to prevent .folder extension visible on every UI folder
     configOptions: [],
   }
 };

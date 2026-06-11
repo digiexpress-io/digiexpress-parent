@@ -14,13 +14,19 @@ function formatFiDate(iso: string | undefined): string {
 
 
 export interface FsPropertiesWorkflowProps {
-  dirent: Fs.DirentBase;
+  direntId: string;
 }
 
-export const FsPropertiesWorkflow: React.FC<FsPropertiesWorkflowProps> = ({ dirent }) => {
+export const FsPropertiesWorkflow: React.FC<FsPropertiesWorkflowProps> = ({ direntId }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { getDirentName, selectOptions } = useFsDirent();
+  const { getDirentName, selectOptions, getDirent } = useFsDirent();
+
+  const dirent = getDirent(direntId);
+
+  if (!dirent) {
+    return;
+  }
 
   if (dirent.type !== 'ARTICLE_WORKFLOW') {
     return undefined;

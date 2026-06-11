@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { DatePicker } from '@dxs-ts/xui-datetime';
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
+import { createWidget } from '../fs-factory';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
@@ -16,11 +17,14 @@ export const FsDirentArticleWorkflowUpdate: React.FC<FsDirentArticleWorkflowUpda
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { selectOptions, getConfigOptionsForType, getDirentName } = useFsDirent();
+  const { selectOptions, getDirentName } = useFsDirent();
   const dialobForms = selectOptions.dialobs;
   const flows = selectOptions.flows;
   const articles = selectOptions.articles.map(item => ({ value: item.value, label: getDirentName(item.value) ?? item.label }));
-  const configOptions = getConfigOptionsForType('ARTICLE_WORKFLOW');
+  const configOptions = createWidget({ type: 'ARTICLE_WORKFLOW' }).meta.configOptions.map(opt => ({
+    value: opt,
+    label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
+  }));
   const dialobTags = selectOptions.collectDialobTags(ownerState.dialobFormName);
 
   return (

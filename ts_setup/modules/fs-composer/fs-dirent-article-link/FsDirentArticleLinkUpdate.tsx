@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useFsDirent } from '@dxs-ts/fs-api';
+import { createWidget } from '../fs-factory';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
@@ -14,9 +15,12 @@ export const FsDirentArticleLinkUpdate: React.FC<FsDirentArticleLinkUpdateProps>
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { selectOptions, getConfigOptionsForType, getDirentName } = useFsDirent();
+  const { selectOptions, getDirentName } = useFsDirent();
   const articles = selectOptions.articles.map(item => ({ value: item.value, label: getDirentName(item.value) ?? item.label }));
-  const configOptions = getConfigOptionsForType('ARTICLE_LINK');
+  const configOptions = createWidget({ type: 'ARTICLE_LINK' }).meta.configOptions.map(opt => ({
+    value: opt,
+    label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
+  }));
   const linkTypeOptions = selectOptions.linkTypes.map(v => ({
     value: v,
     label: intl.formatMessage({ id: `fs.dirent.link.contentType.${v}` }),

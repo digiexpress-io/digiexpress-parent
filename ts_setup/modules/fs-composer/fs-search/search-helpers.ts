@@ -1,4 +1,5 @@
 import { Fs } from "@dxs-ts/fs-api";
+import { createWidget } from "../fs-factory";
 
 type AssetTypeFilter = { type: 'asset'; label: string; value: Fs.BodyType };
 type LabelFilter = { type: 'label'; label: string; value: string };
@@ -9,7 +10,6 @@ export function filterTreeDirents(
   searchTerm: string,
   visibleFilters: FilterData[],
   getDirent: (id: string) => Fs.DirentBase | undefined,
-  getExtension: (type: Fs.BodyType) => string | undefined,
 ): Fs.DirentBase[] {
 
   const typeFilters = visibleFilters.filter((f): f is AssetTypeFilter => f.type === 'asset');
@@ -24,15 +24,18 @@ export function filterTreeDirents(
   const labelValues = labelFilters.map(f => f.value);
   const filtered: Fs.DirentBase[] = [];
 
+
   for (const dirent of dirents) {
     const direntEntry = getDirent(dirent.id);
-    const extension = getExtension(dirent.type) ?? '';
+    const widget = createWidget(direntEntry!);
+
+    const extension = widget.meta.extension ?? '';
     const displayName = dirent.name + extension;
     const nameMatches = displayName.toLowerCase().includes(searchTerm.toLowerCase());
     const descriptionMatches = direntEntry?.props?.assetDescription?.toLowerCase().includes(searchTerm.toLowerCase());
     const typeMatches = typeFilters.length === 0 || typeFilters.some(f => f.value === dirent.type);
     const labelMatches = labelFilters.length === 0 || (direntEntry?.props?.labels ?? []).some(l => labelValues.includes(l.value));
-    const childMatches = dirent.children ? filterTreeDirents(dirent.children, searchTerm, visibleFilters, getDirent, getExtension) : [];
+    const childMatches = dirent.children ? filterTreeDirents(dirent.children, searchTerm, visibleFilters, getDirent) : [];
 
     const showBySearch = isSearchTermEmpty || nameMatches || descriptionMatches;
 
