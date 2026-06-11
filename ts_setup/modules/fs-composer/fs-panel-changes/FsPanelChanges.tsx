@@ -28,8 +28,8 @@ export const FsPanelChanges: React.FC<FsPanelChangesProps> = (props) => {
         {changes.map((asset) => (
           <div key={asset.id} className={classes.changeRow}>
             <div className={classes.assetName}>
-              <Typography variant='subtitle2' fontWeight='bold'>{asset.name}</Typography>
-              <Typography variant='caption'>{asset.fullPath}</Typography>
+              <Typography className={classes.assetTitle}>{asset.name}</Typography>
+              <Typography className={classes.assetPath}>{asset.fullPath}</Typography>
             </div>
 
             <Tooltip title={intl.formatMessage({ id: 'fs.changesView.undo' })}>

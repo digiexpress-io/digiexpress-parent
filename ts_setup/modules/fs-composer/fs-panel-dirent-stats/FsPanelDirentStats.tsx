@@ -3,14 +3,13 @@ import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
-import { FsPanelDirentStatsProps } from './FsPanelDirentStatsProps';
 import { useOwnerState } from './useOwnerState';
 import { FsPanelDirentStatsRoot, useUtilityClasses } from './useUtilityClasses';
 
 
-export const FsPanelDirentStats: React.FC<FsPanelDirentStatsProps> = (props) => {
+export const FsPanelDirentStats: React.FC = () => {
   const intl = useIntl();
-  const ownerState = useOwnerState(props);
+  const ownerState = useOwnerState();
   const classes = useUtilityClasses();
 
   return (

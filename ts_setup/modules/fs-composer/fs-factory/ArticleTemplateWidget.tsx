@@ -31,6 +31,7 @@ export const ArticleTemplateWidget: DirentWidget = {
     type: 'ARTICLE_TEMPLATE',
     extension: '.template',
     configOptions: [],
+    supportedViews: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
 

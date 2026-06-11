@@ -41,21 +41,21 @@ export const ContentPanel: React.FC<ContentPanelProps> = ({ ownerState, classNam
             case 'references':
               return <FsPanelReferences dirent={activeDirent} />;
           case 'properties':
-              return <FsPanelProperties dirent={activeDirent} />;
+            return <FsPanelProperties dirent={activeDirent} />;
           case 'history':
-              return <FsPanelHistory dirent={activeDirent} />;
+            return <FsPanelHistory dirent={activeDirent} />;
           case 'help':
-              return <FsPanelHelp dirent={activeDirent} />;
+            return <FsPanelHelp dirent={activeDirent} />;
           case 'preview':
-              return <FsPanelPreview dirent={activeDirent} />;
+            return <FsPanelPreview dirent={activeDirent} />;
           case 'article-order':
-              return <FsPanelArticleOrder />;
+            return <FsPanelArticleOrder />;
           case 'article-locale-overview':
-              return <FsPanelArticleLocaleOverview />;
+            return <FsPanelArticleLocaleOverview />;
           case 'stats':
-              return <FsPanelDirentStats />;
+            return <FsPanelDirentStats />;
           case 'debug':
-              return <FsPanelDebug dirent={activeDirent} />;
+            return <FsPanelDebug dirent={activeDirent} />;
           default:
             return (
               <FsPanel title='View not implemented'>

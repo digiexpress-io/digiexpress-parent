@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tooltip, Badge } from '@mui/material';
 import { PanelButton, OwnerState } from './useOwnerState';
+import { useUtilityClasses } from './useUtilityClasses';
 
 export interface ContentPanelToolbarProps {
   ownerState: OwnerState;
@@ -9,38 +10,33 @@ export interface ContentPanelToolbarProps {
 
 export const ContentPanelToolbar: React.FC<ContentPanelToolbarProps> = ({ ownerState, className }) => {
   const { toolbar } = ownerState;
+  const classes = useUtilityClasses({});
 
-  const renderIcon = (button: PanelButton) => {
-    const IconComponent = button.icon;
-    return <IconComponent />;
-  };
+  function getButtonClassName(button: PanelButton): string {
+    const root = button.type === 'save' ? classes.toolbarSaveButton : classes.toolbarButton;
+    if (button.isSelected && !button.isEnabled) {
+      return `${root} ${classes.toolbarButtonSelected} ${classes.toolbarButtonDisabled}`;
+    }
+    if (button.isSelected) {
+      return `${root} ${classes.toolbarButtonSelected}`;
+    }
+    if (!button.isEnabled) {
+      return `${root} ${classes.toolbarButtonDisabled}`;
+    }
+    return root;
+  }
 
   return (
     <div className={className}>
       {toolbar.buttons.map((button) => (
         <Tooltip key={button.id} title={button.tooltip} placement="left" arrow>
-          <div onClick={button.isEnabled ? button.onClick : undefined}
-            className={`
-              ${button.type === 'save' ? 'FsMain-toolbarSaveButton' : 'FsMain-toolbarButton'}
-              ${button.isSelected ? ' FsMain-toolbarButtonSelected' : ''}
-              ${!button.isEnabled ? ' FsMain-toolbarButtonDisabled' : ''}
-            `}
-          >
+          <div onClick={button.isEnabled ? button.onClick : undefined} className={getButtonClassName(button)}>
             {button.badge ? (
-              <Badge badgeContent={button.badge} color="error"
-                sx={{
-                  '& .MuiBadge-badge': {
-                    fontSize: '10px',
-                    fontWeight: 'bold',
-                    height: '16px',
-                    minWidth: '16px',
-                  }
-                }}
-              >
-                {renderIcon(button)}
+              <Badge badgeContent={button.badge} color="error" className={classes.toolbarBadge}>
+                <button.icon />
               </Badge>
             ) : (
-              renderIcon(button)
+                <button.icon />
             )}
           </div>
         </Tooltip>

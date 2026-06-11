@@ -29,6 +29,7 @@ export const DialobFormWidget: DirentWidget = {
     type: 'DIALOB_FORM_META',
     extension: '.dialob',
     configOptions: [],
+    supportedViews: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
 

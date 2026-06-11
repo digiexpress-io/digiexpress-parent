@@ -5,27 +5,9 @@ import { FsTab, useFsNav } from '@dxs-ts/fs-nav';
 import { useFsTheme } from '../fs-theme';
 import { FsIcons } from '../fs-theme/fs-icons';
 import { FsMainProps } from './FsMainProps';
+import { createWidget } from '../fs-factory';
 
 type ToolbarButtonType = 'toggle' | 'view' | 'save';
-type ViewSupport = Partial<Record<Fs.BodyType, Fs.SecondaryView[]>>;
-
-const SUPPORTED_VIEWS: ViewSupport = {
-  FOLDER: ['properties', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
-  ARTICLE: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
-  ARTICLE_PAGE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
-  ARTICLE_TEMPLATE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
-  ARTICLE_WORKFLOW: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
-  ARTICLE_LINK: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
-  FLOW: ['properties', 'references', 'debug', 'errors', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'debug', 'stats', 'help'],
-  FLOW_TASK: ['properties', 'references', 'debug', 'errors', 'history', 'changes', 'article-order', 'article-locale-overview', 'debug', 'stats', 'help'],
-  DECISION_TABLE: ['properties', 'references', 'errors', 'history', 'changes', 'article-order', 'article-locale-overview', 'debug', 'stats', 'help'],
-  DIALOB_FORM: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
-  PRINTOUT: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
-  PRINTOUT_PAGE: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
-  PRINTOUT_RESOURCE: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
-  LOCALE: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
-  DEPLOYMENT: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
-};
 
 export interface PanelButton {
   id: string;
@@ -58,21 +40,23 @@ const toolbarWidth = '50px';
 
 export const useOwnerState = (_props: FsMainProps): OwnerState => {
   const intl = useIntl();
+
   const { isDarkMode } = useFsTheme();
   const { activeDirent, activeTabIndex, openTabs } = useFsNav();
   const { getDirent } = useFsDirent();
   const { allChanges } = useFsu();
+
   const unsavedCount = allChanges.filter(c => c.isChanged).length;
   const activeDirentEntry = activeDirent ? getDirent(activeDirent.id) : undefined;
-  const [isRightPanelOpen, setIsRightPanelOpen] = React.useState(!!activeDirent);
+  const [isRightPanelOpen, setIsRightPanelOpen] = React.useState(false);
   const [selectedView, setSelectedView] = React.useState<Fs.SecondaryView | undefined>();
 
   React.useEffect(() => {
     if (activeDirent) {
-      setIsRightPanelOpen(true);
       setSelectedView(activeDirent.type === 'ARTICLE_PAGE' || activeDirent.type === 'FLOW' || activeDirent.type === 'ARTICLE_TEMPLATE' ? 'preview' : 'properties');
     } else {
       setIsRightPanelOpen(false);
+      setSelectedView(undefined);
     }
   }, [activeDirent?.id]);
 
@@ -81,13 +65,15 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
   }, []);
 
   const handleViewChange = React.useCallback((view: Fs.SecondaryView) => {
-    setSelectedView(view);
-    if (!isRightPanelOpen) {
+    if (isRightPanelOpen && selectedView === view) {
+      setIsRightPanelOpen(false);
+    } else {
+      setSelectedView(view);
       setIsRightPanelOpen(true);
     }
-  }, [isRightPanelOpen]);
+  }, [isRightPanelOpen, selectedView]);
 
-  const supportedViews = activeDirentEntry?.type ? (SUPPORTED_VIEWS[activeDirentEntry.type] ?? []) : [];
+  const supportedViews = activeDirentEntry ? createWidget(activeDirentEntry).meta.supportedViews : [];
   const isViewEnabled = (view: Fs.SecondaryView) => supportedViews.includes(view);
 
   const toolbarButtons = React.useMemo((): PanelButton[] => [

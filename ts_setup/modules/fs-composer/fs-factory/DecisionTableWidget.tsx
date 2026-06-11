@@ -33,6 +33,7 @@ export const DecisionTableWidget: DirentWidget = {
     type: 'DECISION_TABLE',
     extension: '.decision-table',
     configOptions: [],
+    supportedViews: ['properties', 'references', 'errors', 'history', 'changes', 'article-order', 'article-locale-overview', 'debug', 'stats', 'help'],
   }
 };
 

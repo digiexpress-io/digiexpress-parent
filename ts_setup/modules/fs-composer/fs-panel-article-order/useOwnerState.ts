@@ -1,6 +1,5 @@
 import { useFsDirent, Fs } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
-import { FsPanelArticleOrderProps } from './FsPanelArticleOrderProps';
 
 
 export interface OwnerState {
@@ -9,7 +8,7 @@ export interface OwnerState {
   getDirentName: (id: string) => string | undefined;
 }
 
-export const useOwnerState = (_props: FsPanelArticleOrderProps): OwnerState => {
+export const useOwnerState = (): OwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, selectOptions, getDirentName } = useFsDirent();
 

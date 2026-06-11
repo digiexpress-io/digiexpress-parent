@@ -1,6 +1,5 @@
 import { useFsDirent, Fs } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
-import { FsPanelDirentStatsProps } from './FsPanelDirentStatsProps';
 
 
 export interface AssetCount {
@@ -26,7 +25,7 @@ export interface OwnerState {
   disabledAssets: DisabledAsset[];
 }
 
-export const useOwnerState = (_props: FsPanelDirentStatsProps): OwnerState => {
+export const useOwnerState = (): OwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, selectOptions, getDirentName } = useFsDirent();
 

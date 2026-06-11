@@ -30,6 +30,7 @@ export const PrintoutWidget: DirentWidget = {
     type: 'PRINTOUT',
     extension: '.printout',
     configOptions: [],
+    supportedViews: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
 

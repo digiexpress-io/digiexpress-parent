@@ -33,6 +33,7 @@ export const FolderWidget: DirentWidget = {
     type: 'FOLDER',
     extension: '', // left empty to prevent .folder extension visible on every UI folder
     configOptions: [],
+    supportedViews: ['properties', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
 

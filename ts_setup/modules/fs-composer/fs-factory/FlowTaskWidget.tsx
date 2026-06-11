@@ -33,6 +33,7 @@ export const FlowTaskWidget: DirentWidget = {
     type: 'FLOW_TASK',
     extension: '.flow-task',
     configOptions: [],
+    supportedViews: ['properties', 'references', 'debug', 'errors', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
 

@@ -31,6 +31,7 @@ export const LocaleWidget: DirentWidget = {
     type: 'LOCALE',
     extension: '.locale',
     configOptions: ['DISABLED_MODE'],
+    supportedViews: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
 

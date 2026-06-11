@@ -25,6 +25,7 @@ import { helpPrintoutResource } from './help-printout-resource';
 import { helpLocale } from './help-locale';
 import { helpDeployment } from './help-deployment';
 
+
 const HELP_CONTENT: Partial<Record<Fs.BodyType, string>> = {
   FOLDER: helpFolder,
   ARTICLE: helpArticle,

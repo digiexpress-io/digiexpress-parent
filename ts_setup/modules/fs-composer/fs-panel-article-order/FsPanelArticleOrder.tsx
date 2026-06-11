@@ -4,14 +4,13 @@ import { useIntl } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
-import { FsPanelArticleOrderProps } from './FsPanelArticleOrderProps';
 import { useOwnerState } from './useOwnerState';
 import { FsPanelArticleOrderRoot, useUtilityClasses } from './useUtilityClasses';
 
 
-export const FsPanelArticleOrder: React.FC<FsPanelArticleOrderProps> = (props) => {
+export const FsPanelArticleOrder: React.FC = () => {
   const intl = useIntl();
-  const ownerState = useOwnerState(props);
+  const ownerState = useOwnerState();
   const classes = useUtilityClasses();
 
   return (

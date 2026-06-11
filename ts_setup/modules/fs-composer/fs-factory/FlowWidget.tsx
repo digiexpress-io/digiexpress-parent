@@ -34,6 +34,7 @@ export const FlowWidget: DirentWidget = {
     type: 'FLOW',
     extension: '.flow',
     configOptions: ['DEV_MODE', 'DISABLED_MODE'],
+    supportedViews: ['properties', 'references', 'debug', 'errors', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
 

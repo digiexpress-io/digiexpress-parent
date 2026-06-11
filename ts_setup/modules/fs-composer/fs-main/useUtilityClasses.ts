@@ -19,6 +19,7 @@ export interface FsMainClasses {
   toolbarButtonSelected: string;
   toolbarButtonDisabled: string;
   toolbarSaveButton: string;
+  toolbarBadge: string;
 }
 
 export type FsMainClassKey = keyof FsMainClasses;
@@ -36,7 +37,8 @@ export const useUtilityClasses = (_props: FsMainProps) => {
     toolbarButton: ['toolbarButton'],
     toolbarButtonSelected: ['toolbarButtonSelected'],
     toolbarButtonDisabled: ['toolbarButtonDisabled'],
-    toolbarSaveButton: ['toolbarSaveButton']
+    toolbarSaveButton: ['toolbarSaveButton'],
+    toolbarBadge: ['toolbarBadge'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -150,6 +152,12 @@ export const FsMainRoot = styled('div', {
       },
       '&:hover': {
         backgroundColor: ownerState.isDarkMode ? FsColors.dark.border + '20' : FsColors.light.surface
+      },
+      [`& .${MUI_NAME}-toolbarBadge .MuiBadge-badge`]: {
+        fontSize: '10px',
+        fontWeight: 'bold',
+        height: '16px',
+        minWidth: '16px',
       },
     },
 

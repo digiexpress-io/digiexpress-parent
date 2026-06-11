@@ -11,6 +11,8 @@ export interface FsPanelChangesClasses {
   root: string;
   changeRow: string;
   assetName: string;
+  assetTitle: string;
+  assetPath: string;
   statusText: string;
   undoButton: string;
   actionBar: string;
@@ -24,6 +26,8 @@ export const useUtilityClasses = () => {
     root: ['root'],
     changeRow: ['changeRow'],
     assetName: ['assetName'],
+    assetTitle: ['assetTitle'],
+    assetPath: ['assetPath'],
     statusText: ['statusText'],
     undoButton: ['undoButton'],
     actionBar: ['actionBar'],
@@ -58,6 +62,17 @@ export const FsPanelChangesRoot = styled('div', {
     '&:last-child': {
       borderBottom: 'none'
     }
+  },
+
+  [`& .${MUI_NAME}-assetTitle`]: {
+    ...theme.typography.subtitle2,
+    fontWeight: 'bold',
+    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+  },
+
+  [`& .${MUI_NAME}-assetPath`]: {
+    ...theme.typography.caption,
+    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
   },
 
   [`& .${MUI_NAME}-assetName`]: {

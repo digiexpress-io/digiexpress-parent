@@ -28,9 +28,10 @@ export const ArticleWorkflowWidget: DirentWidget = {
     icon: 'iconArticle'
   },
   meta: {
-    type: 'ARTICLE',
+    type: 'ARTICLE_WORKFLOW',
     extension: '.article-workflow',
     configOptions: ['DEV_MODE', 'DISABLED_MODE'],
+    supportedViews: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
 

@@ -30,6 +30,7 @@ export const ArticlePageWidget: DirentWidget = {
     type: 'ARTICLE_PAGE',
     extension: '.article-page',
     configOptions: ['DEV_MODE', 'DISABLED_MODE'],
+    supportedViews: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
 

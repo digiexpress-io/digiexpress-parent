@@ -32,6 +32,7 @@ export const ArticleLinkWidget: DirentWidget = {
     type: 'ARTICLE_LINK',
     extension: '.link',
     configOptions: ['DEV_MODE', 'DISABLED_MODE'],
+    supportedViews: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
 function _link_help_view() {

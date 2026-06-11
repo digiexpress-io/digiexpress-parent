@@ -83,6 +83,8 @@ export interface DirentWidget {
 
     // helpers.ts export function getConfigOptionsForType(type: Fs.BodyType): Fs.SelectOption[] {
     configOptions: Fs.ConfigOption[],
+
+    supportedViews: Fs.SecondaryView[],
   }
 };
 
@@ -165,6 +167,7 @@ const _UN_IMPLEMENTED: DirentWidget = {
   meta: {
     type: _EMPTY_TYPE,
     configOptions: _EMPTY_CONFIG_OPTIONS,
-    extension: _EMPTY_FILE_EXTENSION
+    extension: _EMPTY_FILE_EXTENSION,
+    supportedViews: [],
   }
 }
