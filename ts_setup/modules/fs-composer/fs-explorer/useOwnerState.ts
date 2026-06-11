@@ -1,5 +1,4 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { FsExplorerProps } from "./FsExplorerProps";
 import { FilterData, filterTreeDirents, useFsSearch } from '../fs-search';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
@@ -43,7 +42,7 @@ export interface OwnerState {
   toggleDirent: (direntId: string) => void;
 }
 
-export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
+export const useOwnerState = (): OwnerState => {
   const { isDarkMode, setIsDarkMode } = useFsTheme();
   const { openAsset, activeDirent } = useFsNav();
   const { getDirent, dirents } = useFsDirent();

@@ -9,7 +9,6 @@ export type { ItemReferencesEntry };
 
 export interface FsDirentContextType {
   dirents: Fs.DirentBase[];
-  creatableTypes: Fs.BodyType[];
   selectOptions: Fs.SelectOptions;
   getParentDirent(childId: string): Fs.DirentBase | undefined;
   getDirentName: (id: string) => string | undefined;
@@ -25,22 +24,6 @@ export interface FsDirentContextType {
   createDirent(change: FsuCreateChange): Promise<Fs.DirentBase>;
 }
 
-const ALL_TYPES: Fs.BodyType[] = [
-  'ARTICLE',
-  'ARTICLE_PAGE',
-  'ARTICLE_LINK',
-  'ARTICLE_WORKFLOW',
-  'ARTICLE_TEMPLATE',
-  'FLOW',
-  'FLOW_TASK',
-  'DECISION_TABLE',
-  'LOCALE',
-  'PRINTOUT',
-  'PRINTOUT_PAGE',
-  'PRINTOUT_RESOURCE',
-  'FOLDER',
-  'DIALOB_FORM',
-];
 
 const FsDirentContext = React.createContext<FsDirentContextType | undefined>(undefined);
 
@@ -146,7 +129,6 @@ function _initCtx(initProps: {
 
   return {
 
-    creatableTypes: ALL_TYPES,
     get selectOptions() {
       return dirents.selectOptions;
     },

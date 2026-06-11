@@ -93,8 +93,6 @@ export function createWidget(dirent: { type: Fs.BodyType }): DirentWidget {
     case 'ARTICLE_LINK': return ArticleLinkWidget;
     case 'ARTICLE_TEMPLATE': return ArticleTemplateWidget;
     case 'ARTICLE_PAGE': return ArticlePageWidget;
-
-    case 'FOLDER': return FolderWidget;
     case 'ARTICLE_WORKFLOW': return ArticleWorkflowWidget;
     case 'LOCALE': return LocaleWidget;
     case 'FLOW': return FlowWidget;
@@ -104,10 +102,27 @@ export function createWidget(dirent: { type: Fs.BodyType }): DirentWidget {
     case 'FLOW_TASK': return FlowTaskWidget;
     case 'DECISION_TABLE': return DecisionTableWidget;
     case 'DIALOB_FORM': return DialobFormWidget;
-
+    case 'FOLDER': return FolderWidget;
     default: return _UN_IMPLEMENTED;
   }
 }
+
+export const allWidgets: DirentWidget[] = [
+  ArticleWidget,
+  ArticleLinkWidget,
+  ArticleTemplateWidget,
+  ArticlePageWidget,
+  ArticleWorkflowWidget,
+  LocaleWidget,
+  FlowWidget,
+  FlowTaskWidget,
+  DecisionTableWidget,
+  DialobFormWidget,
+  PrintoutWidget,
+  PrintoutPageWidget,
+  PrintoutResourceWidget,
+  FolderWidget,
+];
 
 
 
