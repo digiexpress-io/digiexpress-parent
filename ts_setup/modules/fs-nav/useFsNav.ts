@@ -15,6 +15,3 @@ export function useFsNav() {
   };
 }
 
-export function useFsExpanded(): (id: string) => boolean {
-  return useFsNavContext().isExpanded;
-}

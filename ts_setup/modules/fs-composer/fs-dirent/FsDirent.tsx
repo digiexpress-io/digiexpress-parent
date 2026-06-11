@@ -1,5 +1,4 @@
 import React from 'react';
-import { useFsExpanded } from '@dxs-ts/fs-nav';
 import { Box, Collapse, IconButton, List, ListItemIcon, Tooltip } from '@mui/material';
 
 import { useUtilityClasses, FsDirentRoot } from './useUtilityClasses';
@@ -16,8 +15,7 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(ownerState.isDarkMode, ownerState.dirent);
 
-  const isExpanded = useFsExpanded();
-  const expanded = isExpanded(props.dirent.id) ?? false;
+  const { expanded, isExpanded } = props;
   //FSU:::boken const { isChange, getChange } = useFsu();
   //const isUnsavedChanges = isChange(props.dirent.id) && getChange(props.dirent.id).isChanged;
 
@@ -77,13 +75,15 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
     </FsDirentRoot>
 
     {ownerState.isChildren && (
-      <Collapse in={expanded} timeout={0}>
+      <Collapse in={expanded} timeout={0} unmountOnExit>
         <List disablePadding>
           {ownerState.children.map((child) => (
             <FsDirent
               key={child.id}
               dirent={child}
               level={ownerState.level + 1}
+              expanded={isExpanded(child.id)}
+              isExpanded={isExpanded}
               activeDirentId={props.activeDirentId}
               openAsset={props.openAsset}
               onToggle={ownerState.onToggle}
