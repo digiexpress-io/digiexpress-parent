@@ -1,8 +1,8 @@
 import React from 'react';
-import { Divider, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useUtilityClasses } from './useUtilityClasses';
+import { usePanelProperties } from '../fs-panel-properties';
 
 export interface FsPropertiesPrintoutPageProps {
   direntId: string;
@@ -10,7 +10,7 @@ export interface FsPropertiesPrintoutPageProps {
 
 export const FsPropertiesPrintoutPage: React.FC<FsPropertiesPrintoutPageProps> = ({ direntId }) => {
   const intl = useIntl();
-  const classes = useUtilityClasses();
+  const classes = usePanelProperties();
   const { selectOptions, getDirent } = useFsDirent();
 
   const dirent = getDirent(direntId);

@@ -3,7 +3,7 @@ import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useUtilityClasses } from './useUtilityClasses';
+import { usePanelProperties } from '../fs-panel-properties';
 
 function formatFiDate(iso: string | undefined): string {
   if (!iso) {
@@ -19,7 +19,7 @@ export interface FsPropertiesWorkflowProps {
 
 export const FsPropertiesWorkflow: React.FC<FsPropertiesWorkflowProps> = ({ direntId }) => {
   const intl = useIntl();
-  const classes = useUtilityClasses();
+  const classes = usePanelProperties();
   const { getDirentName, selectOptions, getDirent } = useFsDirent();
 
   const dirent = getDirent(direntId);

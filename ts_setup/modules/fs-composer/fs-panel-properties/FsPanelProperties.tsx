@@ -1,46 +1,21 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
 import { FsPanelPropertiesProps } from './FsPanelPropertiesProps';
 import { useOwnerState } from './useOwnerState';
-import { FsPanelPropertiesRoot, useUtilityClasses } from './useUtilityClasses';
-import { FsPropertiesWorkflow } from './FsPropertiesWorkflow';
-import { FsPropertiesArticle } from './FsPropertiesArticle';
-import { FsPropertiesDialob } from './FsPropertiesDialob';
-import { FsPropertiesLanguage } from './FsPropertiesLanguage';
-import { FsPropertiesPrintout } from './FsPropertiesPrintout';
-import { FsPropertiesLink } from './FsPropertiesLink';
-import { FsPropertiesTemplate } from './FsPropertiesTemplate';
-import { FsPropertiesPrintoutResource } from './FsPropertiesPrintoutResource';
-import { FsPropertiesPrintoutPage } from './FsPropertiesPrintoutPage';
-import { FsPropertiesArticlePage } from './FsPropertiesArticlePage';
+import { FsPanelPropertiesRoot, usePanelProperties } from './useUtilityClasses';
+import { FsPropertiesArticle } from '../fs-dirent-article/FsPropertiesArticle';
+import { createWidget } from '../fs-factory';
 
-
-
-function renderTypeSpecificRows(dirent: Fs.DirentBase): React.ReactNode {
-  switch (dirent.type) {
-    case 'ARTICLE': return null;
-    case 'ARTICLE_WORKFLOW': return <FsPropertiesWorkflow direntId={dirent.id} />;
-    case 'DIALOB_FORM': return <FsPropertiesDialob direntId={dirent.id} />;
-    case 'LOCALE': return <FsPropertiesLanguage direntId={dirent.id} />;
-    case 'PRINTOUT': return <FsPropertiesPrintout direntId={dirent.id} />;
-    case 'ARTICLE_LINK': return <FsPropertiesLink direntId={dirent.id} />;
-    case 'ARTICLE_TEMPLATE': return <FsPropertiesTemplate direntId={dirent.id} />;
-    case 'PRINTOUT_RESOURCE': return <FsPropertiesPrintoutResource direntId={dirent.id} />;
-    case 'PRINTOUT_PAGE': return <FsPropertiesPrintoutPage direntId={dirent.id} />;
-    case 'ARTICLE_PAGE': return <FsPropertiesArticlePage direntId={dirent.id} />;
-    default: return null;
-  }
-}
 
 
 export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
-  const classes = useUtilityClasses();
+  const classes = usePanelProperties();
 
   const { dirent } = ownerState;
   const { getDirentName } = useFsDirent();
@@ -59,6 +34,7 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
   const labels = (dirent.props?.labels ?? []).map(l => l.value);
   const comments = dirent.props?.comments ?? [];
   const description = dirent.props?.assetDescription;
+  const widget = createWidget(dirent);
 
   return (
     <FsPanel title={intl.formatMessage({ id: 'fs.properties.title.direntName' }, { direntName: displayName })} icon={<FsIcon icon={FsIcons.Settings} large />} activeDirent={true}>
@@ -94,7 +70,7 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
           </div>
         </div>
 
-        {renderTypeSpecificRows(dirent)}
+        <widget.views.PropertiesView direntId={dirent.id} />
 
         {dirent.type === 'ARTICLE' && (
           <FsPropertiesArticle direntId={dirent.id} />

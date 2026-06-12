@@ -1,7 +1,6 @@
-import { FsDirentArticleCreate, FsDirentArticleUpdate } from '../fs-dirent-article';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
+import { FsDirentArticleCreate, FsDirentArticleUpdate, FsPropertiesArticle } from '../fs-dirent-article';
 import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
-import { FsPropertiesLink } from '../fs-panel-properties/FsPropertiesLink';
 
 
 
@@ -9,7 +8,7 @@ export const ArticleWidget: DirentWidget = {
   views: {
     CreateView: FsDirentArticleCreate,
     UpdateView: FsDirentArticleUpdate,
-    PropertiesView: FsPropertiesLink,
+    PropertiesView: FsPropertiesArticle,
     HelpView: _article_help_view
   },
   icons: {

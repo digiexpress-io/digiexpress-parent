@@ -30,60 +30,30 @@ export interface DirentWidgetIconProps {
 
 export interface DirentWidget {
   classNames: {
-    //  dirent: Content.tsx
     dirent: string;
-
-    //      iconClassName -  FsDirent/useUtilityClasses: function _getIconClassName(dirent: Fs.DirentBase): keyof FsDirentClasses { /modules/fs-composer/fs-dirent/useOwnerState.ts
     icon: string
   };
   icons: {
-    /* 
-    FsDirentMenuNew.tsx       const DIRENT_TYPE_ICONS: { [key: string]: React.ElementType<SvgIconProps> } = {
-    FsExplorer.tsx            const TYPE_ICONS: Partial<Record<Fs.BodyType, React.ElementType<SvgIconProps>>> = {
-    FsPropertiesArticle.tsx   function getTypeIcon(type: Fs.BodyType): React.ElementType<SvgIconProps> {
-    Supports.tsx              export const DirentIcon = (props: { dirent: Fs.DirentBase }) => {
-    */
-    
     dirent: {
-      /*   
-      Supports.tsx      export const DirentIcon = (props: { dirent: Fs.DirentBase }) => {
-      FsDirent.tsx    
-                        <IconButton size='small'>
-                         {expanded ?
-                            <FsIcon small icon={FsIcons.ExpandMore} className={classes.iconExpand} /> :
-                            <FsIcon small icon={FsIcons.ChevronRight} className={classes.iconExpand} />}
-                        </IconButton>
-          */
       Marker: React.ElementType<DirentWidgetIconProps>;
       Collapsed: React.ElementType<DirentWidgetIconProps>;
       Expanded: React.ElementType<DirentWidgetIconProps>;
     };
   };
-
   colors: {
-    /*   fs-colors:  export function getDirentColor(direntType: Fs.BodyType, isDarkTheme: boolean) {
-        FsDirentRoot: /fs-dirent/useUtilityClasses.tsx
-    */
     direntDark: string;
     direntLight: string;
   };
   views: {
-    // FsDirentArticle.tsx
     CreateView: React.ElementType;
     UpdateView: React.ElementType<{ direntId: string }>;
     PropertiesView: React.ElementType<{direntId: string}>;
     HelpView: React.ElementType<{direntId: string}>;
   },
   meta: {
-    // FsPanelProperties: function renderTypeSpecificRows(dirent: Fs.DirentBase): React.ReactNode {
     type: Fs.BodyType;
-
-    // helpers.ts: export function getExtension(type: Fs.BodyType): string | undefined {
     extension: string,
-
-    // helpers.ts export function getConfigOptionsForType(type: Fs.BodyType): Fs.SelectOption[] {
     configOptions: Fs.ConfigOption[],
-
     supportedViews: Fs.SecondaryView[],
   }
 };

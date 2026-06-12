@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useUtilityClasses } from './useUtilityClasses';
+import { usePanelProperties } from '../fs-panel-properties';
 
 
 export interface FsPropertiesLinkProps {
@@ -11,7 +11,7 @@ export interface FsPropertiesLinkProps {
 
 export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ direntId }) => {
   const intl = useIntl();
-  const classes = useUtilityClasses();
+  const classes = usePanelProperties();
   const { selectOptions, getDirentName, getDirent } = useFsDirent();
 
   const dirent = getDirent(direntId);
@@ -69,5 +69,3 @@ export const FsPropertiesLink: React.FC<FsPropertiesLinkProps> = ({ direntId }) 
     </>
   );
 };
-
-

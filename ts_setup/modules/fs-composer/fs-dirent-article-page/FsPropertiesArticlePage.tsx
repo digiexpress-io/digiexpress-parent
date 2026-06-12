@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useUtilityClasses } from './useUtilityClasses';
+import { usePanelProperties } from '../fs-panel-properties';
 
 
 export interface FsPropertiesArticlePageProps {
@@ -11,7 +11,6 @@ export interface FsPropertiesArticlePageProps {
 
 export const FsPropertiesArticlePage: React.FC<FsPropertiesArticlePageProps> = ({ direntId }) => {
   const intl = useIntl();
-  const classes = useUtilityClasses();
   const { getDirentName, getDirent } = useFsDirent();
 
   const dirent = getDirent(direntId);
@@ -19,7 +18,7 @@ export const FsPropertiesArticlePage: React.FC<FsPropertiesArticlePageProps> = (
   if (!dirent || dirent.type !== 'ARTICLE_PAGE') {
     return undefined;
   }
-
+  const classes = usePanelProperties();
   const pageProps = dirent.props as Fs.PageProps;
   const configOptionsEnabled = dirent.props?.configOptions ?? [];
   const articleName = getDirentName(pageProps.articleId) ?? pageProps.articleId;

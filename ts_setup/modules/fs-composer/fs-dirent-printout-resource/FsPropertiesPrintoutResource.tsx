@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useUtilityClasses } from './useUtilityClasses';
+import { usePanelProperties } from '../fs-panel-properties';
 
 export interface FsPropertiesPrintoutResourceProps {
   direntId: string;
@@ -10,7 +10,7 @@ export interface FsPropertiesPrintoutResourceProps {
 
 export const FsPropertiesPrintoutResource: React.FC<FsPropertiesPrintoutResourceProps> = ({ direntId }) => {
   const intl = useIntl();
-  const classes = useUtilityClasses();
+  const classes = usePanelProperties();
   const { selectOptions, getDirent } = useFsDirent();
 
   const dirent = getDirent(direntId);

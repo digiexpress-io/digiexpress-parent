@@ -1,5 +1,4 @@
-import { FsDirentArticleTemplateCreate, FsDirentArticleTemplateUpdate } from '../fs-dirent-article-template';
-import { FsPropertiesTemplate } from '../fs-panel-properties/FsPropertiesTemplate';
+import { FsDirentArticleTemplateCreate, FsDirentArticleTemplateUpdate, FsPropertiesTemplate } from '../fs-dirent-article-template';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
 

@@ -1,8 +1,7 @@
 
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
-import { FsDirentArticleLinkUpdate, FsDirentArticleLinkCreate } from '../fs-dirent-article-link/';
-import { FsPropertiesLink } from '../fs-panel-properties/FsPropertiesLink';
+import { FsDirentArticleLinkUpdate, FsDirentArticleLinkCreate, FsPropertiesLink } from '../fs-dirent-article-link/';
 
 
 

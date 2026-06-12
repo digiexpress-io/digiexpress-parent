@@ -1,7 +1,6 @@
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
-import { FsPropertiesWorkflow } from '../fs-panel-properties/FsPropertiesWorkflow';
-import { FsDirentArticleWorkflowCreate, FsDirentArticleWorkflowUpdate } from '../fs-dirent-article-workflow';
+import { FsDirentArticleWorkflowCreate, FsDirentArticleWorkflowUpdate, FsPropertiesWorkflow } from '../fs-dirent-article-workflow';
 
 
 

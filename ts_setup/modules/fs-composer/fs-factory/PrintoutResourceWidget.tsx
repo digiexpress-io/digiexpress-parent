@@ -1,8 +1,6 @@
-import React from 'react';
-import { FsDirentPrintoutResourceCreate, FsDirentPrintoutResourceUpdate } from '../fs-dirent-printout-resource';
-import { FsPropertiesPrintoutResource } from '../fs-panel-properties/FsPropertiesPrintoutResource';
+import { FsDirentPrintoutResourceCreate, FsDirentPrintoutResourceUpdate, FsPropertiesPrintoutResource } from '../fs-dirent-printout-resource';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
-import { DirentWidget, DirentWidgetIconProps } from './index';
+import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
 
 export const PrintoutResourceWidget: DirentWidget = {
   views: {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useUtilityClasses } from './useUtilityClasses';
+import { usePanelProperties } from '../fs-panel-properties';
 
 
 export interface FsPropertiesDialobProps {
@@ -11,7 +11,7 @@ export interface FsPropertiesDialobProps {
 
 export const FsPropertiesDialob: React.FC<FsPropertiesDialobProps> = ({ direntId }) => {
   const intl = useIntl();
-  const classes = useUtilityClasses();
+  const classes = usePanelProperties();
   const { selectOptions, getDirent } = useFsDirent();
 
   const dirent = getDirent(direntId);

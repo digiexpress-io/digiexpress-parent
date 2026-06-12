@@ -1,7 +1,6 @@
-import { FsDirentDialobCreate, FsDirentDialobUpdate } from '../fs-dirent-dialob';
-import { FsPropertiesDialob } from '../fs-panel-properties/FsPropertiesDialob';
+import { FsDirentDialobCreate, FsDirentDialobUpdate, FsPropertiesDialob } from '../fs-dirent-dialob';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
-import { DirentWidget, DirentWidgetIconProps } from './index';
+import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
 
 export const DialobFormWidget: DirentWidget = {
   views: {

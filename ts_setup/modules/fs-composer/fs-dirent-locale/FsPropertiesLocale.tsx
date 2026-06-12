@@ -2,16 +2,16 @@ import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useUtilityClasses } from './useUtilityClasses';
+import { usePanelProperties } from '../fs-panel-properties';
 
 
-export interface FsPropertiesLanguageProps {
+export interface FsPropertiesLocaleProps {
   direntId: string;
 }
 
-export const FsPropertiesLanguage: React.FC<FsPropertiesLanguageProps> = ({ direntId }) => {
+export const FsPropertiesLocale: React.FC<FsPropertiesLocaleProps> = ({ direntId }) => {
   const intl = useIntl();
-  const classes = useUtilityClasses();
+  const classes = usePanelProperties();
   const { getDirent } = useFsDirent();
 
   const dirent = getDirent(direntId);

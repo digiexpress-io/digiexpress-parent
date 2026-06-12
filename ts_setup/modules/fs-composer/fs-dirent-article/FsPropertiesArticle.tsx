@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { SvgIconProps } from '@mui/material';
 import { FsIcons } from '../fs-theme';
-import { useUtilityClasses } from './useUtilityClasses';
+import { usePanelProperties } from '../fs-panel-properties';
 import { createWidget } from '../fs-factory';
 
 
@@ -14,7 +14,7 @@ export interface FsPropertiesArticleProps {
 
 export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ direntId }) => {
   const intl = useIntl();
-  const classes = useUtilityClasses();
+  const classes = usePanelProperties();
   const { getParentDirent, getDirentName, selectOptions, getDirent } = useFsDirent();
 
   const dirent = getDirent(direntId);

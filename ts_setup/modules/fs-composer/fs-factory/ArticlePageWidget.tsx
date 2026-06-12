@@ -1,7 +1,6 @@
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
-import { FsDirentArticlePageCreate, FsDirentArticlePageUpdate } from '../fs-dirent-article-page';
-import { FsPropertiesArticlePage } from '../fs-panel-properties/FsPropertiesArticlePage';
+import { FsDirentArticlePageCreate, FsDirentArticlePageUpdate, FsPropertiesArticlePage } from '../fs-dirent-article-page';
 
 
 export const ArticlePageWidget: DirentWidget = {

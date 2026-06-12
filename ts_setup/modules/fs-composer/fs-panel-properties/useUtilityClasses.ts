@@ -30,7 +30,7 @@ export interface FsPanelPropertiesClasses {
 
 export type FsPanelPropertiesClassKey = keyof FsPanelPropertiesClasses;
 
-export const useUtilityClasses = () => {
+export const usePanelProperties = () => {
   const slots = {
     root: ['root'],
     propertyRow: ['propertyRow'],

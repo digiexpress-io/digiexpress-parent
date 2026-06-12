@@ -1,7 +1,6 @@
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
-import { DirentWidget, DirentWidgetIconProps } from './index';
-import { FsDirentLocaleUpdate, FsDirentLocaleCreate } from '../fs-dirent-locale';
-import { FsPropertiesLanguage } from '../fs-panel-properties/FsPropertiesLanguage';
+import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
+import { FsDirentLocaleUpdate, FsDirentLocaleCreate, FsPropertiesLocale } from '../fs-dirent-locale';
 
 
 
@@ -9,7 +8,7 @@ export const LocaleWidget: DirentWidget = {
   views: {
     CreateView: FsDirentLocaleCreate,
     UpdateView: FsDirentLocaleUpdate,
-    PropertiesView: FsPropertiesLanguage,
+    PropertiesView: FsPropertiesLocale,
     HelpView: _locale_help_view
   },
   icons: {
