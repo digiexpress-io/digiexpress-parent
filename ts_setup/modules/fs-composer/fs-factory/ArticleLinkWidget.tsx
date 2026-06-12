@@ -1,7 +1,7 @@
 
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
-import { FsDirentArticleLinkUpdate, FsDirentArticleLinkCreate, FsPropertiesLink } from '../fs-dirent-article-link/';
+import { FsDirentArticleLinkUpdate, FsDirentArticleLinkCreate, FsPropertiesLink, FsHelpArticleLink } from '../fs-dirent-article-link/';
 
 
 
@@ -10,7 +10,7 @@ export const ArticleLinkWidget: DirentWidget = {
     CreateView: FsDirentArticleLinkCreate,
     UpdateView: FsDirentArticleLinkUpdate,
     PropertiesView: FsPropertiesLink,
-    HelpView: _link_help_view
+    HelpView: FsHelpArticleLink
   },
   icons: {
     dirent: {
@@ -34,9 +34,7 @@ export const ArticleLinkWidget: DirentWidget = {
     supportedViews: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
-function _link_help_view() {
-  return (<>HELP MARKDOWN</>);
-}
+
 function _link_icon(props: DirentWidgetIconProps) {
   return <FsIcon icon={FsIcons.Link} {...props} />;
 }

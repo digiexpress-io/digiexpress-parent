@@ -1,4 +1,4 @@
-import { FsDirentPrintoutPageCreate, FsDirentPrintoutPageUpdate, FsPropertiesPrintoutPage } from '../fs-dirent-printout-page';
+import { FsDirentPrintoutPageCreate, FsDirentPrintoutPageUpdate, FsPropertiesPrintoutPage, FsHelpPrintoutPage } from '../fs-dirent-printout-page';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
 
@@ -7,7 +7,7 @@ export const PrintoutPageWidget: DirentWidget = {
     CreateView: FsDirentPrintoutPageCreate,
     UpdateView: FsDirentPrintoutPageUpdate,
     PropertiesView: FsPropertiesPrintoutPage,
-    HelpView: _printout_page_help_view
+    HelpView: FsHelpPrintoutPage
   },
   icons: {
     dirent: {
@@ -32,9 +32,7 @@ export const PrintoutPageWidget: DirentWidget = {
   }
 };
 
-function _printout_page_help_view() {
-  return (<>HELP MARKDOWN</>);
-}
+
 function _printout_page_icon(props: DirentWidgetIconProps) {
   return <FsIcon icon={FsIcons.Page} {...props} />;
 }

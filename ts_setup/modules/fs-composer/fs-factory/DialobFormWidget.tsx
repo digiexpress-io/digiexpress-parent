@@ -1,4 +1,4 @@
-import { FsDirentDialobCreate, FsDirentDialobUpdate, FsPropertiesDialob } from '../fs-dirent-dialob';
+import { FsDirentDialobCreate, FsDirentDialobUpdate, FsPropertiesDialob, FsHelpDialob } from '../fs-dirent-dialob';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
 
@@ -7,7 +7,7 @@ export const DialobFormWidget: DirentWidget = {
     CreateView: FsDirentDialobCreate,
     UpdateView: FsDirentDialobUpdate,
     PropertiesView: FsPropertiesDialob,
-    HelpView: _dialob_form_help_view
+    HelpView: FsHelpDialob
   },
   icons: {
     dirent: {
@@ -32,9 +32,7 @@ export const DialobFormWidget: DirentWidget = {
   }
 };
 
-function _dialob_form_help_view() {
-  return (<>HELP MARKDOWN</>);
-}
+
 function _dialob_form_icon(props: DirentWidgetIconProps) {
   return <FsIcon icon={FsIcons.Form} {...props} />;
 }

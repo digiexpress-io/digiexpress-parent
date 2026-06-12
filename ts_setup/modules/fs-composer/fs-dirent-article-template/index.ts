@@ -2,3 +2,4 @@ export type { FsDirentArticleTemplateProps } from './FsDirentArticleTemplateProp
 export * from './FsDirentArticleTemplateCreate';
 export * from './FsDirentArticleTemplateUpdate';
 export { FsPropertiesTemplate } from './FsPropertiesTemplate';
+export { FsHelpArticleTemplate } from './FsHelpArticleTemplate';

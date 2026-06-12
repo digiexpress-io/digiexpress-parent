@@ -1,4 +1,4 @@
-import { FsDirentArticleTemplateCreate, FsDirentArticleTemplateUpdate, FsPropertiesTemplate } from '../fs-dirent-article-template';
+import { FsDirentArticleTemplateCreate, FsDirentArticleTemplateUpdate, FsPropertiesTemplate, FsHelpArticleTemplate } from '../fs-dirent-article-template';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
 
@@ -9,7 +9,7 @@ export const ArticleTemplateWidget: DirentWidget = {
     CreateView: FsDirentArticleTemplateCreate,
     UpdateView: FsDirentArticleTemplateUpdate,
     PropertiesView: FsPropertiesTemplate,
-    HelpView: _article_template_help_view
+    HelpView: FsHelpArticleTemplate
   },
   icons: {
     dirent: {
@@ -33,11 +33,6 @@ export const ArticleTemplateWidget: DirentWidget = {
     supportedViews: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
-
-// TODO
-function _article_template_help_view() {
-  return (<>HELP MARKDOWN</>);
-}
 function _article_template_icon(props: DirentWidgetIconProps) {
   return <FsIcon icon={FsIcons.ArticleOutlined} {...props} />;
 }

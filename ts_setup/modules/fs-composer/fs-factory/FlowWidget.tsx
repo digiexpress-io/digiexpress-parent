@@ -1,6 +1,5 @@
 import React from 'react';
-import { FsDirentFlowCreate } from '../fs-dirent-flow/FsDirentFlowCreate';
-import { FsDirentFlowUpdate } from '../fs-dirent-flow/FsDirentFlowUpdate';
+import { FsDirentFlowCreate, FsDirentFlowUpdate, FsHelpFlow } from '../fs-dirent-flow';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './index';
 
@@ -13,7 +12,7 @@ export const FlowWidget: DirentWidget = {
     CreateView: FsDirentFlowCreate,
     UpdateView: FsDirentFlowUpdate,
     PropertiesView: FsPropertiesFlow,
-    HelpView: _flow_help_view
+    HelpView: FsHelpFlow
   },
   icons: {
     dirent: {
@@ -37,11 +36,6 @@ export const FlowWidget: DirentWidget = {
     supportedViews: ['properties', 'references', 'debug', 'errors', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
-
-
-function _flow_help_view() {
-  return (<>HELP MARKDOWN</>);
-}
 function _flow_icon(props: DirentWidgetIconProps) {
   return <FsIcon icon={FsIcons.Flow} {...props} />;
 }

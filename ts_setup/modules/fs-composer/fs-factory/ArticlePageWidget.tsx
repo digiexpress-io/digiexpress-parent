@@ -1,6 +1,6 @@
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
-import { FsDirentArticlePageCreate, FsDirentArticlePageUpdate, FsPropertiesArticlePage } from '../fs-dirent-article-page';
+import { FsDirentArticlePageCreate, FsDirentArticlePageUpdate, FsPropertiesArticlePage, FsHelpArticlePage } from '../fs-dirent-article-page';
 
 
 export const ArticlePageWidget: DirentWidget = {
@@ -8,7 +8,7 @@ export const ArticlePageWidget: DirentWidget = {
     CreateView: FsDirentArticlePageCreate,
     UpdateView: FsDirentArticlePageUpdate,
     PropertiesView: FsPropertiesArticlePage,
-    HelpView: _article_help_view
+    HelpView: FsHelpArticlePage
   },
   icons: {
     dirent: {
@@ -32,11 +32,6 @@ export const ArticlePageWidget: DirentWidget = {
     supportedViews: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
-
-// TODO
-function _article_help_view() {
-  return (<>HELP MARKDOWN</>);
-}
 function _article_page_icon(props: DirentWidgetIconProps) {
   return <FsIcon icon={FsIcons.Page} {...props} />;
 }

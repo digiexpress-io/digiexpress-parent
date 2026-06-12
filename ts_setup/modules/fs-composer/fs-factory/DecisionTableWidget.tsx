@@ -1,5 +1,5 @@
 import React from 'react';
-import { FsDirentDecisionTableCreate, FsDirentDecisionTableUpdate } from '../fs-dirent-decision-table';
+import { FsDirentDecisionTableCreate, FsDirentDecisionTableUpdate, FsHelpDecisionTable } from '../fs-dirent-decision-table';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './index';
 
@@ -12,7 +12,7 @@ export const DecisionTableWidget: DirentWidget = {
     CreateView: FsDirentDecisionTableCreate,
     UpdateView: FsDirentDecisionTableUpdate,
     PropertiesView: FsPropertiesDecisionTable,
-    HelpView: _decision_table_help_view
+    HelpView: FsHelpDecisionTable
   },
   icons: {
     dirent: {
@@ -37,9 +37,7 @@ export const DecisionTableWidget: DirentWidget = {
   }
 };
 
-function _decision_table_help_view() {
-  return (<>HELP MARKDOWN</>);
-}
+
 function _decision_table_icon(props: DirentWidgetIconProps) {
   return <FsIcon icon={FsIcons.DecisionTable} {...props} />;
 }

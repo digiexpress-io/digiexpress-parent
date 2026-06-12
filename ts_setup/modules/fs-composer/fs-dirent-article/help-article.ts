@@ -1,7 +1,7 @@
 export const helpArticle = `
 # Article
 
-* An Article is like a container for content. It represents a section of the client-facing portal that contains Article Pages and their localised content, links, workflows, etc. 
+* An Article is like a container for content. It represents a section of the client-facing portal that contains Article Pages and their localised content, links, workflows, etc.
 * Articles can be nested inside folders or other articles to form the client portal site hierarchy.
 * Articles have a three-digit order number, which determines the order in which they are rendered in the client portal's menu system.
 
@@ -20,4 +20,3 @@ export const helpArticle = `
 
 - **Development mode**: The article is only visible in development environments. It will not appear in production builds.
 `;
-

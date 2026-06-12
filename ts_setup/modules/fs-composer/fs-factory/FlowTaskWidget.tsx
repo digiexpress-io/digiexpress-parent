@@ -1,5 +1,5 @@
 import React from 'react';
-import { FsDirentFlowTaskCreate, FsDirentFlowTaskUpdate } from '../fs-dirent-flow-task';
+import { FsDirentFlowTaskCreate, FsDirentFlowTaskUpdate, FsHelpFlowTask } from '../fs-dirent-flow-task';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './index';
 
@@ -12,7 +12,7 @@ export const FlowTaskWidget: DirentWidget = {
     CreateView: FsDirentFlowTaskCreate,
     UpdateView: FsDirentFlowTaskUpdate,
     PropertiesView: FsPropertiesFlowTask,
-    HelpView: _flow_task_help_view
+    HelpView: FsHelpFlowTask
   },
   icons: {
     dirent: {
@@ -37,9 +37,7 @@ export const FlowTaskWidget: DirentWidget = {
   }
 };
 
-function _flow_task_help_view() {
-  return (<>HELP MARKDOWN</>);
-}
+
 function _flow_task_icon(props: DirentWidgetIconProps) {
   return <FsIcon icon={FsIcons.FlowTask} {...props} />;
 }

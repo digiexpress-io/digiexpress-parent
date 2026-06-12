@@ -1,6 +1,6 @@
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
-import { FsDirentArticleWorkflowCreate, FsDirentArticleWorkflowUpdate, FsPropertiesWorkflow } from '../fs-dirent-article-workflow';
+import { FsDirentArticleWorkflowCreate, FsDirentArticleWorkflowUpdate, FsPropertiesWorkflow, FsHelpArticleWorkflow } from '../fs-dirent-article-workflow';
 
 
 
@@ -9,7 +9,7 @@ export const ArticleWorkflowWidget: DirentWidget = {
     CreateView: FsDirentArticleWorkflowCreate,
     UpdateView: FsDirentArticleWorkflowUpdate,
     PropertiesView: FsPropertiesWorkflow,
-    HelpView: _article_workflow_help_view
+    HelpView: FsHelpArticleWorkflow
   },
   icons: {
     dirent: {
@@ -33,11 +33,6 @@ export const ArticleWorkflowWidget: DirentWidget = {
     supportedViews: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
-
-// TODO
-function _article_workflow_help_view() {
-  return (<>HELP MARKDOWN</>);
-}
 function _article_workflow_icon(props: DirentWidgetIconProps) {
   return <FsIcon icon={FsIcons.Settings} {...props} />;
 }

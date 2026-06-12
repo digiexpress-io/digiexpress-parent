@@ -1,4 +1,4 @@
-import { FsDirentFolderCreate, FsDirentFolderUpdate } from '../fs-dirent-folder';
+import { FsDirentFolderCreate, FsDirentFolderUpdate, FsHelpFolder } from '../fs-dirent-folder';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './WidgetFactory';
 
@@ -12,7 +12,7 @@ export const FolderWidget: DirentWidget = {
     CreateView: FsDirentFolderCreate,
     UpdateView: FsDirentFolderUpdate,
     PropertiesView: FsPropertiesFolder,
-    HelpView: _folder_help_view
+    HelpView: FsHelpFolder
   },
   icons: {
     dirent: {
@@ -36,11 +36,6 @@ export const FolderWidget: DirentWidget = {
     supportedViews: ['properties', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
-
-// TODO
-function _folder_help_view() {
-  return (<>HELP MARKDOWN</>);
-}
 function _folder_expanded_icon(props: DirentWidgetIconProps) {
   return <FsIcon icon={FsIcons.FolderOpen} {...props} />;
 }
