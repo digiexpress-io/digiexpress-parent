@@ -2,8 +2,6 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { SvgIconProps } from '@mui/material';
-import { FsIcons } from '../fs-theme';
 import { usePanelProperties } from '../fs-panel-properties';
 import { createWidget } from '../fs-factory';
 
@@ -69,25 +67,6 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent
 };
 
 
-// TODO FACTORY
-function getTypeIcon(type: Fs.BodyType): React.ElementType<SvgIconProps> {
-  switch (type) {
-    case 'FOLDER': return FsIcons.FolderClosed;
-    case 'DIALOB_FORM': return FsIcons.Form;
-    case 'FLOW': return FsIcons.Flow;
-    case 'ARTICLE_LINK': return FsIcons.Link;
-    case 'LOCALE': return FsIcons.Language;
-    case 'PRINTOUT': return FsIcons.Print;
-    case 'UNKNOWN': return FsIcons.Image;
-    case 'ARTICLE_TEMPLATE': return FsIcons.Pdf;
-    case 'ARTICLE_PAGE': return FsIcons.Page;
-    case 'ARTICLE': return FsIcons.Article;
-    case 'ARTICLE_WORKFLOW': return FsIcons.Settings;
-
-    //case '': return FsIcons.Phone;
-    default: return FsIcons.Article;
-  }
-}
 
 function collectDescendants(items: Fs.DirentBase[], excludeId: string, depth: number): Array<{ dirent: Fs.DirentBase; depth: number }> {
   return items.flatMap(child => {

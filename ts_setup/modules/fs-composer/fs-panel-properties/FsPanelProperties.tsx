@@ -72,10 +72,6 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
 
         <widget.views.PropertiesView direntId={dirent.id} />
 
-        {dirent.type === 'ARTICLE' && (
-          <FsPropertiesArticle direntId={dirent.id} />
-        )}
-
       </FsPanelPropertiesRoot>
     </FsPanel>
   );
