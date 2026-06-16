@@ -60,7 +60,7 @@ export const useOwnerState = (props: FsDirentLabelsProps): OwnerState => {
   const { dirent } = props;
   const { updateDirentLabels, selectOptions } = useFsDirent();
 
-  const { state, update, cancel } = useFsuChange(dirent.id, () => new _ChangeState({
+  const { state, update } = useFsuChange(dirent.id, () => new _ChangeState({
     direntId: dirent.id,
     bodyType: dirent.type,
     labels: (dirent.props?.labels ?? []).map(l => l.key),
@@ -74,7 +74,6 @@ export const useOwnerState = (props: FsDirentLabelsProps): OwnerState => {
 
   async function onSave() {
     await updateDirentLabels(dirent.id, state.labels.map(key => ({ key })));
-    cancel();
   }
 
   return {
