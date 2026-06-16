@@ -1,5 +1,5 @@
 import React from 'react';
-import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
 
@@ -124,7 +124,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
   const { getDirent, selectOptions } = useFsDirent();
-  const { withNewChange, withChange } = useFsu();
+
 
   const dirent = getDirent(props.direntId)!;
   const workflowProps = dirent.props as Fs.WorkflowProps;
@@ -132,7 +132,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [isExpanded, setIsExpanded] = React.useState(false);
 
-  const state = withNewChange(props.direntId, () => new _ChangeState({
+  const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     workflowId: props.direntId,
     bodyType: dirent.type,
     value: dirent.name ?? '',
@@ -146,7 +146,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     configOptions: (workflowProps.configOptions ?? []) as Fs.ConfigOption[],
   }));
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
   const isChangesPresent = state.isChanged;
 
   function onChangeName(value: string) {

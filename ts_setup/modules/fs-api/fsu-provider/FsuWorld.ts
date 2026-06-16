@@ -1,17 +1,4 @@
-import { Fs } from "../fs-types";
-
-export interface FsuChange {
-  id: string;
-  isChanged: boolean;
-  bodyType: Fs.BodyType;
-  getCurrentProps(): { bodyType: Fs.BodyType; id: string, changes: Record<string, any> };
-}
-
-export interface FsuCreateChange {
-  bodyType: Fs.BodyType;
-  getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> };
-}
-
+import { FsuChange } from './fsu-types' 
 
 export class FsuWorld {
   private _changes: Record<string, FsuChange>;
@@ -38,6 +25,14 @@ export class FsuWorld {
     }
     console.log("cant find change", id, this._changes)
     throw new Error("Change not created!");
+  }
+
+  public findChange(id: string): FsuChange | undefined {
+    const change = this._changes[id];
+    if (change) {
+      return change;
+    }
+    return undefined;
   }
 
   public withNewChange(init: () => FsuChange): [FsuWorld, string] {

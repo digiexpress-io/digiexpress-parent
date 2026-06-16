@@ -4,7 +4,8 @@ import {
   Fs,
   useFsDirent,
   useFsu,
-  FsuChange
+  FsuChange,
+  useFsuChange
 } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
@@ -66,9 +67,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [initialCommands, setInitialCommands] = React.useState<Fs.AstCommand[]>([]);
   const [initialDecision, setInitialDecision] = React.useState<Fs.DecisionAst | undefined>(undefined);
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback)
 
-  const state = withNewChange(props.direntId, () => new _ChangeState({
+  const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     decisionTableId: props.direntId,
     bodyType: dirent!.type,
     nodes: commands,

@@ -38,45 +38,26 @@ export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
   const dirent = getDirent(tabId);
 
 
-
-  if (!dirent) {
+  // some create view
+  if (!dirent && tabId && activeTab?.type === 'create') {
+    const widget = createWidget({ type: tabId as any });
     return (
       <div key={tabId} className={className}>
-        <FsMainDefaultBackground />
+        <widget.views.CreateView />
       </div>);
   }
 
-  const widget = createWidget(dirent);
-  const DirentView = activeTab.type === 'edit' ? widget.views.UpdateView : widget.views.CreateView;
+  if (dirent) {
+    const widget = createWidget(dirent);
+    return (
+      <div key={tabId} className={className}>
+        <widget.views.UpdateView direntId={dirent.id} />
+      </div>
+    )
+  }
 
   return (
     <div key={tabId} className={className}>
-      <DirentView direntId={dirent.id} />
-    </div>
-  )
-/*
-  switch (tabType) {
-    case 'ARTICLE': {
-      return (activeTab.type === 'edit' ? <widget.views.UpdateView direntId={dirent.id} /> : <widget.views.CreateView />)
-    }
-
-    case 'FOLDER': return ((<div key={tabId} className={className}><FsDirentFolder tab={activeTab} /></div>));
-    case 'ARTICLE_LINK': return ((<div key={tabId} className={className}><FsDirentArticleLink tab={activeTab} /></div>));
-    case 'ARTICLE_WORKFLOW': return ((<div key={tabId} className={className}><FsDirentArticleWorkflow tab={activeTab} /></div>));
-    case 'FLOW': return ((<div key={tabId} className={className}><FsDirentFlow tab={activeTab} /></div>));
-    case 'FLOW_TASK': return ((<div key={tabId} className={className}><FsDirentFlowTask tab={activeTab} /></div>));
-    case 'DECISION_TABLE': return ((<div key={tabId} className={className}><FsDirentDecisionTable tab={activeTab} /></div>));
-    case 'PRINTOUT': return ((<div key={tabId} className={className}><FsDirentPrintout tab={activeTab} /></div>));
-    case 'PRINTOUT_RESOURCE': return ((<div key={tabId} className={className}><FsDirentPrintoutResource tab={activeTab} /></div>));
-    case 'PRINTOUT_PAGE': return ((<div key={tabId} className={className}><FsDirentPrintoutPage tab={activeTab} /></div>));
-    case 'ARTICLE_TEMPLATE': return ((<div key={tabId} className={className}><FsDirentArticleTemplate tab={activeTab} /></div>));
-    case 'DIALOB_FORM': return ((<div key={tabId} className={className}><FsDirentDialob tab={activeTab} /></div>));
-    case 'DIALOB_FORM_META': return ((<div key={tabId} className={className}><FsDirentDialob tab={activeTab} /></div>));
-    case 'LOCALE': return ((<div key={tabId} className={className}><FsDirentLocale tab={activeTab} /></div>));
-    case 'ARTICLE_PAGE': return ((<div key={tabId} className={className}><FsDirentArticlePage tab={activeTab} /></div>));
-    default: return (<FsMainDefaultBackground />);
-
-  }
-        */
-};
-
+      <FsMainDefaultBackground />
+    </div>);
+}

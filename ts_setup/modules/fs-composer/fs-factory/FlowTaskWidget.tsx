@@ -1,11 +1,7 @@
 import React from 'react';
-import { FsDirentFlowTaskCreate, FsDirentFlowTaskUpdate, FsHelpFlowTask } from '../fs-dirent-flow-task';
+import { FsDirentFlowTaskCreate, FsDirentFlowTaskUpdate, FsHelpFlowTask, FsPropertiesFlowTask } from '../fs-dirent-flow-task';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './index';
-
-const FsPropertiesFlowTask: React.FC = () => {
-  return (<>TODO</>);
-}
 
 export const FlowTaskWidget: DirentWidget = {
   views: {

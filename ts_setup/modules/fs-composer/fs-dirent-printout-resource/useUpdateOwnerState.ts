@@ -1,5 +1,4 @@
-import React from 'react';
-import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsDirentSelectMultiOption } from '../fs-dirent-select-multi';
@@ -108,12 +107,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
   const { getDirent, selectOptions, getDirentName } = useFsDirent();
-  const { withNewChange, withChange } = useFsu();
+
 
   const dirent = getDirent(props.direntId)!;
   const resourceProps = dirent.props as Fs.PrintoutResourceProps;
 
-  const state = withNewChange(props.direntId, () => new _ChangeState({
+  const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     resourceId: props.direntId,
     bodyType: dirent.type,
     resourceName: resourceProps.resourceName ?? dirent.name ?? '',
@@ -124,7 +123,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     printoutPageIds: resourceProps.printoutPageIds ?? [],
   }));
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
 
   const printoutPageOptions: FsDirentSelectMultiOption[] = Object.values(selectOptions.direntProps)
     .filter(p => p.type === 'PRINTOUT_PAGE')

@@ -3,7 +3,7 @@ import { useFsTheme } from '../fs-theme';
 import {
   Fs,
   useFsDirent,
-  useFsu,
+  useFsuChange,
   FsuChange
 } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
@@ -90,14 +90,13 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
   const { getDirent, selectOptions } = useFsDirent();
-  const { withNewChange, withChange } = useFsu();
   const dirent = getDirent(props.direntId);
   const linkProps = dirent?.type === 'ARTICLE_LINK' ? dirent.props as Fs.LinkProps : undefined;
 
   const [isExpanded, setIsExpanded] = React.useState(false);
   const locales = selectOptions.languages;
 
-  const state = withNewChange(props.direntId, () => new _ChangeState({
+  const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     linkId: props.direntId,
     bodyType: dirent!.type,
     type: linkProps?.contentType ?? 'internal',
@@ -111,7 +110,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const isChangesPresent = state.isChanged;
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
 
   function onChangeContentType(value: string) {
     setState(prev => prev.withContentType(value as Fs.LinkType));

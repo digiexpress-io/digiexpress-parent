@@ -1,9 +1,8 @@
-import React from 'react';
 import { useFsTheme } from '../fs-theme';
 import {
   Fs,
   useFsDirent,
-  useFsu,
+  useFsuChange,
   FsuChange
 } from '@dxs-ts/fs-api';
 
@@ -59,15 +58,15 @@ class _ChangeState implements FsuChange {
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent } = useFsDirent();
-  const { withNewChange, withChange } = useFsu();
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
 
   const dirent = getDirent(props.direntId);
   const flowTaskProps = dirent?.props as Fs.FlowTaskProps | undefined;
 
 
-  const state = withNewChange(props.direntId, () => new _ChangeState({
+  const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     flowTaskId: props.direntId,
     bodyType: flowTaskProps!.type,
     flowTaskValue: flowTaskProps?.taskValue ?? '',

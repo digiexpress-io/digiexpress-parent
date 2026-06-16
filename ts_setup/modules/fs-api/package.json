@@ -10,7 +10,8 @@
     "@mui/material": "*",
     "@mui/utils": "*",
     "react-intl": "*",
-    "notistack": "*"
+    "notistack": "*",
+    "@tanstack/react-store": "*"
   },
   "keywords": ["filesystem", "explorer", "api", "types"],
   "private": true

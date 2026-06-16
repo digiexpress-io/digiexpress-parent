@@ -1,5 +1,4 @@
-import React from 'react';
-import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
 
@@ -89,12 +88,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
   const { getDirent, selectOptions } = useFsDirent();
-  const { withNewChange, withChange } = useFsu();
+
 
   const dirent = getDirent(props.direntId)!;
   const printoutProps = dirent.props as Fs.PrintoutProps;
 
-  const state = withNewChange(props.direntId, () => new _ChangeState({
+  const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     printoutId: props.direntId,
     bodyType: dirent.type,
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
@@ -102,7 +101,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     intlValues: printoutProps.intlValues ?? {},
   }));
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
 
   const connectedPages: ConnectedPage[] = Object.values(selectOptions.direntProps)
     .filter(p => p.type === 'PRINTOUT_PAGE' && (p as Fs.PrintoutPageProps).serviceId === props.direntId)

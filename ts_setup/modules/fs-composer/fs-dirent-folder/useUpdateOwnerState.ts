@@ -1,4 +1,4 @@
-import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
 
@@ -60,14 +60,14 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
   const { getDirent } = useFsDirent();
-  const { withNewChange, withChange } = useFsu();
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
 
   const dirent = getDirent(props.direntId);
   const folder = dirent?.type === 'FOLDER' ? dirent : undefined;
 
-  const state = withNewChange(props.direntId, () => new _ChangeState({
+  const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     folderId: props.direntId,
     bodyType: dirent!.type,
     name: dirent?.name ?? '',

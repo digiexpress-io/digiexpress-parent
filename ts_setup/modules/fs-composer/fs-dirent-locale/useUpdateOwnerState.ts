@@ -1,5 +1,5 @@
 import React from 'react';
-import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
 
@@ -23,6 +23,7 @@ class _ChangeState implements FsuChange {
 
   get id() { return this._current.localeId; }
   get bodyType() { return this._current.bodyType; }
+  get value() { return this._current.value; }
   get configOptions() { return this._current.configOptions; }
   get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
@@ -36,6 +37,10 @@ class _ChangeState implements FsuChange {
       enabled: !configOptions.includes('DISABLED_MODE'),
     }, this._origin);
   }
+  withLocaleCode(value: string): _ChangeState {
+    return new _ChangeState({ ...this._current, value }, this._origin);
+  }
+
 }
 
 
@@ -60,12 +65,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
   const { getDirent } = useFsDirent();
-  const { withNewChange, withChange, cancel } = useFsu();
+
 
   const dirent = getDirent(props.direntId)!;
   const languageProps = dirent.props as Fs.LanguageProps;
 
-  const state = withNewChange(props.direntId, () => new _ChangeState({
+  const { state, update, cancel } = useFsuChange(props.direntId, () => new _ChangeState({
     localeId: props.direntId,
     bodyType: dirent.type,
     value: languageProps.localeCode,
@@ -73,24 +78,15 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     configOptions: (languageProps.configOptions ?? []) as Fs.ConfigOption[],
   }));
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback)
 
-  const [fields, setFields] = React.useState<TextFields>({
-    assetDescription: languageProps.assetDescription ?? '',
-    configOptions: (languageProps.configOptions ?? []) as Fs.ConfigOption[],
-  });
 
   function onChangeConfigOptions(value: string[]) {
     const opts = value as Fs.ConfigOption[];
-    setFields(prev => ({ ...prev, configOptions: opts }));
     setState(prev => prev.withConfigOptions(opts));
   }
   function onCancel() {
-    setFields({
-      assetDescription: languageProps.assetDescription ?? '',
-      configOptions: (languageProps.configOptions ?? []) as Fs.ConfigOption[],
-    });
-    cancel(props.direntId);
+    cancel();
   }
 
   const changes = state.isChanged;
@@ -100,8 +96,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     assetPath: activeTabPath,
     dirent,
     id: state.id,
-    localeCode: languageProps.localeCode,
-    configOptions: fields.configOptions,
+    localeCode: state.value,
+    configOptions: state.configOptions,
     isChanged: changes,
     onChangeConfigOptions,
     onCancel,

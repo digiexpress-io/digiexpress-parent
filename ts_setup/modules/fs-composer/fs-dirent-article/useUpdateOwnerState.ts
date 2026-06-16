@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
-import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 
 export interface UpdateOwnerState {
@@ -16,7 +16,6 @@ export interface UpdateOwnerState {
   onChangeName: (value: string) => void;
   onChangeOrderNumber: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
-  onChangeComments: (value: string) => void;
   onToggleExpanded: () => void;
 }
 
@@ -73,12 +72,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
   const { getDirent, getDirentName } = useFsDirent();
-  const { withNewChange, withChange } = useFsu();
+
 
   const dirent = getDirent(props.direntId);
   const articleProps = dirent?.type === 'ARTICLE' ? dirent.props as Fs.ArticleProps : undefined;
 
-  const state = withNewChange(props.direntId, () => new _ChangeState({
+  const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     articleId: props.direntId,
     bodyType: dirent!.type,
     name: getDirentName(props.direntId) ?? '',
@@ -88,10 +87,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     authOnly: (articleProps?.configOptions ?? []).includes('AUTH_ONLY_MODE'),
   }));
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
-  const changes = state.isChanged;
-  const [isExpanded, setIsExpanded] = React.useState(false);
 
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   function onChangeName(value: string) {
     setState(prev => prev.withName(value));
@@ -102,20 +100,16 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
-  function onChangeComments(value: string) {
-    //todo
-  }
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
-
 
   return ({
     isDarkMode,
     assetPath: activeTabPath,
     dirent,
     id: state.id,
-    isChanged: changes,
+    isChanged: state.isChanged,
     name: state.name,
     orderNumber: state.orderNumber,
     configOptions: state.configOptions,
@@ -123,7 +117,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeName,
     onChangeOrderNumber,
     onChangeConfigOptions,
-    onChangeComments,
     onToggleExpanded,
   });
 };

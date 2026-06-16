@@ -1,6 +1,6 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
@@ -76,7 +76,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { activeTabPath } = useFsNav();
   const intl = useIntl();
   const { getDirent, getDirentName, selectOptions } = useFsDirent();
-  const { withNewChange, withChange } = useFsu();
+
 
   const [isExpanded, setIsExpanded] = React.useState(false);
 
@@ -88,7 +88,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
   }));
 
-  const state = withNewChange(props.direntId, () => new _ChangeState({
+  const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     pageId: props.direntId,
     bodyType: dirent.type,
     locale: pageProps.localeCode,
@@ -106,7 +106,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   );
 
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
 
   function onChangeLocale(value: string) {
     setState(prev => prev.withLocale(value));

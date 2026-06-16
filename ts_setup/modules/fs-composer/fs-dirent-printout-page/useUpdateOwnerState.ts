@@ -1,5 +1,5 @@
 import React from 'react';
-import { Fs, useFsDirent, useFsu, FsuChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
 
@@ -62,18 +62,18 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
   const { getDirent, selectOptions } = useFsDirent();
-  const { withNewChange, withChange } = useFsu();
+
 
   const dirent = getDirent(props.direntId)!;
   const pageProps = dirent.props as Fs.PrintoutPageProps;
 
-  const state = withNewChange(props.direntId, () => new _ChangeState({
+  const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     pageId: props.direntId,
     bodyType: dirent.type,
     content: pageProps.content ?? '',
   }));
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => withChange(props.direntId, callback);
+  const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
 
 
   const connectedResourceNames = Object.values(selectOptions.direntProps)

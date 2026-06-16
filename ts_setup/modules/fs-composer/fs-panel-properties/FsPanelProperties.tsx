@@ -7,7 +7,6 @@ import { FsPanel } from '../fs-panel';
 import { FsPanelPropertiesProps } from './FsPanelPropertiesProps';
 import { useOwnerState } from './useOwnerState';
 import { FsPanelPropertiesRoot, usePanelProperties } from './useUtilityClasses';
-import { FsPropertiesArticle } from '../fs-dirent-article/FsPropertiesArticle';
 import { createWidget } from '../fs-factory';
 
 
@@ -32,7 +31,6 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
   }
 
   const labels = (dirent.props?.labels ?? []).map(l => l.value);
-  const comments = dirent.props?.comments ?? [];
   const description = dirent.props?.assetDescription;
   const widget = createWidget(dirent);
 
@@ -56,21 +54,7 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
           </div>
         </div>
 
-        <div className={classes.propertyRow}>
-          <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.comments' })}</Typography>
-          <div className={classes.commentList}>
-            {comments.map((c, index) => (
-              <div key={index} className={classes.commentItem}>
-                <Typography className={classes.commentText}>{c.comment}</Typography>
-                <div className={classes.commentMeta}>
-                  <Typography component="span" className={classes.commentAuthor}>{c.author}{', '}{c.created}</Typography>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <widget.views.PropertiesView direntId={dirent.id} />
+<widget.views.PropertiesView direntId={dirent.id} />
 
       </FsPanelPropertiesRoot>
     </FsPanel>

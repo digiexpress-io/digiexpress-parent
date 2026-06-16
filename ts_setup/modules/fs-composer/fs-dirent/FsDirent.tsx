@@ -9,17 +9,15 @@ import { useOwnerState } from './useOwnerState';
 import { ConfigOptionIcons, FsDirentName, DirentDecorator } from './Supports';
 import { FsDiffIndicator } from '../fs-diff-indicator';
 import { createWidget } from '../fs-factory';
+import { useFsuIsChanged } from '@dxs-ts/fs-api';
 
 
 export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(ownerState.isDarkMode, ownerState.dirent);
-  const expanded = props.setExpanded(props.dirent.id);
+  const isExpanded = props.isExpanded(props.dirent.id);
+  const isUnsavedChanges = useFsuIsChanged(props.dirent.id);
 
-  //FSU:::boken const { isChange, getChange } = useFsu();
-  //const isUnsavedChanges = isChange(props.dirent.id) && getChange(props.dirent.id).isChanged;
-
-  const isUnsavedChanges = false;
   const widget = createWidget(ownerState.dirent)
 
   function handleClick() {
@@ -39,7 +37,7 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
       <Box className={classes.explorerDirentContent}>
         {ownerState.isChildren ? (
           <IconButton size='small'>
-            {expanded ?
+            {isExpanded ?
               <FsIcon small icon={FsIcons.ExpandMore} className={classes.iconExpand} /> :
               <FsIcon small icon={FsIcons.ChevronRight} className={classes.iconExpand} />}
           </IconButton>
@@ -75,14 +73,14 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
     </FsDirentRoot>
 
     {ownerState.isChildren && (
-      <Collapse in={expanded} timeout={0} unmountOnExit>
+      <Collapse in={isExpanded} timeout={0} unmountOnExit>
         <List disablePadding>
           {ownerState.children.map((child) => (
             <FsDirent
               key={child.id}
               dirent={child}
               level={ownerState.level + 1}
-              setExpanded={props.setExpanded}
+              isExpanded={props.isExpanded}
               activeDirentId={props.activeDirentId}
               openAsset={props.openAsset}
               onToggle={ownerState.onToggle}
