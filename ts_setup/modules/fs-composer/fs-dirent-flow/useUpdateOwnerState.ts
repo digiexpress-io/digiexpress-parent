@@ -12,12 +12,10 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   id: string;
   isDirty: boolean;
-  isExpanded: boolean;
   content: string;
   configOptions: Fs.ConfigOption[];
   onChangeContent: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
-  onToggleExpanded: () => void;
 }
 
 type _ChangeStateProps = {
@@ -67,13 +65,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { isDarkMode } = useFsTheme();
   const { getDirent } = useFsDirent();
 
-
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
 
   const dirent = getDirent(props.direntId);
   const flowProps = dirent?.props as Fs.FlowProps | undefined;
-
-  const [isExpanded, setIsExpanded] = React.useState(false);
 
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     flowId: props.direntId,
@@ -90,19 +85,15 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
-  function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
-  }
+
   return {
     isDarkMode,
     dirent,
     id: state.id,
     isDirty: state.isDirty,
-    isExpanded,
     content: state.flowValue,
     configOptions: state.configOptions,
     onChangeContent,
     onChangeConfigOptions,
-    onToggleExpanded,
   };
 };

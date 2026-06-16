@@ -10,7 +10,6 @@ export interface CreateOwnerState {
   isDarkMode: boolean;
   locales: Fs.SelectOption[];
   isDirty: boolean;
-  isExpanded: boolean;
   contentType: Fs.LinkType;
   urlValue: string;
   intlValues: Record<string, string>;
@@ -21,7 +20,6 @@ export interface CreateOwnerState {
   onChangeIntlValue: (locale: string, value: string) => void;
   onChangeArticles: (value: string[]) => void;
   onChangeConfigOptions: (value: string[]) => void;
-  onToggleExpanded: () => void;
 }
 
 type _CreateStateProps = {
@@ -101,7 +99,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { selectOptions } = useFsDirent();
 
-  const [isExpanded, setIsExpanded] = React.useState(false);
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
   const locales = selectOptions.languages;
 
@@ -122,10 +119,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
-  function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
-  }
-
 
   return ({
     isDarkMode,
@@ -136,12 +129,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     intlValues: state.intlValues,
     articles: state.articles,
     configOptions: state.configOptions,
-    isExpanded,
     onChangeContentType,
     onChangeUrlValue,
     onChangeIntlValue,
     onChangeArticles,
     onChangeConfigOptions,
-    onToggleExpanded,
   });
 };

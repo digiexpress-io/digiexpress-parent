@@ -9,14 +9,12 @@ export interface CreateOwnerState {
   parentArticle: Fs.DirentBase | undefined;
   parentArticlePath: string | undefined;
   isDirty: boolean;
-  isExpanded: boolean;
   name: string;
   orderNumber: string;
   configOptions: Fs.ConfigOption[];
   onChangeName: (value: string) => void;
   onChangeOrderNumber: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
-  onToggleExpanded: () => void;
 }
 
 type _CreateStateProps = {
@@ -84,7 +82,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const parentArticlePath = parentArticle ? activeTabPath : undefined;
   const parentId = parentArticle?.id;
 
-  const [isExpanded, setIsExpanded] = React.useState(false);
 
   const _init: _CreateStateProps = {
     bodyType: 'ARTICLE',
@@ -108,22 +105,17 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
-  function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
-  }
 
   return ({
     isDarkMode,
     parentArticle,
     parentArticlePath,
     isDirty: isChangesPresent,
-    isExpanded,
     name: state.name,
     orderNumber: state.orderNumber,
     configOptions: state.configOptions,
     onChangeName,
     onChangeOrderNumber,
     onChangeConfigOptions,
-    onToggleExpanded
   });
 };

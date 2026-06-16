@@ -15,7 +15,6 @@ export interface UpdateOwnerState {
   locales: Fs.SelectOption[];
   id: string;
   isDirty: boolean;
-  isExpanded: boolean;
   contentType: Fs.LinkType;
   urlValue: string;
   intlValues: Record<string, string>;
@@ -26,7 +25,6 @@ export interface UpdateOwnerState {
   onChangeIntlValue: (locale: string, value: string) => void;
   onChangeArticles: (value: string[]) => void;
   onChangeConfigOptions: (value: string[]) => void;
-  onToggleExpanded: () => void;
 }
 
 type _ChangeStateProps = {
@@ -93,7 +91,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const dirent = getDirent(props.direntId);
   const linkProps = dirent?.type === 'ARTICLE_LINK' ? dirent.props as Fs.LinkProps : undefined;
 
-  const [isExpanded, setIsExpanded] = React.useState(false);
   const locales = selectOptions.languages;
 
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
@@ -127,9 +124,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
-  function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
-  }
+
 
 
   return ({
@@ -144,12 +139,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     intlValues: state.intlValues,
     articles: state.articles,
     configOptions: state.configOptions,
-    isExpanded,
     onChangeContentType,
     onChangeUrlValue,
     onChangeIntlValue,
     onChangeArticles,
     onChangeConfigOptions,
-    onToggleExpanded,
   });
 };

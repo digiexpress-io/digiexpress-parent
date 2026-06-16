@@ -10,10 +10,8 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   technicalName: string;
   formName: string;
-  isExpanded: boolean;
   onChangeTechnicalName: (value: string) => void;
   onChangeFormName: (value: string) => void;
-  onToggleExpanded: () => void;
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
@@ -26,19 +24,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const [technicalName, setTechnicalName] = React.useState(dialobProps?.formTechnicalId ?? dirent?.id ?? '');
   const [formName, setFormName] = React.useState(dialobProps?.formName ?? dirent?.name ?? '');
-  const [isExpanded, setIsExpanded] = React.useState(false);
 
   function onChangeTechnicalName(value: string) {
     setTechnicalName(value);
   }
-
   function onChangeFormName(value: string) {
     setFormName(value);
-  }
-
-
-  function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
   }
 
   return ({
@@ -47,9 +38,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     dirent,
     technicalName,
     formName,
-    isExpanded,
     onChangeTechnicalName,
     onChangeFormName,
-    onToggleExpanded,
   });
 };

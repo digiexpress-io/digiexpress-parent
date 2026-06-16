@@ -1,10 +1,9 @@
 
 import React from 'react';
-import { Typography, Divider, Collapse } from '@mui/material';
+import { Typography, Divider } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { DatePicker } from '@dxs-ts/xui-datetime';
 import { useFsDirent } from '@dxs-ts/fs-api';
-import { FsIcon, FsIcons } from '../fs-theme';
 import { createWidget } from '../fs-factory';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
@@ -26,64 +25,57 @@ export const FsDirentArticleWorkflowCreate: React.FC = () => {
     value: opt,
     label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
   }));
-    const dialobTags = selectOptions.collectDialobTags(ownerState.formName);
+  const dialobTags = selectOptions.collectDialobTags(ownerState.formName);
 
-    return (
-      <FsDirentArticleWorkflowRoot className={classes.root} ownerState={ownerState}>
-        <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createNew' })}</Typography>
-        <div className={classes.formContainer}>
+  return (
+    <FsDirentArticleWorkflowRoot className={classes.root} ownerState={ownerState}>
+      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createNew' })}</Typography>
+      <div className={classes.formContainer}>
 
-          <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-          <FsDirentTextField required value={ownerState.value}
-            placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })}
-            onChange={ownerState.onChangeValue}
-          />
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
+        <FsDirentTextField required value={ownerState.value}
+          placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })}
+          onChange={ownerState.onChangeValue}
+        />
 
-          <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobFormField.label' })}</Typography>
-          <FsDirentSelectSingle options={dialobForms} value={ownerState.formName} onChange={ownerState.onChangeFormName} />
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobFormField.label' })}</Typography>
+        <FsDirentSelectSingle options={dialobForms} value={ownerState.formName} onChange={ownerState.onChangeFormName} />
 
-          <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobTagField.label' })}</Typography>
-          <FsDirentSelectSingle options={dialobTags} value={ownerState.formTag} onChange={ownerState.onChangeFormTag} />
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobTagField.label' })}</Typography>
+        <FsDirentSelectSingle options={dialobTags} value={ownerState.formTag} onChange={ownerState.onChangeFormTag} />
 
-          <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.flowField.label' })}</Typography>
-          <FsDirentSelectSingle options={flows} value={ownerState.flowName} onChange={ownerState.onChangeFlowName} />
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.flowField.label' })}</Typography>
+        <FsDirentSelectSingle options={flows} value={ownerState.flowName} onChange={ownerState.onChangeFlowName} />
 
-          <Divider />
+        <Divider />
 
-          <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createLocaleLabels' })}</Typography>
+        <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createLocaleLabels' })}</Typography>
 
-          {ownerState.locales.map((locale) => (
-            <div key={locale.value} className={classes.localeRow}>
-              <Typography className={classes.localeLabel}>{intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}</Typography>
-              <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''}
-                onChange={(value) => ownerState.onChangeIntlValues(locale.value, value)}
-              />
-            </div>
-          ))}
-
-          <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
-            {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.expandToggle.hide' : 'fs.dirent.expandToggle.show' })}
-            <FsIcon icon={FsIcons.ExpandMore} small className={ownerState.isExpanded ? classes.expandToggleIconOpen : classes.expandToggleIcon} />
+        {ownerState.locales.map((locale) => (
+          <div key={locale.value} className={classes.localeRow}>
+            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}</Typography>
+            <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''}
+              onChange={(value) => ownerState.onChangeIntlValues(locale.value, value)}
+            />
           </div>
-
-          <Collapse in={ownerState.isExpanded}>
-            <div className={classes.optionalFields}>
-              <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityStartField.label' })}</Typography>
-              <DatePicker value={ownerState.validityStart ? new Date(ownerState.validityStart) : null} onChange={(d) => ownerState.onChangeValidityStart(d ?? undefined)} fullWidth size='small' />
-
-              <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityEndField.label' })}</Typography>
-              <DatePicker value={ownerState.validityEnd ? new Date(ownerState.validityEnd) : null} onChange={(d) => ownerState.onChangeValidityEnd(d ?? undefined)} fullWidth size='small' />
-
-              <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.articlesField.label' })}</Typography>
-              <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
-
-              <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
-              <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
-            </div>
-          </Collapse>
+        ))}
 
 
-        </div>
-      </FsDirentArticleWorkflowRoot>
-    );
-  };
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityStartField.label' })}</Typography>
+        <DatePicker value={ownerState.validityStart ? new Date(ownerState.validityStart) : null} onChange={(d) => ownerState.onChangeValidityStart(d ?? undefined)} fullWidth size='small' />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityEndField.label' })}</Typography>
+        <DatePicker value={ownerState.validityEnd ? new Date(ownerState.validityEnd) : null} onChange={(d) => ownerState.onChangeValidityEnd(d ?? undefined)} fullWidth size='small' />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.articlesField.label' })}</Typography>
+        <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
+
+        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
+        <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+
+
+
+      </div>
+    </FsDirentArticleWorkflowRoot>
+  );
+};

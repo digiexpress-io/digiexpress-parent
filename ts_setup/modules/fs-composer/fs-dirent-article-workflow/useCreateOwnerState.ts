@@ -6,7 +6,6 @@ import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 export interface CreateOwnerState {
   isDarkMode: boolean;
   isDirty: boolean;
-  isExpanded: boolean;
   value: string;
   formName: string;
   formTag: string;
@@ -26,7 +25,6 @@ export interface CreateOwnerState {
   onChangeConfigOptions: (v: string[]) => void;
   onChangeValidityStart: (date: Date | undefined) => void;
   onChangeValidityEnd: (date: Date | undefined) => void;
-  onToggleExpanded: () => void;
 }
 
 type _CreateStateProps = {
@@ -130,7 +128,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { selectOptions } = useFsDirent();
 
-  const [isExpanded, setIsExpanded] = React.useState(false);
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
   const isChangesPresent = state.isDirty;
@@ -164,14 +161,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     const iso = date ? date.toISOString() : '';
     setState(prev => prev.withValidityEnd(iso));
   }
-  function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
-  }
 
   return ({
     isDarkMode,
     isDirty: isChangesPresent,
-    isExpanded,
     value: state.value,
     formName: state.formName,
     formTag: state.formTag,
@@ -191,6 +184,5 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeConfigOptions,
     onChangeValidityStart,
     onChangeValidityEnd,
-    onToggleExpanded,
   });
 };

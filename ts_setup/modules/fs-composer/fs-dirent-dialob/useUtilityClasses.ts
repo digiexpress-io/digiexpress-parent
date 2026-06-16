@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled, darken, lighten } from '@mui/material';
+import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 

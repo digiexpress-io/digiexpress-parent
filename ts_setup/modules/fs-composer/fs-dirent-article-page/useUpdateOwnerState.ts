@@ -1,4 +1,3 @@
-import React from 'react';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
@@ -17,11 +16,9 @@ export interface UpdateOwnerState {
   availableConfigOptions: Fs.SelectOption[];
   localeOptions: FsDirentSelectSingleOption[];
   isDirty: boolean;
-  isExpanded: boolean;
   onChangeLocale: (value: string) => void;
   onChangeContent: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
-  onToggleExpanded: () => void;
   content: string;
 }
 
@@ -77,8 +74,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const intl = useIntl();
   const { getDirent, getDirentName, selectOptions } = useFsDirent();
 
-  const [isExpanded, setIsExpanded] = React.useState(false);
-
   const dirent = getDirent(props.direntId)!;
   const pageProps = dirent.props as Fs.PageProps;
   const articleName = getDirentName(pageProps.articleId) ?? '';
@@ -116,9 +111,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
-  function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
-  }
+
   const changes = state.isDirty;
 
   return ({
@@ -133,10 +126,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     availableConfigOptions,
     localeOptions,
     isDirty: changes,
-    isExpanded,
     onChangeLocale,
     onChangeContent,
     onChangeConfigOptions,
-    onToggleExpanded,
   });
 };

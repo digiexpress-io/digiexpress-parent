@@ -1,9 +1,8 @@
 import React from 'react';
-import { Typography, Divider, Collapse } from '@mui/material';
+import { Typography, Divider } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { DatePicker } from '@dxs-ts/xui-datetime';
 import { useFsDirent } from '@dxs-ts/fs-api';
-import { FsIcon, FsIcons } from '../fs-theme';
 import { createWidget } from '../fs-factory';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
@@ -59,14 +58,6 @@ export const FsDirentArticleWorkflowUpdate: React.FC<FsDirentArticleWorkflowProp
           </div>
         ))}
 
-        <div className={classes.expandToggle} onClick={ownerState.onToggleExpanded}>
-          {intl.formatMessage({ id: ownerState.isExpanded ? 'fs.dirent.expandToggle.hide' : 'fs.dirent.expandToggle.show' })}
-          <FsIcon icon={FsIcons.ExpandMore} small className={ownerState.isExpanded ? classes.expandToggleIconOpen : classes.expandToggleIcon} />
-        </div>
-
-        <Collapse in={ownerState.isExpanded}>
-          <div className={classes.optionalFields}>
-
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityStartField.label' })}</Typography>
             <DatePicker value={ownerState.validityStart ? new Date(ownerState.validityStart) : null} onChange={(d) => ownerState.onChangeValidityStart(d ?? undefined)} fullWidth size='small' />
 
@@ -78,11 +69,8 @@ export const FsDirentArticleWorkflowUpdate: React.FC<FsDirentArticleWorkflowProp
 
             <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
             <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
-          </div>
-        </Collapse>
-
-
       </div>
+
     </FsDirentArticleWorkflowRoot>
   );
 };

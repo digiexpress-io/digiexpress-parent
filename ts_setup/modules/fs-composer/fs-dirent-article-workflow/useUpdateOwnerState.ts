@@ -17,7 +17,6 @@ export interface UpdateOwnerState {
   configOptions: Fs.ConfigOption[];
   intlValues: Record<string, string>;
   locales: Fs.SelectOption[];
-  isExpanded: boolean;
   isDirty: boolean;
   onChangeName: (value: string) => void;
   onChangeDialobFormName: (value: string) => void;
@@ -28,7 +27,6 @@ export interface UpdateOwnerState {
   onChangeArticles: (value: string[]) => void;
   onChangeConfigOptions: (value: string[]) => void;
   onChangeIntlValues: (locale: string, value: string) => void;
-  onToggleExpanded: () => void;
 }
 
 type _ChangeStateProps = {
@@ -130,8 +128,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const workflowProps = dirent.props as Fs.WorkflowProps;
   const locales = selectOptions.languages;
 
-  const [isExpanded, setIsExpanded] = React.useState(false);
-
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     workflowId: props.direntId,
     bodyType: dirent.type,
@@ -179,9 +175,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     const opts = value as Fs.ConfigOption[];
     setState(prev => prev.withConfigOptions(opts));
   }
-  function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
-  }
+
   return ({
     isDarkMode,
     assetPath: activeTabPath,
@@ -196,7 +190,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     configOptions: state.configOptions,
     intlValues: state.intlValues,
     locales,
-    isExpanded,
     isDirty: isChangesPresent,
     onChangeName,
     onChangeDialobFormName,
@@ -207,6 +200,5 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeArticles,
     onChangeConfigOptions,
     onChangeIntlValues,
-    onToggleExpanded,
   });
 };

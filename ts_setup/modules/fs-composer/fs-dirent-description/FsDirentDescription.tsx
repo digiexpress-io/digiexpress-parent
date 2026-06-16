@@ -7,7 +7,7 @@ import { FsDirentDescriptionProps } from './FsDirentDescriptionProps';
 import { useOwnerState } from './useOwnerState';
 import { useUtilityClasses, FsDirentDescriptionRoot } from './useUtilityClasses';
 
-// xxx
+
 export const FsDirentDescription: React.FC<FsDirentDescriptionProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useFsTheme } from '../fs-theme';
 import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
@@ -12,11 +11,9 @@ export interface UpdateOwnerState {
   name: string;
   orderNumber: string;
   configOptions: Fs.ConfigOption[];
-  isExpanded: boolean;
   onChangeName: (value: string) => void;
   onChangeOrderNumber: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
-  onToggleExpanded: () => void;
 }
 
 type _ChangeStateProps = {
@@ -88,7 +85,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
-  const [isExpanded, setIsExpanded] = React.useState(false);
 
   function onChangeName(value: string) {
     setState(prev => prev.withName(value));
@@ -99,9 +95,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
-  function onToggleExpanded() {
-    setIsExpanded(prev => !prev);
-  }
+
 
   return ({
     isDarkMode,
@@ -112,10 +106,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     name: state.name,
     orderNumber: state.orderNumber,
     configOptions: state.configOptions,
-    isExpanded,
     onChangeName,
     onChangeOrderNumber,
     onChangeConfigOptions,
-    onToggleExpanded,
   });
 };
