@@ -9,6 +9,7 @@ export interface FsDirentLabelsClasses {
   root: string;
   textField: string;
   title: string;
+  titleRow: string;
 }
 
 export type FsDirentLabelsClassKey = keyof FsDirentLabelsClasses;
@@ -17,7 +18,8 @@ export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
     textField: ['textField'],
-    title: ['title']
+    title: ['title'],
+    titleRow: ['titleRow'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -31,11 +33,17 @@ export const FsDirentLabelsRoot = styled('div', {
   display: 'flex',
   flexDirection: 'column',
 
+  [`& .${MUI_NAME}-titleRow`]: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(1),
+  },
+
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.subtitle2,
     fontWeight: 500,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    marginBottom: theme.spacing(1),
   },
 
   [`& .${MUI_NAME}-textField`]: {

@@ -19,7 +19,6 @@ export interface UpdateOwnerState {
   locales: Fs.SelectOption[];
   isExpanded: boolean;
   isDirty: boolean;
-  assetDescription: string | undefined;
   onChangeName: (value: string) => void;
   onChangeDialobFormName: (value: string) => void;
   onChangeDialobFormTag: (value: string) => void;
@@ -44,7 +43,6 @@ type _ChangeStateProps = {
   articles: string[];
   intlValues: Record<string, string>;
   configOptions: Fs.ConfigOption[];
-  assetDescription: string | undefined;
 }
 
 class _ChangeState implements FsuChange {
@@ -67,7 +65,6 @@ class _ChangeState implements FsuChange {
   get formTag() { return this._current.formTag }
   get formName() { return this._current.formName }
   get configOptions() { return this._current.configOptions }
-  get assetDescription() { return this._current.assetDescription; }
   get isDirty(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; id: string; changes: Record<string, any> } {
@@ -90,7 +87,6 @@ class _ChangeState implements FsuChange {
         anon: c.configOptions.includes('ANONYMOUS_MODE') || undefined,
         assignable: c.configOptions.includes('ASSIGNABLE_MODE') || undefined,
         authOnly: c.configOptions.includes('AUTH_ONLY_MODE') || undefined,
-        assetDescription: c.assetDescription || undefined,
       }
     };
   }
@@ -122,9 +118,6 @@ class _ChangeState implements FsuChange {
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
     return new _ChangeState({ ...this._current, configOptions }, this._origin);
   }
-  withDescription(assetDescription: string | undefined): _ChangeState {
-    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
-  }
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
@@ -151,7 +144,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     articles: (workflowProps.articles ?? []),
     intlValues: (workflowProps.intlValues ?? {}),
     configOptions: (workflowProps.configOptions ?? []) as Fs.ConfigOption[],
-    assetDescription: workflowProps.assetDescription,
   }));
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
@@ -206,7 +198,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     locales,
     isExpanded,
     isDirty: isChangesPresent,
-    assetDescription: state.assetDescription,
     onChangeName,
     onChangeDialobFormName,
     onChangeDialobFormTag,

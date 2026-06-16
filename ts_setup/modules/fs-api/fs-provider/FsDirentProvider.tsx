@@ -20,6 +20,8 @@ export interface FsDirentContextType {
   debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
 
   updateDirent(change: FsuChange): Promise<void>;
+  updateDirentDescription(id: string, text?: string): Promise<void>;
+  updateDirentLabels(id: string, values: Fs.DescriptionLabel[]): Promise<void>;
   deleteDirent(id: string, bodyType: Fs.BodyType): Promise<void>;
   createDirent(change: FsuCreateChange): Promise<Fs.DirentBase>;
 }
@@ -35,6 +37,8 @@ export interface FsDirentProviderProps {
     debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
     pushChange: (change: FsuChange) => Promise<void>;
     pushCreate: (change: FsuCreateChange) => Promise<string>;
+    pushDescription: (props: { id: string; text?: string }) => Promise<void>;
+    pushLabels: (props: { id: string; values: Fs.DescriptionLabel[] }) => Promise<void>;
     deleteDirent: (id: string, bodyType: Fs.BodyType) => Promise<void>;
   }
   children: React.ReactNode;
@@ -103,6 +107,30 @@ function _initCtx(initProps: {
     }
   }
 
+  async function updateDirentDescription(id: string, text?: string): Promise<void> {
+    const bodyType = dirents.getDirent(id)?.type ?? 'ARTICLE';
+    try {
+      await persistenceUnit.pushDescription({ id, text });
+      const bodyName = dirents.getDirentName(id) ?? id;
+      notify({ id: 'fs.snackbar.saveSuccess', bodyName, bodyType });
+      refresh();
+    } catch (error: any) {
+      notify({ id: 'fs.snackbar.saveFailed', error, bodyType });
+    }
+  }
+
+  async function updateDirentLabels(id: string, values: Fs.DescriptionLabel[]): Promise<void> {
+    const bodyType = dirents.getDirent(id)?.type ?? 'ARTICLE';
+    try {
+      await persistenceUnit.pushLabels({ id, values });
+      const bodyName = dirents.getDirentName(id) ?? id;
+      notify({ id: 'fs.snackbar.saveSuccess', bodyName, bodyType });
+      refresh();
+    } catch (error: any) {
+      notify({ id: 'fs.snackbar.saveFailed', error, bodyType });
+    }
+  }
+
   async function pushDelete(id: string, bodyType: Fs.BodyType): Promise<void> {
     try {
       await persistenceUnit.deleteDirent(id, bodyType);
@@ -148,7 +176,9 @@ function _initCtx(initProps: {
     debugDirent: persistenceUnit.debugDirent,
     deleteDirent: pushDelete,
     createDirent,
-    updateDirent
+    updateDirent,
+    updateDirentDescription,
+    updateDirentLabels,
   };
 }
 

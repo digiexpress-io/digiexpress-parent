@@ -13,7 +13,6 @@ export interface UpdateOwnerState {
   orderNumber: string;
   configOptions: Fs.ConfigOption[];
   isExpanded: boolean;
-  assetDescription: string | undefined;
   onChangeName: (value: string) => void;
   onChangeOrderNumber: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
@@ -28,7 +27,6 @@ type _ChangeStateProps = {
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
   authOnly: boolean;
-  assetDescription: string | undefined;
 }
 
 class _ChangeState implements FsuChange {
@@ -44,8 +42,6 @@ class _ChangeState implements FsuChange {
   get name() { return this._current.name; }
   get orderNumber() { return String(this._current.order); }
   get configOptions() { return this._current.configOptions; }
-  get assetDescription() { return this._current.assetDescription; }
-
   get bodyType() { return this._current.bodyType; }
   get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
@@ -68,9 +64,6 @@ class _ChangeState implements FsuChange {
       authOnly: configOptions.includes('AUTH_ONLY_MODE'),
     }, this._origin);
   }
-  withDescription(assetDescription: string | undefined): _ChangeState {
-    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
-  }
 }
 
 
@@ -91,7 +84,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     configOptions: (articleProps?.configOptions ?? []) as Fs.ConfigOption[],
     devMode: (articleProps?.configOptions ?? []).includes('DEV_MODE'),
     authOnly: (articleProps?.configOptions ?? []).includes('AUTH_ONLY_MODE'),
-    assetDescription: articleProps?.assetDescription,
   }));
 
 
@@ -121,7 +113,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     orderNumber: state.orderNumber,
     configOptions: state.configOptions,
     isExpanded,
-    assetDescription: state.assetDescription,
     onChangeName,
     onChangeOrderNumber,
     onChangeConfigOptions,

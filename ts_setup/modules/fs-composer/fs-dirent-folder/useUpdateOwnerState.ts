@@ -6,7 +6,6 @@ type _ChangeStateProps = {
   folderId: string;
   bodyType: Fs.BodyType;
   name: string;
-  assetDescription: string | undefined;
 }
 
 class _ChangeState implements FsuChange {
@@ -27,7 +26,6 @@ class _ChangeState implements FsuChange {
   get name() {
     return this._current.name;
   }
-  get assetDescription() { return this._current.assetDescription; }
   get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
@@ -38,16 +36,12 @@ class _ChangeState implements FsuChange {
       id: this._current.folderId,
       changes: {
         name: this._current.name || undefined,
-        assetDescription: this._current.assetDescription || undefined,
       },
     };
   }
 
   withName(name: string): _ChangeState {
     return new _ChangeState({ ...this._current, name }, this._origin);
-  }
-  withDescription(assetDescription: string | undefined): _ChangeState {
-    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 }
 
@@ -59,7 +53,6 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   location: string;
   name: string;
-  assetDescription: string | undefined;
   onChangeName: (value: string) => void;
 }
 
@@ -78,7 +71,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     folderId: props.direntId,
     bodyType: dirent!.type,
     name: dirent?.name ?? '',
-    assetDescription: dirent?.props?.assetDescription,
   }));
 
   function onChangeName(value: string) {
@@ -93,7 +85,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     dirent: folder,
     location: dirent?.fullPath ?? '',
     name: state.name,
-    assetDescription: state.assetDescription,
     onChangeName,
   });
 };

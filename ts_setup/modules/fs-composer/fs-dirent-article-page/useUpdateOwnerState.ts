@@ -18,7 +18,6 @@ export interface UpdateOwnerState {
   localeOptions: FsDirentSelectSingleOption[];
   isDirty: boolean;
   isExpanded: boolean;
-  assetDescription: string | undefined;
   onChangeLocale: (value: string) => void;
   onChangeContent: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
@@ -34,7 +33,6 @@ type _ChangeStateProps = {
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
   disabledMode: boolean;
-  assetDescription: string | undefined;
 }
 
 class _ChangeState implements FsuChange {
@@ -51,7 +49,6 @@ class _ChangeState implements FsuChange {
   get content() { return this._current.content; }
 
   get configOptions() { return this._current.configOptions; }
-  get assetDescription() { return this._current.assetDescription; }
   get bodyType() { return this._origin.bodyType; }
   get isDirty(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
@@ -71,9 +68,6 @@ class _ChangeState implements FsuChange {
       disabledMode: configOptions.includes('DISABLED_MODE')
     }, this._origin);
   }
-  withDescription(assetDescription: string | undefined): _ChangeState {
-    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
-  }
 }
 
 
@@ -82,7 +76,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { activeTabPath } = useFsNav();
   const intl = useIntl();
   const { getDirent, getDirentName, selectOptions } = useFsDirent();
-
 
   const [isExpanded, setIsExpanded] = React.useState(false);
 
@@ -102,7 +95,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     configOptions: (pageProps.configOptions ?? []) as Fs.ConfigOption[],
     devMode: (pageProps.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (pageProps.configOptions ?? []).includes('DISABLED_MODE'),
-    assetDescription: pageProps.assetDescription,
   }));
 
   const usedLocaleIds = Object.values(selectOptions.direntProps)
@@ -142,7 +134,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     localeOptions,
     isDirty: changes,
     isExpanded,
-    assetDescription: state.assetDescription,
     onChangeLocale,
     onChangeContent,
     onChangeConfigOptions,

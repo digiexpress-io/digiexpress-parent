@@ -25,6 +25,8 @@ function Component() {
   const { applyTransientChanges } = useFetch('worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType/transient-changes.POST', {});
   const { debugDirent } = useFetch('worker/rest/api/assets/fs/debugs.POST', {});
   const { putAny } = useFetch('worker/rest/api/assets/fs/dirents.PUT', {});
+  const { putDescription } = useFetch('worker/rest/api/assets/fs/dirents/description.PUT', {});
+  const { putLabels } = useFetch('worker/rest/api/assets/fs/dirents/labels.PUT', {});
   const { postAny } = useFetch('worker/rest/api/assets/fs/dirents.POST', {});
   const { deleteAny } = useFetch('worker/rest/api/assets/fs/dirents/$id.DELETE', {});
 
@@ -35,6 +37,8 @@ function Component() {
     debugDirent,
     pushChange: async (change) => putAny(change.getCurrentProps()),
     pushCreate: async (change) => postAny(change.getCurrentProps()),
+    pushDescription: putDescription,
+    pushLabels: putLabels,
     deleteDirent: deleteAny,
   };
 

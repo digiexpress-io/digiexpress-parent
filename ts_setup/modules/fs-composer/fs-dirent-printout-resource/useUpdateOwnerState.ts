@@ -7,12 +7,29 @@ type _ChangeStateProps = {
   resourceId: string;
   bodyType: Fs.BodyType;
   resourceName: string;
-  assetDescription: string | undefined;
   labels: string[];
   contentType: string;
   uploadBody: string;
   printoutPageIds: string[];
 }
+
+export interface UpdateOwnerState {
+  isDarkMode: boolean;
+  assetPath: string | undefined;
+  isDirty: boolean;
+  resourceName: string;
+  labels: string[];
+  labelOptions: string[];
+  contentType: string;
+  uploadBody: string;
+  printoutPageIds: string[];
+  printoutPageOptions: FsDirentSelectMultiOption[];
+  onChangeResourceName: (value: string) => void;
+  onChangeLabels: (value: string[]) => void;
+  onChangeUploadBody: (value: string) => void;
+  onChangePrintoutPageIds: (value: string[]) => void;
+}
+
 
 class _ChangeState implements FsuChange {
   private _origin: _ChangeStateProps;
@@ -31,9 +48,6 @@ class _ChangeState implements FsuChange {
   }
   get resourceName() {
     return this._current.resourceName;
-  }
-  get assetDescription() {
-    return this._current.assetDescription;
   }
   get labels() {
     return this._current.labels;
@@ -59,7 +73,6 @@ class _ChangeState implements FsuChange {
       changes: {
         resourceId: c.resourceId,
         resourceName: c.resourceName || undefined,
-        assetDescription: c.assetDescription || undefined,
         labels: c.labels.length ? c.labels : undefined,
         uploadBody: c.uploadBody || undefined,
         printoutPageIds: c.printoutPageIds,
@@ -69,9 +82,6 @@ class _ChangeState implements FsuChange {
 
   withResourceName(resourceName: string): _ChangeState {
     return new _ChangeState({ ...this._current, resourceName }, this._origin);
-  }
-  withDescription(assetDescription: string | undefined): _ChangeState {
-    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _ChangeState {
     return new _ChangeState({ ...this._current, labels }, this._origin);
@@ -84,24 +94,6 @@ class _ChangeState implements FsuChange {
   }
 }
 
-export interface UpdateOwnerState {
-  isDarkMode: boolean;
-  assetPath: string | undefined;
-  isDirty: boolean;
-  resourceName: string;
-  assetDescription: string;
-  labels: string[];
-  labelOptions: string[];
-  contentType: string;
-  uploadBody: string;
-  printoutPageIds: string[];
-  printoutPageOptions: FsDirentSelectMultiOption[];
-  onChangeResourceName: (value: string) => void;
-  onChangeDescription: (value: string) => void;
-  onChangeLabels: (value: string[]) => void;
-  onChangeUploadBody: (value: string) => void;
-  onChangePrintoutPageIds: (value: string[]) => void;
-}
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
@@ -116,8 +108,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     resourceId: props.direntId,
     bodyType: dirent.type,
     resourceName: resourceProps.resourceName ?? dirent.name ?? '',
-    assetDescription: resourceProps.assetDescription,
-    labels: (resourceProps.labels ?? []).map(l => l.value),
+    labels: (resourceProps.labels ?? []).map(l => l.key),
     contentType: resourceProps.contentType ?? '',
     uploadBody: '',
     printoutPageIds: resourceProps.printoutPageIds ?? [],
@@ -137,9 +128,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeResourceName(value: string) {
     setState(prev => prev.withResourceName(value));
   }
-  function onChangeDescription(value: string) {
-    setState(prev => prev.withDescription(value));
-  }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
   }
@@ -154,7 +142,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     assetPath: activeTabPath,
     isDirty: state.isDirty,
     resourceName: state.resourceName,
-    assetDescription: state.assetDescription ?? '',
     labels: state.labels,
     labelOptions: selectOptions.labels,
     contentType: state.contentType,
@@ -162,7 +149,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     printoutPageIds: state.printoutPageIds,
     printoutPageOptions,
     onChangeResourceName,
-    onChangeDescription,
     onChangeLabels,
     onChangeUploadBody,
     onChangePrintoutPageIds,

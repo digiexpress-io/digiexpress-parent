@@ -23,7 +23,7 @@ export declare namespace Fs {
     comments: Comment[];
     changes: Change[];
     permissions: Permission[];
-    labels: Label[];
+    labels: DescriptionLabel[];
     errors: AssetError[];
   }
 
@@ -388,9 +388,9 @@ export declare namespace Fs {
     changedBy: User;
   }
 
-  export interface Label {
-    id: LabelId;
-    value: string;
+  export interface DescriptionLabel {
+    key: string;
+    text?: string;
   }
 
   export interface Permission {
@@ -437,8 +437,7 @@ export declare namespace Fs {
   export type PrintoutId = string;
   export type ImageId = string;
   export type TemplateId = string;
-  export type LabelId = string;
-  export type PhoneNumberId = string;
+export type PhoneNumberId = string;
 
   export interface ContextMenuData {
     dirent: DirentBase;

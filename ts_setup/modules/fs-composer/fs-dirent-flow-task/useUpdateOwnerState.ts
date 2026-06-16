@@ -12,7 +12,6 @@ export interface UpdateOwnerState {
   id: string;
   isDirty: boolean;
   taskValue: string;
-  assetDescription: string | undefined;
   onChangeTaskValue: (value: string) => void;
 }
 
@@ -20,7 +19,6 @@ type _ChangeStateProps = {
   flowTaskId: string;
   bodyType: Fs.BodyType;
   flowTaskValue: string;
-  assetDescription: string | undefined;
 }
 
 class _ChangeState implements FsuChange {
@@ -35,8 +33,6 @@ class _ChangeState implements FsuChange {
   get id() { return this._current.flowTaskId; }
   get bodyType() { return this._current.bodyType; }
   get flowTaskValue() { return this._current.flowTaskValue; }
-  get assetDescription() { return this._current.assetDescription; }
-
   get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
@@ -48,16 +44,12 @@ class _ChangeState implements FsuChange {
       changes: {
         flowTaskId: this.id,
         flowTaskValue: this._current.flowTaskValue,
-        assetDescription: this._current.assetDescription || undefined,
       },
     };
   }
 
   withFlowTaskValue(flowTaskValue: string): _ChangeState {
     return new _ChangeState({ ...this._current, flowTaskValue }, this._origin);
-  }
-  withDescription(assetDescription: string | undefined): _ChangeState {
-    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 }
 
@@ -77,7 +69,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     flowTaskId: props.direntId,
     bodyType: flowTaskProps!.type,
     flowTaskValue: flowTaskProps?.taskValue ?? '',
-    assetDescription: flowTaskProps?.assetDescription,
   }));
 
   function onChangeTaskValue(value: string) {
@@ -91,7 +82,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     id: state.id,
     isDirty: state.isDirty,
     taskValue: state.flowTaskValue,
-    assetDescription: state.assetDescription,
     onChangeTaskValue,
   };
 };

@@ -213,7 +213,7 @@ function _collectLinkTypes(): Fs.LinkType[] {
 function _collectLabels(nodes: Fs.DirentBase[]): string[] {
   const labelSet = new Set<string>();
   nodes.forEach(d => {
-    (d.props?.labels ?? []).forEach(l => labelSet.add(l.value));
+    (d.props?.labels ?? []).forEach(l => labelSet.add(l.key));
   });
   return Array.from(labelSet).sort();
 }

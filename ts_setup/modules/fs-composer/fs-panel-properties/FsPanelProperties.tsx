@@ -30,7 +30,7 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
     );
   }
 
-  const labels = (dirent.props?.labels ?? []).map(l => l.value);
+  const labels = (dirent.props?.labels ?? []).map(l => l.key);
   const description = dirent.props?.assetDescription;
   const widget = createWidget(dirent);
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
@@ -9,7 +8,6 @@ export interface UpdateOwnerState {
   isDirty: boolean;
   content: string;
   connectedResourceNames: string[];
-  assetDescription: string | undefined;
   onChangeContent: (value: string) => void;
 }
 
@@ -17,7 +15,6 @@ type _ChangeStateProps = {
   pageId: string;
   bodyType: Fs.BodyType;
   content: string;
-  assetDescription: string | undefined;
 }
 
 class _ChangeState implements FsuChange {
@@ -38,7 +35,6 @@ class _ChangeState implements FsuChange {
   get content() {
     return this._current.content;
   }
-  get assetDescription() { return this._current.assetDescription; }
   get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
@@ -51,16 +47,12 @@ class _ChangeState implements FsuChange {
       changes: {
         pageId: c.pageId,
         content: c.content || undefined,
-        assetDescription: c.assetDescription || undefined,
       },
     };
   }
 
   withContent(content: string): _ChangeState {
     return new _ChangeState({ ...this._current, content }, this._origin);
-  }
-  withDescription(assetDescription: string | undefined): _ChangeState {
-    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 }
 
@@ -78,7 +70,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     pageId: props.direntId,
     bodyType: dirent.type,
     content: pageProps.content ?? '',
-    assetDescription: pageProps.assetDescription,
   }));
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
@@ -100,7 +91,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isDirty: state.isDirty,
     content: state.content,
     connectedResourceNames,
-    assetDescription: state.assetDescription,
     onChangeContent,
   };
 };

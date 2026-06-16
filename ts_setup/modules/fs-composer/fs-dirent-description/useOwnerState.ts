@@ -1,4 +1,4 @@
-import { Fs, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
+import { Fs, FsuChange, useFsuChange, useFsDirent } from '@dxs-ts/fs-api';
 import { FsDirentDescriptionProps } from './FsDirentDescriptionProps';
 import { useFsTheme } from '../fs-theme';
 
@@ -13,6 +13,7 @@ export interface OwnerState {
   description: string;
   isDirty: boolean;
   onChangeDescription: (value: string) => void;
+  onSave: () => Promise<void>;
 }
 
 class _ChangeState implements FsuChange {
@@ -56,6 +57,7 @@ class _ChangeState implements FsuChange {
 export const useOwnerState = (props: FsDirentDescriptionProps): OwnerState => {
   const { isDarkMode } = useFsTheme();
   const { dirent } = props;
+  const { updateDirentDescription } = useFsDirent();
 
   const { state, update } = useFsuChange(dirent.id, () => new _ChangeState({
     direntId: dirent.id,
@@ -69,10 +71,15 @@ export const useOwnerState = (props: FsDirentDescriptionProps): OwnerState => {
     setState(prev => prev.withDescription(value));
   }
 
+  async function onSave() {
+    await updateDirentDescription(dirent.id, state.assetDescription || undefined);
+  }
+
   return {
     isDarkMode,
     description: state.assetDescription ?? '',
     isDirty: state.isDirty,
     onChangeDescription,
+    onSave,
   };
 };

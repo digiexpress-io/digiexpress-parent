@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsu } from '@dxs-ts/fs-api';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentDescriptionProps } from './FsDirentDescriptionProps';
@@ -11,7 +10,6 @@ import { useUtilityClasses, FsDirentDescriptionRoot } from './useUtilityClasses'
 
 export const FsDirentDescription: React.FC<FsDirentDescriptionProps> = (props) => {
   const intl = useIntl();
-  const { push } = useFsu();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
 
@@ -19,7 +17,7 @@ export const FsDirentDescription: React.FC<FsDirentDescriptionProps> = (props) =
     <FsDirentDescriptionRoot className={classes.root} ownerState={ownerState}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
-        <FsDirentButtonSave onClick={() => push(props.dirent.id)} disabled={!ownerState.isDirty} />
+        <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />
       </div>
 
       <FsDirentTextField multiline minRows={35} maxRows={60}

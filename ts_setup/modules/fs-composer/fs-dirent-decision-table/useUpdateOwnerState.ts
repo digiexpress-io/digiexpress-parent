@@ -15,7 +15,6 @@ export interface UpdateOwnerState {
   isDirty: boolean;
   wrenchBody: Fs.WrenchBody | undefined;
   decision: Fs.DecisionAst | undefined;
-  assetDescription: string | undefined;
   onChangeCommands: (commands: Fs.AstCommand[]) => void;
 }
 
@@ -23,7 +22,6 @@ type _ChangeStateProps = {
   decisionTableId: string;
   bodyType: Fs.BodyType;
   nodes: Fs.AstCommand[];
-  assetDescription: string | undefined;
 }
 
 class _ChangeState implements FsuChange {
@@ -37,7 +35,6 @@ class _ChangeState implements FsuChange {
 
   get id() { return this._current.decisionTableId; }
   get bodyType() { return this._current.bodyType; }
-  get assetDescription() { return this._current.assetDescription; }
 
   get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
@@ -54,9 +51,7 @@ class _ChangeState implements FsuChange {
   withNodes(nodes: Fs.AstCommand[]): _ChangeState {
     return new _ChangeState({ ...this._current, nodes }, this._origin);
   }
-  withDescription(assetDescription: string | undefined): _ChangeState {
-    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
-  }
+
 }
 
 
@@ -79,7 +74,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     decisionTableId: props.direntId,
     bodyType: dirent!.type,
     nodes: commands,
-    assetDescription: dirent?.props?.assetDescription,
   }));
 
   React.useEffect(() => {
@@ -120,7 +114,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isDirty: state.isDirty,
     wrenchBody,
     decision,
-    assetDescription: state.assetDescription,
     onChangeCommands,
   };
 };

@@ -34,7 +34,7 @@ export function filterTreeDirents(
     const nameMatches = displayName.toLowerCase().includes(searchTerm.toLowerCase());
     const descriptionMatches = direntEntry?.props?.assetDescription?.toLowerCase().includes(searchTerm.toLowerCase());
     const typeMatches = typeFilters.length === 0 || typeFilters.some(f => f.value === dirent.type);
-    const labelMatches = labelFilters.length === 0 || (direntEntry?.props?.labels ?? []).some(l => labelValues.includes(l.value));
+    const labelMatches = labelFilters.length === 0 || (direntEntry?.props?.labels ?? []).some(l => labelValues.includes(l.key));
     const childMatches = dirent.children ? filterTreeDirents(dirent.children, searchTerm, visibleFilters, getDirent) : [];
 
     const showBySearch = isSearchTermEmpty || nameMatches || descriptionMatches;
@@ -49,7 +49,7 @@ export function filterTreeDirents(
 
   return filtered;
 }
-
+//TODO FACTORY
 export const allAvailableTypeFilters: AssetTypeFilter[] = [
   { type: 'asset', label: 'Articles', value: 'ARTICLE' },
   { type: 'asset', label: 'Dialobs', value: 'DIALOB_FORM' },

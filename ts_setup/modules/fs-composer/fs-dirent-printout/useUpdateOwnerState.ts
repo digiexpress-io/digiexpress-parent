@@ -13,7 +13,6 @@ type _ChangeStateProps = {
   serviceName: string;
   orchestratorName: string;
   intlValues: Record<string, string>;
-  assetDescription: string | undefined;
 }
 
 export interface UpdateOwnerState {
@@ -24,7 +23,6 @@ export interface UpdateOwnerState {
   orchestratorName: string;
   flows: Fs.SelectOption[];
   connectedPages: ConnectedPage[];
-  assetDescription: string | undefined;
   onChangeServiceName: (value: string) => void;
   onChangeOrchestratorName: (value: string) => void;
 }
@@ -53,7 +51,6 @@ class _ChangeState implements FsuChange {
   get intlValues() {
     return this._current.intlValues;
   }
-  get assetDescription() { return this._current.assetDescription; }
   get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
@@ -68,7 +65,6 @@ class _ChangeState implements FsuChange {
         serviceName: c.serviceName || undefined,
         orchestratorName: c.orchestratorName || undefined,
         localeLabels: Object.entries(c.intlValues).map(([locale, labelValue]) => ({ locale, labelValue })),
-        assetDescription: c.assetDescription || undefined,
       },
     };
   }
@@ -84,9 +80,6 @@ class _ChangeState implements FsuChange {
       ...this._current,
       intlValues: { ...this._current.intlValues, [locale]: labelValue },
     }, this._origin);
-  }
-  withDescription(assetDescription: string | undefined): _ChangeState {
-    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 }
 
@@ -106,7 +99,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
     orchestratorName: printoutProps.orchestratorName ?? '',
     intlValues: printoutProps.intlValues ?? {},
-    assetDescription: printoutProps.assetDescription,
   }));
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
@@ -133,7 +125,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     orchestratorName: state.orchestratorName,
     flows: selectOptions.flows,
     connectedPages,
-    assetDescription: state.assetDescription,
     onChangeServiceName,
     onChangeOrchestratorName,
   };

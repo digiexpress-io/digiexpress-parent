@@ -6,8 +6,18 @@ type _ChangeStateProps = {
   templateId: string;
   bodyType: Fs.BodyType;
   content: string;
-  assetDescription: string | undefined;
 }
+
+export interface UpdateOwnerState {
+  isDarkMode: boolean;
+  assetPath: string | undefined;
+  isDirty: boolean;
+  id: string;
+  dirent: Fs.DirentBase | undefined;
+  content: string;
+  onChangeContent: (value: string) => void;
+}
+
 
 class _ChangeState implements FsuChange {
   private _origin: _ChangeStateProps;
@@ -27,7 +37,6 @@ class _ChangeState implements FsuChange {
   get content() {
     return this._current.content;
   }
-  get assetDescription() { return this._current.assetDescription; }
   get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
@@ -38,7 +47,6 @@ class _ChangeState implements FsuChange {
       id: this._current.templateId,
       changes: {
         content: this._current.content || undefined,
-        assetDescription: this._current.assetDescription || undefined,
       },
     };
   }
@@ -48,16 +56,6 @@ class _ChangeState implements FsuChange {
   }
 }
 
-export interface UpdateOwnerState {
-  isDarkMode: boolean;
-  assetPath: string | undefined;
-  isDirty: boolean;
-  id: string;
-  dirent: Fs.DirentBase | undefined;
-  content: string;
-  assetDescription: string | undefined;
-  onChangeContent: (value: string) => void;
-}
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
@@ -74,7 +72,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     templateId: props.direntId,
     bodyType: dirent!.type,
     content: templateProps?.content ?? '',
-    assetDescription: templateProps?.assetDescription,
   }));
 
   function onChangeContent(value: string) {
@@ -88,7 +85,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     id: state.id,
     dirent,
     content: state.content,
-    assetDescription: state.assetDescription,
     onChangeContent,
   });
 };
