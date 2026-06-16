@@ -5,7 +5,7 @@ import React from 'react';
 
   export interface CreateOwnerState {
     isDarkMode: boolean;
-    isChanged: boolean;
+    isDirty: boolean;
     serviceName: string;
     orchestratorName: string;
     flows: Fs.SelectOption[];
@@ -37,7 +37,7 @@ import React from 'react';
     get orchestratorName() {
       return this._current.orchestratorName;
     }
-    get isChanged(): boolean {
+    get isDirty(): boolean {
       return JSON.stringify(this._origin) !== JSON.stringify(this._current);
     }
 
@@ -82,7 +82,7 @@ import React from 'react';
 
     return {
       isDarkMode,
-      isChanged: state.isChanged,
+      isDirty: state.isDirty,
       serviceName: state.serviceName,
       orchestratorName: state.orchestratorName,
       flows: selectOptions.flows,

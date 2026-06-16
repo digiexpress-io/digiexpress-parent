@@ -6,7 +6,7 @@ import { Fs, FsuCreateChange } from '@dxs-ts/fs-api';
 export interface CreateOwnerState {
   isDarkMode: boolean;
   name: string;
-  isChanged: boolean;
+  isDirty: boolean;
   onChangeName: (v: string) => void;
 }
 
@@ -30,7 +30,7 @@ class _CreateState implements FsuCreateChange {
   get name() {
     return this._current.name;
   }
-  get isChanged(): boolean {
+  get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
 
@@ -64,7 +64,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   return {
     isDarkMode,
     name: state.name,
-    isChanged: state.isChanged,
+    isDirty: state.isDirty,
     onChangeName,
   };
 };

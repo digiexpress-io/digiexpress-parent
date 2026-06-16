@@ -15,8 +15,7 @@ export type FsuChangeProps =
 
 export interface FsuChange {
   id: string;
-  isChanged: boolean; // TODO remove this duplicate same as isDirty
-  //isDirty: boolean; TODO:: u
+  isDirty: boolean; 
   bodyType: Fs.BodyType;
   getCurrentProps(): { bodyType: Fs.BodyType; id: string, changes: Record<string, any> };
 }

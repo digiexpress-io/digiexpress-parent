@@ -10,6 +10,7 @@ type _ChangeStateProps = {
   value: string;
   enabled: boolean;
   configOptions: Fs.ConfigOption[];
+  assetDescription: string | undefined;
 }
 
 class _ChangeState implements FsuChange {
@@ -25,7 +26,8 @@ class _ChangeState implements FsuChange {
   get bodyType() { return this._current.bodyType; }
   get value() { return this._current.value; }
   get configOptions() { return this._current.configOptions; }
-  get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
+  get assetDescription() { return this._current.assetDescription; }
+  get isDirty(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; id: string; changes: Record<string, any> } {
     return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
@@ -39,6 +41,9 @@ class _ChangeState implements FsuChange {
   }
   withLocaleCode(value: string): _ChangeState {
     return new _ChangeState({ ...this._current, value }, this._origin);
+  }
+  withDescription(assetDescription: string | undefined): _ChangeState {
+    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 
 }
@@ -56,7 +61,8 @@ export interface UpdateOwnerState {
   id: string;
   localeCode: string;
   configOptions: Fs.ConfigOption[];
-  isChanged: boolean;
+  isDirty: boolean;
+  assetDescription: string | undefined;
   onChangeConfigOptions: (value: string[]) => void;
   onCancel: () => void;
 }
@@ -76,6 +82,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     value: languageProps.localeCode,
     enabled: !(languageProps.configOptions ?? []).includes('DISABLED_MODE'),
     configOptions: (languageProps.configOptions ?? []) as Fs.ConfigOption[],
+    assetDescription: languageProps.assetDescription,
   }));
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback)
@@ -89,7 +96,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     cancel();
   }
 
-  const changes = state.isChanged;
+  const changes = state.isDirty;
 
   return ({
     isDarkMode,
@@ -98,7 +105,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     id: state.id,
     localeCode: state.value,
     configOptions: state.configOptions,
-    isChanged: changes,
+    isDirty: changes,
+    assetDescription: state.assetDescription,
     onChangeConfigOptions,
     onCancel,
   });

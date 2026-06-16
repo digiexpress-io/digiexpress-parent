@@ -5,7 +5,7 @@ import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
-  isChanged: boolean;
+  isDirty: boolean;
   isExpanded: boolean;
   value: string;
   formName: string;
@@ -61,7 +61,7 @@ class _CreateState implements FsuCreateChange {
   get configOptions() { return this._current.configOptions; }
   get validityStart() { return this._current.validityStart; }
   get validityEnd() { return this._current.validityEnd; }
-  get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
+  get isDirty(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
     const current = this._current;
@@ -133,7 +133,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
-  const isChangesPresent = state.isChanged;
+  const isChangesPresent = state.isDirty;
 
   function onChangeValue(value: string) {
     setState(prev => prev.withValue(value));
@@ -170,7 +170,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   return ({
     isDarkMode,
-    isChanged: isChangesPresent,
+    isDirty: isChangesPresent,
     isExpanded,
     value: state.value,
     formName: state.formName,

@@ -23,7 +23,7 @@ class _CreateState implements FsuCreateChange {
   get name() {
     return this._current.name;
   }
-  get isChanged(): boolean {
+  get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
 
@@ -54,7 +54,7 @@ function getLocationPath(parentFolder: Fs.DirentBase | undefined): string {
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
-  isChanged: boolean;
+  isDirty: boolean;
   locationPath: string;
   name: string;
   onChangeName: (value: string) => void;
@@ -81,7 +81,7 @@ export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undef
 
   return {
     isDarkMode,
-    isChanged: state.isChanged,
+    isDirty: state.isDirty,
     locationPath,
     name: state.name,
     onChangeName,

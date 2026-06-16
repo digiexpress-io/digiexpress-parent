@@ -201,6 +201,7 @@ public class WorldFsFactory {
     case ARTICLE_TEMPLATE: {
       final ArticleTemplate template = worldState.getBodyOfType(node);
       final var name = template.getName();
+      worldState.putProps(node, n -> Props_ArticleTemplateBuilder.of(worldState, n));
       return NodePathAndName.of(path.orElse("templates"), name);
     }
     

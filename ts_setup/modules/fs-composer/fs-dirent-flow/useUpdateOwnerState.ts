@@ -11,10 +11,11 @@ export interface UpdateOwnerState {
   isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
   id: string;
-  isChanged: boolean;
+  isDirty: boolean;
   isExpanded: boolean;
   content: string;
   configOptions: Fs.ConfigOption[];
+  assetDescription: string | undefined;
   onChangeContent: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
   onToggleExpanded: () => void;
@@ -27,6 +28,7 @@ type _ChangeStateProps = {
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
   disabledMode: boolean;
+  assetDescription: string | undefined;
 }
 
 class _ChangeState implements FsuChange {
@@ -42,7 +44,8 @@ class _ChangeState implements FsuChange {
   get bodyType() { return this._current.bodyType; }
   get configOptions() { return this._current.configOptions; }
   get flowValue() { return this._current.flowValue; }
-  get isChanged(): boolean {
+  get assetDescription() { return this._current.assetDescription; }
+  get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
 
@@ -58,6 +61,9 @@ class _ChangeState implements FsuChange {
   }
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
     return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
+  }
+  withDescription(assetDescription: string | undefined): _ChangeState {
+    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 
 }
@@ -82,6 +88,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     configOptions: (flowProps?.configOptions ?? []) as Fs.ConfigOption[],
     devMode: (flowProps?.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (flowProps?.configOptions ?? []).includes('DISABLED_MODE'),
+    assetDescription: flowProps?.assetDescription,
   }));
 
   function onChangeContent(value: string) {
@@ -97,10 +104,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isDarkMode,
     dirent,
     id: state.id,
-    isChanged: state.isChanged,
+    isDirty: state.isDirty,
     isExpanded,
     content: state.flowValue,
     configOptions: state.configOptions,
+    assetDescription: state.assetDescription,
     onChangeContent,
     onChangeConfigOptions,
     onToggleExpanded,

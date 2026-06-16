@@ -5,7 +5,7 @@ import { FsDirentSelectMultiOption } from '../fs-dirent-select-multi';
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
-  isChanged: boolean;
+  isDirty: boolean;
   resourceName: string;
   contentType: string;
   uploadBody: string;
@@ -50,7 +50,7 @@ class _CreateState implements FsuCreateChange {
   get printoutPageIds() {
     return this._current.printoutPageIds;
   }
-  get isChanged(): boolean {
+  get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
 
@@ -124,7 +124,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   return {
     isDarkMode,
-    isChanged: state.isChanged,
+    isDirty: state.isDirty,
     resourceName: state.resourceName,
     contentType: state.contentType,
     uploadBody: state.uploadBody,

@@ -22,7 +22,7 @@ class _CreateState implements FsuCreateChange {
   get name() {
     return this._current.name;
   }
-  get isChanged(): boolean {
+  get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
 
@@ -47,7 +47,7 @@ const _init: _CreateStateProps = {
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
-  isChanged: boolean;
+  isDirty: boolean;
   name: string;
   onChangeName: (value: string) => void;
 }
@@ -63,7 +63,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   return ({
     isDarkMode,
-    isChanged: state.isChanged,
+    isDirty: state.isDirty,
     name: state.name,
     onChangeName,
   });

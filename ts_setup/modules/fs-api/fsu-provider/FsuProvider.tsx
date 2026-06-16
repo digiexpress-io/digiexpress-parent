@@ -21,7 +21,7 @@ export interface FsuContextType {
 
 export interface FsuChangeContextType<T extends FsuChange> {
   state: T;
-  isChanged: boolean;
+  isDirty: boolean;
   push(): Promise<void>;
   cancel(): void;
   update(callback: (prev: T) => T): T;
@@ -84,7 +84,7 @@ export function useFsuIsChanged(
   id: string
 ): boolean {
   // subscribe only to this node
-  const state = useSelector(store, (w) => w.isChange(id) && w.getChange(id).isChanged);
+  const state = useSelector(store, (w) => w.isChange(id) && w.getChange(id).isDirty);
   return React.useMemo(() => state, [state, id]);
 }
 
@@ -119,7 +119,7 @@ export function useFsuChange<T extends FsuChange>(
 
   return React.useMemo(() => ({
     state,
-    isChanged: state.isChanged,
+    isDirty: state.isDirty,
     update(callback: (prev: T) => T): T {
       const nextWorld = store.state.withChange(id, callback);
       store.setState(() => nextWorld);

@@ -34,14 +34,15 @@ import org.springframework.web.bind.annotation.RestController;
 import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.authoring.DebugAny.DebugAnyProps;
 import io.resys.limaone.authoring.DebugAny.DebugResult;
-import io.resys.limaone.authoring.DeleteAny.DeleteAnyProps;
 import io.resys.limaone.authoring.ModifyArticle.ModifyArticleProps;
 import io.resys.limaone.authoring.ModifyArticleLink.ModifyArticleLinkProps;
 import io.resys.limaone.authoring.ModifyArticlePage.ModifyArticlePageProps;
 import io.resys.limaone.authoring.ModifyArticleWorkflow.ModifyArticleWorkflowProps;
 import io.resys.limaone.authoring.ModifyDecisionTable.ModifyDecisionTableProps;
+import io.resys.limaone.authoring.ModifyDescription.ModifyDescriptionProps;
 import io.resys.limaone.authoring.ModifyFlow.ModifyFlowProps;
 import io.resys.limaone.authoring.ModifyFlowTask.ModifyFlowTaskProps;
+import io.resys.limaone.authoring.ModifyLabels.ModifyLabelsProps;
 import io.resys.limaone.authoring.ModifyLocale.ModifyLocaleProps;
 import io.resys.limaone.authoring.ModifyPrintout.ModifyPrintoutProps;
 import io.resys.limaone.authoring.ModifyPrintoutPage.ModifyPrintoutPageProps;
@@ -189,6 +190,23 @@ public class AssetsFsController {
     return authoring.modifyModel().modifyFlowTask().props(body).build();
   }
 
+  @PutMapping("dirents/description/{id}")
+  public Uni<Model<?>> updateDescription(
+      @PathVariable("id") String id,
+      @RequestBody ModifyDescriptionProps body)
+  {
+    return authoring.modifyModel().modifyDescription().props(body).build();
+  }
+  
+  @PutMapping("dirents/labels/{id}")
+  public Uni<Model<?>> updateDescription(
+      @PathVariable("id") String id,
+      @RequestBody ModifyLabelsProps body)
+  {
+    return authoring.modifyModel().modifyLabels().props(body).build();
+  }
+  
+  
   @PutMapping("dirents/locales/{id}")
   public Uni<Model<Locale>> updateLocale(
       @PathVariable("id") String id,

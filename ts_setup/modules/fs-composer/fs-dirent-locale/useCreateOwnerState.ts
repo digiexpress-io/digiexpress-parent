@@ -9,7 +9,7 @@ export interface TextFields {
 export interface CreateOwnerState {
   isDarkMode: boolean;
   locale: string;
-  isChanged: boolean;
+  isDirty: boolean;
   onChangeLocale: (value: string) => void;
 }
 
@@ -29,7 +29,7 @@ class _CreateState implements FsuCreateChange {
 
   get bodyType() { return this._current.bodyType; }
   get locale() { return this._current.locale; }
-  get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
+  get isDirty(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
     return {
@@ -51,7 +51,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
 
-  const isChangesPresent = state.isChanged;
+  const isChangesPresent = state.isDirty;
 
   function onChangeLocale(value: string) {
     setState(prev => prev.withLocale(value));
@@ -60,7 +60,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   return ({
     locale: state.locale,
     isDarkMode,
-    isChanged: isChangesPresent,
+    isDirty: isChangesPresent,
     onChangeLocale
   });
 };

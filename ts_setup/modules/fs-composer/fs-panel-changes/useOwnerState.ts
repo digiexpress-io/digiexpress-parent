@@ -21,7 +21,7 @@ export const useOwnerState = (_props: FsPanelChangesProps): OwnerState => {
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
   const changes = allChanges
-    .filter(change => change.isChanged)
+    .filter(change => change.isDirty)
     .map(change => {
       const dirent = getDirent(change.id);
       return {

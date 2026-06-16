@@ -116,6 +116,10 @@ public interface Authoring {
   
   
   interface ModifyModel {
+    
+    ModifyDescription modifyDescription();
+    ModifyLabels modifyLabels();
+    
     ModifyDeployment modifyDeployment();
     
     ModifyFlow modifyFlow();

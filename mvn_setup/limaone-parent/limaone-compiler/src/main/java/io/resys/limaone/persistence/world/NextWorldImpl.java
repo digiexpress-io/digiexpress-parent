@@ -93,8 +93,6 @@ public class NextWorldImpl implements NextWorld {
   public ModelWorld getCurrentWorld() {
     return world;
   }
-  
-
   @Override
   public <T extends Body> Model<T> deleteModel(String id, T body) {
 
@@ -113,7 +111,7 @@ public class NextWorldImpl implements NextWorld {
     this.changeCommands.add(new NextWorldChange(deleted, null, null));
     return deleted;
   }
-
+  
   @Override
   public <T extends Body> Model<T> newModel(String name, T body, @Nullable Description desc, @Nullable DescriptionLabels labels) {
     final var id = OidUtils.genUUID();   
@@ -156,6 +154,16 @@ public class NextWorldImpl implements NextWorld {
         .build();
     this.changeCommands.add(new NextWorldChange(null, null, created));
     return created;
+  }
+  
+  @Override
+  public <T extends Body> Model<T> newModel(String fileName, T body) {
+    return newModel(fileName, body);
+  }
+
+  @Override
+  public <T extends Body> Model<T> mergeModel(String id, String fileName, T body) {
+    return mergeModel(id, fileName, body);
   }
   
   @SuppressWarnings("unchecked")
@@ -202,6 +210,38 @@ public class NextWorldImpl implements NextWorld {
     this.changeCommands.add(new NextWorldChange(null, merged, null));
     return merged;
   }
+  
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T extends Body> Model<T> mergeModel(String id, DescriptionLabels labels) {
+    changes++;
+    append("updated file: " + id + " description" + labels);
+    this.commitBuilder.mergeFile(id, (node, mergeFile) -> {
+      mergeFile
+        .fileProps((prev, mergeProps) -> addProps(null, labels, mergeProps, prev))
+        .build();
+    });
+    final var merged = (Model<T>) this.getCurrentWorld().findAnyObject(id).orElseThrow();
+    this.changeCommands.add(new NextWorldChange(null, merged, null));
+    return merged;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T extends Body> Model<T> mergeModel(String id, Description desc) {
+    changes++;
+    append("updated file: " + id + " description");
+    this.commitBuilder.mergeFile(id, (node, mergeFile) -> {
+      mergeFile
+        .fileProps((prev, mergeProps) -> addProps(desc, null, mergeProps, prev))
+        .build();
+    });
+    
+    final var merged = (Model<T>) this.getCurrentWorld().findAnyObject(id).orElseThrow();
+    this.changeCommands.add(new NextWorldChange(null, merged, null));
+    return merged;
+  }
+  
   @Value
   public static class NextWorldResult {
     boolean isCommits;
@@ -240,5 +280,6 @@ public class NextWorldImpl implements NextWorld {
       
     propsBuilder.build();
   }
-  
+
+
 }

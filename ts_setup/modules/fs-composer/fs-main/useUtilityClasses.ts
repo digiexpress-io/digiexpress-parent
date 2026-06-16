@@ -5,6 +5,7 @@ import { OwnerState } from './useOwnerState';
 import { FsMainProps } from './FsMainProps';
 
 export const MUI_NAME = 'FsMain';
+const toolbarWidth = '50px';
 
 export interface FsMainClasses {
   root: string;
@@ -15,11 +16,6 @@ export interface FsMainClasses {
   rightPanelClosed: string;
   rightPanelContent: string;
   toolbar: string;
-  toolbarButton: string;
-  toolbarButtonSelected: string;
-  toolbarButtonDisabled: string;
-  toolbarSaveButton: string;
-  toolbarBadge: string;
 }
 
 export type FsMainClassKey = keyof FsMainClasses;
@@ -34,11 +30,6 @@ export const useUtilityClasses = (_props: FsMainProps) => {
     rightPanelClosed: ['rightPanelClosed'],
     rightPanelContent: ['rightPanelContent'],
     toolbar: ['toolbar'],
-    toolbarButton: ['toolbarButton'],
-    toolbarButtonSelected: ['toolbarButtonSelected'],
-    toolbarButtonDisabled: ['toolbarButtonDisabled'],
-    toolbarSaveButton: ['toolbarSaveButton'],
-    toolbarBadge: ['toolbarBadge'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -74,7 +65,7 @@ export const FsMainRoot = styled('div', {
 
     [`& .${MUI_NAME}-rightPanel`]: {
       height: '100%',
-      width: ownerState.isRightPanelOpen ? `calc(50% - ${ownerState.toolbar.width})` : '0px',
+      width: ownerState.isRightPanelOpen ? `calc(50% - ${toolbarWidth})` : '0px',
       transition: 'width 300ms cubic-bezier(0.4, 0, 0.2, 1)',
       overflow: 'hidden',
       display: 'flex',
@@ -87,7 +78,7 @@ export const FsMainRoot = styled('div', {
     },
 
     [`& .${MUI_NAME}-toolbar`]: {
-      width: ownerState.toolbar.width,
+      width: toolbarWidth,
       height: '100%',
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
@@ -98,9 +89,19 @@ export const FsMainRoot = styled('div', {
       borderLeft: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
       alignItems: 'center',
       flexShrink: 0
-    },
+    }
+  };
+});
 
-    [`& .${MUI_NAME}-toolbarButton`]: {
+
+export const FsToolbarButtonRoot = styled('div', {
+  name: MUI_NAME,
+  slot: 'ToolbarButton',
+  shouldForwardProp: (prop) => prop !== 'ownerState',
+})<{ ownerState: { isDarkMode: boolean, isSelected: boolean, isEnabled: boolean } }>(({ theme, ownerState }) => {
+
+  return {
+
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
@@ -116,10 +117,9 @@ export const FsMainRoot = styled('div', {
       },
       '&:hover': {
         backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.surface
-      },
     },
 
-    [`& .${MUI_NAME}-toolbarButtonSelected`]: {
+    ...(ownerState.isSelected ? {
       backgroundColor: theme.palette.primary.main,
       border: `1px solid ${theme.palette.primary.main}`,
       '& .MuiSvgIcon-root': {
@@ -128,45 +128,52 @@ export const FsMainRoot = styled('div', {
       '&:hover': {
         backgroundColor: darken(theme.palette.primary.main, 0.6),
       },
-    },
+    } : {}),
 
-    [`& .${MUI_NAME}-toolbarButtonDisabled`]: {
+    ...(!ownerState.isEnabled ? {
       opacity: 0.3,
       cursor: 'default',
       pointerEvents: 'none',
-    },
+    } : {}),
+  };
+});
 
-    [`& .${MUI_NAME}-toolbarSaveButton`]: {
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      opacity: 1,
-      borderRadius: '4px',
-      padding: '4px',
-      backgroundColor: 'transparent',
-      border: '1px solid transparent',
-      '& .MuiSvgIcon-root': {
-        fontSize: '1.2rem',
-        color: ownerState.unsavedCount > 0 ? theme.palette.error.main : (ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text),
-      },
-      '&:hover': {
-        backgroundColor: ownerState.isDarkMode ? FsColors.dark.border + '20' : FsColors.light.surface
-      },
-      [`& .${MUI_NAME}-toolbarBadge .MuiBadge-badge`]: {
-        fontSize: '10px',
-        fontWeight: 'bold',
-        height: '16px',
-        minWidth: '16px',
-      },
-    },
 
+export const FsSaveButtonRoot = styled('div', {
+  name: MUI_NAME,
+  slot: 'Save',
+  shouldForwardProp: (prop) => prop !== 'ownerState',
+})<{ ownerState: { isDarkMode: boolean, unsavedCount: number } }>(({ theme, ownerState }) => {
+  return {
     [`& .${MUI_NAME}-toolbarSaveButton.${MUI_NAME}-toolbarButtonSelected`]: {
       backgroundColor: ownerState.isDarkMode ? FsColors.semantic.primary + '26' : FsColors.semantic.dangerLight + '26',
       border: ownerState.isDarkMode ? `1px solid ${FsColors.semantic.dangerDark}` : `1px solid ${FsColors.semantic.dangerLight}`,
       '&:hover': {
         backgroundColor: ownerState.isDarkMode ? FsColors.semantic.primary + '40' : FsColors.semantic.warningLight + '40',
       },
+    },
+
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    opacity: 1,
+    borderRadius: '4px',
+    padding: '4px',
+    backgroundColor: 'transparent',
+    border: '1px solid transparent',
+    '& .MuiSvgIcon-root': {
+      fontSize: '1.2rem',
+      color: ownerState.unsavedCount > 0 ? theme.palette.error.main : (ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text),
+    },
+    '&:hover': {
+      backgroundColor: ownerState.isDarkMode ? FsColors.dark.border + '20' : FsColors.light.surface
+    },
+    [`& .MuiBadge-badge`]: {
+      fontSize: '10px',
+      fontWeight: 'bold',
+      height: '16px',
+      minWidth: '16px',
     },
   };
 });

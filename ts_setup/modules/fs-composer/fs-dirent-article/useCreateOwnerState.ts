@@ -8,7 +8,7 @@ export interface CreateOwnerState {
   isDarkMode: boolean;
   parentArticle: Fs.DirentBase | undefined;
   parentArticlePath: string | undefined;
-  isChanged: boolean;
+  isDirty: boolean;
   isExpanded: boolean;
   name: string;
   orderNumber: string;
@@ -42,7 +42,7 @@ class _CreateState implements FsuCreateChange {
   get name() { return this._current.name; }
   get orderNumber() { return String(this._current.order); }
   get configOptions() { return this._current.configOptions; }
-  get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
+  get isDirty(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
     return {
@@ -96,7 +96,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     authOnly: false,
   }
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
-  const isChangesPresent = state.isChanged;
+  const isChangesPresent = state.isDirty;
 
 
   function onChangeName(value: string) {
@@ -116,7 +116,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     isDarkMode,
     parentArticle,
     parentArticlePath,
-    isChanged: isChangesPresent,
+    isDirty: isChangesPresent,
     isExpanded,
     name: state.name,
     orderNumber: state.orderNumber,

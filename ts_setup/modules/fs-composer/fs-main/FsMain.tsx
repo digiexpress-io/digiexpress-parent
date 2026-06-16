@@ -1,19 +1,29 @@
 import React from 'react';
+import { Tooltip, Badge } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { Fs, useFsu } from '@dxs-ts/fs-api';
+
 import { FsMainProps } from './FsMainProps';
 import { useOwnerState } from './useOwnerState';
-import { FsMainRoot, useUtilityClasses } from './useUtilityClasses';
-import { Content } from './Content';
+import { FsMainRoot, FsSaveButtonRoot, FsToolbarButtonRoot, useUtilityClasses } from './useUtilityClasses';
+import { FsMainDefaultBackground } from './FsMainDefaultBackground';
+import { OwnerState } from './useOwnerState';
 import { ContentPanel } from './ContentPanel';
-import { ContentPanelToolbar } from './ContentPanelToolbar';
+import { FsIcons, useFsTheme } from '../fs-theme';
+
+
+
 
 export const FsMain: React.FC<FsMainProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(props);
+  const intl = useIntl();
 
   return (
     <FsMainRoot ownerState={ownerState} className={classes.root}>
-      <Content ownerState={ownerState} className={classes.leftPanel} children={<MainContent />} />
+      <div key={ownerState.activeTabId} className={classes.leftPanel} >
+        <Content ownerState={ownerState} />
+      </div>
 
       <div className={classes.divider} />
 
@@ -21,15 +31,143 @@ export const FsMain: React.FC<FsMainProps> = (props) => {
         <ContentPanel ownerState={ownerState} className={classes.rightPanelContent} />
       </div>
 
-      <ContentPanelToolbar ownerState={ownerState} className={classes.toolbar} />
+      <div className={classes.toolbar}>
+        <Tooltip key={'toggle-panel'}
+          title={ownerState.isRightPanelOpen ?
+            intl.formatMessage({ id: 'fs.main.tooltip.togglePanelCollapse' }) :
+            intl.formatMessage({ id: 'fs.main.tooltip.togglePanelExpand' })}
+          placement="left" arrow>
+          <FsToolbarButtonRoot onClick={ownerState.toggleRightPanel} ownerState={{
+            isDarkMode: ownerState.isDarkMode,
+            isEnabled: true,
+            isSelected: false
+          }}>{ownerState.isRightPanelOpen ? <FsIcons.CollapseAll /> : <FsIcons.ExpandAll />}</FsToolbarButtonRoot>
+        </Tooltip>
+
+        <PanelButton
+          id='properties'
+          ownerState={ownerState}
+          icon={FsIcons.Info}
+          tooltip={intl.formatMessage({ id: 'fs.main.tooltip.properties' })}
+        />
+        <PanelButton
+          id='references'
+          ownerState={ownerState}
+          icon={FsIcons.Tree}
+          tooltip={intl.formatMessage({ id: 'fs.main.tooltip.references' })}
+        />
+        <PanelButton
+          id='debug'
+          ownerState={ownerState}
+          icon={FsIcons.Debug}
+          tooltip={intl.formatMessage({ id: 'fs.main.tooltip.debug' })}
+        />
+        <PanelButton
+          id='errors'
+          ownerState={ownerState}
+          icon={FsIcons.Error}
+          tooltip={intl.formatMessage({ id: 'fs.main.tooltip.errors' })}
+        />
+        <PanelButton
+          id='preview'
+          ownerState={ownerState}
+          icon={FsIcons.Preview}
+          tooltip={intl.formatMessage({ id: 'fs.main.tooltip.preview' })}
+        />
+        <PanelButton
+          id='history'
+          ownerState={ownerState}
+          icon={FsIcons.History}
+          tooltip={intl.formatMessage({ id: 'fs.main.tooltip.history' })}
+        />
+        <PanelButton
+          id='help'
+          ownerState={ownerState}
+          icon={FsIcons.Help}
+          tooltip={intl.formatMessage({ id: 'fs.main.tooltip.help' })}
+        />
+        <PanelButton
+          id='article-order'
+          ownerState={ownerState}
+          icon={FsIcons.ArticleOrder}
+          tooltip={intl.formatMessage({ id: 'fs.main.tooltip.articleOrder' })}
+        />
+        <PanelButton
+          id='article-locale-overview'
+          ownerState={ownerState}
+          icon={FsIcons.Language}
+          tooltip={intl.formatMessage({ id: 'fs.main.tooltip.articleLocaleOverview' })}
+        />
+        <PanelButton
+          id='stats'
+          ownerState={ownerState}
+          icon={FsIcons.Stats}
+          tooltip={intl.formatMessage({ id: 'fs.main.tooltip.stats' })}
+        />
+
+        <SaveButton ownerState={ownerState} />
+
+
+      </div>
     </FsMainRoot>
   );
-};
+}
+
+const Content: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
+  const dirent = ownerState.activeDirent;
+  if (dirent) {
+    const widget = ownerState.activeWidget!;
+    return (<widget.views.UpdateView direntId={dirent.id} />)
+  } else if (ownerState.activeTab?.type === 'create') {
+    const widget = ownerState.activeWidget!;
+    return <widget.views.CreateView />;
+  }
+  return (<FsMainDefaultBackground />);
+}
 
 
-const MainContent: React.FC = () => {
+const SaveButton: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
   const intl = useIntl();
+  const tooltip = intl.formatMessage({ id: 'fs.main.tooltip.changes' });
 
-  return (<>{intl.formatMessage({ id: 'fs.main.message.mainContent' })}</>)
+  const { allChanges } = useFsu();
+  const { isDarkMode } = useFsTheme();
+  const unsavedCount = allChanges.filter(c => c.isDirty).length;
+
+  return (
+    <Tooltip key={'save'} title={tooltip} placement="left" arrow >
+      <FsSaveButtonRoot ownerState={{ isDarkMode, unsavedCount }} onClick={() => ownerState.onViewChange('changes')}>
+        <Badge badgeContent={unsavedCount} color="error">
+          <FsIcons.Save />
+        </Badge>
+      </FsSaveButtonRoot>
+    </Tooltip>
+  )
+}
+
+const PanelButton: React.FC<{
+  id: Fs.SecondaryView,
+  tooltip: string,
+  icon: React.ElementType,
+  ownerState: OwnerState
+}> = ({ id, tooltip, ownerState, icon: Icon }) => {
+
+  function handleOnClick() {
+    const isEnabled = ownerState.activeWidget?.meta.supportedViews.includes(id as any);
+    if (isEnabled) {
+      ownerState.onViewChange(id as any)
+    }
+  }
+  const isSelected: boolean = ownerState.selectedView === id;
+  const isEnabled: boolean = ownerState.activeWidget?.meta.supportedViews.includes(id as any) ?? false;
+
+
+  return (<Tooltip key={id} title={tooltip} placement="left" arrow>
+    <FsToolbarButtonRoot onClick={handleOnClick} ownerState={{
+      isDarkMode: ownerState.isDarkMode,
+      isEnabled,
+      isSelected
+    }}><Icon /></FsToolbarButtonRoot>
+  </Tooltip>);
 }
 

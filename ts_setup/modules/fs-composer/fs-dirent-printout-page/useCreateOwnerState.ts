@@ -4,7 +4,7 @@ import { useFsTheme } from '../fs-theme';
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
-  isChanged: boolean;
+  isDirty: boolean;
   serviceId: string;
   localeId: string;
   content: string;
@@ -43,7 +43,7 @@ class _CreateState implements FsuCreateChange {
   get content() {
     return this._current.content;
   }
-  get isChanged(): boolean {
+  get isDirty(): boolean {
     return !!this._current.serviceId && !!this._current.localeId;
   }
 
@@ -104,7 +104,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   return {
     isDarkMode,
-    isChanged: state.isChanged,
+    isDirty: state.isDirty,
     serviceId: state.serviceId,
     localeId: state.localeId,
     content: state.content,

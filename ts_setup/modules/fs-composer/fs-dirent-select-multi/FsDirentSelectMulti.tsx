@@ -12,7 +12,7 @@ export const FsDirentSelectMulti: React.FC<FsDirentSelectMultiProps> = (props) =
   return (
     <FsDirentSelectMultiRoot className={classes.root} ownerState={ownerState} fullWidth size='small'>
       <Select className={classes.select} multiple
-        value={props.value}
+        value={props.value ?? []}
         onChange={(e) => props.onChange(e.target.value as string[])}
         displayEmpty
         input={<OutlinedInput />}
@@ -27,7 +27,7 @@ export const FsDirentSelectMulti: React.FC<FsDirentSelectMultiProps> = (props) =
                     className={classes.chip}
                     label={option?.label}
                     size='small'
-                    onDelete={() => props.onChange(props.value.filter(v => v !== value))}
+                    onDelete={() => props.onChange((props.value ?? []).filter(v => v !== value))}
                     onMouseDown={(e) => e.stopPropagation()}
                   />
                 );

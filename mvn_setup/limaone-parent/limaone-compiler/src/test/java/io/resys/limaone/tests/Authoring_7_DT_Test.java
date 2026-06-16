@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class Authoring_7_DT extends DbSupport {
+public class Authoring_7_DT_Test extends DbSupport {
   private static final CompilerImpl compiler = new CompilerImpl(DefaultEnvironmentProperties.builder()
       .dbConfig(ModelDbConfig.external(() -> { throw new RuntimeException(); }))
       .defaultTenantName("Authoring_7_DT")

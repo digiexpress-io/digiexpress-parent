@@ -9,7 +9,7 @@ import {
 export interface CreateOwnerState {
   isDarkMode: boolean;
   locales: Fs.SelectOption[];
-  isChanged: boolean;
+  isDirty: boolean;
   isExpanded: boolean;
   contentType: Fs.LinkType;
   urlValue: string;
@@ -50,7 +50,7 @@ class _CreateState implements FsuCreateChange {
   get intlValues() { return Object.fromEntries(this._current.labels.map(l => [l.locale, l.labelValue])); }
   get configOptions() { return this._current.configOptions; }
   get articles() { return this._current.articles; }
-  get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
+  get isDirty(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
     return {
@@ -105,7 +105,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
   const locales = selectOptions.languages;
 
-  const isChangesPresent = state.isChanged;
+  const isChangesPresent = state.isDirty;
 
   function onChangeContentType(value: string) {
     setState(prev => prev.withContentType(value as Fs.LinkType));
@@ -130,7 +130,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   return ({
     isDarkMode,
     locales,
-    isChanged: isChangesPresent,
+    isDirty: isChangesPresent,
     contentType: state.contentType,
     urlValue: state.urlValue,
     intlValues: state.intlValues,

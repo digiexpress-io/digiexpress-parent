@@ -15,7 +15,7 @@ export interface CreateOwnerState {
   availableConfigOptions: Fs.SelectOption[];
   articleOptions: FsDirentSelectSingleOption[];
   localeOptions: FsDirentSelectSingleOption[];
-  isChanged: boolean;
+  isDirty: boolean;
   isExpanded: boolean;
   onChangeArticle: (value: string) => void;
   onChangeLocale: (value: string) => void;
@@ -48,7 +48,7 @@ class _CreateState implements FsuCreateChange {
   get locale() { return this._current.locale; }
   get content() { return this._current.content; }
   get configOptions() { return this._current.configOptions; }
-  get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
+  get isDirty(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
     return {
@@ -119,7 +119,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     value: opt,
     label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
   }));
-  const isChangesPresent = state.isChanged;
+  const isChangesPresent = state.isDirty;
 
   function onChangeArticle(value: string) {
     setState(prev => prev.withArticle(value));
@@ -146,7 +146,7 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     availableConfigOptions,
     articleOptions,
     localeOptions,
-    isChanged: isChangesPresent,
+    isDirty: isChangesPresent,
     isExpanded,
     onChangeArticle,
     onChangeLocale,

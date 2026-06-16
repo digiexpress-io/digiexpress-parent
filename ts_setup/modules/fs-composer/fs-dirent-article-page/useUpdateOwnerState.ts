@@ -16,8 +16,9 @@ export interface UpdateOwnerState {
   configOptions: Fs.ConfigOption[];
   availableConfigOptions: Fs.SelectOption[];
   localeOptions: FsDirentSelectSingleOption[];
-  isChanged: boolean;
+  isDirty: boolean;
   isExpanded: boolean;
+  assetDescription: string | undefined;
   onChangeLocale: (value: string) => void;
   onChangeContent: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
@@ -33,6 +34,7 @@ type _ChangeStateProps = {
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
   disabledMode: boolean;
+  assetDescription: string | undefined;
 }
 
 class _ChangeState implements FsuChange {
@@ -49,8 +51,9 @@ class _ChangeState implements FsuChange {
   get content() { return this._current.content; }
 
   get configOptions() { return this._current.configOptions; }
+  get assetDescription() { return this._current.assetDescription; }
   get bodyType() { return this._origin.bodyType; }
-  get isChanged(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
+  get isDirty(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; id: string; changes: Record<string, any> } {
     return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
@@ -67,6 +70,9 @@ class _ChangeState implements FsuChange {
       devMode: configOptions.includes('DEV_MODE'),
       disabledMode: configOptions.includes('DISABLED_MODE')
     }, this._origin);
+  }
+  withDescription(assetDescription: string | undefined): _ChangeState {
+    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 }
 
@@ -96,6 +102,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     configOptions: (pageProps.configOptions ?? []) as Fs.ConfigOption[],
     devMode: (pageProps.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (pageProps.configOptions ?? []).includes('DISABLED_MODE'),
+    assetDescription: pageProps.assetDescription,
   }));
 
   const usedLocaleIds = Object.values(selectOptions.direntProps)
@@ -120,7 +127,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onToggleExpanded() {
     setIsExpanded(prev => !prev);
   }
-  const changes = state.isChanged;
+  const changes = state.isDirty;
 
   return ({
     isDarkMode,
@@ -133,8 +140,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     configOptions: state.configOptions,
     availableConfigOptions,
     localeOptions,
-    isChanged: changes,
+    isDirty: changes,
     isExpanded,
+    assetDescription: state.assetDescription,
     onChangeLocale,
     onChangeContent,
     onChangeConfigOptions,

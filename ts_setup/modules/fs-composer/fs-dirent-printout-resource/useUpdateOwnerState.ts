@@ -7,7 +7,7 @@ type _ChangeStateProps = {
   resourceId: string;
   bodyType: Fs.BodyType;
   resourceName: string;
-  assetDescription: { text: string };
+  assetDescription: string | undefined;
   labels: string[];
   contentType: string;
   uploadBody: string;
@@ -47,7 +47,7 @@ class _ChangeState implements FsuChange {
   get printoutPageIds() {
     return this._current.printoutPageIds;
   }
-  get isChanged(): boolean {
+  get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
 
@@ -70,7 +70,7 @@ class _ChangeState implements FsuChange {
   withResourceName(resourceName: string): _ChangeState {
     return new _ChangeState({ ...this._current, resourceName }, this._origin);
   }
-  withDescription(assetDescription: { text: string }): _ChangeState {
+  withDescription(assetDescription: string | undefined): _ChangeState {
     return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
   withLabels(labels: string[]): _ChangeState {
@@ -87,7 +87,7 @@ class _ChangeState implements FsuChange {
 export interface UpdateOwnerState {
   isDarkMode: boolean;
   assetPath: string | undefined;
-  isChanged: boolean;
+  isDirty: boolean;
   resourceName: string;
   assetDescription: string;
   labels: string[];
@@ -116,7 +116,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     resourceId: props.direntId,
     bodyType: dirent.type,
     resourceName: resourceProps.resourceName ?? dirent.name ?? '',
-    assetDescription: { text: resourceProps.assetDescription ?? '' },
+    assetDescription: resourceProps.assetDescription,
     labels: (resourceProps.labels ?? []).map(l => l.value),
     contentType: resourceProps.contentType ?? '',
     uploadBody: '',
@@ -138,7 +138,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withResourceName(value));
   }
   function onChangeDescription(value: string) {
-    setState(prev => prev.withDescription({ text: value }));
+    setState(prev => prev.withDescription(value));
   }
   function onChangeLabels(value: string[]) {
     setState(prev => prev.withLabels(value));
@@ -152,9 +152,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   return {
     isDarkMode,
     assetPath: activeTabPath,
-    isChanged: state.isChanged,
+    isDirty: state.isDirty,
     resourceName: state.resourceName,
-    assetDescription: state.assetDescription.text,
+    assetDescription: state.assetDescription ?? '',
     labels: state.labels,
     labelOptions: selectOptions.labels,
     contentType: state.contentType,

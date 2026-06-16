@@ -27,6 +27,7 @@ export const FsDirentArticleLinkUpdate: React.FC<FsDirentArticleLinkProps> = (pr
   }));
 
 
+
   return (
     <FsDirentArticleLinkRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.link.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>

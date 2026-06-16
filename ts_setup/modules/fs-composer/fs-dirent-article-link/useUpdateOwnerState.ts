@@ -14,13 +14,14 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   locales: Fs.SelectOption[];
   id: string;
-  isChanged: boolean;
+  isDirty: boolean;
   isExpanded: boolean;
   contentType: Fs.LinkType;
   urlValue: string;
   intlValues: Record<string, string>;
   articles: string[];
   configOptions: Fs.ConfigOption[];
+  assetDescription: string | undefined;
   onChangeContentType: (value: string) => void;
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
@@ -39,6 +40,7 @@ type _ChangeStateProps = {
   devMode: boolean;
   disabledMode: boolean;
   articles: string[];
+  assetDescription: string | undefined;
 }
 
 class _ChangeState implements FsuChange {
@@ -56,6 +58,7 @@ class _ChangeState implements FsuChange {
   get intlValues() { return Object.fromEntries(this._current.labels.map(l => [l.locale, l.labelValue])); }
   get configOptions() { return this._current.configOptions; }
   get articles() { return this._current.articles; }
+  get assetDescription() { return this._current.assetDescription; }
 
   getCurrentProps(): { bodyType: Fs.BodyType, id: string, changes: Record<string, any> } {
     return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
@@ -63,7 +66,7 @@ class _ChangeState implements FsuChange {
   get bodyType() {
     return this._origin.bodyType;
   }
-  get isChanged(): boolean {
+  get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
   withContentType(contentType: Fs.LinkType): _ChangeState {
@@ -82,6 +85,9 @@ class _ChangeState implements FsuChange {
   }
   withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
     return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
+  }
+  withDescription(assetDescription: string | undefined): _ChangeState {
+    return new _ChangeState({ ...this._current, assetDescription }, this._origin);
   }
 }
 
@@ -106,9 +112,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     devMode: (linkProps?.configOptions ?? []).includes('DEV_MODE'),
     disabledMode: (linkProps?.configOptions ?? []).includes('DISABLED_MODE'),
     articles: linkProps?.articles ?? [],
+    assetDescription: linkProps?.assetDescription,
   }));
 
-  const isChangesPresent = state.isChanged;
+  const isChangesPresent = state.isDirty;
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
 
@@ -138,12 +145,13 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     dirent,
     locales,
     id: state.id,
-    isChanged: isChangesPresent,
+    isDirty: isChangesPresent,
     contentType: state.contentType,
     urlValue: state.urlValue,
     intlValues: state.intlValues,
     articles: state.articles,
     configOptions: state.configOptions,
+    assetDescription: state.assetDescription,
     isExpanded,
     onChangeContentType,
     onChangeUrlValue,

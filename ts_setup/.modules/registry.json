@@ -1383,7 +1383,8 @@
           "@mui/material": "*",
           "@mui/utils": "*",
           "react-intl": "*",
-          "notistack": "*"
+          "notistack": "*",
+          "@tanstack/react-store": "*"
         },
         "keywords": [
           "filesystem",
@@ -1398,32 +1399,37 @@
         "@mui/material",
         "@mui/utils",
         "react-intl",
-        "notistack"
+        "notistack",
+        "@tanstack/react-store"
       ],
       "peerDependencies": [
         "react",
         "@mui/material",
         "@mui/utils",
         "react-intl",
-        "notistack"
+        "notistack",
+        "@tanstack/react-store"
       ],
       "externalDependencies": [
         "react",
         "@mui/material",
         "@mui/utils",
         "react-intl",
-        "notistack"
+        "notistack",
+        "@tanstack/react-store"
       ],
       "internalDependencies": [],
       "actualDependencies": [
         "react",
         "react-intl",
-        "notistack"
+        "notistack",
+        "@tanstack/react-store"
       ],
       "actualExternalDependencies": [
         "react",
         "react-intl",
-        "notistack"
+        "notistack",
+        "@tanstack/react-store"
       ],
       "actualInternalDependencies": [],
       "missingDependencies": [],
@@ -1527,35 +1533,35 @@
       "actualDependencies": [
         "react",
         "@mui/material",
-        "react-intl",
-        "@dxs-ts/fs-api",
-        "@dxs-ts/fs-nav",
         "@mui/utils",
+        "@dxs-ts/fs-api",
+        "react-intl",
+        "@dxs-ts/fs-nav",
         "@uiw/react-md-editor",
+        "@monaco-editor/react",
         "@dxs-ts/xui-datetime",
+        "luxon",
         "js-file-download",
         "@mui/icons-material",
-        "@monaco-editor/react",
         "yaml",
         "react-markdown",
         "@xyflow/react",
-        "elkjs",
-        "luxon"
+        "elkjs"
       ],
       "actualExternalDependencies": [
         "react",
         "@mui/material",
-        "react-intl",
         "@mui/utils",
+        "react-intl",
         "@uiw/react-md-editor",
+        "@monaco-editor/react",
+        "luxon",
         "js-file-download",
         "@mui/icons-material",
-        "@monaco-editor/react",
         "yaml",
         "react-markdown",
         "@xyflow/react",
-        "elkjs",
-        "luxon"
+        "elkjs"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/fs-api",
@@ -4787,6 +4793,6 @@
       ]
     }
   },
-  "checksum": "0b9443ac5121f63fd29220cddeba2f9e85fae7b0384e756941d43b025b4ad784",
-  "generatedAt": "2026-06-05T14:02:35.326Z"
+  "checksum": "e35710f1c9c5daeec54dc301e743ec17a49fc197d5468e8c3a7c34c27fc56bc1",
+  "generatedAt": "2026-06-16T05:46:37.057Z"
 }

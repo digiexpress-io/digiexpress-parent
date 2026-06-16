@@ -55,6 +55,11 @@ public interface WorldFsProps {
   }
 
   @Value.Immutable
+  interface ArticleTemplateProps extends WorldFsProps {
+
+  }
+  
+  @Value.Immutable
   interface ArticleProps extends WorldFsProps {
     Integer getOrderNumber();
 
