@@ -1,7 +1,7 @@
 import React from 'react';
-import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentFormField } from '../fs-dirent-form-field';
 import { useUtilityClasses, FsDirentFlowTaskRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 
@@ -16,12 +16,13 @@ export const FsDirentFlowTaskCreate: React.FC = () => {
     <FsDirentFlowTaskRoot className={classes.root} ownerState={ownerState}>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.flow_task.taskNameField.label' })}</Typography>
-        <FsDirentTextField required
-          value={ownerState.name}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.flow_task.taskNameField.placeholder' })}
-          onChange={ownerState.onChangeName}
-        />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.flow_task.taskNameField.label' })}>
+          <FsDirentTextField required
+            value={ownerState.name}
+            placeholder={intl.formatMessage({ id: 'fs.dirent.flow_task.taskNameField.placeholder' })}
+            onChange={ownerState.onChangeName}
+          />
+        </FsDirentFormField>
 
       </div>
     </FsDirentFlowTaskRoot>

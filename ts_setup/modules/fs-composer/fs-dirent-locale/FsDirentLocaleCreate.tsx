@@ -3,6 +3,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentFormField } from '../fs-dirent-form-field';
 import { useUtilityClasses, FsDirentLocaleRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 
@@ -17,11 +18,12 @@ export const FsDirentLocaleCreate: React.FC = () => {
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.language.sectionTitle.createNew' })}</Typography>
         <div className={classes.formContainer}>
 
-          <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.label' })}</Typography>
-          <FsDirentTextField required value={ownerState.locale}
-            placeholder={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.placeholder' })}
-            onChange={ownerState.onChangeLocale}
-          />
+          <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.label' })}>
+            <FsDirentTextField required value={ownerState.locale}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.placeholder' })}
+              onChange={ownerState.onChangeLocale}
+            />
+          </FsDirentFormField>
 
         </div>
       </FsDirentLocaleRoot>

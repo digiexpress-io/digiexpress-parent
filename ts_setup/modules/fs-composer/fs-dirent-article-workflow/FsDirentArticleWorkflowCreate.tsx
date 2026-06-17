@@ -8,7 +8,7 @@ import { createWidget } from '../fs-factory';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-
+import { FsDirentFormField } from '../fs-dirent-form-field';
 import { useUtilityClasses, FsDirentArticleWorkflowRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 
@@ -32,20 +32,24 @@ export const FsDirentArticleWorkflowCreate: React.FC = () => {
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField required value={ownerState.value}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })}
-          onChange={ownerState.onChangeValue}
-        />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.nameField.label' })}>
+          <FsDirentTextField required value={ownerState.value}
+            placeholder={intl.formatMessage({ id: 'fs.dirent.service.nameField.placeholder' })}
+            onChange={ownerState.onChangeValue}
+          />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobFormField.label' })}</Typography>
-        <FsDirentSelectSingle options={dialobForms} value={ownerState.formName} onChange={ownerState.onChangeFormName} />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.dialobFormField.label' })}>
+          <FsDirentSelectSingle options={dialobForms} value={ownerState.formName} onChange={ownerState.onChangeFormName} />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.dialobTagField.label' })}</Typography>
-        <FsDirentSelectSingle options={dialobTags} value={ownerState.formTag} onChange={ownerState.onChangeFormTag} />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.dialobTagField.label' })}>
+          <FsDirentSelectSingle options={dialobTags} value={ownerState.formTag} onChange={ownerState.onChangeFormTag} />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.flowField.label' })}</Typography>
-        <FsDirentSelectSingle options={flows} value={ownerState.flowName} onChange={ownerState.onChangeFlowName} />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.flowField.label' })}>
+          <FsDirentSelectSingle options={flows} value={ownerState.flowName} onChange={ownerState.onChangeFlowName} />
+        </FsDirentFormField>
 
         <Divider />
 
@@ -61,17 +65,21 @@ export const FsDirentArticleWorkflowCreate: React.FC = () => {
         ))}
 
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityStartField.label' })}</Typography>
-        <DatePicker value={ownerState.validityStart ? new Date(ownerState.validityStart) : null} onChange={(d) => ownerState.onChangeValidityStart(d ?? undefined)} fullWidth size='small' />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.validityStartField.label' })}>
+          <DatePicker value={ownerState.validityStart ? new Date(ownerState.validityStart) : null} onChange={(d) => ownerState.onChangeValidityStart(d ?? undefined)} fullWidth size='small' />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.validityEndField.label' })}</Typography>
-        <DatePicker value={ownerState.validityEnd ? new Date(ownerState.validityEnd) : null} onChange={(d) => ownerState.onChangeValidityEnd(d ?? undefined)} fullWidth size='small' />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.validityEndField.label' })}>
+          <DatePicker value={ownerState.validityEnd ? new Date(ownerState.validityEnd) : null} onChange={(d) => ownerState.onChangeValidityEnd(d ?? undefined)} fullWidth size='small' />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.service.articlesField.label' })}</Typography>
-        <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.articlesField.label' })}>
+          <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
-        <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}>
+          <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+        </FsDirentFormField>
 
 
 

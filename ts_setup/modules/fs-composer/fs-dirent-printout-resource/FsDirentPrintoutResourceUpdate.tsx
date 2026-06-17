@@ -3,6 +3,7 @@ import { Typography, Button } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
+import { FsDirentFormField } from '../fs-dirent-form-field';
 import { useUtilityClasses, FsDirentPrintoutResourceRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPrintoutResourceProps } from './FsDirentPrintoutResourceProps';
@@ -38,31 +39,34 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourcePr
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField required placeholder={intl.formatMessage({ id: 'fs.dirent.printoutResource.nameField.placeholder' })}
-          value={ownerState.resourceName}
-          onChange={ownerState.onChangeResourceName}
-        />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.nameField.label' })}>
+          <FsDirentTextField required placeholder={intl.formatMessage({ id: 'fs.dirent.printoutResource.nameField.placeholder' })}
+            value={ownerState.resourceName}
+            onChange={ownerState.onChangeResourceName}
+          />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.printoutPagesField.label' })}</Typography>
-        <FsDirentSelectMulti
-          options={ownerState.printoutPageOptions}
-          value={ownerState.printoutPageIds}
-          onChange={ownerState.onChangePrintoutPageIds}
-        />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutResource.printoutPagesField.label' })}>
+          <FsDirentSelectMulti
+            options={ownerState.printoutPageOptions}
+            value={ownerState.printoutPageIds}
+            onChange={ownerState.onChangePrintoutPageIds}
+          />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.label' })}</Typography>
-        <input
-          ref={fileInputRef}
-          type='file'
-          accept={ownerState.contentType === 'image/*' ? 'image/*' : 'text/*'}
-          style={{ display: 'none' }}
-          onChange={handleFileChange}
-        />
-        <FsDirentTextField disabled value={fileName} placeholder={intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.placeholder' })} />
-        <Button variant='outlined' size='small' sx={{ alignSelf: 'flex-start' }} onClick={() => fileInputRef.current?.click()}>
-          {intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.button' })}
-        </Button>
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.label' })}>
+          <input
+            ref={fileInputRef}
+            type='file'
+            accept={ownerState.contentType === 'image/*' ? 'image/*' : 'text/*'}
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+          />
+          <FsDirentTextField disabled value={fileName} placeholder={intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.placeholder' })} />
+          <Button variant='outlined' size='small' sx={{ alignSelf: 'flex-start' }} onClick={() => fileInputRef.current?.click()}>
+            {intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.button' })}
+          </Button>
+        </FsDirentFormField>
 
         {ownerState.contentType === 'image/*' && previewSrc && (
           <img

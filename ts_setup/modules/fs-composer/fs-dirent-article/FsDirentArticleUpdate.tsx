@@ -7,6 +7,7 @@ import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentArticleProps } from './FsDirentArticleProps';
+import { FsDirentFormField } from '../fs-dirent-form-field';
 
 
 export const FsDirentArticleUpdate: React.FC<FsDirentArticleProps> = (props) => {
@@ -23,20 +24,24 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleProps> = (props) => 
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.article.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
 
       <div className={classes.formContainer}>
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField required value={ownerState.name}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
-          onChange={ownerState.onChangeName}
-        />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.nameField.label' })}>
+          <FsDirentTextField required value={ownerState.name}
+            placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
+            onChange={ownerState.onChangeName}
+          />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.label' })}</Typography>
-        <FsDirentTextField required value={ownerState.orderNumber}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.placeholder' })}
-          onChange={ownerState.onChangeOrderNumber}
-        />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.label' })}>
+          <FsDirentTextField required value={ownerState.orderNumber}
+            placeholder={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.placeholder' })}
+            onChange={ownerState.onChangeOrderNumber}
+          />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
-        <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}>
+          <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+        </FsDirentFormField>
+
       </div>
     </FsDirentArticleRoot>
   )

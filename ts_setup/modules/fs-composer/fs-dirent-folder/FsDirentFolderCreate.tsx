@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentFormField } from '../fs-dirent-form-field';
 import { useUtilityClasses, FsDirentFolderRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentFolderCreateProps } from './FsDirentFolderProps';
@@ -17,14 +18,16 @@ export const FsDirentFolderCreate: React.FC<FsDirentFolderCreateProps> = (props)
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.folder.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.folder.locationField.label' })}</Typography>
-        <FsDirentTextField value={`${ownerState.locationPath ? `${ownerState.locationPath} / ` : ''}${intl.formatMessage({ id: 'fs.dirent.folder.locationField.newFolder' })}`} disabled />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.folder.locationField.label' })}>
+          <FsDirentTextField value={`${ownerState.locationPath ? `${ownerState.locationPath} / ` : ''}${intl.formatMessage({ id: 'fs.dirent.folder.locationField.newFolder' })}`} disabled />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField required placeholder={intl.formatMessage({ id: 'fs.dirent.folder.nameField.placeholder' })}
-          value={ownerState.name}
-          onChange={ownerState.onChangeName}
-        />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.nameField.label' })}>
+          <FsDirentTextField required placeholder={intl.formatMessage({ id: 'fs.dirent.folder.nameField.placeholder' })}
+            value={ownerState.name}
+            onChange={ownerState.onChangeName}
+          />
+        </FsDirentFormField>
 
 
       </div>

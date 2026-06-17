@@ -8,7 +8,6 @@ export interface FsDirentFlowClasses {
   root: string;
   title: string;
   formContainer: string;
-  label: string;
   sectionTitle: string;
   sectionBox: string;
   sectionContent: string;
@@ -22,7 +21,6 @@ export const useUtilityClasses = () => {
     root: ['root'],
     title: ['title'],
     formContainer: ['formContainer'],
-    label: ['label'],
     sectionTitle: ['sectionTitle'],
     sectionBox: ['sectionBox'],
     sectionContent: ['sectionContent'],
@@ -50,20 +48,11 @@ export const FsDirentFlowRoot = styled('div', {
   [`& .${MUI_NAME}-formContainer`]: {
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(1.5),
-    padding: '8px 0',
-  },
-
-  [`& .${MUI_NAME}-label`]: {
-    ...theme.typography.subtitle2,
-    fontWeight: 500,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
   },
 
   [`& .${MUI_NAME}-sectionTitle`]: {
     ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    marginBottom: '8px',
     display: 'block',
   },
 
@@ -71,7 +60,6 @@ export const FsDirentFlowRoot = styled('div', {
     backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
     border: `1px solid ${ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary}`,
     borderRadius: '4px',
-    padding: '12px',
     marginTop: '0px !important'
   },
 

@@ -1,9 +1,8 @@
 import React from 'react';
-import { Typography, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MonacoReact from '@monaco-editor/react';
-import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
+import { FsDirentFormField } from '../fs-dirent-form-field';
 import { useUtilityClasses, FsDirentFlowRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentFlowProps } from './FsDirentFlowProps';
@@ -36,8 +35,9 @@ export const FsDirentFlowUpdate: React.FC<FsDirentFlowProps> = (props) => {
         </div>
 
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
-        <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}>
+          <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+        </FsDirentFormField>
 
 
       </div>

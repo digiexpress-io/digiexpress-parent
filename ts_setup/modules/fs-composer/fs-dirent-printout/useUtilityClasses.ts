@@ -8,7 +8,6 @@ import { generateUtilityClass, styled } from '@mui/material';
     root: string;
     title: string;
     formContainer: string;
-    label: string;
     pageList: string;
   }
 
@@ -19,7 +18,6 @@ import { generateUtilityClass, styled } from '@mui/material';
       root: ['root'],
       title: ['title'],
       formContainer: ['formContainer'],
-      label: ['label'],
       pageList: ['pageList'],
     };
     const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -43,14 +41,6 @@ import { generateUtilityClass, styled } from '@mui/material';
     [`& .${MUI_NAME}-formContainer`]: {
       display: 'flex',
       flexDirection: 'column',
-      gap: theme.spacing(1.5),
-      padding: '8px 0',
-    },
-
-    [`& .${MUI_NAME}-label`]: {
-      ...theme.typography.subtitle2,
-      fontWeight: 500,
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     },
 
     [`& .${MUI_NAME}-pageList`]: {

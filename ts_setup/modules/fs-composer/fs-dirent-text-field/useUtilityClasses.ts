@@ -73,14 +73,14 @@ export const FsDirentTextFieldRoot = styled('div', {
 
     '& .MuiInputBase-input': {
       color: textColor,
-      ...theme.typography.caption,
+      ...theme.typography.body1,
       lineHeight: 1,
       padding: theme.spacing(1.5),
 
       '&::placeholder': {
         color: placeholderColor,
         opacity: 1,
-        ...theme.typography.caption,
+        ...theme.typography.body1,
       },
 
       '&.Mui-disabled': {
@@ -94,11 +94,11 @@ export const FsDirentTextFieldRoot = styled('div', {
 
     '& .MuiInputLabel-root': {
       color: textColor,
-      ...theme.typography.caption,
+      ...theme.typography.subtitle2,
     },
 
     [`& .${MUI_NAME}-requiredMessage`]: {
-      ...theme.typography.caption,
+      ...theme.typography.subtitle2,
       display: ownerState.showRequiredError ? 'block' : 'none',
       color: dangerColor,
       marginTop: '3px',

@@ -3,6 +3,7 @@ import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
+import { FsDirentFormField } from '../fs-dirent-form-field';
 import { useUtilityClasses, FsDirentPrintoutPageRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 
@@ -16,22 +17,25 @@ export const FsDirentPrintoutPageCreate: React.FC = () => {
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.serviceIdField.label' })}</Typography>
-        <FsDirentSelectSingle options={ownerState.printoutOptions} value={ownerState.serviceId} onChange={ownerState.onChangeServiceId} />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutPage.serviceIdField.label' })}>
+          <FsDirentSelectSingle options={ownerState.printoutOptions} value={ownerState.serviceId} onChange={ownerState.onChangeServiceId} />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.localeIdField.label' })}</Typography>
-        <FsDirentSelectSingle
-          options={ownerState.localeOptions}
-          value={ownerState.localeId}
-          onChange={ownerState.onChangeLocaleId}
-        />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutPage.localeIdField.label' })}>
+          <FsDirentSelectSingle
+            options={ownerState.localeOptions}
+            value={ownerState.localeId}
+            onChange={ownerState.onChangeLocaleId}
+          />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.contentField.label' })}</Typography>
-        <FsDirentTextField multiline minRows={4}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.printoutPage.contentField.placeholder' })}
-          value={ownerState.content}
-          onChange={ownerState.onChangeContent}
-        />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutPage.contentField.label' })}>
+          <FsDirentTextField multiline minRows={4}
+            placeholder={intl.formatMessage({ id: 'fs.dirent.printoutPage.contentField.placeholder' })}
+            value={ownerState.content}
+            onChange={ownerState.onChangeContent}
+          />
+        </FsDirentFormField>
 
       </div>
     </FsDirentPrintoutPageRoot>

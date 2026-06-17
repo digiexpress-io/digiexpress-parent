@@ -1442,8 +1442,6 @@ export const en = {
   'fs.dirent.labelsField.placeholder': 'Select or add new labels',
   'fs.dirent.article.commentsField.label': 'Comments',
   'fs.dirent.article.commentsField.placeholder': 'Notes/comments about this asset',
-  'fs.dirent.expandToggle.show': 'More options',
-  'fs.dirent.expandToggle.hide': 'Fewer options',
   'fs.dirent.article.parentArticleField.label': 'Parent article',
   'fs.dirent.article.parentArticleField.desc': 'This article will be created as a child of the article below. Please note that child articles may be rendered differently on your client-facing application.',
   'fs.dirent.link.contentTypeField.label': 'Link type',

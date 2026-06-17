@@ -8,7 +8,6 @@ export interface FsDirentArticleWorkflowClasses {
   root: string;
   title: string;
   formContainer: string;
-  label: string;
   localeLabel: string;
   localeRow: string;
   sectionTitle: string;
@@ -21,7 +20,6 @@ export const useUtilityClasses = () => {
     root: ['root'],
     title: ['title'],
     formContainer: ['formContainer'],
-    label: ['label'],
     localeLabel: ['localeLabel'],
     localeRow: ['localeRow'],
     sectionTitle: ['sectionTitle'],
@@ -51,17 +49,6 @@ export const FsDirentArticleWorkflowRoot = styled('div', {
   [`& .${MUI_NAME}-formContainer`]: {
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(1.5),
-    padding: '8px 0',
-  },
-
-  [`& .${MUI_NAME}-label`]: {
-    ...theme.typography.subtitle2,
-    fontWeight: 500,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    '&.MuiTypography-root': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    },
   },
 
   [`& .${MUI_NAME}-localeLabel`]: {
@@ -82,7 +69,6 @@ export const FsDirentArticleWorkflowRoot = styled('div', {
   [`& .${MUI_NAME}-sectionTitle`]: {
     ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    marginBottom: '8px',
     display: 'block',
     '&.MuiTypography-root': {
       color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,

@@ -7,6 +7,7 @@ import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
+import { FsDirentFormField } from '../fs-dirent-form-field';
 
 
 export const FsDirentArticleCreate: React.FC = () => {
@@ -22,40 +23,35 @@ export const FsDirentArticleCreate: React.FC = () => {
     <FsDirentArticleRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.article.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
-
         {ownerState.parentArticle && (
-          <>
-            <Box display='flex' justifyContent='space-between' alignItems='center'>
-              <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.parentArticleField.label' })}</Typography>
-              <FsIcon icon={FsIcons.Info} small tooltip={intl.formatMessage({ id: 'fs.dirent.article.parentArticleField.desc' })} />
-            </Box>
-            <FsDirentTextField value={ownerState.parentArticlePath} disabled />
-          </>
+          <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.article.parentArticleField.label' })}>
+            <>
+              <Box display='flex' justifyContent='space-between' alignItems='center'>
+                <FsIcon icon={FsIcons.Info} small tooltip={intl.formatMessage({ id: 'fs.dirent.article.parentArticleField.desc' })} />
+              </Box>
+              <FsDirentTextField value={ownerState.parentArticlePath} disabled />
+            </>
+
+          </FsDirentFormField>
         )}
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.nameField.label' })}</Typography>
-        <FsDirentTextField
-          required
-          placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
-          value={ownerState.name}
-          onChange={ownerState.onChangeName}
-        />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.nameField.label' })}>
+          <FsDirentTextField required placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
+            value={ownerState.name}
+            onChange={ownerState.onChangeName}
+          />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.label' })}</Typography>
-        <FsDirentTextField
-          required
-          placeholder={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.placeholder' })}
-          value={ownerState.orderNumber}
-          onChange={ownerState.onChangeOrderNumber}
-        />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.label' })}>
+          <FsDirentTextField required placeholder={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.placeholder' })}
+            value={ownerState.orderNumber}
+            onChange={ownerState.onChangeOrderNumber}
+          />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
-        <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
-
-        <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.article.sectionTitle.sharing' })}</Typography>
-        <div className={classes.sectionBox}>
-          <Typography className={classes.sectionContent}>TODO</Typography>
-        </div>
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}>
+          <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+        </FsDirentFormField>
 
       </div>
     </FsDirentArticleRoot>

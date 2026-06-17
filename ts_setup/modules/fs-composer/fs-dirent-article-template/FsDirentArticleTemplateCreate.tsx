@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MonacoReact from '@monaco-editor/react';
+import { FsDirentFormField } from '../fs-dirent-form-field';
 import { useUtilityClasses, FsDirentArticleTemplateRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 
@@ -16,15 +17,16 @@ export const FsDirentArticleTemplateCreate: React.FC = () => {
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.template.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.template.contentField.label' })}</Typography>
-        <div className={classes.editor}>
-          <MonacoReact height="100%" defaultLanguage="html"
-            options={{
-              wordBasedSuggestions: 'off',
-              minimap: { enabled: false },
-            }}
-          />
-        </div>
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.template.contentField.label' })}>
+          <div className={classes.editor}>
+            <MonacoReact height="100%" defaultLanguage="html"
+              options={{
+                wordBasedSuggestions: 'off',
+                minimap: { enabled: false },
+              }}
+            />
+          </div>
+        </FsDirentFormField>
 
       </div>
     </FsDirentArticleTemplateRoot>

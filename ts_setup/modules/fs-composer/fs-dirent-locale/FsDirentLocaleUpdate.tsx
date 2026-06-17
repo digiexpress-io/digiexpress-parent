@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { createWidget } from '../fs-factory';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentFormField } from '../fs-dirent-form-field';
 import { useUtilityClasses, FsDirentLocaleRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentLocaleProps } from './FsDirentLocaleProps';
@@ -24,15 +25,17 @@ export const FsDirentLocaleUpdate: React.FC<FsDirentLocaleProps> = (props) => {
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.language.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.label' })}</Typography>
-        <FsDirentTextField
-          value={ownerState.localeCode}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.placeholder' })}
-          disabled
-        />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.label' })}>
+          <FsDirentTextField
+            value={ownerState.localeCode}
+            placeholder={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.placeholder' })}
+            disabled
+          />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
-        <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}>
+          <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+        </FsDirentFormField>
 
       </div>
     </FsDirentLocaleRoot>

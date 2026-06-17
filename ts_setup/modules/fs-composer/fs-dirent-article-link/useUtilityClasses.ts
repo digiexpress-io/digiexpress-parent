@@ -8,13 +8,11 @@ export interface FsDirentArticleLinkClasses {
   root: string;
   title: string;
   formContainer: string;
-  label: string;
   localeRow: string;
   localeLabel: string;
   sectionTitle: string;
   sectionBox: string;
   sectionContent: string;
-  helperText: string;
 }
 
 export type FsDirentArticleLinkClassKey = keyof FsDirentArticleLinkClasses;
@@ -24,13 +22,11 @@ export const useUtilityClasses = () => {
     root: ['root'],
     title: ['title'],
     formContainer: ['formContainer'],
-    label: ['label'],
     localeRow: ['localeRow'],
     localeLabel: ['localeLabel'],
     sectionTitle: ['sectionTitle'],
     sectionBox: ['sectionBox'],
     sectionContent: ['sectionContent'],
-    helperText: ['helperText'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -54,14 +50,6 @@ export const FsDirentArticleLinkRoot = styled('div', {
   [`& .${MUI_NAME}-formContainer`]: {
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(1.5),
-    padding: '8px 0',
-  },
-
-  [`& .${MUI_NAME}-label`]: {
-    ...theme.typography.subtitle2,
-    fontWeight: 500,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
   },
 
   [`& .${MUI_NAME}-localeRow`]: {
@@ -79,7 +67,6 @@ export const FsDirentArticleLinkRoot = styled('div', {
   [`& .${MUI_NAME}-sectionTitle`]: {
     ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    marginBottom: '8px',
     display: 'block',
   },
 
@@ -87,7 +74,6 @@ export const FsDirentArticleLinkRoot = styled('div', {
     backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
     border: `1px solid ${ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary}`,
     borderRadius: '4px',
-    padding: '12px',
     marginTop: '0px !important',
   },
 
@@ -96,10 +82,5 @@ export const FsDirentArticleLinkRoot = styled('div', {
     color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
   },
 
-  [`& .${MUI_NAME}-helperText`]: {
-    ...theme.typography.caption,
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
-    marginTop: theme.spacing(-1),
-  },
 
 }));

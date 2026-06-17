@@ -6,6 +6,7 @@ import { createWidget } from '../fs-factory';
 import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
 import { FsDirentSelectSingle } from '../fs-dirent-select-single';
 import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentFormField } from '../fs-dirent-form-field';
 import { useUtilityClasses, FsDirentArticleLinkRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 
@@ -30,16 +31,20 @@ export const FsDirentArticleLinkCreate: React.FC = () => {
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.link.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.urlValueField.label' })}</Typography>
-        <FsDirentTextField
-          value={ownerState.urlValue}
-          placeholder={intl.formatMessage({ id: 'fs.dirent.link.urlValueField.placeholder' })}
-          onChange={ownerState.onChangeUrlValue}
-        />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.link.urlValueField.label' })}>
+          <FsDirentTextField
+            value={ownerState.urlValue}
+            placeholder={intl.formatMessage({ id: 'fs.dirent.link.urlValueField.placeholder' })}
+            onChange={ownerState.onChangeUrlValue}
+          />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.contentTypeField.label' })}</Typography>
-        <FsDirentSelectSingle options={linkTypeOptions} value={ownerState.contentType} onChange={ownerState.onChangeContentType} />
-        <Typography className={classes.helperText}>{intl.formatMessage({ id: `fs.dirent.link.contentType.${ownerState.contentType}.desc` })}</Typography>
+        <FsDirentFormField
+          label={intl.formatMessage({ id: 'fs.dirent.link.contentTypeField.label' })}
+          helperText={intl.formatMessage({ id: `fs.dirent.link.contentType.${ownerState.contentType}.desc` })}
+        >
+          <FsDirentSelectSingle options={linkTypeOptions} value={ownerState.contentType} onChange={ownerState.onChangeContentType} />
+        </FsDirentFormField>
 
         {ownerState.locales.map((locale) => (
           <div key={locale.value} className={classes.localeRow}>
@@ -48,11 +53,13 @@ export const FsDirentArticleLinkCreate: React.FC = () => {
           </div>
         ))}
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.link.articlesField.label' })}</Typography>
-        <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.link.articlesField.label' })}>
+          <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
+        </FsDirentFormField>
 
-        <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}</Typography>
-        <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}>
+          <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+        </FsDirentFormField>
 
       </div>
     </FsDirentArticleLinkRoot>
