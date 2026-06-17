@@ -53,7 +53,6 @@ export const FsDirentProvider: React.FC<FsDirentProviderProps> = (props) => {
   React.useEffect(() => {
     persistenceUnit.fetchDirents()
       .then(dirents => {
-        console.log('dirents', dirents);
         return new FsWorld({ dirents })
       })
       .then(setDirents)
@@ -101,7 +100,7 @@ function _initCtx(initProps: {
       await persistenceUnit.pushChange(change);
       const bodyName = dirents.getDirentName(change.id) ?? change.id;
       notify({ id: 'fs.snackbar.saveSuccess', bodyName, bodyType: change.bodyType });
-      refresh();
+      await refresh();
     } catch (error: any) {
       notify({ id: 'fs.snackbar.saveFailed', error, bodyType: change.bodyType });
     }

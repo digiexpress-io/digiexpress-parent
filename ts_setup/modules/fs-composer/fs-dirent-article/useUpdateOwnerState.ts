@@ -25,11 +25,13 @@ type _ChangeStateProps = {
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
   authOnly: boolean;
+  treeId: string;
 }
 
 class _ChangeState implements FsuChange {
   private _origin: _ChangeStateProps;
   private _current: _ChangeStateProps;
+
 
   constructor(props: _ChangeStateProps, origin?: _ChangeStateProps) {
     this._current = props;
@@ -38,6 +40,7 @@ class _ChangeState implements FsuChange {
 
   get id() { return this._current.articleId; }
   get name() { return this._current.name; }
+  get treeId() { return this._current.treeId; }
   get orderNumber() { return String(this._current.order); }
   get configOptions() { return this._current.configOptions; }
   get bodyType() { return this._current.bodyType; }
@@ -76,6 +79,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     articleId: props.direntId,
     bodyType: dirent!.type,
+    treeId: dirent?.commitIndex?.treeId!,
     name: getDirentName(props.direntId) ?? '',
     order: articleProps?.orderNumber ?? 0,
     configOptions: (articleProps?.configOptions ?? []) as Fs.ConfigOption[],

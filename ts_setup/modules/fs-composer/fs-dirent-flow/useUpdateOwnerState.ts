@@ -24,6 +24,7 @@ type _ChangeStateProps = {
   bodyType: Fs.BodyType;
   flowValue: string;
   configOptions: Fs.ConfigOption[];
+  treeId: string;
 }
 
 class _ChangeState implements FsuChange {
@@ -36,6 +37,7 @@ class _ChangeState implements FsuChange {
   }
 
   get id() { return this._current.flowId; }
+  get treeId() { return this._current.treeId; }
   get bodyType() { return this._current.bodyType; }
   get configOptions() { return this._current.configOptions; }
   get flowValue() { return this._current.flowValue; }
@@ -73,6 +75,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     flowId: props.direntId,
     bodyType: flowProps!.type,
+    treeId: dirent?.commitIndex?.treeId!,
     flowValue: flowProps?.content ?? '',
     configOptions: (flowProps?.configOptions ?? []) as Fs.ConfigOption[],
   }));

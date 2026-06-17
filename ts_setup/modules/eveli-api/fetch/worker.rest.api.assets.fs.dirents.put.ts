@@ -22,7 +22,6 @@ function hook(props: {}) {
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify(assetBody)
       })
-      .then((data) => console.log("update asset:", data))
       .catch(error => {
         enqueueSnackbar(intl.formatMessage({ id: 'error.saveFailed' }, { cause: (error.message || 'N/A') }), { variant: 'error' });
       });

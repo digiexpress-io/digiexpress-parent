@@ -13,6 +13,7 @@ type _ChangeStateProps = {
   serviceName: string;
   orchestratorName: string;
   intlValues: Record<string, string>;
+  treeId: string;
 }
 
 export interface UpdateOwnerState {
@@ -39,6 +40,7 @@ class _ChangeState implements FsuChange {
   get id() {
     return this._current.printoutId;
   }
+  get treeId() { return this._current.treeId; }
   get bodyType() {
     return this._current.bodyType;
   }
@@ -96,6 +98,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     printoutId: props.direntId,
     bodyType: dirent.type,
+    treeId: dirent?.commitIndex?.treeId!,
     serviceName: printoutProps.printoutServiceName ?? dirent.name ?? '',
     orchestratorName: printoutProps.orchestratorName ?? '',
     intlValues: printoutProps.intlValues ?? {},

@@ -2,52 +2,56 @@ import React from 'react';
 import { useFsDirent, useFsu } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { FsPanelChangesProps } from './FsPanelChangesProps';
-import { FsColors } from '../fs-theme';
 
 
 export interface OwnerState {
   isDarkMode: boolean;
   confirmOpen: boolean;
   setConfirmOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  getStatusColor: (status: string, isDarkMode: boolean) => string;
   changes: { id: string; name: string; fullPath: string; bodyType: string }[];
+  onSave: (id: string) => Promise<void>;
+  onSaveAll: () => Promise<void>;
   onDiscard: (id: string) => void;
+  onDiscardAll: () => void;
 }
 
 export const useOwnerState = (_props: FsPanelChangesProps): OwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent } = useFsDirent();
-  const { allChanges, cancel } = useFsu();
+  const { allChanges, push, cancel } = useFsu();
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
-  const changes = allChanges
-    .filter(change => change.isDirty)
-    .map(change => {
-      const dirent = getDirent(change.id);
-      return {
-        id: change.id,
-        name: dirent?.name ?? change.id,
-        fullPath: dirent?.fullPath ?? change.id,
-        bodyType: change.bodyType,
-      };
-    });
+  const dirtyChanges = allChanges.filter(change => change.isDirty);
+
+  const changes = dirtyChanges.map(change => {
+    const dirent = getDirent(change.id);
+    return {
+      id: change.id,
+      name: dirent?.name ?? change.id,
+      fullPath: dirent?.fullPath ?? change.id,
+      bodyType: change.bodyType,
+    };
+  });
+
+  async function onSave(id: string) {
+    await push(id);
+  }
+
+  async function onSaveAll() {
+    for (const change of dirtyChanges) {
+      await push(change.id);
+    }
+  }
 
   function onDiscard(id: string) {
     cancel(id);
   }
 
-  return ({ isDarkMode, confirmOpen, setConfirmOpen, getStatusColor, changes, onDiscard });
-}
-
-function getStatusColor(status: string, isDarkMode: boolean) {
-  switch (status) {
-    case 'delete':
-      return isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight;
-    case 'create':
-      return FsColors.semantic.success;
-    case 'update':
-      return isDarkMode ? FsColors.semantic.warning : FsColors.semantic.warningLight;
-    default:
-      return isDarkMode ? FsColors.dark.text : FsColors.light.text;
+  function onDiscardAll() {
+    for (const change of dirtyChanges) {
+      cancel(change.id);
+    }
   }
+
+  return { isDarkMode, confirmOpen, setConfirmOpen, changes, onSave, onSaveAll, onDiscard, onDiscardAll };
 };

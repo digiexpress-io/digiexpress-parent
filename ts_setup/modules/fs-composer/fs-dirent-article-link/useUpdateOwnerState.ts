@@ -38,6 +38,7 @@ type _ChangeStateProps = {
   devMode: boolean;
   disabledMode: boolean;
   articles: string[];
+  treeId: string;
 }
 
 class _ChangeState implements FsuChange {
@@ -50,6 +51,7 @@ class _ChangeState implements FsuChange {
   }
 
   get id() { return this._current.linkId; }
+  get treeId() { return this._current.treeId; }
   get contentType() { return this._current.type; }
   get urlValue() { return this._current.value; }
   get intlValues() { return Object.fromEntries(this._current.labels.map(l => [l.locale, l.labelValue])); }
@@ -98,6 +100,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     linkId: props.direntId,
     bodyType: dirent!.type,
+    treeId: dirent?.commitIndex?.treeId!,
     type: linkProps?.contentType ?? 'internal',
     value: linkProps?.urlValue ?? '',
     labels: Object.entries(linkProps?.intlValues ?? {}).map(([locale, labelValue]) => ({ locale, labelValue })),

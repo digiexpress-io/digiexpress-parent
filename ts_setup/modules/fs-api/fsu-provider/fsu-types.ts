@@ -15,6 +15,7 @@ export type FsuChangeProps =
 
 export interface FsuChange {
   id: string;
+  treeId: string;
   isDirty: boolean; 
   bodyType: Fs.BodyType;
   getCurrentProps(): { bodyType: Fs.BodyType; id: string, changes: Record<string, any> };

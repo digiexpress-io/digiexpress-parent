@@ -42,6 +42,7 @@ type _ChangeStateProps = {
   articles: string[];
   intlValues: Record<string, string>;
   configOptions: Fs.ConfigOption[];
+  treeId: string;
 }
 
 class _ChangeState implements FsuChange {
@@ -54,6 +55,7 @@ class _ChangeState implements FsuChange {
   }
 
   get id() { return this._current.workflowId; }
+  get treeId() { return this._current.treeId; }
   get bodyType() { return this._current.bodyType; }
   get value() { return this._current.value; }
   get intlValues() { return this._current.intlValues; }
@@ -133,6 +135,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     workflowId: props.direntId,
     bodyType: dirent.type,
+    treeId: dirent?.commitIndex?.treeId!,
     value: dirent.name ?? '',
     formName: workflowProps.dialobFormName ?? '',
     formTag: workflowProps.dialobFormTag ?? '',

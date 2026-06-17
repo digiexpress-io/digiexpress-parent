@@ -60,4 +60,13 @@ export class FsuWorld {
     );
     return new FsuWorld({ changes });
   }
+
+
+  public isReinit(id: string, treeId: string): boolean {
+    if (!this.isChange(id)) {
+      return true;
+    }
+    const change = this.getChange(id);
+    return change.treeId !== treeId && !change.isDirty;
+  }
 }

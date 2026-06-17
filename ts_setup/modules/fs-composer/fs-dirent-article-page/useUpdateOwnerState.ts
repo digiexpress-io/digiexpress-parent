@@ -30,6 +30,7 @@ type _ChangeStateProps = {
   configOptions: Fs.ConfigOption[];
   devMode: boolean;
   disabledMode: boolean;
+  treeId: string;
 }
 
 class _ChangeState implements FsuChange {
@@ -42,6 +43,7 @@ class _ChangeState implements FsuChange {
   }
 
   get id() { return this._current.pageId; }
+  get treeId() { return this._current.treeId; }
   get locale() { return this._current.locale; }
   get content() { return this._current.content; }
 
@@ -79,9 +81,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
   }));
 
+
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     pageId: props.direntId,
     bodyType: dirent.type,
+    treeId: dirent?.commitIndex?.treeId!,
     locale: pageProps.localeCode,
     content: pageProps.content ?? '',
     configOptions: (pageProps.configOptions ?? []) as Fs.ConfigOption[],

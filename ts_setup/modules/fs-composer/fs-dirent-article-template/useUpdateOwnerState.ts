@@ -7,6 +7,7 @@ type _ChangeStateProps = {
   bodyType: Fs.BodyType;
   name: string;
   content: string;
+  treeId: string;
 }
 
 export interface UpdateOwnerState {
@@ -37,6 +38,7 @@ class _ChangeState implements FsuChange {
   get bodyType() {
     return this._current.bodyType;
   }
+  get treeId() { return this._current.treeId; }
   get name() {
     return this._current.name;
   }
@@ -82,6 +84,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     templateId: props.direntId,
     bodyType: dirent!.type,
+    treeId: dirent?.commitIndex?.treeId!,
     name: dirent!.name,
     content: templateProps?.content,
   }));

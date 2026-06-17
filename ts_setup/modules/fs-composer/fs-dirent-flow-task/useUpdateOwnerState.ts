@@ -19,6 +19,7 @@ type _ChangeStateProps = {
   flowTaskId: string;
   bodyType: Fs.BodyType;
   flowTaskValue: string;
+  treeId: string;
 }
 
 class _ChangeState implements FsuChange {
@@ -31,6 +32,7 @@ class _ChangeState implements FsuChange {
   }
 
   get id() { return this._current.flowTaskId; }
+  get treeId() { return this._current.treeId; }
   get bodyType() { return this._current.bodyType; }
   get flowTaskValue() { return this._current.flowTaskValue; }
   get isDirty(): boolean {
@@ -68,6 +70,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     flowTaskId: props.direntId,
     bodyType: flowTaskProps!.type,
+    treeId: dirent?.commitIndex?.treeId!,
     flowTaskValue: flowTaskProps?.taskValue ?? '',
   }));
 

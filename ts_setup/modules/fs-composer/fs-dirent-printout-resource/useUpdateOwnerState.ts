@@ -11,6 +11,7 @@ type _ChangeStateProps = {
   contentType: string;
   uploadBody: string;
   printoutPageIds: string[];
+  treeId: string;
 }
 
 export interface UpdateOwnerState {
@@ -43,6 +44,7 @@ class _ChangeState implements FsuChange {
   get id() {
     return this._current.resourceId;
   }
+  get treeId() { return this._current.treeId; }
   get bodyType() {
     return this._current.bodyType;
   }
@@ -107,6 +109,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     resourceId: props.direntId,
     bodyType: dirent.type,
+    treeId: dirent?.commitIndex?.treeId!,
     resourceName: resourceProps.resourceName ?? dirent.name ?? '',
     labels: (resourceProps.labels ?? []).map(l => l.key),
     contentType: resourceProps.contentType ?? '',

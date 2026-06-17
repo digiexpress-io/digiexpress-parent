@@ -95,27 +95,33 @@ export function useFsuChange<T extends FsuChange>(
 ): FsuChangeContextType<T> {
 
   const fs = useFsDirent();
+  const treeId = fs.getDirent(id)?.commitIndex?.treeId!;
   const initRef = React.useRef<T | null>(null);
 
+  const world = store.state;
+  const isStateCreated = world.isChange(id);
+  const reinit = world.isReinit(id, treeId);
+
   const initOnce = React.useCallback((): T => {
-    if (initRef.current !== null) {
+    if (initRef.current && !reinit) {
       return initRef.current;
     }
     initRef.current = init();
     return initRef.current;
-  }, []);
+  }, [init, reinit]);
+
 
   // register if not yet registered
-  const world = store.state;
   React.useEffect(() => {
-    if (!world.isChange(id)) {
-      const [nextWorld] = world.withNewChange(initOnce);
+    if (!world.isChange(id) || reinit) {
+      const [nextWorld] = world.clearChange(id).withNewChange(initOnce);
       store.setState(() => nextWorld);
     }
-  }, []);
+  }, [isStateCreated, initOnce]);
 
   // subscribe only to this node
   const state = useSelector(store, (w) => w.findChange(id) as T | undefined) ?? initOnce();
+
 
   return React.useMemo(() => ({
     state,

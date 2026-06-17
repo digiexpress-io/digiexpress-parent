@@ -10,6 +10,7 @@ type _ChangeStateProps = {
   value: string;
   enabled: boolean;
   configOptions: Fs.ConfigOption[];
+  treeId: string;
 }
 
 class _ChangeState implements FsuChange {
@@ -22,6 +23,7 @@ class _ChangeState implements FsuChange {
   }
 
   get id() { return this._current.localeId; }
+  get treeId() { return this._current.treeId; }
   get bodyType() { return this._current.bodyType; }
   get value() { return this._current.value; }
   get configOptions() { return this._current.configOptions; }
@@ -70,6 +72,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const { state, update, cancel } = useFsuChange(props.direntId, () => new _ChangeState({
     localeId: props.direntId,
     bodyType: dirent.type,
+    treeId: dirent?.commitIndex?.treeId!,
     value: languageProps.localeCode,
     enabled: !(languageProps.configOptions ?? []).includes('DISABLED_MODE'),
     configOptions: (languageProps.configOptions ?? []) as Fs.ConfigOption[],

@@ -1406,6 +1406,7 @@ export const en = {
   'fs.direntStats.section.overview.assetType.UNKNOWN': 'Unknown',
   'fs.breadcrumb.tooltip.error': 'An issue with this asset needs attention.',
   'fs.changesView.title': 'Unsaved changes',
+  'fs.changesView.save': 'Save changes',
   'fs.changesView.undo': 'Undo changes',
   'fs.changesView.discardAll': 'Discard all changes',
   'fs.changesView.saveAll': 'Save all changes',
