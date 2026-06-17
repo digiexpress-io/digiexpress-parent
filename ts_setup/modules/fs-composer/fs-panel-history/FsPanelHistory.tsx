@@ -20,20 +20,24 @@ export const FsPanelHistory: React.FC<FsPanelHistoryProps> = (props) => {
       activeDirent={true}
     >
       <FsPanelHistoryRoot className={classes.root} ownerState={ownerState}>
-        <div className={classes.container}>
-          <div className={classes.row}>
-            <Typography className={classes.change}>{intl.formatMessage({ id: 'fs.history.row.created' })}</Typography>
-            <Typography className={classes.user}>{ownerState.createdBy}</Typography>
-            <Typography className={classes.date}>{ownerState.createdAt}</Typography>
-          </div>
-          {ownerState.updatedAt && (
+        {!ownerState.createdAt ? (
+          <Typography>{intl.formatMessage({ id: 'fs.history.message.noHistory' })}</Typography>
+        ) : (
+          <div className={classes.container}>
             <div className={classes.row}>
-              <Typography className={classes.change}>{intl.formatMessage({ id: 'fs.history.row.updated' })}</Typography>
-              <Typography className={classes.user}>{ownerState.updatedBy}</Typography>
-              <Typography className={classes.date}>{ownerState.updatedAt}</Typography>
+              <Typography className={classes.change}>{intl.formatMessage({ id: 'fs.history.row.created' })}</Typography>
+              <Typography className={classes.user}>{ownerState.createdBy}</Typography>
+              <Typography className={classes.date}>{ownerState.createdAt}</Typography>
             </div>
-          )}
-        </div>
+            {ownerState.updatedAt && (
+              <div className={classes.row}>
+                <Typography className={classes.change}>{intl.formatMessage({ id: 'fs.history.row.updated' })}</Typography>
+                <Typography className={classes.user}>{ownerState.updatedBy}</Typography>
+                <Typography className={classes.date}>{ownerState.updatedAt}</Typography>
+              </div>
+            )}
+          </div>
+        )}
       </FsPanelHistoryRoot>
     </FsPanel>
   );
