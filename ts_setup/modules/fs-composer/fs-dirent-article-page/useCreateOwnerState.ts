@@ -9,23 +9,27 @@ import { createWidget } from '../fs-factory';
 export interface CreateOwnerState {
   isDarkMode: boolean;
   articleId: string;
+  templateId: string;
   locale: string;
   content: string;
   configOptions: Fs.ConfigOption[];
   availableConfigOptions: Fs.SelectOption[];
   articleOptions: FsDirentSelectSingleOption[];
   localeOptions: FsDirentSelectSingleOption[];
+  templateOptions: FsDirentSelectSingleOption[];
   isDirty: boolean;
   onChangeArticle: (value: string) => void;
   onChangeLocale: (value: string) => void;
   onChangeContent: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
+  onChangeTemplate: (value: string) => void;
   onSave: () => Promise<void>;
 }
 
 type _CreateStateProps = {
   bodyType: Fs.BodyType;
   articleId: string;
+  templateId: string;
   locale: string;
   content: string;
   configOptions: Fs.ConfigOption[];
@@ -44,6 +48,7 @@ class _CreateState implements FsuCreateChange {
 
   get bodyType() { return this._current.bodyType; }
   get articleId() { return this._current.articleId; }
+  get templateId() { return this._current.templateId; }
   get locale() { return this._current.locale; }
   get content() { return this._current.content; }
   get configOptions() { return this._current.configOptions; }
@@ -75,12 +80,16 @@ class _CreateState implements FsuCreateChange {
     const widget = createWidget({ type: 'ARTICLE_PAGE' });
     return new _CreateState({ ...this._current, configOptions: widget.meta.configOptions.filter(opt => value.includes(opt)) }, this._origin);
   }
+  withTemplate(templateId: string, content: string): _CreateState {
+    return new _CreateState({ ...this._current, templateId, content }, this._origin);
+  }
 }
 
 
 const _init: _CreateStateProps = {
   bodyType: 'ARTICLE_PAGE',
   articleId: '',
+  templateId: '',
   locale: '',
   content: '',
   configOptions: [],
@@ -105,6 +114,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     label: getDirentName(item.value) ?? item.label,
   }));
 
+  const templateOptions: FsDirentSelectSingleOption[] = Object.entries(selectOptions.direntProps)
+    .filter(([_id, props]) => props.type === 'ARTICLE_TEMPLATE')
+    .map(([id]) => ({ value: id, label: getDirentName(id) ?? id }));
+
   const localeOptions: FsDirentSelectSingleOption[] = selectOptions.languages.filter(
     l => !usedLocaleIds.includes(l.value)
   );
@@ -127,6 +140,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
+  function onChangeTemplate(value: string) {
+    const templateProps = selectOptions.direntProps[value] as Fs.TemplateProps | undefined;
+    setState(prev => prev.withTemplate(value, templateProps?.content ?? ''));
+  }
 
   async function onSave() {
     await createDirent(state);
@@ -135,17 +152,20 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   return ({
     isDarkMode,
     articleId: state.articleId,
+    templateId: state.templateId,
     locale: state.locale,
     content: state.content,
     configOptions: state.configOptions,
     availableConfigOptions,
     articleOptions,
     localeOptions,
+    templateOptions,
     isDirty: isChangesPresent,
     onChangeArticle,
     onChangeLocale,
     onChangeContent,
     onChangeConfigOptions,
+    onChangeTemplate,
     onSave,
   });
 };

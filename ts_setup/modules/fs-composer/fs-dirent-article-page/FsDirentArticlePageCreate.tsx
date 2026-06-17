@@ -21,14 +21,8 @@ export const FsDirentArticlePageCreate: React.FC = () => {
       </div>
 
       <div className={classes.formContainer}>
-        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}>
-          <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
-            <MDEditor height={600}
-              preview="edit"
-              value={ownerState.content}
-              onChange={(val) => ownerState.onChangeContent(val ?? '')}
-            />
-          </div>
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.localeField.label' })}>
+          <FsDirentSelectSingle required options={ownerState.localeOptions} value={ownerState.locale} onChange={ownerState.onChangeLocale} />
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.articleField.label' })}>
@@ -37,8 +31,20 @@ export const FsDirentArticlePageCreate: React.FC = () => {
           />
         </FsDirentFormField>
 
-        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.localeField.label' })}>
-          <FsDirentSelectSingle required options={ownerState.localeOptions} value={ownerState.locale} onChange={ownerState.onChangeLocale} />
+        {ownerState.templateOptions.length > 0 && (
+          <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.templateField.label' })}>
+            <FsDirentSelectSingle options={ownerState.templateOptions} value={ownerState.templateId} onChange={ownerState.onChangeTemplate} />
+          </FsDirentFormField>
+        )}
+
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}>
+          <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
+            <MDEditor height={600}
+              preview="edit"
+              value={ownerState.content}
+              onChange={(val) => ownerState.onChangeContent(val ?? '')}
+            />
+          </div>
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}>

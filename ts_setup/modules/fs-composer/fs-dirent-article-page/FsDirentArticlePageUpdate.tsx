@@ -18,20 +18,20 @@ export const FsDirentArticlePageUpdate: React.FC<FsDirentArticlePageProps> = (pr
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.page.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <div className={classes.formContainer}>
 
-        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}>
-          <MDEditor height={600}
-            data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}
-            preview="edit" value={ownerState.content}
-            onChange={(val) => ownerState.onChangeContent(val ?? '')}
-          />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.localeField.label' })}>
+          <FsDirentSelectSingle options={ownerState.localeOptions} value={ownerState.locale} onChange={ownerState.onChangeLocale} />
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.articleField.label' })}>
           <FsDirentTextField disabled value={ownerState.articleName} />
         </FsDirentFormField>
 
-        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.localeField.label' })}>
-          <FsDirentSelectSingle options={ownerState.localeOptions} value={ownerState.locale} onChange={ownerState.onChangeLocale} />
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}>
+          <MDEditor height={600}
+            data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}
+            preview="edit" value={ownerState.content}
+            onChange={(val) => ownerState.onChangeContent(val ?? '')}
+          />
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}>

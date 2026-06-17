@@ -1495,6 +1495,7 @@ export const en = {
   'fs.dirent.page.localeField.label': 'Language',
   'fs.dirent.page.contentField.label': 'Markdown content',
   'fs.dirent.page.articleField.label': 'Article',
+  'fs.dirent.page.templateField.label': 'Create page from template',
   'fs.dirent.page.parentField.label': 'Location',
   'fs.dirent.flow.sectionTitle.createNew': 'Create new flow',
   'fs.dirent.flow.sectionTitle.edit': 'Edit flow',
