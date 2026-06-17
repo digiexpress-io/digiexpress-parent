@@ -56,7 +56,8 @@ public interface WorldFsProps {
 
   @Value.Immutable
   interface ArticleTemplateProps extends WorldFsProps {
-
+    @Nullable 
+    String getContent();
   }
   
   @Value.Immutable

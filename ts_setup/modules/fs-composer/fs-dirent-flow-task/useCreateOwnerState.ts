@@ -1,12 +1,13 @@
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
-import { Fs, FsuCreateChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
   isDirty: boolean;
   name: string;
   onChangeName: (value: string) => void;
+  onSave: () => Promise<void>;
 }
 
 type _CreateStateProps = {
@@ -46,17 +47,22 @@ const _init: _CreateStateProps = { bodyType: 'FLOW_TASK', name: '', tagLabels: [
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
+  const { createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
   function onChangeName(value: string) {
     setState(prev => prev.withName(value));
   }
+  async function onSave() {
+    await createDirent(state);
+  }
 
   return ({
     isDarkMode,
     isDirty: state.isDirty,
     name: state.name,
-    onChangeName
+    onChangeName,
+    onSave,
   });
 };

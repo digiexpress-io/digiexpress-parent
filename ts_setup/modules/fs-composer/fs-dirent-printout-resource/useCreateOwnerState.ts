@@ -16,6 +16,7 @@ export interface CreateOwnerState {
   onChangeContentType: (value: string) => void;
   onChangeUploadBody: (value: string) => void;
   onChangePrintoutPageIds: (value: string[]) => void;
+  onSave: () => Promise<void>;
 }
 
 type _CreateStateProps = {
@@ -96,7 +97,7 @@ const _init: _CreateStateProps = {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { selectOptions, getDirentName } = useFsDirent();
+  const { selectOptions, getDirentName, createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
@@ -121,6 +122,9 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   function onChangePrintoutPageIds(value: string[]) {
     setState(prev => prev.withPrintoutPageIds(value));
   }
+  async function onSave() {
+    await createDirent(state);
+  }
 
   return {
     isDarkMode,
@@ -135,5 +139,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeContentType,
     onChangeUploadBody,
     onChangePrintoutPageIds,
+    onSave,
   };
 };

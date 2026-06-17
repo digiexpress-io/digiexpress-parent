@@ -36,7 +36,6 @@ import io.resys.limaone.model.Model.BodyType;
 public interface ArticleTemplate extends Body {
   
   String getName();
-  String getDescription();
   String getContent();
   String getType();
   

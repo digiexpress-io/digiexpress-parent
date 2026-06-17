@@ -6,6 +6,7 @@ import { createWidget } from '../fs-factory';
 import { useUtilityClasses, FsDirentArticleLinkRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentSelectMulti, FsDirentTextField, FsDirentFormField, FsDirentSelectSingle } from '../fs-utilities';
+import { FsDirentButtonSave } from '../fs-dirent-button-save';
 
 export const FsDirentArticleLinkCreate: React.FC = () => {
   const intl = useIntl();
@@ -25,7 +26,10 @@ export const FsDirentArticleLinkCreate: React.FC = () => {
 
   return (
     <FsDirentArticleLinkRoot className={classes.root} ownerState={ownerState}>
-      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.link.sectionTitle.createNew' })}</Typography>
+      <div className={classes.titleRow}>
+        <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.link.sectionTitle.createNew' })}</Typography>
+        <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />
+      </div>
       <div className={classes.formContainer}>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.link.urlValueField.label' })}>

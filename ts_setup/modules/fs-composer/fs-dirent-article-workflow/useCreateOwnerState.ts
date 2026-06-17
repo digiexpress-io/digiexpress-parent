@@ -26,6 +26,7 @@ export interface CreateOwnerState {
   onChangeConfigOptions: (v: string[]) => void;
   onChangeValidityStart: (date: Date | undefined) => void;
   onChangeValidityEnd: (date: Date | undefined) => void;
+  onSave: () => Promise<void>;
 }
 
 type _CreateStateProps = {
@@ -128,7 +129,7 @@ const _init: _CreateStateProps = {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { selectOptions } = useFsDirent();
+  const { selectOptions, createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
@@ -163,6 +164,9 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     const iso = date ? date.toISOString() : '';
     setState(prev => prev.withValidityEnd(iso));
   }
+  async function onSave() {
+    await createDirent(state);
+  }
 
   return ({
     isDarkMode,
@@ -186,5 +190,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeConfigOptions,
     onChangeValidityStart,
     onChangeValidityEnd,
+    onSave,
   });
 };

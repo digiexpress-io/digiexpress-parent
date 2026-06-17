@@ -38,7 +38,7 @@ public class Authoring_8_Meta_Test extends DbSupport {
     
     final var template1 = authoring.newModel()
         .newArticleTemplate()
-        .props(props -> props.name("Nice page template").content("# Header 1").type("Page").description("Generic page structure"))
+        .props(props -> props.name("Nice page template").content("# Header 1").type("Page"))
         .buildSync();
         
     @SuppressWarnings("unused")

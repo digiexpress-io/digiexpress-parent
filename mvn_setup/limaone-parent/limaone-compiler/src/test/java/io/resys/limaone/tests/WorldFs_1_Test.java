@@ -117,12 +117,12 @@ public class WorldFs_1_Test extends DbSupport {
       
     final var template1 = authoring.newModel()
       .newArticleTemplate()
-      .props(props -> props.name("Template1").content("#Heading1").description("Very good template1").type("type"))
+      .props(props -> props.name("Template1").content("#Heading1").type("type"))
       .buildSync();
     
     final var template2 = authoring.newModel()
         .newArticleTemplate()
-        .props(props -> props.name("Template2").content("#Heading1").description("Excellent template2").type("type"))
+        .props(props -> props.name("Template2").content("#Heading1").type("type"))
         .buildSync();
       
     final var printout1 = authoring.newModel()

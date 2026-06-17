@@ -21,7 +21,7 @@ export const FsDirentDescription: React.FC<FsDirentDescriptionProps> = (props) =
         <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />
       </div>
 
-      <FsDirentTextField multiline minRows={35} maxRows={60}
+      <FsDirentTextField multiline minRows={25} maxRows={40}
         value={ownerState.description}
         onChange={(value) => ownerState.onChangeDescription(value)}
         placeholder={intl.formatMessage({ id: 'fs.dirent.descriptionField.placeholder' })}

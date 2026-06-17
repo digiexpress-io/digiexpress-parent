@@ -44,6 +44,7 @@ export const FsDirentDescriptionRoot = styled('div', {
     ...theme.typography.subtitle2,
     fontWeight: 500,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    marginBottom: theme.spacing(2)
   },
 
   [`& .${MUI_NAME}-textField`]: {

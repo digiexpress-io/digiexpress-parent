@@ -1,8 +1,9 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import MonacoReact from '@monaco-editor/react';
-import { FsDirentFormField } from '../fs-utilities';
+import MDEditor from '@uiw/react-md-editor';
+import { FsDirentFormField, FsDirentTextField } from '../fs-utilities';
+import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { useUtilityClasses, FsDirentArticleTemplateRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 
@@ -14,18 +15,23 @@ export const FsDirentArticleTemplateCreate: React.FC = () => {
 
   return (
     <FsDirentArticleTemplateRoot className={classes.root} ownerState={ownerState}>
-      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.template.sectionTitle.createNew' })}</Typography>
+      <div className={classes.titleRow}>
+        <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.template.sectionTitle.createNew' })}</Typography>
+        <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />
+      </div>
       <div className={classes.formContainer}>
 
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.direntCreate.nameField.placeholder' })}>
+          <FsDirentTextField required value={ownerState.name} onChange={ownerState.onChangeName} />
+        </FsDirentFormField>
+
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.template.contentField.label' })}>
-          <div className={classes.editor}>
-            <MonacoReact height="100%" defaultLanguage="html"
-              options={{
-                wordBasedSuggestions: 'off',
-                minimap: { enabled: false },
-              }}
-            />
-          </div>
+          <MDEditor height={600}
+            data-color-mode="light"
+            preview="edit"
+            value={ownerState.content}
+            onChange={(value) => ownerState.onChangeContent(value ?? '')}
+          />
         </FsDirentFormField>
 
       </div>

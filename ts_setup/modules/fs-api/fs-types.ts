@@ -348,7 +348,7 @@ export declare namespace Fs {
 
   export interface TemplateProps extends PropsBase {
     type: 'ARTICLE_TEMPLATE';
-    content?: string;
+    content: string;
   }
 
   export interface LinkProps extends PropsBase {

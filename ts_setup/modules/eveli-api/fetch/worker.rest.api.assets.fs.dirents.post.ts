@@ -37,6 +37,9 @@ function hook(props: {}) {
       if (props.bodyType === 'ARTICLE_WORKFLOW') {
         return baseline('article-workflows', props.changes);
       }
+      if (props.bodyType === 'ARTICLE_TEMPLATE') {
+        return baseline('article-templates', props.changes);
+      }
       if (props.bodyType === 'FLOW') {
         return baseline('flows', props.changes);
       }

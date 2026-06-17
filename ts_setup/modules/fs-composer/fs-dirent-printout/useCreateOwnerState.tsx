@@ -11,6 +11,7 @@ import React from 'react';
     flows: Fs.SelectOption[];
     onChangeServiceName: (value: string) => void;
     onChangeOrchestratorName: (value: string) => void;
+    onSave: () => Promise<void>;
   }
 
   type _CreateStateProps = {
@@ -69,7 +70,7 @@ import React from 'react';
 
   export const useCreateOwnerState = (): CreateOwnerState => {
     const { isDarkMode } = useFsTheme();
-    const { selectOptions } = useFsDirent();
+    const { selectOptions, createDirent } = useFsDirent();
 
     const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
@@ -78,6 +79,9 @@ import React from 'react';
     }
     function onChangeOrchestratorName(value: string) {
       setState(prev => prev.withOrchestratorName(value));
+    }
+    async function onSave() {
+      await createDirent(state);
     }
 
     return {
@@ -88,5 +92,6 @@ import React from 'react';
       flows: selectOptions.flows,
       onChangeServiceName,
       onChangeOrchestratorName,
+      onSave,
     };
   };

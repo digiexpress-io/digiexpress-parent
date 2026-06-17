@@ -21,6 +21,7 @@ export interface CreateOwnerState {
   onChangeIntlValue: (locale: string, value: string) => void;
   onChangeArticles: (value: string[]) => void;
   onChangeConfigOptions: (value: string[]) => void;
+  onSave: () => Promise<void>;
 }
 
 type _CreateStateProps = {
@@ -99,7 +100,7 @@ const _init: _CreateStateProps = {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { selectOptions } = useFsDirent();
+  const { selectOptions, createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
   const locales = selectOptions.languages;
@@ -121,6 +122,9 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   function onChangeConfigOptions(value: string[]) {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
+  async function onSave() {
+    await createDirent(state);
+  }
 
   return ({
     isDarkMode,
@@ -136,5 +140,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeIntlValue,
     onChangeArticles,
     onChangeConfigOptions,
+    onSave,
   });
 };

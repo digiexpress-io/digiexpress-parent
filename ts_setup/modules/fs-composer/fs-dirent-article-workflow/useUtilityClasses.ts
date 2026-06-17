@@ -6,6 +6,7 @@ const MUI_NAME = 'FsDirentArticleWorkflowRoot';
 
 export interface FsDirentArticleWorkflowClasses {
   root: string;
+  titleRow: string;
   title: string;
   formContainer: string;
   localeLabel: string;
@@ -18,6 +19,7 @@ export type FsDirentArticleWorkflowClassKey = keyof FsDirentArticleWorkflowClass
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
+    titleRow: ['titleRow'],
     title: ['title'],
     formContainer: ['formContainer'],
     localeLabel: ['localeLabel'],
@@ -35,6 +37,13 @@ export const FsDirentArticleWorkflowRoot = styled('div', {
 })<{ ownerState: { isDarkMode: boolean } }>(({ theme, ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
+
+  [`& .${MUI_NAME}-titleRow`]: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(2),
+  },
 
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.body1,

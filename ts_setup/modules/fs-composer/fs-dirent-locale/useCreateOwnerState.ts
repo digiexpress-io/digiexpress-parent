@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
-import { Fs, FsuCreateChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 
 export interface TextFields {
   locale: string;
@@ -11,6 +11,7 @@ export interface CreateOwnerState {
   locale: string;
   isDirty: boolean;
   onChangeLocale: (value: string) => void;
+  onSave: () => Promise<void>;
 }
 
 type _CreateStateProps = {
@@ -47,20 +48,24 @@ const _init: _CreateStateProps = { bodyType: 'LOCALE', locale: '' };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
+  const { createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
-
 
   const isChangesPresent = state.isDirty;
 
   function onChangeLocale(value: string) {
     setState(prev => prev.withLocale(value));
   }
+  async function onSave() {
+    await createDirent(state);
+  }
 
   return ({
     locale: state.locale,
     isDarkMode,
     isDirty: isChangesPresent,
-    onChangeLocale
+    onChangeLocale,
+    onSave,
   });
 };

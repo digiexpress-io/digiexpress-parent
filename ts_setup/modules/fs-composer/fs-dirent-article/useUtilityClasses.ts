@@ -49,6 +49,7 @@ export const FsDirentArticleRoot = styled('div', {
     ...theme.typography.body1,
     fontWeight: 500,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    marginBottom: theme.spacing(2)
   },
 
   [`& .${MUI_NAME}-formContainer`]: {

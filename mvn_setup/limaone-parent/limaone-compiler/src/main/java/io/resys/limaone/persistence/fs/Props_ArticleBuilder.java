@@ -47,11 +47,6 @@ public class Props_ArticleBuilder {
       builder.addConfigOptions(ConfigOption.AUTH_ONLY_MODE);
     }
 
-//    final List<Label> labels = article.getLabels() == null ? Collections.emptyList() :
-//        article.getLabels().stream()
-//            .map(v -> (Label) ImmutableLabel.builder().id(v).value(v).build())
-//            .toList();
-
     return builder
         .id(node.getObjectId())
         .type(node.getBodyType())

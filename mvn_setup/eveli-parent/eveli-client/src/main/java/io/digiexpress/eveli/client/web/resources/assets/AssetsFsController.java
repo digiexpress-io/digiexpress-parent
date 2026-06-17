@@ -50,6 +50,7 @@ import io.resys.limaone.authoring.ModifyPrintoutResource.ModifyPrintoutResourceP
 import io.resys.limaone.authoring.NewArticle.NewArticleProps;
 import io.resys.limaone.authoring.NewArticleLink.NewArticleLinkProps;
 import io.resys.limaone.authoring.NewArticlePage.NewArticlePageProps;
+import io.resys.limaone.authoring.NewArticleTemplate.NewArticleTemplateProps;
 import io.resys.limaone.authoring.NewArticleWorkflow.NewArticleWorkflowProps;
 import io.resys.limaone.authoring.NewDecisionTable.NewDecisionTableProps;
 import io.resys.limaone.authoring.NewFlow.NewFlowProps;
@@ -64,6 +65,7 @@ import io.resys.limaone.fs.WorldFsBody.WrenchAstBodyChange;
 import io.resys.limaone.model.Article;
 import io.resys.limaone.model.ArticleLink;
 import io.resys.limaone.model.ArticlePage;
+import io.resys.limaone.model.ArticleTemplate;
 import io.resys.limaone.model.ArticleWorkflow;
 import io.resys.limaone.model.DecisionTable;
 import io.resys.limaone.model.Flow;
@@ -133,6 +135,7 @@ public class AssetsFsController {
   {
     return authoring.modifyModel().modifyArticle().props(body).build();
   }
+ 
 
   @PutMapping("dirents/links/{id}")
   public Uni<Model<ArticleLink>> udpateLink(
@@ -228,6 +231,11 @@ public class AssetsFsController {
   @PostMapping("dirents/links")
   public Uni<Model<ArticleLink>> createLink(@RequestBody NewArticleLinkProps body) {
     return authoring.newModel().newArticleLink().props(body).build();
+  }
+  
+  @PostMapping("dirents/article-templates")
+  public Uni<Model<ArticleTemplate>> createArticleTemplate(@RequestBody NewArticleTemplateProps body) {
+    return authoring.newModel().newArticleTemplate().props(body).build();
   }
   
   @PostMapping("dirents/locales")

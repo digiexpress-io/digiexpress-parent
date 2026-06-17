@@ -5,6 +5,7 @@ import { useFsNav } from '@dxs-ts/fs-nav';
 type _ChangeStateProps = {
   templateId: string;
   bodyType: Fs.BodyType;
+  name: string;
   content: string;
 }
 
@@ -14,7 +15,9 @@ export interface UpdateOwnerState {
   isDirty: boolean;
   id: string;
   dirent: Fs.DirentBase | undefined;
+  name: string;
   content: string;
+  onChangeName: (value: string) => void;
   onChangeContent: (value: string) => void;
 }
 
@@ -34,6 +37,9 @@ class _ChangeState implements FsuChange {
   get bodyType() {
     return this._current.bodyType;
   }
+  get name() {
+    return this._current.name;
+  }
   get content() {
     return this._current.content;
   }
@@ -46,11 +52,16 @@ class _ChangeState implements FsuChange {
       bodyType: this._current.bodyType,
       id: this._current.templateId,
       changes: {
+        name: this._current.name,
+        type: this._current.bodyType,
         content: this._current.content || undefined,
       },
     };
   }
 
+  withName(name: string): _ChangeState {
+    return new _ChangeState({ ...this._current, name }, this._origin);
+  }
   withContent(content: string): _ChangeState {
     return new _ChangeState({ ...this._current, content }, this._origin);
   }
@@ -65,15 +76,19 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
 
-  const dirent = getDirent(props.direntId);
-  const templateProps = dirent?.type === 'ARTICLE_TEMPLATE' ? dirent.props as Fs.TemplateProps : undefined;
+  const dirent = getDirent(props.direntId)!;
+  const templateProps = dirent.props as Fs.TemplateProps;
 
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     templateId: props.direntId,
     bodyType: dirent!.type,
-    content: templateProps?.content ?? '',
+    name: dirent!.name,
+    content: templateProps?.content,
   }));
 
+  function onChangeName(value: string) {
+    setState(prev => prev.withName(value));
+  }
   function onChangeContent(value: string) {
     setState(prev => prev.withContent(value));
   }
@@ -84,7 +99,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     isDirty: state.isDirty,
     id: state.id,
     dirent,
+    name: state.name,
     content: state.content,
+    onChangeName,
     onChangeContent,
   });
 };

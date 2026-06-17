@@ -48,10 +48,9 @@ public interface ModifyArticleTemplate {
   interface ModifyArticleTemplateProps extends AuthoringModelProps {
     String getTemplateId();
     String getName();
-    String getDescription();
     String getContent();
     String getType();
-    
+
     @Nullable Description getAssetDescription();
     @Nullable DescriptionLabels getAssetLabels();
   }

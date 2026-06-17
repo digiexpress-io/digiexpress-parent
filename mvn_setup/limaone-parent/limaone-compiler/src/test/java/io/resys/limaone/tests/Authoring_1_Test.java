@@ -40,7 +40,7 @@ public class Authoring_1_Test extends DbSupport {
     
     final var template1 = authoring.newModel()
         .newArticleTemplate()
-        .props(props -> props.name("Nice page template").content("# Header 1").type("Page").description("Generic page structure"))
+        .props(props -> props.name("Nice page template").content("# Header 1").type("Page"))
         .buildSync();
         
     final var article1 = authoring.newModel()
@@ -111,8 +111,7 @@ public class Authoring_1_Test extends DbSupport {
         .props(props -> props.templateId(template1.getId())
             .name("new name")
             .content("cool content")
-            .type("PAGE")
-            .description("description"))
+            .type("PAGE"))
         .buildSync();
 
     authoring.modifyModel()

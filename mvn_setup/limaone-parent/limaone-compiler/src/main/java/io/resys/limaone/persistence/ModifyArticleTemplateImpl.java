@@ -91,7 +91,6 @@ public class ModifyArticleTemplateImpl extends AuthoringTemplate<ModifyArticleTe
     return ImmutableArticleTemplate.builder()
       .from(start.getBody())
       .name(props.getName())
-      .description(props.getDescription())
       .content(props.getContent())
       .type(props.getType())
       .build();

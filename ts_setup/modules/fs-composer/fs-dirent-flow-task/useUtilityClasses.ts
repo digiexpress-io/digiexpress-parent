@@ -6,6 +6,7 @@ const MUI_NAME = 'FsDirentFlowTask';
 
 export interface FsDirentFlowTaskClasses {
   root: string;
+  titleRow: string;
   title: string;
   formContainer: string;
   editor: string;
@@ -16,6 +17,7 @@ export type FsDirentFlowTaskClassKey = keyof FsDirentFlowTaskClasses;
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
+    titleRow: ['titleRow'],
     title: ['title'],
     formContainer: ['formContainer'],
     editor: ['editor'],
@@ -32,11 +34,18 @@ export const FsDirentFlowTaskRoot = styled('div', {
   display: 'flex',
   flexDirection: 'column',
 
+  [`& .${MUI_NAME}-titleRow`]: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(2),
+  },
+
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.body1,
     fontWeight: 500,
-    marginBottom: theme.spacing(2),
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    marginBottom: theme.spacing(2)
   },
 
   [`& .${MUI_NAME}-formContainer`]: {

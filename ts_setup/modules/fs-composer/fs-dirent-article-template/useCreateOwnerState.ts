@@ -1,10 +1,11 @@
 import React from 'react';
-import { Fs, FsuCreateChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 
 type _CreateStateProps = {
   bodyType: Fs.BodyType;
   name: string;
+  content: string;
 }
 
 class _CreateState implements FsuCreateChange {
@@ -22,6 +23,9 @@ class _CreateState implements FsuCreateChange {
   get name() {
     return this._current.name;
   }
+  get content() {
+    return this._current.content;
+  }
   get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
@@ -31,6 +35,8 @@ class _CreateState implements FsuCreateChange {
       bodyType: this._current.bodyType,
       changes: {
         name: this._current.name || undefined,
+        type: this._current.bodyType,
+        content: this._current.content || undefined,
       },
     };
   }
@@ -38,33 +44,50 @@ class _CreateState implements FsuCreateChange {
   withName(name: string): _CreateState {
     return new _CreateState({ ...this._current, name }, this._origin);
   }
+  withContent(content: string): _CreateState {
+    return new _CreateState({ ...this._current, content }, this._origin);
+  }
 }
 
 const _init: _CreateStateProps = {
   bodyType: 'ARTICLE_TEMPLATE',
   name: '',
+  content: '',
 };
 
 export interface CreateOwnerState {
   isDarkMode: boolean;
   isDirty: boolean;
   name: string;
+  content: string;
   onChangeName: (value: string) => void;
+  onChangeContent: (value: string) => void;
+  onSave: () => Promise<void>;
 }
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
+  const { createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
   function onChangeName(value: string) {
     setState(prev => prev.withName(value));
   }
+  function onChangeContent(value: string) {
+    setState(prev => prev.withContent(value));
+  }
+  async function onSave() {
+    await createDirent(state);
+  }
 
   return ({
     isDarkMode,
     isDirty: state.isDirty,
     name: state.name,
+    content: state.content,
     onChangeName,
+    onChangeContent,
+    onSave,
   });
 };

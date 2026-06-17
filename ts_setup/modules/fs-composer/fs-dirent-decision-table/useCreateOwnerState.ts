@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
-import { Fs, FsuCreateChange } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 
 
 export interface CreateOwnerState {
@@ -8,6 +8,7 @@ export interface CreateOwnerState {
   name: string;
   isDirty: boolean;
   onChangeName: (v: string) => void;
+  onSave: () => Promise<void>;
 }
 
 type _CreateStateProps = {
@@ -54,11 +55,15 @@ const _init: _CreateStateProps = { bodyType: 'DECISION_TABLE', name: '' };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
+  const { createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
   function onChangeName(v: string) {
     setState(prev => prev.withName(v));
+  }
+  async function onSave() {
+    await createDirent(state);
   }
 
   return {
@@ -66,5 +71,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     name: state.name,
     isDirty: state.isDirty,
     onChangeName,
+    onSave,
   };
 };

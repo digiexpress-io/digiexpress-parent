@@ -19,9 +19,11 @@ export const FsDirentArticlePageUpdate: React.FC<FsDirentArticlePageProps> = (pr
       <div className={classes.formContainer}>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}>
-          <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
-            <MDEditor preview="edit" value={ownerState.content} onChange={(val) => ownerState.onChangeContent(val ?? '')} />
-          </div>
+          <MDEditor height={600}
+            data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}
+            preview="edit" value={ownerState.content}
+            onChange={(val) => ownerState.onChangeContent(val ?? '')}
+          />
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.articleField.label' })}>

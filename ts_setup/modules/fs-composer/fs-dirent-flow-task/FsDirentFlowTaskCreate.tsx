@@ -1,6 +1,8 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
+import { Typography } from '@mui/material';
 import { FsDirentFormField, FsDirentTextField } from '../fs-utilities';
+import { FsDirentButtonSave } from '../fs-dirent-button-save';
 
 import { useUtilityClasses, FsDirentFlowTaskRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
@@ -14,6 +16,10 @@ export const FsDirentFlowTaskCreate: React.FC = () => {
 
   return (
     <FsDirentFlowTaskRoot className={classes.root} ownerState={ownerState}>
+      <div className={classes.titleRow}>
+        <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.flow_task.sectionTitle.createNew' })}</Typography>
+        <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />
+      </div>
       <div className={classes.formContainer}>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.flow_task.taskNameField.label' })}>

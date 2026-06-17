@@ -25,22 +25,24 @@ import java.util.Collections;
 import io.resys.limaone.fs.ImmutableArticleTemplateProps;
 import io.resys.limaone.fs.WorldFsProps;
 import io.resys.limaone.fs.WorldFsProps.ArticleTemplateProps;
+import io.resys.limaone.model.ArticleTemplate;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class Props_ArticleTemplateBuilder {
   
-  @SuppressWarnings("unused")
   private final WorldFsState currentState;
   private final NodeAndBody node;
   
   public ArticleTemplateProps build() {
+    final ArticleTemplate template = currentState.getBodyOfType(node);
 
 
     return ImmutableArticleTemplateProps.builder()
         .id(node.getObjectId())
-        .type(node.getBodyType())
+        .type(template.getBodyType())
         .locked(false)
+        .content(template.getContent())
         .assetDescription(node.getDescription().map(e -> e.getText()).orElse(null))
         .labels(node.getLabels().map(e -> e.getValues()).orElse(Collections.emptyList()))
         .build();

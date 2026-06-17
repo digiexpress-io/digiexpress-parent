@@ -23,7 +23,11 @@ export const FsDirentArticlePageCreate: React.FC = () => {
       <div className={classes.formContainer}>
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}>
           <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
-            <MDEditor preview="edit" value={ownerState.content} onChange={(val) => ownerState.onChangeContent(val ?? '')} />
+            <MDEditor height={600}
+              preview="edit"
+              value={ownerState.content}
+              onChange={(val) => ownerState.onChangeContent(val ?? '')}
+            />
           </div>
         </FsDirentFormField>
 

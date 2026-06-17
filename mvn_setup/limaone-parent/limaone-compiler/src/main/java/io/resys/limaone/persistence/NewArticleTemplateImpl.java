@@ -75,7 +75,6 @@ public class NewArticleTemplateImpl extends AuthoringTemplate<NewArticleTemplate
 
     final var template = ImmutableArticleTemplate.builder()
         .name(props.getName())
-        .description(props.getDescription())
         .type(props.getType())
         .content(props.getContent());
     

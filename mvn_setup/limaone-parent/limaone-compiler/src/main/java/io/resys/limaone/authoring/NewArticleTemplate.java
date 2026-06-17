@@ -47,7 +47,6 @@ public interface NewArticleTemplate {
   @Value.Immutable @JsonSerialize(as = ImmutableNewArticleTemplateProps.class) @JsonDeserialize(as = ImmutableNewArticleTemplateProps.class)
   interface NewArticleTemplateProps extends AuthoringModelProps {
     String getName();
-    String getDescription();
     String getContent();
     String getType();
     
