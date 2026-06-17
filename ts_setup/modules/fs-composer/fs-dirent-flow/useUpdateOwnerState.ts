@@ -1,5 +1,6 @@
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
+import { createWidget } from '../fs-factory';
 import {
   Fs,
   useFsDirent,
@@ -23,8 +24,6 @@ type _ChangeStateProps = {
   bodyType: Fs.BodyType;
   flowValue: string;
   configOptions: Fs.ConfigOption[];
-  devMode: boolean;
-  disabledMode: boolean;
 }
 
 class _ChangeState implements FsuChange {
@@ -54,8 +53,9 @@ class _ChangeState implements FsuChange {
   withFlowValue(flowValue: string): _ChangeState {
     return new _ChangeState({ ...this._current, flowValue }, this._origin);
   }
-  withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
-    return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
+  withConfigOptions(_value: string[]): _ChangeState {
+    const widget = createWidget({ type: 'FLOW' });
+    return new _ChangeState({ ...this._current, configOptions: widget.meta.configOptions }, this._origin);
   }
 
 }
@@ -75,8 +75,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     bodyType: flowProps!.type,
     flowValue: flowProps?.content ?? '',
     configOptions: (flowProps?.configOptions ?? []) as Fs.ConfigOption[],
-    devMode: (flowProps?.configOptions ?? []).includes('DEV_MODE'),
-    disabledMode: (flowProps?.configOptions ?? []).includes('DISABLED_MODE'),
   }));
 
   function onChangeContent(value: string) {

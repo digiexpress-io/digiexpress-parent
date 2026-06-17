@@ -7,6 +7,7 @@ import {
   FsuChange
 } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
+import { createWidget } from '../fs-factory';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
@@ -78,8 +79,12 @@ class _ChangeState implements FsuChange {
   withArticles(articles: string[]): _ChangeState {
     return new _ChangeState({ ...this._current, articles }, this._origin);
   }
-  withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
-    return new _ChangeState({ ...this._current, configOptions, devMode: configOptions.includes('DEV_MODE'), disabledMode: configOptions.includes('DISABLED_MODE') }, this._origin);
+  withConfigOptions(_value: string[]): _ChangeState {
+    const widget = createWidget({ type: 'ARTICLE_LINK' })
+    return new _ChangeState({
+      ...this._current,
+      configOptions: widget.meta.configOptions,
+    }, this._origin);
   }
 }
 

@@ -1,6 +1,7 @@
 import { useFsTheme } from '../fs-theme';
 import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
+import { createWidget } from '../fs-factory';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
@@ -53,12 +54,11 @@ class _ChangeState implements FsuChange {
   withOrder(order: string): _ChangeState {
     return new _ChangeState({ ...this._current, order: parseInt(order) || 0 }, this._origin);
   }
-  withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
+  withConfigOptions(_value: string[]): _ChangeState {
+    const widget = createWidget({ type: 'ARTICLE' })
     return new _ChangeState({
       ...this._current,
-      configOptions,
-      devMode: configOptions.includes('DEV_MODE'),
-      authOnly: configOptions.includes('AUTH_ONLY_MODE'),
+      configOptions: widget.meta.configOptions,
     }, this._origin);
   }
 }

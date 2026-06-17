@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { createWidget } from '../fs-factory';
 import { FsDirentSelectMulti, FsDirentTextField, FsDirentFormField } from '../fs-utilities';
+import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 
@@ -19,7 +20,10 @@ export const FsDirentArticleCreate: React.FC = () => {
 
   return (
     <FsDirentArticleRoot className={classes.root} ownerState={ownerState}>
-      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.article.sectionTitle.createNew' })}</Typography>
+      <div className={classes.titleRow}>
+        <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.article.sectionTitle.createNew' })}</Typography>
+        <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />
+      </div>
       <div className={classes.formContainer}>
         {ownerState.parentArticle && (
           <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.article.parentArticleField.label' })}>

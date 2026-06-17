@@ -58,11 +58,11 @@ class _ChangeState implements FsuChange {
   withContent(content: string): _ChangeState {
     return new _ChangeState({ ...this._current, content }, this._origin);
   }
-  withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
+  withConfigOptions(_value: string[]): _ChangeState {
+    const widget = createWidget({ type: 'ARTICLE_PAGE' })
     return new _ChangeState({
-      ...this._current, configOptions,
-      devMode: configOptions.includes('DEV_MODE'),
-      disabledMode: configOptions.includes('DISABLED_MODE')
+      ...this._current,
+      configOptions: widget.meta.configOptions,
     }, this._origin);
   }
 }

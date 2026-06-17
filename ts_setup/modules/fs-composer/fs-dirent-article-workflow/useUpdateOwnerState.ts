@@ -2,6 +2,7 @@ import React from 'react';
 import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
+import { createWidget } from '../fs-factory';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
@@ -113,8 +114,9 @@ class _ChangeState implements FsuChange {
   withIntlValues(locale: string, labelValue: string): _ChangeState {
     return new _ChangeState({ ...this._current, intlValues: { ...this._current.intlValues, [locale]: labelValue } }, this._origin);
   }
-  withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
-    return new _ChangeState({ ...this._current, configOptions }, this._origin);
+  withConfigOptions(_value: string[]): _ChangeState {
+    const widget = createWidget({ type: 'ARTICLE_WORKFLOW' });
+    return new _ChangeState({ ...this._current, configOptions: widget.meta.configOptions }, this._origin);
   }
 }
 

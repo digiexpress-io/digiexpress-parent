@@ -6,6 +6,7 @@ const MUI_NAME = 'FsDirentArticle';
 
 export interface FsDirentArticleClasses {
   root: string;
+  titleRow: string;
   title: string;
   formContainer: string;
   sectionTitle: string;
@@ -18,6 +19,7 @@ export type FsDirentArticleClassKey = keyof FsDirentArticleClasses;
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
+    titleRow: ['titleRow'],
     title: ['title'],
     formContainer: ['formContainer'],
     sectionTitle: ['sectionTitle'],
@@ -36,10 +38,16 @@ export const FsDirentArticleRoot = styled('div', {
   display: 'flex',
   flexDirection: 'column',
 
+  [`& .${MUI_NAME}-titleRow`]: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(2),
+  },
+
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.body1,
     fontWeight: 500,
-    marginBottom: theme.spacing(2),
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
   },
 

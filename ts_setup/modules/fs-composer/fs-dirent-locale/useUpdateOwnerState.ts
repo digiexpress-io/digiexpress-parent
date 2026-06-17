@@ -1,6 +1,7 @@
 import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
+import { createWidget } from '../fs-factory';
 
 
 type _ChangeStateProps = {
@@ -29,11 +30,13 @@ class _ChangeState implements FsuChange {
   getCurrentProps(): { bodyType: Fs.BodyType; id: string; changes: Record<string, any> } {
     return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
   }
-  withConfigOptions(configOptions: Fs.ConfigOption[]): _ChangeState {
+  withConfigOptions(_value: string[]): _ChangeState {
+    const widget = createWidget({ type: 'LOCALE' });
+    const configOptions = widget.meta.configOptions;
     return new _ChangeState({
       ...this._current,
       configOptions,
-      enabled: !configOptions.includes('DISABLED_MODE'),
+      enabled: !widget.meta.configOptions.includes('DISABLED_MODE'),
     }, this._origin);
   }
   withLocaleCode(value: string): _ChangeState {

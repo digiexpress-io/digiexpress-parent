@@ -1,7 +1,8 @@
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
-import { Fs, FsuCreateChange } from '@dxs-ts/fs-api';
+import { Fs, FsuCreateChange, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
+import { createWidget } from '../fs-factory';
 
 
 export interface CreateOwnerState {
@@ -15,6 +16,7 @@ export interface CreateOwnerState {
   onChangeName: (value: string) => void;
   onChangeOrderNumber: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
+  onSave: () => Promise<void>;
 }
 
 type _CreateStateProps = {
@@ -61,12 +63,11 @@ class _CreateState implements FsuCreateChange {
   withOrder(order: string): _CreateState {
     return new _CreateState({ ...this._current, order: parseInt(order) || 0 }, this._origin);
   }
-  withConfigOptions(configOptions: Fs.ConfigOption[]): _CreateState {
+  withConfigOptions(_value: string[]): _CreateState {
+    const widget = createWidget({ type: 'ARTICLE' })
     return new _CreateState({
       ...this._current,
-      configOptions,
-      devMode: configOptions.includes('DEV_MODE'),
-      authOnly: configOptions.includes('AUTH_ONLY_MODE'),
+      configOptions: widget.meta.configOptions,
     }, this._origin);
   }
 }
@@ -74,6 +75,7 @@ class _CreateState implements FsuCreateChange {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
+  const { createDirent } = useFsDirent();
   const { activeTabPath, openTabs, activeTabIndex } = useFsNav();
 
   const activeTab = openTabs[activeTabIndex];
@@ -103,7 +105,11 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withOrder(value));
   }
   function onChangeConfigOptions(value: string[]) {
-    setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
+    setState(prev => prev.withConfigOptions(value));
+  }
+
+  async function onSave() {
+    await createDirent(state);
   }
 
   return ({
@@ -117,5 +123,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeName,
     onChangeOrderNumber,
     onChangeConfigOptions,
+    onSave,
   });
 };
