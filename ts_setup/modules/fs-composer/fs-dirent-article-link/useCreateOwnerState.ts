@@ -79,12 +79,9 @@ class _CreateState implements FsuCreateChange {
   withArticles(articles: string[]): _CreateState {
     return new _CreateState({ ...this._current, articles }, this._origin);
   }
-  withConfigOptions(_value: string[]): _CreateState {
-    const widget = createWidget({ type: 'ARTICLE_LINK' })
-    return new _CreateState({
-      ...this._current,
-      configOptions: widget.meta.configOptions,
-    }, this._origin);
+  withConfigOptions(value: string[]): _CreateState {
+    const widget = createWidget({ type: 'ARTICLE_LINK' });
+    return new _CreateState({ ...this._current, configOptions: widget.meta.configOptions.filter(opt => value.includes(opt)) }, this._origin);
   }
 }
 

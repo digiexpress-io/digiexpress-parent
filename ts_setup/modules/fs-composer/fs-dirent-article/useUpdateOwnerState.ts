@@ -54,11 +54,11 @@ class _ChangeState implements FsuChange {
   withOrder(order: string): _ChangeState {
     return new _ChangeState({ ...this._current, order: parseInt(order) || 0 }, this._origin);
   }
-  withConfigOptions(_value: string[]): _ChangeState {
-    const widget = createWidget({ type: 'ARTICLE' })
+  withConfigOptions(value: string[]): _ChangeState {
+    const widget = createWidget({ type: 'ARTICLE' });
     return new _ChangeState({
       ...this._current,
-      configOptions: widget.meta.configOptions,
+      configOptions: widget.meta.configOptions.filter(opt => value.includes(opt)),
     }, this._origin);
   }
 }

@@ -63,12 +63,9 @@ class _CreateState implements FsuCreateChange {
   withOrder(order: string): _CreateState {
     return new _CreateState({ ...this._current, order: parseInt(order) || 0 }, this._origin);
   }
-  withConfigOptions(_value: string[]): _CreateState {
-    const widget = createWidget({ type: 'ARTICLE' })
-    return new _CreateState({
-      ...this._current,
-      configOptions: widget.meta.configOptions,
-    }, this._origin);
+  withConfigOptions(value: string[]): _CreateState {
+    const widget = createWidget({ type: 'ARTICLE' });
+    return new _CreateState({ ...this._current, configOptions: widget.meta.configOptions.filter(opt => value.includes(opt)) }, this._origin);
   }
 }
 

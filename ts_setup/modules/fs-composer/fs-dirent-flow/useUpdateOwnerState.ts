@@ -53,9 +53,9 @@ class _ChangeState implements FsuChange {
   withFlowValue(flowValue: string): _ChangeState {
     return new _ChangeState({ ...this._current, flowValue }, this._origin);
   }
-  withConfigOptions(_value: string[]): _ChangeState {
+  withConfigOptions(value: string[]): _ChangeState {
     const widget = createWidget({ type: 'FLOW' });
-    return new _ChangeState({ ...this._current, configOptions: widget.meta.configOptions }, this._origin);
+    return new _ChangeState({ ...this._current, configOptions: widget.meta.configOptions.filter(opt => value.includes(opt)) }, this._origin);
   }
 
 }

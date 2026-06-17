@@ -3,6 +3,7 @@ import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
 import { FsDirentSelectMulti, FsDirentSelectSingle, FsDirentFormField } from '../fs-utilities';
+import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { useUtilityClasses, FsDirentArticlePageRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 
@@ -14,7 +15,10 @@ export const FsDirentArticlePageCreate: React.FC = () => {
 
   return (
     <FsDirentArticlePageRoot className={classes.root} ownerState={ownerState}>
-      <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.page.sectionTitle.createNew' })}</Typography>
+      <div className={classes.titleRow}>
+        <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.page.sectionTitle.createNew' })}</Typography>
+        <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />
+      </div>
       <div className={classes.formContainer}>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}>

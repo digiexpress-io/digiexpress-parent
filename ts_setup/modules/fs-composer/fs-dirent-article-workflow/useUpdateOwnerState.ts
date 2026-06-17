@@ -114,9 +114,9 @@ class _ChangeState implements FsuChange {
   withIntlValues(locale: string, labelValue: string): _ChangeState {
     return new _ChangeState({ ...this._current, intlValues: { ...this._current.intlValues, [locale]: labelValue } }, this._origin);
   }
-  withConfigOptions(_value: string[]): _ChangeState {
+  withConfigOptions(value: string[]): _ChangeState {
     const widget = createWidget({ type: 'ARTICLE_WORKFLOW' });
-    return new _ChangeState({ ...this._current, configOptions: widget.meta.configOptions }, this._origin);
+    return new _ChangeState({ ...this._current, configOptions: widget.meta.configOptions.filter(opt => value.includes(opt)) }, this._origin);
   }
 }
 

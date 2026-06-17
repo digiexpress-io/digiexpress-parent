@@ -30,13 +30,13 @@ class _ChangeState implements FsuChange {
   getCurrentProps(): { bodyType: Fs.BodyType; id: string; changes: Record<string, any> } {
     return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
   }
-  withConfigOptions(_value: string[]): _ChangeState {
+  withConfigOptions(value: string[]): _ChangeState {
     const widget = createWidget({ type: 'LOCALE' });
-    const configOptions = widget.meta.configOptions;
+    const configOptions = widget.meta.configOptions.filter(opt => value.includes(opt));
     return new _ChangeState({
       ...this._current,
       configOptions,
-      enabled: !widget.meta.configOptions.includes('DISABLED_MODE'),
+      enabled: !configOptions.includes('DISABLED_MODE'),
     }, this._origin);
   }
   withLocaleCode(value: string): _ChangeState {

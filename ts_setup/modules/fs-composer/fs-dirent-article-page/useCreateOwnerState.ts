@@ -20,6 +20,7 @@ export interface CreateOwnerState {
   onChangeLocale: (value: string) => void;
   onChangeContent: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
+  onSave: () => Promise<void>;
 }
 
 type _CreateStateProps = {
@@ -70,12 +71,9 @@ class _CreateState implements FsuCreateChange {
   withContent(content: string): _CreateState {
     return new _CreateState({ ...this._current, content }, this._origin);
   }
-  withConfigOptions(_value: string[]): _CreateState {
-    const widget = createWidget({ type: 'ARTICLE_PAGE' })
-    return new _CreateState({
-      ...this._current,
-      configOptions: widget.meta.configOptions,
-    }, this._origin);
+  withConfigOptions(value: string[]): _CreateState {
+    const widget = createWidget({ type: 'ARTICLE_PAGE' });
+    return new _CreateState({ ...this._current, configOptions: widget.meta.configOptions.filter(opt => value.includes(opt)) }, this._origin);
   }
 }
 
@@ -93,7 +91,7 @@ const _init: _CreateStateProps = {
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const intl = useIntl();
-  const { selectOptions, getDirentName } = useFsDirent();
+  const { selectOptions, getDirentName, createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
@@ -130,6 +128,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
 
+  async function onSave() {
+    await createDirent(state);
+  }
+
   return ({
     isDarkMode,
     articleId: state.articleId,
@@ -144,5 +146,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     onChangeLocale,
     onChangeContent,
     onChangeConfigOptions,
+    onSave,
   });
 };

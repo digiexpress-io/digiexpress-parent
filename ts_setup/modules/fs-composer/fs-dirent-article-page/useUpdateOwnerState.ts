@@ -58,12 +58,9 @@ class _ChangeState implements FsuChange {
   withContent(content: string): _ChangeState {
     return new _ChangeState({ ...this._current, content }, this._origin);
   }
-  withConfigOptions(_value: string[]): _ChangeState {
-    const widget = createWidget({ type: 'ARTICLE_PAGE' })
-    return new _ChangeState({
-      ...this._current,
-      configOptions: widget.meta.configOptions,
-    }, this._origin);
+  withConfigOptions(value: string[]): _ChangeState {
+    const widget = createWidget({ type: 'ARTICLE_PAGE' });
+    return new _ChangeState({ ...this._current, configOptions: widget.meta.configOptions.filter(opt => value.includes(opt)) }, this._origin);
   }
 }
 
