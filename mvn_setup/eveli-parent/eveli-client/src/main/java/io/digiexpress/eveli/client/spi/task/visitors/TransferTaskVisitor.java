@@ -179,6 +179,7 @@ public class TransferTaskVisitor {
       final var flowInput = new HashMap<String, Serializable>();
       flowInput.put("questionnaireId", questionnaireId);
       flowInput.put("assigneeId", assigneeId);
+      flowInput.put("assignedRoles", task.getAssignedRoles() != null ? String.join(",",task.getAssignedRoles()) : "");
       final FlowResult run = flow.get().run(DefaultProgramInput.of(flowInput)).andGetBody();
       
       return run.getReturns().entrySet().stream()
