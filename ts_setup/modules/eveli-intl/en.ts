@@ -1652,6 +1652,8 @@ export const en = {
   'fs.history.title.direntName': 'History: {direntName}',
   'fs.history.sectionTitle.recentChanges': 'Recent changes to this item',
   'fs.history.message.noHistory': 'No history available for this dirent.',
+  'fs.history.row.created': 'Created',
+  'fs.history.row.updated': 'Last updated',
   'fs.changeType.update': 'Updated',
   'fs.changeType.create': 'Created',
   'fs.changeType.delete': 'Deleted',

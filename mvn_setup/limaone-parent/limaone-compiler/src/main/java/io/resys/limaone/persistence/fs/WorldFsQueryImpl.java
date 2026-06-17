@@ -45,9 +45,10 @@ public class WorldFsQueryImpl implements WorldFsQuery {
 
   @Override
   public Uni<WorldFs> findAll() {
+    final var fs = filesystem.withTenant();
     
     final var findAllForms = formDb.withTenant().formMetaQuery().findAll().collect().asList();
-    final var findAllAssets = filesystem.withTenant()
+    final var findAllAssets = fs
         .branchQuery()
         .branchName(name -> name.equals(branchName))
         .blobTypes(
@@ -56,9 +57,13 @@ public class WorldFsQueryImpl implements WorldFsQuery {
             .toList().toArray(new String[]{}))
         .getOne();
     
-    return Uni.combine().all().unis(findAllForms, findAllAssets)
+    final var findIndex = fs.branchQuery()
+        .branchName(name -> name.equals(branchName))
+        .findIndexOnly().collect().asList();
+    
+    return Uni.combine().all().unis(findAllForms, findAllAssets, findIndex)
       .asTuple()
-      .onItem().transform(tuple -> new WorldFsFactory(tuple.getItem2(), tuple.getItem1()).create());
+      .onItem().transform(tuple -> new WorldFsFactory(tuple.getItem2(), tuple.getItem1(), tuple.getItem3()).create());
   }
 
   @Override

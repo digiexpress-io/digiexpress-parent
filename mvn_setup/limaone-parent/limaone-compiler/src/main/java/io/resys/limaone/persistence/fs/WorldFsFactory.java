@@ -45,6 +45,7 @@ import io.resys.limaone.model.PrintoutPage;
 import io.resys.limaone.model.PrintoutResource;
 import io.resys.limaone.spi.dialob.FormDb.FormMetadata;
 import io.resys.thena.fs.entities.Entity;
+import io.resys.thena.fs.entities.Index;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Ref;
 import lombok.extern.slf4j.Slf4j;
@@ -54,12 +55,14 @@ import lombok.extern.slf4j.Slf4j;
 public class WorldFsFactory {
   private final Ref ref;
   private final Map<String, FormMetadata> forms;
+  private final Map<String, Index> modelIndex;
   private final WorldFsState worldState = new WorldFsState();
   
-  public WorldFsFactory(Ref ref, List<FormMetadata> forms) {
+  public WorldFsFactory(Ref ref, List<FormMetadata> forms, List<Index> modelIndex) {
     super();
     this.ref = ref;
     this.forms = forms.stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+    this.modelIndex = modelIndex.stream().collect(Collectors.toMap(e -> e.getObjectId(), e -> e));
   }  
   
   public WorldFs create() {
@@ -290,6 +293,7 @@ public class WorldFsFactory {
       .fullPath(pathAndName.getPath() + "/" + pathAndName.getName())
       .name(pathAndName.getName())
       .type(node.getBodyType())
+      .commitIndex(modelIndex.get(node.getValue().getObjectId()))
       .props(worldState.getProps(node.getObjectId()))
       .build();
 

@@ -8,6 +8,7 @@ export declare namespace Fs {
     name: string;
     type: BodyType;
     fullPath: string;
+    commitIndex: Index | undefined;
     children: DirentBase[];
     props: PropsBase | undefined;
   }
@@ -25,6 +26,19 @@ export declare namespace Fs {
     permissions: Permission[];
     labels: DescriptionLabel[];
     errors: AssetError[];
+  }
+
+  export interface Index {
+    objectId: string;
+    treeId: string;
+    createdBy: string;
+    updatedBy: string;
+
+    createdByAuthor: string;
+    updatedByAuthor: string;
+
+    createdAt: string;
+    updatedAt: string;
   }
 
   export type BodyType =

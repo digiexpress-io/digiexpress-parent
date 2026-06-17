@@ -6,6 +6,7 @@ import { useFsNav } from '@dxs-ts/fs-nav';
 import { useUtilityClasses } from './useUtilityClasses';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentMenuDeleteDialog } from './FsDirentMenuDeleteDialog';
+import { DateTime } from 'luxon';
 
 
 export interface FsDirentMenuMainProps {
@@ -23,8 +24,9 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const dirent = props.dirent;
 
-  const changes = dirent?.props?.changes ?? [];
-  const lastChange = changes.length > 0 ? changes[changes.length - 1] : undefined;
+  const lastUpdated = dirent?.commitIndex?.updatedAt;
+  const formatted = lastUpdated ? DateTime.fromISO(lastUpdated).toFormat('d.M.yyyy HH:mm') : undefined;
+  const lastUpdatedBy = dirent?.commitIndex?.updatedByAuthor;
 
   function handleEdit() {
     if (dirent) {
@@ -72,9 +74,10 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
     <Box className={classes.sectionMain}>
       <Box className={classes.headerMain}>
         <Typography variant='h3' paddingBottom={0} paddingTop={0}>{dirent?.name}</Typography>
-        <Typography variant='caption'>
-          {intl.formatMessage({ id: 'fs.direntMenu.header.lastEdited' }, { updated: lastChange?.changeDate, user: lastChange?.changedBy.userName })}
-        </Typography>
+        {dirent?.type !== 'FOLDER' && <Typography variant='caption'>
+          {intl.formatMessage({ id: 'fs.direntMenu.header.lastEdited' },
+            { updated: formatted, user: lastUpdatedBy })}
+        </Typography>}
       </Box>
 
       <Divider className={classes.divider} />

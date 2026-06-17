@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.BodyType;
+import io.resys.thena.fs.entities.Index;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
@@ -41,6 +42,7 @@ public interface WorldFs {
     String getId();
     String getName();
     String getFullPath();
+    @Nullable Index getCommitIndex(); // null when the folder is pseudo created for grouping only... ie. it's not persisted
     BodyType getType();
     List<DirentBase> getChildren();
     
