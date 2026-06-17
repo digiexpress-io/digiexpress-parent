@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select, MenuItem, Chip, OutlinedInput, IconButton } from '@mui/material';
 import { FsDirentSelectMultiProps } from './FsDirentSelectMultiProps';
-import { FsIcons, FsIcon } from '../fs-theme';
+import { FsIcons, FsIcon } from '../../fs-theme';
 import { useUtilityClasses, FsDirentSelectMultiRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
 

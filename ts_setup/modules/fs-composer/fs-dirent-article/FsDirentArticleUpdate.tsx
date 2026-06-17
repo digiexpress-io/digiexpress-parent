@@ -2,12 +2,10 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { createWidget } from '../fs-factory';
-import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentTextField } from '../fs-dirent-text-field';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentArticleProps } from './FsDirentArticleProps';
-import { FsDirentFormField } from '../fs-dirent-form-field';
+import { FsDirentSelectMulti, FsDirentTextField, FsDirentFormField } from '../fs-utilities';
 
 
 export const FsDirentArticleUpdate: React.FC<FsDirentArticleProps> = (props) => {

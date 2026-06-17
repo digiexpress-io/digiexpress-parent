@@ -2,7 +2,8 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 
-import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentTextField } from '../fs-utilities';
+
 import { useUtilityClasses, FsDirentDialobRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 

@@ -1,7 +1,7 @@
 import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 import { useFsNav } from '@dxs-ts/fs-nav';
-import { FsDirentSelectMultiOption } from '../fs-dirent-select-multi';
+import { FsDirentSelectMultiOption } from '../fs-utilities';
 
 type _ChangeStateProps = {
   resourceId: string;

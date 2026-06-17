@@ -1,7 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { FsDirentTextField } from '../fs-dirent-text-field';
-import { FsDirentFormField } from '../fs-dirent-form-field';
+import { FsDirentFormField, FsDirentTextField } from '../fs-utilities';
+
 import { useUtilityClasses, FsDirentFlowTaskRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 

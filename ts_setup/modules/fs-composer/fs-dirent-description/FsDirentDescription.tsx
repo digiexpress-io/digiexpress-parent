@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentTextField } from '../fs-utilities';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { FsDirentDescriptionProps } from './FsDirentDescriptionProps';
 import { useOwnerState } from './useOwnerState';

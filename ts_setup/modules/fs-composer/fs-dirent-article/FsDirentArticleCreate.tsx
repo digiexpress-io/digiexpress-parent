@@ -3,11 +3,9 @@ import { Typography, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { createWidget } from '../fs-factory';
-import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentTextField } from '../fs-dirent-text-field';
+import { FsDirentSelectMulti, FsDirentTextField, FsDirentFormField } from '../fs-utilities';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
-import { FsDirentFormField } from '../fs-dirent-form-field';
 
 
 export const FsDirentArticleCreate: React.FC = () => {

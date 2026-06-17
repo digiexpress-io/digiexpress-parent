@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MonacoReact from '@monaco-editor/react';
-import { FsDirentFormField } from '../fs-dirent-form-field';
+import { FsDirentFormField } from '../fs-utilities';
 import { useUtilityClasses, FsDirentArticleTemplateRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 

@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { FsSearchProps } from './FsSearchProps';
 import { useOwnerState } from './useOwnerState';
 import { FsSearchRoot, useUtilityClasses } from './useUtilityClasses';
-import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
+import { FsDirentSelectMulti } from '../fs-utilities';
 
 export const FsSearch: React.FC<FsSearchProps> = (props) => {
   const intl = useIntl();

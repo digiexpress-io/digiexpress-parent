@@ -2,9 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
-import { FsDirentSelectSingle } from '../fs-dirent-select-single';
-import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentFormField } from '../fs-dirent-form-field';
+import { FsDirentSelectMulti, FsDirentSelectSingle, FsDirentFormField } from '../fs-utilities';
 import { useUtilityClasses, FsDirentArticlePageRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 

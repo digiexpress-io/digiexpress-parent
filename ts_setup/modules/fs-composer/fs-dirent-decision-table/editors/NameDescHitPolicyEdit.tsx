@@ -4,8 +4,7 @@ import { FsDirentButtonCancel } from '../../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../../fs-dirent-button-save';
 import { useIntl } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
-import { FsDirentTextField } from '../../fs-dirent-text-field';
-import { FsDirentSelectSingle } from '../../fs-dirent-select-single';
+import { FsDirentTextField, FsDirentSelectSingle } from '../../fs-utilities';
 
 const hitPolicyOptions = [
   { value: 'ALL', label: 'ALL' },

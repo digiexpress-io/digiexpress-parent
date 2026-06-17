@@ -3,12 +3,9 @@ import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { createWidget } from '../fs-factory';
-import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentSelectSingle } from '../fs-dirent-select-single';
-import { FsDirentTextField } from '../fs-dirent-text-field';
-import { FsDirentFormField } from '../fs-dirent-form-field';
 import { useUtilityClasses, FsDirentArticleLinkRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
+import { FsDirentSelectMulti, FsDirentTextField, FsDirentFormField, FsDirentSelectSingle } from '../fs-utilities';
 
 export const FsDirentArticleLinkCreate: React.FC = () => {
   const intl = useIntl();

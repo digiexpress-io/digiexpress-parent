@@ -1,9 +1,7 @@
 import React from 'react';
 import { Typography, Button } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentTextField } from '../fs-dirent-text-field';
-import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentFormField } from '../fs-dirent-form-field';
+import { FsDirentFormField, FsDirentSelectMulti, FsDirentTextField } from '../fs-utilities';
 import { useUtilityClasses, FsDirentPrintoutResourceRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPrintoutResourceProps } from './FsDirentPrintoutResourceProps';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFsTheme } from '../fs-theme';
 import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
-import { FsDirentSelectMultiOption } from '../fs-dirent-select-multi';
+import { FsDirentSelectMultiOption } from '../fs-utilities';
 
 export interface CreateOwnerState {
   isDarkMode: boolean;

@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, InputLabel, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
-import { FsDirentSelectSingle } from '../../fs-dirent-select-single';
+import { FsDirentSelectSingle } from '../../fs-utilities';
 import { FsDirentButtonCancel } from '../../fs-dirent-button-cancel';
 import { FsDirentButtonSave } from '../../fs-dirent-button-save';
 

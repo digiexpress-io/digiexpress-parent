@@ -1,5 +1,5 @@
 import { FsDirentSelectSingleProps } from './FsDirentSelectSingleProps';
-import { useFsTheme } from '../fs-theme';
+import { useFsTheme } from '../../fs-theme';
 
 export interface OwnerState {
   isDarkMode: boolean;

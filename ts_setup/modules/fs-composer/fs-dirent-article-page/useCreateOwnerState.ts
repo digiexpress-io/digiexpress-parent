@@ -2,7 +2,7 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
-import { FsDirentSelectSingleOption } from '../fs-dirent-select-single';
+import { FsDirentSelectSingleOption } from '../fs-utilities';
 import { createWidget } from '../fs-factory';
 
 

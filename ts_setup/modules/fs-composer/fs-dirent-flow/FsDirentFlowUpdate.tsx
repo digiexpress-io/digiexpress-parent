@@ -1,8 +1,7 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import MonacoReact from '@monaco-editor/react';
-import { FsDirentSelectMulti } from '../fs-dirent-select-multi';
-import { FsDirentFormField } from '../fs-dirent-form-field';
+import { FsDirentFormField, FsDirentSelectMulti } from '../fs-utilities';
 import { useUtilityClasses, FsDirentFlowRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentFlowProps } from './FsDirentFlowProps';

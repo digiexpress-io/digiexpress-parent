@@ -1,7 +1,6 @@
 import React from "react";
 import { Typography, FormHelperText } from "@mui/material";
-import { FsDirentSelectSingle } from '../../fs-dirent-select-single';
-import { FsDirentTextField } from '../../fs-dirent-text-field';
+import { FsDirentSelectSingle, FsDirentTextField } from '../../fs-utilities';
 import { Fs } from '@dxs-ts/fs-api';
 
 interface InputFORMFieldProps {

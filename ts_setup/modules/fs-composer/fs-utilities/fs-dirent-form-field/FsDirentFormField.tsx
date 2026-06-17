@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { FsIcon, FsIcons, useFsTheme } from '../fs-theme';
+import { FsIcon, FsIcons, useFsTheme } from '../../fs-theme';
 import { FsDirentFormFieldProps } from './FsDirentFormFieldProps';
 import { useUtilityClasses, FsDirentFormFieldRoot } from './useUtilityClasses';
 

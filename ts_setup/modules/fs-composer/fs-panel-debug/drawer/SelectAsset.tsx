@@ -2,8 +2,8 @@ import React from 'react'
 import { Box, List, ListItem, ListItemText, Typography, Divider, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useIntl } from 'react-intl'
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { FsDirentSelectSingle } from '../../fs-dirent-select-single';
-import { FsDirentTextField } from '../../fs-dirent-text-field';
+import { FsDirentSelectSingle, FsDirentTextField } from '../../fs-utilities';
+
 
 
 const flattenDirents = (nodes: Fs.DirentBase[]): Fs.DirentBase[] => {

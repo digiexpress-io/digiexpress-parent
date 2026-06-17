@@ -1,6 +1,6 @@
 import { generateUtilityClass, styled, FormControl } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { FsColors } from '../fs-theme';
+import { FsColors } from '../../fs-theme';
 import { OwnerState } from './useOwnerState';
 
 const MUI_NAME = 'FsDirentSelectMulti';
