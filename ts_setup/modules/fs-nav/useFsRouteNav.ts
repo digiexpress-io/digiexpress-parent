@@ -68,7 +68,7 @@ export function useFsRouteNav() {
   }
 
   function openCreateTab(direntType: Fs.BodyType, _parentFolder: Fs.DirentBase | undefined) {
-    updateSearch(prev => mergeFsSearchParams({ type: 'create', direntType }, prev));
+    updateSearch(prev => mergeFsSearchParams({ type: 'create', direntType, instanceId: Date.now().toString(36) }, prev));
   }
 
   function closeTab(index: number) {

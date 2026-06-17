@@ -8,4 +8,5 @@ export interface FsDirentSelectSingleProps {
   value: string;
   onChange: (value: string) => void;
   allowNone?: boolean;
+  required?: boolean;
 }

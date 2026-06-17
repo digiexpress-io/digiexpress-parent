@@ -3,9 +3,14 @@ import { useFsTheme } from '../../fs-theme';
 
 export interface OwnerState {
   isDarkMode: boolean;
+  isRequired: boolean;
+  showRequiredError: boolean;
 }
 
-export const useOwnerState = (_props: FsDirentSelectSingleProps): OwnerState => {
+export const useOwnerState = (props: FsDirentSelectSingleProps): OwnerState => {
   const { isDarkMode } = useFsTheme();
-  return { isDarkMode };
+  const isRequired = props.required === true;
+  const showRequiredError = isRequired && !props.value;
+
+  return { isDarkMode, isRequired, showRequiredError };
 };

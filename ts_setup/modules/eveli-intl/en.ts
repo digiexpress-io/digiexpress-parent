@@ -1556,6 +1556,7 @@ export const en = {
   'fs.dirent.configOption.ASSIGNABLE_MODE': 'Assignable mode',
   'fs.dirent.configOption.AUTH_ONLY_MODE': 'Auth-only mode',
   'fs.direntTextField.required': '* Required',
+  'fs.direntSelectSingle.required': '* Required',
   'fs.direntCreate.printout.sectionTitle.createNew': 'Create new printout service',
   'fs.direntCreate.printout.printoutServiceNameField.label': 'Printout service name',
   'fs.direntCreate.printout.printoutServiceNameField.placeholder': 'Enter printout service name',

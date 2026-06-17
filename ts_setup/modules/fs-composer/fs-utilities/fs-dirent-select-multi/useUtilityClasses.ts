@@ -60,12 +60,12 @@ export const FsDirentSelectMultiRoot = styled(FormControl, {
       backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
       color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
       padding: theme.spacing(1.5),
-      ...theme.typography.caption,
+      ...theme.typography.subtitle1,
     },
   },
 
   [`& .${MUI_NAME}-placeholderText`]: {
-    ...theme.typography.caption,
+    ...theme.typography.subtitle1,
     color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
   },
 

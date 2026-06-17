@@ -17,10 +17,10 @@ export const FsDirentArticlePageCreate: React.FC = () => {
     <FsDirentArticlePageRoot className={classes.root} ownerState={ownerState}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.page.sectionTitle.createNew' })}</Typography>
-        <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />
+        <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty || !ownerState.articleId} />
       </div>
-      <div className={classes.formContainer}>
 
+      <div className={classes.formContainer}>
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}>
           <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
             <MDEditor preview="edit" value={ownerState.content} onChange={(val) => ownerState.onChangeContent(val ?? '')} />
@@ -28,11 +28,13 @@ export const FsDirentArticlePageCreate: React.FC = () => {
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.articleField.label' })}>
-          <FsDirentSelectSingle options={ownerState.articleOptions} value={ownerState.articleId} onChange={ownerState.onChangeArticle} />
+          <FsDirentSelectSingle required
+            options={ownerState.articleOptions} value={ownerState.articleId} onChange={ownerState.onChangeArticle}
+          />
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.localeField.label' })}>
-          <FsDirentSelectSingle options={ownerState.localeOptions} value={ownerState.locale} onChange={ownerState.onChangeLocale} />
+          <FsDirentSelectSingle required options={ownerState.localeOptions} value={ownerState.locale} onChange={ownerState.onChangeLocale} />
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}>

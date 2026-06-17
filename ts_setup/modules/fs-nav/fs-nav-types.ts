@@ -16,7 +16,7 @@ export type FsTab = FsEditTab | FsCreateTab;
 
 export type FsTabDescriptor =
   | { type: 'edit'; id: string }
-  | { type: 'create'; direntType: Fs.BodyType };
+  | { type: 'create'; direntType: Fs.BodyType; instanceId: string };
 
 export interface FsRouteSearchParams {
   openTabs: FsTabDescriptor[];
@@ -28,7 +28,7 @@ export function toTabId(descriptor: FsTabDescriptor): string {
   if (descriptor.type === 'edit') {
     return `edit:${descriptor.id}`;
   }
-  return `create:${descriptor.direntType}`;
+  return `create:${descriptor.direntType}:${descriptor.instanceId}`;
 }
 
 export function parseFsSearchParams(search: Record<string, unknown>): FsRouteSearchParams {
@@ -132,7 +132,7 @@ function isValidTabDescriptor(item: unknown): item is FsTabDescriptor {
     return typeof obj['id'] === 'string';
   }
   if (obj['type'] === 'create') {
-    return typeof obj['direntType'] === 'string';
+    return typeof obj['direntType'] === 'string' && typeof obj['instanceId'] === 'string';
   }
   return false;
 }

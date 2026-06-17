@@ -1,17 +1,19 @@
 import React from 'react';
-import { Select, MenuItem, OutlinedInput } from '@mui/material';
+import { Select, MenuItem, OutlinedInput, FormControl, Typography } from '@mui/material';
+import { useIntl } from 'react-intl';
 import { FsDirentSelectSingleProps } from './FsDirentSelectSingleProps';
 import { useUtilityClasses, FsDirentSelectSingleRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
 
 export const FsDirentSelectSingle: React.FC<FsDirentSelectSingleProps> = (props) => {
+  const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
 
   const value = props.options.some(o => o.value === props.value) ? props.value : '';
 
   return (
-    <FsDirentSelectSingleRoot className={classes.root} ownerState={ownerState} fullWidth size='small'>
+    <FsDirentSelectSingleRoot className={classes.root} ownerState={ownerState}>
       <Select className={classes.select}
         value={value}
         displayEmpty
@@ -25,6 +27,11 @@ export const FsDirentSelectSingle: React.FC<FsDirentSelectSingleProps> = (props)
           </MenuItem>
         ))}
       </Select>
+      {ownerState.showRequiredError && (
+        <Typography className={classes.requiredMessage}>
+          {intl.formatMessage({ id: 'fs.direntSelectSingle.required' })}
+        </Typography>
+      )}
     </FsDirentSelectSingleRoot>
   );
 };
