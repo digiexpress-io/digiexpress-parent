@@ -1,3 +1,4 @@
+import React from 'react';
 import { useFsDirent, Fs } from '@dxs-ts/fs-api';
 import { useFsTheme } from '../fs-theme';
 
@@ -23,11 +24,30 @@ export interface OwnerState {
   assetCounts: AssetCount[];
   danglingGroups: DanglingGroup[];
   disabledAssets: DisabledAsset[];
+  overviewExpanded: boolean;
+  danglingExpanded: boolean;
+  disabledExpanded: boolean;
+  onToggleOverview: () => void;
+  onToggleDangling: () => void;
+  onToggleDisabled: () => void;
 }
 
 export const useOwnerState = (): OwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent, selectOptions, getDirentName } = useFsDirent();
+  const [overviewExpanded, setOverviewExpanded] = React.useState(false);
+  const [danglingExpanded, setDanglingExpanded] = React.useState(false);
+  const [disabledExpanded, setDisabledExpanded] = React.useState(false);
+
+  function onToggleOverview() {
+    setOverviewExpanded(prev => !prev);
+  }
+  function onToggleDangling() {
+    setDanglingExpanded(prev => !prev);
+  }
+  function onToggleDisabled() {
+    setDisabledExpanded(prev => !prev);
+  }
 
   const allProps = Object.values(selectOptions.direntProps);
 
@@ -86,5 +106,16 @@ export const useOwnerState = (): OwnerState => {
     .filter(p => p.configOptions?.includes('DISABLED_MODE'))
     .map(p => ({ name: getDirent(p.id)?.name ?? p.id, type: p.type }));
 
-  return { isDarkMode, assetCounts, danglingGroups, disabledAssets };
+  return {
+    isDarkMode,
+    assetCounts,
+    danglingGroups,
+    disabledAssets,
+    overviewExpanded,
+    danglingExpanded,
+    disabledExpanded,
+    onToggleOverview,
+    onToggleDangling,
+    onToggleDisabled,
+  };
 };
