@@ -45,7 +45,8 @@ export const EveliShellRoot = styled('div', {
     footerHeight: number;
     drawerWidth: number;
     drawerOpen: boolean;
-    minibarWidth: number
+    tabs: boolean;
+    minibarWidth: number;
   }
 }>(({ theme, ownerState }) => {
 
@@ -55,6 +56,7 @@ export const EveliShellRoot = styled('div', {
     toolbarHeight,
     footerHeight,
     drawerOpen,
+    tabs
   } = ownerState;
 
   return {
@@ -172,7 +174,7 @@ export const EveliShellRoot = styled('div', {
       width: `calc(100% - ${drawerWidth}px)`,
       minHeight: '100vh',
       backgroundColor: theme.palette.background.paper,
-      marginTop: `${toolbarHeight}px`,
+      marginTop: `${tabs ? toolbarHeight : 0}px`,
     },
     "& .MuiContainer-root": {
       overflow: 'auto',

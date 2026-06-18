@@ -8,12 +8,13 @@ export interface EveliShellClasses {
 export interface EveliShellProps {
   children: React.ReactNode,
   drawerOpen?: boolean;
-
+  tabs: boolean;
   toolbarHeight?: Partial<EveliShellToolbarHeightOptions>;
   footerHeight?: number;
   drawerWidth?: number;
   minibarWidth?: number;
   
+
   component?: EveliOverridableComponent<EveliShellProps>;
 }
 

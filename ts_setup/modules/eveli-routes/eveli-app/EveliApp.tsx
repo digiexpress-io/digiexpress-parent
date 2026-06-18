@@ -50,8 +50,8 @@ export interface ContainerProps {
   tabs?: React.FC;
 
   wrapper?: React.FC<{ children: any }>;
-
   toolbarHeight?: Partial<EveliShellToolbarHeightOptions>;
+
   drawerWidth?: number;
   drawerOpen?: boolean;
   contentOnly?: boolean;
@@ -72,14 +72,14 @@ export const EveliApp: React.FC<ContainerProps> = (components) => {
       <EveliShell 
         drawerOpen={components.drawerOpen ?? true} 
         toolbarHeight={components.toolbarHeight} 
-        drawerWidth={components.drawerWidth} >
+        drawerWidth={components.drawerWidth}
+        tabs={!!UserTabs} >
         
         <Wrapper>
           {!contentOnly && (<ToggleDrawer {...components} />)}
-
-          {!contentOnly && (
+          {!contentOnly && UserTabs && (
             <AppBar position='fixed' className={EveliShellClassName}>
-              {UserTabs ? <UserTabs /> : <></>}
+              <UserTabs />
             </AppBar>)}
 
           <main role='main'>
