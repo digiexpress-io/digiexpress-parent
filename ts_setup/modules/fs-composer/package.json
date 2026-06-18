@@ -6,6 +6,8 @@
   "type": "module",
   "dependencies": {
     "@dxs-ts/eveli-primitives": "*",
+    "@dxs-ts/eveli-api": "*",
+    "@dxs-ts/envir-fetch": "*",
     "@dxs-ts/fs-api": "*",
     "@dxs-ts/fs-nav": "*",
     "@dxs-ts/xui-datetime": "*"

@@ -88,8 +88,8 @@ tasks:
       id: "first_task"
       then: end
 """
-    .replace("{id}", Optional.ofNullable(props.getName()).orElse("first_flow"))
-    .replace("{desc}", Optional.ofNullable(props.getDesc()).orElse("my first flow"));
+      .replace("{id}", Optional.ofNullable(props.getName()).orElse("first_flow"))
+      .replace("{desc}", Optional.ofNullable(props.getDesc()).orElse("my first flow"));
     } else {
       syntax = props.getBody();
     }

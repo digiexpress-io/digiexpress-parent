@@ -21,6 +21,7 @@ package io.resys.limaone.persistence.fs;
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -150,7 +151,7 @@ public class WorldFsFactory {
   }
 
   private NodePathAndName parsePathAndName(NodeAndBody node) {
-    final var path = node.getValue().getNodePath();
+    final var path = createPath(node.getValue().getNodePath());
     
     switch (node.getBodyType()) {
     case ARTICLE: {
@@ -326,5 +327,23 @@ public class WorldFsFactory {
     }
     worldState.putNodeAndBody(nodeType.get());
     return nodeType;
+  }
+  
+  private Optional<String> createPath(Optional<String> original) {
+    if(original.isEmpty()) {
+      return original;
+    }
+    
+    // hard overrides, ignore certain defined paths
+    final var path = original.get();
+    if(Arrays.asList(
+        "wrench/dt",
+        "wrench/flow_task",
+        "wrench/flow"
+        ).contains(path)) {
+      return Optional.empty();
+    }
+    
+    return original;
   }
 }

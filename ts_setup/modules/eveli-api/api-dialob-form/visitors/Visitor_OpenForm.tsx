@@ -1,5 +1,4 @@
 import { DashboardItem } from "../types-dashboard";
-import { DialobRestApi } from "../types-rest-api";
 
 export namespace Visitor_OpenForm {
   export interface Input {

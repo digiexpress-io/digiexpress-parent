@@ -1,4 +1,4 @@
 export interface FsDirentButtonSaveProps {
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent) => void;
   disabled?: boolean;
 }

@@ -64,6 +64,7 @@ export const FsSearchProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
 export const useFsSearch = () => {
   const context = useContext(FsSearchContext);
+
   if (!context) {
     throw new Error('useFsSearch must be used within a FsSearchProvider');
   }
