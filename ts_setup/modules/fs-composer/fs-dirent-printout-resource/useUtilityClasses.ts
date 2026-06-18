@@ -42,7 +42,8 @@ export const FsDirentPrintoutResourceRoot = styled('div', {
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.body1,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
+    fontWeight: 500
   },
 
   [`& .${MUI_NAME}-formContainer`]: {
