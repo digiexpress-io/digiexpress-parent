@@ -1,11 +1,7 @@
 import React from 'react';
-import { FsDirentFlowCreate, FsDirentFlowUpdate, FsHelpFlow } from '../fs-dirent-flow';
+import { FsDirentFlowCreate, FsDirentFlowUpdate, FsHelpFlow, FsPropertiesFlow } from '../fs-dirent-flow';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './index';
-
-const FsPropertiesFlow: React.FC = () => {
-  return (<>TODO</>);
-}
 
 export const FlowWidget: DirentWidget = {
   views: {

@@ -42,8 +42,8 @@ export const FsMainRoot = styled('div', {
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
   return {
     display: 'flex',
-    height: '100%',
-    width: '100%',
+    height: '100vh',
+    // width: '100%',
     backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
 
@@ -102,21 +102,21 @@ export const FsToolbarButtonRoot = styled('div', {
 
   return {
 
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      opacity: 1,
-      borderRadius: '4px',
-      padding: '4px',
-      backgroundColor: 'transparent',
-      border: '1px solid transparent',
-      '& .MuiSvgIcon-root': {
-        fontSize: '1.2rem',
-        color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-      },
-      '&:hover': {
-        backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.surface
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    opacity: 1,
+    borderRadius: theme.spacing(0.5),
+    padding: theme.spacing(0.5),
+    backgroundColor: 'transparent',
+    border: '1px solid transparent',
+    '& .MuiSvgIcon-root': {
+      fontSize: '1.2rem',
+      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    },
+    '&:hover': {
+      backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.surface
     },
 
     ...(ownerState.isSelected ? {
@@ -152,14 +152,13 @@ export const FsSaveButtonRoot = styled('div', {
         backgroundColor: ownerState.isDarkMode ? FsColors.semantic.primary + '40' : FsColors.semantic.warningLight + '40',
       },
     },
-
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     opacity: 1,
-    borderRadius: '4px',
-    padding: '4px',
+    borderRadius: theme.spacing(0.5),
+    padding: theme.spacing(0.5),
     backgroundColor: 'transparent',
     border: '1px solid transparent',
     '& .MuiSvgIcon-root': {
@@ -172,8 +171,8 @@ export const FsSaveButtonRoot = styled('div', {
     [`& .MuiBadge-badge`]: {
       fontSize: '10px',
       fontWeight: 'bold',
-      height: '16px',
-      minWidth: '16px',
+      height: theme.spacing(2),
+      minWidth: theme.spacing(2),
     },
   };
 });

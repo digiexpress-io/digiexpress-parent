@@ -33,6 +33,7 @@ export const FsDirentFlowTaskRoot = styled('div', {
 })<{ ownerState: { isDarkMode: boolean } }>(({ theme, ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
+  overflowY: 'hidden',
 
   [`& .${MUI_NAME}-titleRow`]: {
     display: 'flex',
@@ -51,12 +52,6 @@ export const FsDirentFlowTaskRoot = styled('div', {
   [`& .${MUI_NAME}-formContainer`]: {
     display: 'flex',
     flexDirection: 'column',
-  },
-
-  [`& .${MUI_NAME}-editor`]: {
-    height: '500px',
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
-    borderRadius: '4px',
   },
 
 }));

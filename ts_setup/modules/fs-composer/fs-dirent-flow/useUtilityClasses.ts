@@ -57,32 +57,8 @@ export const FsDirentFlowRoot = styled('div', {
   [`& .${MUI_NAME}-formContainer`]: {
     display: 'flex',
     flexDirection: 'column',
+    flex: 1,
+    minHeight: 0,
   },
-
-  [`& .${MUI_NAME}-sectionTitle`]: {
-    ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    display: 'block',
-  },
-
-  [`& .${MUI_NAME}-sectionBox`]: {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary}`,
-    borderRadius: '4px',
-    marginTop: '0px !important'
-  },
-
-  [`& .${MUI_NAME}-sectionContent`]: {
-    ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
-  },
-
-  [`& .${MUI_NAME}-editor`]: {
-    height: '500px',
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
-    borderRadius: '4px',
-    overflow: 'hidden',
-  },
-
 
 }));

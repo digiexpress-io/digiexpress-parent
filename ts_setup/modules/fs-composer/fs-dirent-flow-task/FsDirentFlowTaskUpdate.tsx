@@ -11,20 +11,15 @@ export const FsDirentFlowTaskUpdate: React.FC<FsDirentFlowTaskProps> = (props) =
 
   return (
     <FsDirentFlowTaskRoot className={classes.root} ownerState={ownerState}>
-
-      <div className={classes.editor}>
-        <MonacoReact
-          height="100%"
-          defaultLanguage="java"
-          value={ownerState.taskValue}
-          onChange={(v) => ownerState.onChangeTaskValue(v ?? '')}
-          options={{
-            wordBasedSuggestions: 'off',
-            minimap: { enabled: true },
-          }}
-        />
-      </div>
-
+      <MonacoReact height="100vh"
+        defaultLanguage="java"
+        value={ownerState.taskValue}
+        onChange={(v) => ownerState.onChangeTaskValue(v ?? '')}
+        options={{
+          wordBasedSuggestions: 'off',
+          minimap: { enabled: true },
+        }}
+      />
     </FsDirentFlowTaskRoot>
   );
 };
