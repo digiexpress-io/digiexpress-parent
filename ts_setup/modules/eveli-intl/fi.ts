@@ -173,6 +173,8 @@ export const fi = {
   'button.close': 'Sulje',
   'button.republish': 'Julkaise uudelleen',
   'button.save': 'Tallenna',
+  'button.saveAll': 'Tallenna kaikki',
+  'button.cancelAll': 'Peruuta kaikki',
   'button.dismiss': 'Hylkää',
   'button.select': 'Valitse',
   'button.startBatch': 'Start batch',

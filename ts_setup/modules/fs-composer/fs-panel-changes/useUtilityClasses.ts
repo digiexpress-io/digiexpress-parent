@@ -13,10 +13,8 @@ export interface FsPanelChangesClasses {
   assetName: string;
   assetTitle: string;
   assetPath: string;
-  statusText: string;
   undoButton: string;
   actionBar: string;
-  discardButton: string;
 }
 
 export type FsPanelChangesClassKey = keyof FsPanelChangesClasses;
@@ -28,10 +26,8 @@ export const useUtilityClasses = () => {
     assetName: ['assetName'],
     assetTitle: ['assetTitle'],
     assetPath: ['assetPath'],
-    statusText: ['statusText'],
     undoButton: ['undoButton'],
     actionBar: ['actionBar'],
-    discardButton: ['discardButton'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -43,10 +39,8 @@ export const FsPanelChangesRoot = styled('div', {
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
-
   display: 'flex',
   flexDirection: 'column',
-  border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
 
   [`& .${MUI_NAME}-changeRow:nth-of-type(odd)`]: {
     backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
@@ -55,13 +49,12 @@ export const FsPanelChangesRoot = styled('div', {
   [`& .${MUI_NAME}-changeRow`]: {
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(2),
-    padding: theme.spacing(1, 1.5),
+    gap: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
+    paddingBottom: theme.spacing(0.5),
+    paddingTop: theme.spacing(0.5),
     backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
     borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
-    '&:last-child': {
-      borderBottom: 'none'
-    }
   },
 
   [`& .${MUI_NAME}-assetTitle`]: {
@@ -78,21 +71,11 @@ export const FsPanelChangesRoot = styled('div', {
   [`& .${MUI_NAME}-assetName`]: {
     fontWeight: 500,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    width: '300px',
-    flexShrink: 0,
-    ...theme.typography.subtitle2
-  },
-
-  [`& .${MUI_NAME}-statusText`]: {
-    fontWeight: 500,
-    width: '100px',
-    flexShrink: 0,
-    textAlign: 'right',
+    flex: 1,
     ...theme.typography.subtitle2
   },
 
   [`& .${MUI_NAME}-undoButton`]: {
-    marginLeft: 'auto',
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     '&:hover': {
       backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface
@@ -101,12 +84,9 @@ export const FsPanelChangesRoot = styled('div', {
 
   [`& .${MUI_NAME}-actionBar`]: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     gap: theme.spacing(1),
     marginBottom: theme.spacing(1)
   },
 
-  [`& .${MUI_NAME}-discardButton`]: {
-    color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
-  },
 }));

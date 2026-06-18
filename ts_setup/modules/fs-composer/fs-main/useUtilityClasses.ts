@@ -43,7 +43,6 @@ export const FsMainRoot = styled('div', {
   return {
     display: 'flex',
     height: '100vh',
-    // width: '100%',
     backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
 
@@ -152,11 +151,12 @@ export const FsSaveButtonRoot = styled('div', {
         backgroundColor: ownerState.isDarkMode ? FsColors.semantic.primary + '40' : FsColors.semantic.warningLight + '40',
       },
     },
-    cursor: 'pointer',
+    cursor: ownerState.unsavedCount > 0 ? 'pointer' : 'default',
+    pointerEvents: ownerState.unsavedCount > 0 ? 'auto' : 'none',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    opacity: 1,
+    opacity: ownerState.unsavedCount > 0 ? 1 : 0.3,
     borderRadius: theme.spacing(0.5),
     padding: theme.spacing(0.5),
     backgroundColor: 'transparent',

@@ -173,6 +173,8 @@ export const en = {
   'button.close': 'Close',
   'button.republish': 'Republish',
   'button.save': 'Save',
+  'button.saveAll': 'Save all',
+  'button.cancelAll': 'Cancel all',
   'button.dismiss': 'Dismiss',
   'button.select': 'Select',
   'button.startBatch': 'Start batch',

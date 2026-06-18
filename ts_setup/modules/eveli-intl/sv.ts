@@ -173,6 +173,8 @@ export const sv = {
   'button.close': 'Stäng',
   'button.republish': 'Återpublicera',
   'button.save': 'Spara',
+  'button.saveAll': 'Spara alla',
+  'button.cancelAll': 'Avbryt alla',
   'button.dismiss': 'Avfärda',
   'button.select': 'Välja',
   'button.startBatch': 'Start batch',
