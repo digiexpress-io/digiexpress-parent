@@ -23,7 +23,7 @@ const MdLocaleSelect: React.FC<{ locale: string }> = ({ locale }) => (
   <div style={{ fontWeight: 'bold', fontSize: 15, alignItems: 'center' }}>{locale}</div>
 );
 
-const getMdCommands = (dt: Fs.DecisionAst, header: Fs.DecisionTypeDef): ICommand[] => {
+const getMdCommands = (dt: Fs.DecisionAst, header: Fs.TypeDef): ICommand[] => {
   const localeTitle: ICommand = {
     name: header.name,
     groupName: 'title',

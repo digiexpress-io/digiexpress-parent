@@ -11,10 +11,10 @@ interface DownloadCSVProps {
 }
 
 export const saveCsv = (decision: Fs.DecisionAst, delimiter: string) => {
-  const accepts: Fs.DecisionTypeDef[] = [...decision.headers.acceptDefs].sort((a, b) => a.order - b.order);
-  const returns: Fs.DecisionTypeDef[] = [...decision.headers.returnDefs].sort((a, b) => a.order - b.order);
+  const accepts: Fs.TypeDef[] = [...decision.headers.acceptDefs].sort((a, b) => a.order - b.order);
+  const returns: Fs.TypeDef[] = [...decision.headers.returnDefs].sort((a, b) => a.order - b.order);
   const rows = decision.rows.sort((a, b) => a.order - b.order);
-  const headers: Fs.DecisionTypeDef[] = [...accepts, ...returns];
+  const headers: Fs.TypeDef[] = [...accepts, ...returns];
 
   const line0 = headers.map(h => h.name).join(delimiter);
   const lines = rows.map(row => {

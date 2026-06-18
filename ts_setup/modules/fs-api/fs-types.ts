@@ -143,29 +143,19 @@ export declare namespace Fs {
       value: string;
     };
     headers?: {
-      acceptDefs: DecisionTypeDef[];
-      returnDefs: DecisionTypeDef[];
+      acceptDefs: TypeDef[];
+      returnDefs: TypeDef[];
     };
   }
 
   export interface FlowTaskAst {
     value: string;
     headers?: {
-      acceptDefs: DecisionTypeDef[];
-      returnDefs: DecisionTypeDef[];
+      acceptDefs: TypeDef[];
+      returnDefs: TypeDef[];
     };
   }
 
-  export interface DecisionTypeDef {
-    id: string;
-    name: string;
-    order: number;
-    direction: 'IN' | 'OUT';
-    valueType: string;
-    valueSet?: string[];
-    expression?: string;
-    script?: string;
-  }
 
   export interface DecisionAstCell {
     id: string;
@@ -186,8 +176,8 @@ export declare namespace Fs {
     headerTypes: string[];
     headerExpressions: Record<string, string[]>;
     headers: {
-      acceptDefs: DecisionTypeDef[];
-      returnDefs: DecisionTypeDef[];
+      acceptDefs: TypeDef[];
+      returnDefs: TypeDef[];
     };
     rows: DecisionAstRow[];
   }
@@ -232,8 +222,8 @@ export declare namespace Fs {
   export type HitPolicy = "FIRST" | "ALL";
 
   export interface Headers {
-    acceptDefs: DecisionTypeDef[];
-    returnDefs: DecisionTypeDef[];
+    acceptDefs: TypeDef[];
+    returnDefs: TypeDef[];
   }
 
   export interface AstBody {
@@ -473,6 +463,8 @@ export type PhoneNumberId = string;
     properties: TypeDef[];
     values?: string;
     valueSet?: string[];
+    expression?: string;
+    script?: string;
   }
 
   export interface DebugResponse {

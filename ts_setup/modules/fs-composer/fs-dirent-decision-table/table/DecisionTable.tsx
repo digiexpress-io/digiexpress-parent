@@ -1,23 +1,24 @@
 import React from 'react';
-import { Table, TableBody, TableContainer, TablePagination } from '@mui/material';
+import { IconButton, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow } from '@mui/material';
 import { Fs } from '@dxs-ts/fs-api';
+import { Add as AddIcon } from '@mui/icons-material';
 
 
 interface RenderCellProps {
   row: Fs.DecisionAstRow;
-  header: Fs.DecisionTypeDef;
-  cell: Fs.DecisionAstCell | undefined;
+  header: Fs.TypeDef;
+  cell: Fs.DecisionAstCell;
 }
 
 interface RenderRowProps {
-  headers: Fs.DecisionTypeDef[];
+  headers: Fs.TypeDef[];
   row: Fs.DecisionAstRow;
   renderCell: (props: RenderCellProps) => React.ReactNode;
 }
 
 interface RenderHeaderProps {
   ast: Fs.DecisionAst;
-  headers: Fs.DecisionTypeDef[];
+  headers: Fs.TypeDef[];
 }
 
 const DecisionTable: React.FC<{
@@ -25,7 +26,9 @@ const DecisionTable: React.FC<{
   renderHeader: (props: RenderHeaderProps) => React.ReactNode;
   renderRow: (props: RenderRowProps) => React.ReactNode;
   renderCell: (props: RenderCellProps) => React.ReactNode;
-}> = ({ ast, renderRow, renderHeader, renderCell }) => {
+  onAddRow: () => void;
+
+}> = ({ ast, renderRow, renderHeader, renderCell, onAddRow }) => {
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(50);
@@ -39,14 +42,16 @@ const DecisionTable: React.FC<{
   const accepts = ast ? [...ast.headers.acceptDefs].sort((a, b) => a.order - b.order) : [];
   const returns = ast ? [...ast.headers.returnDefs].sort((a, b) => a.order - b.order) : [];
   const rows = React.useMemo(() => ast ? [...ast.rows].sort((a, b) => a.order - b.order) : [], [ast]);
-  const headers: Fs.DecisionTypeDef[] = [...accepts, ...returns];
+  const headers: Fs.TypeDef[] = [...accepts, ...returns];
 
   if (!ast) {
     return <span>syntax error</span>;
   }
 
   return (<>
-    <TableContainer sx={{ height: 'calc(100vh - 150px)' }}>
+    <TableContainer sx={{
+      height: "calc(100vh - 150px)"
+    }}>
       <Table stickyHeader size="small">
         {renderHeader({ ast, headers })}
         <TableBody>
@@ -57,6 +62,23 @@ const DecisionTable: React.FC<{
                 {renderRow({ row, renderCell, headers })}
               </React.Fragment>
             ))}
+          <TableRow>
+            <TableCell
+              colSpan={headers.length + 2}
+              align="left"
+              sx={{
+                pl: 0,
+                borderBottom: "unset"
+              }}
+            >
+              <IconButton
+                color="primary"
+                onClick={() => onAddRow()}
+              >
+                <AddIcon />
+              </IconButton>
+            </TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
@@ -67,10 +89,9 @@ const DecisionTable: React.FC<{
       rowsPerPage={rowsPerPage}
       page={page}
       onPageChange={handleChangePage}
-      onRowsPerPageChange={handleChangeRowsPerPage}
-    />
+      onRowsPerPageChange={handleChangeRowsPerPage} />
   </>);
-};
+}
 
 export type { RenderCellProps, RenderRowProps, RenderHeaderProps };
 export { DecisionTable };

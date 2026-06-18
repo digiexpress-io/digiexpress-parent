@@ -11,7 +11,7 @@ import { EditIntlValueSet } from './builders/EditIntlValueSet';
 
 interface HeaderEditProps {
   dt: Fs.DecisionAst;
-  header: Fs.DecisionTypeDef;
+  header: Fs.TypeDef;
   onClose: () => void;
   onChange: (commands: Fs.AstCommand[]) => void;
 }

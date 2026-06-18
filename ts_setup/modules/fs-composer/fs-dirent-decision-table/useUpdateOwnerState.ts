@@ -3,19 +3,35 @@ import { useFsTheme } from '../fs-theme';
 import {
   Fs,
   useFsDirent,
-  useFsu,
   FsuChange,
-  useFsuChange
+  useFsuChange,
+  useFsDirentBody
 } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
   isDarkMode: boolean;
-  dirent: Fs.DirentBase | undefined;
+  dirent: Fs.DirentBase;
   id: string;
   isDirty: boolean;
-  wrenchBody: Fs.WrenchBody | undefined;
-  decision: Fs.DecisionAst | undefined;
+  wrenchBody: Fs.WrenchBody;
+  decision: Fs.DecisionAst;
   onChangeCommands: (commands: Fs.AstCommand[]) => void;
+
+  onDragStart: (index: number) => any,
+  onDragOver: (index: number) => any,
+  onDrop: (index: number) => any,
+
+  confirmDelete: { type: 'ROW' | 'COLUMN', id: string } | null;
+  setConfirmDelete: (value: UpdateOwnerState['confirmDelete']) => void;
+  editMode: {
+    cell?: Fs.DecisionAstCell;
+    header?: Fs.TypeDef;
+    meta?: boolean;
+    upload?: boolean;
+    download?: boolean;
+    rowsColumns?: boolean;
+  } | undefined
+  setEditMode: (value: UpdateOwnerState['editMode']) => void;
 }
 
 type _ChangeStateProps = {
@@ -37,6 +53,7 @@ class _ChangeState implements FsuChange {
   get id() { return this._current.decisionTableId; }
   get bodyType() { return this._current.bodyType; }
   get treeId() { return this._current.treeId; }
+  get nodes() { return this._current.nodes; }
   get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
   }
@@ -58,16 +75,13 @@ class _ChangeState implements FsuChange {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { getDirent, fetchDirentBody, applyTransientChanges } = useFsDirent();
-  const { withNewChange, withChange, cancel, push } = useFsu();
-
-  const dirent = getDirent(props.direntId);
-
-  const [wrenchBody, setWrenchBody] = React.useState<Fs.WrenchBody | undefined>(undefined);
-  const [decision, setDecision] = React.useState<Fs.DecisionAst | undefined>(undefined);
-  const [commands, setCommands] = React.useState<Fs.AstCommand[]>([]);
-  const [initialCommands, setInitialCommands] = React.useState<Fs.AstCommand[]>([]);
-  const [initialDecision, setInitialDecision] = React.useState<Fs.DecisionAst | undefined>(undefined);
+  const { getDirent, applyTransientChanges } = useFsDirent();
+  const dirent = getDirent(props.direntId)!;
+  const { body: initBody } = useFsDirentBody();
+  const [editMode, setEditMode] = React.useState<UpdateOwnerState['editMode']>();
+  const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
+  const [confirmDelete, setConfirmDelete] = React.useState<UpdateOwnerState['confirmDelete']>(null);
+  const [decision, setDecision] = React.useState<Fs.DecisionAst>(() => initBody.decisions[props.direntId]?.ast);
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback)
 
@@ -75,47 +89,60 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     decisionTableId: props.direntId,
     bodyType: dirent!.type,
     treeId: dirent?.commitIndex?.treeId!,
-    nodes: commands,
+    nodes: initBody.decisions[props.direntId]?.commands!,
   }));
 
-  React.useEffect(() => {
-    fetchDirentBody(props.direntId, 'DECISION_TABLE')
-      .then((body) => {
-        const wb = body as Fs.WrenchBody;
-        const loaded = wb.decisions[props.direntId]?.commands ?? [];
-        const loadedDecision = wb.decisions[props.direntId]?.ast;
-        setWrenchBody(wb);
-        setDecision(loadedDecision);
-        setCommands(loaded);
-        setInitialCommands(loaded);
-        setInitialDecision(loadedDecision);
-        cancel(props.direntId);
-      });
-  }, [props.direntId]);
 
-  const onChangeCommands = React.useCallback((newCommands: Fs.AstCommand[]) => {
-    const allCommands = [...commands, ...newCommands];
-    setCommands(allCommands);
-    setState(prev => prev.withNodes(allCommands));
-
+  const onChangeCommands = (newCommands: Fs.AstCommand[]) => {
+    const allCommands = [...state.nodes, ...newCommands];
     applyTransientChanges({
       id: props.direntId,
       bodyType: 'DECISION_TABLE',
       bodyStatment: allCommands,
     }).then((body) => {
       const wb = body as Fs.WrenchAstBody<Fs.DecisionAst>;
+      setState(prev => prev.withNodes(allCommands));
       setDecision(wb.ast);
-      push(props.direntId);
     });
-  }, [commands, props.direntId, applyTransientChanges, withChange, push]);
+  }
+
+  const onDragStart = (index: number) => () => {
+    setDraggedIndex(index);
+  }
+
+  const onDragOver = (_index: number) => (e: React.DragEvent) => {
+    e.preventDefault();
+  }
+
+  const onDrop = (targetIndex: number) => () => {
+    if (draggedIndex === null || draggedIndex === targetIndex) return;
+
+    const sourceRow = decision!.rows[draggedIndex];
+    const targetRow = decision!.rows[targetIndex];
+
+    onChangeCommands([
+      {
+        type: 'MOVE_ROW' as const,
+        id: sourceRow.id,
+        value: targetRow.id,
+      }
+    ]);
+    setDraggedIndex(null);
+  }
 
   return {
     isDarkMode,
     dirent,
     id: state.id,
     isDirty: state.isDirty,
-    wrenchBody,
+    wrenchBody: initBody,
     decision,
+    confirmDelete,
+    setConfirmDelete,
     onChangeCommands,
+    onDragStart,
+    onDragOver,
+    onDrop,
+    editMode, setEditMode
   };
 };

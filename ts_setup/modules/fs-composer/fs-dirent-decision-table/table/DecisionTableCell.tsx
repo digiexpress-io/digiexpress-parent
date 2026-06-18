@@ -9,8 +9,8 @@ import IntlBuilder from '../editors/builders/TypeIntlBuilder';
 const DecisionTableCell: React.FC<{
   dt: Fs.DecisionAst;
   row: Fs.DecisionAstRow;
-  header: Fs.DecisionTypeDef;
-  cell: Fs.DecisionAstCell | undefined;
+  header: Fs.TypeDef;
+  cell: Fs.DecisionAstCell;
   onClick: () => void;
   onChange: (commands: Fs.AstCommand[]) => void;
 }> = ({ dt, header, cell, onClick, onChange }) => {
@@ -23,7 +23,7 @@ const DecisionTableCell: React.FC<{
 
   if (header.direction === 'IN') {
     return (
-      <TableCell
+      <TableCell key={cell.header}
         sx={{ borderRight: `1px ${borderColor} solid`, cursor: cell ? 'pointer' : undefined }}
         onClick={cell ? onClick : undefined}
       >
@@ -37,9 +37,9 @@ const DecisionTableCell: React.FC<{
   }
 
   if (header.valueType === 'INTL') {
-    const builder = new IntlBuilder({ header, value: cell?.value ?? '' });
+    const builder = new IntlBuilder({ header, value: cell.value ?? '' });
     return (
-      <TableCell sx={{ borderRight: `1px ${borderColor} solid` }}>
+      <TableCell sx={{ borderRight: `1px ${borderColor} solid` }} key={cell.header}>
         {openIntl.open && cell && (
           <CellEditIntl
             dt={dt}
@@ -52,7 +52,7 @@ const DecisionTableCell: React.FC<{
         <ButtonGroup variant="text">
           {(header.valueSet ?? []).map((locale) => (
             <Tooltip key={locale} title={builder.getLocaleValue(locale)}>
-              <Button onClick={cell ? () => setOpenIntl({ open: true, locale }) : undefined}>
+              <Button onClick={() => setOpenIntl({ open: true, locale })}>
                 <Typography textTransform="uppercase" fontWeight="bold">{locale}</Typography>
               </Button>
             </Tooltip>
@@ -64,13 +64,12 @@ const DecisionTableCell: React.FC<{
 
   return (
     <TableCell
+      key={cell.header}
       sx={{ borderRight: `1px ${borderColor} solid`, cursor: cell ? 'pointer' : undefined }}
       onClick={cell ? onClick : undefined}
     >
       <Typography noWrap>
-        {cell
-          ? (cell.value ?? <EditIcon fontSize="small" color="disabled" />)
-          : <Box component="span" sx={{ color: 'text.disabled' }}>—</Box>}
+        {cell.value ?? <EditIcon fontSize="small" color="disabled" />}
       </Typography>
     </TableCell>
   );

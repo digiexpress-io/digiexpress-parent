@@ -1,75 +1,103 @@
 import React from 'react';
 import { Button, Menu, MenuItem, Divider, SvgIconProps, Box, Stack, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
+
+
 import { FsIcon, FsIcons } from '../fs-theme';
 
-import { Fs } from '@dxs-ts/fs-api';
+import { Fs, FsDirentBodyProvider } from '@dxs-ts/fs-api';
 import { useUtilityClasses, FsDirentDecisionTableRoot } from './useUtilityClasses';
-import { useUpdateOwnerState } from './useUpdateOwnerState';
+import { UpdateOwnerState, useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentDecisionTableProps } from './FsDirentDecisionTableProps';
 import { DecisionTable, DecisionTableHeader, DecisionTableRow, DecisionTableCell } from './table';
 import { NameDescHitPolicyEdit, OrderEdit, HeaderEdit, UploadCSV, DownloadCSV, CellEdit } from './editors';
+import { ConfirmDialog } from '@dxs-ts/eveli-primitives';
 
 
-interface EditMode {
-  cell?: Fs.DecisionAstCell;
-  header?: Fs.DecisionTypeDef;
-  meta?: boolean;
-  upload?: boolean;
-  download?: boolean;
-  rowsColumns?: boolean;
-}
-
-interface DecisionTableToolbarProps {
-  decision: Fs.DecisionAst;
-  edit: EditMode | undefined;
-  setEdit: (mode: EditMode | undefined) => void;
-  onChange: (commands: Fs.AstCommand[]) => void;
-}
 
 
 export const FsDirentDecisionTableUpdate: React.FC<FsDirentDecisionTableProps> = (props) => {
+  return (<FsDirentBodyProvider direntId={props.direntId}>
+    <Internal {...props} />
+  </FsDirentBodyProvider>);
+}
+
+const Internal: React.FC<FsDirentDecisionTableProps> = (props) => {
+  const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const [edit, setEdit] = React.useState<EditMode | undefined>();
 
   const onChange = ownerState.onChangeCommands;
+  const decision = ownerState.decision;
+  const setEdit = ownerState.setEditMode;
 
   return (
     <FsDirentDecisionTableRoot className={classes.root} ownerState={ownerState}>
-      {ownerState.decision && (
-        <>
-          <DecisionTableToolbar
-            decision={ownerState.decision}
-            edit={edit}
-            setEdit={setEdit}
+      <DecisionTableToolbar ownerState={ownerState} />
+      <DecisionTable
+        ast={decision}
+        onAddRow={() => onChange([{ type: 'ADD_ROW', id: "" }])}
+        renderHeader={({ ast, headers }) => (
+          <DecisionTableHeader ast={ast} headers={headers} onClick={(h) => setEdit({ header: h })}>
+            <Typography variant='subtitle2' sx={{ ml: 'auto' }}>{ast.name} - {ast.hitPolicy}</Typography>
+          </DecisionTableHeader>
+        )}
+        renderRow={(rowProps) => {
+          const index = decision.rows.findIndex((r) => r.id === rowProps.row.id);
+
+          const dragProps = {
+            draggable: true,
+            onDragStart: ownerState.onDragStart(index),
+            onDragOver: ownerState.onDragOver(index),
+            onDrop: ownerState.onDrop(index),
+          };
+
+          return (
+            <DecisionTableRow
+              {...rowProps}
+              dragProps={dragProps}
+              onDelete={(id) => ownerState.setConfirmDelete({ type: 'ROW', id })}
+            />
+          );
+        }}
+        renderCell={({ row, header, cell }) => (
+          <DecisionTableCell
+            dt={decision}
+            row={row}
+            header={header}
+            cell={cell}
             onChange={onChange}
+            onClick={() => cell && setEdit({ cell })}
           />
+        )}
+      />
 
-          <DecisionTable
-            ast={ownerState.decision}
-            renderHeader={({ ast, headers }) => (
-              <DecisionTableHeader ast={ast} headers={headers} onClick={(h) => setEdit({ header: h })}>
-                <span />
-              </DecisionTableHeader>
-            )}
-            renderRow={({ row, headers, renderCell }) => (
-              <DecisionTableRow row={row} headers={headers} renderCell={renderCell} />
-            )}
-            renderCell={({ row, header, cell }) => (
-              <DecisionTableCell
-                dt={ownerState.decision!}
-                row={row}
-                header={header}
-                cell={cell}
-                onChange={onChange}
-                onClick={() => cell && setEdit({ cell })}
-              />
-            )}
-          />
-        </>
+
+      <ConfirmDialog
+        open={!!ownerState.confirmDelete}
+        title={intl.formatMessage({ id: 'decisions.deleteConfirmTitle' })}
+        message={intl.formatMessage(
+          { id: 'decisions.deleteConfirmText' },
+          {
+            type: intl.formatMessage({
+              id: ownerState.confirmDelete?.type === 'ROW'
+                ? 'decisions.type.row'
+                : 'decisions.type.column'
+            })
+          }
       )}
-
+        confirmLabel={intl.formatMessage({ id: 'button.confirmDelete' })}
+        onCancel={() => ownerState.setConfirmDelete(null)}
+        onConfirm={() => {
+          if (!ownerState.confirmDelete) return;
+          const { type, id } = ownerState.confirmDelete;
+          const cmd: Fs.AstCommand = type === 'ROW'
+            ? { type: 'DELETE_ROW', id }
+            : { type: 'DELETE_HEADER', id };
+          onChange([cmd]);
+          ownerState.setConfirmDelete(null);
+        }}
+      />
     </FsDirentDecisionTableRoot>
   );
 };
@@ -91,11 +119,15 @@ const MenuOption: React.FC<{
   );
 };
 
-const DecisionTableToolbar: React.FC<DecisionTableToolbarProps> = ({ decision, edit, setEdit, onChange }) => {
+const DecisionTableToolbar: React.FC<{ ownerState: UpdateOwnerState }> = ({ ownerState }) => {
   const intl = useIntl();
   const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null);
-
   const closeMenu = () => setMenuAnchorEl(null);
+  const onChange = ownerState.onChangeCommands;
+  const decision = ownerState.decision;
+
+  const edit = ownerState.editMode;
+  const setEdit = ownerState.setEditMode;
 
   return (
     <>
@@ -148,4 +180,4 @@ const DecisionTableToolbar: React.FC<DecisionTableToolbarProps> = ({ decision, e
       </div>
     </>
   );
-};
+}

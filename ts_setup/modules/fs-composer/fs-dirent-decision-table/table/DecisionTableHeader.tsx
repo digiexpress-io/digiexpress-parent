@@ -7,9 +7,9 @@ import { Fs } from '@dxs-ts/fs-api';
 
 const DecisionTableHeader: React.FC<{
   ast: Fs.DecisionAst;
-  headers: Fs.DecisionTypeDef[];
+  headers: Fs.TypeDef[];
   children: React.ReactNode;
-  onClick: (header: Fs.DecisionTypeDef) => void;
+  onClick: (header: Fs.TypeDef) => void;
 }> = ({ ast, headers, children, onClick }) => {
   const totalCols = ast.headers.returnDefs.length + ast.headers.acceptDefs.length + 2;
 
