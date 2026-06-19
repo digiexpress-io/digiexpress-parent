@@ -1526,6 +1526,7 @@ export const en = {
   'fs.dirent.printoutResource.contentTypeField.label': 'Content type',
   'fs.dirent.printoutResource.printoutPagesField.label': 'Printout pages',
   'fs.dirent.printoutResource.uploadBodyField.label': 'File',
+  'fs.dirent.printoutResource.uploadBodyFieldText.label': 'Script',
   'fs.dirent.printoutResource.uploadBodyField.placeholder': 'No file selected',
   'fs.dirent.printoutResource.uploadBodyField.button': 'Choose file',
   'fs.dirent.printoutPage.sectionTitle.createNew': 'Create new printout page',

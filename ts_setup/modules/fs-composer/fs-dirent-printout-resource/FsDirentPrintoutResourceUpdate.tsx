@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Button } from '@mui/material';
 import { useIntl } from 'react-intl';
+import MonacoReact from '@monaco-editor/react';
 import { FsDirentFormField, FsDirentSelectMulti, FsDirentTextField } from '../fs-utilities';
 import { useUtilityClasses, FsDirentPrintoutResourceRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
@@ -52,29 +53,35 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourcePr
           />
         </FsDirentFormField>
 
-        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.label' })}>
-          <input
-            ref={fileInputRef}
-            type='file'
-            accept={ownerState.contentType === 'image/*' ? 'image/*' : 'text/*'}
-            style={{ display: 'none' }}
-            onChange={handleFileChange}
-          />
-
-          <FsDirentTextField disabled value={fileName} placeholder={intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.placeholder' })} />
-
-          <Button variant='text' size='small' className={classes.uploadButton} onClick={() => fileInputRef.current?.click()}>
-            {intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.button' })}
-          </Button>
-
-        </FsDirentFormField>
-
-        {ownerState.contentType === 'image/*' && previewSrc && (
-          <img
-            src={previewSrc}
-            alt={ownerState.resourceName}
-            style={{ maxWidth: '50%', maxHeight: '50%', objectFit: 'contain' }}
-          />
+        {ownerState.contentType === 'text/*' ? (
+          <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyFieldText.label' })}>
+            <MonacoReact
+              height='300px'
+              defaultLanguage='yaml'
+              options={{ wordBasedSuggestions: 'off', minimap: { enabled: false } }}
+            />
+          </FsDirentFormField>
+        ) : (
+            <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.label' })}>
+              <input
+                ref={fileInputRef}
+                type='file'
+                accept='image/*'
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
+              <FsDirentTextField disabled value={fileName} placeholder={intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.placeholder' })} />
+              <Button variant='text' size='small' className={classes.uploadButton} onClick={() => fileInputRef.current?.click()}>
+                {intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.button' })}
+              </Button>
+              {previewSrc && (
+                <img
+                  src={previewSrc}
+                  alt={ownerState.resourceName}
+                  style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain' }}
+                />
+              )}
+            </FsDirentFormField>
         )}
 
 
