@@ -1,3 +1,4 @@
+import React from 'react';
 import { useFsTheme } from '../fs-theme';
 
 
@@ -58,33 +59,44 @@ class _ChangeState implements FsuChange {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
-  const { getDirent } = useFsDirent();
-  const { body } = useFsDirentBody();
+  const { getDirent, applyTransientChanges } = useFsDirent();
+  const { body: initBody } = useFsDirentBody();
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
-
-  const flow = body.flows[props.direntId];
   const dirent = getDirent(props.direntId);
-  const flowProps = dirent?.props as Fs.FlowProps | undefined;
-
 
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     flowId: props.direntId,
-    bodyType: flowProps!.type,
+    bodyType: dirent?.type!,
     treeId: dirent?.commitIndex?.treeId!,
-    flowValue: flow.ast.parseTree.value,
+    flowValue: initBody.flows[props.direntId].ast.parseTree.value,
   }));
 
+  const [flow, setFlow] = React.useState<Fs.WrenchAstBody<Fs.FlowAst>>(() => initBody.flows[props.direntId]);
+
   function onChangeContent(value: string) {
+    onChangeCommands(value);
     setState(prev => prev.withFlowValue(value));
+  }
+
+  const onChangeCommands = (bodySyntax: string) => {
+    applyTransientChanges({
+      id: props.direntId,
+      bodyType: 'FLOW',
+      bodyStatment: [],
+      bodySyntax,
+    }).then((body) => {
+      const wb = body as Fs.WrenchAstBody<Fs.FlowAst>;
+      setFlow(wb);
+    });
   }
 
   return {
     isDarkMode,
     dirent,
+    flow,
     id: state.id,
     isDirty: state.isDirty,
     content: state.flowValue,
-    onChangeContent,
-    flow
+    onChangeContent
   };
 };
