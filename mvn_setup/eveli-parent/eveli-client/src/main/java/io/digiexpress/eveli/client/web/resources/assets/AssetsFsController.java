@@ -239,7 +239,7 @@ public class AssetsFsController {
   }
   
   @PostMapping("dirents/locales")
-   public Uni<Model<Locale>> createLocale(@RequestBody NewLocaleProps body) {
+  public Uni<Model<Locale>> createLocale(@RequestBody NewLocaleProps body) {
    return authoring.newModel().newLocale().props(body).build();
   }
   
@@ -293,9 +293,5 @@ public class AssetsFsController {
   public Uni<Model<PrintoutPage>> createPrintoutPage(@RequestBody NewPrintoutPageProps body) {
     return authoring.newModel().newPrintoutPage().props(body).build();
   }
-  
-  
-
-
 
 }

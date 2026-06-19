@@ -131,7 +131,7 @@ const DecisionTableToolbar: React.FC<{ ownerState: UpdateOwnerState }> = ({ owne
 
   return (
     <>
-      {edit?.meta && <NameDescHitPolicyEdit decision={decision as Fs.AstDecision} onChange={onChange} onClose={() => setEdit(undefined)} />}
+      {edit?.meta && <NameDescHitPolicyEdit decision={decision} onChange={onChange} onClose={() => setEdit(undefined)} />}
       {edit?.rowsColumns && <OrderEdit decision={decision} onChange={onChange} onClose={() => setEdit(undefined)} />}
       {edit?.upload && <UploadCSV onChange={onChange} onClose={() => setEdit(undefined)} />}
       {edit?.download && <DownloadCSV decision={decision} onClose={() => setEdit(undefined)} />}

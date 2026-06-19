@@ -1,11 +1,12 @@
-import React from 'react';
 import { useFsTheme } from '../fs-theme';
-import { createWidget } from '../fs-factory';
+
+
 import {
   Fs,
   useFsDirent,
   FsuChange,
   useFsuChange,
+  useFsDirentBody,
 } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
@@ -14,16 +15,14 @@ export interface UpdateOwnerState {
   id: string;
   isDirty: boolean;
   content: string;
-  configOptions: Fs.ConfigOption[];
+  flow: Fs.WrenchAstBody<Fs.FlowAst>
   onChangeContent: (value: string) => void;
-  onChangeConfigOptions: (value: string[]) => void;
 }
 
 type _ChangeStateProps = {
   flowId: string;
   bodyType: Fs.BodyType;
   flowValue: string;
-  configOptions: Fs.ConfigOption[];
   treeId: string;
 }
 
@@ -39,7 +38,6 @@ class _ChangeState implements FsuChange {
   get id() { return this._current.flowId; }
   get treeId() { return this._current.treeId; }
   get bodyType() { return this._current.bodyType; }
-  get configOptions() { return this._current.configOptions; }
   get flowValue() { return this._current.flowValue; }
   get isDirty(): boolean {
     return JSON.stringify(this._origin) !== JSON.stringify(this._current);
@@ -55,36 +53,29 @@ class _ChangeState implements FsuChange {
   withFlowValue(flowValue: string): _ChangeState {
     return new _ChangeState({ ...this._current, flowValue }, this._origin);
   }
-  withConfigOptions(value: string[]): _ChangeState {
-    const widget = createWidget({ type: 'FLOW' });
-    return new _ChangeState({ ...this._current, configOptions: widget.meta.configOptions.filter(opt => value.includes(opt)) }, this._origin);
-  }
-
 }
 
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent } = useFsDirent();
-
+  const { body } = useFsDirentBody();
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
 
+  const flow = body.flows[props.direntId];
   const dirent = getDirent(props.direntId);
   const flowProps = dirent?.props as Fs.FlowProps | undefined;
+
 
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     flowId: props.direntId,
     bodyType: flowProps!.type,
     treeId: dirent?.commitIndex?.treeId!,
-    flowValue: flowProps?.content ?? '',
-    configOptions: (flowProps?.configOptions ?? []) as Fs.ConfigOption[],
+    flowValue: flow.ast.parseTree.value,
   }));
 
   function onChangeContent(value: string) {
     setState(prev => prev.withFlowValue(value));
-  }
-  function onChangeConfigOptions(value: string[]) {
-    setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
 
   return {
@@ -93,8 +84,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     id: state.id,
     isDirty: state.isDirty,
     content: state.flowValue,
-    configOptions: state.configOptions,
     onChangeContent,
-    onChangeConfigOptions,
+    flow
   };
 };

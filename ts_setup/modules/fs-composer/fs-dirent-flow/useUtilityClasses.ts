@@ -39,6 +39,7 @@ export const FsDirentFlowRoot = styled('div', {
 })<{ ownerState: { isDarkMode: boolean } }>(({ theme, ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
+  height: '100%',
 
   [`& .${MUI_NAME}-titleRow`]: {
     display: 'flex',

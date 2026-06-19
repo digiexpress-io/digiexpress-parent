@@ -80,7 +80,7 @@ export declare namespace Fs {
 
   // ------------- START WRENCH --------------
 
-  export type WrenchProgramStatus = 'UP' | 'ERROR';
+  export type ProgramStatus = 'UP' | 'ERROR';
 
   export type AstCommandValue =
     | 'SET_NAME'
@@ -114,48 +114,131 @@ export declare namespace Fs {
     type: AstCommandValue;
   }
 
-  export interface WrenchModelError {
+  export interface ModelError {
     id?: string;
     msg: string;
     line?: number;
     column?: number;
   }
 
-  export interface WrenchProgramAssociation {
+  export interface ProgramAssociation {
     id?: string;
     ref: string;
     refType: BodyType;
-    refStatus: WrenchProgramStatus;
+    refStatus: ProgramStatus;
     owner: boolean;
   }
 
   export interface WrenchAstBody<T> {
     id: string;
     ast: T;
-    errors: WrenchModelError[];
-    associations: WrenchProgramAssociation[];
-    status: WrenchProgramStatus;
+    errors: ModelError[];
+    associations: ProgramAssociation[];
+    status: ProgramStatus;
     commands: AstCommand[];
   }
 
   export interface FlowAst {
-    parseTree?: {
-      value: string;
-    };
-    headers?: {
+    parseTree: YamlFlow;
+    headers: {
       acceptDefs: TypeDef[];
       returnDefs: TypeDef[];
     };
   }
+
+  export type YamlFlowKeyword =
+    | "id"
+    | "description"
+    | "inputs"
+    | "returns"
+    | "tasks"
+    | "then"
+    | "when"
+    | "switch"
+    | "required"
+    | "type"
+    | "decisionTable"
+    | "userTask"
+    | "ref"
+    | "collection"
+    | "service"
+    | "form"
+    | "debugValue";
+
+  export interface YamlFlowInputType {
+    name: string;
+    value: string;
+    ref?: string;
+  }
+  export interface YamlFlow extends Yaml {
+    id: Yaml;
+    description: Yaml;
+    types: YamlFlowInputType[];
+    inputs: Record<string, YamlFlowInputNode>;
+    tasks: Record<string, YamlFlowTaskNode>;
+  }
+  export interface YamlFlowTaskNode extends Omit<Yaml, "switch"> {
+    id: Yaml;
+    order: number;
+    then: Yaml;
+    ref: YamlFlowRefNode;
+    userTask: YamlFlowRefNode;
+    decisionTable: YamlFlowRefNode;
+    service: YamlFlowRefNode;
+    form: YamlFlowRefNode;
+    returns: YamlFlowRefNode;
+    switch: Record<string, YamlFlowSwitchNode>;
+  }
+  export interface YamlFlowRefNode extends Yaml {
+    ref: Yaml;
+    collection: Yaml;
+    inputsNode: Yaml;
+    inputs: Record<string, Yaml>;
+  }
+  export interface YamlFlowSwitchNode extends Yaml {
+    order: string;
+    when: Yaml;
+    then: Yaml;
+  }
+  export interface YamlFlowInputNode extends Yaml {
+    required: Yaml;
+    type: Yaml;
+    debugValue: Yaml;
+  }
+  export interface Yaml {
+    parent: Yaml | undefined;
+    keyword: string;
+    children: Record<string, Yaml>;
+    value: string;
+    source: { lineNumber: number, line: string };
+    start: number;
+    end: number;
+    indent: number;
+
+    collection?: Yaml | undefined;
+    service?: Yaml | undefined;
+    form?: Yaml | undefined;
+    decisionTable?: Yaml | undefined;
+    then?: Yaml | undefined;
+    id?: Yaml | undefined;
+    ref?: Yaml | undefined;
+    returns?: Yaml | undefined;
+    switch?: Yaml | undefined;
+  }
+
+
+
+
 
   export interface FlowTaskAst {
     value: string;
-    headers?: {
+    name: string;
+    description: string | undefined;
+    headers: {
       acceptDefs: TypeDef[];
       returnDefs: TypeDef[];
     };
   }
-
 
   export interface DecisionAstCell {
     id: string;
@@ -195,12 +278,6 @@ export declare namespace Fs {
     bodyStatment: AstCommand[]; // typo matches backend field name
   }
 
-  export type AstBodyType = "FLOW"
-    | "FLOW_TASK"
-    | "DECISION_TABLE"
-    | "TAG"
-    | "BRANCH";
-
   export type ValueType = "TIME"
     | "DATE"
     | "DATE_TIME"
@@ -224,32 +301,6 @@ export declare namespace Fs {
   export interface Headers {
     acceptDefs: TypeDef[];
     returnDefs: TypeDef[];
-  }
-
-  export interface AstBody {
-    name: string;
-    description?: string;
-    headers: Headers;
-    bodyType: AstBodyType;
-    parseTree?: { value: string }
-  }
-
-  // decision table
-  export interface AstDecision extends AstBody {
-    headerTypes: string[];
-    headerExpressions: Record<ValueType, string[]>;
-    hitPolicy: HitPolicy;
-    rows: AstDecisionRow[];
-  }
-  export interface AstDecisionRow {
-    id: string;
-    order: number;
-    cells: AstDecisionCell[];
-  }
-  export interface AstDecisionCell {
-    id: string;
-    header: string;
-    value?: string;
   }
 
   // ------------- END WRENCH --------------
@@ -301,7 +352,6 @@ export declare namespace Fs {
   export interface FlowProps extends PropsBase {
     type: 'FLOW';
     name: string;
-    content?: string;
   }
 
   export interface FlowTaskProps extends PropsBase {
@@ -441,7 +491,7 @@ export declare namespace Fs {
   export type PrintoutId = string;
   export type ImageId = string;
   export type TemplateId = string;
-export type PhoneNumberId = string;
+  export type PhoneNumberId = string;
 
   export interface ContextMenuData {
     dirent: DirentBase;

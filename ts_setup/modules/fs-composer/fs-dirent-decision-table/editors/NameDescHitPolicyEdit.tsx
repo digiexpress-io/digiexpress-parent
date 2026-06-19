@@ -12,7 +12,7 @@ const hitPolicyOptions = [
 ];
 
 const NameDescHitPolicyEdit: React.FC<{
-  decision: Fs.AstDecision;
+  decision: Fs.DecisionAst;
   onClose: () => void;
   onChange: (commands: Fs.AstCommand[]) => void;
 }> = ({ onChange, decision, onClose }) => {

@@ -40,7 +40,6 @@ public class Props_FlowTaskBuilder {
         .type(node.getBodyType())
         .locked(false)
         .taskName(flowTask.getTaskName())
-        .taskValue(flowTask.getTaskValue())
         .assetDescription(node.getDescription().map(e -> e.getText()).orElse(null))
         .labels(node.getLabels().map(e -> e.getValues()).orElse(Collections.emptyList()))
         .build();

@@ -1546,11 +1546,14 @@
         "@uiw/react-md-editor",
         "@dxs-ts/xui-datetime",
         "luxon",
+        "@dxs-ts/eveli-primitives",
         "js-file-download",
         "@mui/icons-material",
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api",
         "@monaco-editor/react",
+        "monaco-editor",
+        "notistack",
         "yaml",
         "react-markdown",
         "@xyflow/react",
@@ -1566,6 +1569,8 @@
         "js-file-download",
         "@mui/icons-material",
         "@monaco-editor/react",
+        "monaco-editor",
+        "notistack",
         "yaml",
         "react-markdown",
         "@xyflow/react",
@@ -1575,13 +1580,15 @@
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-nav",
         "@dxs-ts/xui-datetime",
+        "@dxs-ts/eveli-primitives",
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api"
       ],
-      "missingDependencies": [],
-      "unusedDependencies": [
-        "@dxs-ts/eveli-primitives"
-      ]
+      "missingDependencies": [
+        "monaco-editor",
+        "notistack"
+      ],
+      "unusedDependencies": []
     },
     "@dxs-ts/fs-nav": {
       "name": "@dxs-ts/fs-nav",
@@ -4807,6 +4814,6 @@
       ]
     }
   },
-  "checksum": "dc1477fff2e9c49bfeb65addd4b9f7925c4c442fe812f65aa9d5551d307c0f0a",
-  "generatedAt": "2026-06-18T13:53:11.073Z"
+  "checksum": "f46254a900e49dba87da0992872cf8874a260e9d1414ba8cf38b62f3928c44aa",
+  "generatedAt": "2026-06-19T05:56:29.371Z"
 }

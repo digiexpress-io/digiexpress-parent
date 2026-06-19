@@ -1,24 +1,33 @@
 import React from 'react';
-import MonacoReact from '@monaco-editor/react';
+
 import { useUtilityClasses, FsDirentFlowRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentFlowProps } from './FsDirentFlowProps';
+import { MonacoIntegration } from './MonacoIntegration';
+import { FsDirentBodyProvider } from '@dxs-ts/fs-api';
 
 
 export const FsDirentFlowUpdate: React.FC<FsDirentFlowProps> = (props) => {
+
+  return (<FsDirentBodyProvider direntId={props.direntId}>
+    <Internal {...props} />
+  </FsDirentBodyProvider>);
+}
+
+const Internal: React.FC<FsDirentFlowProps> = (props) => {
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
 
   return (
     <FsDirentFlowRoot className={classes.root} ownerState={ownerState}>
-      <MonacoReact height="100vh" value={ownerState.content}
-        defaultLanguage="yaml"
-        onChange={(value) => ownerState.onChangeContent(value ?? '')}
-        options={{
-          wordBasedSuggestions: 'off',
-          minimap: { enabled: false }
-        }}
+      <MonacoIntegration
+        id={ownerState.id}
+        key={ownerState.id}
+        src={ownerState.content}
+        onChange={ownerState.onChangeContent}
+        flow={ownerState.flow}
+        messages={ownerState.flow.errors}
       />
     </FsDirentFlowRoot>
   );
-};
+}

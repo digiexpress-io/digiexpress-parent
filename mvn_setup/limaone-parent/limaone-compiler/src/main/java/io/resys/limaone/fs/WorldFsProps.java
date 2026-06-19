@@ -120,15 +120,11 @@ public interface WorldFsProps {
   @Value.Immutable
   interface FlowProps extends WorldFsProps {
     String getName();
-    
-    @Nullable 
-    String getContent();
   }
   
   @Value.Immutable
   interface FlowTaskProps extends WorldFsProps {
     String getTaskName();
-    String getTaskValue();
   }
 
   @Value.Immutable
