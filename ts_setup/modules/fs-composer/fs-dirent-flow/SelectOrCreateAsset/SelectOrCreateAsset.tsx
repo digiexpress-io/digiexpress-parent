@@ -1,0 +1,160 @@
+import React from 'react'
+
+import { Box, List, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { FormattedMessage, useIntl } from 'react-intl'
+import { useSnackbar } from 'notistack';
+import * as monaco_editor from 'monaco-editor';
+import * as Burger from '@dxs-ts/eveli-primitives';
+import { Fs, useFsDirentBody, useFsu } from '@dxs-ts/fs-api';
+
+
+
+import { CancelButton } from '@dxs-ts/eveli-primitives';
+import { SelectTask } from './SelectTask';
+import { CompletionDialogProps } from '../autocomplete';
+import { executeTemplate, toLowerCamelCase } from './utils';
+
+
+
+
+
+export interface SelectOrCreateAssetProps {
+  onClose: () => void;
+  flow: Fs.WrenchAstBody<Fs.FlowAst>;
+  guided: CompletionDialogProps;
+  cm: typeof monaco_editor;
+}
+
+export const SelectOrCreateAsset: React.FC<SelectOrCreateAssetProps> = ({ onClose, guided, flow, cm }) => {
+  const intl = useIntl();
+  const { enqueueSnackbar } = useSnackbar();
+  const { body: site, refresh: refreshSite } = useFsDirentBody();
+  const decisions = site.decisions;
+  const services = site.services;
+
+  const { pushCreate } = useFsu();
+  const [name, setName] = React.useState("");
+  const [apply, setApply] = React.useState(false);
+  const [type, setType] = React.useState<Fs.BodyType | string>(guided.guided === "decision-task" ? "DT" : "FLOW_TASK");
+  const [link, setLink] = React.useState<Fs.DecisionAst | Fs.FlowTaskAst>();
+  const usedLinks = flow.associations.filter(l => l.id && l.owner).map(l => l.id);
+  const usedNames = [...Object.values(decisions).map(d => d.ast?.name), ...Object.values(services).map(d => d.ast?.name)]
+
+  const assets: Fs.WrenchAstBody<Fs.DecisionAst | Fs.FlowTaskAst>[] = React.useMemo(() => {
+    const target: Fs.WrenchAstBody<Fs.DecisionAst | Fs.FlowTaskAst>[] = type === "DT" ? Object.values(decisions) : Object.values(services);
+    const keyword = name.toLowerCase();
+    const result:Fs.WrenchAstBody<Fs.DecisionAst | Fs.FlowTaskAst>[] = target.filter(t => t.ast && (
+      t.ast?.name.toLowerCase().indexOf(keyword) > -1 ||
+      (t.ast?.description && t.ast?.description?.toLowerCase().indexOf(keyword) > -1)));
+    return result;
+  }, [name, type, services, decisions]);
+
+
+  const handleSave = () => {
+    setApply(true);
+    
+    const toBeReplaced = {
+      name: name,
+      id: toLowerCamelCase(name),
+      collection: false,
+      serviceType: type === "DT" ? "decisionTable" : "service",
+      ref: name
+    }
+
+    if (link) {
+      executeTemplate(cm, toBeReplaced, guided, link);
+      onClose();
+    } else if (type === "DT") {
+      const serviceName = toBeReplaced.name;
+      enqueueSnackbar(<FormattedMessage id="flows.autocomplete.task.snackbar.creating" values={{ name: serviceName, type }} />,
+        { variant: 'info' }
+      );      
+
+      pushCreate({ bodyType: 'DECISION_TABLE', getCurrentProps: () => ({ bodyType: 'DECISION_TABLE', changes: { name: serviceName } }) })
+      .then(async newSite => {
+        enqueueSnackbar(<FormattedMessage id="flows.autocomplete.task.snackbar.created" values={{ name: serviceName, type }}/>,
+          { variant: 'success' }
+        );      
+        const decisions = (await refreshSite(newSite.commitIndex?.treeId!)).decisions;
+
+        const newAsset = Object.values(decisions).filter(a => a.ast?.name === serviceName);
+        if (newAsset.length === 1) {
+          executeTemplate(cm, toBeReplaced, guided, newAsset[0].ast);
+        }
+        onClose();
+      });
+    } else if (type === "FLOW_TASK") {
+      const serviceName = toBeReplaced.name.charAt(0).toUpperCase() + toBeReplaced.name.slice(1);
+      enqueueSnackbar(<FormattedMessage id="flows.autocomplete.task.snackbar.creating" values={{name: serviceName, type}}/>,
+        { variant: 'info' }
+      );
+      pushCreate({ bodyType: 'FLOW_TASK', getCurrentProps: () => ({ bodyType: 'FLOW_TASK', changes: { name: serviceName } }) })
+      .then(async newSite => {
+        enqueueSnackbar(<FormattedMessage id="flows.autocomplete.task.snackbar.created" values={{name: serviceName, type}}/>,
+          { variant: 'success' }
+        );
+        const services = (await refreshSite(newSite.commitIndex?.treeId!)).services;
+        const newAsset = Object.values(services).filter(a => a.ast?.name === serviceName);
+        if (newAsset.length === 1) {
+          executeTemplate(cm, toBeReplaced, guided, newAsset[0].ast);
+        }
+        onClose();
+      });
+    }
+  }
+
+  return (
+  <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='flows.autocomplete.task.create' /></DialogTitle>
+    <DialogContent>
+      <Burger.Select
+        selected={type}
+        onChange={(newType) => {
+          setLink(undefined);
+          setType(newType);
+        }}
+        label='flows.autocomplete.task.selectType'
+        items={[
+          { id: "DT", value: "Decision tables" },
+          { id: "FLOW_TASK", value: "Flow tasks" }
+        ]}
+      />
+      <Burger.TextField
+        label='flows.autocomplete.task.searchField'
+        placeholder={intl.formatMessage({id: 'flows.autocomplete.task.searchPlaceholder'})}
+        helperText='flows.autocomplete.task.searchHelper'
+        value={name} onChange={(newName) => {
+          if (link) {
+            setLink(undefined);
+          }
+          setName(newName);
+        }} />
+  
+      <Box pt={2} pb={2}>
+        <Typography variant="h4" fontWeight="bold"><FormattedMessage id={"flows.autocomplete.task.searchResults"} /></Typography>
+      </Box>
+      <List sx={{ width: '100%', height: 400, bgcolor: 'background.paper', overflow: "auto"}}>
+        {assets.map(a => {
+          const linked = usedLinks.includes(a.id);
+          const comp = linked + '-' + a.ast?.name;
+          return {entity: a, linked, comp};
+        }).sort((a, b) => a.comp.localeCompare(b.comp) )
+          .map(a => <SelectTask key={a.entity.id} value={a.entity} linked={a.linked} onClick={() => {
+          setLink(a.entity.ast);
+          setName((a.entity.ast as (Fs.DecisionAst | Fs.FlowTaskAst)).name);
+        }} />)}
+
+      </List>
+    </DialogContent>
+    <DialogActions>
+      <Button variant='text' disabled={usedNames.includes(name) || name.trim().length === 0 || apply || link ? true : false } onClick={handleSave}>
+          <FormattedMessage id="flows.autocomplete.task.create" />
+      </Button>
+      <CancelButton onClick={onClose} />
+      <Button disabled={(link ? false : true) || apply} onClick={handleSave}>
+        <FormattedMessage id='flows.autocomplete.task.link'/>
+      </Button>
+    </DialogActions>
+  </Dialog>);
+}
+
