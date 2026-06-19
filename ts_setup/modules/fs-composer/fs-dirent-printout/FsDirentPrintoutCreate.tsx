@@ -35,7 +35,7 @@ export const FsDirentPrintoutCreate: React.FC = () => {
         </FsDirentFormField>
 
         {ownerState.locales.map((locale) => (
-          <FsDirentFormField key={locale.value} label={intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}>
+          <FsDirentFormField key={locale.value} label={intl.formatMessage({ id: 'fs.dirent.printout.locales.labelField' }, { localeCode: locale.label })}>
             <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''} onChange={(value) => ownerState.onChangeIntlValue(locale.value, value)} />
           </FsDirentFormField>
         ))}

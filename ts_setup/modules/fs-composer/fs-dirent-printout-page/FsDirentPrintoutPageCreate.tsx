@@ -31,14 +31,6 @@ export const FsDirentPrintoutPageCreate: React.FC = () => {
           />
         </FsDirentFormField>
 
-        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutPage.contentField.label' })}>
-          <FsDirentTextField multiline minRows={4}
-            placeholder={intl.formatMessage({ id: 'fs.dirent.printoutPage.contentField.placeholder' })}
-            value={ownerState.content}
-            onChange={ownerState.onChangeContent}
-          />
-        </FsDirentFormField>
-
       </div>
     </FsDirentPrintoutPageRoot>
   );

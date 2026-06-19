@@ -12,6 +12,7 @@ export const FsDirentPrintoutResourceCreate: React.FC = () => {
   const classes = useUtilityClasses();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = React.useState('');
+  const previewSrc = ownerState.uploadBody || undefined;
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -73,6 +74,13 @@ export const FsDirentPrintoutResourceCreate: React.FC = () => {
           </Button>
         </FsDirentFormField>
 
+        {ownerState.contentType === 'image/*' && previewSrc && (
+          <img
+            src={previewSrc}
+            alt={ownerState.resourceName}
+            style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain' }}
+          />
+        )}
 
       </div>
     </FsDirentPrintoutResourceRoot>

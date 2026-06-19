@@ -1519,6 +1519,7 @@ export const en = {
   'fs.dirent.printout.orchestratorNameField.placeholder': 'Enter orchestrator name',
   'fs.dirent.printout.sectionTitle.localeLabels': 'Printout template languages',
   'fs.dirent.printout.pagesSection.empty': 'No pages connected to this printout',
+  'fs.dirent.printout.locales.labelField': 'Name for printout page in language: {localeCode}',
   'fs.dirent.printoutResource.sectionTitle.createNew': 'Create new printout resource',
   'fs.dirent.printoutResource.sectionTitle.edit': 'Edit printout resource: {name}',
   'fs.dirent.printoutResource.nameField.placeholder': 'Enter resource name',

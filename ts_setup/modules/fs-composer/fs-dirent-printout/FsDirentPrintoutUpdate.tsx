@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentFormField, FsDirentSelectSingle, FsDirentTextField } from '../fs-utilities';
 import { useUtilityClasses, FsDirentPrintoutRoot } from './useUtilityClasses';
@@ -32,7 +32,7 @@ export const FsDirentPrintoutUpdate: React.FC<FsDirentPrintoutProps> = ({ dirent
         </FsDirentFormField>
 
         {ownerState.locales.map((locale) => (
-          <FsDirentFormField key={locale.value} label={intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}>
+          <FsDirentFormField key={locale.value} label={intl.formatMessage({ id: 'fs.dirent.printout.locales.labelField' }, { localeCode: locale.label })}>
             <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''} onChange={(value) => ownerState.onChangeIntlValue(locale.value, value)} />
           </FsDirentFormField>
         ))}

@@ -7,12 +7,10 @@ export interface CreateOwnerState {
   isDirty: boolean;
   serviceId: string;
   localeId: string;
-  content: string;
   printoutOptions: Fs.SelectOption[];
   localeOptions: Fs.SelectOption[];
   onChangeServiceId: (value: string) => void;
   onChangeLocaleId: (value: string) => void;
-  onChangeContent: (value: string) => void;
   onSave: () => Promise<void>;
 }
 
@@ -20,7 +18,6 @@ type _CreateStateProps = {
   bodyType: Fs.BodyType;
   serviceId: string;
   localeId: string;
-  content: string;
 }
 
 class _CreateState implements FsuCreateChange {
@@ -41,9 +38,7 @@ class _CreateState implements FsuCreateChange {
   get localeId() {
     return this._current.localeId;
   }
-  get content() {
-    return this._current.content;
-  }
+
   get isDirty(): boolean {
     return !!this._current.serviceId && !!this._current.localeId;
   }
@@ -54,7 +49,6 @@ class _CreateState implements FsuCreateChange {
       changes: {
         serviceId: this._current.serviceId,
         localeId: this._current.localeId,
-        content: this._current.content || undefined,
       }
     };
   }
@@ -65,16 +59,13 @@ class _CreateState implements FsuCreateChange {
   withLocaleId(localeId: string): _CreateState {
     return new _CreateState({ ...this._current, localeId }, this._origin);
   }
-  withContent(content: string): _CreateState {
-    return new _CreateState({ ...this._current, content }, this._origin);
-  }
+
 }
 
 const _init: _CreateStateProps = {
   bodyType: 'PRINTOUT_PAGE',
   serviceId: '',
   localeId: '',
-  content: ''
 };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
@@ -99,9 +90,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   function onChangeLocaleId(value: string) {
     setState(prev => prev.withLocaleId(value));
   }
-  function onChangeContent(value: string) {
-    setState(prev => prev.withContent(value));
-  }
   async function onSave() {
     await createDirent(state);
   }
@@ -111,12 +99,10 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     isDirty: state.isDirty,
     serviceId: state.serviceId,
     localeId: state.localeId,
-    content: state.content,
     printoutOptions: selectOptions.printouts,
     localeOptions,
     onChangeServiceId,
     onChangeLocaleId,
-    onChangeContent,
     onSave,
   };
 };
