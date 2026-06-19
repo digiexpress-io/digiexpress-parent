@@ -26,12 +26,14 @@ export const FsDirentBodyProvider: React.FC<FsDirentBodyProviderProps> = (props)
   const { fetchDirentBody, getDirent } = useFsDirent();
   const dirent = getDirent(props.direntId)!;
   const [body, setBody] = React.useState<Fs.WrenchBody>();
+  const [loadTreeId, setLoadTreeId] = React.useState(dirent.commitIndex?.treeId!);
 
   React.useEffect(function load() {
     fetchDirentBody(props.direntId, dirent.type)
       .then((body) => {
         const wb = body as Fs.WrenchBody;
         setBody(wb);
+        setLoadTreeId(dirent.commitIndex!.treeId);
       });
   }, [props.direntId, dirent.commitIndex!.treeId]);
 
@@ -45,7 +47,7 @@ export const FsDirentBodyProvider: React.FC<FsDirentBodyProviderProps> = (props)
     return wb;
   }, [props.direntId, dirent.commitIndex!.treeId, body]);
 
-  if(!body) {
+  if (!body || loadTreeId !== dirent.commitIndex!.treeId) {
     return (<></>);
   }
 
