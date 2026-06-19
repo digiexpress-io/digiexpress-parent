@@ -1468,7 +1468,9 @@
           "@uiw/react-md-editor": "*",
           "@xyflow/react": "*",
           "elkjs": "*",
-          "luxon": "*"
+          "luxon": "*",
+          "notistack": "*",
+          "monaco-editor": "*"
         },
         "keywords": [
           "filesystem",
@@ -1496,7 +1498,9 @@
         "@uiw/react-md-editor",
         "@xyflow/react",
         "elkjs",
-        "luxon"
+        "luxon",
+        "notistack",
+        "monaco-editor"
       ],
       "peerDependencies": [
         "js-file-download",
@@ -1511,7 +1515,9 @@
         "@uiw/react-md-editor",
         "@xyflow/react",
         "elkjs",
-        "luxon"
+        "luxon",
+        "notistack",
+        "monaco-editor"
       ],
       "externalDependencies": [
         "js-file-download",
@@ -1526,7 +1532,9 @@
         "@uiw/react-md-editor",
         "@xyflow/react",
         "elkjs",
-        "luxon"
+        "luxon",
+        "notistack",
+        "monaco-editor"
       ],
       "internalDependencies": [
         "@dxs-ts/eveli-primitives",
@@ -1584,10 +1592,7 @@
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api"
       ],
-      "missingDependencies": [
-        "monaco-editor",
-        "notistack"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": []
     },
     "@dxs-ts/fs-nav": {
@@ -4814,6 +4819,6 @@
       ]
     }
   },
-  "checksum": "f46254a900e49dba87da0992872cf8874a260e9d1414ba8cf38b62f3928c44aa",
-  "generatedAt": "2026-06-19T05:56:29.371Z"
+  "checksum": "7de8f89caa37d115ab327fea68ee6588c26c97e6faaa48c426b0029dcf4b1572",
+  "generatedAt": "2026-06-19T11:12:23.510Z"
 }

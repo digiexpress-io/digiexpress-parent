@@ -25,7 +25,9 @@
     "@uiw/react-md-editor": "*",
     "@xyflow/react": "*",
     "elkjs": "*",
-    "luxon": "*"
+    "luxon": "*",
+    "notistack": "*" ,
+    "monaco-editor": "*"
   },
   "keywords": ["filesystem", "tree", "components"],
   "private": true
