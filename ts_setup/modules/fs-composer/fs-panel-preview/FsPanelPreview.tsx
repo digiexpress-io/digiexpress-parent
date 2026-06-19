@@ -25,7 +25,7 @@ export const FsPanelPreview: React.FC<FsPanelPreviewProps> = (props) => {
     return <FsPanelPreviewWrench dirent={ownerState.dirent} />;
   }
 
-  if (ownerState.isTemplate) {
+  if (ownerState.isArticleTemplate) {
     return (
       <FsPanel title={intl.formatMessage({ id: 'fs.panelPreview.title' })} icon={<FsIcon icon={FsIcons.Preview} large />} activeDirent={true}>
         <FsPanelPreviewRoot className={classes.root} ownerState={ownerState}>
@@ -37,7 +37,17 @@ export const FsPanelPreview: React.FC<FsPanelPreviewProps> = (props) => {
     );
   }
 
-  if (!ownerState.isPage) {
+  if (ownerState.isPrintoutPage) {
+    return (
+      <FsPanel title={intl.formatMessage({ id: 'fs.panelPreview.title' })} icon={<FsIcon icon={FsIcons.Preview} large />} activeDirent={true}>
+        <FsPanelPreviewRoot className={classes.root} ownerState={ownerState}>
+          <Typography className={classes.content}>{intl.formatMessage({ id: 'fs.panelPreview.message.notAvailable' })}</Typography>
+        </FsPanelPreviewRoot>
+      </FsPanel>
+    );
+  }
+
+  if (ownerState.isArticlePage) {
     return (
       <FsPanel title={intl.formatMessage({ id: 'fs.panelPreview.title' })} icon={<FsIcon icon={FsIcons.Preview} large />} activeDirent={true}>
         <FsPanelPreviewRoot className={classes.root} ownerState={ownerState}>

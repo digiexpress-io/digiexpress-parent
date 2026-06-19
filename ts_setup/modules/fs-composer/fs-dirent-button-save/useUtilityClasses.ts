@@ -72,14 +72,15 @@ export const FsDirentButtonSaveRoot = styled(Button, {
 
 export const FsDirentButtonOpenRoot = styled(Button, {
   name: MUI_NAME,
-  slot: 'Root',
+  slot: 'OpenRoot',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
-  backgroundColor: alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.1),
-  color: ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success,
-  border: `1px solid ${alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.3)}`,
+  backgroundColor: alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form, 0.1),
+  color: ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form,
+  border: `1px solid ${alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form, 0.3)}`,
   borderRadius: theme.spacing(0.5),
   minWidth: '13ch',
+  alignSelf: 'flex-start',
   padding: theme.spacing(0.5),
   ...theme.typography.subtitle2,
   textTransform: 'none',
@@ -89,7 +90,7 @@ export const FsDirentButtonOpenRoot = styled(Button, {
   '&:hover': {
     boxShadow: 'none',
     backgroundColor: ownerState.disabled
-      ? alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.1)
-      : alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.2),
+      ? alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form, 0.1)
+      : alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form, 0.2),
   },
 }));

@@ -48,10 +48,9 @@ export const FsDirentArticleLinkCreate: React.FC = () => {
         </FsDirentFormField>
 
         {ownerState.locales.map((locale) => (
-          <div key={locale.value} className={classes.localeRow}>
-            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}</Typography>
+          <FsDirentFormField key={locale.value} label={intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}>
             <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''} onChange={(value) => ownerState.onChangeIntlValue(locale.value, value)} />
-          </div>
+          </FsDirentFormField>
         ))}
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.link.articlesField.label' })}>

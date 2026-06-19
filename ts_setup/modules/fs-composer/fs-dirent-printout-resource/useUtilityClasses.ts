@@ -9,6 +9,7 @@ export interface FsDirentPrintoutResourceClasses {
   titleRow: string;
   title: string;
   formContainer: string;
+  uploadButton: string;
 }
 
 export type FsDirentPrintoutResourceClassKey = keyof FsDirentPrintoutResourceClasses;
@@ -19,6 +20,7 @@ export const useUtilityClasses = () => {
     titleRow: ['titleRow'],
     title: ['title'],
     formContainer: ['formContainer'],
+    uploadButton: ['uploadButton'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -49,6 +51,11 @@ export const FsDirentPrintoutResourceRoot = styled('div', {
   [`& .${MUI_NAME}-formContainer`]: {
     display: 'flex',
     flexDirection: 'column',
+  },
+
+  [`& .${MUI_NAME}-uploadButton`]: {
+    alignSelf: 'flex-start',
+    marginTop: theme.spacing(1),
   },
 
 }));

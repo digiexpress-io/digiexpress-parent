@@ -1,7 +1,8 @@
 import React from 'react';
+import MonacoReact, { OnChange } from '@monaco-editor/react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentFormField, FsDirentTextField } from '../fs-utilities';
+import { FsDirentFormField } from '../fs-utilities';
 import { useUtilityClasses, FsDirentPrintoutPageRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPrintoutPageProps } from './FsDirentPrintoutPageProps';
@@ -11,31 +12,27 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
   const ownerState = useUpdateOwnerState({ direntId });
   const classes = useUtilityClasses();
 
+  const handleChange: OnChange = (value) => {
+    ownerState.onChangeContent(value ?? '');
+  };
+
   return (
     <FsDirentPrintoutPageRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <div className={classes.formContainer}>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutPage.contentField.label' })}>
-          <FsDirentTextField multiline minRows={4}
-            placeholder={intl.formatMessage({ id: 'fs.dirent.printoutPage.contentField.placeholder' })}
+          <MonacoReact
+            height='100vh'
             value={ownerState.content}
-            onChange={ownerState.onChangeContent}
+            defaultLanguage='yaml'
+            theme={ownerState.isDarkMode ? 'vs-dark' : 'vs'}
+            onChange={handleChange}
+            options={{
+              wordBasedSuggestions: 'off',
+              minimap: { enabled: false },
+            }}
           />
-        </FsDirentFormField>
-
-        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutPage.printoutResourcesField.label' })}>
-          {ownerState.connectedResourceNames.length === 0 ? (
-            <Typography variant='body2' color='textSecondary'>
-              {intl.formatMessage({ id: 'fs.dirent.printoutPage.printoutResourcesField.empty' })}
-            </Typography>
-          ) : (
-            <div className={classes.resourceList}>
-              {ownerState.connectedResourceNames.map((name, index) => (
-                <Typography key={index} variant='body2'>{name}</Typography>
-              ))}
-            </div>
-          )}
         </FsDirentFormField>
 
       </div>

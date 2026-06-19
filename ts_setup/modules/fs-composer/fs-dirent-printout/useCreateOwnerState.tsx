@@ -9,8 +9,11 @@ import React from 'react';
     serviceName: string;
     orchestratorName: string;
     flows: Fs.SelectOption[];
+    locales: Fs.SelectOption[];
+    intlValues: Record<string, string>;
     onChangeServiceName: (value: string) => void;
     onChangeOrchestratorName: (value: string) => void;
+    onChangeIntlValue: (locale: string, value: string) => void;
     onSave: () => Promise<void>;
   }
 
@@ -18,6 +21,7 @@ import React from 'react';
     bodyType: Fs.BodyType;
     serviceName: string;
     orchestratorName: string;
+    localeLabels: { locale: string; labelValue: string }[];
   }
 
   class _CreateState implements FsuCreateChange {
@@ -38,6 +42,9 @@ import React from 'react';
     get orchestratorName() {
       return this._current.orchestratorName;
     }
+    get intlValues() {
+      return Object.fromEntries(this._current.localeLabels.map(l => [l.locale, l.labelValue]));
+    }
     get isDirty(): boolean {
       return JSON.stringify(this._origin) !== JSON.stringify(this._current);
     }
@@ -49,7 +56,7 @@ import React from 'react';
         changes: {
           serviceName: c.serviceName || undefined,
           orchestratorName: c.orchestratorName || undefined,
-          localeLabels: [],
+          localeLabels: c.localeLabels,
         },
       };
     }
@@ -60,12 +67,18 @@ import React from 'react';
     withOrchestratorName(orchestratorName: string): _CreateState {
       return new _CreateState({ ...this._current, orchestratorName }, this._origin);
     }
+    withIntlValue(locale: string, labelValue: string): _CreateState {
+      const localeLabels = this._current.localeLabels.filter(l => l.locale !== locale);
+      localeLabels.push({ locale, labelValue });
+      return new _CreateState({ ...this._current, localeLabels }, this._origin);
+    }
   }
 
   const _init: _CreateStateProps = {
     bodyType: 'PRINTOUT',
     serviceName: '',
     orchestratorName: '',
+    localeLabels: [],
   };
 
   export const useCreateOwnerState = (): CreateOwnerState => {
@@ -80,6 +93,9 @@ import React from 'react';
     function onChangeOrchestratorName(value: string) {
       setState(prev => prev.withOrchestratorName(value));
     }
+    function onChangeIntlValue(locale: string, value: string) {
+      setState(prev => prev.withIntlValue(locale, value));
+    }
     async function onSave() {
       await createDirent(state);
     }
@@ -90,8 +106,11 @@ import React from 'react';
       serviceName: state.serviceName,
       orchestratorName: state.orchestratorName,
       flows: selectOptions.flows,
+      locales: selectOptions.languages,
+      intlValues: state.intlValues,
       onChangeServiceName,
       onChangeOrchestratorName,
+      onChangeIntlValue,
       onSave,
     };
   };

@@ -68,7 +68,7 @@ export const FsDirentPrintoutResourceCreate: React.FC = () => {
             onChange={handleFileChange}
           />
           <FsDirentTextField disabled value={fileName} placeholder={intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.placeholder' })} />
-          <Button variant='outlined' size='small' sx={{ alignSelf: 'flex-start' }} onClick={() => fileInputRef.current?.click()}>
+          <Button variant='text' size='small' className={classes.uploadButton} onClick={() => fileInputRef.current?.click()}>
             {intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyField.button' })}
           </Button>
         </FsDirentFormField>

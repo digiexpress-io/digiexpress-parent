@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Divider, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentFormField, FsDirentSelectSingle, FsDirentTextField } from '../fs-utilities';
 import { useUtilityClasses, FsDirentPrintoutRoot } from './useUtilityClasses';
@@ -31,20 +31,11 @@ export const FsDirentPrintoutUpdate: React.FC<FsDirentPrintoutProps> = ({ dirent
           />
         </FsDirentFormField>
 
-        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printout.pagesSection.label' })}>
-          {ownerState.connectedPages.length === 0 ? (
-            <Typography variant='body2' color='textSecondary'>
-              {intl.formatMessage({ id: 'fs.dirent.printout.pagesSection.empty' })}
-            </Typography>
-          ) : (
-            <div className={classes.pageList}>
-              {ownerState.connectedPages.map(page => (
-                <Typography key={page.id} variant='body2'>{page.localeName}</Typography>
-              ))}
-            </div>
-          )}
-        </FsDirentFormField>
-
+        {ownerState.locales.map((locale) => (
+          <FsDirentFormField key={locale.value} label={intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}>
+            <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''} onChange={(value) => ownerState.onChangeIntlValue(locale.value, value)} />
+          </FsDirentFormField>
+        ))}
 
       </div>
     </FsDirentPrintoutRoot>

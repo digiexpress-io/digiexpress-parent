@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled, darken, lighten } from '@mui/material';
+import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 
@@ -9,7 +9,6 @@ export interface FsDirentArticleLinkClasses {
   titleRow: string;
   title: string;
   formContainer: string;
-  localeRow: string;
   localeLabel: string;
   sectionTitle: string;
   sectionBox: string;
@@ -24,7 +23,6 @@ export const useUtilityClasses = () => {
     titleRow: ['titleRow'],
     title: ['title'],
     formContainer: ['formContainer'],
-    localeRow: ['localeRow'],
     localeLabel: ['localeLabel'],
     sectionTitle: ['sectionTitle'],
     sectionBox: ['sectionBox'],
@@ -59,12 +57,6 @@ export const FsDirentArticleLinkRoot = styled('div', {
   [`& .${MUI_NAME}-formContainer`]: {
     display: 'flex',
     flexDirection: 'column',
-  },
-
-  [`& .${MUI_NAME}-localeRow`]: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(0.5),
   },
 
   [`& .${MUI_NAME}-localeLabel`]: {

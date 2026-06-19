@@ -6,9 +6,10 @@ import { FsPanelPreviewProps } from './FsPanelPreviewProps';
 
 export interface OwnerState {
   isDarkMode: boolean;
-  isPage: boolean;
+  isArticlePage: boolean;
+  isArticleTemplate: boolean;
+  isPrintoutPage: boolean;
   isFlow: boolean;
-  isTemplate: boolean;
   dirent: Fs.DirentBase | undefined;
   content: {
     pageContent: string;
@@ -25,12 +26,13 @@ export const useOwnerState = (props: FsPanelPreviewProps): OwnerState => {
   const pageProps = dirent?.type === 'ARTICLE_PAGE' ? dirent.props as Fs.PageProps : undefined;
   const templateProps = dirent?.type === 'ARTICLE_TEMPLATE' ? dirent.props as Fs.TemplateProps : undefined;
 
-  const isPage = dirent?.type === 'ARTICLE_PAGE';
+  const isArticlePage = dirent?.type === 'ARTICLE_PAGE';
+  const isPrintoutPage = dirent?.type === 'PRINTOUT_PAGE';
+  const isArticleTemplate = dirent?.type === 'ARTICLE_TEMPLATE';
   const isFlow = dirent?.type === 'FLOW';
-  const isTemplate = dirent?.type === 'ARTICLE_TEMPLATE';
 
   return {
-    isDarkMode, isPage, isFlow, isTemplate,
+    isDarkMode, isArticlePage, isFlow, isArticleTemplate, isPrintoutPage,
     dirent,
     content: {
       pageContent: pageProps?.content ?? '',

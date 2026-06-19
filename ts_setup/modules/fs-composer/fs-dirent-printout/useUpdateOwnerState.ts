@@ -23,9 +23,12 @@ export interface UpdateOwnerState {
   serviceName: string;
   orchestratorName: string;
   flows: Fs.SelectOption[];
+  locales: Fs.SelectOption[];
+  intlValues: Record<string, string>;
   connectedPages: ConnectedPage[];
   onChangeServiceName: (value: string) => void;
   onChangeOrchestratorName: (value: string) => void;
+  onChangeIntlValue: (locale: string, value: string) => void;
 }
 
 class _ChangeState implements FsuChange {
@@ -120,6 +123,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeOrchestratorName(value: string) {
     setState(prev => prev.withOrchestratorName(value));
   }
+  function onChangeIntlValue(locale: string, value: string) {
+    setState(prev => prev.withIntlValues(locale, value));
+  }
   return {
     isDarkMode,
     assetPath: activeTabPath,
@@ -127,8 +133,11 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     serviceName: state.serviceName,
     orchestratorName: state.orchestratorName,
     flows: selectOptions.flows,
+    locales: selectOptions.languages,
+    intlValues: state.intlValues,
     connectedPages,
     onChangeServiceName,
     onChangeOrchestratorName,
+    onChangeIntlValue,
   };
 };
