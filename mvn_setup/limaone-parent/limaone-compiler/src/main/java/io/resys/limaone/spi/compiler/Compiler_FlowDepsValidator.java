@@ -44,6 +44,7 @@ import io.resys.limaone.ast.Flow_AST.ReturnsStatement;
 import io.resys.limaone.ast.Flow_AST.StartStatement;
 import io.resys.limaone.ast.Flow_AST.StatementType;
 import io.resys.limaone.ast.Flow_AST.SwitchStatement;
+import io.resys.limaone.ast.Flow_CST.YamlInput;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
@@ -81,11 +82,47 @@ public class Compiler_FlowDepsValidator {
     Optional<String> dependencyId; 
     StatementType parent;
   }
+  
+
+  private List<Parameter> visitHeaders(Flow_AST ast) {
+    final Map<String, YamlInput> inputs = ast.getParseTree().getInputs();
+
+    
+    final List<Parameter> result = new ArrayList<>();
+    for (final Map.Entry<String, YamlInput> entry : inputs.entrySet()) {
+      if (entry.getValue().getType() == null) {
+        continue;
+      }
+      try {
+        ValueType.valueOf(entry.getValue().getType().getValue());
+        
+        
+      } catch (Exception e) {
+        final String msg = String.format("Failed to convert data type from: %s, error: %s, \n  L%s: %s", 
+            entry.getValue().getType().getValue(), 
+            e.getMessage(), 
+            entry.getValue().getStart() + "",
+            entry.getValue().getSyntax()
+            );
+        
+        errors.add(ImmutableModelError.builder()
+            .id("I001")
+            .column(1)
+            .line(entry.getValue().getStart())
+            .msg(msg)
+            .exception(e)
+            .build());
+      }
+    }
+    return result;
+  }
+  
 
   /**
    * Walk the entire Flow AST starting from the root statement
    */
   public List<ModelError> walk() {
+    visitHeaders(this.ast);
     artifact.getChildDeps().forEach(dep -> childrenByName.put(dep.getDependencyId(), dep));
     visit(ast.getStatement(), NO_PROPS);
     toValidate.forEach(this::visitDepToValidate);

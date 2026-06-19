@@ -140,3 +140,17 @@ export function useFsuChange<T extends FsuChange>(
     },
   }), [state, fs, id]);
 }
+
+
+export function useFsuValue<T extends FsuChange>(
+  id: string
+) {
+  const fs = useFsDirent();
+
+  // subscribe only to this node
+  const state = useSelector(store, (w) => w.findChange(id) as T | undefined);
+
+  return React.useMemo(() => ({
+    state
+  }), [state, fs, id]);
+}

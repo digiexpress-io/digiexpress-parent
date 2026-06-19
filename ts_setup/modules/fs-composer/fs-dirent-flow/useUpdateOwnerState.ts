@@ -78,7 +78,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withFlowValue(value));
   }
 
-  const onChangeCommands = (bodySyntax: string) => {
+  const onChangeCommands = useDebounce((bodySyntax: string) => {
     applyTransientChanges({
       id: props.direntId,
       bodyType: 'FLOW',
@@ -88,7 +88,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
       const wb = body as Fs.WrenchAstBody<Fs.FlowAst>;
       setFlow(wb);
     });
-  }
+  })
 
   return {
     isDarkMode,
@@ -100,3 +100,17 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     onChangeContent
   };
 };
+
+
+
+const delay = 1000;
+function useDebounce<T extends (...args: Parameters<T>) => void>(fn: T) {
+  const handlerRef = React.useRef<ReturnType<typeof setTimeout>>();
+
+  return React.useCallback((...args: Parameters<T>) => {
+    clearTimeout(handlerRef.current);
+    handlerRef.current = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  }, [fn]) as T;
+}
