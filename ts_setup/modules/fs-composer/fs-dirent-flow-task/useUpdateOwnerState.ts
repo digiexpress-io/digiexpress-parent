@@ -3,7 +3,8 @@ import {
   Fs,
   useFsDirent,
   useFsuChange,
-  FsuChange
+  FsuChange,
+  useFsDirentBody
 } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
@@ -59,7 +60,7 @@ class _ChangeState implements FsuChange {
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { isDarkMode } = useFsTheme();
   const { getDirent } = useFsDirent();
-
+  const { body } = useFsDirentBody();
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
 
@@ -71,7 +72,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     flowTaskId: props.direntId,
     bodyType: flowTaskProps!.type,
     treeId: dirent?.commitIndex?.treeId!,
-    flowTaskValue: flowTaskProps?.taskValue ?? '',
+    flowTaskValue: body.services[props.direntId].ast.value ?? '',
   }));
 
   function onChangeTaskValue(value: string) {

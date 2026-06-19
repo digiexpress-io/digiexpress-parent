@@ -357,7 +357,6 @@ export declare namespace Fs {
   export interface FlowTaskProps extends PropsBase {
     type: 'FLOW_TASK';
     taskName: string;
-    taskValue: string;
   }
 
   export interface DecisionTableProps extends PropsBase {
