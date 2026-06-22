@@ -56,7 +56,6 @@ const _init: _CreateStateProps = {
 };
 
 export interface CreateOwnerState {
-  isDarkMode: boolean;
   isDirty: boolean;
   name: string;
   content: string;
@@ -66,7 +65,6 @@ export interface CreateOwnerState {
 }
 
 export const useCreateOwnerState = (): CreateOwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
@@ -82,7 +80,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   return ({
-    isDarkMode,
     isDirty: state.isDirty,
     name: state.name,
     content: state.content,

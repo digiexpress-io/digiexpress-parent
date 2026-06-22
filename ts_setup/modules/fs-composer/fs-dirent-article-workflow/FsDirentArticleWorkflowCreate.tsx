@@ -26,7 +26,7 @@ export const FsDirentArticleWorkflowCreate: React.FC = () => {
   const dialobTags = selectOptions.collectDialobTags(ownerState.formName);
 
   return (
-    <FsDirentArticleWorkflowRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentArticleWorkflowRoot className={classes.root}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createNew' })}</Typography>
         <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />

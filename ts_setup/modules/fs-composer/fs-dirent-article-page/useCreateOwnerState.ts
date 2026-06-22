@@ -7,7 +7,6 @@ import { createWidget } from '../fs-factory';
 
 
 export interface CreateOwnerState {
-  isDarkMode: boolean;
   articleId: string;
   templateId: string;
   locale: string;
@@ -150,7 +149,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   return ({
-    isDarkMode,
     articleId: state.articleId,
     templateId: state.templateId,
     locale: state.locale,

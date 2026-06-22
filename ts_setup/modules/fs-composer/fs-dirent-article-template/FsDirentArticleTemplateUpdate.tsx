@@ -14,7 +14,7 @@ export const FsDirentArticleTemplateUpdate: React.FC<FsDirentArticleTemplateProp
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentArticleTemplateRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentArticleTemplateRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.template.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <div className={classes.formContainer}>
 

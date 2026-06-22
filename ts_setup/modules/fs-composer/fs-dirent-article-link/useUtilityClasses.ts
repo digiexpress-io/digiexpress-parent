@@ -36,7 +36,7 @@ export const FsDirentArticleLinkRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: { isDarkMode: boolean } }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
 
@@ -50,7 +50,7 @@ export const FsDirentArticleLinkRoot = styled('div', {
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.body1,
     fontWeight: 500,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     marginBottom: theme.spacing(2)
   },
 
@@ -62,25 +62,25 @@ export const FsDirentArticleLinkRoot = styled('div', {
   [`& .${MUI_NAME}-localeLabel`]: {
     ...theme.typography.subtitle2,
     fontWeight: 500,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
   },
 
   [`& .${MUI_NAME}-sectionTitle`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     display: 'block',
   },
 
   [`& .${MUI_NAME}-sectionBox`]: {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary}`,
+    backgroundColor: FsColors.light.border,
+    border: `1px solid ${FsColors.dark.textSecondary}`,
     borderRadius: '4px',
     marginTop: '0px !important',
   },
 
   [`& .${MUI_NAME}-sectionContent`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
   },
 
 

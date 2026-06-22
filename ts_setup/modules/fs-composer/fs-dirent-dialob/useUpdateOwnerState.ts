@@ -5,7 +5,6 @@ import { useFsNav } from '@dxs-ts/fs-nav';
 
 
 export interface UpdateOwnerState {
-  isDarkMode: boolean;
   assetPath: string | undefined;
   dirent: Fs.DirentBase | undefined;
   technicalName: string;
@@ -15,7 +14,6 @@ export interface UpdateOwnerState {
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
   const { getDirent } = useFsDirent();
 
@@ -33,7 +31,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   }
 
   return ({
-    isDarkMode,
     assetPath: activeTabPath,
     dirent,
     technicalName,

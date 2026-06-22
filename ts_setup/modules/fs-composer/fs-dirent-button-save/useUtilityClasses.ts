@@ -24,9 +24,9 @@ export const FsDirentButtonSaveAllRoot = styled(Button, {
   slot: 'AllRoot',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
-  backgroundColor: alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.25),
-  color: ownerState.isDarkMode ? FsColors.direntTypes.dark.link : darken(FsColors.semantic.success, 0.7),
-  border: `1px solid ${alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.7)}`,
+  backgroundColor: alpha(FsColors.semantic.success, 0.25),
+  color: darken(FsColors.semantic.success, 0.7),
+  border: `1px solid ${alpha(FsColors.semantic.success, 0.7)}`,
   borderRadius: theme.spacing(0.5),
   padding: theme.spacing(0.5),
   minWidth: '13ch',
@@ -36,13 +36,13 @@ export const FsDirentButtonSaveAllRoot = styled(Button, {
   boxShadow: 'none',
   '&.Mui-disabled': {
     opacity: 0.4,
-    color: ownerState.isDarkMode ? FsColors.direntTypes.dark.link : darken(FsColors.semantic.success, 0.7),
-    backgroundColor: alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.25),
-    border: `1px solid ${alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.7)}`,
+    color: darken(FsColors.semantic.success, 0.7),
+    backgroundColor: alpha(FsColors.semantic.success, 0.25),
+    border: `1px solid ${alpha(FsColors.semantic.success, 0.7)}`,
   },
   '&:hover': {
     boxShadow: 'none',
-    backgroundColor: alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.5),
+    backgroundColor: alpha(FsColors.semantic.success, 0.5),
   },
 }));
 
@@ -51,9 +51,9 @@ export const FsDirentButtonSaveRoot = styled(Button, {
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
-  backgroundColor: alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.1),
-  color: ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success,
-  border: `1px solid ${alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.3)}`,
+  backgroundColor: alpha(FsColors.semantic.success, 0.1),
+  color: FsColors.semantic.success,
+  border: `1px solid ${alpha(FsColors.semantic.success, 0.3)}`,
   borderRadius: theme.spacing(0.5),
   minWidth: '13ch',
   padding: theme.spacing(0.5),
@@ -64,9 +64,7 @@ export const FsDirentButtonSaveRoot = styled(Button, {
   opacity: ownerState.disabled ? 0.4 : 1,
   '&:hover': {
     boxShadow: 'none',
-    backgroundColor: ownerState.disabled
-      ? alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.1)
-      : alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.link : FsColors.semantic.success, 0.2),
+    backgroundColor: ownerState.disabled ? alpha(FsColors.semantic.success, 0.1) : alpha(FsColors.semantic.success, 0.2),
   },
 }));
 
@@ -75,9 +73,9 @@ export const FsDirentButtonOpenRoot = styled(Button, {
   slot: 'OpenRoot',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
-  backgroundColor: alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form, 0.1),
-  color: ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form,
-  border: `1px solid ${alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form, 0.3)}`,
+  backgroundColor: alpha(FsColors.direntTypes.light.form, 0.1),
+  color: FsColors.direntTypes.light.form,
+  border: `1px solid ${alpha(FsColors.direntTypes.light.form, 0.3)}`,
   borderRadius: theme.spacing(0.5),
   minWidth: '13ch',
   alignSelf: 'flex-start',
@@ -89,8 +87,6 @@ export const FsDirentButtonOpenRoot = styled(Button, {
   opacity: ownerState.disabled ? 0.4 : 1,
   '&:hover': {
     boxShadow: 'none',
-    backgroundColor: ownerState.disabled
-      ? alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form, 0.1)
-      : alpha(ownerState.isDarkMode ? FsColors.direntTypes.dark.form : FsColors.direntTypes.light.form, 0.2),
+    backgroundColor: ownerState.disabled ? alpha(FsColors.direntTypes.light.form, 0.1) : alpha(FsColors.direntTypes.light.form, 0.2),
   },
 }));

@@ -3,12 +3,10 @@ import { useIntl } from 'react-intl';
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsDirentButtonDeleteProps } from './FsDirentButtonDeleteProps';
 import { useUtilityClasses, FsDirentButtonDeleteRoot } from './useUtilityClasses';
-import { useOwnerState } from './useOwnerState';
 import { FsDirentButtonDeleteDialog } from './FsDirentButtonDeleteDialog';
 
 export const FsDirentButtonDelete: React.FC<FsDirentButtonDeleteProps> = (props) => {
   const intl = useIntl();
-  const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
   const { deleteDirent, getDirent } = useFsDirent();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -26,7 +24,7 @@ export const FsDirentButtonDelete: React.FC<FsDirentButtonDeleteProps> = (props)
 
   return (
     <>
-      <FsDirentButtonDeleteRoot className={classes.root} ownerState={ownerState} onClick={handleClick}>
+      <FsDirentButtonDeleteRoot className={classes.root} onClick={handleClick}>
         {intl.formatMessage({ id: 'button.delete' })}
       </FsDirentButtonDeleteRoot>
       <FsDirentButtonDeleteDialog open={dialogOpen} onClose={handleClose} onConfirm={handleConfirm} assetId={props.assetId}/>

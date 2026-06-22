@@ -14,7 +14,7 @@ export const FsDirentArticlePageCreate: React.FC = () => {
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentArticlePageRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentArticlePageRoot className={classes.root}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.page.sectionTitle.createNew' })}</Typography>
         <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty || !ownerState.articleId} />
@@ -38,7 +38,7 @@ export const FsDirentArticlePageCreate: React.FC = () => {
         )}
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}>
-          <div data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}>
+          <div data-color-mode={'light'}>
             <MDEditor height={600}
               preview="edit"
               value={ownerState.content}

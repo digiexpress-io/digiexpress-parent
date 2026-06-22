@@ -4,7 +4,6 @@ import { useFsTheme } from '../fs-theme';
 
 
 export interface CreateOwnerState {
-  isDarkMode: boolean;
   isDirty: boolean;
   formName: string;
   formTechnicalId: string;
@@ -61,7 +60,6 @@ const _initProps: _CreateStateProps = {
 };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_initProps));
@@ -77,7 +75,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   return {
-    isDarkMode,
     isDirty: state.isDirty,
     formName: state.formName,
     formTechnicalId: state.formTechnicalId,

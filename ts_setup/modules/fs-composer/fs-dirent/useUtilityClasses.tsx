@@ -2,7 +2,6 @@ import { generateUtilityClass, styled, alpha, ListItem } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 import { createWidget } from '../fs-factory';
-
 import { Fs } from '@dxs-ts/fs-api';
 
 

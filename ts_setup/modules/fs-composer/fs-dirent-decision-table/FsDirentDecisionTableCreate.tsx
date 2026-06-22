@@ -14,7 +14,7 @@ export const FsDirentDecisionTableCreate: React.FC = (_props) => {
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentDecisionTableRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentDecisionTableRoot className={classes.root}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.decision_table.sectionTitle.createNew' })}</Typography>
         <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />

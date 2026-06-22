@@ -19,7 +19,7 @@ export const FsDirentDialobCreate: React.FC = (_props) => {
 
   return (
     <DialobFormsProvider dialobApiUrl={dialobUrl}>
-      <FsDirentDialobRoot className={classes.root} ownerState={ownerState}>
+      <FsDirentDialobRoot className={classes.root}>
         <div className={classes.titleRow}>
           <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.dialob.sectionTitle.createNew' })}</Typography>
           <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />

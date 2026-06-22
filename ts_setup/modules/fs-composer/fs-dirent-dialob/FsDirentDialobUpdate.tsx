@@ -17,7 +17,7 @@ export const FsDirentDialobUpdate: React.FC<FsDirentDialobProps> = (props) => {
 
   return (
     <DialobFormsProvider dialobApiUrl={dialobUrl}>
-      <FsDirentDialobRoot className={classes.root} ownerState={ownerState}>
+      <FsDirentDialobRoot className={classes.root}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.dialob.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
         <div className={classes.formContainer}>
 

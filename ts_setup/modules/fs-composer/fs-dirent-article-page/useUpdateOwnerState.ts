@@ -6,7 +6,6 @@ import { FsDirentSelectSingleOption } from '../fs-utilities';
 import { createWidget } from '../fs-factory';
 
 export interface UpdateOwnerState {
-  isDarkMode: boolean;
   assetPath: string | undefined;
   dirent: Fs.DirentBase | undefined;
   id: string;
@@ -116,7 +115,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const changes = state.isDirty;
 
   return ({
-    isDarkMode,
     assetPath: activeTabPath,
     dirent,
     id: state.id,

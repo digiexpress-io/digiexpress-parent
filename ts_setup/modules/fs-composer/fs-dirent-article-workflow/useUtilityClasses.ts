@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled, darken, lighten } from '@mui/material';
+import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 
@@ -34,7 +34,7 @@ export const FsDirentArticleWorkflowRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: { isDarkMode: boolean } }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
 
@@ -49,9 +49,9 @@ export const FsDirentArticleWorkflowRoot = styled('div', {
     ...theme.typography.body1,
     fontWeight: 500,
     marginBottom: theme.spacing(2),
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     '&.MuiTypography-root': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
     },
   },
 
@@ -63,9 +63,9 @@ export const FsDirentArticleWorkflowRoot = styled('div', {
   [`& .${MUI_NAME}-localeLabel`]: {
     ...theme.typography.subtitle2,
     fontWeight: 500,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     '&.MuiTypography-root': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
     },
   },
 
@@ -77,10 +77,10 @@ export const FsDirentArticleWorkflowRoot = styled('div', {
 
   [`& .${MUI_NAME}-sectionTitle`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     display: 'block',
     '&.MuiTypography-root': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
     },
   },
 

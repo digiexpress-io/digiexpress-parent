@@ -1,7 +1,6 @@
 import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
-import { OwnerState } from './useOwnerState';
 
 const MUI_NAME = 'FsDirentComments';
 
@@ -41,39 +40,39 @@ export const FsDirentCommentsRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
 
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.caption,
     fontWeight: 500,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
   },
 
   [`& .${MUI_NAME}-textField`]: {
     width: '100%',
     marginTop: theme.spacing(0.5),
     '& .MuiInputBase-root': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      backgroundColor: FsColors.light.background,
+      color: FsColors.light.text,
       borderRadius: 0,
       '& fieldset': {
-        borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
+        borderColor: FsColors.light.border,
         borderRadius: 0,
       },
       '&:hover fieldset': {
-        borderColor: ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary,
+        borderColor: FsColors.dark.textSecondary,
       },
       '&.Mui-focused fieldset': {
-        border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text}`
+        border: `1px solid ${FsColors.light.text}`
       },
     },
     '& .MuiInputBase-input': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
       ...theme.typography.caption,
       '&::placeholder': {
-        color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+        color: FsColors.light.textSecondary,
         opacity: 1,
         ...theme.typography.caption,
       },
@@ -82,7 +81,7 @@ export const FsDirentCommentsRoot = styled('div', {
       padding: 'unset',
     },
     '& .MuiInputLabel-root': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
       ...theme.typography.caption,
     },
   },
@@ -98,7 +97,7 @@ export const FsDirentCommentsRoot = styled('div', {
 
   [`& .${MUI_NAME}-noComments`]: {
     ...theme.typography.caption,
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
     fontStyle: 'italic',
   },
 
@@ -109,12 +108,12 @@ export const FsDirentCommentsRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-divider`]: {
-    borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
+    borderColor: FsColors.light.border,
   },
 
   [`& .${MUI_NAME}-commentContent`]: {
     ...theme.typography.caption,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
   },
 
   [`& .${MUI_NAME}-commentMeta`]: {
@@ -123,7 +122,7 @@ export const FsDirentCommentsRoot = styled('div', {
 
     '& .MuiTypography-root': {
       ...theme.typography.caption,
-      color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+      color: FsColors.light.textSecondary,
       fontStyle: 'italic',
     },
   },

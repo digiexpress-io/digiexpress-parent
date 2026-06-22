@@ -8,7 +8,6 @@ import {
 import { createWidget } from '../fs-factory';
 
 export interface CreateOwnerState {
-  isDarkMode: boolean;
   locales: Fs.SelectOption[];
   isDirty: boolean;
   contentType: Fs.LinkType;
@@ -127,7 +126,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   return ({
-    isDarkMode,
     locales,
     isDirty: isChangesPresent,
     contentType: state.contentType,

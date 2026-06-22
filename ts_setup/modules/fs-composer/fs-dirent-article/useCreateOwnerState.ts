@@ -6,7 +6,6 @@ import { createWidget } from '../fs-factory';
 
 
 export interface CreateOwnerState {
-  isDarkMode: boolean;
   parentArticle: Fs.DirentBase | undefined;
   parentArticlePath: string | undefined;
   isDirty: boolean;
@@ -110,7 +109,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   return ({
-    isDarkMode,
     parentArticle,
     parentArticlePath,
     isDirty: isChangesPresent,

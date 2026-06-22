@@ -4,7 +4,6 @@ import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 
 
 export interface CreateOwnerState {
-  isDarkMode: boolean;
   name: string;
   isDirty: boolean;
   onChangeName: (v: string) => void;
@@ -54,7 +53,6 @@ class _CreateState implements FsuCreateChange {
 const _init: _CreateStateProps = { bodyType: 'DECISION_TABLE', name: '' };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
@@ -67,7 +65,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   return {
-    isDarkMode,
     name: state.name,
     isDirty: state.isDirty,
     onChangeName,

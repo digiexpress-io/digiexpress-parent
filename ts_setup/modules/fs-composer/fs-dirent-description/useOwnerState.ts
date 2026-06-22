@@ -1,11 +1,9 @@
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsDirentDescriptionProps } from './FsDirentDescriptionProps';
-import { useFsTheme } from '../fs-theme';
 import React from 'react';
 
 
 export interface OwnerState {
-  isDarkMode: boolean;
   description: string;
   isDirty: boolean;
   onChangeDescription: (value: string) => void;
@@ -14,7 +12,6 @@ export interface OwnerState {
 
 
 export const useOwnerState = (props: FsDirentDescriptionProps): OwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { dirent } = props;
   const { updateDirentDescription } = useFsDirent();
   const init = dirent.props?.assetDescription ?? '';
@@ -29,7 +26,6 @@ export const useOwnerState = (props: FsDirentDescriptionProps): OwnerState => {
   }
 
   return {
-    isDarkMode,
     description,
     isDirty: description !== init,
     onChangeDescription,

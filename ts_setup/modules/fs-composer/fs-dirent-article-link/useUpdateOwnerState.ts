@@ -1,4 +1,3 @@
-import React from 'react';
 import { useFsTheme } from '../fs-theme';
 import {
   Fs,
@@ -10,7 +9,6 @@ import { useFsNav } from '@dxs-ts/fs-nav';
 import { createWidget } from '../fs-factory';
 
 export interface UpdateOwnerState {
-  isDarkMode: boolean;
   assetPath: string | undefined;
   dirent: Fs.DirentBase | undefined;
   locales: Fs.SelectOption[];
@@ -133,7 +131,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
 
   return ({
-    isDarkMode,
     assetPath: activeTabPath,
     dirent,
     locales,

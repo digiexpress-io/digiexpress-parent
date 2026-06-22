@@ -14,7 +14,7 @@ export const FsDirentArticleTemplateCreate: React.FC = () => {
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentArticleTemplateRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentArticleTemplateRoot className={classes.root}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.template.sectionTitle.createNew' })}</Typography>
         <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />

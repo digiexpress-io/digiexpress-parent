@@ -14,7 +14,7 @@ export const FsDirentArticlePageUpdate: React.FC<FsDirentArticlePageProps> = (pr
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentArticlePageRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentArticlePageRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.page.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <div className={classes.formContainer}>
 
@@ -28,7 +28,7 @@ export const FsDirentArticlePageUpdate: React.FC<FsDirentArticlePageProps> = (pr
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.page.contentField.label' })}>
           <MDEditor height={600}
-            data-color-mode={ownerState.isDarkMode ? 'dark' : 'light'}
+            data-color-mode={'light'}
             preview="edit" value={ownerState.content}
             onChange={(val) => ownerState.onChangeContent(val ?? '')}
           />

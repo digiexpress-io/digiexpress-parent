@@ -25,7 +25,7 @@ export const FsDirentArticleWorkflowUpdate: React.FC<FsDirentArticleWorkflowProp
   const dialobTags = selectOptions.collectDialobTags(ownerState.dialobFormName);
 
   return (
-    <FsDirentArticleWorkflowRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentArticleWorkflowRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <div className={classes.formContainer}>
 

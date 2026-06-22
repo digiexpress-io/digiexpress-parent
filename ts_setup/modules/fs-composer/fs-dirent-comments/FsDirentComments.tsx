@@ -4,18 +4,16 @@ import { useIntl } from 'react-intl';
 
 import { FsDirentCommentsProps } from './FsDirentCommentsProps';
 import { useUtilityClasses, FsDirentCommentsRoot } from './useUtilityClasses';
-import { useOwnerState } from './useOwnerState';
 
 
 export const FsDirentComments: React.FC<FsDirentCommentsProps> = (props) => {
   const intl = useIntl();
-  const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
   const comments = props.dirent?.props?.comments ?? [];
   const [newComment, setNewComment] = React.useState('');
 
   return (
-    <FsDirentCommentsRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentCommentsRoot className={classes.root}>
       <Typography className={classes.title}>Comments ({comments.length})</Typography>
 
       <TextField fullWidth multiline className={classes.textField}

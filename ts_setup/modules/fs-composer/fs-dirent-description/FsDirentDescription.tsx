@@ -15,7 +15,7 @@ export const FsDirentDescription: React.FC<FsDirentDescriptionProps> = (props) =
 
 
   return (
-    <FsDirentDescriptionRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentDescriptionRoot className={classes.root}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.descriptionField.label' })}</Typography>
         <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />

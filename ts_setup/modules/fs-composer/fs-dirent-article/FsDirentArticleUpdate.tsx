@@ -18,7 +18,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleProps> = (props) => 
   }));
 
   return (
-    <FsDirentArticleRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentArticleRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.article.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
 
       <div className={classes.formContainer}>

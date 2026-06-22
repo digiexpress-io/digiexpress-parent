@@ -32,7 +32,7 @@ const Internal: React.FC<FsDirentDecisionTableProps> = (props) => {
   const setEdit = ownerState.setEditMode;
 
   return (
-    <FsDirentDecisionTableRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentDecisionTableRoot className={classes.root}>
       <DecisionTableToolbar ownerState={ownerState} />
       <DecisionTable
         ast={decision}

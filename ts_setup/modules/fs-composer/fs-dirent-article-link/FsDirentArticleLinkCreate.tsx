@@ -25,7 +25,7 @@ export const FsDirentArticleLinkCreate: React.FC = () => {
   }));
 
   return (
-    <FsDirentArticleLinkRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentArticleLinkRoot className={classes.root}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.link.sectionTitle.createNew' })}</Typography>
         <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />
