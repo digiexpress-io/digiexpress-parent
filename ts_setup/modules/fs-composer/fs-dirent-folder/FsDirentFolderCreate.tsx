@@ -13,7 +13,7 @@ export const FsDirentFolderCreate: React.FC<FsDirentFolderCreateProps> = (props)
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentFolderRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentFolderRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.folder.sectionTitle.createNew' })}</Typography>
       <div className={classes.formContainer}>
 

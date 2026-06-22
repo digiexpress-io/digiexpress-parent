@@ -1,5 +1,5 @@
 import composeClasses from '@mui/utils/composeClasses';
-import { generateUtilityClass, styled, Popover, darken, lighten } from '@mui/material';
+import { generateUtilityClass, styled, Popover, darken } from '@mui/material';
 import { FsColors } from '../fs-theme';
 
 export const MUI_NAME = 'FsDirentMenu';
@@ -53,17 +53,17 @@ export const useUtilityClasses = () => {
 export const FsDirentMenuRoot = styled(Popover, {
   name: MUI_NAME,
   slot: 'Root',
-  shouldForwardProp: (prop) => !['isSubmenuOpen', 'shouldExpandUpward', 'isDarkMode'].includes(prop as string),
-})<{ isSubmenuOpen?: boolean; shouldExpandUpward?: boolean; isDarkMode?: boolean }>(({ theme, isSubmenuOpen, isDarkMode }) => {
-  const colors = isDarkMode ? FsColors.dark : FsColors.light;
-  const dangerColor = isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight;
-  const warningColor = isDarkMode ? FsColors.semantic.warning : FsColors.semantic.warningLight;
-  const activeColor = isDarkMode ? FsColors.semantic.active : FsColors.light.border;
-  const borderColor = isDarkMode ? lighten(colors.border, 0.15) : darken(colors.border, 0.15);
+  shouldForwardProp: (prop) => !['isSubmenuOpen', 'shouldExpandUpward'].includes(prop as string),
+})<{ isSubmenuOpen?: boolean; shouldExpandUpward?: boolean }>(({ theme, isSubmenuOpen }) => {
+  const colors = FsColors.light;
+  const dangerColor = FsColors.semantic.dangerLight;
+  const warningColor = FsColors.semantic.warningLight;
+  const activeColor = FsColors.light.border;
+  const borderColor = darken(colors.border, 0.15);
 
   return {
     '& .MuiPaper-root': {
-      backgroundColor: isDarkMode ? lighten(colors.surface, 0.08) : darken(colors.surface, 0.06),
+      backgroundColor: darken(colors.surface, 0.06),
       color: colors.text,
       border: `1px solid ${borderColor}`,
       minWidth: MENU_WIDTH,

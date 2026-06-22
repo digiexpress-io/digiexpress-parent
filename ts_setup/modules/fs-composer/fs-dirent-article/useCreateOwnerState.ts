@@ -70,7 +70,6 @@ class _CreateState implements FsuCreateChange {
 
 
 export const useCreateOwnerState = (): CreateOwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { createDirent } = useFsDirent();
   const { activeTabPath, openTabs, activeTabIndex } = useFsNav();
 

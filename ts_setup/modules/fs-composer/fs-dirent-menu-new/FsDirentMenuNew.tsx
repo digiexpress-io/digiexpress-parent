@@ -4,14 +4,12 @@ import { useIntl } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsDirentMenuNewProps } from './FsDirentMenuNewProps';
-import { useOwnerState } from './useOwnerState';
 import { useUtilityClasses, FsDirentMenuNewRoot } from './useUtilityClasses';
 import { allWidgets } from '../fs-factory';
 
 
 export const FsDirentMenuNew: React.FC<FsDirentMenuNewProps> = (props) => {
   const intl = useIntl();
-  const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
   const { openCreateTab } = useFsNav();
 
@@ -24,7 +22,7 @@ export const FsDirentMenuNew: React.FC<FsDirentMenuNewProps> = (props) => {
   }
 
   return (
-    <FsDirentMenuNewRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentMenuNewRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.direntNew.title' })}</Typography>
       {allWidgets.map((widget) => {
         return (

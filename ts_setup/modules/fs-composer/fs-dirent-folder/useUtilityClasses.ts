@@ -26,7 +26,7 @@ export const FsDirentFolderRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: { isDarkMode: boolean } }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
 
@@ -34,7 +34,7 @@ export const FsDirentFolderRoot = styled('div', {
     ...theme.typography.body1,
     fontWeight: 500,
     marginBottom: theme.spacing(2),
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
   },
 
   [`& .${MUI_NAME}-formContainer`]: {

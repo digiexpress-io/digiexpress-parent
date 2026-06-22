@@ -77,6 +77,6 @@ export const FsColors = {
 
 
 
-export function getThemeColors(isDarkTheme: boolean) {
-  return isDarkTheme ? FsColors.dark : FsColors.light;
+export function getThemeColors() {
+  return FsColors.light;
 }

@@ -26,13 +26,13 @@ export const FsDirentTextFieldRoot = styled('div', {
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
-  const dangerColor    = ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight;
-  const borderColor    = ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border;
-  const hoverColor     = ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary;
-  const focusColor     = ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text;
-  const textColor      = ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text;
-  const bgColor        = ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background;
-  const placeholderColor = ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary;
+  const dangerColor = FsColors.semantic.dangerLight;
+  const borderColor = FsColors.light.border;
+  const hoverColor = FsColors.dark.textSecondary;
+  const focusColor = FsColors.light.text;
+  const textColor = FsColors.light.text;
+  const bgColor = FsColors.light.background;
+  const placeholderColor = FsColors.light.textSecondary;
 
   const activeBorderColor  = ownerState.showRequiredError ? dangerColor : borderColor;
   const activeHoverColor   = ownerState.showRequiredError ? dangerColor : hoverColor;

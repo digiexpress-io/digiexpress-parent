@@ -4,9 +4,6 @@ import { FsColors } from '../../fs-theme';
 
 const MUI_NAME = 'FsDirentFormField';
 
-interface _OwnerState {
-  isDarkMode: boolean;
-}
 
 export interface FsDirentFormFieldClasses {
   root: string;
@@ -32,7 +29,7 @@ export const FsDirentFormFieldRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: _OwnerState }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   marginBottom: theme.spacing(1),
 
   [`& .${MUI_NAME}-labelRow`]: {
@@ -45,11 +42,11 @@ export const FsDirentFormFieldRoot = styled('div', {
   [`& .${MUI_NAME}-label`]: {
     ...theme.typography.subtitle2,
     fontWeight: 500,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
   },
 
   [`& .${MUI_NAME}-helperText`]: {
     ...theme.typography.caption,
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
   },
 }));

@@ -35,7 +35,7 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   [`& .${MUI_NAME}-header`]: {
     display: 'flex',
     padding: theme.spacing(0.75, 1.5),

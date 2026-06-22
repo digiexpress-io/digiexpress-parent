@@ -17,7 +17,7 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
   };
 
   return (
-    <FsDirentPrintoutPageRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentPrintoutPageRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <div className={classes.formContainer}>
 
@@ -26,7 +26,7 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
             height='100vh'
             value={ownerState.content}
             defaultLanguage='yaml'
-            theme={ownerState.isDarkMode ? 'vs-dark' : 'vs'}
+            theme={'vs'}
             onChange={handleChange}
             options={{
               wordBasedSuggestions: 'off',

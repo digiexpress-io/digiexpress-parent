@@ -35,12 +35,11 @@ export const useUtilityClasses = () => {
 export const FsExplorerRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
-  shouldForwardProp: (prop) => prop !== 'isDarkTheme',
-})<{ isDarkTheme: boolean }>(({ theme, isDarkTheme }) => {
-  const treeThemeColors = getThemeColors(isDarkTheme);
+})(({ theme }) => {
+  const treeThemeColors = getThemeColors();
 
   return {
-    backgroundColor: isDarkTheme ? treeThemeColors.background : theme.palette.secondary.main,
+    backgroundColor: theme.palette.secondary.main,
     color: treeThemeColors.text,
     flex: 1,
     minHeight: 0,
@@ -90,7 +89,7 @@ export const FsExplorerRoot = styled('div', {
 
     [`& .${MUI_NAME}-badgeLight .MuiBadge-badge`]: {
       backgroundColor: treeThemeColors.text,
-      color: isDarkTheme ? treeThemeColors.surface : treeThemeColors.background,
+      color: treeThemeColors.background,
       height: '10px',
       width: '10px',
       minWidth: '10px',

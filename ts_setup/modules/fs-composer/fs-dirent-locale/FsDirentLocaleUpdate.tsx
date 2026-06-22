@@ -19,7 +19,7 @@ export const FsDirentLocaleUpdate: React.FC<FsDirentLocaleProps> = (props) => {
   }));
 
   return (
-    <FsDirentLocaleRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentLocaleRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.language.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <div className={classes.formContainer}>
 

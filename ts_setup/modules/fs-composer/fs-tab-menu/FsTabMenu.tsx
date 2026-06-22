@@ -44,7 +44,6 @@ export const FsTabMenu: React.FC<FsTabMenuProps> = (props) => {
       className={classes.root}
       open={props.open}
       onClose={props.onClose}
-      isDarkMode={ownerState.isDarkMode}
       anchorReference='anchorPosition'
       anchorPosition={props.anchorPosition}
       anchorOrigin={{ vertical: 'top', horizontal: 'left' }}

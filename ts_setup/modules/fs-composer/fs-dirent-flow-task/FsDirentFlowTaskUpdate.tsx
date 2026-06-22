@@ -18,7 +18,7 @@ const Internal: React.FC<FsDirentFlowTaskProps> = (props) => {
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentFlowTaskRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentFlowTaskRoot className={classes.root}>
       <MonacoReact height="100vh"
         defaultLanguage="java"
         value={ownerState.taskValue}

@@ -3,7 +3,6 @@ import { useFsTheme } from '../fs-theme';
 import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 
 export interface CreateOwnerState {
-  isDarkMode: boolean;
   isDirty: boolean;
   name: string;
   onChangeName: (value: string) => void;
@@ -47,7 +46,6 @@ const _init: _CreateStateProps = {
 };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
@@ -60,7 +58,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   return ({
-    isDarkMode,
     isDirty: state.isDirty,
     name: state.name,
     onChangeName,

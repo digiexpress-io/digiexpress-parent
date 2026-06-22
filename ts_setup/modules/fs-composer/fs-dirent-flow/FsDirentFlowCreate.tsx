@@ -13,7 +13,7 @@ export const FsDirentFlowCreate: React.FC = () => {
   const classes = useUtilityClasses();
 
     return (
-      <FsDirentFlowRoot className={classes.root} ownerState={ownerState}>
+      <FsDirentFlowRoot className={classes.root}>
         <div className={classes.titleRow}>
           <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.flow.sectionTitle.createNew' })}</Typography>
           <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />

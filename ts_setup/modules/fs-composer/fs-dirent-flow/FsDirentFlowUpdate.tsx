@@ -19,7 +19,7 @@ const Internal: React.FC<FsDirentFlowProps> = (props) => {
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentFlowRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentFlowRoot className={classes.root}>
       <MonacoIntegration
         id={ownerState.id}
         key={ownerState.id}

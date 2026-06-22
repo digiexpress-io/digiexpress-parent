@@ -1,6 +1,5 @@
 import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { OwnerState } from './useOwnerState';
 
 const MUI_NAME = 'FsDirentLoader';
 
@@ -20,7 +19,7 @@ export const FsDirentLoaderRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: OwnerState }>(() => ({
+})(() => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',

@@ -67,7 +67,6 @@ class _ChangeState implements FsuChange {
 
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
   const intl = useIntl();
   const { getDirent, getDirentName, selectOptions } = useFsDirent();

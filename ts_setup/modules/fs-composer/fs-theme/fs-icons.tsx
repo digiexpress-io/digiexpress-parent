@@ -9,7 +9,6 @@ import {
 
   // Theme & Mode Icons
   LightModeOutlined,
-  DarkModeOutlined,
 
   // File & Folder Icons
   InsertDriveFileOutlined,
@@ -96,7 +95,6 @@ export const FsIcons = {
 
   // Theme & Mode
   LightMode: LightModeOutlined,
-  DarkMode: DarkModeOutlined,
 
   // File & Folder
   File: InsertDriveFileOutlined,

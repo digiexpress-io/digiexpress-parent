@@ -28,8 +28,8 @@ export const FsDirentSelectSingleRoot = styled('div', {
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
-  const dangerColor = ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight;
-  const borderColor = ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border;
+  const dangerColor = FsColors.semantic.dangerLight;
+  const borderColor = FsColors.light.border;
   const activeBorderColor = ownerState.showRequiredError ? dangerColor : borderColor;
 
   return {
@@ -37,8 +37,8 @@ export const FsDirentSelectSingleRoot = styled('div', {
     marginTop: 'unset !important',
 
     [`& .${MUI_NAME}-select`]: {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      backgroundColor: FsColors.light.background,
+      color: FsColors.light.text,
       borderRadius: 0,
       width: '100%',
 
@@ -47,17 +47,17 @@ export const FsDirentSelectSingleRoot = styled('div', {
         borderRadius: 0,
       },
       '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: ownerState.showRequiredError ? dangerColor : (ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary),
+        borderColor: ownerState.showRequiredError ? dangerColor : FsColors.dark.textSecondary,
       },
       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        border: `1px solid ${ownerState.showRequiredError ? dangerColor : (ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text)}`,
+        border: `1px solid ${ownerState.showRequiredError ? dangerColor : FsColors.light.text}`,
       },
       '& .MuiSvgIcon-root': {
-        color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+        color: FsColors.light.text,
       },
       '& .MuiSelect-select': {
-        backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-        color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+        backgroundColor: FsColors.light.background,
+        color: FsColors.light.text,
         padding: theme.spacing(1.5),
         ...theme.typography.subtitle1,
       },

@@ -34,7 +34,7 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourcePr
   const previewSrc = ownerState.uploadBody || undefined;
 
   return (
-    <FsDirentPrintoutResourceRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentPrintoutResourceRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <div className={classes.formContainer}>
 

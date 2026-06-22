@@ -1,13 +1,11 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useFsDirent } from '@dxs-ts/fs-api';
-import { useFsTheme } from '../fs-theme';
 import { allAvailableTypeFilters, AssetTypeFilter, FilterData, LabelFilter } from './search-helpers';
 
 interface FsSearchContextType {
   searchTerm: string;
   activeFilters: FilterData[];
   open: boolean;
-  isDarkMode: boolean;
   allAvailableTypeFilters: AssetTypeFilter[];
   availableLabelOptions: string[];
 
@@ -22,7 +20,6 @@ interface FsSearchContextType {
 const FsSearchContext = createContext<FsSearchContextType | undefined>(undefined);
 
 export const FsSearchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isDarkMode } = useFsTheme();
   const { selectOptions } = useFsDirent();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -45,7 +42,6 @@ export const FsSearchProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     searchTerm,
     activeFilters,
     open,
-    isDarkMode,
     allAvailableTypeFilters,
     availableLabelOptions: selectOptions.labels,
     setSearchTerm,
@@ -53,7 +49,7 @@ export const FsSearchProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setOpen,
     handleFilterSelectChange,
     handleLabelFilterSelectChange,
-  }), [searchTerm, activeFilters, open, isDarkMode, selectOptions.labels]);
+  }), [searchTerm, activeFilters, open, selectOptions.labels]);
 
   return (
     <FsSearchContext.Provider value={contextValue}>

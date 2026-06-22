@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, MenuItem, OutlinedInput, FormControl, Typography } from '@mui/material';
+import { Select, MenuItem, OutlinedInput, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentSelectSingleProps } from './FsDirentSelectSingleProps';
 import { useUtilityClasses, FsDirentSelectSingleRoot } from './useUtilityClasses';

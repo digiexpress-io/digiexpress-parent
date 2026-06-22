@@ -53,7 +53,6 @@ function getLocationPath(parentFolder: Fs.DirentBase | undefined): string {
 }
 
 export interface CreateOwnerState {
-  isDarkMode: boolean;
   isDirty: boolean;
   locationPath: string;
   name: string;
@@ -61,7 +60,6 @@ export interface CreateOwnerState {
 }
 
 export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undefined }): CreateOwnerState => {
-  const { isDarkMode } = useFsTheme();
 
   const parentId = props.parentFolder?.type === 'FOLDER' ? props.parentFolder.id : undefined;
 
@@ -80,7 +78,6 @@ export const useCreateOwnerState = (props: { parentFolder: Fs.DirentBase | undef
   }
 
   return {
-    isDarkMode,
     isDirty: state.isDirty,
     locationPath,
     name: state.name,

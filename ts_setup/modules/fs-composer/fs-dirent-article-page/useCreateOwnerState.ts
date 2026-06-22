@@ -97,7 +97,6 @@ const _init: _CreateStateProps = {
 };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
-  const { isDarkMode } = useFsTheme();
   const intl = useIntl();
   const { selectOptions, getDirentName, createDirent } = useFsDirent();
 

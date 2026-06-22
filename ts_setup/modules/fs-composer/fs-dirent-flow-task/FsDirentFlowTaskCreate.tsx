@@ -15,7 +15,7 @@ export const FsDirentFlowTaskCreate: React.FC = () => {
 
 
   return (
-    <FsDirentFlowTaskRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentFlowTaskRoot className={classes.root}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.flow_task.sectionTitle.createNew' })}</Typography>
         <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />

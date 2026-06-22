@@ -49,7 +49,6 @@ class _ChangeState implements FsuChange {
 
 
 export interface UpdateOwnerState {
-  isDarkMode: boolean;
   assetPath: string | undefined;
   dirent: Fs.DirentBase | undefined;
   id: string;
@@ -61,7 +60,6 @@ export interface UpdateOwnerState {
 }
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
   const { getDirent } = useFsDirent();
 
@@ -92,7 +90,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const changes = state.isDirty;
 
   return ({
-    isDarkMode,
     assetPath: activeTabPath,
     dirent,
     id: state.id,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentFormField, FsDirentSelectSingle, FsDirentTextField } from '../fs-utilities';
+import { FsDirentFormField, FsDirentSelectSingle } from '../fs-utilities';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { useUtilityClasses, FsDirentPrintoutPageRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
@@ -12,7 +12,7 @@ export const FsDirentPrintoutPageCreate: React.FC = () => {
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentPrintoutPageRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentPrintoutPageRoot className={classes.root}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.sectionTitle.createNew' })}</Typography>
         <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />

@@ -98,7 +98,6 @@ const _init: _CreateStateProps = {
 
 
 export const useCreateOwnerState = (): CreateOwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { selectOptions, createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));

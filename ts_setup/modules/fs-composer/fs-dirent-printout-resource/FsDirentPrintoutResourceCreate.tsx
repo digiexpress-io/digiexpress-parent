@@ -33,7 +33,7 @@ export const FsDirentPrintoutResourceCreate: React.FC = () => {
   }
 
   return (
-    <FsDirentPrintoutResourceRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentPrintoutResourceRoot className={classes.root}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.sectionTitle.createNew' })}</Typography>
         <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />

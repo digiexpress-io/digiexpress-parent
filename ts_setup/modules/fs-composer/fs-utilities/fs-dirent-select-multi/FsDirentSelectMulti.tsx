@@ -3,14 +3,13 @@ import { Select, MenuItem, Chip, OutlinedInput, IconButton } from '@mui/material
 import { FsDirentSelectMultiProps } from './FsDirentSelectMultiProps';
 import { FsIcons, FsIcon } from '../../fs-theme';
 import { useUtilityClasses, FsDirentSelectMultiRoot } from './useUtilityClasses';
-import { useOwnerState } from './useOwnerState';
+
 
 export const FsDirentSelectMulti: React.FC<FsDirentSelectMultiProps> = (props) => {
-  const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentSelectMultiRoot className={classes.root} ownerState={ownerState} fullWidth size='small'>
+    <FsDirentSelectMultiRoot className={classes.root} fullWidth size='small'>
       <Select className={classes.select} multiple
         value={props.value ?? []}
         onChange={(e) => props.onChange(e.target.value as string[])}

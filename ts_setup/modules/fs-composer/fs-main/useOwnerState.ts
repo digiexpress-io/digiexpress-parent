@@ -1,12 +1,10 @@
 import React from 'react';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { FsTab, useFsNav } from '@dxs-ts/fs-nav';
-import { useFsTheme } from '../fs-theme';
 import { createWidget, DirentWidget } from '../fs-factory';
 
 
 export interface OwnerState {
-  isDarkMode: boolean;
   activeDirent: Fs.DirentBase | undefined;
   isRightPanelOpen: boolean;
   selectedView: Fs.SecondaryView | undefined;
@@ -22,8 +20,6 @@ export interface OwnerState {
 
 
 export const useOwnerState = (): OwnerState => {
-
-  const { isDarkMode } = useFsTheme();
   const { activeDirent, activeTabIndex: activeTabId, openTabs } = useFsNav();
   const { getDirent } = useFsDirent();
   const activeTab = openTabs[activeTabId];
@@ -61,7 +57,6 @@ export const useOwnerState = (): OwnerState => {
   }, [isRightPanelOpen, selectedView]);
 
   return {
-    isDarkMode,
     activeDirent: activeDirentEntry,
     activeTab,
     openTabs,

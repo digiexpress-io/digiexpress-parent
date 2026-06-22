@@ -12,7 +12,7 @@ export const FsDirentPrintoutCreate: React.FC = () => {
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentPrintoutRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentPrintoutRoot className={classes.root}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printout.sectionTitle.createNew' })}</Typography>
         <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />

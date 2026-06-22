@@ -13,8 +13,7 @@ export interface FsFilterChipClasses {
 
 interface FsFilterChipProps {
   label: string;
-  chipType: Fs.Type;
-  isDarkMode: boolean;
+  chipType: Fs.BodyType;
   onDelete: () => void;
 }
 
@@ -30,9 +29,10 @@ const useUtilityClasses = (_props: FsFilterChipProps) => {
 const FsFilterChipRoot = styled(Chip, {
   name: MUI_NAME,
   slot: 'Root',
-  shouldForwardProp: (prop) => prop !== 'chipType' && prop !== 'isDarkMode',
-})<{ chipType: Fs.Type; isDarkMode: boolean }>(({ theme, chipType, isDarkMode }) => {
-  const baseColor = getDirentColor(chipType, isDarkMode);
+  shouldForwardProp: (prop) => prop !== 'chipType',
+})<{ chipType: Fs.BodyType }>(({ theme, chipType }) => {
+  const baseColor = getDirentColor(chipType);
+
   return {
     backgroundColor: baseColor + '20',
     borderColor: baseColor,
@@ -59,7 +59,6 @@ export const FsFilterChip: React.FC<FsFilterChipProps> = (props) => {
   return (
     <FsFilterChipRoot
       chipType={props.chipType}
-      isDarkMode={props.isDarkMode}
       className={classes.root}
       label={props.label}
       size="small"

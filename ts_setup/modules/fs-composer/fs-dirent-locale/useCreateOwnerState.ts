@@ -7,7 +7,6 @@ export interface TextFields {
 }
 
 export interface CreateOwnerState {
-  isDarkMode: boolean;
   locale: string;
   isDirty: boolean;
   onChangeLocale: (value: string) => void;
@@ -47,7 +46,6 @@ class _CreateState implements FsuCreateChange {
 const _init: _CreateStateProps = { bodyType: 'LOCALE', locale: '' };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { createDirent } = useFsDirent();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
@@ -63,7 +61,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
 
   return ({
     locale: state.locale,
-    isDarkMode,
     isDirty: isChangesPresent,
     onChangeLocale,
     onSave,

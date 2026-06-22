@@ -30,7 +30,7 @@ export const FsDirentPrintoutResourceRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: { isDarkMode: boolean } }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
 
@@ -43,7 +43,7 @@ export const FsDirentPrintoutResourceRoot = styled('div', {
 
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.body1,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     marginBottom: theme.spacing(2),
     fontWeight: 500
   },

@@ -36,7 +36,6 @@ export const FsMain: React.FC = () => {
             intl.formatMessage({ id: 'fs.main.tooltip.togglePanelExpand' })}
           placement="left" arrow>
           <FsToolbarButtonRoot onClick={ownerState.toggleRightPanel} ownerState={{
-            isDarkMode: ownerState.isDarkMode,
             isEnabled: true,
             isSelected: false
           }}>{ownerState.isRightPanelOpen ? <FsIcons.CollapseAll /> : <FsIcons.ExpandAll />}</FsToolbarButtonRoot>
@@ -130,12 +129,11 @@ const SaveButton: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
   const tooltip = intl.formatMessage({ id: 'fs.main.tooltip.changes' });
 
   const { allChanges } = useFsu();
-  const { isDarkMode } = useFsTheme();
   const unsavedCount = allChanges.filter(c => c.isDirty).length;
 
   return (
     <Tooltip key={'save'} title={tooltip} placement="left" arrow >
-      <FsSaveButtonRoot ownerState={{ isDarkMode, unsavedCount }} onClick={() => ownerState.onViewChange('changes')}>
+      <FsSaveButtonRoot ownerState={{ unsavedCount }} onClick={() => ownerState.onViewChange('changes')}>
         <Badge badgeContent={unsavedCount} color="error">
           <FsIcons.Save />
         </Badge>
@@ -163,11 +161,9 @@ const PanelButton: React.FC<{
 
   return (
     <Tooltip key={id} title={tooltip} placement="left" arrow>
-      <FsToolbarButtonRoot onClick={handleOnClick} ownerState={{
-        isDarkMode: ownerState.isDarkMode,
-        isEnabled,
-        isSelected
-      }}><Icon /></FsToolbarButtonRoot>
+      <FsToolbarButtonRoot onClick={handleOnClick} ownerState={{ isEnabled, isSelected }}>
+        <Icon />
+      </FsToolbarButtonRoot>
     </Tooltip>);
 }
 

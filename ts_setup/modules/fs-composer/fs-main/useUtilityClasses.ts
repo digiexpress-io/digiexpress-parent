@@ -42,22 +42,22 @@ export const FsMainRoot = styled('div', {
   return {
     display: 'flex',
     height: '100vh',
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    backgroundColor: FsColors.light.background,
+    color: FsColors.light.text,
 
     [`& .${MUI_NAME}-leftPanel`]: {
       flex: 1,
       minWidth: 0,
       padding: theme.spacing(2),
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.background,
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      backgroundColor: FsColors.light.background,
+      color: FsColors.light.text,
       overflow: 'auto'
     },
 
     [`& .${MUI_NAME}-divider`]: {
       width: '1px',
       height: '100%',
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
+      backgroundColor: FsColors.light.border,
       flexShrink: 0
     },
 
@@ -83,8 +83,8 @@ export const FsMainRoot = styled('div', {
       display: 'flex',
       gap: theme.spacing(2),
       flexDirection: 'column',
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
-      borderLeft: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+      backgroundColor: FsColors.light.surface,
+      borderLeft: `1px solid ${FsColors.light.border}`,
       alignItems: 'center',
       flexShrink: 0
     }
@@ -96,7 +96,7 @@ export const FsToolbarButtonRoot = styled('div', {
   name: MUI_NAME,
   slot: 'ToolbarButton',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: { isDarkMode: boolean, isSelected: boolean, isEnabled: boolean } }>(({ theme, ownerState }) => {
+})<{ ownerState: { isSelected: boolean, isEnabled: boolean } }>(({ theme, ownerState }) => {
 
   return {
 
@@ -111,10 +111,10 @@ export const FsToolbarButtonRoot = styled('div', {
     border: '1px solid transparent',
     '& .MuiSvgIcon-root': {
       fontSize: '1.2rem',
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
     },
     '&:hover': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.surface
+      backgroundColor: FsColors.light.surface
     },
 
     ...(ownerState.isSelected ? {
@@ -141,13 +141,13 @@ export const FsSaveButtonRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Save',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: { isDarkMode: boolean, unsavedCount: number } }>(({ theme, ownerState }) => {
+})<{ ownerState: { unsavedCount: number } }>(({ theme, ownerState }) => {
   return {
     [`& .${MUI_NAME}-toolbarSaveButton.${MUI_NAME}-toolbarButtonSelected`]: {
-      backgroundColor: ownerState.isDarkMode ? FsColors.semantic.primary + '26' : FsColors.semantic.dangerLight + '26',
-      border: ownerState.isDarkMode ? `1px solid ${FsColors.semantic.dangerDark}` : `1px solid ${FsColors.semantic.dangerLight}`,
+      backgroundColor: FsColors.semantic.dangerLight + '26',
+      border: `1px solid ${FsColors.semantic.dangerLight}`,
       '&:hover': {
-        backgroundColor: ownerState.isDarkMode ? FsColors.semantic.primary + '40' : FsColors.semantic.warningLight + '40',
+        backgroundColor: FsColors.semantic.warningLight + '40',
       },
     },
     cursor: ownerState.unsavedCount > 0 ? 'pointer' : 'default',
@@ -162,10 +162,10 @@ export const FsSaveButtonRoot = styled('div', {
     border: '1px solid transparent',
     '& .MuiSvgIcon-root': {
       fontSize: '1.2rem',
-      color: ownerState.unsavedCount > 0 ? theme.palette.error.main : (ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text),
+      color: ownerState.unsavedCount > 0 ? theme.palette.error.main : FsColors.light.text,
     },
     '&:hover': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.border + '20' : FsColors.light.surface
+      backgroundColor: FsColors.light.surface
     },
     [`& .MuiBadge-badge`]: {
       fontSize: '10px',

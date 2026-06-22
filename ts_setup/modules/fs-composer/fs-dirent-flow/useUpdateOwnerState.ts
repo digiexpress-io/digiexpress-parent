@@ -11,7 +11,6 @@ import {
 } from '@dxs-ts/fs-api';
 
 export interface UpdateOwnerState {
-  isDarkMode: boolean;
   dirent: Fs.DirentBase | undefined;
   id: string;
   isDirty: boolean;
@@ -58,7 +57,6 @@ class _ChangeState implements FsuChange {
 
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { getDirent, applyTransientChanges } = useFsDirent();
   const { body: initBody } = useFsDirentBody();
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
@@ -91,7 +89,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   })
 
   return {
-    isDarkMode,
     dirent,
     flow,
     id: state.id,

@@ -35,10 +35,6 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
     props.onClose();
   }
 
-  function handleCopy() {
-    props.onClose();
-  }
-
   function handleDelete() {
     setDeleteDialogOpen(true);
   }

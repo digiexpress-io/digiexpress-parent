@@ -1,7 +1,6 @@
 import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
-import { OwnerState } from './useOwnerState';
 
 const MUI_NAME = 'FsDirentTextFieldAutocomplete';
 
@@ -23,7 +22,7 @@ export const FsDirentTextFieldAutocompleteRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   width: '100%',
   marginTop: '0px !important',
 
@@ -33,8 +32,8 @@ export const FsDirentTextFieldAutocompleteRoot = styled('div', {
     marginBottom: '0 !important',
   },
   '& .MuiOutlinedInput-root': {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    backgroundColor: FsColors.light.background,
+    color: FsColors.light.text,
     borderRadius: 0,
     minHeight: '50px',
     display: 'flex',
@@ -42,32 +41,32 @@ export const FsDirentTextFieldAutocompleteRoot = styled('div', {
     padding: theme.spacing(1),
 
     '& fieldset': {
-      borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
+      borderColor: FsColors.light.border,
       borderRadius: 0,
     },
     '&:hover fieldset': {
-      borderColor: ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary,
+      borderColor: FsColors.dark.textSecondary,
     },
     '&.Mui-focused fieldset': {
-      border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text}`,
+      border: `1px solid ${FsColors.light.text}`,
     },
   },
 
   '& .MuiInputBase-input': {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     ...theme.typography.caption,
     padding: theme.spacing(1),
     '&::placeholder': {
-      color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+      color: FsColors.light.textSecondary,
       opacity: 1,
     },
   },
   '& .MuiChip-root': {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    backgroundColor: FsColors.light.border,
+    color: FsColors.light.text,
     ...theme.typography.caption,
     '& .MuiChip-deleteIcon': {
-      color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+      color: FsColors.light.textSecondary,
     },
   },
 }));

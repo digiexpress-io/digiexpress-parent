@@ -1,5 +1,5 @@
 import composeClasses from '@mui/utils/composeClasses';
-import { generateUtilityClass, styled, Popover, darken, lighten } from '@mui/material';
+import { generateUtilityClass, styled, Popover, darken } from '@mui/material';
 import { FsColors } from '../fs-theme';
 
 export const MUI_NAME = 'FsTabMenu';
@@ -23,14 +23,13 @@ export const useUtilityClasses = () => {
 export const FsTabMenuRoot = styled(Popover, {
   name: MUI_NAME,
   slot: 'Root',
-  shouldForwardProp: (prop) => prop !== 'isDarkMode',
-})<{ isDarkMode?: boolean }>(({ theme, isDarkMode }) => {
-  const colors = isDarkMode ? FsColors.dark : FsColors.light;
-  const borderColor = isDarkMode ? lighten(colors.border, 0.15) : darken(colors.border, 0.15);
+})(({ theme }) => {
+  const colors = FsColors.light;
+  const borderColor = darken(colors.border, 0.15);
 
   return {
     '& .MuiPaper-root': {
-      backgroundColor: isDarkMode ? lighten(colors.surface, 0.08) : darken(colors.surface, 0.06),
+      backgroundColor: darken(colors.surface, 0.06),
       color: colors.text,
       border: `1px solid ${borderColor}`,
       padding: theme.spacing(0.5),

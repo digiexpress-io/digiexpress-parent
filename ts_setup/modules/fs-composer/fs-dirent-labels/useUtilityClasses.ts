@@ -43,33 +43,33 @@ export const FsDirentLabelsRoot = styled('div', {
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.subtitle2,
     fontWeight: 500,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
   },
 
   [`& .${MUI_NAME}-textField`]: {
     width: '100%',
     marginTop: theme.spacing(0.5),
     '& .MuiInputBase-root': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      backgroundColor: FsColors.light.background,
+      color: FsColors.light.text,
       borderRadius: 0,
       '& fieldset': {
-        borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
+        borderColor: FsColors.light.border,
         borderRadius: 0,
       },
       '&:hover fieldset': {
         borderColor: FsColors.light.textSecondary,
       },
       '&.Mui-focused fieldset': {
-        border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text}`,
+        border: `1px solid ${FsColors.light.text}`,
       },
     },
     '& .MuiInputBase-input': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
       ...theme.typography.caption,
       padding: '8px 12px',
       '&::placeholder': {
-        color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+        color: FsColors.light.textSecondary,
         opacity: 1,
         ...theme.typography.caption,
       },
@@ -78,7 +78,7 @@ export const FsDirentLabelsRoot = styled('div', {
       padding: 'unset',
     },
     '& .MuiInputLabel-root': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
       ...theme.typography.caption,
     },
   },

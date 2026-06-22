@@ -5,8 +5,6 @@ import { FsColors } from '../fs-theme';
 
 const MUI_NAME = 'SearchResultHighlight';
 
-
-
 interface HighlightProps {
   text: string;
   searchTerm: string;
@@ -29,7 +27,6 @@ const useUtilityClasses = (_props: HighlightProps) => {
 const SearchResultHighlightRoot = styled('span', {
   name: MUI_NAME,
   slot: 'Root',
-  shouldForwardProp: (prop) => prop !== 'isDarkMode',
 })(() => ({
   [`& .${MUI_NAME}-highlight`]: {
     backgroundColor: FsColors.semantic.highlightLight,

@@ -17,7 +17,6 @@ type _ChangeStateProps = {
 }
 
 export interface UpdateOwnerState {
-  isDarkMode: boolean;
   assetPath: string | undefined;
   isDirty: boolean;
   serviceName: string;
@@ -90,10 +89,8 @@ class _ChangeState implements FsuChange {
 
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { activeTabPath } = useFsNav();
   const { getDirent, selectOptions } = useFsDirent();
-
 
   const dirent = getDirent(props.direntId)!;
   const printoutProps = dirent.props as Fs.PrintoutProps;
@@ -127,7 +124,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withIntlValues(locale, value));
   }
   return {
-    isDarkMode,
     assetPath: activeTabPath,
     isDirty: state.isDirty,
     serviceName: state.serviceName,

@@ -35,23 +35,23 @@ export const FsTabRoot = styled('div', {
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
 
-  const borderColor = ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border;
+  const borderColor = FsColors.light.border;
   
   return {
     height: 35,
     display: 'flex',
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    borderBottom: `1px solid ${FsColors.light.border}`,
     width: '100%',
     overflowX: 'auto',
 
     [`& .${MUI_NAME}-tabActive`]: {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.background,
-      borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.background}`,
+      backgroundColor: FsColors.light.background,
+      borderBottom: `1px solid ${FsColors.light.background}`,
       marginBottom: '-1px'
     },
 
     [`& .${MUI_NAME}-tabInactive`]: {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.surface,
+      backgroundColor: FsColors.light.surface,
       borderBottom: 'none',
       marginBottom: 0
     },
@@ -74,7 +74,7 @@ export const FsTabRoot = styled('div', {
       minWidth: 0,
       display: 'flex',
       alignItems: 'center',
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
     },
 
     [`& .${MUI_NAME}-tabTypography .MuiTypography-root`]: {
@@ -85,8 +85,8 @@ export const FsTabRoot = styled('div', {
     },
 
     [`& .${MUI_NAME}-tabError .${MUI_NAME}-tabTypography`]: {
-      fontWeight: ownerState.isDarkMode ? 400 : 500,
-      color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
+      fontWeight: 500,
+      color: FsColors.semantic.dangerLight,
     },
 
     [`& .MuiIconButton-root`]: {

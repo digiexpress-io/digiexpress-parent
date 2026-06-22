@@ -2,7 +2,6 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { FilterData, filterTreeDirents, useFsSearch } from '../fs-search';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
-import { useFsTheme } from '../fs-theme';
 
 function collectParentIds(nodes: Fs.DirentBase[], acc: string[] = []): string[] {
   nodes.forEach(node => {
@@ -16,7 +15,6 @@ function collectParentIds(nodes: Fs.DirentBase[], acc: string[] = []): string[] 
 
 
 export interface OwnerState {
-  isDarkMode: boolean;
   isSearchExpanded: boolean;
   isAnyDirentExpanded: boolean;
   isContextMenuOpen: boolean;
@@ -33,7 +31,6 @@ export interface OwnerState {
   onContextMenuClose: () => void;
   onContextMenu: (event: React.MouseEvent, dirent: Fs.DirentBase) => void;
 
-  setIsDarkMode: (darkMode: boolean) => void;
   setSearchExpanded: (expanded: boolean) => void;
   setSearchTerm: (term: string) => void;
   setFilters: (filters: FilterData[]) => void;
@@ -43,7 +40,6 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (): OwnerState => {
-  const { isDarkMode, setIsDarkMode } = useFsTheme();
   const { openAsset, activeDirent } = useFsNav();
   const { getDirent, dirents } = useFsDirent();
   const { collapseAll, setExpanded, setExpandedBatch, isExpanded } = useFsNav();
@@ -111,7 +107,6 @@ export const useOwnerState = (): OwnerState => {
 
   return {
     isAnyDirentExpanded,
-    isDarkMode,
     activeDirentId: activeDirent?.id,
     openAsset: stableOpenAsset,
     isSearchExpanded: search.open,
@@ -128,7 +123,6 @@ export const useOwnerState = (): OwnerState => {
     onContextMenuClose,
 
     setSearchExpanded: search.setOpen,
-    setIsDarkMode,
     setSearchTerm: handleSetSearchTerm,
     setContextMenuData,
     setFilters: handleSetFilters,

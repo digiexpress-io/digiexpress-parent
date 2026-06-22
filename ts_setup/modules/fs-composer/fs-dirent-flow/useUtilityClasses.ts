@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled, darken, lighten } from '@mui/material';
+import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 
@@ -36,7 +36,7 @@ export const FsDirentFlowRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: { isDarkMode: boolean } }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   height: '100%',
@@ -51,7 +51,7 @@ export const FsDirentFlowRoot = styled('div', {
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.body1,
     fontWeight: 500,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     marginBottom: theme.spacing(2)
   },
 

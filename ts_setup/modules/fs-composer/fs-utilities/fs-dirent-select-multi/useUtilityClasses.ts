@@ -1,7 +1,6 @@
 import { generateUtilityClass, styled, FormControl } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../../fs-theme';
-import { OwnerState } from './useOwnerState';
 
 const MUI_NAME = 'FsDirentSelectMulti';
 
@@ -35,30 +34,30 @@ export const FsDirentSelectMultiRoot = styled(FormControl, {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   width: '100%',
   marginTop: 'unset !important',
 
   [`& .${MUI_NAME}-select`]: {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    backgroundColor: FsColors.light.background,
+    color: FsColors.light.text,
     borderRadius: 0,
     '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
+      borderColor: FsColors.light.border,
       borderRadius: 0,
     },
     '&:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: ownerState.isDarkMode ? FsColors.light.textSecondary : FsColors.dark.textSecondary,
+      borderColor: FsColors.dark.textSecondary,
     },
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text}`,
+      border: `1px solid ${FsColors.light.text}`,
     },
     '& .MuiSvgIcon-root': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
     },
     '& .MuiSelect-select': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      backgroundColor: FsColors.light.background,
+      color: FsColors.light.text,
       padding: theme.spacing(1.5),
       ...theme.typography.subtitle1,
     },
@@ -66,7 +65,7 @@ export const FsDirentSelectMultiRoot = styled(FormControl, {
 
   [`& .${MUI_NAME}-placeholderText`]: {
     ...theme.typography.subtitle1,
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
   },
 
   [`& .${MUI_NAME}-chipContainer`]: {
@@ -84,28 +83,28 @@ export const FsDirentSelectMultiRoot = styled(FormControl, {
     top: '50%',
     transform: 'translateY(-50%)',
     padding: 0,
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
     '&:hover': {
       backgroundColor: 'transparent',
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
     },
   },
 
   [`& .${MUI_NAME}-chip`]: {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    backgroundColor: FsColors.light.border,
+    color: FsColors.light.text,
     '&.MuiChip-root': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      backgroundColor: FsColors.light.border,
+      color: FsColors.light.text,
     },
     '& .MuiChip-label': {
-      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
       ...theme.typography.caption,
     },
     '& .MuiChip-deleteIcon': {
-      color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+      color: FsColors.light.textSecondary,
       '&:hover': {
-        color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+        color: FsColors.light.text,
       },
     },
   },

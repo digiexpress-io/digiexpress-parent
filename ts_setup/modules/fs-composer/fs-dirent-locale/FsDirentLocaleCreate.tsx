@@ -14,7 +14,7 @@ export const FsDirentLocaleCreate: React.FC = () => {
   const classes = useUtilityClasses();
 
     return (
-      <FsDirentLocaleRoot className={classes.root} ownerState={ownerState}>
+      <FsDirentLocaleRoot className={classes.root}>
         <div className={classes.titleRow}>
           <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.language.sectionTitle.createNew' })}</Typography>
           <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />

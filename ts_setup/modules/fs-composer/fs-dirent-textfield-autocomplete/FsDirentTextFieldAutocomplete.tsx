@@ -2,14 +2,12 @@ import React from 'react';
 import { Autocomplete, TextField } from '@mui/material';
 import { FsDirentTextFieldAutocompleteProps } from './FsDirentTextFieldAutocompleteProps';
 import { FsDirentTextFieldAutocompleteRoot, useUtilityClasses } from './useUtilityClasses';
-import { useOwnerState } from './useOwnerState';
 
 export const FsDirentTextFieldAutocomplete: React.FC<FsDirentTextFieldAutocompleteProps> = (props) => {
-  const ownerState = useOwnerState();
   const classes = useUtilityClasses();
 
   return (
-    <FsDirentTextFieldAutocompleteRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentTextFieldAutocompleteRoot className={classes.root}>
       <Autocomplete
         multiple
         freeSolo

@@ -41,18 +41,18 @@ export const FsDirentReferencesRoot = styled('div', {
 
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.caption,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     marginBottom: theme.spacing(1),
   },
 
   [`& .${MUI_NAME}-tableContainer`]: {
     display: 'flex',
     flexDirection: 'column',
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    border: `1px solid ${FsColors.light.border}`,
 
     '& > div:nth-of-type(even)': {
       '& > div': {
-        backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+        backgroundColor: FsColors.light.surface,
       },
     },
   },
@@ -63,8 +63,8 @@ export const FsDirentReferencesRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-tableHeader`]: {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    backgroundColor: FsColors.light.surface,
+    color: FsColors.light.text,
     fontSize: '10px',
     fontWeight: 500,
     padding: theme.spacing(0.5, 0.75),
@@ -72,8 +72,8 @@ export const FsDirentReferencesRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-tableCell`]: {
-    backgroundColor:ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    backgroundColor: FsColors.light.background,
+    color: FsColors.light.text,
     fontSize: '10px',
     padding: theme.spacing(0.25, 0.75),
     flex: 1,
@@ -81,6 +81,6 @@ export const FsDirentReferencesRoot = styled('div', {
 
   [`& .${MUI_NAME}-divider`]: {
     height: '1px',
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
+    backgroundColor: FsColors.light.border,
   },
 }));
