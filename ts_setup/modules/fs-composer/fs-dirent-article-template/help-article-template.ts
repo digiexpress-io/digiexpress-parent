@@ -8,6 +8,10 @@ export const helpArticleTemplate = `
 
 ---
 
+## When to use
+
+---
+
 ## Associated Assets
 
 An Article Template has no associated assets. It is a standalone markdown document referenced at Article Page creation time.

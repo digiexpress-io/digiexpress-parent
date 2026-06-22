@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled } from "@mui/material";
+import { darken, generateUtilityClass, lighten, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 import { FsColors } from "../fs-theme";
 import { OwnerState } from "./useOwnerState";
@@ -18,6 +18,7 @@ export interface FsPanelDirentStatsClasses {
   value: string;
   groupTitle: string;
   groupItem: string;
+  assetTypeChip: string;
 }
 
 export type FsPanelDirentStatsClassKey = keyof FsPanelDirentStatsClasses;
@@ -36,6 +37,7 @@ export const useUtilityClasses = () => {
     value: ['value'],
     groupTitle: ['groupTitle'],
     groupItem: ['groupItem'],
+    assetTypeChip: ['assetTypeChip'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -49,6 +51,7 @@ export const FsPanelDirentStatsRoot = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
+  marginBottom: theme.spacing(10),
 
   [`& .${MUI_NAME}-sectionHeaderOpen`]: {
     display: 'flex',
@@ -115,28 +118,30 @@ export const FsPanelDirentStatsRoot = styled('div', {
     ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     flex: 1,
-    fontSize: '12px',
-    fontWeight: 400,
   },
 
   [`& .${MUI_NAME}-value`]: {
-    ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
-    fontSize: '12px',
-    fontFamily: 'monospace',
+    ...theme.typography.subtitle2,
+    fontWeight: 500
   },
 
   [`& .${MUI_NAME}-groupTitle`]: {
-    ...theme.typography.caption,
-    fontWeight: 600,
+    ...theme.typography.subtitle2,
+    fontWeight: 500,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     padding: theme.spacing(0.5, 1.5),
     backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
     borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
   },
 
+  [`& .${MUI_NAME}-assetTypeChip`]: {
+    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    ...theme.typography.subtitle2,
+  },
+
   [`& .${MUI_NAME}-groupItem`]: {
-    ...theme.typography.caption,
+    ...theme.typography.subtitle2,
     color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
     padding: theme.spacing(0.25, 3),
     borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,

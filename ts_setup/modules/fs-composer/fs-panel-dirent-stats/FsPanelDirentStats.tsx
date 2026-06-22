@@ -1,5 +1,5 @@
 import React from 'react';
-import { Collapse, Typography } from '@mui/material';
+import { Box, Collapse, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
@@ -84,8 +84,10 @@ export const FsPanelDirentStats: React.FC = () => {
             <div className={classes.section}>
               {ownerState.disabledAssets.map((asset, i) => (
                 <div key={i} className={classes.row}>
-                  <Typography className={classes.label}>{asset.name}</Typography>
-                  <Typography className={classes.value}>{asset.type}</Typography>
+                  <Typography className={classes.label}>{asset.fullPath}</Typography>
+                  <Box className={classes.assetTypeChip}>
+                    {intl.formatMessage({ id: `fs.direntStats.section.overview.assetType.${asset.type}` })}
+                  </Box>
                 </div>
               ))}
             </div>

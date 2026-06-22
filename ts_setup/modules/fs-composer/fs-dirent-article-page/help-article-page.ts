@@ -7,6 +7,10 @@ export const helpArticlePage = `
 
 ---
 
+## When to use
+
+---
+
 ## Associated Assets
 
 An Article Page has no directly associated assets. It is a child of an Article and exists solely to hold the markdown content for one locale.

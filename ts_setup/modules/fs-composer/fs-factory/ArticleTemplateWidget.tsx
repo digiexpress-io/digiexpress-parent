@@ -28,7 +28,7 @@ export const ArticleTemplateWidget: DirentWidget = {
   },
   meta: {
     type: 'ARTICLE_TEMPLATE',
-    extension: '.template',
+    extension: '.article-template',
     configOptions: [],
     supportedViews: ['properties', 'preview', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }

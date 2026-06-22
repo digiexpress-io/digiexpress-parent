@@ -7,6 +7,10 @@ export const helpArticle = `
 
 ---
 
+## When to use
+
+---
+
 ## Associated Assets
 
 - **Article Page**: A localized content page belonging to this article. Each language version is a separate page asset. An Article cannot be displayed on the client portal if it has no Article Pages — there would be no content to show.

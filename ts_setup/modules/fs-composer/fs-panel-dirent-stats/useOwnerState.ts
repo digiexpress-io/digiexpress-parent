@@ -15,7 +15,7 @@ export interface DanglingGroup {
 }
 
 export interface DisabledAsset {
-  name: string;
+  fullPath: string;
   type: Fs.BodyType;
 }
 
@@ -62,13 +62,13 @@ export const useOwnerState = (): OwnerState => {
 
   // Section 2: Dangling assets
   const pages = allProps.filter(p => p.type === 'ARTICLE_PAGE') as Fs.PageProps[];
-  const articleIdsWithPages = new Set(pages.map(p => p.articleId));
+  const pageArticleIds = pages.map(p => p.articleId);
 
   const workflows = allProps.filter(p => p.type === 'ARTICLE_WORKFLOW') as Fs.WorkflowProps[];
-  const flowNamesInWorkflows = new Set(workflows.map(w => w.flowName));
+  const workflowFlowNames = workflows.map(w => w.flowName);
 
   const danglingArticles = allProps
-    .filter(p => p.type === 'ARTICLE' && !articleIdsWithPages.has(p.id))
+    .filter(p => p.type === 'ARTICLE' && !pageArticleIds.includes(p.id))
     .map(p => getDirentName(p.id) ?? p.id);
 
   const danglingWorkflows = workflows
@@ -80,7 +80,7 @@ export const useOwnerState = (): OwnerState => {
     .map(l => getDirent(l.id)?.name ?? l.id);
 
   const danglingFlows = (allProps.filter(p => p.type === 'FLOW') as Fs.FlowProps[])
-    .filter(f => !flowNamesInWorkflows.has(f.name))
+    .filter(f => !workflowFlowNames.includes(f.name))
     .map(f => getDirent(f.id)?.name ?? f.id);
 
   const danglingFolders = allProps
@@ -88,6 +88,11 @@ export const useOwnerState = (): OwnerState => {
     .map(p => getDirent(p.id))
     .filter((d): d is Fs.DirentBase => d !== undefined && d.children.length === 0)
     .map(d => d.name);
+
+  const workflowFormNames = workflows.map(w => w.dialobFormName);
+  const danglingForms = (allProps.filter(p => p.type === 'DIALOB_FORM') as Fs.DialobProps[])
+    .filter(f => !workflowFormNames.includes(f.formName))
+    .map(f => getDirent(f.id)?.name ?? f.id);
 
   const danglingGroups: DanglingGroup[] = [
     { label: 'Articles',        descriptionId: 'fs.direntStats.dangling.articles.desc',       items: danglingArticles },
@@ -97,14 +102,14 @@ export const useOwnerState = (): OwnerState => {
     { label: 'Folders',         descriptionId: 'fs.direntStats.dangling.folders.desc',        items: danglingFolders },
     { label: 'Flow Tasks',      descriptionId: 'fs.direntStats.dangling.flowTasks.desc',      items: 'TODO' },
     { label: 'Decision Tables', descriptionId: 'fs.direntStats.dangling.decisionTables.desc', items: 'TODO' },
-    { label: 'Forms',           descriptionId: 'fs.direntStats.dangling.forms.desc',          items: 'TODO' },
+    { label: 'Forms',           descriptionId: 'fs.direntStats.dangling.forms.desc',          items: danglingForms },
     { label: 'Printouts',       descriptionId: 'fs.direntStats.dangling.printouts.desc',      items: 'TODO' },
   ];
 
   // Section 3: Disabled assets (configOption: disabledMode)
   const disabledAssets: DisabledAsset[] = allProps
     .filter(p => p.configOptions?.includes('DISABLED_MODE'))
-    .map(p => ({ name: getDirent(p.id)?.name ?? p.id, type: p.type }));
+    .map(p => ({ fullPath: getDirent(p.id)?.fullPath ?? p.id, type: p.type }));
 
   return {
     isDarkMode,

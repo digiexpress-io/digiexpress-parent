@@ -8,6 +8,10 @@ export const helpArticleLink = `
 
 ---
 
+## When to use
+
+---
+
 ## Associated Assets
 
 - **Article**: A link must be associated with at least one Article to appear on the client portal. It can be connected to multiple articles.
