@@ -35,35 +35,35 @@ export const FsPanelArticleOrderRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   [`& .${MUI_NAME}-header`]: {
     display: 'flex',
     padding: theme.spacing(0.75, 1.5),
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    borderBottom: `1px solid FsColors.light.border`,
 
     '& .MuiTypography-root': {
       ...theme.typography.caption,
       fontWeight: 600,
       textTransform: 'uppercase',
-      color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+      color: FsColors.light.textSecondary,
     },
   },
 
   [`& .${MUI_NAME}-container`]: {
     display: 'flex',
     flexDirection: 'column',
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    border: `1px solid ${FsColors.light.border}`,
 
     '& > div:nth-of-type(odd)': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+      backgroundColor: FsColors.light.surface,
     },
   },
 
   [`& .${MUI_NAME}-row`]: {
     display: 'flex',
     padding: theme.spacing(1, 1.5),
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    backgroundColor: FsColors.light.background,
+    borderBottom: `1px solid ${FsColors.light.border}`,
 
     '&:last-child': {
       borderBottom: 'none',
@@ -72,7 +72,7 @@ export const FsPanelArticleOrderRoot = styled('div', {
 
   [`& .${MUI_NAME}-orderNumber`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
     width: '60px',
     flexShrink: 0,
     fontFamily: 'monospace',
@@ -81,7 +81,7 @@ export const FsPanelArticleOrderRoot = styled('div', {
 
   [`& .${MUI_NAME}-name`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     flex: 1,
     fontSize: '12px',
     fontWeight: 400,
@@ -89,7 +89,7 @@ export const FsPanelArticleOrderRoot = styled('div', {
 
   [`& .${MUI_NAME}-description`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
     flex: 2,
     fontSize: '11px',
   },

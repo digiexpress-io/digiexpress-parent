@@ -5,13 +5,11 @@ import { FsIcon, FsIcons } from '../fs-theme';
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { FsPanel } from '../fs-panel';
 import { FsPanelReferencesProps } from './FsPanelReferencesProps';
-import { useOwnerState } from './useOwnerState';
 import { FsPanelReferencesRoot, useUtilityClasses } from './useUtilityClasses';
 
 
 export const FsPanelReferences: React.FC<FsPanelReferencesProps> = (props) => {
   const intl = useIntl();
-  const ownerState = useOwnerState(props);
   const { dirent } = props;
   const { findReferencesToDirent, getDirent } = useFsDirent();
   const classes = useUtilityClasses();
@@ -46,7 +44,7 @@ export const FsPanelReferences: React.FC<FsPanelReferencesProps> = (props) => {
 
   return (
     <FsPanel title={intl.formatMessage({ id: 'fs.references.title.direntName' }, { direntName: dirent.name })} icon={<FsIcon icon={FsIcons.Tree} large />} secondaryChildren={secondaryContent} activeDirent={true}>
-      <FsPanelReferencesRoot className={classes.root} ownerState={ownerState}>
+      <FsPanelReferencesRoot className={classes.root}>
         <div className={classes.referenceSection}>
           {references.length > 0 ? (
             <div className={classes.referencesContainer}>

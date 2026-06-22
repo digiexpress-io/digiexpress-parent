@@ -3,19 +3,17 @@ import { Box, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsPanelProps } from './FsPanelProps';
 import { FsPanelRoot, useUtilityClasses } from './useUtilityClasses';
-import { useOwnerState } from './useOwnerState';
 
 
 
 
 export const FsPanel: React.FC<FsPanelProps> = (props) => {
   const intl = useIntl();
-  const ownerState = useOwnerState(props);
   const { children, title, activeDirent, icon, noDirentMessage, secondaryChildren } = props;
   const classes = useUtilityClasses();
 
   return (
-    <FsPanelRoot className={classes.root} ownerState={ownerState}>
+    <FsPanelRoot className={classes.root}>
       <div className={classes.content}>
         <div className={classes.header}>
           {icon && <Box>{icon}</Box>}

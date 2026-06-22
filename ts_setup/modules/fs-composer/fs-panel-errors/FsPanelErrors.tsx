@@ -1,16 +1,12 @@
 import React from 'react';
-import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsColors, FsIcon, FsIcons } from '../fs-theme';
-import { FsPanel } from '../fs-panel';
+
 import { FsPanelErrorsProps } from './FsPanelErrorsProps';
-import { useOwnerState } from './useOwnerState';
-import { FsPanelErrorsRoot, useUtilityClasses } from './useUtilityClasses';
+import { useUtilityClasses } from './useUtilityClasses';
 
 
 export const FsPanelErrors: React.FC<FsPanelErrorsProps> = (props) => {
   const intl = useIntl();
-  const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
 
   /*

@@ -63,18 +63,18 @@ export const FsPanelPropertiesRoot = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
-  border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+  border: `1px solid ${FsColors.light.border}`,
 
   [`& > .${MUI_NAME}-propertyRow:nth-of-type(odd)`]: {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+    backgroundColor: FsColors.light.surface,
   },
 
   [`& .${MUI_NAME}-propertyRow`]: {
     display: 'flex',
     gap: theme.spacing(2),
     padding: theme.spacing(1, 1.5),
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    backgroundColor: FsColors.light.background,
+    borderBottom: `1px solid ${FsColors.light.border}`,
     '&:last-child': {
       borderBottom: 'none'
     },
@@ -85,7 +85,7 @@ export const FsPanelPropertiesRoot = styled('div', {
     alignContent: 'center',
     fontWeight: 500,
     textTransform: 'uppercase',
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     width: '200px',
     flexShrink: 0,
     paddingRight: theme.spacing(1.875),
@@ -94,7 +94,7 @@ export const FsPanelPropertiesRoot = styled('div', {
   [`& .${MUI_NAME}-propertyValue`]: {
     ...theme.typography.subtitle2,
     fontWeight: 400,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     flex: 1,
     wordBreak: 'break-word',
   },
@@ -115,10 +115,9 @@ export const FsPanelPropertiesRoot = styled('div', {
   [`& .${MUI_NAME}-propertyListItem`]: {
     fontWeight: 400,
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
-    borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-    border: '1px solid',
+    color: FsColors.light.text,
+    backgroundColor: FsColors.light.surface,
+    border: `1px solid ${FsColors.light.border}`,
     paddingLeft: theme.spacing(0.625),
     paddingRight: theme.spacing(0.625),
   },
@@ -126,11 +125,11 @@ export const FsPanelPropertiesRoot = styled('div', {
   [`& .${MUI_NAME}-configOptionsListItem`]: {
     fontWeight: 400,
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
-    backgroundColor: ownerState.isDarkMode ? darken(FsColors.semantic.info, 0.8) : lighten(FsColors.semantic.info, 0.5),
-    border: `1px solid ${ownerState.isDarkMode ? darken(FsColors.semantic.info, 0.1) : darken(FsColors.semantic.info, 0.3)}`,
-    paddingLeft: theme.spacing(0.625),
-    paddingRight: theme.spacing(0.625),
+    color: FsColors.light.text,
+    backgroundColor: lighten(FsColors.semantic.info, 0.5),
+    border: `1px solid ${darken(FsColors.semantic.info, 0.3)}`,
+    paddingLeft: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5),
   },
 
   [`& .${MUI_NAME}-label`]: {
@@ -189,7 +188,7 @@ export const FsPanelPropertiesRoot = styled('div', {
   [`& .${MUI_NAME}-commentText`]: {
     ...theme.typography.subtitle2,
     fontWeight: 400,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
   },
 
   [`& .${MUI_NAME}-commentMeta`]: {
@@ -199,13 +198,13 @@ export const FsPanelPropertiesRoot = styled('div', {
 
   [`& .${MUI_NAME}-commentAuthor`]: {
     ...theme.typography.caption,
-    color: ownerState.isDarkMode ? FsColors.dark.textMuted : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
     fontStyle: 'italic',
   },
 
   [`& .${MUI_NAME}-commentDate`]: {
     ...theme.typography.caption,
-    color: ownerState.isDarkMode ? FsColors.dark.textMuted : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
   },
 
   [`& .${MUI_NAME}-childPropertyLabel`]: {
@@ -213,7 +212,7 @@ export const FsPanelPropertiesRoot = styled('div', {
     alignSelf: 'flex-start',
     fontWeight: 500,
     textTransform: 'uppercase',
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     width: '120px',
     flexShrink: 0,
     paddingRight: theme.spacing(1.875),

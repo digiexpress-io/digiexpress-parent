@@ -1,11 +1,9 @@
 import React from 'react';
 import { useFsDirent, useFsu } from '@dxs-ts/fs-api';
-import { useFsTheme } from '../fs-theme';
 import { FsPanelChangesProps } from './FsPanelChangesProps';
 
 
 export interface OwnerState {
-  isDarkMode: boolean;
   confirmOpen: boolean;
   setConfirmOpen: React.Dispatch<React.SetStateAction<boolean>>;
   changes: { id: string; name: string; fullPath: string; bodyType: string }[];
@@ -16,7 +14,6 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (_props: FsPanelChangesProps): OwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { getDirent } = useFsDirent();
   const { allChanges, push, cancel } = useFsu();
   const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -53,5 +50,5 @@ export const useOwnerState = (_props: FsPanelChangesProps): OwnerState => {
     }
   }
 
-  return { isDarkMode, confirmOpen, setConfirmOpen, changes, onSave, onSaveAll, onDiscard, onDiscardAll };
+  return { confirmOpen, setConfirmOpen, changes, onSave, onSaveAll, onDiscard, onDiscardAll };
 };

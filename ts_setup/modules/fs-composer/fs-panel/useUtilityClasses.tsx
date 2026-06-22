@@ -1,7 +1,6 @@
 import { darken, generateUtilityClass, lighten, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 import { FsColors } from "../fs-theme";
-import { OwnerState } from "./useOwnerState";
 
 
 
@@ -33,11 +32,11 @@ export const FsPanelRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   flex: 1,
   height: '100%',
-  backgroundColor: ownerState.isDarkMode ? lighten(FsColors.dark.background, 0.03) : darken(FsColors.light.background, 0.01),
-  color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+  backgroundColor: darken(FsColors.light.background, 0.01),
+  color: FsColors.light.text,
   overflow: 'auto',
 
   [`& .${MUI_NAME}-content`]: {

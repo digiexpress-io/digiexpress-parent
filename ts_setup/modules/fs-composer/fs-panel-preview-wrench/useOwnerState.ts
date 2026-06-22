@@ -1,19 +1,15 @@
 import React from 'react';
 import { Fs, useFsDirent, useFsuValue } from '@dxs-ts/fs-api';
-
-import { useFsTheme } from '../fs-theme';
 import { FsPanelPreviewWrenchProps } from './FsPanelPreviewWrenchProps';
 
 
 export interface OwnerState {
-  isDarkMode: boolean;
   flowAst: Fs.FlowAst | undefined;
   wrenchBody: Fs.WrenchBody | undefined;
 }
 
 export const useOwnerState = (props: FsPanelPreviewWrenchProps): OwnerState => {
-  const { isDarkMode } = useFsTheme();
-  const { fetchDirentBody, applyTransientChanges, getDirent } = useFsDirent();
+  const { fetchDirentBody, applyTransientChanges } = useFsDirent();
   const { state } = useFsuValue(props.dirent.id);
   const [wrenchBody, setWrenchBody] = React.useState<Fs.WrenchBody | undefined>(undefined);
   const [flowAst, setFlowAst] = React.useState<Fs.FlowAst>();
@@ -43,7 +39,6 @@ export const useOwnerState = (props: FsPanelPreviewWrenchProps): OwnerState => {
   }, [props.dirent.id, fromEdit]);
 
   return {
-    isDarkMode,
     wrenchBody,
     flowAst: flowAst ?? wrenchBody?.flows[props.dirent.id]?.ast,
   };

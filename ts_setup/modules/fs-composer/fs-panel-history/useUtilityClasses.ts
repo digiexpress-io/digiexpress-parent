@@ -50,18 +50,18 @@ export const FsPanelHistoryRoot = styled('div', {
   [`& .${MUI_NAME}-container`]: {
     display: 'flex',
     flexDirection: 'column',
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    border: `1px solid ${FsColors.light.border}`,
 
     '& > div:nth-of-type(odd)': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+      backgroundColor: FsColors.light.surface,
     },
   },
 
   [`& .${MUI_NAME}-row`]: {
     display: 'flex',
     padding: theme.spacing(1, 1.5),
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    backgroundColor: FsColors.light.background,
+    borderBottom: `1px solid ${FsColors.light.border}`,
 
     '&:last-child': {
       borderBottom: 'none'
@@ -70,7 +70,7 @@ export const FsPanelHistoryRoot = styled('div', {
 
   [`& .${MUI_NAME}-user`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     flex: 1,
     fontSize: '12px',
     fontWeight: 500,
@@ -78,14 +78,14 @@ export const FsPanelHistoryRoot = styled('div', {
 
   [`& .${MUI_NAME}-change`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     flex: 2,
     fontSize: '12px',
   },
 
   [`& .${MUI_NAME}-date`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
     flex: 1,
     fontSize: '12px',
     textAlign: 'right',

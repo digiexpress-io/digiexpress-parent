@@ -1,4 +1,4 @@
-import { darken, generateUtilityClass, lighten, styled } from "@mui/material";
+import { generateUtilityClass, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 import { FsColors } from "../fs-theme";
 import { OwnerState } from "./useOwnerState";
@@ -67,7 +67,7 @@ export const FsPanelDirentStatsRoot = styled('div', {
     justifyContent: 'space-between',
     cursor: 'pointer',
     userSelect: 'none',
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    borderBottom: `1px solid ${FsColors.light.border}`,
   },
 
   [`& .${MUI_NAME}-sectionExpandIconOpen`]: {
@@ -86,19 +86,19 @@ export const FsPanelDirentStatsRoot = styled('div', {
     ...theme.typography.caption,
     fontWeight: 600,
     textTransform: 'uppercase',
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
     padding: theme.spacing(0.75, 1.5),
   },
 
   [`& .${MUI_NAME}-section`]: {
     display: 'flex',
     flexDirection: 'column',
-    borderLeft: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
-    borderRight: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    borderLeft: `1px solid ${FsColors.light.border}`,
+    borderRight: `1px solid ${FsColors.light.border}`,
+    borderBottom: `1px solid ${FsColors.light.border}`,
 
     '& > div:nth-of-type(odd)': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+      backgroundColor: FsColors.light.surface,
     },
   },
 
@@ -106,8 +106,8 @@ export const FsPanelDirentStatsRoot = styled('div', {
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0.75, 1.5),
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    backgroundColor: FsColors.light.background,
+    borderBottom: `1px solid ${FsColors.light.border}`,
 
     '&:last-child': {
       borderBottom: 'none',
@@ -116,12 +116,12 @@ export const FsPanelDirentStatsRoot = styled('div', {
 
   [`& .${MUI_NAME}-label`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     flex: 1,
   },
 
   [`& .${MUI_NAME}-value`]: {
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
     ...theme.typography.subtitle2,
     fontWeight: 500
   },
@@ -129,22 +129,22 @@ export const FsPanelDirentStatsRoot = styled('div', {
   [`& .${MUI_NAME}-groupTitle`]: {
     ...theme.typography.subtitle2,
     fontWeight: 500,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     padding: theme.spacing(0.5, 1.5),
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    backgroundColor: FsColors.light.surface,
+    borderBottom: `1px solid ${FsColors.light.border}`,
   },
 
   [`& .${MUI_NAME}-assetTypeChip`]: {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     ...theme.typography.subtitle2,
   },
 
   [`& .${MUI_NAME}-groupItem`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
     padding: theme.spacing(0.25, 3),
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    borderBottom: `1px solid ${FsColors.light.border}`,
 
     '&:last-child': {
       borderBottom: 'none',

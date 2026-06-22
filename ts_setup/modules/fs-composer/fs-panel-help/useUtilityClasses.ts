@@ -1,7 +1,6 @@
 import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
-import { OwnerState } from './useOwnerState';
 
 const MUI_NAME = 'FsPanelHelp';
 
@@ -45,56 +44,56 @@ export const FsPanelHelpRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
 
   [`& .${MUI_NAME}-h1`]: {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     ...theme.typography.h1
   },
 
   [`& .${MUI_NAME}-h2`]: {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
    ...theme.typography.h2
   },
 
   [`& .${MUI_NAME}-h3`]: {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     ...theme.typography.h3
   },
 
   [`& .${MUI_NAME}-h4`]: {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
    ...theme.typography.h4
   },
 
   [`& .${MUI_NAME}-h5`]: {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     ...theme.typography.h5
   },
 
   [`& .${MUI_NAME}-h6`]: {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     ...theme.typography.h6
   },
 
   [`& .${MUI_NAME}-paragraph`]: {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     ...theme.typography.body1
   },
 
   [`& .${MUI_NAME}-listItem`]: {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     marginBottom: theme.spacing(0.25),
     ...theme.typography.body1
   },
 
   [`& .${MUI_NAME}-codeBlock`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
   },
 
   [`& .${MUI_NAME}-codeContent`]: {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+    backgroundColor: FsColors.light.surface,
     padding: theme.spacing(1),
   },
 
@@ -103,7 +102,7 @@ export const FsPanelHelpRoot = styled('div', {
     alignItems: 'center',
     gap: theme.spacing(0.5),
     marginTop: theme.spacing(0.125),
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     textDecoration: 'none',
     '&:hover': {
       textDecoration: 'underline',

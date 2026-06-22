@@ -1,6 +1,5 @@
 import React from 'react';
 import { useFsDirent, Fs } from '@dxs-ts/fs-api';
-import { useFsTheme } from '../fs-theme';
 
 
 export interface AssetCount {
@@ -20,7 +19,6 @@ export interface DisabledAsset {
 }
 
 export interface OwnerState {
-  isDarkMode: boolean;
   assetCounts: AssetCount[];
   danglingGroups: DanglingGroup[];
   disabledAssets: DisabledAsset[];
@@ -33,7 +31,6 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (): OwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { getDirent, selectOptions, getDirentName } = useFsDirent();
   const [overviewExpanded, setOverviewExpanded] = React.useState(false);
   const [danglingExpanded, setDanglingExpanded] = React.useState(false);
@@ -112,7 +109,6 @@ export const useOwnerState = (): OwnerState => {
     .map(p => ({ fullPath: getDirent(p.id)?.fullPath ?? p.id, type: p.type }));
 
   return {
-    isDarkMode,
     assetCounts,
     danglingGroups,
     disabledAssets,

@@ -1,7 +1,6 @@
 import { generateUtilityClass, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 import { FsColors } from "../fs-theme";
-import { OwnerState } from "./useOwnerState";
 
 
 
@@ -60,7 +59,7 @@ export const FsPanelErrorsRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
 
 
   display: 'flex',
@@ -70,8 +69,8 @@ export const FsPanelErrorsRoot = styled('div', {
 
   [`& .${MUI_NAME}-errorSummary`]: {
     padding: theme.spacing(1),
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    backgroundColor: FsColors.light.surface,
+    border: `1px solid ${FsColors.light.border}`,
   },
 
   [`& .${MUI_NAME}-summaryTitle`]: {
@@ -90,15 +89,15 @@ export const FsPanelErrorsRoot = styled('div', {
     flexDirection: 'column',
     alignItems: 'center',
     padding: theme.spacing(1),
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+    backgroundColor: FsColors.light.surface,
   },
 
   [`& .${MUI_NAME}-statItemError`]: {
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight}`,
+    border: `1px solid ${FsColors.semantic.dangerLight}`,
   },
 
   [`& .${MUI_NAME}-statItemWarning`]: {
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.semantic.warning : FsColors.semantic.warningLight}`,
+    border: `1px solid ${FsColors.semantic.warningLight}`,
   },
 
   [`& .${MUI_NAME}-statCount`]: {
@@ -121,16 +120,16 @@ export const FsPanelErrorsRoot = styled('div', {
   [`& .${MUI_NAME}-errorCard`]: {
     padding: theme.spacing(1),
     marginTop: theme.spacing(1),
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    backgroundColor: FsColors.light.background,
+    border: `1px solid ${FsColors.light.border}`,
   },
 
   [`& .${MUI_NAME}-errorCardError`]: {
-    borderLeft: `4px solid ${ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight}`,
+    borderLeft: `4px solid ${FsColors.semantic.dangerLight}`,
   },
 
   [`& .${MUI_NAME}-errorCardWarning`]: {
-    borderLeft: `4px solid ${ownerState.isDarkMode ? FsColors.semantic.warning : FsColors.semantic.warningLight}`,
+    borderLeft: `4px solid ${FsColors.semantic.warningLight}`,
   },
 
   [`& .${MUI_NAME}-errorHeader`]: {
@@ -151,12 +150,12 @@ export const FsPanelErrorsRoot = styled('div', {
 
   [`& .${MUI_NAME}-errorTimestamp`]: {
     ...theme.typography.caption,
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
   },
 
   [`& .${MUI_NAME}-errorDescription`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     marginBottom: theme.spacing(1),
   },
 }));

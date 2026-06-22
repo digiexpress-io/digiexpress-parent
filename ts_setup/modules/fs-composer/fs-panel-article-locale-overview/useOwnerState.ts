@@ -1,10 +1,8 @@
 import { useFsDirent, Fs } from '@dxs-ts/fs-api';
-import { useFsTheme } from '../fs-theme';
 import { FsPanelArticleLocaleOverviewProps } from './FsPanelArticleLocaleOverviewProps';
 
 
 export interface OwnerState {
-  isDarkMode: boolean;
   articles: Fs.DirentBase[];
   locales: Fs.SelectOption[];
   getDirentName: (id: string) => string | undefined;
@@ -12,7 +10,6 @@ export interface OwnerState {
 }
 
 export const useOwnerState = (_props: FsPanelArticleLocaleOverviewProps): OwnerState => {
-  const { isDarkMode } = useFsTheme();
   const { getDirent, selectOptions, getDirentName } = useFsDirent();
 
   const articles = selectOptions.articles
@@ -33,5 +30,5 @@ export const useOwnerState = (_props: FsPanelArticleLocaleOverviewProps): OwnerS
     return pages.some(p => p.articleId === articleId && p.localeCode === localeCode);
   }
 
-  return { isDarkMode, articles, locales, getDirentName, isPageInLocale };
+  return { articles, locales, getDirentName, isPageInLocale };
 };

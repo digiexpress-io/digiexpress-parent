@@ -39,23 +39,23 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
   [`& .${MUI_NAME}-header`]: {
     display: 'flex',
     padding: theme.spacing(0.75, 1.5),
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    borderBottom: `1px solid ${FsColors.light.border}`,
 
     '& .MuiTypography-root': {
       ...theme.typography.caption,
       fontWeight: 600,
       textTransform: 'uppercase',
-      color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+      color: FsColors.light.textSecondary,
     },
   },
 
   [`& .${MUI_NAME}-container`]: {
     display: 'flex',
     flexDirection: 'column',
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    border: `1px solid ${FsColors.light.border}`,
 
     '& > div:nth-of-type(odd)': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+      backgroundColor: FsColors.light.surface,
     },
   },
 
@@ -63,8 +63,8 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(1, 1.5),
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    backgroundColor: FsColors.light.background,
+    borderBottom: `1px solid ${FsColors.light.border}`,
 
     '&:last-child': {
       borderBottom: 'none',
@@ -73,14 +73,14 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
 
   [`& .${MUI_NAME}-name`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     flex: 1,
     fontWeight: 400,
   },
 
     [`& .${MUI_NAME}-desc`]: {
     ...theme.typography.caption,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
     flex: 1,
     paddingLeft: theme.spacing(1.5),
     fontWeight: 400,
@@ -92,6 +92,6 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
   },
 }));

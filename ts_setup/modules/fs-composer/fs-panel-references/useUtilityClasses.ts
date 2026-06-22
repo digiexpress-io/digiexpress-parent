@@ -1,6 +1,5 @@
 import { generateUtilityClass, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
-import { OwnerState } from "./useOwnerState";
 import { FsColors } from "../fs-theme";
 
 
@@ -37,7 +36,7 @@ export const FsPanelReferencesRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   [`& .${MUI_NAME}-referenceSection`]: {
     marginBottom: theme.spacing(2),
   },
@@ -45,9 +44,9 @@ export const FsPanelReferencesRoot = styled('div', {
   [`& .${MUI_NAME}-referencesContainer`]: {
     display: 'flex',
     flexDirection: 'column',
-    border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    border: `1px solid ${FsColors.light.border}`,
     '& > div:nth-of-type(odd)': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+      backgroundColor: FsColors.light.surface,
     },
   },
 
@@ -55,8 +54,8 @@ export const FsPanelReferencesRoot = styled('div', {
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(1, 1.5),
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    backgroundColor: FsColors.light.background,
+    borderBottom: `1px solid ${FsColors.light.border}`,
     '&:last-child': {
       borderBottom: 'none',
     },
@@ -64,7 +63,7 @@ export const FsPanelReferencesRoot = styled('div', {
 
   [`& .${MUI_NAME}-referenceLocation`]: {
     ...theme.typography.subtitle2,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
   },
 
   [`& .${MUI_NAME}-childrenSection`]: {

@@ -43,7 +43,7 @@ export const FsPanelChangesRoot = styled('div', {
   flexDirection: 'column',
 
   [`& .${MUI_NAME}-changeRow:nth-of-type(odd)`]: {
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+    backgroundColor: FsColors.light.surface,
   },
 
   [`& .${MUI_NAME}-changeRow`]: {
@@ -53,32 +53,32 @@ export const FsPanelChangesRoot = styled('div', {
     paddingLeft: theme.spacing(1),
     paddingBottom: theme.spacing(0.5),
     paddingTop: theme.spacing(0.5),
-    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    backgroundColor: FsColors.light.background,
+    borderBottom: `1px solid ${FsColors.light.border}`,
   },
 
   [`& .${MUI_NAME}-assetTitle`]: {
     ...theme.typography.subtitle2,
     fontWeight: 'bold',
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
   },
 
   [`& .${MUI_NAME}-assetPath`]: {
     ...theme.typography.caption,
-    color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    color: FsColors.light.textSecondary,
   },
 
   [`& .${MUI_NAME}-assetName`]: {
     fontWeight: 500,
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     flex: 1,
     ...theme.typography.subtitle2
   },
 
   [`& .${MUI_NAME}-undoButton`]: {
-    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: FsColors.light.text,
     '&:hover': {
-      backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface
+      backgroundColor: FsColors.light.surface
     }
   },
 
