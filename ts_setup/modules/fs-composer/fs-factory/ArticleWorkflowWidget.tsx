@@ -19,8 +19,7 @@ export const ArticleWorkflowWidget: DirentWidget = {
     }
   },
   colors: {
-    direntDark: FsColors.direntTypes.dark.article,
-    direntLight: FsColors.direntTypes.light.article
+    dirent: FsColors.direntTypes.light.article
   },
   classNames: {
     dirent: '',

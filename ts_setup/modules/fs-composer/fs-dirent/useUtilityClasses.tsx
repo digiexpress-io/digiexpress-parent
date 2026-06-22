@@ -62,7 +62,7 @@ export const FsDirentRoot = styled(ListItem, {
     [`& .${MUI_NAME}-${widget.classNames.icon}`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: widget.colors.direntLight,
+      color: widget.colors.dirent,
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },

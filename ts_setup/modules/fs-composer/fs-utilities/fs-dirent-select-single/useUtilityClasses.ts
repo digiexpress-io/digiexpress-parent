@@ -47,7 +47,7 @@ export const FsDirentSelectSingleRoot = styled('div', {
         borderRadius: 0,
       },
       '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: ownerState.showRequiredError ? dangerColor : FsColors.dark.textSecondary,
+        borderColor: ownerState.showRequiredError ? dangerColor : FsColors.light.textSecondary,
       },
       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
         border: `1px solid ${ownerState.showRequiredError ? dangerColor : FsColors.light.text}`,

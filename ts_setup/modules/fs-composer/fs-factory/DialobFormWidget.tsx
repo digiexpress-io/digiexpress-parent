@@ -17,8 +17,7 @@ export const DialobFormWidget: DirentWidget = {
     }
   },
   colors: {
-    direntDark: FsColors.direntTypes.dark.form,
-    direntLight: FsColors.direntTypes.light.form
+    dirent: FsColors.direntTypes.light.form
   },
   classNames: {
     dirent: '',

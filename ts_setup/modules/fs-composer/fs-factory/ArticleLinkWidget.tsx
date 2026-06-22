@@ -20,8 +20,7 @@ export const ArticleLinkWidget: DirentWidget = {
     }
   },
   colors: {
-    direntDark: FsColors.direntTypes.dark.link,
-    direntLight: FsColors.direntTypes.light.link
+    dirent: FsColors.direntTypes.light.link
   },
   classNames: {
     dirent: '',

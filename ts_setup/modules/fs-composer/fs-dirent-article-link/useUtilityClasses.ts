@@ -73,7 +73,7 @@ export const FsDirentArticleLinkRoot = styled('div', {
 
   [`& .${MUI_NAME}-sectionBox`]: {
     backgroundColor: FsColors.light.border,
-    border: `1px solid ${FsColors.dark.textSecondary}`,
+    border: `1px solid ${FsColors.light.textSecondary}`,
     borderRadius: '4px',
     marginTop: '0px !important',
   },

@@ -104,7 +104,7 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   return (
     <ListItemText className={classes.direntName} primary={<Typography variant='subtitle2'
       sx={{
-        color: props.error ? FsColors.semantic.dangerLight : widget.colors.direntLight,
+        color: props.error ? FsColors.semantic.dangerLight : widget.colors.dirent,
         fontWeight: 500,
       }}
     >

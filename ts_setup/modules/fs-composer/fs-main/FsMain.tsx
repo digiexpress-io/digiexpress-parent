@@ -7,7 +7,7 @@ import { FsMainRoot, FsSaveButtonRoot, FsToolbarButtonRoot, useUtilityClasses } 
 import { FsMainDefaultBackground } from './FsMainDefaultBackground';
 import { OwnerState } from './useOwnerState';
 import { ContentPanel } from './ContentPanel';
-import { FsIcons, useFsTheme } from '../fs-theme';
+import { FsIcons } from '../fs-theme';
 
 
 

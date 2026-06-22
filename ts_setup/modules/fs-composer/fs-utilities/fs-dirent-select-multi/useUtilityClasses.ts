@@ -47,7 +47,7 @@ export const FsDirentSelectMultiRoot = styled(FormControl, {
       borderRadius: 0,
     },
     '&:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: FsColors.dark.textSecondary,
+      borderColor: FsColors.light.textSecondary,
     },
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
       border: `1px solid ${FsColors.light.text}`,

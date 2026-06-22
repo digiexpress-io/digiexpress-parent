@@ -19,8 +19,7 @@ export const LocaleWidget: DirentWidget = {
     }
   },
   colors: {
-    direntDark: FsColors.direntTypes.dark.language,
-    direntLight: FsColors.direntTypes.light.language
+    dirent: FsColors.direntTypes.light.language
   },
   classNames: {
     dirent: '',

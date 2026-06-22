@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useFsTheme } from '../fs-theme';
+
 import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
 import { createWidget } from '../fs-factory';
 

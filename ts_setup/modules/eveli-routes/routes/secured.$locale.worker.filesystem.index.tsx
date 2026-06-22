@@ -1,7 +1,7 @@
 import React from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { EveliSetup } from '../eveli-setup';
-import { FsSetup, FsThemeProvider } from '@dxs-ts/fs-composer';
+import { FsSetup } from '@dxs-ts/fs-composer';
 import { EveliApp } from '../eveli-app';
 import { FsDirentProvider, FsDirentProviderProps } from '@dxs-ts/fs-api';
 
@@ -44,15 +44,13 @@ function Component() {
 
   return (
     <FsDirentProvider persistenceUnit={persistenceUnit}>
-      <FsThemeProvider>
         <EveliApp
           main={FsSetup.Main}
           secondary={FsSetup.Secondary}
           toolbar={MergedToolbar}
           wrapper={FsNavProvider}
           drawerWidth={450}
-        />
-      </FsThemeProvider>
+      />
     </FsDirentProvider>
   );
 }

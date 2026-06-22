@@ -45,7 +45,7 @@ export const FsDirentTextFieldAutocompleteRoot = styled('div', {
       borderRadius: 0,
     },
     '&:hover fieldset': {
-      borderColor: FsColors.dark.textSecondary,
+      borderColor: FsColors.light.textSecondary,
     },
     '&.Mui-focused fieldset': {
       border: `1px solid ${FsColors.light.text}`,

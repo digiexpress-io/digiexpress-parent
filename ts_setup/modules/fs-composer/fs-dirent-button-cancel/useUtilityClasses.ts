@@ -52,7 +52,7 @@ export const FsDirentButtonCancelRoot = styled(Button, {
 })(({ theme }) => ({
   backgroundColor: 'transparent',
   color: FsColors.light.text,
-  border: `1px solid ${FsColors.dark.textSecondary}`,
+  border: `1px solid ${FsColors.light.textSecondary}`,
   borderRadius: theme.spacing(0.5),
   minWidth: '13ch',
   padding: theme.spacing(0.5),

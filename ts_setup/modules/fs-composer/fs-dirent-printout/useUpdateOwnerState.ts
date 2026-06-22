@@ -1,5 +1,5 @@
 import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
-import { useFsTheme } from '../fs-theme';
+
 import { useFsNav } from '@dxs-ts/fs-nav';
 
 export interface ConnectedPage {

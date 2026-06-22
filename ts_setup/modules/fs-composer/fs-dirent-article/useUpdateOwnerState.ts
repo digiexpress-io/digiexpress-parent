@@ -1,4 +1,3 @@
-import { useFsTheme } from '../fs-theme';
 import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { createWidget } from '../fs-factory';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { FsDirentFlowTaskCreate, FsDirentFlowTaskUpdate, FsHelpFlowTask, FsPropertiesFlowTask } from '../fs-dirent-flow-task';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { DirentWidget, DirentWidgetIconProps } from './index';
@@ -18,8 +17,7 @@ export const FlowTaskWidget: DirentWidget = {
     }
   },
   colors: {
-    direntDark: FsColors.direntTypes.dark.flow,
-    direntLight: FsColors.direntTypes.light.flow
+    dirent: FsColors.direntTypes.light.flow
   },
   classNames: {
     dirent: '',

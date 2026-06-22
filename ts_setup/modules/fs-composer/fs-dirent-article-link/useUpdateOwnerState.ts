@@ -1,4 +1,3 @@
-import { useFsTheme } from '../fs-theme';
 import {
   Fs,
   useFsDirent,

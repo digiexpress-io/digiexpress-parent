@@ -1,5 +1,4 @@
 import React from 'react';
-import { useFsTheme } from '../fs-theme';
 import { Fs, FsuCreateChange, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { createWidget } from '../fs-factory';

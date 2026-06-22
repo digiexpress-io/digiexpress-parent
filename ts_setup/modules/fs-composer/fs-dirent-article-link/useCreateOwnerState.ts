@@ -1,5 +1,4 @@
 import React from 'react';
-import { useFsTheme } from '../fs-theme';
 import {
   Fs,
   useFsDirent,

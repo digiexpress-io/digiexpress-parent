@@ -1,6 +1,6 @@
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
-import { useFsTheme } from '../fs-theme';
+
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsDirentSelectSingleOption } from '../fs-utilities';
 import { createWidget } from '../fs-factory';

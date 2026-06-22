@@ -41,8 +41,7 @@ export interface DirentWidget {
     };
   };
   colors: {
-    direntDark: string;
-    direntLight: string;
+    dirent: string;
   };
   views: {
     CreateView: React.ElementType;
@@ -127,8 +126,7 @@ const _UN_IMPLEMENTED: DirentWidget = {
     }
   },
   colors: {
-    direntDark: _EMPTY_COLOR,
-    direntLight: _EMPTY_COLOR
+    dirent: _EMPTY_COLOR
   },
   classNames: {
     dirent: "",

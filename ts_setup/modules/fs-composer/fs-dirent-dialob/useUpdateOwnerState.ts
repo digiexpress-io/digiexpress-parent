@@ -1,6 +1,6 @@
 import React from 'react';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useFsTheme } from '../fs-theme';
+
 import { useFsNav } from '@dxs-ts/fs-nav';
 
 
