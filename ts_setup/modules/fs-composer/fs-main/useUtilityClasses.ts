@@ -2,7 +2,6 @@ import composeClasses from '@mui/utils/composeClasses';
 import { darken, generateUtilityClass, styled } from '@mui/material';
 import { FsColors } from '../fs-theme';
 import { OwnerState } from './useOwnerState';
-import { FsMainProps } from './FsMainProps';
 
 export const MUI_NAME = 'FsMain';
 const toolbarWidth = '50px';
@@ -20,7 +19,7 @@ export interface FsMainClasses {
 
 export type FsMainClassKey = keyof FsMainClasses;
 
-export const useUtilityClasses = (_props: FsMainProps) => {
+export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
     leftPanel: ['leftPanel'],

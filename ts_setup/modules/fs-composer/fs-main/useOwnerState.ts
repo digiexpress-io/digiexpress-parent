@@ -3,7 +3,6 @@ import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { FsTab, useFsNav } from '@dxs-ts/fs-nav';
 import { useFsTheme } from '../fs-theme';
 import { createWidget, DirentWidget } from '../fs-factory';
-import { FsMainProps } from './FsMainProps';
 
 
 export interface OwnerState {
@@ -22,7 +21,7 @@ export interface OwnerState {
 }
 
 
-export const useOwnerState = (_props: FsMainProps): OwnerState => {
+export const useOwnerState = (): OwnerState => {
 
   const { isDarkMode } = useFsTheme();
   const { activeDirent, activeTabIndex: activeTabId, openTabs } = useFsNav();

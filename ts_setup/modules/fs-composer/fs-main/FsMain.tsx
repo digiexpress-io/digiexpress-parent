@@ -2,8 +2,6 @@ import React from 'react';
 import { Tooltip, Badge } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs, useFsu } from '@dxs-ts/fs-api';
-
-import { FsMainProps } from './FsMainProps';
 import { useOwnerState } from './useOwnerState';
 import { FsMainRoot, FsSaveButtonRoot, FsToolbarButtonRoot, useUtilityClasses } from './useUtilityClasses';
 import { FsMainDefaultBackground } from './FsMainDefaultBackground';
@@ -14,9 +12,9 @@ import { FsIcons, useFsTheme } from '../fs-theme';
 
 
 
-export const FsMain: React.FC<FsMainProps> = (props) => {
-  const ownerState = useOwnerState(props);
-  const classes = useUtilityClasses(props);
+export const FsMain: React.FC = () => {
+  const ownerState = useOwnerState();
+  const classes = useUtilityClasses();
   const intl = useIntl();
 
   return (
@@ -50,12 +48,13 @@ export const FsMain: React.FC<FsMainProps> = (props) => {
           icon={FsIcons.Info}
           tooltip={intl.formatMessage({ id: 'fs.main.tooltip.properties' })}
         />
+        {/* TODO
         <PanelButton
           id='references'
           ownerState={ownerState}
           icon={FsIcons.Tree}
           tooltip={intl.formatMessage({ id: 'fs.main.tooltip.references' })}
-        />
+        /> */}
         <PanelButton
           id='debug'
           ownerState={ownerState}
@@ -149,7 +148,7 @@ const PanelButton: React.FC<{
   id: Fs.SecondaryView,
   tooltip: string,
   icon: React.ElementType,
-  ownerState: OwnerState
+  ownerState: OwnerState,
 }> = ({ id, tooltip, ownerState, icon: Icon }) => {
 
   function handleOnClick() {
@@ -162,12 +161,13 @@ const PanelButton: React.FC<{
   const isEnabled: boolean = ownerState.activeWidget?.meta.supportedViews.includes(id as any) ?? false;
 
 
-  return (<Tooltip key={id} title={tooltip} placement="left" arrow>
-    <FsToolbarButtonRoot onClick={handleOnClick} ownerState={{
-      isDarkMode: ownerState.isDarkMode,
-      isEnabled,
-      isSelected
-    }}><Icon /></FsToolbarButtonRoot>
-  </Tooltip>);
+  return (
+    <Tooltip key={id} title={tooltip} placement="left" arrow>
+      <FsToolbarButtonRoot onClick={handleOnClick} ownerState={{
+        isDarkMode: ownerState.isDarkMode,
+        isEnabled,
+        isSelected
+      }}><Icon /></FsToolbarButtonRoot>
+    </Tooltip>);
 }
 
