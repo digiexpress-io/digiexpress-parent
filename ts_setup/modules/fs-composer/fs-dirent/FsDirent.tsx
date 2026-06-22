@@ -14,7 +14,7 @@ import { useFsuIsChanged } from '@dxs-ts/fs-api';
 
 export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
   const ownerState = useOwnerState(props);
-  const classes = useUtilityClasses(ownerState.isDarkMode, ownerState.dirent);
+  const classes = useUtilityClasses(ownerState.dirent);
   const isExpanded = props.isExpanded(props.dirent.id);
   const isUnsavedChanges = useFsuIsChanged(props.dirent.id);
 
@@ -62,7 +62,6 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
         >
           <span>
             <FsDirentName dirent={ownerState.dirent}
-              isDarkTheme={ownerState.isDarkMode}
               error={ownerState.showError ? true : false}
               searchTerm={ownerState.searchTerm}
             />

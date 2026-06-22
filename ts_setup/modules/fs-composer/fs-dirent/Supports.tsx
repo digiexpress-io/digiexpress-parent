@@ -2,7 +2,6 @@ import React from 'react';
 import { Badge, Box, ListItemText, Typography } from '@mui/material';
 
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useFsTheme } from '../fs-theme';
 
 import { useUtilityClasses } from './useUtilityClasses';
 import { FsIcons, FsIcon, FsColors } from '../fs-theme';
@@ -15,7 +14,7 @@ import { createWidget } from '../fs-factory';
 
 
 export const ConfigOptionIcons: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
-  const classes = useUtilityClasses(ownerState.isDarkMode, ownerState.dirent);
+  const classes = useUtilityClasses(ownerState.dirent);
   const Align = React.useCallback((props: { children: React.ReactNode }) => <Box display='flex' alignItems='center'>{props.children}</Box>, []);
 
   if (!ownerState.configOptions) {
@@ -43,14 +42,13 @@ function ConfigIcon(props: { type: Fs.ConfigOption, className: string }) {
 }
 
 export const DirentDecorator = (props: { dirent: Fs.DirentBase, children: React.ReactNode }) => {
-  const { isDarkMode } = useFsTheme();
   const { getDirent } = useFsDirent();
   const { dirent, children } = props;
   const direntEntry = getDirent(dirent.id);
 
   if ((direntEntry?.props?.errors.length ?? 0) > 0) {
     return (
-      <Box display='flex' alignItems='center' sx={{ color: isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight }}>
+      <Box display='flex' alignItems='center' sx={{ color: FsColors.semantic.dangerLight }}>
         {children}
       </Box>
     );
@@ -64,7 +62,7 @@ export const DirentDecorator = (props: { dirent: Fs.DirentBase, children: React.
         }}
         sx={{
           '& .MuiBadge-dot': {
-            backgroundColor: isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
+            backgroundColor: FsColors.semantic.dangerLight,
             width: 6,
             height: 6,
           },
@@ -81,14 +79,13 @@ export const DirentDecorator = (props: { dirent: Fs.DirentBase, children: React.
 
 interface FsDirentNameProps {
   dirent: Fs.DirentBase;
-  isDarkTheme: boolean;
   error: boolean;
   searchTerm: string;
 }
 
 export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   const { getParentDirent, getDirentName } = useFsDirent();
-  const classes = useUtilityClasses(props.isDarkTheme, props.dirent);
+  const classes = useUtilityClasses(props.dirent);
   let displayName: string;
 
   if (props.dirent.type === 'ARTICLE') {
@@ -107,13 +104,11 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   return (
     <ListItemText className={classes.direntName} primary={<Typography variant='subtitle2'
       sx={{
-        color: props.error ? (props.isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight)
-          :
-          props.isDarkTheme ? widget.colors.direntDark : widget.colors.direntLight,
-        fontWeight: props.isDarkTheme ? 400 : 500,
+        color: props.error ? FsColors.semantic.dangerLight : widget.colors.direntLight,
+        fontWeight: 500,
       }}
     >
-      <SearchResultHighlight text={fullDisplayName} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />
+      <SearchResultHighlight text={fullDisplayName} searchTerm={props.searchTerm} />
     </Typography>
     }
     />

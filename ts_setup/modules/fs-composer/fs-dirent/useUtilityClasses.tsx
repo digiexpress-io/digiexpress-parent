@@ -19,7 +19,7 @@ export interface FsDirentClasses {
 
 export type FsDirentClassKey = keyof FsDirentClasses;
 
-export const useUtilityClasses = (_isDarkTheme: boolean, dirent: Fs.DirentBase) => {
+export const useUtilityClasses = (dirent: Fs.DirentBase) => {
   const slots = {
     root: ['root'],
     explorerDirent: ['explorerDirent'],
@@ -40,7 +40,6 @@ export const FsDirentRoot = styled(ListItem, {
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState'
 })<{ ownerState: any }>(({ theme, ownerState }) => {
-  const isDarkTheme = ownerState.isDarkMode;
   const widget = createWidget(ownerState.dirent)
 
   return {
@@ -48,35 +47,35 @@ export const FsDirentRoot = styled(ListItem, {
     paddingLeft: theme.spacing(ownerState.level * 1.2),
     cursor: 'pointer',
     '&:hover': {
-      backgroundColor: isDarkTheme ? FsColors.dark.surface : FsColors.light.surface,
+      backgroundColor: FsColors.light.surface,
     },
     '&.active': {
-      backgroundColor: isDarkTheme ? alpha(FsColors.semantic.primary, 0.15) : alpha(FsColors.semantic.primary, 0.1),
-      outline: `1px solid ${isDarkTheme ? alpha(FsColors.semantic.primary, 0.6) : alpha(FsColors.semantic.primary, 0.5)}`,
+      backgroundColor: alpha(FsColors.semantic.primary, 0.1),
+      outline: `1px solid ${alpha(FsColors.semantic.primary, 0.5)}`,
     },
     '&.error': {
-      backgroundColor: alpha(isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.1),
+      backgroundColor: alpha(FsColors.semantic.dangerLight, 0.1),
       '&:hover': {
-        backgroundColor: isDarkTheme ? alpha(FsColors.semantic.dangerDark, 0.3) : alpha(FsColors.semantic.dangerLight, 0.2),
+        backgroundColor: alpha(FsColors.semantic.dangerLight, 0.2),
       },
     },
 
     [`& .${MUI_NAME}-${widget.classNames.icon}`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: isDarkTheme ? widget.colors.direntDark : widget.colors.direntLight,
+      color: widget.colors.direntLight,
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
     },
     [`& .${MUI_NAME}-iconExpand`]: {
       fontSize: '15px',
-      color: isDarkTheme ? FsColors.dark.text : FsColors.light.textSecondary,
+      color: FsColors.light.textSecondary,
     },
 
     [`& .${MUI_NAME}-iconConfig`]: {
       fontSize: '14px',
-      color: isDarkTheme ? FsColors.dark.text : FsColors.light.text,
+      color: FsColors.light.text,
     },
 
     [`& .${MUI_NAME}-explorerDirentContent`]: {

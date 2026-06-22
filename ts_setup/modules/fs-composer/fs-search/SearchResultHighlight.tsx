@@ -10,7 +10,6 @@ const MUI_NAME = 'SearchResultHighlight';
 interface HighlightProps {
   text: string;
   searchTerm: string;
-  isDarkMode: boolean
 }
 
 export interface SearchResultHighlightClasses {
@@ -31,16 +30,16 @@ const SearchResultHighlightRoot = styled('span', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'isDarkMode',
-})<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
+})(() => ({
   [`& .${MUI_NAME}-highlight`]: {
-    backgroundColor: isDarkMode ? FsColors.semantic.highlightDark : FsColors.semantic.highlightLight,
+    backgroundColor: FsColors.semantic.highlightLight,
     borderRadius: '2px',
     fontWeight: 'bold',
   },
 }));
 
 export const SearchResultHighlight: React.FC<HighlightProps> = (props) => {
-  const { text, searchTerm, isDarkMode } = props;
+  const { text, searchTerm } = props;
   const classes = useUtilityClasses(props);
 
   if (!searchTerm.trim()) {
@@ -67,7 +66,7 @@ export const SearchResultHighlight: React.FC<HighlightProps> = (props) => {
   }
 
   return (
-    <SearchResultHighlightRoot isDarkMode={isDarkMode} className={classes.root}>
+    <SearchResultHighlightRoot className={classes.root}>
       {parts.map((part, index) => {
         const isMatch = part.toLowerCase() === searchTerm.toLowerCase();
         return isMatch ? (

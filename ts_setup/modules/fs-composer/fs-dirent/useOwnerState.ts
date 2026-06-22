@@ -1,6 +1,5 @@
 import React from 'react';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
-import { useFsTheme } from '../fs-theme';
 import { FsDirentProps } from './FsDirentProps';
 
 export interface OwnerState {
@@ -17,7 +16,6 @@ export interface OwnerState {
   children: Fs.DirentBase[];
   options: Fs.ConfigOption[];
 
-  isDarkMode: boolean;
   isActive: boolean;
   isChildren: boolean;
   configOptions: boolean;
@@ -28,7 +26,6 @@ export interface OwnerState {
 
 export const useOwnerState = (props: FsDirentProps): OwnerState => {
   const { dirent, level, onToggle, onContextMenu, searchTerm, openAsset, activeDirentId } = props;
-  const { isDarkMode } = useFsTheme();
   const { isChildError, getDirent } = useFsDirent();
 
   const children = (dirent.children ?? [])
@@ -55,7 +52,6 @@ export const useOwnerState = (props: FsDirentProps): OwnerState => {
     searchTerm,
     configOptions,
 
-    isDarkMode,
     isActive: activeDirentId === dirent.id,
     childWithError,
     showError,
