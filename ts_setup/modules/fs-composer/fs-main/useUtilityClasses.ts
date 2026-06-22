@@ -51,7 +51,9 @@ export const FsMainRoot = styled('div', {
       padding: theme.spacing(2),
       backgroundColor: FsColors.base.background,
       color: FsColors.base.text,
-      overflow: 'auto'
+      overflow: 'auto',
+      paddingBottom: theme.spacing(10),
+
     },
 
     [`& .${MUI_NAME}-divider`]: {
@@ -143,13 +145,6 @@ export const FsSaveButtonRoot = styled('div', {
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: { unsavedCount: number } }>(({ theme, ownerState }) => {
   return {
-    [`& .${MUI_NAME}-toolbarSaveButton.${MUI_NAME}-toolbarButtonSelected`]: {
-      backgroundColor: FsColors.semantic.danger + '26',
-      border: `1px solid ${FsColors.semantic.danger}`,
-      '&:hover': {
-        backgroundColor: FsColors.semantic.warning + '40',
-      },
-    },
     cursor: ownerState.unsavedCount > 0 ? 'pointer' : 'default',
     pointerEvents: ownerState.unsavedCount > 0 ? 'auto' : 'none',
     display: 'flex',
@@ -160,6 +155,16 @@ export const FsSaveButtonRoot = styled('div', {
     padding: theme.spacing(0.5),
     backgroundColor: 'transparent',
     border: '1px solid transparent',
+
+
+    [`& .${MUI_NAME}-toolbarSaveButton.${MUI_NAME}-toolbarButtonSelected`]: {
+      backgroundColor: FsColors.semantic.danger + '26',
+      border: `1px solid ${FsColors.semantic.danger}`,
+      '&:hover': {
+        backgroundColor: FsColors.semantic.warning + '40',
+      },
+    },
+
     '& .MuiSvgIcon-root': {
       fontSize: '1.2rem',
       color: ownerState.unsavedCount > 0 ? theme.palette.error.main : FsColors.base.text,

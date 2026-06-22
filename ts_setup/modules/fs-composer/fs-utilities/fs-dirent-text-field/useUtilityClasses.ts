@@ -71,11 +71,11 @@ export const FsDirentTextFieldRoot = styled('div', {
       },
     },
 
-    '& .MuiInputBase-input': {
+    '&& .MuiInputBase-input': {
       color: textColor,
       ...theme.typography.body1,
       lineHeight: 1,
-      padding: theme.spacing(1.5),
+      padding: theme.spacing(1),
 
       '&::placeholder': {
         color: placeholderColor,

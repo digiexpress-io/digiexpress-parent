@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Typography, Divider } from '@mui/material';
+import { Divider, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { DatePicker } from '@dxs-ts/xui-datetime';
 import { useFsDirent } from '@dxs-ts/fs-api';
@@ -31,6 +31,7 @@ export const FsDirentArticleWorkflowCreate: React.FC = () => {
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createNew' })}</Typography>
         <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />
       </div>
+
       <div className={classes.formContainer}>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.nameField.label' })}>
@@ -52,28 +53,6 @@ export const FsDirentArticleWorkflowCreate: React.FC = () => {
           <FsDirentSelectSingle options={flows} value={ownerState.flowName} onChange={ownerState.onChangeFlowName} />
         </FsDirentFormField>
 
-        <Divider />
-
-        <Typography className={classes.sectionTitle}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createLocaleLabels' })}</Typography>
-
-        {ownerState.locales.map((locale) => (
-          <div key={locale.value} className={classes.localeRow}>
-            <Typography className={classes.localeLabel}>{intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}</Typography>
-            <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''}
-              onChange={(value) => ownerState.onChangeIntlValues(locale.value, value)}
-            />
-          </div>
-        ))}
-
-
-        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.validityStartField.label' })}>
-          <DatePicker value={ownerState.validityStart ? new Date(ownerState.validityStart) : null} onChange={(d) => ownerState.onChangeValidityStart(d ?? undefined)} fullWidth size='small' />
-        </FsDirentFormField>
-
-        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.validityEndField.label' })}>
-          <DatePicker value={ownerState.validityEnd ? new Date(ownerState.validityEnd) : null} onChange={(d) => ownerState.onChangeValidityEnd(d ?? undefined)} fullWidth size='small' />
-        </FsDirentFormField>
-
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.articlesField.label' })}>
           <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />
         </FsDirentFormField>
@@ -82,7 +61,23 @@ export const FsDirentArticleWorkflowCreate: React.FC = () => {
           <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
         </FsDirentFormField>
 
+        {ownerState.locales.map((locale) => (
+          <div key={locale.value} className={classes.localeRow}>
+            <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}>
+              <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''}
+                onChange={(value) => ownerState.onChangeIntlValues(locale.value, value)}
+              />
+            </FsDirentFormField>
+          </div>
+        ))}
 
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.validityStartField.label' })}>
+          <DatePicker value={ownerState.validityStart ? new Date(ownerState.validityStart) : null} onChange={(d) => ownerState.onChangeValidityStart(d ?? undefined)} fullWidth size='small' />
+        </FsDirentFormField>
+
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.validityEndField.label' })}>
+          <DatePicker value={ownerState.validityEnd ? new Date(ownerState.validityEnd) : null} onChange={(d) => ownerState.onChangeValidityEnd(d ?? undefined)} fullWidth size='small' />
+        </FsDirentFormField>
 
       </div>
     </FsDirentArticleWorkflowRoot>

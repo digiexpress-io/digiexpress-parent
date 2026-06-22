@@ -58,7 +58,7 @@ export const FsDirentSelectMultiRoot = styled(FormControl, {
     '& .MuiSelect-select': {
       backgroundColor: FsColors.base.background,
       color: FsColors.base.text,
-      padding: theme.spacing(1.5),
+      padding: theme.spacing(1),
       ...theme.typography.subtitle1,
     },
   },
