@@ -1487,7 +1487,6 @@ export const en = {
   'fs.dirent.service.dialobFormField.label': 'Dialob form',
   'fs.dirent.service.dialobTagField.label': 'Version tag',
   'fs.dirent.service.flowField.label': 'Flow',
-  'fs.dirent.service.sectionTitle.createLocaleLabels': 'Add localised workflow names',
   'fs.dirent.service.validityStartField.label': 'Valid from',
   'fs.dirent.service.validityStartField.placeholder': 'DD.MM.YYYY',
   'fs.dirent.service.validityEndField.label': 'Valid until',
