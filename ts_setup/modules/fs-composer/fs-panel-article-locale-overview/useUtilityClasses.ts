@@ -39,23 +39,23 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
   [`& .${MUI_NAME}-header`]: {
     display: 'flex',
     padding: theme.spacing(0.75, 1.5),
-    borderBottom: `1px solid ${FsColors.light.border}`,
+    borderBottom: `1px solid ${FsColors.base.border}`,
 
     '& .MuiTypography-root': {
       ...theme.typography.caption,
       fontWeight: 600,
       textTransform: 'uppercase',
-      color: FsColors.light.textSecondary,
+      color: FsColors.base.textSecondary,
     },
   },
 
   [`& .${MUI_NAME}-container`]: {
     display: 'flex',
     flexDirection: 'column',
-    border: `1px solid ${FsColors.light.border}`,
+    border: `1px solid ${FsColors.base.border}`,
 
     '& > div:nth-of-type(odd)': {
-      backgroundColor: FsColors.light.surface,
+      backgroundColor: FsColors.base.surface,
     },
   },
 
@@ -63,8 +63,8 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(1, 1.5),
-    backgroundColor: FsColors.light.background,
-    borderBottom: `1px solid ${FsColors.light.border}`,
+    backgroundColor: FsColors.base.background,
+    borderBottom: `1px solid ${FsColors.base.border}`,
 
     '&:last-child': {
       borderBottom: 'none',
@@ -73,14 +73,14 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
 
   [`& .${MUI_NAME}-name`]: {
     ...theme.typography.subtitle2,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     flex: 1,
     fontWeight: 400,
   },
 
     [`& .${MUI_NAME}-desc`]: {
     ...theme.typography.caption,
-      color: FsColors.light.text,
+      color: FsColors.base.text,
     flex: 1,
     paddingLeft: theme.spacing(1.5),
     fontWeight: 400,
@@ -92,6 +92,6 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    color: FsColors.light.text,
+    color: FsColors.base.text,
   },
 }));

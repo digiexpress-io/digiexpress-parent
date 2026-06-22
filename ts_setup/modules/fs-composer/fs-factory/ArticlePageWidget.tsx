@@ -18,7 +18,7 @@ export const ArticlePageWidget: DirentWidget = {
     }
   },
   colors: {
-    dirent: FsColors.direntTypes.light.page
+    dirent: FsColors.direntTypes.page
   },
   classNames: {
     dirent: '',

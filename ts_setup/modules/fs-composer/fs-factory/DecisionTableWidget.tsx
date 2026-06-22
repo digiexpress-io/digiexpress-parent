@@ -22,7 +22,7 @@ export const DecisionTableWidget: DirentWidget = {
     }
   },
   colors: {
-    dirent: FsColors.direntTypes.light.service
+    dirent: FsColors.direntTypes.service
   },
   classNames: {
     dirent: '',

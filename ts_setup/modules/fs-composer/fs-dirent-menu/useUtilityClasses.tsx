@@ -55,16 +55,15 @@ export const FsDirentMenuRoot = styled(Popover, {
   slot: 'Root',
   shouldForwardProp: (prop) => !['isSubmenuOpen', 'shouldExpandUpward'].includes(prop as string),
 })<{ isSubmenuOpen?: boolean; shouldExpandUpward?: boolean }>(({ theme, isSubmenuOpen }) => {
-  const colors = FsColors.light;
-  const dangerColor = FsColors.semantic.dangerLight;
-  const warningColor = FsColors.semantic.warningLight;
-  const activeColor = FsColors.light.border;
-  const borderColor = darken(colors.border, 0.15);
+  const dangerColor = FsColors.semantic.danger;
+  const warningColor = FsColors.semantic.warning;
+  const activeColor = FsColors.base.border;
+  const borderColor = darken(FsColors.base.border, 0.15);
 
   return {
     '& .MuiPaper-root': {
-      backgroundColor: darken(colors.surface, 0.06),
-      color: colors.text,
+      backgroundColor: darken(FsColors.base.surface, 0.06),
+      color: FsColors.base.text,
       border: `1px solid ${borderColor}`,
       minWidth: MENU_WIDTH,
       width: isSubmenuOpen ? MENU_WIDTH_EXTENDED : 'auto',
@@ -83,10 +82,10 @@ export const FsDirentMenuRoot = styled(Popover, {
       alignItems: 'center',
       gap: theme.spacing(1),
       '&:hover': {
-        backgroundColor: colors.border,
+        backgroundColor: FsColors.base.border,
       },
       '& .MuiSvgIcon-root': {
-        color: colors.text,
+        color: FsColors.base.text,
         fontSize: '16px',
       },
     },
@@ -98,10 +97,10 @@ export const FsDirentMenuRoot = styled(Popover, {
       gap: theme.spacing(1),
       backgroundColor: activeColor,
       '&:hover': {
-        backgroundColor: colors.border,
+        backgroundColor: FsColors.base.border,
       },
       '& .MuiSvgIcon-root': {
-        color: colors.text,
+        color: FsColors.base.text,
         fontSize: '16px',
       },
     },
@@ -113,7 +112,7 @@ export const FsDirentMenuRoot = styled(Popover, {
       alignItems: 'center',
       gap: '8px',
       '&:hover': {
-        backgroundColor: colors.border,
+        backgroundColor: FsColors.base.border,
       },
       '& .MuiSvgIcon-root': {
         color: dangerColor,
@@ -128,7 +127,7 @@ export const FsDirentMenuRoot = styled(Popover, {
       alignItems: 'center',
       gap: theme.spacing(1),
       '&:hover': {
-        backgroundColor: colors.border,
+        backgroundColor: FsColors.base.border,
       },
       '& .MuiSvgIcon-root': {
         color: warningColor,
@@ -142,10 +141,10 @@ export const FsDirentMenuRoot = styled(Popover, {
       alignItems: 'center',
       gap: theme.spacing(1),
       '&:hover': {
-        backgroundColor: colors.border,
+        backgroundColor: FsColors.base.border,
       },
       '& .MuiSvgIcon-root': {
-        color: colors.text,
+        color: FsColors.base.text,
         fontSize: '16px',
       },
     },
@@ -159,26 +158,26 @@ export const FsDirentMenuRoot = styled(Popover, {
       width: '100%',
       marginTop: theme.spacing(0.5),
       '& .MuiInputBase-root': {
-        backgroundColor: colors.background,
-        color: colors.text,
+        backgroundColor: FsColors.base.background,
+        color: FsColors.base.text,
         borderRadius: 0,
         '& fieldset': {
           borderColor: borderColor,
           borderRadius: 0,
         },
         '&:hover fieldset': {
-          borderColor: colors.textSecondary,
+          borderColor: FsColors.base.textSecondary,
         },
         '&.Mui-focused fieldset': {
-          border: `1px solid ${colors.text}`
+          border: `1px solid ${FsColors.base.text}`
         },
       },
       '& .MuiInputBase-input': {
-        color: colors.text,
+        color: FsColors.base.text,
         ...theme.typography.caption,
         padding: '8px 12px',
         '&::placeholder': {
-          color: colors.textSecondary,
+          color: FsColors.base.textSecondary,
           opacity: 1,
           ...theme.typography.caption,
         },
@@ -187,14 +186,14 @@ export const FsDirentMenuRoot = styled(Popover, {
         padding: 'unset',
       },
       '& .MuiInputLabel-root': {
-        color: colors.text,
+        color: FsColors.base.text,
         ...theme.typography.caption,
       },
     },
 
     [`& .${MUI_NAME}-label`]: {
-      backgroundColor: colors.border,
-      color: colors.text,
+      backgroundColor: FsColors.base.border,
+      color: FsColors.base.text,
       fontSize: '10px',
       height: '18px',
       border: `1px solid ${borderColor}`,
@@ -210,7 +209,7 @@ export const FsDirentMenuRoot = styled(Popover, {
     [`& .${MUI_NAME}-expandedContent`]: {
       padding: theme.spacing(0, 2, 1, 2),
       '& .MuiTypography-body2': {
-        color: colors.textSecondary,
+        color: FsColors.base.textSecondary,
         fontStyle: 'italic',
       },
     },

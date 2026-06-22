@@ -43,7 +43,7 @@ export const FsPanelChangesRoot = styled('div', {
   flexDirection: 'column',
 
   [`& .${MUI_NAME}-changeRow:nth-of-type(odd)`]: {
-    backgroundColor: FsColors.light.surface,
+    backgroundColor: FsColors.base.surface,
   },
 
   [`& .${MUI_NAME}-changeRow`]: {
@@ -53,32 +53,32 @@ export const FsPanelChangesRoot = styled('div', {
     paddingLeft: theme.spacing(1),
     paddingBottom: theme.spacing(0.5),
     paddingTop: theme.spacing(0.5),
-    backgroundColor: FsColors.light.background,
-    borderBottom: `1px solid ${FsColors.light.border}`,
+    backgroundColor: FsColors.base.background,
+    borderBottom: `1px solid ${FsColors.base.border}`,
   },
 
   [`& .${MUI_NAME}-assetTitle`]: {
     ...theme.typography.subtitle2,
     fontWeight: 'bold',
-    color: FsColors.light.text,
+    color: FsColors.base.text,
   },
 
   [`& .${MUI_NAME}-assetPath`]: {
     ...theme.typography.caption,
-    color: FsColors.light.textSecondary,
+    color: FsColors.base.textSecondary,
   },
 
   [`& .${MUI_NAME}-assetName`]: {
     fontWeight: 500,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     flex: 1,
     ...theme.typography.subtitle2
   },
 
   [`& .${MUI_NAME}-undoButton`]: {
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     '&:hover': {
-      backgroundColor: FsColors.light.surface
+      backgroundColor: FsColors.base.surface
     }
   },
 

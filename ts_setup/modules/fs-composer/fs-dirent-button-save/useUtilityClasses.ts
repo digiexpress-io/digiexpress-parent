@@ -73,9 +73,9 @@ export const FsDirentButtonOpenRoot = styled(Button, {
   slot: 'OpenRoot',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
-  backgroundColor: alpha(FsColors.direntTypes.light.form, 0.1),
-  color: FsColors.direntTypes.light.form,
-  border: `1px solid ${alpha(FsColors.direntTypes.light.form, 0.3)}`,
+  backgroundColor: alpha(FsColors.direntTypes.form, 0.1),
+  color: FsColors.direntTypes.form,
+  border: `1px solid ${alpha(FsColors.direntTypes.form, 0.3)}`,
   borderRadius: theme.spacing(0.5),
   minWidth: '13ch',
   alignSelf: 'flex-start',
@@ -87,6 +87,6 @@ export const FsDirentButtonOpenRoot = styled(Button, {
   opacity: ownerState.disabled ? 0.4 : 1,
   '&:hover': {
     boxShadow: 'none',
-    backgroundColor: ownerState.disabled ? alpha(FsColors.direntTypes.light.form, 0.1) : alpha(FsColors.direntTypes.light.form, 0.2),
+    backgroundColor: ownerState.disabled ? alpha(FsColors.direntTypes.form, 0.1) : alpha(FsColors.direntTypes.form, 0.2),
   },
 }));

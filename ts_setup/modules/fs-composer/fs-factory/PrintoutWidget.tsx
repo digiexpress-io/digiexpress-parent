@@ -17,7 +17,7 @@ export const PrintoutWidget: DirentWidget = {
     }
   },
   colors: {
-    dirent: FsColors.direntTypes.light.printout
+    dirent: FsColors.direntTypes.printout
   },
   classNames: {
     dirent: '',

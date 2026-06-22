@@ -35,23 +35,23 @@ export const FsTabRoot = styled('div', {
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
 
-  const borderColor = FsColors.light.border;
+  const borderColor = FsColors.base.border;
   
   return {
     height: 35,
     display: 'flex',
-    borderBottom: `1px solid ${FsColors.light.border}`,
+    borderBottom: `1px solid ${FsColors.base.border}`,
     width: '100%',
     overflowX: 'auto',
 
     [`& .${MUI_NAME}-tabActive`]: {
-      backgroundColor: FsColors.light.background,
-      borderBottom: `1px solid ${FsColors.light.background}`,
+      backgroundColor: FsColors.base.background,
+      borderBottom: `1px solid ${FsColors.base.background}`,
       marginBottom: '-1px'
     },
 
     [`& .${MUI_NAME}-tabInactive`]: {
-      backgroundColor: FsColors.light.surface,
+      backgroundColor: FsColors.base.surface,
       borderBottom: 'none',
       marginBottom: 0
     },
@@ -74,7 +74,7 @@ export const FsTabRoot = styled('div', {
       minWidth: 0,
       display: 'flex',
       alignItems: 'center',
-      color: FsColors.light.text,
+      color: FsColors.base.text,
     },
 
     [`& .${MUI_NAME}-tabTypography .MuiTypography-root`]: {
@@ -86,7 +86,7 @@ export const FsTabRoot = styled('div', {
 
     [`& .${MUI_NAME}-tabError .${MUI_NAME}-tabTypography`]: {
       fontWeight: 500,
-      color: FsColors.semantic.dangerLight,
+      color: FsColors.semantic.danger,
     },
 
     [`& .MuiIconButton-root`]: {

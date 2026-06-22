@@ -26,13 +26,13 @@ export const FsDirentTextFieldRoot = styled('div', {
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
-  const dangerColor = FsColors.semantic.dangerLight;
-  const borderColor = FsColors.light.border;
-  const hoverColor = FsColors.light.textSecondary;
-  const focusColor = FsColors.light.text;
-  const textColor = FsColors.light.text;
-  const bgColor = FsColors.light.background;
-  const placeholderColor = FsColors.light.textSecondary;
+  const dangerColor = FsColors.semantic.danger;
+  const borderColor = FsColors.base.border;
+  const hoverColor = FsColors.base.textSecondary;
+  const focusColor = FsColors.base.text;
+  const textColor = FsColors.base.text;
+  const bgColor = FsColors.base.background;
+  const placeholderColor = FsColors.base.textSecondary;
 
   const activeBorderColor  = ownerState.showRequiredError ? dangerColor : borderColor;
   const activeHoverColor   = ownerState.showRequiredError ? dangerColor : hoverColor;

@@ -23,5 +23,5 @@ export const FsDiffIndicatorRoot = styled('span', {
 })(() => ({
   display: 'inline-flex',
   alignItems: 'center',
-  color: FsColors.semantic.warningLight,
+  color: FsColors.semantic.warning,
 }));

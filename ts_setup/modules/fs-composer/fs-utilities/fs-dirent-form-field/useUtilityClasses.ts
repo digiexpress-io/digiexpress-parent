@@ -42,11 +42,11 @@ export const FsDirentFormFieldRoot = styled('div', {
   [`& .${MUI_NAME}-label`]: {
     ...theme.typography.subtitle2,
     fontWeight: 500,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
   },
 
   [`& .${MUI_NAME}-helperText`]: {
     ...theme.typography.caption,
-    color: FsColors.light.textSecondary,
+    color: FsColors.base.textSecondary,
   },
 }));

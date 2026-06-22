@@ -43,7 +43,7 @@ export const FsSearchRoot = styled('div', {
     padding: theme.spacing(1),
     flexDirection: 'column',
     gap: theme.spacing(1),
-    backgroundColor: FsColors.light.surface,
+    backgroundColor: FsColors.base.surface,
   },
 
   [`& .${MUI_NAME}-searchField`]: {
@@ -52,22 +52,22 @@ export const FsSearchRoot = styled('div', {
     '& .MuiInputBase-root': {
       borderRadius: 0,
       backgroundColor: theme.palette.background.paper,
-      color: FsColors.light.text,
+      color: FsColors.base.text,
     },
 
     '& .MuiInputBase-input': {
       padding: theme.spacing(1),
       ...theme.typography.subtitle2,
-      color: FsColors.light.text,
+      color: FsColors.base.text,
     },
 
     '& fieldset': {
-      borderColor: FsColors.light.border,
+      borderColor: FsColors.base.border,
       borderRadius: 0,
     },
 
     '&:hover fieldset': {
-      borderColor: FsColors.light.text,
+      borderColor: FsColors.base.text,
     },
 
     '&.Mui-focused fieldset': {
@@ -87,7 +87,7 @@ export const FsSearchRoot = styled('div', {
     '& .MuiInputBase-input': {
       padding: theme.spacing(1),
       ...theme.typography.subtitle2,
-      color: FsColors.light.text,
+      color: FsColors.base.text,
     },
 
     '& .MuiOutlinedInput-root': {
@@ -95,11 +95,11 @@ export const FsSearchRoot = styled('div', {
     },
 
     '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: FsColors.light.border,
+      borderColor: FsColors.base.border,
     },
 
     '&:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: FsColors.light.text,
+      borderColor: FsColors.base.text,
     },
 
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
@@ -108,7 +108,7 @@ export const FsSearchRoot = styled('div', {
     },
 
     '& .MuiSvgIcon-root': {
-      color: FsColors.light.text,
+      color: FsColors.base.text,
     },
   },
 
@@ -124,6 +124,6 @@ export const FsSearchRoot = styled('div', {
   },
 
   '& .MuiDivider-root': {
-    borderColor: FsColors.light.border,
+    borderColor: FsColors.base.border,
   },
 }));

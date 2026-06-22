@@ -50,7 +50,7 @@ export const FsDirentArticleLinkRoot = styled('div', {
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.body1,
     fontWeight: 500,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     marginBottom: theme.spacing(2)
   },
 
@@ -62,25 +62,25 @@ export const FsDirentArticleLinkRoot = styled('div', {
   [`& .${MUI_NAME}-localeLabel`]: {
     ...theme.typography.subtitle2,
     fontWeight: 500,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
   },
 
   [`& .${MUI_NAME}-sectionTitle`]: {
     ...theme.typography.subtitle2,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     display: 'block',
   },
 
   [`& .${MUI_NAME}-sectionBox`]: {
-    backgroundColor: FsColors.light.border,
-    border: `1px solid ${FsColors.light.textSecondary}`,
+    backgroundColor: FsColors.base.border,
+    border: `1px solid ${FsColors.base.textSecondary}`,
     borderRadius: '4px',
     marginTop: '0px !important',
   },
 
   [`& .${MUI_NAME}-sectionContent`]: {
     ...theme.typography.subtitle2,
-    color: FsColors.light.textSecondary,
+    color: FsColors.base.textSecondary,
   },
 
 

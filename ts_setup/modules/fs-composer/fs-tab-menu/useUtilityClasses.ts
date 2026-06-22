@@ -24,13 +24,13 @@ export const FsTabMenuRoot = styled(Popover, {
   name: MUI_NAME,
   slot: 'Root',
 })(({ theme }) => {
-  const colors = FsColors.light;
-  const borderColor = darken(colors.border, 0.15);
+
+  const borderColor = darken(FsColors.base.border, 0.15);
 
   return {
     '& .MuiPaper-root': {
-      backgroundColor: darken(colors.surface, 0.06),
-      color: colors.text,
+      backgroundColor: darken(FsColors.base.surface, 0.06),
+      color: FsColors.base.text,
       border: `1px solid ${borderColor}`,
       padding: theme.spacing(0.5),
     },
@@ -40,10 +40,10 @@ export const FsTabMenuRoot = styled(Popover, {
       alignItems: 'center',
       gap: theme.spacing(1),
       '&:hover': {
-        backgroundColor: colors.border,
+        backgroundColor: FsColors.base.border,
       },
       '& .MuiSvgIcon-root': {
-        color: colors.text,
+        color: FsColors.base.text,
         fontSize: '16px',
       },
     },

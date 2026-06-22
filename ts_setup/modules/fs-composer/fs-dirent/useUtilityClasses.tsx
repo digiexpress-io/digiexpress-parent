@@ -46,16 +46,16 @@ export const FsDirentRoot = styled(ListItem, {
     paddingLeft: theme.spacing(ownerState.level * 1.2),
     cursor: 'pointer',
     '&:hover': {
-      backgroundColor: FsColors.light.surface,
+      backgroundColor: FsColors.base.surface,
     },
     '&.active': {
       backgroundColor: alpha(FsColors.semantic.primary, 0.1),
       outline: `1px solid ${alpha(FsColors.semantic.primary, 0.5)}`,
     },
     '&.error': {
-      backgroundColor: alpha(FsColors.semantic.dangerLight, 0.1),
+      backgroundColor: alpha(FsColors.semantic.danger, 0.1),
       '&:hover': {
-        backgroundColor: alpha(FsColors.semantic.dangerLight, 0.2),
+        backgroundColor: alpha(FsColors.semantic.danger, 0.2),
       },
     },
 
@@ -69,12 +69,12 @@ export const FsDirentRoot = styled(ListItem, {
     },
     [`& .${MUI_NAME}-iconExpand`]: {
       fontSize: '15px',
-      color: FsColors.light.textSecondary,
+      color: FsColors.base.textSecondary,
     },
 
     [`& .${MUI_NAME}-iconConfig`]: {
       fontSize: '14px',
-      color: FsColors.light.text,
+      color: FsColors.base.text,
     },
 
     [`& .${MUI_NAME}-explorerDirentContent`]: {

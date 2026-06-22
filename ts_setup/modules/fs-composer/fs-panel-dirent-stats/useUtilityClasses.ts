@@ -67,7 +67,7 @@ export const FsPanelDirentStatsRoot = styled('div', {
     justifyContent: 'space-between',
     cursor: 'pointer',
     userSelect: 'none',
-    borderBottom: `1px solid ${FsColors.light.border}`,
+    borderBottom: `1px solid ${FsColors.base.border}`,
   },
 
   [`& .${MUI_NAME}-sectionExpandIconOpen`]: {
@@ -86,19 +86,19 @@ export const FsPanelDirentStatsRoot = styled('div', {
     ...theme.typography.caption,
     fontWeight: 600,
     textTransform: 'uppercase',
-    color: FsColors.light.textSecondary,
+    color: FsColors.base.textSecondary,
     padding: theme.spacing(0.75, 1.5),
   },
 
   [`& .${MUI_NAME}-section`]: {
     display: 'flex',
     flexDirection: 'column',
-    borderLeft: `1px solid ${FsColors.light.border}`,
-    borderRight: `1px solid ${FsColors.light.border}`,
-    borderBottom: `1px solid ${FsColors.light.border}`,
+    borderLeft: `1px solid ${FsColors.base.border}`,
+    borderRight: `1px solid ${FsColors.base.border}`,
+    borderBottom: `1px solid ${FsColors.base.border}`,
 
     '& > div:nth-of-type(odd)': {
-      backgroundColor: FsColors.light.surface,
+      backgroundColor: FsColors.base.surface,
     },
   },
 
@@ -106,8 +106,8 @@ export const FsPanelDirentStatsRoot = styled('div', {
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0.75, 1.5),
-    backgroundColor: FsColors.light.background,
-    borderBottom: `1px solid ${FsColors.light.border}`,
+    backgroundColor: FsColors.base.background,
+    borderBottom: `1px solid ${FsColors.base.border}`,
 
     '&:last-child': {
       borderBottom: 'none',
@@ -116,12 +116,12 @@ export const FsPanelDirentStatsRoot = styled('div', {
 
   [`& .${MUI_NAME}-label`]: {
     ...theme.typography.subtitle2,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     flex: 1,
   },
 
   [`& .${MUI_NAME}-value`]: {
-    color: FsColors.light.textSecondary,
+    color: FsColors.base.textSecondary,
     ...theme.typography.subtitle2,
     fontWeight: 500
   },
@@ -129,22 +129,22 @@ export const FsPanelDirentStatsRoot = styled('div', {
   [`& .${MUI_NAME}-groupTitle`]: {
     ...theme.typography.subtitle2,
     fontWeight: 500,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     padding: theme.spacing(0.5, 1.5),
-    backgroundColor: FsColors.light.surface,
-    borderBottom: `1px solid ${FsColors.light.border}`,
+    backgroundColor: FsColors.base.surface,
+    borderBottom: `1px solid ${FsColors.base.border}`,
   },
 
   [`& .${MUI_NAME}-assetTypeChip`]: {
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     ...theme.typography.subtitle2,
   },
 
   [`& .${MUI_NAME}-groupItem`]: {
     ...theme.typography.subtitle2,
-    color: FsColors.light.textSecondary,
+    color: FsColors.base.textSecondary,
     padding: theme.spacing(0.25, 3),
-    borderBottom: `1px solid ${FsColors.light.border}`,
+    borderBottom: `1px solid ${FsColors.base.border}`,
 
     '&:last-child': {
       borderBottom: 'none',

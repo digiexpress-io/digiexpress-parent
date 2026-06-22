@@ -47,32 +47,32 @@ export const FsDirentCommentsRoot = styled('div', {
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.caption,
     fontWeight: 500,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
   },
 
   [`& .${MUI_NAME}-textField`]: {
     width: '100%',
     marginTop: theme.spacing(0.5),
     '& .MuiInputBase-root': {
-      backgroundColor: FsColors.light.background,
-      color: FsColors.light.text,
+      backgroundColor: FsColors.base.background,
+      color: FsColors.base.text,
       borderRadius: 0,
       '& fieldset': {
-        borderColor: FsColors.light.border,
+        borderColor: FsColors.base.border,
         borderRadius: 0,
       },
       '&:hover fieldset': {
-        borderColor: FsColors.light.textSecondary,
+        borderColor: FsColors.base.textSecondary,
       },
       '&.Mui-focused fieldset': {
-        border: `1px solid ${FsColors.light.text}`
+        border: `1px solid ${FsColors.base.text}`
       },
     },
     '& .MuiInputBase-input': {
-      color: FsColors.light.text,
+      color: FsColors.base.text,
       ...theme.typography.caption,
       '&::placeholder': {
-        color: FsColors.light.textSecondary,
+        color: FsColors.base.textSecondary,
         opacity: 1,
         ...theme.typography.caption,
       },
@@ -81,7 +81,7 @@ export const FsDirentCommentsRoot = styled('div', {
       padding: 'unset',
     },
     '& .MuiInputLabel-root': {
-      color: FsColors.light.text,
+      color: FsColors.base.text,
       ...theme.typography.caption,
     },
   },
@@ -97,7 +97,7 @@ export const FsDirentCommentsRoot = styled('div', {
 
   [`& .${MUI_NAME}-noComments`]: {
     ...theme.typography.caption,
-    color: FsColors.light.textSecondary,
+    color: FsColors.base.textSecondary,
     fontStyle: 'italic',
   },
 
@@ -108,12 +108,12 @@ export const FsDirentCommentsRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-divider`]: {
-    borderColor: FsColors.light.border,
+    borderColor: FsColors.base.border,
   },
 
   [`& .${MUI_NAME}-commentContent`]: {
     ...theme.typography.caption,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
   },
 
   [`& .${MUI_NAME}-commentMeta`]: {
@@ -122,7 +122,7 @@ export const FsDirentCommentsRoot = styled('div', {
 
     '& .MuiTypography-root': {
       ...theme.typography.caption,
-      color: FsColors.light.textSecondary,
+      color: FsColors.base.textSecondary,
       fontStyle: 'italic',
     },
   },

@@ -23,9 +23,9 @@ export const FsDirentButtonCancelAllRoot = styled(Button, {
   slot: 'AllRoot',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })(({ theme }) => ({
-  backgroundColor: alpha(FsColors.semantic.dangerLight, 0.1),
-  color: FsColors.semantic.dangerLight,
-  border: `1px solid ${alpha(FsColors.semantic.dangerLight, 0.5)}`,
+  backgroundColor: alpha(FsColors.semantic.danger, 0.1),
+  color: FsColors.semantic.danger,
+  border: `1px solid ${alpha(FsColors.semantic.danger, 0.5)}`,
   borderRadius: theme.spacing(0.5),
   minWidth: '13ch',
   padding: theme.spacing(0.5),
@@ -35,13 +35,13 @@ export const FsDirentButtonCancelAllRoot = styled(Button, {
   cursor: 'pointer',
   '&.Mui-disabled': {
     opacity: 0.4,
-    color: FsColors.semantic.dangerLight,
-    backgroundColor: alpha(FsColors.semantic.dangerLight, 0.1),
-    border: `1px solid ${alpha(FsColors.semantic.dangerLight, 0.5)}`,
+    color: FsColors.semantic.danger,
+    backgroundColor: alpha(FsColors.semantic.danger, 0.1),
+    border: `1px solid ${alpha(FsColors.semantic.danger, 0.5)}`,
   },
   '&:hover': {
     boxShadow: 'none',
-    backgroundColor: alpha(FsColors.semantic.dangerLight, 0.2),
+    backgroundColor: alpha(FsColors.semantic.danger, 0.2),
   },
 }));
 
@@ -51,8 +51,8 @@ export const FsDirentButtonCancelRoot = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })(({ theme }) => ({
   backgroundColor: 'transparent',
-  color: FsColors.light.text,
-  border: `1px solid ${FsColors.light.textSecondary}`,
+  color: FsColors.base.text,
+  border: `1px solid ${FsColors.base.textSecondary}`,
   borderRadius: theme.spacing(0.5),
   minWidth: '13ch',
   padding: theme.spacing(0.5),
@@ -62,6 +62,6 @@ export const FsDirentButtonCancelRoot = styled(Button, {
   cursor: 'pointer',
   '&:hover': {
     boxShadow: 'none',
-    backgroundColor: alpha(FsColors.light.text, 0.05),
+    backgroundColor: alpha(FsColors.base.text, 0.05),
   },
 }));

@@ -5,31 +5,28 @@
 
 export const FsColors = {
   // Base theme colors
-  light: {
+  base: {
     background: '#ffffff',     // Main light background
     surface: '#f5f5f5',        // Cards, title bars, elevated surfaces (also used for hover)
     border: '#e0e0e0',         // Dividers, borders
     text: '#333333',           // Primary text and icons
     textSecondary: '#666666',  // Secondary text, icons (also used for borderHover)
-    textMuted: '#6a9955',      // Description text (shared with dark theme)
   },
 
   // Semantic accent colors
-  semantic: {
-    dangerLight: '#ae0e0e',    // Dark red for light backgrounds (9.3:1 contrast)
-    warning: '#ffa500',        // Lock states, warnings (dark theme)
-    warningLight: '#ff8c00',   // Lock states, warnings (light theme) - changed from red to orange
-    success: '#228b22',        // Success states, links (also used for link icons in light theme)
-    info: '#9cdcfe',           // Information, dialob forms (also used for form icons in dark theme)
-    primary: '#4ec9b0',        // Primary actions, services (also used for service icons in dark theme)
-    secondary: '#b1f8ea',        // Primary actions, services (also used for service icons in dark theme)
+  semantic: { 
+    danger: '#ae0e0e',         // Dark red 
+    warning: '#ff8c00',        // Lock states, warnings 
+    success: '#228b22',        // Success states, links
+    info: '#9cdcfe',           // Information, dialob forms
+    primary: '#4ec9b0',        // Primary actions, services 
+    secondary: '#b1f8ea',      // Primary actions, services 
     active: '#4c4b4b',         // Active menu item background
-    highlightLight: '#eaea25', // Search result text highlighting
+    highlight: '#eaea25',      // Search result text highlighting
   },
 
   // Dirent type colors - ultra-consolidated
   direntTypes: {
-    light: {
       folder: '#333333',       // Dark gray for containers (same as text)
       article: '#8b008b',      // Dark magenta for content (articles and flows merged)
       service: '#1f5f3f',      // Dark green for services/systems
@@ -42,16 +39,7 @@ export const FsColors = {
       asset: '#663399',        // Dark purple for assets/images - changed from red
       phone: '#880e4f',        // Dark rose for phone numbers
       page: '#00838f',         // Dark cyan for pages (localised markdown content)
-    }
+
   }
 } as const;
 
-// =============================================================================
-// HELPER FUNCTIONS
-// =============================================================================
-
-
-
-export function getThemeColors() {
-  return FsColors.light;
-}

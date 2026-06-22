@@ -69,8 +69,8 @@ export const FsPanelErrorsRoot = styled('div', {
 
   [`& .${MUI_NAME}-errorSummary`]: {
     padding: theme.spacing(1),
-    backgroundColor: FsColors.light.surface,
-    border: `1px solid ${FsColors.light.border}`,
+    backgroundColor: FsColors.base.surface,
+    border: `1px solid ${FsColors.base.border}`,
   },
 
   [`& .${MUI_NAME}-summaryTitle`]: {
@@ -89,15 +89,15 @@ export const FsPanelErrorsRoot = styled('div', {
     flexDirection: 'column',
     alignItems: 'center',
     padding: theme.spacing(1),
-    backgroundColor: FsColors.light.surface,
+    backgroundColor: FsColors.base.surface,
   },
 
   [`& .${MUI_NAME}-statItemError`]: {
-    border: `1px solid ${FsColors.semantic.dangerLight}`,
+    border: `1px solid ${FsColors.semantic.danger}`,
   },
 
   [`& .${MUI_NAME}-statItemWarning`]: {
-    border: `1px solid ${FsColors.semantic.warningLight}`,
+    border: `1px solid ${FsColors.semantic.warning}`,
   },
 
   [`& .${MUI_NAME}-statCount`]: {
@@ -120,16 +120,16 @@ export const FsPanelErrorsRoot = styled('div', {
   [`& .${MUI_NAME}-errorCard`]: {
     padding: theme.spacing(1),
     marginTop: theme.spacing(1),
-    backgroundColor: FsColors.light.background,
-    border: `1px solid ${FsColors.light.border}`,
+    backgroundColor: FsColors.base.background,
+    border: `1px solid ${FsColors.base.border}`,
   },
 
   [`& .${MUI_NAME}-errorCardError`]: {
-    borderLeft: `4px solid ${FsColors.semantic.dangerLight}`,
+    borderLeft: `4px solid ${FsColors.semantic.danger}`,
   },
 
   [`& .${MUI_NAME}-errorCardWarning`]: {
-    borderLeft: `4px solid ${FsColors.semantic.warningLight}`,
+    borderLeft: `4px solid ${FsColors.semantic.warning}`,
   },
 
   [`& .${MUI_NAME}-errorHeader`]: {
@@ -150,12 +150,12 @@ export const FsPanelErrorsRoot = styled('div', {
 
   [`& .${MUI_NAME}-errorTimestamp`]: {
     ...theme.typography.caption,
-    color: FsColors.light.textSecondary,
+    color: FsColors.base.textSecondary,
   },
 
   [`& .${MUI_NAME}-errorDescription`]: {
     ...theme.typography.subtitle2,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     marginBottom: theme.spacing(1),
   },
 }));

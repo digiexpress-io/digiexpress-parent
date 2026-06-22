@@ -32,8 +32,8 @@ export const FsDirentTextFieldAutocompleteRoot = styled('div', {
     marginBottom: '0 !important',
   },
   '& .MuiOutlinedInput-root': {
-    backgroundColor: FsColors.light.background,
-    color: FsColors.light.text,
+    backgroundColor: FsColors.base.background,
+    color: FsColors.base.text,
     borderRadius: 0,
     minHeight: '50px',
     display: 'flex',
@@ -41,32 +41,32 @@ export const FsDirentTextFieldAutocompleteRoot = styled('div', {
     padding: theme.spacing(1),
 
     '& fieldset': {
-      borderColor: FsColors.light.border,
+      borderColor: FsColors.base.border,
       borderRadius: 0,
     },
     '&:hover fieldset': {
-      borderColor: FsColors.light.textSecondary,
+      borderColor: FsColors.base.textSecondary,
     },
     '&.Mui-focused fieldset': {
-      border: `1px solid ${FsColors.light.text}`,
+      border: `1px solid ${FsColors.base.text}`,
     },
   },
 
   '& .MuiInputBase-input': {
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     ...theme.typography.caption,
     padding: theme.spacing(1),
     '&::placeholder': {
-      color: FsColors.light.textSecondary,
+      color: FsColors.base.textSecondary,
       opacity: 1,
     },
   },
   '& .MuiChip-root': {
-    backgroundColor: FsColors.light.border,
-    color: FsColors.light.text,
+    backgroundColor: FsColors.base.border,
+    color: FsColors.base.text,
     ...theme.typography.caption,
     '& .MuiChip-deleteIcon': {
-      color: FsColors.light.textSecondary,
+      color: FsColors.base.textSecondary,
     },
   },
 }));

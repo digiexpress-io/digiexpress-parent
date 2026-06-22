@@ -44,7 +44,7 @@ export const FsDirentDialobRoot = styled('div', {
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.body1,
     fontWeight: 500,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
   },
 
   [`& .${MUI_NAME}-formContainer`]: {
@@ -57,7 +57,7 @@ export const FsDirentDialobRoot = styled('div', {
   [`& .${MUI_NAME}-label`]: {
     ...theme.typography.subtitle2,
     fontWeight: 500,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
   },
 
 

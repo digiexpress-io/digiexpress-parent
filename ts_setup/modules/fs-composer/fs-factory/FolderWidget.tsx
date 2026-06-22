@@ -22,7 +22,7 @@ export const FolderWidget: DirentWidget = {
     }
   },
   colors: {
-    dirent: FsColors.direntTypes.light.folder
+    dirent: FsColors.direntTypes.folder
   },
   classNames: {
     dirent: '',

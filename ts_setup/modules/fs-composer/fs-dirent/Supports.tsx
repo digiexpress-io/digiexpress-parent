@@ -48,7 +48,7 @@ export const DirentDecorator = (props: { dirent: Fs.DirentBase, children: React.
 
   if ((direntEntry?.props?.errors.length ?? 0) > 0) {
     return (
-      <Box display='flex' alignItems='center' sx={{ color: FsColors.semantic.dangerLight }}>
+      <Box display='flex' alignItems='center' sx={{ color: FsColors.semantic.danger }}>
         {children}
       </Box>
     );
@@ -62,7 +62,7 @@ export const DirentDecorator = (props: { dirent: Fs.DirentBase, children: React.
         }}
         sx={{
           '& .MuiBadge-dot': {
-            backgroundColor: FsColors.semantic.dangerLight,
+            backgroundColor: FsColors.semantic.danger,
             width: 6,
             height: 6,
           },
@@ -104,7 +104,7 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   return (
     <ListItemText className={classes.direntName} primary={<Typography variant='subtitle2'
       sx={{
-        color: props.error ? FsColors.semantic.dangerLight : widget.colors.dirent,
+        color: props.error ? FsColors.semantic.danger : widget.colors.dirent,
         fontWeight: 500,
       }}
     >

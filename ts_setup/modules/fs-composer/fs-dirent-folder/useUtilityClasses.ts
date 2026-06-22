@@ -34,7 +34,7 @@ export const FsDirentFolderRoot = styled('div', {
     ...theme.typography.body1,
     fontWeight: 500,
     marginBottom: theme.spacing(2),
-    color: FsColors.light.text,
+    color: FsColors.base.text,
   },
 
   [`& .${MUI_NAME}-formContainer`]: {

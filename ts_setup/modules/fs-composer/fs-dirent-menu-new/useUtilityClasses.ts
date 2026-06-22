@@ -33,7 +33,7 @@ export const FsDirentMenuNewRoot = styled('div', {
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.subtitle2,
     fontWeight: 500,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     marginBottom: theme.spacing(1),
   },
 
@@ -42,11 +42,11 @@ export const FsDirentMenuNewRoot = styled('div', {
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     padding: theme.spacing(0.75, 1),
     cursor: 'pointer',
     '&:hover': {
-      backgroundColor: FsColors.light.border,
+      backgroundColor: FsColors.base.border,
     },
   },
 }));

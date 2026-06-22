@@ -45,7 +45,7 @@ export const FsDirentFlowTaskRoot = styled('div', {
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.body1,
     fontWeight: 500,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     marginBottom: theme.spacing(2)
   },
 

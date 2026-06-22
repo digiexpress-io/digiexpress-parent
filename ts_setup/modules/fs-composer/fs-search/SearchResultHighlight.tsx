@@ -29,7 +29,7 @@ const SearchResultHighlightRoot = styled('span', {
   slot: 'Root',
 })(() => ({
   [`& .${MUI_NAME}-highlight`]: {
-    backgroundColor: FsColors.semantic.highlightLight,
+    backgroundColor: FsColors.semantic.highlight,
     borderRadius: '2px',
     fontWeight: 'bold',
   },

@@ -35,8 +35,8 @@ export const FsPanelRoot = styled('div', {
 })(({ theme }) => ({
   flex: 1,
   height: '100%',
-  backgroundColor: darken(FsColors.light.background, 0.01),
-  color: FsColors.light.text,
+  backgroundColor: darken(FsColors.base.background, 0.01),
+  color: FsColors.base.text,
   overflow: 'auto',
 
   [`& .${MUI_NAME}-content`]: {

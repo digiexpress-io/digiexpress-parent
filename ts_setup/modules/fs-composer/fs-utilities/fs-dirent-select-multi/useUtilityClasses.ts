@@ -39,25 +39,25 @@ export const FsDirentSelectMultiRoot = styled(FormControl, {
   marginTop: 'unset !important',
 
   [`& .${MUI_NAME}-select`]: {
-    backgroundColor: FsColors.light.background,
-    color: FsColors.light.text,
+    backgroundColor: FsColors.base.background,
+    color: FsColors.base.text,
     borderRadius: 0,
     '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: FsColors.light.border,
+      borderColor: FsColors.base.border,
       borderRadius: 0,
     },
     '&:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: FsColors.light.textSecondary,
+      borderColor: FsColors.base.textSecondary,
     },
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      border: `1px solid ${FsColors.light.text}`,
+      border: `1px solid ${FsColors.base.text}`,
     },
     '& .MuiSvgIcon-root': {
-      color: FsColors.light.text,
+      color: FsColors.base.text,
     },
     '& .MuiSelect-select': {
-      backgroundColor: FsColors.light.background,
-      color: FsColors.light.text,
+      backgroundColor: FsColors.base.background,
+      color: FsColors.base.text,
       padding: theme.spacing(1.5),
       ...theme.typography.subtitle1,
     },
@@ -65,7 +65,7 @@ export const FsDirentSelectMultiRoot = styled(FormControl, {
 
   [`& .${MUI_NAME}-placeholderText`]: {
     ...theme.typography.subtitle1,
-    color: FsColors.light.textSecondary,
+    color: FsColors.base.textSecondary,
   },
 
   [`& .${MUI_NAME}-chipContainer`]: {
@@ -83,28 +83,28 @@ export const FsDirentSelectMultiRoot = styled(FormControl, {
     top: '50%',
     transform: 'translateY(-50%)',
     padding: 0,
-    color: FsColors.light.textSecondary,
+    color: FsColors.base.textSecondary,
     '&:hover': {
       backgroundColor: 'transparent',
-      color: FsColors.light.text,
+      color: FsColors.base.text,
     },
   },
 
   [`& .${MUI_NAME}-chip`]: {
-    backgroundColor: FsColors.light.border,
-    color: FsColors.light.text,
+    backgroundColor: FsColors.base.border,
+    color: FsColors.base.text,
     '&.MuiChip-root': {
-      backgroundColor: FsColors.light.border,
-      color: FsColors.light.text,
+      backgroundColor: FsColors.base.border,
+      color: FsColors.base.text,
     },
     '& .MuiChip-label': {
-      color: FsColors.light.text,
+      color: FsColors.base.text,
       ...theme.typography.caption,
     },
     '& .MuiChip-deleteIcon': {
-      color: FsColors.light.textSecondary,
+      color: FsColors.base.textSecondary,
       '&:hover': {
-        color: FsColors.light.text,
+        color: FsColors.base.text,
       },
     },
   },

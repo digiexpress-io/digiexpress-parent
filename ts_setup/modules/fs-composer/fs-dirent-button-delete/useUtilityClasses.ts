@@ -23,15 +23,15 @@ export const FsDirentButtonDeleteRoot = styled('button', {
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })(({ theme }) => ({
-  backgroundColor: alpha(FsColors.semantic.dangerLight, 0.1),
-  color: FsColors.semantic.dangerLight,
-  border: `1px solid ${alpha(FsColors.semantic.dangerLight, 0.3)}`,
+  backgroundColor: alpha(FsColors.semantic.danger, 0.1),
+  color: FsColors.semantic.danger,
+  border: `1px solid ${alpha(FsColors.semantic.danger, 0.3)}`,
   borderRadius: theme.spacing(0.5),
   minWidth: '13ch',
   padding: theme.spacing(0.5),
   ...theme.typography.subtitle2,
   cursor: 'pointer',
   '&:hover': {
-    backgroundColor: alpha(FsColors.semantic.dangerLight, 0.2),
+    backgroundColor: alpha(FsColors.semantic.danger, 0.2),
   },
 }));

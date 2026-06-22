@@ -63,18 +63,18 @@ export const FsPanelPropertiesRoot = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
-  border: `1px solid ${FsColors.light.border}`,
+  border: `1px solid ${FsColors.base.border}`,
 
   [`& > .${MUI_NAME}-propertyRow:nth-of-type(odd)`]: {
-    backgroundColor: FsColors.light.surface,
+    backgroundColor: FsColors.base.surface,
   },
 
   [`& .${MUI_NAME}-propertyRow`]: {
     display: 'flex',
     gap: theme.spacing(2),
     padding: theme.spacing(1, 1.5),
-    backgroundColor: FsColors.light.background,
-    borderBottom: `1px solid ${FsColors.light.border}`,
+    backgroundColor: FsColors.base.background,
+    borderBottom: `1px solid ${FsColors.base.border}`,
     '&:last-child': {
       borderBottom: 'none'
     },
@@ -85,7 +85,7 @@ export const FsPanelPropertiesRoot = styled('div', {
     alignContent: 'center',
     fontWeight: 500,
     textTransform: 'uppercase',
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     width: '200px',
     flexShrink: 0,
     paddingRight: theme.spacing(1.875),
@@ -94,7 +94,7 @@ export const FsPanelPropertiesRoot = styled('div', {
   [`& .${MUI_NAME}-propertyValue`]: {
     ...theme.typography.subtitle2,
     fontWeight: 400,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     flex: 1,
     wordBreak: 'break-word',
   },
@@ -115,9 +115,9 @@ export const FsPanelPropertiesRoot = styled('div', {
   [`& .${MUI_NAME}-propertyListItem`]: {
     fontWeight: 400,
     ...theme.typography.subtitle2,
-    color: FsColors.light.text,
-    backgroundColor: FsColors.light.surface,
-    border: `1px solid ${FsColors.light.border}`,
+    color: FsColors.base.text,
+    backgroundColor: FsColors.base.surface,
+    border: `1px solid ${FsColors.base.border}`,
     paddingLeft: theme.spacing(0.625),
     paddingRight: theme.spacing(0.625),
   },
@@ -125,7 +125,7 @@ export const FsPanelPropertiesRoot = styled('div', {
   [`& .${MUI_NAME}-configOptionsListItem`]: {
     fontWeight: 400,
     ...theme.typography.subtitle2,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     backgroundColor: lighten(FsColors.semantic.info, 0.5),
     border: `1px solid ${darken(FsColors.semantic.info, 0.3)}`,
     paddingLeft: theme.spacing(0.5),
@@ -188,7 +188,7 @@ export const FsPanelPropertiesRoot = styled('div', {
   [`& .${MUI_NAME}-commentText`]: {
     ...theme.typography.subtitle2,
     fontWeight: 400,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
   },
 
   [`& .${MUI_NAME}-commentMeta`]: {
@@ -198,13 +198,13 @@ export const FsPanelPropertiesRoot = styled('div', {
 
   [`& .${MUI_NAME}-commentAuthor`]: {
     ...theme.typography.caption,
-    color: FsColors.light.textSecondary,
+    color: FsColors.base.textSecondary,
     fontStyle: 'italic',
   },
 
   [`& .${MUI_NAME}-commentDate`]: {
     ...theme.typography.caption,
-    color: FsColors.light.textSecondary,
+    color: FsColors.base.textSecondary,
   },
 
   [`& .${MUI_NAME}-childPropertyLabel`]: {
@@ -212,7 +212,7 @@ export const FsPanelPropertiesRoot = styled('div', {
     alignSelf: 'flex-start',
     fontWeight: 500,
     textTransform: 'uppercase',
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     width: '120px',
     flexShrink: 0,
     paddingRight: theme.spacing(1.875),

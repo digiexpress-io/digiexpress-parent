@@ -44,9 +44,9 @@ export const FsPanelReferencesRoot = styled('div', {
   [`& .${MUI_NAME}-referencesContainer`]: {
     display: 'flex',
     flexDirection: 'column',
-    border: `1px solid ${FsColors.light.border}`,
+    border: `1px solid ${FsColors.base.border}`,
     '& > div:nth-of-type(odd)': {
-      backgroundColor: FsColors.light.surface,
+      backgroundColor: FsColors.base.surface,
     },
   },
 
@@ -54,8 +54,8 @@ export const FsPanelReferencesRoot = styled('div', {
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(1, 1.5),
-    backgroundColor: FsColors.light.background,
-    borderBottom: `1px solid ${FsColors.light.border}`,
+    backgroundColor: FsColors.base.background,
+    borderBottom: `1px solid ${FsColors.base.border}`,
     '&:last-child': {
       borderBottom: 'none',
     },
@@ -63,7 +63,7 @@ export const FsPanelReferencesRoot = styled('div', {
 
   [`& .${MUI_NAME}-referenceLocation`]: {
     ...theme.typography.subtitle2,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
   },
 
   [`& .${MUI_NAME}-childrenSection`]: {

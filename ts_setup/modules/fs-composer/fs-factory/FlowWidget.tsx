@@ -17,7 +17,7 @@ export const FlowWidget: DirentWidget = {
     }
   },
   colors: {
-    dirent: FsColors.direntTypes.light.flow
+    dirent: FsColors.direntTypes.flow
   },
   classNames: {
     dirent: '',

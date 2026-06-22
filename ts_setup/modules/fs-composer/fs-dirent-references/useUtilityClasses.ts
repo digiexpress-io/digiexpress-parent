@@ -41,18 +41,18 @@ export const FsDirentReferencesRoot = styled('div', {
 
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.caption,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     marginBottom: theme.spacing(1),
   },
 
   [`& .${MUI_NAME}-tableContainer`]: {
     display: 'flex',
     flexDirection: 'column',
-    border: `1px solid ${FsColors.light.border}`,
+    border: `1px solid ${FsColors.base.border}`,
 
     '& > div:nth-of-type(even)': {
       '& > div': {
-        backgroundColor: FsColors.light.surface,
+        backgroundColor: FsColors.base.surface,
       },
     },
   },
@@ -63,8 +63,8 @@ export const FsDirentReferencesRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-tableHeader`]: {
-    backgroundColor: FsColors.light.surface,
-    color: FsColors.light.text,
+    backgroundColor: FsColors.base.surface,
+    color: FsColors.base.text,
     fontSize: '10px',
     fontWeight: 500,
     padding: theme.spacing(0.5, 0.75),
@@ -72,8 +72,8 @@ export const FsDirentReferencesRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-tableCell`]: {
-    backgroundColor: FsColors.light.background,
-    color: FsColors.light.text,
+    backgroundColor: FsColors.base.background,
+    color: FsColors.base.text,
     fontSize: '10px',
     padding: theme.spacing(0.25, 0.75),
     flex: 1,
@@ -81,6 +81,6 @@ export const FsDirentReferencesRoot = styled('div', {
 
   [`& .${MUI_NAME}-divider`]: {
     height: '1px',
-    backgroundColor: FsColors.light.border,
+    backgroundColor: FsColors.base.border,
   },
 }));

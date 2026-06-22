@@ -49,9 +49,9 @@ export const FsDirentArticleWorkflowRoot = styled('div', {
     ...theme.typography.body1,
     fontWeight: 500,
     marginBottom: theme.spacing(2),
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     '&.MuiTypography-root': {
-      color: FsColors.light.text,
+      color: FsColors.base.text,
     },
   },
 
@@ -63,9 +63,9 @@ export const FsDirentArticleWorkflowRoot = styled('div', {
   [`& .${MUI_NAME}-localeLabel`]: {
     ...theme.typography.subtitle2,
     fontWeight: 500,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     '&.MuiTypography-root': {
-      color: FsColors.light.text,
+      color: FsColors.base.text,
     },
   },
 
@@ -77,10 +77,10 @@ export const FsDirentArticleWorkflowRoot = styled('div', {
 
   [`& .${MUI_NAME}-sectionTitle`]: {
     ...theme.typography.subtitle2,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     display: 'block',
     '&.MuiTypography-root': {
-      color: FsColors.light.text,
+      color: FsColors.base.text,
     },
   },
 

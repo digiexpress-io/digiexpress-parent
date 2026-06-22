@@ -12,8 +12,8 @@ const Main: React.FC<{}> = () => {
       display: 'flex',
       flexDirection: 'column',
       height: '100vh',
-      backgroundColor: FsColors.light.background,
-      color: FsColors.light.text
+      backgroundColor: FsColors.base.background,
+      color: FsColors.base.text
     }}>
       <FsTabs />
       <Box sx={{ flex: 1, overflow: 'hidden' }}>

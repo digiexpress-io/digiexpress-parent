@@ -28,8 +28,8 @@ export const FsDirentSelectSingleRoot = styled('div', {
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
-  const dangerColor = FsColors.semantic.dangerLight;
-  const borderColor = FsColors.light.border;
+  const dangerColor = FsColors.semantic.danger;
+  const borderColor = FsColors.base.border;
   const activeBorderColor = ownerState.showRequiredError ? dangerColor : borderColor;
 
   return {
@@ -37,8 +37,8 @@ export const FsDirentSelectSingleRoot = styled('div', {
     marginTop: 'unset !important',
 
     [`& .${MUI_NAME}-select`]: {
-      backgroundColor: FsColors.light.background,
-      color: FsColors.light.text,
+      backgroundColor: FsColors.base.background,
+      color: FsColors.base.text,
       borderRadius: 0,
       width: '100%',
 
@@ -47,17 +47,17 @@ export const FsDirentSelectSingleRoot = styled('div', {
         borderRadius: 0,
       },
       '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: ownerState.showRequiredError ? dangerColor : FsColors.light.textSecondary,
+        borderColor: ownerState.showRequiredError ? dangerColor : FsColors.base.textSecondary,
       },
       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        border: `1px solid ${ownerState.showRequiredError ? dangerColor : FsColors.light.text}`,
+        border: `1px solid ${ownerState.showRequiredError ? dangerColor : FsColors.base.text}`,
       },
       '& .MuiSvgIcon-root': {
-        color: FsColors.light.text,
+        color: FsColors.base.text,
       },
       '& .MuiSelect-select': {
-        backgroundColor: FsColors.light.background,
-        color: FsColors.light.text,
+        backgroundColor: FsColors.base.background,
+        color: FsColors.base.text,
         padding: theme.spacing(1.5),
         ...theme.typography.subtitle1,
       },

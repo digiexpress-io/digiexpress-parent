@@ -42,22 +42,22 @@ export const FsMainRoot = styled('div', {
   return {
     display: 'flex',
     height: '100vh',
-    backgroundColor: FsColors.light.background,
-    color: FsColors.light.text,
+    backgroundColor: FsColors.base.background,
+    color: FsColors.base.text,
 
     [`& .${MUI_NAME}-leftPanel`]: {
       flex: 1,
       minWidth: 0,
       padding: theme.spacing(2),
-      backgroundColor: FsColors.light.background,
-      color: FsColors.light.text,
+      backgroundColor: FsColors.base.background,
+      color: FsColors.base.text,
       overflow: 'auto'
     },
 
     [`& .${MUI_NAME}-divider`]: {
       width: '1px',
       height: '100%',
-      backgroundColor: FsColors.light.border,
+      backgroundColor: FsColors.base.border,
       flexShrink: 0
     },
 
@@ -83,8 +83,8 @@ export const FsMainRoot = styled('div', {
       display: 'flex',
       gap: theme.spacing(2),
       flexDirection: 'column',
-      backgroundColor: FsColors.light.surface,
-      borderLeft: `1px solid ${FsColors.light.border}`,
+      backgroundColor: FsColors.base.surface,
+      borderLeft: `1px solid ${FsColors.base.border}`,
       alignItems: 'center',
       flexShrink: 0
     }
@@ -111,10 +111,10 @@ export const FsToolbarButtonRoot = styled('div', {
     border: '1px solid transparent',
     '& .MuiSvgIcon-root': {
       fontSize: '1.2rem',
-      color: FsColors.light.text,
+      color: FsColors.base.text,
     },
     '&:hover': {
-      backgroundColor: FsColors.light.surface
+      backgroundColor: FsColors.base.surface
     },
 
     ...(ownerState.isSelected ? {
@@ -144,10 +144,10 @@ export const FsSaveButtonRoot = styled('div', {
 })<{ ownerState: { unsavedCount: number } }>(({ theme, ownerState }) => {
   return {
     [`& .${MUI_NAME}-toolbarSaveButton.${MUI_NAME}-toolbarButtonSelected`]: {
-      backgroundColor: FsColors.semantic.dangerLight + '26',
-      border: `1px solid ${FsColors.semantic.dangerLight}`,
+      backgroundColor: FsColors.semantic.danger + '26',
+      border: `1px solid ${FsColors.semantic.danger}`,
       '&:hover': {
-        backgroundColor: FsColors.semantic.warningLight + '40',
+        backgroundColor: FsColors.semantic.warning + '40',
       },
     },
     cursor: ownerState.unsavedCount > 0 ? 'pointer' : 'default',
@@ -162,10 +162,10 @@ export const FsSaveButtonRoot = styled('div', {
     border: '1px solid transparent',
     '& .MuiSvgIcon-root': {
       fontSize: '1.2rem',
-      color: ownerState.unsavedCount > 0 ? theme.palette.error.main : FsColors.light.text,
+      color: ownerState.unsavedCount > 0 ? theme.palette.error.main : FsColors.base.text,
     },
     '&:hover': {
-      backgroundColor: FsColors.light.surface
+      backgroundColor: FsColors.base.surface
     },
     [`& .MuiBadge-badge`]: {
       fontSize: '10px',

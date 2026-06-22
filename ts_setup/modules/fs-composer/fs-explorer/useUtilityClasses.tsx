@@ -1,6 +1,6 @@
 import composeClasses from '@mui/utils/composeClasses';
 import { generateUtilityClass, styled } from '@mui/material';
-import { getThemeColors } from '../fs-theme';
+import { FsColors } from '../fs-theme';
 
 export const MUI_NAME = 'FsExplorer';
 
@@ -36,11 +36,10 @@ export const FsExplorerRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
 })(({ theme }) => {
-  const treeThemeColors = getThemeColors();
 
   return {
     backgroundColor: theme.palette.secondary.main,
-    color: treeThemeColors.text,
+    color: FsColors.base.text,
     flex: 1,
     minHeight: 0,
     fontSize: '13px',
@@ -48,8 +47,8 @@ export const FsExplorerRoot = styled('div', {
     overflowX: 'hidden',
 
     [`& .${MUI_NAME}-title`]: {
-      borderBottom: `1px solid ${treeThemeColors.border}`,
-      backgroundColor: treeThemeColors.surface,
+      borderBottom: `1px solid ${FsColors.base.border}`,
+      backgroundColor: FsColors.base.surface,
       padding: theme.spacing(1),
       display: 'flex',
       alignItems: 'center',
@@ -57,24 +56,24 @@ export const FsExplorerRoot = styled('div', {
     },
 
     [`& .${MUI_NAME}-titleText`]: {
-      color: treeThemeColors.text,
+      color: FsColors.base.text,
       ...theme.typography.subtitle2,
       fontWeight: 500
     },
 
     [`& .${MUI_NAME}-iconDark`]: {
       size: 'small',
-      color: treeThemeColors.text,
+      color: FsColors.base.text,
     },
 
     [`& .${MUI_NAME}-iconLight`]: {
       size: 'small',
-      color: treeThemeColors.text,
+      color: FsColors.base.text,
     },
 
     [`& .${MUI_NAME}-badgeDark .MuiBadge-badge`]: {
-      backgroundColor: treeThemeColors.text,
-      color: treeThemeColors.surface,
+      backgroundColor: FsColors.base.text,
+      color: FsColors.base.surface,
       height: '10px',
       width: '10px',
       minWidth: '10px',
@@ -88,8 +87,8 @@ export const FsExplorerRoot = styled('div', {
     },
 
     [`& .${MUI_NAME}-badgeLight .MuiBadge-badge`]: {
-      backgroundColor: treeThemeColors.text,
-      color: treeThemeColors.background,
+      backgroundColor: FsColors.base.text,
+      color: FsColors.base.background,
       height: '10px',
       width: '10px',
       minWidth: '10px',
@@ -104,7 +103,7 @@ export const FsExplorerRoot = styled('div', {
 
     [`& .${MUI_NAME}-noSearchResults`]: {
       padding: theme.spacing(2),
-      color: treeThemeColors.text,
+      color: FsColors.base.text,
       ...theme.typography.subtitle2,
       fontStyle: 'italic',
       fontWeight: 500,

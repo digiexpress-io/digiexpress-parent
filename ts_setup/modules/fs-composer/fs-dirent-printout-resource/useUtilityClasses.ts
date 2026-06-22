@@ -43,7 +43,7 @@ export const FsDirentPrintoutResourceRoot = styled('div', {
 
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.body1,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     marginBottom: theme.spacing(2),
     fontWeight: 500
   },

@@ -36,7 +36,7 @@ export const FsPanelPreviewRoot = styled('div', {
 
   [`& .${MUI_NAME}-content`]: {
     ...theme.typography.body2,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
   },
 
   [`& .${MUI_NAME}-editor`]: {

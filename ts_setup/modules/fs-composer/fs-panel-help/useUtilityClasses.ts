@@ -47,53 +47,53 @@ export const FsPanelHelpRoot = styled('div', {
 })(({ theme }) => ({
 
   [`& .${MUI_NAME}-h1`]: {
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     ...theme.typography.h1
   },
 
   [`& .${MUI_NAME}-h2`]: {
-    color: FsColors.light.text,
+    color: FsColors.base.text,
    ...theme.typography.h2
   },
 
   [`& .${MUI_NAME}-h3`]: {
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     ...theme.typography.h3
   },
 
   [`& .${MUI_NAME}-h4`]: {
-    color: FsColors.light.text,
+    color: FsColors.base.text,
    ...theme.typography.h4
   },
 
   [`& .${MUI_NAME}-h5`]: {
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     ...theme.typography.h5
   },
 
   [`& .${MUI_NAME}-h6`]: {
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     ...theme.typography.h6
   },
 
   [`& .${MUI_NAME}-paragraph`]: {
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     ...theme.typography.body1
   },
 
   [`& .${MUI_NAME}-listItem`]: {
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     marginBottom: theme.spacing(0.25),
     ...theme.typography.body1
   },
 
   [`& .${MUI_NAME}-codeBlock`]: {
     ...theme.typography.subtitle2,
-    color: FsColors.light.text,
+    color: FsColors.base.text,
   },
 
   [`& .${MUI_NAME}-codeContent`]: {
-    backgroundColor: FsColors.light.surface,
+    backgroundColor: FsColors.base.surface,
     padding: theme.spacing(1),
   },
 
@@ -102,7 +102,7 @@ export const FsPanelHelpRoot = styled('div', {
     alignItems: 'center',
     gap: theme.spacing(0.5),
     marginTop: theme.spacing(0.125),
-    color: FsColors.light.text,
+    color: FsColors.base.text,
     textDecoration: 'none',
     '&:hover': {
       textDecoration: 'underline',
