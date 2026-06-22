@@ -156,7 +156,7 @@ const NewDirent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', p: 1, minWidth: 180 }}>
-      {allWidgets.map((widget) => {
+      {allWidgets.filter(w => w.meta.type !== 'FOLDER').map((widget) => {
 
         return (
           <Box key={widget.meta.type} onClick={() => handleTypeClick(widget.meta.type)}
