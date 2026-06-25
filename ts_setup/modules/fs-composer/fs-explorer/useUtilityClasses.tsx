@@ -60,6 +60,10 @@ export const FsExplorerRoot = styled('div', {
     [`& .${MUI_NAME}-icon`]: {
       size: 'small',
       color: FsColors.base.text,
+      [`&.Mui-disabled`]: {
+        opacity: 0.35,
+        color: FsColors.base.textSecondary,
+      },
     },
 
     [`& .${MUI_NAME}-badge .MuiBadge-badge`]: {
