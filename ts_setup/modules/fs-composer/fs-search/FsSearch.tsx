@@ -28,7 +28,7 @@ export const FsSearch: React.FC<FsSearchProps> = (props) => {
           />
 
           <FsDirentSelectMulti
-            options={ownerState.allAvailableTypeFilters.map(f => ({ value: f.value, label: f.label }))}
+            options={ownerState.allAvailableTypeFilters.map(f => ({ value: f.value, label: intl.formatMessage({ id: `fs.dirent.type.${f.value.toLowerCase()}` }) }))}
             value={ownerState.visibleFilters.filter(f => f.type === 'asset').map(f => f.value)}
             onChange={ownerState.handleTypeFilterSelectChange}
             placeholder={intl.formatMessage({ id: 'fs.search.filterSelect.placeholder' })}

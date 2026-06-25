@@ -28,7 +28,7 @@ export const FsDirentMenuNew: React.FC<FsDirentMenuNewProps> = (props) => {
         return (
           <MenuItem key={widget.meta.type} className={classes.listItem} onClick={() => handleTypeClick(widget.meta.type)} disableRipple>
             <widget.icons.dirent.Marker small />
-            {intl.formatMessage({ id: `fs.direntNew.type.${widget.meta.type.toLocaleLowerCase()}` })}
+            {intl.formatMessage({ id: `fs.dirent.type.${widget.meta.type.toLocaleLowerCase()}` })}
           </MenuItem>
         )
       })}

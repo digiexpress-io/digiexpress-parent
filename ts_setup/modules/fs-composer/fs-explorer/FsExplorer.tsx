@@ -133,7 +133,7 @@ const NewDirent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           >
 
             <widget.icons.dirent.Collapsed small />
-            <Typography variant='subtitle2'>{intl.formatMessage({ id: `fs.direntNew.type.${widget.meta.type.toLocaleLowerCase()}` })}</Typography>
+            <Typography variant='subtitle2'>{intl.formatMessage({ id: `fs.dirent.type.${widget.meta.type.toLocaleLowerCase()}` })}</Typography>
           </Box>
         )
       })}

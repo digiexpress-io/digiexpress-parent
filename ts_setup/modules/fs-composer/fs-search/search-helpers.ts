@@ -1,7 +1,7 @@
 import { Fs } from "@dxs-ts/fs-api";
-import { createWidget } from "../fs-factory";
+import { createWidget, allWidgets } from "../fs-factory";
 
-type AssetTypeFilter = { type: 'asset'; label: string; value: Fs.BodyType };
+type AssetTypeFilter = { type: 'asset'; value: Fs.BodyType };
 type LabelFilter = { type: 'label'; label: string; value: string };
 type FilterData = AssetTypeFilter | LabelFilter;
 
@@ -49,18 +49,6 @@ export function filterTreeDirents(
 
   return filtered;
 }
-//TODO FACTORY
-export const allAvailableTypeFilters: AssetTypeFilter[] = [
-  { type: 'asset', label: 'Articles', value: 'ARTICLE' },
-  { type: 'asset', label: 'Dialobs', value: 'DIALOB_FORM' },
-  { type: 'asset', label: 'Services', value: 'ARTICLE_WORKFLOW' },
-  { type: 'asset', label: 'Pages', value: 'FOLDER' },
-  { type: 'asset', label: 'Links', value: 'ARTICLE_LINK' },
-  { type: 'asset', label: 'Phone Numbers', value: 'UNKNOWN' },
-  { type: 'asset', label: 'Languages', value: 'LOCALE' },
-  { type: 'asset', label: 'Flows', value: 'FLOW' },
-  { type: 'asset', label: 'Printouts', value: 'PRINTOUT' },
-  { type: 'asset', label: 'Images', value: 'UNKNOWN' },
-];
+export const allAvailableTypeFilters: AssetTypeFilter[] = allWidgets.map(w => ({ type: 'asset' as const, value: w.meta.type }));
 
 export type { FilterData, AssetTypeFilter, LabelFilter };
