@@ -54,7 +54,7 @@ export const FsPanelProperties: React.FC<FsPanelPropertiesProps> = (props) => {
           </div>
         </div>
 
-<widget.views.PropertiesView direntId={dirent.id} />
+        <widget.views.PropertiesView direntId={dirent.id} />
 
       </FsPanelPropertiesRoot>
     </FsPanel>

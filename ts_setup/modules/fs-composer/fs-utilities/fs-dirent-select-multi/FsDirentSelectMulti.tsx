@@ -24,7 +24,7 @@ export const FsDirentSelectMulti: React.FC<FsDirentSelectMultiProps> = (props) =
                 return (
                   <Chip key={value}
                     className={classes.chip}
-                    label={option?.label}
+                    label={option?.label ?? value}
                     size='small'
                     onDelete={() => props.onChange((props.value ?? []).filter(v => v !== value))}
                     onMouseDown={(e) => e.stopPropagation()}
