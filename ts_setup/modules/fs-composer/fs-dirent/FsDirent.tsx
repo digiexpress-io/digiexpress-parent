@@ -60,12 +60,12 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
           disableHoverListener={!ownerState.dirent.props?.assetDescription}
           slotProps={{ popper: { modifiers: [{ name: 'offset', options: { offset: [0, -12] } }] } }}
         >
-          <span>
+          <Box className={classes.truncationWrapper}>
             <FsDirentName dirent={ownerState.dirent}
               error={ownerState.showError ? true : false}
               searchTerm={ownerState.searchTerm}
             />
-          </span>
+          </Box>
         </Tooltip>
         <ConfigOptionIcons ownerState={ownerState} />
       </Box>

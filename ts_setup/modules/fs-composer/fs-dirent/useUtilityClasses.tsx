@@ -14,6 +14,7 @@ export interface FsDirentClasses {
   iconExpand: string;
   iconConfig: string;
   direntName: string;
+  truncationWrapper: string;
 }
 
 export type FsDirentClassKey = keyof FsDirentClasses;
@@ -22,10 +23,11 @@ export const useUtilityClasses = (dirent: Fs.DirentBase) => {
   const slots = {
     root: ['root'],
     explorerDirent: ['explorerDirent'],
-    explorerDirentContent: ['explorerDirentContent'], 
+    explorerDirentContent: ['explorerDirentContent'],
     iconExpand: ['iconExpand'],
     iconConfig: ['iconConfig'],
     direntName: ['direntName'],
+    truncationWrapper: ['truncationWrapper'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return {
@@ -82,6 +84,12 @@ export const FsDirentRoot = styled(ListItem, {
       alignItems: 'center',
       width: '100%',
       overflow: 'hidden',
+    },
+
+    [`& .${MUI_NAME}-truncationWrapper`]: {
+      minWidth: 0,
+      overflow: 'hidden',
+      flex: 1,
     },
 
     [`& .${MUI_NAME}-direntName`]: {
