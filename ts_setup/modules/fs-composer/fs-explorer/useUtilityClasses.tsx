@@ -8,10 +8,8 @@ export interface FsExplorerClasses {
   root: string;
   title: string;
   titleText: string;
-  iconDark: string;
-  iconLight: string;
-  badgeDark: string;
-  badgeLight: string;
+  icon: string;
+  badge: string;
   noSearchResults: string;
 }
 
@@ -22,10 +20,8 @@ export const useUtilityClasses = () => {
     root: ['root'],
     title: ['title'],
     titleText: ['titleText'],
-    iconDark: ['iconDark'],
-    iconLight: ['iconLight'],
-    badgeDark: ['badgeDark'],
-    badgeLight: ['badgeLight'],
+    icon: ['icon'],
+    badge: ['badge'],
     noSearchResults: ['noSearchResults']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -61,32 +57,12 @@ export const FsExplorerRoot = styled('div', {
       fontWeight: 500
     },
 
-    [`& .${MUI_NAME}-iconDark`]: {
+    [`& .${MUI_NAME}-icon`]: {
       size: 'small',
       color: FsColors.base.text,
     },
 
-    [`& .${MUI_NAME}-iconLight`]: {
-      size: 'small',
-      color: FsColors.base.text,
-    },
-
-    [`& .${MUI_NAME}-badgeDark .MuiBadge-badge`]: {
-      backgroundColor: FsColors.base.text,
-      color: FsColors.base.surface,
-      height: '10px',
-      width: '10px',
-      minWidth: '10px',
-      borderRadius: '50%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '2px',
-      right: '2px',
-      bottom: '2px',
-    },
-
-    [`& .${MUI_NAME}-badgeLight .MuiBadge-badge`]: {
+    [`& .${MUI_NAME}-badge .MuiBadge-badge`]: {
       backgroundColor: FsColors.base.text,
       color: FsColors.base.background,
       height: '10px',

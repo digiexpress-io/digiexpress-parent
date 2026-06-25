@@ -1573,7 +1573,7 @@ export const en = {
   'fs.direntNew.type.article_template': 'Article Template',
   'fs.direntNew.type.article_page': 'Article page',
   'fs.direntNew.type.article_link': 'Article Link',
-  'fs.direntNew.type.dialob_form': 'Dialob',
+  'fs.direntNew.type.dialob_form': 'Dialob form',
   'fs.direntNew.type.flow': 'Flow',
   'fs.direntNew.type.flow_task': 'Flow task',
   'fs.direntNew.type.decision_table': 'Decision table',

@@ -26,8 +26,8 @@ export const FsExplorer: React.FC = () => {
           <Typography className={classes.titleText} mr={3}>{intl.formatMessage({ id: 'fs.explorer.title' })}</Typography>
           <Box flexGrow={1} />
 
-          <IconButton className={classes.iconLight} onClick={() => ownerState.setSearchExpanded(!ownerState.isSearchExpanded)}>
-            <Badge className={classes.badgeLight}
+          <IconButton className={classes.icon} onClick={() => ownerState.setSearchExpanded(!ownerState.isSearchExpanded)}>
+            <Badge className={classes.badge}
               badgeContent={ownerState.isSearchExpanded ? <FsIcon icon={FsIcons.Close} xsmall /> : undefined}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
@@ -36,8 +36,8 @@ export const FsExplorer: React.FC = () => {
           </IconButton>
 
 
-          <IconButton className={classes.iconLight} onClick={(e) => setNewFileAnchorEl(e.currentTarget)}>
-            <Badge className={classes.badgeLight} badgeContent={<FsIcon icon={FsIcons.Add} xsmall />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+          <IconButton className={classes.icon} onClick={(e) => setNewFileAnchorEl(e.currentTarget)}>
+            <Badge className={classes.badge} badgeContent={<FsIcon icon={FsIcons.Add} xsmall />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
               <FsIcon icon={FsIcons.File} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.newFile' })} />
             </Badge>
           </IconButton>
@@ -52,13 +52,13 @@ export const FsExplorer: React.FC = () => {
             <NewDirent onClose={() => setNewFileAnchorEl(null)} />
           </Popover>
 
-          <IconButton className={classes.iconLight} onClick={() => openCreateTab('FOLDER', undefined)}>
-            <Badge className={classes.badgeLight} badgeContent={<FsIcon icon={FsIcons.Add} xsmall />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+          <IconButton disabled className={classes.icon} onClick={() => openCreateTab('FOLDER', undefined)}>
+            <Badge className={classes.badge} badgeContent={<FsIcon icon={FsIcons.Add} xsmall />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
               <FsIcon icon={FsIcons.Folder} small tooltip={intl.formatMessage({ id: 'fs.explorer.tooltip.newFolder' })} />
             </Badge>
           </IconButton>
 
-          <IconButton className={classes.iconLight}
+          <IconButton className={classes.icon}
             onClick={() => ownerState.collapseAll()}
             disabled={!ownerState.isAnyDirentExpanded}
           >

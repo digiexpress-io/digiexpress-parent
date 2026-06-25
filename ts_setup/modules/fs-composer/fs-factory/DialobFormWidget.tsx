@@ -24,7 +24,7 @@ export const DialobFormWidget: DirentWidget = {
     icon: 'iconDialobForm'
   },
   meta: {
-    type: 'DIALOB_FORM_META',
+    type: 'DIALOB_FORM',
     extension: '.dialob',
     configOptions: [],
     supportedViews: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],

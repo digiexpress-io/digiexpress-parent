@@ -24,7 +24,7 @@ export const FsDirentMenuNew: React.FC<FsDirentMenuNewProps> = (props) => {
   return (
     <FsDirentMenuNewRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.direntNew.title' })}</Typography>
-      {allWidgets.map((widget) => {
+      {allWidgets.filter(w => w.meta.type !== 'FOLDER').map((widget) => {
         return (
           <MenuItem key={widget.meta.type} className={classes.listItem} onClick={() => handleTypeClick(widget.meta.type)} disableRipple>
             <widget.icons.dirent.Marker small />
