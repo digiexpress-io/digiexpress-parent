@@ -94,19 +94,19 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.edit' })}
       </MenuItem>
 
-      <MenuItem disableRipple className={dirent?.props?.locked ? classes.menuItemLocked : classes.menuItemUnlocked} onClick={handleLock}>
+      <MenuItem disableRipple disabled className={dirent?.props?.locked ? classes.menuItemLocked : classes.menuItemUnlocked} onClick={handleLock}>
         {dirent?.props?.locked ? (<FsIcon icon={FsIcons.Locked} small />) : (<FsIcon icon={FsIcons.Unlocked} small />)}
         {dirent?.props?.locked ? intl.formatMessage({ id: 'fs.direntMenu.menuItem.unlock' }) : intl.formatMessage({ id: 'fs.direntMenu.menuItem.lock' })}
       </MenuItem>
 
-      <MenuItem disableRipple className={classes.menuItem} onClick={handleDuplicate}>
+      <MenuItem disableRipple disabled className={classes.menuItem} onClick={handleDuplicate}>
         <FsIcon icon={FsIcons.Copy} small />
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.duplicate' })}
       </MenuItem>
 
       <Divider className={classes.divider} />
 
-      <MenuItem disableRipple
+      <MenuItem disableRipple disabled
         className={props.openSubmenu === 'rename' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('rename')}
       >
