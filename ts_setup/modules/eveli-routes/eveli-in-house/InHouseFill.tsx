@@ -22,7 +22,7 @@ export const InHouseFill: React.FC<InHouseFillProps> = ({ workflowName, onCancel
 
         <Box className={classes.spacer} />
 
-        <Box display='flex' justifyContent='center' gap={1}>
+        <Box className={classes.actions}>
           <Button variant='outlined' onClick={onCancel}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
           <Button variant='contained'>{intl.formatMessage({ id: 'button.startForm' })}</Button>
         </Box>

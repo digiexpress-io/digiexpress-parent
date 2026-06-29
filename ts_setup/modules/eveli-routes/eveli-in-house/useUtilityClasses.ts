@@ -8,6 +8,7 @@ export const useUtilityClasses = () => {
     root: ['root'],
     content: ['content'],
     spacer: ['spacer'],
+    actions: ['actions'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -17,7 +18,7 @@ export const InHouseFillRoot = styled(Box, {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
-    return [styles.root, styles.content, styles.spacer];
+    return [styles.root, styles.content, styles.spacer, styles.actions];
   },
 })(({ theme }) => {
   return {
@@ -26,15 +27,20 @@ export const InHouseFillRoot = styled(Box, {
     justifyContent: 'center',
     height: '90vh',
 
-    '& .EveliInHouseFill-content': {
+    [`& .${MUI_NAME}-content`]: {
       padding: theme.spacing(3),
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: theme.spacing(1),
       maxWidth: '50vw',
       boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.18)}`,
     },
-    '& .EveliInHouseFill-spacer': {
+    [`& .${MUI_NAME}-spacer`]: {
       marginBottom: theme.spacing(3),
+    },
+    [`& .${MUI_NAME}-actions`]: {
+      display: 'flex',
+      justifyContent: 'center',
+      gap: theme.spacing(1),
     },
   };
 });
