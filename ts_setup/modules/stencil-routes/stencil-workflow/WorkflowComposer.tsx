@@ -36,7 +36,8 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     anon: undefined,
     devMode: undefined,
     disabled: undefined,
-    assignable: undefined
+    assignable: undefined,
+    inHouse: undefined
   });
 
   const { flows: allFlows = [] } = useFetch('worker/rest/api/assets/wrench/flow-names.GET', {});
@@ -52,6 +53,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       anon: workflowOptions.anon,
       assignable: workflowOptions.assignable,
       disabled: workflowOptions.disabled,
+      inHouse: workflowOptions.inHouse,
       startDate: startdate ? startdate : undefined,
       endDate: enddate ? enddate : undefined,
       flowName: flowName,

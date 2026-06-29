@@ -40,15 +40,16 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
     anon: workflow.body.anon,
     devMode: workflow.body.devMode,
     disabled: workflow.body.disabled,
-    assignable: workflow.body.assignable
+    assignable: workflow.body.assignable,
+    inHouse: workflow.body.inHouse
   });
 
   const { flows: allFlows = [] } = useFetch('worker/rest/api/assets/wrench/flow-names.GET', {});
   const { allTags: allDialobTags } = useFetch('worker/rest/api/assets/dialob/tags.GET', {});
 
+  console.log("xxx", service)
 
   const handleCreate = () => {
-
     const entity: StencilApi.WorkflowMutator = {
       workflowId: workflow.id,
       value: technicalname.trim(),
@@ -57,6 +58,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
       anon: workflowOptions.anon,
       assignable: workflowOptions.assignable,
       disabled: workflowOptions.disabled,
+      inHouse: workflowOptions.inHouse,
       labels,
       startDate: startdate ? startdate : undefined,
       endDate: enddate ? enddate : undefined,

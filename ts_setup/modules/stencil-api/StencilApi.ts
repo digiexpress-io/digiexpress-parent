@@ -252,6 +252,7 @@ export declare namespace StencilApi {
       devMode?: boolean,
       disabled?: boolean,
       anon?: boolean,
+      inHouse?: boolean,
       assignable?: boolean,
       startDate?: string | undefined,
       endDate?: string | undefined,
@@ -270,6 +271,7 @@ export declare namespace StencilApi {
     devMode: boolean | undefined,
     anon: boolean | undefined,
     assignable?: boolean,
+    inHouse?: boolean,
     disabled: boolean | undefined,
     startDate?: string | undefined,
     endDate?: string | undefined,
@@ -329,6 +331,7 @@ export declare namespace StencilApi {
     anon: boolean | undefined;
     assignable?: boolean;
     disabled: boolean | undefined;
+    inHouse?: boolean,
 
     startDate?: string | undefined;
     endDate?: string | undefined;

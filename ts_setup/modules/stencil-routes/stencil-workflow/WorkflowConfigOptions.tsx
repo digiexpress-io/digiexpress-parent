@@ -11,7 +11,7 @@ interface WorkflowIntl {
   helperText: string;
 }
 
-type WorkflowFeatureType = 'DEV' | 'ANON' | 'DISABLED' | 'ASSIGNABLE' | 'NONE';
+type WorkflowFeatureType = 'DEV' | 'ANON' | 'DISABLED' | 'ASSIGNABLE' | 'IN_HOUSE' | 'NONE';
 
 const all_features: WorkflowIntl[] = [
   {
@@ -33,6 +33,11 @@ const all_features: WorkflowIntl[] = [
     value: 'ASSIGNABLE',
     label: 'services.assignableMode.label',
     helperText: 'services.assignableMode.helper'
+  },
+  {
+    value: 'IN_HOUSE',
+    label: 'services.inHouseMode.label',
+    helperText: 'services.inHouseMode.helper'
   },
   {
     value: 'NONE',
@@ -64,6 +69,9 @@ function getTypes(value: WorkflowOptions): WorkflowFeatureType[] {
     result.push('DEV');
   }
 
+  if (value.inHouse === true) {
+    result.push('IN_HOUSE');
+  }
   return result;
 }
 
@@ -73,6 +81,7 @@ export type WorkflowOptions = {
   anon: boolean | undefined,
   disabled: boolean | undefined,
   assignable: boolean | undefined,
+  inHouse: boolean | undefined
 }
 
 export const WorkflowConfigOptions: React.FC<{ onChange: (props: WorkflowOptions) => void, value: WorkflowOptions }> = ({ value, onChange }) => {
@@ -85,7 +94,8 @@ export const WorkflowConfigOptions: React.FC<{ onChange: (props: WorkflowOptions
       anon: newState.includes('ANON') ? true : undefined,
       devMode: newState.includes('DEV') ? true : undefined,
       disabled: newState.includes('DISABLED') ? true : undefined,
-      assignable: newState.includes('ASSIGNABLE') ? true : undefined
+      assignable: newState.includes('ASSIGNABLE') ? true : undefined,
+      inHouse: newState.includes('IN_HOUSE') ? true : undefined
     });
   }
   const none = getIntl('NONE');

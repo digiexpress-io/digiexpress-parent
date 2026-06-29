@@ -421,7 +421,7 @@ export declare namespace Fs {
     intlValues: Record<string, string>;
   }
 
-  export type ConfigOption = 'DEV_MODE' | 'ASSIGNABLE_MODE' | 'DISABLED_MODE' | 'ANONYMOUS_MODE' | 'AUTH_ONLY_MODE';
+  export type ConfigOption = 'DEV_MODE' | 'ASSIGNABLE_MODE' | 'DISABLED_MODE' | 'ANONYMOUS_MODE' | 'AUTH_ONLY_MODE' | 'IN_HOUSE_MODE';
 
   export interface User {
     userName: string;
