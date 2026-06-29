@@ -21,6 +21,7 @@ export const EveliFeatureMapping = {
   'CONTRACT_ENABLED': oneOf(['contract']),
   'COCKPITS_ENABLED': oneOf(['cockpits']),
   'EVELI_TREE_ENABLED': oneOf(['eveli_tree']),
+  'IN_HOUSE_ENABLED': oneOf(['in_house']),
 
   'PUBLICATION_UPDATE': notOneOf(['external-deployment']),                    
 

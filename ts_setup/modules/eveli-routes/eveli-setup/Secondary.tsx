@@ -146,6 +146,20 @@ export const Secondary: React.FC = () => {
         </EveliPermissions>
       </EveliTenantFeatureEnabled>
 
+      <EveliTenantFeatureEnabled id='IN_HOUSE_ENABLED'>
+        <EveliPermissions id='NAV_TO_IN_HOUSE'>
+          <Button startIcon={<ThumbUpAltOutlinedIcon />}
+            variant={location.pathname.endsWith('in-house') ? 'explorerActive' : 'explorerInactive'}
+            onClick={() => navigate({
+              from: '/secured/$locale',
+              to: '/secured/$locale/worker/in-house'
+            })}
+          >
+            {intl.formatMessage({ id: 'menu.inHouse' })}
+          </Button>
+        </EveliPermissions>
+      </EveliTenantFeatureEnabled>
+
 
       <EveliTenantFeatureEnabled id='QUEUES_ENABLED'>
         <EveliPermissions id='NAV_TO_TASKS_QUEUES'>

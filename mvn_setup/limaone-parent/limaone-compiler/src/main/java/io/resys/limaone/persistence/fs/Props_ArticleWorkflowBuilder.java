@@ -49,6 +49,9 @@ public class Props_ArticleWorkflowBuilder {
     if (Boolean.TRUE.equals(service.getAssignable())) {
       builder.addConfigOptions(ConfigOption.ASSIGNABLE_MODE);
     }
+    if (Boolean.TRUE.equals(service.getInHouse())) {
+      builder.addConfigOptions(ConfigOption.IN_HOUSE);
+    }
     if (Boolean.TRUE.equals(service.getDisabled())) {
       builder.addConfigOptions(ConfigOption.DISABLED_MODE);
     }

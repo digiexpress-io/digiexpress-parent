@@ -42,7 +42,9 @@ import jakarta.annotation.Nullable;
 public interface WorkflowProgram extends Program {
 
   Boolean getAssignable();
+  Boolean getInHouse();
 
+  
   String getFormId();
   String getFormName();
   String getFormTag();

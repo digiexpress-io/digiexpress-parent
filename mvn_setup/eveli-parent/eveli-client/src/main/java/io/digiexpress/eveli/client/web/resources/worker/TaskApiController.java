@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /*-
@@ -54,6 +55,7 @@ import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.spi.dialob.DialobCreateEventPublisher;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
+import io.resys.limaone.program.WorkflowProgram;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.AllArgsConstructor;
@@ -242,6 +244,19 @@ public class TaskApiController {
     final var worker = securityClient.getUser().getPrincipal();
     
     return taskClient.queryTaskDasboard().requireAnyRoles(worker.getRoles()).findAll();
+  }
+
+  
+  @GetMapping(value="/in-house")
+  public List<WorkflowProgram> findAllInhouse() {
+    
+    final var inhouse = new ArrayList<WorkflowProgram>();
+    this.envirClient.getBundle().queryWorkflows().forEach(wk -> {
+      if(wk.getInHouse()) {
+        inhouse.add(wk);
+      }
+    });
+    return inhouse;
   }
   
   

@@ -20,7 +20,8 @@ export declare namespace IamApi {
     'TAGOMI_EDIT' |
     'CONTRACT_EDIT' |
     'TASK_RETRANSFER' |
-    'COCKPITS_EDIT'
+    'COCKPITS_EDIT' |
+    'IN_HOUSE'
 
   export interface User {
     userId: string;

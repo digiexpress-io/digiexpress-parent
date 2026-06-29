@@ -122,6 +122,9 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
     if(Boolean.TRUE.equals(link.getBody().getDisabled())) {
       return result;
     }
+    if(Boolean.TRUE.equals(link.getBody().getInHouse())) {
+      return result;
+    }
     
     if(!props.isDev() && Boolean.TRUE.equals(link.getBody().getDevMode())){
       return result;

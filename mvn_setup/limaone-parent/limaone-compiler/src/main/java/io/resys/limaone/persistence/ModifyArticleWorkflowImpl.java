@@ -86,6 +86,7 @@ public class ModifyArticleWorkflowImpl extends AuthoringTemplate<ModifyArticleWo
       .devMode(props.getDevMode())
       .anon(Boolean.TRUE.equals(props.getAnon()))
       .assignable(Boolean.TRUE.equals(props.getAssignable()) ? true : null)
+      .inHouse(Boolean.TRUE.equals(props.getInHouse()) ? true : null)
       .disabled(Boolean.TRUE.equals(props.getDisabled()) ? true : null)
       .value(props.getValue())
       .startDate(props.getStartDate())

@@ -28,6 +28,7 @@ import { Route as SecuredLocaleWorkerTaskActivityIndexRouteImport } from './rout
 import { Route as SecuredLocaleWorkerQueuesIndexRouteImport } from './routes/secured.$locale.worker.queues.index'
 import { Route as SecuredLocaleWorkerMonitoringIndexRouteImport } from './routes/secured.$locale.worker.monitoring.index'
 import { Route as SecuredLocaleWorkerLedgersIndexRouteImport } from './routes/secured.$locale.worker.ledgers.index'
+import { Route as SecuredLocaleWorkerInHouseIndexRouteImport } from './routes/secured.$locale.worker.in-house.index'
 import { Route as SecuredLocaleWorkerHelpIndexRouteImport } from './routes/secured.$locale.worker.help.index'
 import { Route as SecuredLocaleWorkerFilesystemIndexRouteImport } from './routes/secured.$locale.worker.filesystem.index'
 import { Route as SecuredLocaleWorkerFeedbackIndexRouteImport } from './routes/secured.$locale.worker.feedback.index'
@@ -161,6 +162,12 @@ const SecuredLocaleWorkerLedgersIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => SecuredLocaleWorkerLedgersRoute,
+  } as any)
+const SecuredLocaleWorkerInHouseIndexRoute =
+  SecuredLocaleWorkerInHouseIndexRouteImport.update({
+    id: '/in-house/',
+    path: '/in-house/',
+    getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
 const SecuredLocaleWorkerHelpIndexRoute =
   SecuredLocaleWorkerHelpIndexRouteImport.update({
@@ -340,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
   '/secured/$locale/worker/filesystem': typeof SecuredLocaleWorkerFilesystemIndexRoute
   '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
+  '/secured/$locale/worker/in-house': typeof SecuredLocaleWorkerInHouseIndexRoute
   '/secured/$locale/worker/ledgers/': typeof SecuredLocaleWorkerLedgersIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
@@ -380,6 +388,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
   '/secured/$locale/worker/filesystem': typeof SecuredLocaleWorkerFilesystemIndexRoute
   '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
+  '/secured/$locale/worker/in-house': typeof SecuredLocaleWorkerInHouseIndexRoute
   '/secured/$locale/worker/ledgers': typeof SecuredLocaleWorkerLedgersIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
@@ -427,6 +436,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker/feedback/': typeof SecuredLocaleWorkerFeedbackIndexRoute
   '/secured/$locale/worker/filesystem/': typeof SecuredLocaleWorkerFilesystemIndexRoute
   '/secured/$locale/worker/help/': typeof SecuredLocaleWorkerHelpIndexRoute
+  '/secured/$locale/worker/in-house/': typeof SecuredLocaleWorkerInHouseIndexRoute
   '/secured/$locale/worker/ledgers/': typeof SecuredLocaleWorkerLedgersIndexRoute
   '/secured/$locale/worker/monitoring/': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues/': typeof SecuredLocaleWorkerQueuesIndexRoute
@@ -475,6 +485,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/feedback'
     | '/secured/$locale/worker/filesystem'
     | '/secured/$locale/worker/help'
+    | '/secured/$locale/worker/in-house'
     | '/secured/$locale/worker/ledgers/'
     | '/secured/$locale/worker/monitoring'
     | '/secured/$locale/worker/queues'
@@ -515,6 +526,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/feedback'
     | '/secured/$locale/worker/filesystem'
     | '/secured/$locale/worker/help'
+    | '/secured/$locale/worker/in-house'
     | '/secured/$locale/worker/ledgers'
     | '/secured/$locale/worker/monitoring'
     | '/secured/$locale/worker/queues'
@@ -561,6 +573,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/feedback/'
     | '/secured/$locale/worker/filesystem/'
     | '/secured/$locale/worker/help/'
+    | '/secured/$locale/worker/in-house/'
     | '/secured/$locale/worker/ledgers/'
     | '/secured/$locale/worker/monitoring/'
     | '/secured/$locale/worker/queues/'
@@ -721,6 +734,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/secured/$locale/worker/ledgers/'
       preLoaderRoute: typeof SecuredLocaleWorkerLedgersIndexRouteImport
       parentRoute: typeof SecuredLocaleWorkerLedgersRoute
+    }
+    '/secured/$locale/worker/in-house/': {
+      id: '/secured/$locale/worker/in-house/'
+      path: '/in-house'
+      fullPath: '/secured/$locale/worker/in-house'
+      preLoaderRoute: typeof SecuredLocaleWorkerInHouseIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/help/': {
       id: '/secured/$locale/worker/help/'
@@ -1031,6 +1051,7 @@ interface SecuredLocaleWorkerRouteChildren {
   SecuredLocaleWorkerFeedbackIndexRoute: typeof SecuredLocaleWorkerFeedbackIndexRoute
   SecuredLocaleWorkerFilesystemIndexRoute: typeof SecuredLocaleWorkerFilesystemIndexRoute
   SecuredLocaleWorkerHelpIndexRoute: typeof SecuredLocaleWorkerHelpIndexRoute
+  SecuredLocaleWorkerInHouseIndexRoute: typeof SecuredLocaleWorkerInHouseIndexRoute
   SecuredLocaleWorkerMonitoringIndexRoute: typeof SecuredLocaleWorkerMonitoringIndexRoute
   SecuredLocaleWorkerQueuesIndexRoute: typeof SecuredLocaleWorkerQueuesIndexRoute
   SecuredLocaleWorkerTaskActivityIndexRoute: typeof SecuredLocaleWorkerTaskActivityIndexRoute
@@ -1055,6 +1076,7 @@ const SecuredLocaleWorkerRouteChildren: SecuredLocaleWorkerRouteChildren = {
   SecuredLocaleWorkerFilesystemIndexRoute:
     SecuredLocaleWorkerFilesystemIndexRoute,
   SecuredLocaleWorkerHelpIndexRoute: SecuredLocaleWorkerHelpIndexRoute,
+  SecuredLocaleWorkerInHouseIndexRoute: SecuredLocaleWorkerInHouseIndexRoute,
   SecuredLocaleWorkerMonitoringIndexRoute:
     SecuredLocaleWorkerMonitoringIndexRoute,
   SecuredLocaleWorkerQueuesIndexRoute: SecuredLocaleWorkerQueuesIndexRoute,

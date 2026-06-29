@@ -60,7 +60,10 @@ public class WorkflowProgramImpl implements WorkflowProgram {
   public Boolean getAssignable() {
     return Boolean.TRUE.equals(target.getBody().getAssignable());
   }
-
+  @Override
+  public Boolean getInHouse() {
+    return Boolean.TRUE.equals(target.getBody().getInHouse());
+  }
   @Override
   public String getFormId() {
     return target.getBody().getFormId();

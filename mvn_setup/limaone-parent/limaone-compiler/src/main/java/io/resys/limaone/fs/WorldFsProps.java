@@ -217,7 +217,8 @@ public interface WorldFsProps {
     ASSIGNABLE_MODE,
     DISABLED_MODE,
     ANONYMOUS_MODE,
-    AUTH_ONLY_MODE
+    AUTH_ONLY_MODE,
+    IN_HOUSE
   } 
   
   enum ErrorSeverityType {

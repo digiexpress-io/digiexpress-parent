@@ -57,6 +57,9 @@ public interface ArticleWorkflow extends Body {
   @Nullable Boolean getDisabled();
   
   @JsonInclude(JsonInclude.Include.NON_NULL) 
+  @Nullable Boolean getInHouse();
+  
+  @JsonInclude(JsonInclude.Include.NON_NULL) 
   @Nullable OffsetDateTime getStartDate();
   
   @JsonInclude(JsonInclude.Include.NON_NULL) 

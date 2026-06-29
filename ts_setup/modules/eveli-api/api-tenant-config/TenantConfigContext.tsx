@@ -25,6 +25,7 @@ export const tenant_features = [
   "user_profile",
   'queues-visually-disabled',
   'feedback-visually-disabled',
+  'in_house',
 
   'stencil_locale_filter',
   'eveli_publication_only',
