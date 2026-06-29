@@ -18,7 +18,7 @@ export const InHouseFill: React.FC<InHouseFillProps> = ({ workflowName, onCancel
     <InHouseFillRoot className={classes.root}>
       <Box className={classes.content}>
         <Typography variant='h3'>{intl.formatMessage({ id: 'inHouseFill.prompt' }, { formName })}</Typography>
-        <Typography variant='h3' color='primary.main' fontWeight={500}>{formName}</Typography>
+        <Typography variant='h3' className={classes.formName}>{formName}</Typography>
 
         <Box className={classes.spacer} />
 

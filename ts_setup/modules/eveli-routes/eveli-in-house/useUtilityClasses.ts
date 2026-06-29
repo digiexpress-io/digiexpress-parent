@@ -9,6 +9,7 @@ export const useUtilityClasses = () => {
     content: ['content'],
     spacer: ['spacer'],
     actions: ['actions'],
+    formName: ['formName'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -18,7 +19,7 @@ export const InHouseFillRoot = styled(Box, {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
-    return [styles.root, styles.content, styles.spacer, styles.actions];
+    return [styles.root, styles.content, styles.spacer, styles.actions, styles.formName];
   },
 })(({ theme }) => {
   return {
@@ -41,6 +42,10 @@ export const InHouseFillRoot = styled(Box, {
       display: 'flex',
       justifyContent: 'center',
       gap: theme.spacing(1),
+    },
+    [`& .${MUI_NAME}-formName`]: {
+      color: theme.palette.primary.main,
+      fontWeight: 500,
     },
   };
 });
