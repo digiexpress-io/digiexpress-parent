@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton, Tooltip, Typography } from '@mui/material';
+import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import { ContentCopy as ContentCopyIcon } from '@mui/icons-material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
@@ -10,7 +10,7 @@ import { useFetch } from '@dxs-ts/envir-fetch';
 export const InHouseTable: React.FC = () => {
   const intl = useIntl();
   const { inHouseWorkflows } = useFetch('worker/rest/api/tasks/in-house.GET', {});
-  const link = window.location.pathname;
+  const link = window.location.origin + window.location.pathname;
 
   const columns: ColumnDef<any, any>[] = [
     {
@@ -35,16 +35,6 @@ export const InHouseTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({ id: 'inHouseTable.col.header.link' }),
-      id: 'link',
-      accessorFn: (row) => link + '/' + encodeURIComponent(row.name),
-      size: 300,
-      minSize: 200,
-      enableSorting: false,
-      enableColumnFilter: false,
-      enableResizing: true,
-    },
-    {
       header: '',
       id: 'copy',
       size: 60,
@@ -53,11 +43,13 @@ export const InHouseTable: React.FC = () => {
       enableColumnFilter: false,
       enableResizing: false,
       cell: ({ row }) => (
-        <Tooltip title={intl.formatMessage({ id: 'inHouseTable.col.copy.tooltip' })}>
-          <IconButton size='small' onClick={() => navigator.clipboard.writeText(link + '/' + encodeURIComponent(row.original.name))}>
-            <ContentCopyIcon fontSize='small' />
-          </IconButton>
-        </Tooltip>
+        <Box display='flex' justifyContent='center'>
+          <Tooltip title={intl.formatMessage({ id: 'inHouseTable.col.copy.tooltip' })} arrow placement='right'>
+            <IconButton sx={{ color: 'primary.main' }} size='small' onClick={() => navigator.clipboard.writeText(link + '/' + encodeURIComponent(row.original.name))}>
+              <ContentCopyIcon fontSize='small' />
+            </IconButton>
+          </Tooltip>
+        </Box>
       ),
     },
   ];

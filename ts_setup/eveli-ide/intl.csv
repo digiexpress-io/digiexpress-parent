@@ -213,7 +213,6 @@ processTableHeader.taskRef,Monitoring,Task reference,Tehtävän viite,Uppgiftsre
 inHouseTable.title,In-house,In-house services,Talon omat palvelut,Husets egna tjänster,
 inHouseTable.col.header.name,In-house,Name,Nimi,Namn,
 inHouseTable.col.header.description,In-house,Description,Kuvaus,Beskrivning,
-inHouseTable.col.header.link,In-house,Link,Linkki,Länk,
 inHouseTable.col.copy.tooltip,In-house,Copy link,Kopioi linkki,Kopiera länk,
 process.status.ANSWERED,Monitoring,Answered,Lähetetty,Skickad,
 process.status.CREATED,Monitoring,Created,Luotu,Skapad,
