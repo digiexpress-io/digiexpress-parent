@@ -1,12 +1,12 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { InHouseFill } from '../eveli-in-house';
+import { InHouseFillStart } from '../eveli-in-house';
 
 export const Route = createFileRoute('/secured/$locale/worker/in-house/$workflowName/')({
   component: Component,
 })
 
 function Component() {
-  const { workflowName } = Route.useParams();
+  const { workflowName, locale } = Route.useParams();
   const navigate = useNavigate();
 
   function handleCancel() {
@@ -15,5 +15,5 @@ function Component() {
       to: '/secured/$locale/worker/in-house' });
   }
 
-  return (<InHouseFill workflowName={workflowName} onCancel={handleCancel} />);
+  return (<InHouseFillStart workflowName={workflowName} locale={locale} onCancel={handleCancel} />);
 }

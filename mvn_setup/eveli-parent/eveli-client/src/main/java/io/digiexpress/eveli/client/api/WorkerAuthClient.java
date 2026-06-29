@@ -29,8 +29,6 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.smallrye.mutiny.Uni;
-
 
 public interface WorkerAuthClient {
   Liveness getLiveness();

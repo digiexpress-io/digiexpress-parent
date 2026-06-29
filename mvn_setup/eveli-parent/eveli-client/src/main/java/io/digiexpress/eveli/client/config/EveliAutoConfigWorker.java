@@ -35,6 +35,7 @@ import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
 import io.digiexpress.eveli.client.spi.dialob.DialobCreateEventPublisher;
+import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.digiexpress.eveli.client.spi.dialob.DialobScheduler;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
@@ -79,9 +80,11 @@ public class EveliAutoConfigWorker {
       MqEventPublisher mqEventPublisher,
       TaskViewerPublisher viewerEventPublisher,
       TaskAuditClient taskAuditClient,
-      DialobCreateEventPublisher dialobCreateEventPublisher) {
+      DialobCreateEventPublisher dialobCreateEventPublisher,
+      DialobFillEventPublisher dialobFillEventPublisher,
+      AttachmentCommands attachmentCommands) {
     
-    return new TaskApiController(dialobCreateEventPublisher, security, taskclient, mqEventPublisher, viewerEventPublisher, taskAuditClient, runtime);
+    return new TaskApiController(dialobFillEventPublisher, dialobCreateEventPublisher, attachmentCommands, security, taskclient, mqEventPublisher, viewerEventPublisher, taskAuditClient, runtime);
   }
   @Bean 
   public ProcessApiController processApiController(TaskClient taskClient) {

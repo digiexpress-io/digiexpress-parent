@@ -780,6 +780,7 @@
           "@dxs-ts/ledger-api": "*",
           "@dxs-ts/tagomi-api": "*",
           "@dxs-ts/gamut-theme": "*",
+          "@dxs-ts/gamut-api": "*",
           "@dxs-ts/user-profile": "*",
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/fs-api": "*",
@@ -812,6 +813,7 @@
         "@dxs-ts/ledger-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-api",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
         "@dxs-ts/fs-api",
@@ -851,6 +853,7 @@
         "@dxs-ts/ledger-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-api",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
         "@dxs-ts/fs-api",
@@ -876,7 +879,8 @@
         "@dxs-ts/contract-api",
         "@dxs-ts/ledger-api",
         "@dxs-ts/task-api",
-        "@material-table/core"
+        "@material-table/core",
+        "@dxs-ts/gamut-api"
       ],
       "actualExternalDependencies": [
         "react",
@@ -900,7 +904,8 @@
         "@dxs-ts/cockpit-api",
         "@dxs-ts/contract-api",
         "@dxs-ts/ledger-api",
-        "@dxs-ts/task-api"
+        "@dxs-ts/task-api",
+        "@dxs-ts/gamut-api"
       ],
       "missingDependencies": [],
       "unusedDependencies": [
@@ -1292,8 +1297,8 @@
         "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@mui/icons-material",
-        "@dxs-ts/xui-table",
         "@tanstack/react-table",
+        "@dxs-ts/xui-table",
         "@mui/utils",
         "@monaco-editor/react",
         "yaml",
@@ -4190,6 +4195,7 @@
         "@dxs-ts/ledger-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-api",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
         "@dxs-ts/fs-api",
@@ -4491,6 +4497,7 @@
       "@dxs-ts/gamut-api": [
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/gamut-demo-app",
+        "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/gamut-form",
         "@dxs-ts/gamut-form-review",
@@ -4819,6 +4826,6 @@
       ]
     }
   },
-  "checksum": "7de8f89caa37d115ab327fea68ee6588c26c97e6faaa48c426b0029dcf4b1572",
-  "generatedAt": "2026-06-19T11:12:23.510Z"
+  "checksum": "fda206347f13609f6c5b39fc83710dd39b8e97517c42a7c56717dce64a7ef0be",
+  "generatedAt": "2026-06-29T13:37:16.070Z"
 }

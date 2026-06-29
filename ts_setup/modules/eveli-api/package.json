@@ -16,6 +16,7 @@
     "@dxs-ts/ledger-api": "*",
     "@dxs-ts/tagomi-api": "*",
     "@dxs-ts/gamut-theme": "*",
+    "@dxs-ts/gamut-api": "*",
     "@dxs-ts/user-profile": "*",
     "@dxs-ts/task-feedback": "*",
     "@dxs-ts/fs-api": "*",

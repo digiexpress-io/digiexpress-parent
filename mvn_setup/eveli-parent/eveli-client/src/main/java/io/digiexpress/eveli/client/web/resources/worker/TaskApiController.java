@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -42,7 +43,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.hash.Hashing;
+
 import io.dialob.api.proto.Actions;
+import io.digiexpress.eveli.client.api.AttachmentCommands;
+import io.digiexpress.eveli.client.api.GamutClient.UserActionAttachment;
+import io.digiexpress.eveli.client.api.GamutClient.UserActionFillEvent;
+import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
+import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
+import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.FormAssignment;
@@ -52,10 +61,17 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskDasboard;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.dialob.DialobCreateEventPublisher;
+import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
+import io.digiexpress.eveli.client.spi.gamut.UserAttachmentBuilderImpl;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
+import io.resys.limaone.program.ImmutableParticipant;
+import io.resys.limaone.program.ImmutableParticipantId;
+import io.resys.limaone.program.ImmutableWorkflowDefaultProps;
 import io.resys.limaone.program.WorkflowProgram;
+import io.resys.limaone.program.WorkflowProgram.WorkflowFormResult;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.AllArgsConstructor;
@@ -74,7 +90,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/worker/rest/api/tasks")
 @Slf4j
 public class TaskApiController {    
+  private final DialobFillEventPublisher dialobFillEventPublisher;
   private final DialobCreateEventPublisher dialobCreateEventPublisher;
+  private final AttachmentCommands attachmentCommands;
   private final WorkerAuthClient securityClient;
   private final TaskClient taskClient;
   private final MqEventPublisher mqEventPublisher;
@@ -259,6 +277,98 @@ public class TaskApiController {
     return inhouse;
   }
   
+  @GetMapping(value = "/in-house/{id}")
+  public WorkflowFormResult getInHouseSession(
+      @PathVariable("id") String id,
+      @RequestParam("locale") String clientLocale,
+      @RequestParam(name = "tenantId", required = false) String tenantId
+  ) throws UserActionNotAllowedException, WorkflowNotFoundException {
+    
+    final var worker = securityClient.getUser().getPrincipal();
+    
+    TaskAssert.notNull(id, () -> "id can't be null!");
+    TaskAssert.notNull(clientLocale, () -> "clientLocale can't be null!");
+    
+
+    final var props = ImmutableWorkflowDefaultProps.builder().locale(clientLocale).build();    
+    final var wk = envirClient.withTenant(Optional.ofNullable(tenantId))
+        .getBundle()
+        .queryWorkflows()
+        .name(id)
+        .locale(clientLocale)
+        .findOne();
+    
+    if(wk.isEmpty()) {
+      throw new WorkflowNotFoundException(new StringBuilder()
+        .append("Can't find stencil service for locale: '").append(clientLocale).append("'!")
+        .toString());
+    }
+    
+    final var customer = ImmutableParticipant.builder()
+        .identity(worker.getSub())
+        .partId(ImmutableParticipantId.builder().realId(id).hashId(Hashing
+            .murmur3_128()
+            .hashString(worker.getSub(), StandardCharsets.UTF_8)
+            .toString()).build())
+        .username(worker.getUsername())
+        
+        .anon(false)
+        .protectionOrder(false)
+        .build();
+    
+    final var wkResult = wk.get().runForm(customer, props);
+    
+    if(wkResult.getAccessAllowed()) {
+      return wkResult;
+    }
+    throw new UserActionNotAllowedException("Process: " + customer + " blocked!");
+  }
+ 
+
+  @GetMapping(value="/in-house/{sessionId}/actions")
+  public Uni<?> getInHouseSessionGet(@PathVariable("sessionId") String sessionId) {
+    return envirClient.getProperties().getFormDb().withTenant().createFormFill().formInstanceId(sessionId).build()
+        .onItem().transform(questionnaire -> questionnaire.unwrap());
+  }
+  
+  @PostMapping(value="/in-house/{sessionId}/actions")
+  public Uni<?> getInHouseSessionPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
+    return envirClient.getProperties().getFormDb().withTenant().createFormFill().formInstanceId(sessionId).actions(body)
+        .onCompletion(completion -> {
+          final var event = UserActionFillEvent.builder()
+              .requestBody(body)
+              .responseBody(completion)
+              .sessionId(sessionId)
+              .build();
+          return Uni.createFrom().item(event).onItem().invoke(i -> dialobFillEventPublisher.publishEvent(i));
+        })
+        .build()
+        .onItem().transform(questionnaire -> questionnaire.unwrap());
+  }
+  @PostMapping(value="/in-house/{sessionId}/attachments")
+  public Uni<ResponseEntity<List<UserActionAttachment>>> createAttachments(
+      @PathVariable("actionId") String actionId, 
+      @RequestBody List<UserAttachmentUploadInit> raw) {
+
+    return new UserAttachmentBuilderImpl(this.taskClient, attachmentCommands)
+        .actionId(actionId)
+        .addAll(raw)
+        .createMany()
+        
+        .collect().asList().onItem().transform(entries -> new ResponseEntity<>(entries, HttpStatus.CREATED))
+        .onFailure().recoverWithItem(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+        
+  }
+  
+  @GetMapping(value="/in-house/{sessionId}/review")
+  public Uni<Map<String, Object>> getInHouseReviewGet(@PathVariable("sessionId") String sessionId) {
+    return envirClient.getProperties().getFormDb().withTenant()
+        .formInstanceQuery().includeForm(true)
+        .getOne(sessionId)
+        .onItem()
+        .transform(prop -> Map.of("session", prop.getQuestionnaire(), "form", prop.getForm().get()));
+    
+  }
   
   @GetMapping(value="/{id}/comments")
   public Multi<TaskClient.TaskComment> getTaskComments(@PathVariable("id") String id)

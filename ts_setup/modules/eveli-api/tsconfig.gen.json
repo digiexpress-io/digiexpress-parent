@@ -37,6 +37,9 @@
       "@dxs-ts/gamut-theme": [
         "./../gamut-theme/index.ts"
       ],
+      "@dxs-ts/gamut-api": [
+        "./../gamut-api/index.ts"
+      ],
       "@dxs-ts/user-profile": [
         "./../user-profile/index.ts"
       ],
@@ -87,6 +90,9 @@
       "path": "../gamut-theme"
     },
     {
+      "path": "../gamut-api"
+    },
+    {
       "path": "../user-profile"
     },
     {
@@ -101,9 +107,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-05-29T10:45:18.153Z",
+    "at": "2026-06-29T13:37:16.072Z",
     "forModule": "@dxs-ts/eveli-api",
-    "fromRegistry": "a1320c9a7322",
+    "fromRegistry": "fda206347f13",
     "alias": {
       "@dxs-ts/eveli-api": [
         "../xui-table"

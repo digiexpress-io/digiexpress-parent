@@ -1,32 +1,61 @@
 import React from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { useFetch } from '@dxs-ts/envir-fetch';
 
-import { InHouseFillRoot, useUtilityClasses } from './useUtilityClasses';
+import { DialobProvider, WithFormProvider, LocaleProvider } from '@dxs-ts/gamut-api';
+import { GFormTip } from '@dxs-ts/gamut-form';
+import { GThemeOptions } from '@dxs-ts/gamut-theme';
+import { useNavigate } from '@tanstack/react-router';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 interface InHouseFillProps {
-  workflowName: string;
+  workflowId: string;
+  locale: string;
   onCancel: () => void;
 }
 
-export const InHouseFill: React.FC<InHouseFillProps> = ({ workflowName, onCancel }) => {
+
+
+const queryClient = new QueryClient();
+const reviewTheme = createTheme(GThemeOptions);
+const formUnavailable = () => {
+  return 'form is unavailable';
+}
+
+export const InHouseFill: React.FC<InHouseFillProps> = ({ workflowId }) => {
   const intl = useIntl();
-  const classes = useUtilityClasses();
-  const formName = decodeURIComponent(workflowName);
+  const dialob = useFetch('worker/rest/api/tasks/in-house/$id.GET', {})
+  const nav = useNavigate();
+
+  function handleOnComplete() {
+    nav({
+      from: '/secured/$locale/worker',
+      to: '/secured/$locale/worker/tasks'
+    })
+  }
+
+  function handleOnCancel() {
+
+  }
 
   return (
-    <InHouseFillRoot className={classes.root}>
-      <Box className={classes.content}>
-        <Typography variant='h3'>{intl.formatMessage({ id: 'inHouseFill.prompt' }, { formName })}</Typography>
-        <Typography variant='h3' className={classes.formName}>{formName}</Typography>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={reviewTheme}>
+        <DialobProvider
+          fetchActionGet={dialob.fetchActionGet}
+          fetchActionPost={dialob.fetchActionPost}
+          fetchAttachmentPost={dialob.fetchAttachmentPost}
+          fetchReviewGet={dialob.fetchReviewGet}>
 
-        <Box className={classes.spacer} />
+          <LocaleProvider defaultLocale={() => intl.locale}>
+            <WithFormProvider id={workflowId} executionId={workflowId} variant='' onAfterComplete={handleOnComplete} onCancel={handleOnCancel} formUnavailable={formUnavailable}>
+              <GFormTip executionId={workflowId} variant='' onAfterComplete={handleOnComplete} onCancel={handleOnCancel} formUnavailable={formUnavailable} />
+            </WithFormProvider>
+          </LocaleProvider>
 
-        <Box className={classes.actions}>
-          <Button variant='outlined' onClick={onCancel}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-          <Button variant='contained'>{intl.formatMessage({ id: 'button.startForm' })}</Button>
-        </Box>
-      </Box>
-    </InHouseFillRoot>
-  );
+        </DialobProvider>
+      </ThemeProvider>
+    </QueryClientProvider>)
 };
