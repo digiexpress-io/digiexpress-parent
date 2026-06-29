@@ -1,22 +1,23 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import { CreateOutlined as CreateOutlinedIcon } from '@mui/icons-material';
-import { TaskOutlined as TaskOutlinedIcon } from '@mui/icons-material';
-import { AccountBalance as AccountBalanceIcon } from '@mui/icons-material';
-import { DashboardCustomizeOutlined as DashboardCustomizeOutlinedIcon } from '@mui/icons-material';
-import { HandshakeOutlined as HandshakeOutlinedIcon } from '@mui/icons-material';
-import { NetworkCheck as NetworkCheckIcon } from '@mui/icons-material';
-import { ThumbUpAltOutlined as ThumbUpAltOutlinedIcon } from '@mui/icons-material';
-import { CloudQueue as CloudQueueIcon } from '@mui/icons-material';
-import { SupervisedUserCircleOutlined as SupervisedUserCircleOutlinedIcon } from '@mui/icons-material';
-import { HealthAndSafetyOutlined as HealthAndSafetyOutlinedIcon } from '@mui/icons-material';
-
-import { PersonOutlineOutlined as PersonOutlineOutlinedIcon } from '@mui/icons-material';
-import { WorkOutlineOutlined as WorkOutlineOutlinedIcon } from '@mui/icons-material';
+import {
+  CreateOutlined as CreateOutlinedIcon,
+  TaskOutlined as TaskOutlinedIcon,
+  AccountBalance as AccountBalanceIcon,
+  DashboardCustomizeOutlined as DashboardCustomizeOutlinedIcon,
+  HandshakeOutlined as HandshakeOutlinedIcon,
+  NetworkCheck as NetworkCheckIcon,
+  ThumbUpAltOutlined as ThumbUpAltOutlinedIcon,
+  CloudQueue as CloudQueueIcon,
+  SupervisedUserCircleOutlined as SupervisedUserCircleOutlinedIcon,
+  HealthAndSafetyOutlined as HealthAndSafetyOutlinedIcon,
+  HomeWorkOutlined as HomeWorkOutlinedIcon,
+  PersonOutlineOutlined as PersonOutlineOutlinedIcon,
+  WorkOutlineOutlined as WorkOutlineOutlinedIcon
+} from '@mui/icons-material';
 
 import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'
-
 import { _eveli_shell_useUtilityClasses as useUtilityClasses, EveliShellExplorer, EveliPermissions } from '@dxs-ts/eveli-primitives';
 import { EveliTenantFeatureEnabled, useTenantConfigFeatures } from '@dxs-ts/eveli-api';
 import { TaskCreate } from '@dxs-ts/task-composer-v2'
@@ -148,7 +149,7 @@ export const Secondary: React.FC = () => {
 
       <EveliTenantFeatureEnabled id='IN_HOUSE_ENABLED'>
         <EveliPermissions id='NAV_TO_IN_HOUSE'>
-          <Button startIcon={<ThumbUpAltOutlinedIcon />}
+          <Button startIcon={<HomeWorkOutlinedIcon />}
             variant={location.pathname.endsWith('in-house') ? 'explorerActive' : 'explorerInactive'}
             onClick={() => navigate({
               from: '/secured/$locale',
