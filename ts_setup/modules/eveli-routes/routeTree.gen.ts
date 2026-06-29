@@ -47,6 +47,7 @@ import { Route as SecuredLocaleWorkerTasksTaskIdIndexRouteImport } from './route
 import { Route as SecuredLocaleWorkerQueuesMessagesIndexRouteImport } from './routes/secured.$locale.worker.queues.messages.index'
 import { Route as SecuredLocaleWorkerQueuesDeliveriesIndexRouteImport } from './routes/secured.$locale.worker.queues.deliveries.index'
 import { Route as SecuredLocaleWorkerLedgersLedgerIdIndexRouteImport } from './routes/secured.$locale.worker.ledgers.$ledgerId.index'
+import { Route as SecuredLocaleWorkerInHouseWorkflowNameIndexRouteImport } from './routes/secured.$locale.worker.in-house.$workflowName.index'
 import { Route as SecuredLocaleWorkerFeedbackFeedbackIdIndexRouteImport } from './routes/secured.$locale.worker.feedback.$feedbackId.index'
 import { Route as SecuredLocaleWorkerContractsContractIdIndexRouteImport } from './routes/secured.$locale.worker.contracts.$contractId.index'
 import { Route as SecuredLocaleWorkerCockpitsCockpitIdIndexRouteImport } from './routes/secured.$locale.worker.cockpits.$cockpitId.index'
@@ -277,6 +278,12 @@ const SecuredLocaleWorkerLedgersLedgerIdIndexRoute =
     path: '/$ledgerId/',
     getParentRoute: () => SecuredLocaleWorkerLedgersRoute,
   } as any)
+const SecuredLocaleWorkerInHouseWorkflowNameIndexRoute =
+  SecuredLocaleWorkerInHouseWorkflowNameIndexRouteImport.update({
+    id: '/in-house/$workflowName/',
+    path: '/in-house/$workflowName/',
+    getParentRoute: () => SecuredLocaleWorkerRoute,
+  } as any)
 const SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute =
   SecuredLocaleWorkerFeedbackFeedbackIdIndexRouteImport.update({
     id: '/feedback/$feedbackId/',
@@ -359,6 +366,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker/cockpits/$cockpitId': typeof SecuredLocaleWorkerCockpitsCockpitIdIndexRoute
   '/secured/$locale/worker/contracts/$contractId': typeof SecuredLocaleWorkerContractsContractIdIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
+  '/secured/$locale/worker/in-house/$workflowName': typeof SecuredLocaleWorkerInHouseWorkflowNameIndexRoute
   '/secured/$locale/worker/ledgers/$ledgerId': typeof SecuredLocaleWorkerLedgersLedgerIdIndexRoute
   '/secured/$locale/worker/queues/deliveries': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
   '/secured/$locale/worker/queues/messages': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
@@ -400,6 +408,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/worker/cockpits/$cockpitId': typeof SecuredLocaleWorkerCockpitsCockpitIdIndexRoute
   '/secured/$locale/worker/contracts/$contractId': typeof SecuredLocaleWorkerContractsContractIdIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
+  '/secured/$locale/worker/in-house/$workflowName': typeof SecuredLocaleWorkerInHouseWorkflowNameIndexRoute
   '/secured/$locale/worker/ledgers/$ledgerId': typeof SecuredLocaleWorkerLedgersLedgerIdIndexRoute
   '/secured/$locale/worker/queues/deliveries': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
   '/secured/$locale/worker/queues/messages': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
@@ -448,6 +457,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker/cockpits/$cockpitId/': typeof SecuredLocaleWorkerCockpitsCockpitIdIndexRoute
   '/secured/$locale/worker/contracts/$contractId/': typeof SecuredLocaleWorkerContractsContractIdIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId/': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
+  '/secured/$locale/worker/in-house/$workflowName/': typeof SecuredLocaleWorkerInHouseWorkflowNameIndexRoute
   '/secured/$locale/worker/ledgers/$ledgerId/': typeof SecuredLocaleWorkerLedgersLedgerIdIndexRoute
   '/secured/$locale/worker/queues/deliveries/': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
   '/secured/$locale/worker/queues/messages/': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
@@ -497,6 +507,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/cockpits/$cockpitId'
     | '/secured/$locale/worker/contracts/$contractId'
     | '/secured/$locale/worker/feedback/$feedbackId'
+    | '/secured/$locale/worker/in-house/$workflowName'
     | '/secured/$locale/worker/ledgers/$ledgerId'
     | '/secured/$locale/worker/queues/deliveries'
     | '/secured/$locale/worker/queues/messages'
@@ -538,6 +549,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/cockpits/$cockpitId'
     | '/secured/$locale/worker/contracts/$contractId'
     | '/secured/$locale/worker/feedback/$feedbackId'
+    | '/secured/$locale/worker/in-house/$workflowName'
     | '/secured/$locale/worker/ledgers/$ledgerId'
     | '/secured/$locale/worker/queues/deliveries'
     | '/secured/$locale/worker/queues/messages'
@@ -585,6 +597,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/cockpits/$cockpitId/'
     | '/secured/$locale/worker/contracts/$contractId/'
     | '/secured/$locale/worker/feedback/$feedbackId/'
+    | '/secured/$locale/worker/in-house/$workflowName/'
     | '/secured/$locale/worker/ledgers/$ledgerId/'
     | '/secured/$locale/worker/queues/deliveries/'
     | '/secured/$locale/worker/queues/messages/'
@@ -868,6 +881,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SecuredLocaleWorkerLedgersLedgerIdIndexRouteImport
       parentRoute: typeof SecuredLocaleWorkerLedgersRoute
     }
+    '/secured/$locale/worker/in-house/$workflowName/': {
+      id: '/secured/$locale/worker/in-house/$workflowName/'
+      path: '/in-house/$workflowName'
+      fullPath: '/secured/$locale/worker/in-house/$workflowName'
+      preLoaderRoute: typeof SecuredLocaleWorkerInHouseWorkflowNameIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
+    }
     '/secured/$locale/worker/feedback/$feedbackId/': {
       id: '/secured/$locale/worker/feedback/$feedbackId/'
       path: '/feedback/$feedbackId'
@@ -1057,6 +1077,7 @@ interface SecuredLocaleWorkerRouteChildren {
   SecuredLocaleWorkerTaskActivityIndexRoute: typeof SecuredLocaleWorkerTaskActivityIndexRoute
   SecuredLocaleWorkerUserActivityIndexRoute: typeof SecuredLocaleWorkerUserActivityIndexRoute
   SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute: typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
+  SecuredLocaleWorkerInHouseWorkflowNameIndexRoute: typeof SecuredLocaleWorkerInHouseWorkflowNameIndexRoute
   SecuredLocaleWorkerQueuesDeliveriesIndexRoute: typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
   SecuredLocaleWorkerQueuesMessagesIndexRoute: typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
 }
@@ -1086,6 +1107,8 @@ const SecuredLocaleWorkerRouteChildren: SecuredLocaleWorkerRouteChildren = {
     SecuredLocaleWorkerUserActivityIndexRoute,
   SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute:
     SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute,
+  SecuredLocaleWorkerInHouseWorkflowNameIndexRoute:
+    SecuredLocaleWorkerInHouseWorkflowNameIndexRoute,
   SecuredLocaleWorkerQueuesDeliveriesIndexRoute:
     SecuredLocaleWorkerQueuesDeliveriesIndexRoute,
   SecuredLocaleWorkerQueuesMessagesIndexRoute:

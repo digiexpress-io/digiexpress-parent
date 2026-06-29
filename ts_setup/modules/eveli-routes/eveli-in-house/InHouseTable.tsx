@@ -35,10 +35,10 @@ export const InHouseTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: '',
+      header: intl.formatMessage({ id: 'inHouseTable.col.header.options' }),
       id: 'copy',
-      size: 60,
-      minSize: 60,
+      size: 100,
+      minSize: 100,
       enableSorting: false,
       enableColumnFilter: false,
       enableResizing: false,
