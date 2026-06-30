@@ -1,8 +1,7 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Radio, RadioGroup, FormControlLabel, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { createWidget } from '../fs-factory';
-import { FsDirentFormField, FsDirentSelectMulti, FsDirentTextField } from '../fs-utilities';
+import { FsDirentFormField, FsDirentTextField } from '../fs-utilities';
 import { useUtilityClasses, FsDirentLocaleRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentLocaleProps } from './FsDirentLocaleProps';
@@ -12,11 +11,6 @@ export const FsDirentLocaleUpdate: React.FC<FsDirentLocaleProps> = (props) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const ownerState = useUpdateOwnerState(props);
-
-  const configOptions = createWidget({ type: 'LOCALE' }).meta.configOptions.map(opt => ({
-    value: opt,
-    label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
-  }));
 
   return (
     <FsDirentLocaleRoot className={classes.root}>
@@ -31,8 +25,20 @@ export const FsDirentLocaleUpdate: React.FC<FsDirentLocaleProps> = (props) => {
           />
         </FsDirentFormField>
 
-        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.configOptionsField.label' })}>
-          <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
+        <FsDirentFormField
+          label={intl.formatMessage({ id: 'fs.dirent.language.enabledField.label' })}
+          helperText={ownerState.enabled
+            ? intl.formatMessage({ id: 'fs.dirent.language.enabled.note' })
+            : intl.formatMessage({ id: 'fs.dirent.language.disabled.note' })}
+        >
+          <RadioGroup
+            row
+            value={ownerState.enabled ? 'enabled' : 'disabled'}
+            onChange={(event) => ownerState.onChangeEnabled(event.target.value === 'enabled')}
+          >
+            <FormControlLabel value='enabled' control={<Radio />} label={intl.formatMessage({ id: 'fs.dirent.language.enabled' })} />
+            <FormControlLabel value='disabled' control={<Radio />} label={intl.formatMessage({ id: 'fs.dirent.language.disabled' })} />
+          </RadioGroup>
         </FsDirentFormField>
 
       </div>

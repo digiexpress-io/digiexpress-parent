@@ -43,9 +43,6 @@ public interface ArticlePage extends Body {
   
   @JsonInclude(JsonInclude.Include.NON_NULL)
   @Nullable Boolean getDevMode();
-
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  @Nullable Boolean getDisabledMode();
   
   default BodyType getBodyType() {
     return BodyType.ARTICLE_PAGE;

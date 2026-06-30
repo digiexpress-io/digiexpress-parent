@@ -27,8 +27,6 @@ type _ChangeStateProps = {
   locale: string;
   content: string;
   configOptions: Fs.ConfigOption[];
-  devMode: boolean;
-  disabledMode: boolean;
   treeId: string;
 }
 
@@ -51,7 +49,17 @@ class _ChangeState implements FsuChange {
   get isDirty(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; id: string; changes: Record<string, any> } {
-    return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
+    const c = this._current;
+    return {
+      bodyType: c.bodyType,
+      id: this.id,
+      changes: {
+        pageId: c.pageId,
+        locale: c.locale,
+        content: c.content,
+        devMode: c.configOptions.includes('DEV_MODE') || undefined,
+      }
+    };
   }
   withLocale(locale: string): _ChangeState {
     return new _ChangeState({ ...this._current, locale }, this._origin);
@@ -87,8 +95,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     locale: pageProps.localeCode,
     content: pageProps.content ?? '',
     configOptions: (pageProps.configOptions ?? []) as Fs.ConfigOption[],
-    devMode: (pageProps.configOptions ?? []).includes('DEV_MODE'),
-    disabledMode: (pageProps.configOptions ?? []).includes('DISABLED_MODE'),
   }));
 
   const usedLocaleIds = Object.values(selectOptions.direntProps)

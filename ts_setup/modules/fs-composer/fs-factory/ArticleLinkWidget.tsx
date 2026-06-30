@@ -29,7 +29,7 @@ export const ArticleLinkWidget: DirentWidget = {
   meta: {
     type: 'ARTICLE_LINK',
     extension: '.link',
-    configOptions: ['DEV_MODE', 'DISABLED_MODE'],
+    configOptions: ['DEV_MODE'],
     supportedViews: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };

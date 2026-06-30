@@ -46,9 +46,7 @@ public class Props_ArticleLinkBuilder {
     if (Boolean.TRUE.equals(link.getDevMode())) {
       builder.addConfigOptions(WorldFsProps.ConfigOption.DEV_MODE);
     }
-    if (Boolean.TRUE.equals(link.getDisabledMode())) {
-      builder.addConfigOptions(WorldFsProps.ConfigOption.DISABLED_MODE);
-    }
+
 
     return builder
         .id(node.getObjectId())

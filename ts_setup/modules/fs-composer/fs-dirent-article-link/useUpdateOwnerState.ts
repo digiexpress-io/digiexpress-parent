@@ -32,8 +32,6 @@ type _ChangeStateProps = {
   value: string;
   labels: { locale: string; labelValue: string }[];
   configOptions: Fs.ConfigOption[];
-  devMode: boolean;
-  disabledMode: boolean;
   articles: string[];
   treeId: string;
 }
@@ -56,7 +54,19 @@ class _ChangeState implements FsuChange {
   get articles() { return this._current.articles; }
 
   getCurrentProps(): { bodyType: Fs.BodyType, id: string, changes: Record<string, any> } {
-    return { bodyType: this._current.bodyType, id: this.id, changes: this._current };
+    const c = this._current;
+    return {
+      bodyType: c.bodyType,
+      id: this.id,
+      changes: {
+        linkId: c.linkId,
+        type: c.type,
+        value: c.value,
+        labels: c.labels,
+        articles: c.articles,
+        devMode: c.configOptions.includes('DEV_MODE') || undefined,
+      }
+    };
   }
   get bodyType() {
     return this._origin.bodyType;
@@ -101,8 +111,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     value: linkProps?.urlValue ?? '',
     labels: Object.entries(linkProps?.intlValues ?? {}).map(([locale, labelValue]) => ({ locale, labelValue })),
     configOptions: (linkProps?.configOptions ?? []) as Fs.ConfigOption[],
-    devMode: (linkProps?.configOptions ?? []).includes('DEV_MODE'),
-    disabledMode: (linkProps?.configOptions ?? []).includes('DISABLED_MODE'),
     articles: linkProps?.articles ?? [],
   }));
 

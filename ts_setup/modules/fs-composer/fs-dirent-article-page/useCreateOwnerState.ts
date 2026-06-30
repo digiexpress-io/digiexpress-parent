@@ -32,8 +32,6 @@ type _CreateStateProps = {
   locale: string;
   content: string;
   configOptions: Fs.ConfigOption[];
-  devMode: boolean;
-  disabledMode: boolean;
 }
 
 class _CreateState implements FsuCreateChange {
@@ -54,14 +52,14 @@ class _CreateState implements FsuCreateChange {
   get isDirty(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
+    const c = this._current;
     return {
-      bodyType: this._current.bodyType,
+      bodyType: c.bodyType,
       changes: {
-        articleId: this._current.articleId,
-        locale: this._current.locale,
-        content: this._current.content,
-        devMode: this._current.devMode,
-        disabledMode: this._current.disabledMode,
+        articleId: c.articleId,
+        locale: c.locale,
+        content: c.content,
+        devMode: c.configOptions.includes('DEV_MODE') || undefined,
       }
     };
   }
@@ -92,8 +90,6 @@ const _init: _CreateStateProps = {
   locale: '',
   content: '',
   configOptions: [],
-  devMode: false,
-  disabledMode: false,
 };
 
 export const useCreateOwnerState = (): CreateOwnerState => {

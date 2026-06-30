@@ -46,7 +46,7 @@ export const FsDirentFormFieldRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-helperText`]: {
-    ...theme.typography.caption,
-    color: FsColors.base.textSecondary,
+    ...theme.typography.subtitle2,
+    color: FsColors.base.text,
   },
 }));

@@ -28,7 +28,7 @@ export const LocaleWidget: DirentWidget = {
   meta: {
     type: 'LOCALE',
     extension: '.locale',
-    configOptions: ['DISABLED_MODE'],
+    configOptions: [],
     supportedViews: ['properties', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };

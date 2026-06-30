@@ -41,9 +41,7 @@ public class Props_ArticlePageBuilder {
     if (Boolean.TRUE.equals(articlePage.getDevMode())) {
       builder.addConfigOptions(ConfigOption.DEV_MODE);
     }
-    if (Boolean.TRUE.equals(articlePage.getDisabledMode())) {
-      builder.addConfigOptions(ConfigOption.DISABLED_MODE);
-    }
+
 
     return builder
         .id(node.getObjectId())

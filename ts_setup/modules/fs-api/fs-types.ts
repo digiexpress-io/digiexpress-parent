@@ -366,6 +366,7 @@ export declare namespace Fs {
   export interface LanguageProps extends PropsBase {
     type: 'LOCALE';
     localeCode: string;
+    enabled: boolean;
   }
 
   export interface PageProps extends PropsBase {

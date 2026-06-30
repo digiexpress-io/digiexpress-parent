@@ -23,8 +23,6 @@ type _CreateStateProps = {
   parentId: string | undefined;
   order: number;
   configOptions: Fs.ConfigOption[];
-  devMode: boolean;
-  authOnly: boolean;
 }
 
 class _CreateState implements FsuCreateChange {
@@ -43,14 +41,15 @@ class _CreateState implements FsuCreateChange {
   get isDirty(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
+    const c = this._current;
     return {
-      bodyType: this._current.bodyType,
+      bodyType: c.bodyType,
       changes: {
-        name: this._current.name,
-        parentId: this._current.parentId,
-        order: this._current.order,
-        devMode: this._current.devMode,
-        authOnly: this._current.authOnly,
+        name: c.name,
+        parentId: c.parentId,
+        order: c.order,
+        devMode: c.configOptions.includes('DEV_MODE') || undefined,
+        authOnly: c.configOptions.includes('AUTH_ONLY_MODE') || undefined,
       }
     };
   }
@@ -85,8 +84,6 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     parentId,
     order: 0,
     configOptions: [],
-    devMode: false,
-    authOnly: false,
   }
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
   const isChangesPresent = state.isDirty;

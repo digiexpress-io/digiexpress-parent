@@ -29,8 +29,6 @@ type _CreateStateProps = {
   value: string;
   labels: { locale: string; labelValue: string }[];
   configOptions: Fs.ConfigOption[];
-  devMode: boolean;
-  disabledMode: boolean;
   articles: string[];
 }
 
@@ -52,15 +50,15 @@ class _CreateState implements FsuCreateChange {
   get isDirty(): boolean { return JSON.stringify(this._origin) !== JSON.stringify(this._current); }
 
   getCurrentProps(): { bodyType: Fs.BodyType; changes: Record<string, any> } {
+    const c = this._current;
     return {
-      bodyType: this._current.bodyType,
+      bodyType: c.bodyType,
       changes: {
-        value: this._current.value,
-        type: this._current.type,
-        labels: this._current.labels,
-        articles: this._current.articles,
-        devMode: this._current.devMode,
-        disabledMode: this._current.disabledMode,
+        value: c.value,
+        type: c.type,
+        labels: c.labels,
+        articles: c.articles,
+        devMode: c.configOptions.includes('DEV_MODE') || undefined,
       }
     };
   }
@@ -91,8 +89,6 @@ const _init: _CreateStateProps = {
   value: '',
   labels: [],
   configOptions: [],
-  devMode: false,
-  disabledMode: false,
   articles: [],
 };
 
