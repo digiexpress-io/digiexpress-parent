@@ -28,7 +28,7 @@ export const ArticleWorkflowWidget: DirentWidget = {
   meta: {
     type: 'ARTICLE_WORKFLOW',
     extension: '.article-workflow',
-    configOptions: ['DEV_MODE', 'DISABLED_MODE', 'AUTH_ONLY_MODE', 'IN_HOUSE_MODE'],
+    configOptions: ['DEV_MODE', 'DISABLED_MODE', 'ANONYMOUS_MODE', 'IN_HOUSE_MODE', 'ASSIGNABLE_MODE'],
     supportedViews: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
