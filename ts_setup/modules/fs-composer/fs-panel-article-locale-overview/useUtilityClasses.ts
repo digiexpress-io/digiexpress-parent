@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled } from "@mui/material";
+import { alpha, generateUtilityClass, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 import { FsColors } from "../fs-theme";
 import { OwnerState } from "./useOwnerState";
@@ -12,6 +12,7 @@ export interface FsPanelArticleLocaleOverviewClasses {
   row: string;
   name: string;
   localeCell: string;
+  localeCellDisabled: string;
   desc: string;
 }
 
@@ -25,6 +26,7 @@ export const useUtilityClasses = () => {
     row: ['row'],
     name: ['name'],
     localeCell: ['localeCell'],
+    localeCellDisabled: ['localeCellDisabled'],
     desc: ['desc']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -38,8 +40,10 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   [`& .${MUI_NAME}-header`]: {
     display: 'flex',
-    padding: theme.spacing(0.75, 1.5),
+    padding: theme.spacing(0, 1.5),
     borderBottom: `1px solid ${FsColors.base.border}`,
+    borderLeft: '1px solid transparent',
+    borderRight: '1px solid transparent',
 
     '& .MuiTypography-root': {
       ...theme.typography.caption,
@@ -61,8 +65,8 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
 
   [`& .${MUI_NAME}-row`]: {
     display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(1, 1.5),
+    alignItems: 'stretch',
+    padding: theme.spacing(0, 1.5),
     backgroundColor: FsColors.base.background,
     borderBottom: `1px solid ${FsColors.base.border}`,
 
@@ -76,6 +80,9 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
     color: FsColors.base.text,
     flex: 1,
     fontWeight: 400,
+    padding: theme.spacing(1, 0),
+    display: 'flex',
+    alignItems: 'center',
   },
 
     [`& .${MUI_NAME}-desc`]: {
@@ -93,6 +100,11 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
     justifyContent: 'center',
     alignItems: 'center',
     color: FsColors.base.text,
+    padding: theme.spacing(0.75, 0),
+  },
+
+  [`& .${MUI_NAME}-localeCellDisabled`]: {
+    backgroundColor: alpha(FsColors.semantic.danger, 0.1),
   },
 
 

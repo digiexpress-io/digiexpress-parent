@@ -25,7 +25,7 @@ export const FsPanelArticleLocaleOverview: React.FC<FsPanelArticleLocaleOverview
         <div className={classes.header}>
           <Typography className={classes.name}>{intl.formatMessage({ id: 'fs.articleLocaleOverview.col.article' })}</Typography>
           {ownerState.locales.map((locale) => (
-            <Box key={locale.value} className={classes.localeCell} display='flex' alignItems='center' gap={0.5}>
+            <Box key={locale.value} className={`${classes.localeCell} ${!locale.enabled ? classes.localeCellDisabled : ''}`} display='flex' alignItems='center' gap={0.5}>
               {!locale.enabled && (
                 <FsIcon small icon={FsIcons.Disabled} color={FsColors.semantic.danger} tooltip={intl.formatMessage({ id: 'fs.dirent.language.disabled' })} />
               )}
@@ -38,8 +38,8 @@ export const FsPanelArticleLocaleOverview: React.FC<FsPanelArticleLocaleOverview
             <div key={article.id} className={classes.row}>
               <Typography className={classes.name}>{ownerState.getDirentName(article.id)}</Typography>
               {ownerState.locales.map((locale) => (
-                <div key={locale.value} className={classes.localeCell}>
-                  {ownerState.isPageInLocale(article.id, locale.value) ? <FsIcon icon={FsIcons.Checkmark} small color={FsColors.semantic.success} /> : "--"}
+                <div key={locale.value} className={`${classes.localeCell} ${!locale.enabled ? classes.localeCellDisabled : ''}`}>
+                  {ownerState.isPageInLocale(article.id, locale.value) ? <FsIcon icon={FsIcons.Checkmark} small color={locale.enabled ? FsColors.semantic.success : FsColors.semantic.danger} /> : "--"}
                 </div>
               ))}
             </div>
