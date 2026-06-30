@@ -216,6 +216,7 @@ export const en = {
   'inHouseTable.col.header.description': 'Description',
   'inHouseTable.col.copy.tooltip': 'Copy link',
   'inHouseFill.prompt': 'You are about to start filling this form:',
+  'inHouseFill.prompt.end': 'Thank you! Your form has been submitted.',
   'inHouseTable.col.header.options': 'Options',
   'process.status.ANSWERED': 'Answered',
   'process.status.CREATED': 'Created',

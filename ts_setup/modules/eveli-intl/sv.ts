@@ -215,6 +215,7 @@ export const sv = {
   'inHouseTable.col.header.description': 'Beskrivning',
   'inHouseTable.col.copy.tooltip': 'Kopiera länk',
   'inHouseFill.prompt': 'Du håller på att börja fylla i formuläret:',
+  'inHouseFill.prompt.end': 'Tack! Ditt formulär har skickats.',
   'process.status.ANSWERED': 'Skickad',
   'process.status.CREATED': 'Skapad',
   'process.status.ANSWERING': 'På hälft',

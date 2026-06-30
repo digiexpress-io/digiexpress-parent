@@ -215,6 +215,7 @@ export const fi = {
   'inHouseTable.col.header.description': 'Kuvaus',
   'inHouseTable.col.copy.tooltip': 'Kopioi linkki',
   'inHouseFill.prompt': 'Olet aloittamassa lomakkeen täyttämistä:',
+  'inHouseFill.prompt.end': 'Kiitos! Lomakkeesi on lähetetty.',
   'process.status.ANSWERED': 'Lähetetty',
   'process.status.CREATED': 'Luotu',
   'process.status.ANSWERING': 'Keskeneräinen',
