@@ -27,7 +27,7 @@ export const useOwnerState = (): OwnerState => {
   const activeDirentType = activeDirentEntry?.type ?? (activeTab?.type === 'create' ? activeTab?.direntType : undefined);
   const activeWidget = activeDirentType ? createWidget({ type: activeDirentType }) : undefined;
 
-  const autoPreview = activeDirent?.type === 'ARTICLE_PAGE' || activeDirent?.type === 'FLOW' || activeDirent?.type === 'PRINTOUT_PAGE';
+  const autoPreview = activeDirent?.type === 'ARTICLE_PAGE' || activeDirent?.type === 'ARTICLE_TEMPLATE' || activeDirent?.type === 'FLOW' || activeDirent?.type === 'PRINTOUT_PAGE';
 
   const [isRightPanelOpen, setIsRightPanelOpen] = React.useState(false);
   const [selectedView, setSelectedView] = React.useState<Fs.SecondaryView | undefined>();

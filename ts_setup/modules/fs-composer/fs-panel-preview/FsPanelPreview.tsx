@@ -50,8 +50,10 @@ export const FsPanelPreview: React.FC<FsPanelPreviewProps> = (props) => {
   if (ownerState.isArticlePage) {
     return (
       <FsPanel title={intl.formatMessage({ id: 'fs.panelPreview.title' })} icon={<FsIcon icon={FsIcons.Preview} large />} activeDirent={true}>
-        <FsPanelPreviewRoot className={classes.root} >
-          <Typography className={classes.content}>{intl.formatMessage({ id: 'fs.panelPreview.message.notAvailable' })}</Typography>
+        <FsPanelPreviewRoot className={classes.root}>
+          <div data-color-mode={'light'}>
+            <MDEditor.Markdown source={ownerState.content.pageContent} />
+          </div>
         </FsPanelPreviewRoot>
       </FsPanel>
     );
