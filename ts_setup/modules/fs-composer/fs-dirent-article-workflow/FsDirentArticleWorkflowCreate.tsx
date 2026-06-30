@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Divider, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { DatePicker } from '@dxs-ts/xui-datetime';
 import { useFsDirent } from '@dxs-ts/fs-api';
@@ -24,12 +24,13 @@ export const FsDirentArticleWorkflowCreate: React.FC = () => {
     label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
   }));
   const dialobTags = selectOptions.collectDialobTags(ownerState.formName);
+  const disabled = !ownerState.isDirty || !ownerState.flowName || !ownerState.formName || !ownerState.formTag;
 
   return (
     <FsDirentArticleWorkflowRoot className={classes.root}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.service.sectionTitle.createNew' })}</Typography>
-        <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />
+        <FsDirentButtonSave onClick={ownerState.onSave} disabled={disabled} />
       </div>
 
       <div className={classes.formContainer}>
@@ -42,15 +43,15 @@ export const FsDirentArticleWorkflowCreate: React.FC = () => {
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.dialobFormField.label' })}>
-          <FsDirentSelectSingle options={dialobForms} value={ownerState.formName} onChange={ownerState.onChangeFormName} />
+          <FsDirentSelectSingle required options={dialobForms} value={ownerState.formName} onChange={ownerState.onChangeFormName} />
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.dialobTagField.label' })}>
-          <FsDirentSelectSingle options={dialobTags} value={ownerState.formTag} onChange={ownerState.onChangeFormTag} />
+          <FsDirentSelectSingle required options={dialobTags} value={ownerState.formTag} onChange={ownerState.onChangeFormTag} />
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.flowField.label' })}>
-          <FsDirentSelectSingle options={flows} value={ownerState.flowName} onChange={ownerState.onChangeFlowName} />
+          <FsDirentSelectSingle required options={flows} value={ownerState.flowName} onChange={ownerState.onChangeFlowName} />
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.articlesField.label' })}>

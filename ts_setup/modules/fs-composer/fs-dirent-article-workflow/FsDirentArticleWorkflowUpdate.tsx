@@ -36,15 +36,15 @@ export const FsDirentArticleWorkflowUpdate: React.FC<FsDirentArticleWorkflowProp
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.dialobFormField.label' })}>
-          <FsDirentSelectSingle options={dialobForms} value={ownerState.dialobFormName} onChange={ownerState.onChangeDialobFormName} />
+          <FsDirentSelectSingle required options={dialobForms} value={ownerState.dialobFormName} onChange={ownerState.onChangeDialobFormName} />
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.dialobTagField.label' })}>
-          <FsDirentSelectSingle options={dialobTags} value={ownerState.dialobFormTag} onChange={ownerState.onChangeDialobFormTag} />
+          <FsDirentSelectSingle required options={dialobTags} value={ownerState.dialobFormTag} onChange={ownerState.onChangeDialobFormTag} />
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.service.flowField.label' })}>
-          <FsDirentSelectSingle options={flows} value={ownerState.flowName} onChange={ownerState.onChangeFlowName} />
+          <FsDirentSelectSingle required options={flows} value={ownerState.flowName} onChange={ownerState.onChangeFlowName} />
         </FsDirentFormField>
 
 
