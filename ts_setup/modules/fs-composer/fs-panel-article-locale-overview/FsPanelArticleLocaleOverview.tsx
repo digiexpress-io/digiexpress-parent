@@ -1,7 +1,7 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsColors, FsIcon, FsIcons } from '../fs-theme';
+import { FsIcon, FsIcons, FsColors } from '../fs-theme';
 import { FsPanel } from '../fs-panel';
 import { FsPanelArticleLocaleOverviewProps } from './FsPanelArticleLocaleOverviewProps';
 import { useOwnerState } from './useOwnerState';
@@ -25,7 +25,12 @@ export const FsPanelArticleLocaleOverview: React.FC<FsPanelArticleLocaleOverview
         <div className={classes.header}>
           <Typography className={classes.name}>{intl.formatMessage({ id: 'fs.articleLocaleOverview.col.article' })}</Typography>
           {ownerState.locales.map((locale) => (
-            <Typography key={locale.value} className={classes.localeCell}>{locale.label}</Typography>
+            <Box key={locale.value} className={classes.localeCell} display='flex' alignItems='center' gap={0.5}>
+              {!locale.enabled && (
+                <FsIcon small icon={FsIcons.Disabled} color={FsColors.semantic.danger} tooltip={intl.formatMessage({ id: 'fs.dirent.language.disabled' })} />
+              )}
+              <Typography>{locale.label}</Typography>
+            </Box>
           ))}
         </div>
         <div className={classes.container}>

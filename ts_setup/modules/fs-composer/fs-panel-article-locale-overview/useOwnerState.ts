@@ -2,9 +2,11 @@ import { useFsDirent, Fs } from '@dxs-ts/fs-api';
 import { FsPanelArticleLocaleOverviewProps } from './FsPanelArticleLocaleOverviewProps';
 
 
+export type LocaleOption = Fs.SelectOption & { enabled: boolean };
+
 export interface OwnerState {
   articles: Fs.DirentBase[];
-  locales: Fs.SelectOption[];
+  locales: LocaleOption[];
   getDirentName: (id: string) => string | undefined;
   isPageInLocale: (articleId: string, localeCode: string) => boolean;
 }
@@ -21,7 +23,13 @@ export const useOwnerState = (_props: FsPanelArticleLocaleOverviewProps): OwnerS
       return aOrder - bOrder;
     });
 
-  const locales = selectOptions.languages;
+  const allLocaleProps = Object.values(selectOptions.direntProps)
+    .filter(p => p.type === 'LOCALE') as Fs.LanguageProps[];
+
+  const locales: LocaleOption[] = selectOptions.languages.map(l => {
+    const lp = allLocaleProps.find(p => p.id === l.value);
+    return { ...l, enabled: lp?.enabled !== false };
+  });
 
   const pages = Object.values(selectOptions.direntProps)
     .filter(p => p.type === 'ARTICLE_PAGE') as Fs.PageProps[];

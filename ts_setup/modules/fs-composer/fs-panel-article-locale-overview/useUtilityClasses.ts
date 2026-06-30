@@ -94,4 +94,6 @@ export const FsPanelArticleLocaleOverviewRoot = styled('div', {
     alignItems: 'center',
     color: FsColors.base.text,
   },
+
+
 }));
