@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Fs, useFsDirent, FsuCreateChange } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 
 export interface TextFields {
   locale: string;
@@ -47,6 +48,7 @@ const _init: _CreateStateProps = { bodyType: 'LOCALE', locale: '' };
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { createDirent } = useFsDirent();
+  const { openAsset } = useFsNav();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
 
@@ -56,7 +58,8 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withLocale(value));
   }
   async function onSave() {
-    await createDirent(state);
+    const newDirent = await createDirent(state);
+    openAsset(newDirent);
   }
 
   return ({

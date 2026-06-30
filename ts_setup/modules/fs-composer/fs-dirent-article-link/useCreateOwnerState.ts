@@ -4,6 +4,7 @@ import {
   useFsDirent,
   FsuCreateChange,
 } from '@dxs-ts/fs-api';
+import { useFsNav } from '@dxs-ts/fs-nav';
 import { createWidget } from '../fs-factory';
 
 export interface CreateOwnerState {
@@ -98,6 +99,7 @@ const _init: _CreateStateProps = {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { selectOptions, createDirent } = useFsDirent();
+  const { openAsset } = useFsNav();
 
   const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
   const locales = selectOptions.languages;
@@ -120,7 +122,8 @@ export const useCreateOwnerState = (): CreateOwnerState => {
     setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
   async function onSave() {
-    await createDirent(state);
+    const newDirent = await createDirent(state);
+    openAsset(newDirent);
   }
 
   return ({

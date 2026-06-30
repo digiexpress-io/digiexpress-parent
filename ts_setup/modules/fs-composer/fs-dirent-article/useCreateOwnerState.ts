@@ -70,7 +70,7 @@ class _CreateState implements FsuCreateChange {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { createDirent } = useFsDirent();
-  const { activeTabPath, openTabs, activeTabIndex } = useFsNav();
+  const { activeTabPath, openTabs, activeTabIndex, openAsset } = useFsNav();
 
   const activeTab = openTabs[activeTabIndex];
   const parentFolder = activeTab?.type === 'create' ? activeTab.parentFolder : undefined;
@@ -103,7 +103,8 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   async function onSave() {
-    await createDirent(state);
+    const newDirent = await createDirent(state);
+    openAsset(newDirent);
   }
 
   return ({
