@@ -1,5 +1,6 @@
 import React from 'react';
 import { Badge, Box, ListItemText, Typography } from '@mui/material';
+import { useIntl } from 'react-intl';
 
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 
@@ -30,14 +31,17 @@ export const ConfigOptionIcons: React.FC<{ ownerState: OwnerState }> = ({ ownerS
 }
 
 
-function ConfigIcon(props: { type: Fs.ConfigOption, className: string }) {
-  const { className, type } = props;
+const ConfigIcon: React.FC<{ type: Fs.ConfigOption, className: string }> = ({ type, className }) => {
+  const intl = useIntl();
+  const tooltip = intl.formatMessage({ id: `fs.dirent.configOption.${type}` });
 
   switch (type) {
-    case 'DEV_MODE': return <FsIcon small icon={FsIcons.DevMode} className={className} tooltip='Development Mode' key='development' />;
-    case 'ASSIGNABLE_MODE': return <FsIcon small icon={FsIcons.Assignment} className={className} tooltip='Assignable Mode' key='assignable' />
-    case 'DISABLED_MODE': return <FsIcon small icon={FsIcons.Disabled} className={className} tooltip='Disabled Mode' key='disabled' />
-    case 'ANONYMOUS_MODE': return <FsIcon small icon={FsIcons.Anonymous} className={className} tooltip='Anonymous Mode' key='anonymous' />
+    case 'DEV_MODE': return <FsIcon small icon={FsIcons.DevMode} className={className} tooltip={tooltip} />;
+    case 'ASSIGNABLE_MODE': return <FsIcon small icon={FsIcons.Assignment} className={className} tooltip={tooltip} />;
+    case 'DISABLED_MODE': return <FsIcon small icon={FsIcons.Disabled} className={className} tooltip={tooltip} />;
+    case 'ANONYMOUS_MODE': return <FsIcon small icon={FsIcons.Anonymous} className={className} tooltip={tooltip} />;
+    case 'AUTH_ONLY_MODE': return <FsIcon small icon={FsIcons.Locked} className={className} tooltip={tooltip} />;
+    case 'IN_HOUSE_MODE': return <FsIcon small icon={FsIcons.InHouse} className={className} tooltip={tooltip} />;
   }
 }
 

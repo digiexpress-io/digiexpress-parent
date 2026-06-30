@@ -99,10 +99,8 @@ public interface WorldFsProps {
     String getDialobFormTag();
     String getFlowName();
     
-    @Nullable 
-    String getValidityStart();
-    @Nullable 
-    String getValidityEnd();
+    @Nullable String getValidityStart();
+    @Nullable String getValidityEnd();
     
     List<String> getArticles();
     Map<String, String> getIntlValues();
@@ -218,7 +216,7 @@ public interface WorldFsProps {
     DISABLED_MODE,
     ANONYMOUS_MODE,
     AUTH_ONLY_MODE,
-    IN_HOUSE
+    IN_HOUSE_MODE
   } 
   
   enum ErrorSeverityType {

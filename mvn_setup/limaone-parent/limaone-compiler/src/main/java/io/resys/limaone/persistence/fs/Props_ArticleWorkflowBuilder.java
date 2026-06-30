@@ -23,6 +23,7 @@ import java.util.Collections;
  */
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.resys.limaone.fs.ImmutableServiceProps;
@@ -50,7 +51,7 @@ public class Props_ArticleWorkflowBuilder {
       builder.addConfigOptions(ConfigOption.ASSIGNABLE_MODE);
     }
     if (Boolean.TRUE.equals(service.getInHouse())) {
-      builder.addConfigOptions(ConfigOption.IN_HOUSE);
+      builder.addConfigOptions(ConfigOption.IN_HOUSE_MODE);
     }
     if (Boolean.TRUE.equals(service.getDisabled())) {
       builder.addConfigOptions(ConfigOption.DISABLED_MODE);
@@ -72,9 +73,9 @@ public class Props_ArticleWorkflowBuilder {
                 l -> l.getLabelValue()
               )))
         .serviceName(service.getValue())
-        .dialobFormName(service.getFormName())
-        .dialobFormTag(service.getFormTag())
-        .flowName(service.getFlowName())
+        .dialobFormName(Optional.ofNullable(service.getFormName()).orElse(""))
+        .dialobFormTag(Optional.ofNullable(service.getFormTag()).orElse(""))
+        .flowName(Optional.ofNullable(service.getFlowName()).orElse(""))
         .validityStart(service.getStartDate() != null ? service.getStartDate().toString() : null)
         .validityEnd(service.getEndDate() != null ? service.getEndDate().toString() : null)
         .assetDescription(node.getDescription().map(e -> e.getText()).orElse(null))

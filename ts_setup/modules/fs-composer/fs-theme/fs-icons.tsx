@@ -45,6 +45,7 @@ import {
   Assignment,
   Block,
   VisibilityOff,
+  HomeWorkOutlined,
 
   // Utility Icons
   Search,
@@ -135,6 +136,7 @@ export const FsIcons = {
   Assignment: Assignment,
   Disabled: Block,
   Anonymous: VisibilityOff,
+  InHouse: HomeWorkOutlined,
 
   // Utility
   Phone: Phone,
