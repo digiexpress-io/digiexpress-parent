@@ -24,7 +24,7 @@ export const FsPanelDirentStats: React.FC = () => {
         <div>
           <div className={ownerState.overviewExpanded ? classes.sectionHeaderOpen : classes.sectionHeaderCollapsed} onClick={ownerState.onToggleOverview}>
             <Typography className={classes.sectionTitle}>
-              {intl.formatMessage({ id: 'fs.direntStats.section.overview' })}
+              {intl.formatMessage({ id: 'fs.direntStats.section.overview' })} <span className={classes.sectionCount}>({ownerState.overviewCount})</span>
             </Typography>
             <span className={ownerState.overviewExpanded ? classes.sectionExpandIconOpen : classes.sectionExpandIconCollapsed}>
               <FsIcon icon={FsIcons.ExpandMore} small />
@@ -46,7 +46,7 @@ export const FsPanelDirentStats: React.FC = () => {
         <div>
           <div className={ownerState.danglingExpanded ? classes.sectionHeaderOpen : classes.sectionHeaderCollapsed} onClick={ownerState.onToggleDangling}>
             <Typography className={classes.sectionTitle}>
-              {intl.formatMessage({ id: 'fs.direntStats.section.dangling' })}
+              {intl.formatMessage({ id: 'fs.direntStats.section.dangling' })} <span className={classes.sectionCount}>({ownerState.danglingCount})</span>
             </Typography>
             <span className={ownerState.danglingExpanded ? classes.sectionExpandIconOpen : classes.sectionExpandIconCollapsed}>
               <FsIcon icon={FsIcons.ExpandMore} small />
@@ -74,7 +74,7 @@ export const FsPanelDirentStats: React.FC = () => {
         <div>
           <div className={ownerState.disabledExpanded ? classes.sectionHeaderOpen : classes.sectionHeaderCollapsed} onClick={ownerState.onToggleDisabled}>
             <Typography className={classes.sectionTitle}>
-              {intl.formatMessage({ id: 'fs.direntStats.section.disabled' })}
+              {intl.formatMessage({ id: 'fs.direntStats.section.disabled' })} <span className={classes.sectionCount}>({ownerState.disabledCount})</span>
             </Typography>
             <span className={ownerState.disabledExpanded ? classes.sectionExpandIconOpen : classes.sectionExpandIconCollapsed}>
               <FsIcon icon={FsIcons.ExpandMore} small />

@@ -10,6 +10,7 @@ export interface FsPanelDirentStatsClasses {
   sectionHeaderOpen: string;
   sectionHeaderCollapsed: string;
   sectionTitle: string;
+  sectionCount: string;
   sectionExpandIconOpen: string;
   sectionExpandIconCollapsed: string;
   section: string;
@@ -29,6 +30,7 @@ export const useUtilityClasses = () => {
     sectionHeaderOpen: ['sectionHeaderOpen'],
     sectionHeaderCollapsed: ['sectionHeaderCollapsed'],
     sectionTitle: ['sectionTitle'],
+    sectionCount: ['sectionCount'],
     sectionExpandIconOpen: ['sectionExpandIconOpen'],
     sectionExpandIconCollapsed: ['sectionExpandIconCollapsed'],
     section: ['section'],
@@ -88,6 +90,10 @@ export const FsPanelDirentStatsRoot = styled('div', {
     textTransform: 'uppercase',
     color: FsColors.base.textSecondary,
     padding: theme.spacing(0.75, 1.5),
+  },
+
+  [`& .${MUI_NAME}-sectionCount`]: {
+    fontWeight: 500,
   },
 
   [`& .${MUI_NAME}-section`]: {

@@ -22,6 +22,9 @@ export interface OwnerState {
   assetCounts: AssetCount[];
   danglingGroups: DanglingGroup[];
   disabledAssets: DisabledAsset[];
+  overviewCount: number;
+  danglingCount: number;
+  disabledCount: number;
   overviewExpanded: boolean;
   danglingExpanded: boolean;
   disabledExpanded: boolean;
@@ -103,15 +106,29 @@ export const useOwnerState = (): OwnerState => {
     { label: 'Printouts',       descriptionId: 'fs.direntStats.dangling.printouts.desc',      items: 'TODO' },
   ];
 
-  // Section 3: Disabled assets (configOption: disabledMode)
-  const disabledAssets: DisabledAsset[] = allProps
+  // Section 3: Disabled assets (configOption: disabledMode, or locale enabled === false)
+  const disabledByConfigOption: DisabledAsset[] = allProps
     .filter(p => p.configOptions?.includes('DISABLED_MODE'))
     .map(p => ({ fullPath: getDirent(p.id)?.fullPath ?? p.id, type: p.type }));
+
+  const disabledLocales: DisabledAsset[] = (allProps.filter(p => p.type === 'LOCALE') as Fs.LanguageProps[])
+    .filter(p => p.enabled === false)
+    .map(p => ({ fullPath: getDirent(p.id)?.fullPath ?? p.id, type: p.type }));
+
+  const disabledAssets: DisabledAsset[] = [...disabledByConfigOption, ...disabledLocales]
+    .sort((a, b) => a.type.localeCompare(b.type));
+
+  const overviewCount = allProps.length;
+  const danglingCount = danglingGroups.reduce((sum, g) => sum + (g.items === 'TODO' ? 0 : g.items.length), 0);
+  const disabledCount = disabledAssets.length;
 
   return {
     assetCounts,
     danglingGroups,
     disabledAssets,
+    overviewCount,
+    danglingCount,
+    disabledCount,
     overviewExpanded,
     danglingExpanded,
     disabledExpanded,
