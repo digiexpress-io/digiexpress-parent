@@ -58,9 +58,7 @@ public class Props_ArticleWorkflowBuilder {
     }
     if (Boolean.TRUE.equals(service.getAnon())) {
       builder.addConfigOptions(ConfigOption.ANONYMOUS_MODE);
-    } else {
-      builder.addConfigOptions(ConfigOption.AUTH_ONLY_MODE);
-    }
+    } 
 
     return builder
         .id(node.getObjectId())

@@ -85,7 +85,6 @@ class _ChangeState implements FsuChange {
         devMode: c.configOptions.includes('DEV_MODE') || undefined,
         anon: c.configOptions.includes('ANONYMOUS_MODE') || undefined,
         assignable: c.configOptions.includes('ASSIGNABLE_MODE') || undefined,
-        authOnly: c.configOptions.includes('AUTH_ONLY_MODE') || undefined,
         inHouse: c.configOptions.includes('IN_HOUSE_MODE') || undefined,
       }
     };

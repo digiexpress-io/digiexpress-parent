@@ -80,7 +80,6 @@ class _CreateState implements FsuCreateChange {
         devMode: current.configOptions.includes('DEV_MODE') || undefined,
         anon: current.configOptions.includes('ANONYMOUS_MODE') || undefined,
         assignable: current.configOptions.includes('ASSIGNABLE_MODE') || undefined,
-        authOnly: current.configOptions.includes('AUTH_ONLY_MODE') || undefined,
         inHouse: current.configOptions.includes('IN_HOUSE_MODE') || undefined,
       },
     };

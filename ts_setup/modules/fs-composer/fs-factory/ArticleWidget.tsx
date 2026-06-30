@@ -28,7 +28,7 @@ export const ArticleWidget: DirentWidget = {
   meta: {
     type: 'ARTICLE',
     extension: '.article',
-    configOptions: ['DEV_MODE'],
+    configOptions: ['DEV_MODE', 'AUTH_ONLY_MODE'],
     supportedViews: ['properties', 'references', 'history', 'changes', 'article-order', 'article-locale-overview', 'stats', 'help'],
   }
 };
