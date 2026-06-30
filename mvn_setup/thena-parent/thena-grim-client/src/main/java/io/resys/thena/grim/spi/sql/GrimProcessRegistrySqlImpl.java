@@ -450,7 +450,7 @@ WHERE id = $9""").ln()
         .append("DELETE FROM ").append(options.getGrimProcesses())
         .append(" WHERE id = $1")
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.of(Long.parseLong(id)))
         .build();
   }
 
