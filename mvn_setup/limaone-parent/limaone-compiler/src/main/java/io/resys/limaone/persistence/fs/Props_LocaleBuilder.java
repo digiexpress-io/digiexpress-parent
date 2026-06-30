@@ -23,7 +23,6 @@ import java.util.Collections;
  */
 
 import io.resys.limaone.fs.ImmutableLocaleProps;
-import io.resys.limaone.fs.WorldFsProps.ConfigOption;
 import io.resys.limaone.fs.WorldFsProps.LocaleProps;
 import io.resys.limaone.model.Locale;
 import lombok.RequiredArgsConstructor;
@@ -37,16 +36,13 @@ public class Props_LocaleBuilder {
     final Locale locale = currentState.getBodyOfType(node);
     final var builder = ImmutableLocaleProps.builder();
 
-    if (!Boolean.TRUE.equals(locale.getEnabled())) {
-      builder.addConfigOptions(ConfigOption.DISABLED_MODE);
-    }
-
     return builder
         .localeCode(locale.getValue())
         .assetDescription(node.getDescription().map(e -> e.getText()).orElse(null))
         .labels(node.getLabels().map(e -> e.getValues()).orElse(Collections.emptyList()))
         .id(node.getObjectId())
         .type(node.getBodyType())
+        .enabled(locale.getEnabled())
         .locked(false)
         .build();
   }

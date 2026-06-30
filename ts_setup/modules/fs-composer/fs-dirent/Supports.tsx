@@ -12,19 +12,25 @@ import { SearchResultHighlight } from '../fs-search';
 import { createWidget } from '../fs-factory';
 
 
-
-
 export const ConfigOptionIcons: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
   const classes = useUtilityClasses(ownerState.dirent);
+  const intl = useIntl();
   const Align = React.useCallback((props: { children: React.ReactNode }) => <Box display='flex' alignItems='center'>{props.children}</Box>, []);
 
-  if (!ownerState.configOptions) {
+  const isLocaleDisabled = ownerState.dirent.type === 'LOCALE' &&
+    (ownerState.dirent.props as Fs.LanguageProps)?.enabled === false;
+
+  if (!ownerState.configOptions && !isLocaleDisabled) {
     return (<></>)
   }
+
   const { options } = ownerState;
   return (
     <Box sx={{ marginLeft: 'auto', paddingRight: 1, display: 'flex', gap: 0.5 }}>
-      {ownerState.options.length === 0 && (<Align><FsIcon small icon={FsIcons.Settings} className={classes.iconConfig} tooltip='Configuration' key='configuration' /></Align>)}
+      {isLocaleDisabled && (
+        <Align><FsIcon small icon={FsIcons.Disabled} className={classes.iconConfig} tooltip={intl.formatMessage({ id: 'fs.dirent.language.disabled' })} /></Align>
+      )}
+      {!isLocaleDisabled && options.length === 0 && (<Align><FsIcon small icon={FsIcons.Settings} className={classes.iconConfig} tooltip='Configuration' key='configuration' /></Align>)}
       {options.map((type) => (<Align key={type}><ConfigIcon type={type} className={classes.iconConfig} /></Align>))}
     </Box>
   )
@@ -101,9 +107,7 @@ export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   }
   const widget = createWidget(props.dirent);
 
-
   const fullDisplayName = widget.meta.extension ? displayName + widget.meta.extension : displayName;
-
 
   return (
     <ListItemText className={classes.direntName} primary={<Typography variant='subtitle2'

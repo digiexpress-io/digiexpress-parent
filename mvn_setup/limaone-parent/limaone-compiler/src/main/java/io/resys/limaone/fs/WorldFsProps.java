@@ -128,6 +128,7 @@ public interface WorldFsProps {
   @Value.Immutable
   interface LocaleProps extends WorldFsProps {
     String getLocaleCode();
+    Boolean getEnabled();
   }
   
   @Value.Immutable
