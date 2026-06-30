@@ -30,7 +30,7 @@ export const FsDirentFormFieldRoot = styled('div', {
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',
 })(({ theme }) => ({
-  marginBottom: theme.spacing(1),
+  marginBottom: theme.spacing(1.5),
 
   [`& .${MUI_NAME}-labelRow`]: {
     display: 'flex',

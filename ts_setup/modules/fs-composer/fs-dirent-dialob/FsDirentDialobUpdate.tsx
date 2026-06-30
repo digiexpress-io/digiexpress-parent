@@ -1,13 +1,13 @@
 import React from 'react';
-import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentTextField } from '../fs-utilities';
+import { FsDirentFormField, FsDirentTextField } from '../fs-utilities';
 import { useUtilityClasses, FsDirentDialobRoot } from './useUtilityClasses';
 import { UpdateOwnerState, useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentDialobProps } from './FsDirentDialobProps';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { DialobFormsProvider, useDialobForms } from '@dxs-ts/eveli-api';
 import { FsDirentButtonOpen } from '../fs-dirent-button-save';
+import { Typography } from '@mui/material';
 
 export const FsDirentDialobUpdate: React.FC<FsDirentDialobProps> = (props) => {
   const intl = useIntl();
@@ -21,19 +21,21 @@ export const FsDirentDialobUpdate: React.FC<FsDirentDialobProps> = (props) => {
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.dialob.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
         <div className={classes.formContainer}>
 
-          <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.dialob.technicalNameField.label' })}</Typography>
-          <FsDirentTextField
-            value={ownerState.technicalName}
-            placeholder={intl.formatMessage({ id: 'fs.dirent.dialob.technicalNameField.placeholder' })}
-            onChange={ownerState.onChangeTechnicalName}
-          />
+          <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.dialob.technicalNameField.label' })}>
+            <FsDirentTextField
+              value={ownerState.technicalName}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.dialob.technicalNameField.placeholder' })}
+              onChange={ownerState.onChangeTechnicalName}
+            />
+          </FsDirentFormField>
 
-          <Typography className={classes.label}>{intl.formatMessage({ id: 'fs.dirent.dialob.formNameField.label' })}</Typography>
-          <FsDirentTextField
-            value={ownerState.formName}
-            placeholder={intl.formatMessage({ id: 'fs.dirent.dialob.formNameField.placeholder' })}
-            onChange={ownerState.onChangeFormName}
-          />
+          <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.dialob.formNameField.label' })}>
+            <FsDirentTextField
+              value={ownerState.formName}
+              placeholder={intl.formatMessage({ id: 'fs.dirent.dialob.formNameField.placeholder' })}
+              onChange={ownerState.onChangeFormName}
+            />
+          </FsDirentFormField>
 
         </div>
 
