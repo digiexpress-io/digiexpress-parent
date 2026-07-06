@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box, List, Drawer, ListItemIcon, ListItemText, Divider, ListItemButton, SxProps } from '@mui/material';
-import { Search as SearchIcon, Edit as EditIcon, Upload as UploadIcon  } from '@mui/icons-material';
+
+import { ArrowDropDown as ArrowDropDownIcon } from '@mui/icons-material';
+import { Button, ButtonGroup, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@mui/material';
 
 
 import { useIntl } from 'react-intl';
@@ -8,38 +9,82 @@ import { useIntl } from 'react-intl';
 import { DebugOptionType } from '../api';
 
 
-const DrawerOption: React.FC<{
-  onClick: () => void;
-  label: string;
-  icon: React.ReactElement;
-  disabled: boolean;
-}> = ({ icon, onClick, label, disabled }) => {
-  const intl = useIntl();
-  const itemSx: SxProps = { color: "text.primary" }
-  return (<ListItemButton disabled={disabled} onClick={onClick}><ListItemIcon sx={itemSx}>{icon}</ListItemIcon><ListItemText sx={itemSx}><Box component="span" sx={itemSx}>{intl.formatMessage({ id: label })}</Box></ListItemText></ListItemButton>);
-}
-const DrawerSection: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (<><Box sx={{ width: "350px" }}><List>{children}</List></Box><Divider orientation="vertical" flexItem color="secondary.dark" /></>)
-}
+export const DebugDrawer: React.FC<{
 
-
-const DebugDrawer: React.FC<{
-  open: boolean;
-  selected?: string;
-  onClose: () => void;
   onSelect: (type: DebugOptionType) => void;
-}> = ({ open, selected, onClose, onSelect }) => {
+}> = ({ onSelect }) => {
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef<HTMLDivElement>(null);
+  const intl = useIntl();
 
-  return (<Drawer anchor="top" open={open} onClose={onClose} sx={{ zIndex: "10000" }}>
-    <Box sx={{ display: "flex", backgroundColor: "secondary.main", color: "primary.contrastText" }}>
-      <DrawerSection>
-        <DrawerOption disabled={false} label='debug.toolbar.selectAsset' icon={<SearchIcon />} onClick={() => onSelect('SELECT_ASSET')} />
-        <DrawerOption disabled={selected ? false : true} label='debug.toolbar.inputCsv' icon={<UploadIcon />} onClick={() => onSelect('INPUT_CSV')} />
-        <DrawerOption disabled={selected ? false : true} label='debug.toolbar.inputForm' icon={<EditIcon />} onClick={() => onSelect('INPUT_FORM')} />
-        <DrawerOption disabled={selected ? false : true} label='debug.toolbar.inputJson' icon={<EditIcon />} onClick={() => onSelect('INPUT_JSON')} />
-      </DrawerSection>
-    </Box>
-  </Drawer>);
+
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event: Event) => {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  return (
+    <React.Fragment>
+      <ButtonGroup variant="contained" ref={anchorRef}>
+        <Button
+          size="small"
+          aria-controls={open ? 'split-button-menu' : undefined}
+          aria-expanded={open ? 'true' : undefined}
+          aria-haspopup="menu"
+          onClick={handleToggle}
+        >
+          {intl.formatMessage({ id: 'debug.toolbar.options' })}
+          <ArrowDropDownIcon />
+        </Button>
+      </ButtonGroup>
+      <Popper
+        sx={{ zIndex: 1 }}
+        open={open}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        transition
+        disablePortal
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin:
+                placement === 'bottom' ? 'center top' : 'center bottom',
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList id="split-button-menu" autoFocusItem>
+                  <MenuItem onClick={() => onSelect('INPUT_CSV')}>
+                    {intl.formatMessage({ id: 'debug.toolbar.inputCsv' })}
+                  </MenuItem>
+
+                  <MenuItem
+                    onClick={() => onSelect('INPUT_FORM')}>
+                    {intl.formatMessage({ id: 'debug.toolbar.inputForm' })}
+                  </MenuItem>
+
+                  <MenuItem onClick={() => onSelect('INPUT_JSON')}>
+                    {intl.formatMessage({ id: 'debug.toolbar.inputJson' })}
+                  </MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </React.Fragment>
+  );
 }
-
-export { DebugDrawer };

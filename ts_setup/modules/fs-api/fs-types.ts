@@ -469,6 +469,7 @@ export declare namespace Fs {
     dialobs: SelectOption[];
     languages: SelectOption[];
     printouts: SelectOption[];
+    links: SelectOption[];
     linkTypes: LinkType[];
     labels: string[];
     direntProps: Record<string, Fs.Props>;

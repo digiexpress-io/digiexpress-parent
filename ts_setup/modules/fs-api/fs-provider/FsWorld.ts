@@ -74,6 +74,7 @@ export class FsWorld {
         dialobs: _collectDialobs(dirents),
         languages: _collectLanguages(dirents),
         printouts: _collectPrintouts(dirents),
+        links: _collectLinks(dirents),
         linkTypes: _collectLinkTypes(),
         labels: _collectLabels(dirents),
         direntProps: propsMap,
@@ -200,6 +201,16 @@ function _collectPrintouts(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
   const result: Fs.SelectOption[] = [];
   nodes.forEach(node => {
     if (node.type === 'PRINTOUT') {
+      result.push({ value: node.id, label: node.name });
+    }
+  });
+  return result;
+}
+
+function _collectLinks(nodes: Fs.DirentBase[]): Fs.SelectOption[] {
+  const result: Fs.SelectOption[] = [];
+  nodes.forEach(node => {
+    if (node.type === 'ARTICLE_LINK') {
       result.push({ value: node.id, label: node.name });
     }
   });

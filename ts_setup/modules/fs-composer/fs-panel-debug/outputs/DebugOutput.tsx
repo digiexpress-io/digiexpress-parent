@@ -6,16 +6,16 @@ import { DebugOutputsFl } from './DebugOutputsFl';
 import { DebugOutputsFt } from './DebugOutputsFt';
 
 
-const DebugOutput: React.FC<{
-  selected?: Fs.DirentBase;
+export const DebugOutput: React.FC<{
+  selected: Fs.DirentBase;
   debug?: Fs.DebugResponse;
 }> = ({ selected, debug }) => {
 
-  if (!selected || !debug) {
+  if (!debug) {
     return null;
   }
 
-  const bodyType = selected?.type;
+  const bodyType = selected.type;
 
   let delegate = (<></>);
   if (!debug.body) {
@@ -32,5 +32,3 @@ const DebugOutput: React.FC<{
   return delegate;
 }
 
-export type { };
-export { DebugOutput };

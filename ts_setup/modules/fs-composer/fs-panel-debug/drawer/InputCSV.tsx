@@ -5,7 +5,6 @@ import { useIntl } from 'react-intl'
 
 interface InputCSVProps {
   value: string;
-  selected?: string;
   onClose: () => void;
   onSelect: (csv: string) => void;
 }
