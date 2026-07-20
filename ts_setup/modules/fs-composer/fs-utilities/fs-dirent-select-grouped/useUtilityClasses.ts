@@ -14,6 +14,7 @@ export interface FsDirentSelectGroupedClasses {
   sectionDivider: string;
   formControlLabel: string;
   searchField: string;
+  dialogContent: string;
 }
 
 export type FsDirentSelectGroupedClassKey = keyof FsDirentSelectGroupedClasses;
@@ -30,6 +31,7 @@ export const useUtilityClasses = () => {
     sectionDivider: ['sectionDivider'],
     formControlLabel: ['formControlLabel'],
     searchField: ['searchField'],
+    dialogContent: ['dialogContent'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -89,5 +91,10 @@ export const FsDirentSelectGroupedRoot = styled(Dialog, {
 
   [`& .${MUI_NAME}-searchField`]: {
     marginTop: theme.spacing(1),
+  },
+
+  [`& .${MUI_NAME}-dialogContent`]: {
+    height: '80vh',
+    overflowY: 'auto',
   },
 }));

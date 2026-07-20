@@ -80,7 +80,7 @@ export const FsDirentSelectGrouped: React.FC<FsDirentSelectGroupedProps> = ({ op
         </Stack>
       </DialogTitle>
 
-      <DialogContent>
+      <DialogContent className={classes.dialogContent}>
         {isSelected && (
           <>
             <Typography variant="subtitle1" className={classes.selectedLabel}>
