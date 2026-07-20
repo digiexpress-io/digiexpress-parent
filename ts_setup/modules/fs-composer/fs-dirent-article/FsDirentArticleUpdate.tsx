@@ -22,11 +22,8 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleProps> = (props) => 
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
-  const selectedLinks = selectOptions.links
-    .filter(l => {
-      const linkProps = getDirent(l.value)?.props as Fs.LinkProps | undefined;
-      return linkProps?.articles?.includes(props.direntId) ?? false;
-    })
+  const savedLinks = selectOptions.links
+    .filter(l => ((getDirent(l.value)?.props as Fs.LinkProps | undefined)?.articles ?? []).includes(props.direntId))
     .map(l => l.value);
 
   const groups: FsDirentSelectGroup[] = selectOptions.languages.map(locale => ({
@@ -51,8 +48,8 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleProps> = (props) => 
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         title="Article links"
-        value={selectedLinks}
-        onChange={(value) => console.log('selected links:', value)}
+        value={ownerState.links}
+        onChange={ownerState.onChangeLinks}
         groups={groups}
       />
 
@@ -77,7 +74,7 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleProps> = (props) => 
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.article.linksField.label' })}>
           <Stack direction="column" spacing={0.5}>
-            {selectedLinks.map(linkId => {
+            {savedLinks.map(linkId => {
               const linkLabel = selectOptions.links.find(l => l.value === linkId)?.label ?? linkId;
               return (
                 <Stack key={linkId} direction="row" spacing={1} alignItems="center">
@@ -88,7 +85,9 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleProps> = (props) => 
             })}
           </Stack>
           <Box sx={{ mt: 1 }}>
-            <Button onClick={() => setDialogOpen(true)}>{intl.formatMessage({ id: 'fs.dirent.article.linksEdit.button.label' })} ({selectedLinks.length})</Button>
+            <Button onClick={() => setDialogOpen(true)}>
+              {intl.formatMessage({ id: 'fs.dirent.article.linksEdit.button.label' })}
+            </Button>
           </Box>
         </FsDirentFormField>
 

@@ -1,6 +1,9 @@
-import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
+import React from 'react';
+import { Fs, useFsDirent, FsuChange, useFsuChange, useFsu } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { createWidget } from '../fs-factory';
+import { createLinkFsuChange, LinkArticleChange } from '../fs-dirent-article-link/useUpdateOwnerState';
+import { ArticleLinkChangeState } from './ArticleLinkChangeState';
 
 export interface UpdateOwnerState {
   assetPath: string | undefined;
@@ -10,9 +13,11 @@ export interface UpdateOwnerState {
   name: string;
   orderNumber: string;
   configOptions: Fs.ConfigOption[];
+  links: string[];
   onChangeName: (value: string) => void;
   onChangeOrderNumber: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
+  onChangeLinks: (value: string[]) => void;
 }
 
 type _ChangeStateProps = {
@@ -22,26 +27,43 @@ type _ChangeStateProps = {
   order: number;
   configOptions: Fs.ConfigOption[];
   treeId: string;
+  linkState: ArticleLinkChangeState;
 }
 
 class _ChangeState implements FsuChange {
   private _origin: _ChangeStateProps;
   private _current: _ChangeStateProps;
 
-
   constructor(props: _ChangeStateProps, origin?: _ChangeStateProps) {
     this._current = props;
     this._origin = origin ?? props;
   }
 
-  get id() { return this._current.articleId; }
-  get name() { return this._current.name; }
-  get treeId() { return this._current.treeId; }
-  get orderNumber() { return String(this._current.order); }
-  get configOptions() { return this._current.configOptions; }
-  get bodyType() { return this._current.bodyType; }
+  get id() {
+    return this._current.articleId;
+  }
+  get name() {
+    return this._current.name;
+  }
+  get treeId() {
+    return this._current.treeId;
+  }
+  get orderNumber() {
+    return String(this._current.order);
+  }
+  get configOptions() {
+    return this._current.configOptions;
+  }
+  get bodyType() {
+    return this._current.bodyType;
+  }
+  get linkState() {
+    return this._current.linkState;
+  }
   get isDirty(): boolean {
-    return JSON.stringify(this._origin) !== JSON.stringify(this._current);
+    const { linkState: _ol, ...originRest } = this._origin;
+    const { linkState: _cl, ...currentRest } = this._current;
+    return JSON.stringify(originRest) !== JSON.stringify(currentRest);
   }
 
   getCurrentProps(): { bodyType: Fs.BodyType; id: string; changes: Record<string, any> } {
@@ -58,6 +80,7 @@ class _ChangeState implements FsuChange {
       }
     };
   }
+
   withName(name: string): _ChangeState {
     return new _ChangeState({ ...this._current, name }, this._origin);
   }
@@ -71,13 +94,19 @@ class _ChangeState implements FsuChange {
       configOptions: widget.meta.configOptions.filter(opt => value.includes(opt)),
     }, this._origin);
   }
+  withLinks(pendingLinks: string[]): _ChangeState {
+    return new _ChangeState({
+      ...this._current,
+      linkState: this._current.linkState.withLinks(pendingLinks),
+    }, this._origin);
+  }
 }
 
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { activeTabPath } = useFsNav();
-  const { getDirent, getDirentName } = useFsDirent();
-
+  const { getDirent, getDirentName, selectOptions } = useFsDirent();
+  const fsu = useFsu();
 
   const dirent = getDirent(props.direntId);
   const articleProps = dirent?.type === 'ARTICLE' ? dirent.props as Fs.ArticleProps : undefined;
@@ -89,21 +118,48 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     name: getDirentName(props.direntId) ?? '',
     order: articleProps?.orderNumber ?? 0,
     configOptions: (articleProps?.configOptions ?? []) as Fs.ConfigOption[],
+    linkState: new ArticleLinkChangeState(
+      selectOptions.links
+        .filter(l => ((getDirent(l.value)?.props as Fs.LinkProps | undefined)?.articles ?? []).includes(props.direntId))
+        .map(l => l.value)
+    ),
   }));
 
+  function applyLinkArticleChange(linkId: string, transform: (articles: string[]) => string[]) {
+    const linkDirent = getDirent(linkId);
+    if (!linkDirent) {
+      return;
+    }
+    const currentArticles = fsu.isChange(linkId) ? (fsu.getChange(linkId) as LinkArticleChange).articles : ((linkDirent.props as Fs.LinkProps)?.articles ?? []);
+    const newArticles = transform(currentArticles);
+    if (fsu.isChange(linkId)) {
+      fsu.withChange<LinkArticleChange>(linkId, prevChange => prevChange.withArticles(newArticles));
+    } else {
+      fsu.withNewChange(linkId, () => createLinkFsuChange(linkDirent, newArticles));
+    }
+  }
 
-  const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
+  React.useEffect(() => {
+    for (const linkId of state.linkState.addedFromPrevious) {
+      applyLinkArticleChange(linkId, articles => [...articles.filter(id => id !== props.direntId), props.direntId]);
+    }
+    for (const linkId of state.linkState.removedFromPrevious) {
+      applyLinkArticleChange(linkId, articles => articles.filter(id => id !== props.direntId));
+    }
+  }, [state.linkState]);
 
   function onChangeName(value: string) {
-    setState(prev => prev.withName(value));
+    update(prev => prev.withName(value));
   }
   function onChangeOrderNumber(value: string) {
-    setState(prev => prev.withOrder(value));
+    update(prev => prev.withOrder(value));
   }
   function onChangeConfigOptions(value: string[]) {
-    setState(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
+    update(prev => prev.withConfigOptions(value as Fs.ConfigOption[]));
   }
-
+  function onChangeLinks(newLinkIds: string[]) {
+    update(prev => prev.withLinks(newLinkIds));
+  }
 
   return ({
     assetPath: activeTabPath,
@@ -113,8 +169,10 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     name: state.name,
     orderNumber: state.orderNumber,
     configOptions: state.configOptions,
+    links: state.linkState.pendingLinks,
     onChangeName,
     onChangeOrderNumber,
     onChangeConfigOptions,
+    onChangeLinks,
   });
 };

@@ -8,6 +8,7 @@ import { FsIcons } from '../../fs-theme';
 import { FsDirentSelectGroupedProps } from './FsDirentSelectGroupedProps';
 import { FsDirentTextField } from '../fs-dirent-text-field';
 import { FsDirentSelectGroupedRoot, useUtilityClasses } from './useUtilityClasses';
+import { SearchResultHighlight } from '../../fs-search/SearchResultHighlight';
 
 export const FsDirentSelectGrouped: React.FC<FsDirentSelectGroupedProps> = ({ open, onClose, title, value, onChange, groups }) => {
   const intl = useIntl();
@@ -42,10 +43,10 @@ export const FsDirentSelectGrouped: React.FC<FsDirentSelectGroupedProps> = ({ op
     .map(g => ({
       ...g,
       items: g.items.filter(item =>
-        !value.includes(item.id) &&
-        (searchString === '' || item.label.toLowerCase().includes(searchString))
+        searchString === '' || item.label.toLowerCase().includes(searchString)
       ),
-    }));
+    }))
+    .filter(g => g.items.length > 0);
 
   const selectedGroups = groups
     .map(g => ({ ...g, items: g.items.filter(item => value.includes(item.id)) }))
@@ -112,17 +113,16 @@ export const FsDirentSelectGrouped: React.FC<FsDirentSelectGroupedProps> = ({ op
             <Typography variant="subtitle2" className={classes.groupLabel}>
               {group.localeLabel}
             </Typography>
-            {group.items.length === 0 ? <Typography variant="body2" color="text.secondary">--</Typography> : group.items.map(item => (
+            {group.items.map(item => (
               <FormControlLabel
                 key={item.id}
-                label={<Typography variant="body2">{item.label}</Typography>}
+                label={<Typography variant="body2"><SearchResultHighlight text={item.label} searchTerm={search} /></Typography>}
                 control={
                   <Checkbox size="small" checked={value.includes(item.id)} onChange={() => toggleItem(item.id)} />
                 }
                 className={classes.formControlLabel}
               />
-            ))
-            }
+            ))}
           </React.Fragment>
         ))}
       </DialogContent>

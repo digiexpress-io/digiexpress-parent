@@ -95,6 +95,26 @@ class _ChangeState implements FsuChange {
 }
 
 
+export interface LinkArticleChange extends FsuChange {
+  readonly articles: string[];
+  withArticles(articles: string[]): LinkArticleChange;
+}
+
+export function createLinkFsuChange(dirent: Fs.DirentBase, articles: string[]): LinkArticleChange {
+  const linkProps = dirent.props as Fs.LinkProps;
+  const originProps: _ChangeStateProps = {
+    linkId: dirent.id,
+    bodyType: dirent.type,
+    treeId: dirent.commitIndex?.treeId!,
+    type: linkProps?.contentType ?? 'internal',
+    value: linkProps?.urlValue ?? '',
+    labels: Object.entries(linkProps?.intlValues ?? {}).map(([locale, labelValue]) => ({ locale, labelValue })),
+    configOptions: (linkProps?.configOptions ?? []) as Fs.ConfigOption[],
+    articles: linkProps?.articles ?? [],
+  };
+  return new _ChangeState({ ...originProps, articles }, originProps);
+}
+
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { activeTabPath } = useFsNav();
   const { getDirent, selectOptions } = useFsDirent();
