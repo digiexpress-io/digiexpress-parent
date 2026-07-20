@@ -1579,6 +1579,8 @@ export const en = {
   'fs.dirent.configOption.IN_HOUSE_MODE': 'In-house mode',
   'fs.direntTextField.required': '* Required',
   'fs.direntSelectSingle.required': '* Required',
+  'fs.direntSelectGrouped.localeFilter.label': 'Filter by locale',
+  'fs.direntSelectGrouped.associatedItems.label': 'Currently associated items',
   'fs.direntCreate.printout.sectionTitle.createNew': 'Create new printout service',
   'fs.direntCreate.printout.printoutServiceNameField.label': 'Printout service name',
   'fs.direntCreate.printout.printoutServiceNameField.placeholder': 'Enter printout service name',
