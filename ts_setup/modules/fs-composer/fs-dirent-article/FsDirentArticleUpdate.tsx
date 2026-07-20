@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Button } from '@mui/material';
+import { Typography, Button, Stack, Box } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { createWidget } from '../fs-factory';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
@@ -7,6 +7,7 @@ import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentArticleProps } from './FsDirentArticleProps';
 import { FsDirentSelectMulti, FsDirentTextField, FsDirentFormField, FsDirentSelectGrouped, FsDirentSelectGroup } from '../fs-utilities';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 
 
 export const FsDirentArticleUpdate: React.FC<FsDirentArticleProps> = (props) => {
@@ -74,7 +75,23 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleProps> = (props) => 
           <FsDirentSelectMulti options={configOptions} value={ownerState.configOptions} onChange={ownerState.onChangeConfigOptions} />
         </FsDirentFormField>
 
-        <Button size="small" onClick={() => setDialogOpen(true)}>Article links ({selectedLinks.length})</Button>
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.article.linksField.label' })}>
+          <Stack direction="column" spacing={0.5}>
+            {selectedLinks.map(linkId => {
+              const linkLabel = selectOptions.links.find(l => l.value === linkId)?.label ?? linkId;
+              return (
+                <Stack key={linkId} direction="row" spacing={1} alignItems="center">
+                  <FsIcon icon={FsIcons.Link} color={FsColors.direntTypes.link} />
+                  <Typography variant="subtitle2">{linkLabel}</Typography>
+                </Stack>
+              );
+            })}
+          </Stack>
+          <Box sx={{ mt: 1 }}>
+            <Button onClick={() => setDialogOpen(true)}>{intl.formatMessage({ id: 'fs.dirent.article.linksEdit.button.label' })} ({selectedLinks.length})</Button>
+          </Box>
+        </FsDirentFormField>
+
 
       </div>
     </FsDirentArticleRoot>
