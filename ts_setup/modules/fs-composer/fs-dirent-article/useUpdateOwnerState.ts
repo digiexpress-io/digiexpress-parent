@@ -57,6 +57,9 @@ class _ChangeState implements FsuChange {
   get bodyType() {
     return this._current.bodyType;
   }
+  get links() {
+    return this._current.linkState.pendingLinks;
+  }
   get linkState() {
     return this._current.linkState;
   }
@@ -169,7 +172,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     name: state.name,
     orderNumber: state.orderNumber,
     configOptions: state.configOptions,
-    links: state.linkState.pendingLinks,
+    links: state.links,
     onChangeName,
     onChangeOrderNumber,
     onChangeConfigOptions,
