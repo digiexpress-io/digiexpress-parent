@@ -1,6 +1,7 @@
 export interface FsDirentSelectGroupedItem {
   id: string;
   label: string;
+  desc?: string;
 }
 
 export interface FsDirentSelectGroup {

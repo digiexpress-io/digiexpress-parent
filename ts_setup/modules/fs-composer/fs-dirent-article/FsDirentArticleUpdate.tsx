@@ -34,10 +34,14 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleProps> = (props) => 
         const linkProps = getDirent(l.value)?.props as Fs.LinkProps | undefined;
         return !!linkProps?.intlValues?.[locale.value];
       })
-      .map(l => ({
-        id: l.value,
-        label: (getDirent(l.value)?.props as Fs.LinkProps | undefined)?.intlValues?.[locale.value] ?? l.label,
-      })),
+      .map(l => {
+        const linkProps = getDirent(l.value)?.props as Fs.LinkProps | undefined;
+        return {
+          id: l.value,
+          label: linkProps?.intlValues?.[locale.value] ?? l.label,
+          desc: linkProps?.urlValue,
+        };
+      }),
   }));
 
   return (

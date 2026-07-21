@@ -95,7 +95,13 @@ export const FsDirentSelectGrouped: React.FC<FsDirentSelectGroupedProps> = ({ op
                     {group.localeLabel}
                   </Typography>
                   {group.items.map(item => (
-                    <FormControlLabel key={item.id} label={<Typography variant="body2">{item.label}</Typography>}
+                    <FormControlLabel key={item.id}
+                      label={
+                        <Stack direction="column" spacing={0} mt={1}>
+                          <Typography variant="body2">{item.label}</Typography>
+                          {item.desc && <Typography variant="subtitle2" color="text.secondary">{item.desc}</Typography>}
+                        </Stack>
+                      }
                       control={<Checkbox size="small" checked onChange={() => toggleItem(item.id)} />}
                       className={classes.formControlLabel}
                     />
@@ -110,13 +116,15 @@ export const FsDirentSelectGrouped: React.FC<FsDirentSelectGroupedProps> = ({ op
         {visibleGroups.map((group, index) => (
           <React.Fragment key={group.localeId}>
             {index > 0 && <Divider className={classes.groupDivider} />}
-            <Typography variant="subtitle2" className={classes.groupLabel}>
-              {group.localeLabel}
-            </Typography>
+            <Typography variant="subtitle2" className={classes.groupLabel}>{group.localeLabel}</Typography>
             {group.items.map(item => (
-              <FormControlLabel
-                key={item.id}
-                label={<Typography variant="body2"><SearchResultHighlight text={item.label} searchTerm={search} /></Typography>}
+              <FormControlLabel key={item.id}
+                label={
+                  <Stack direction="column" spacing={0} mt={1}>
+                    <Typography variant="body2"><SearchResultHighlight text={item.label} searchTerm={search} /></Typography>
+                    {item.desc && <Typography variant="subtitle2" color="text.secondary">{item.desc}</Typography>}
+                  </Stack>
+                }
                 control={
                   <Checkbox size="small" checked={value.includes(item.id)} onChange={() => toggleItem(item.id)} />
                 }
