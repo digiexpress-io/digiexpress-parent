@@ -28,6 +28,7 @@ import io.resys.limaone.model.Article;
 import io.resys.limaone.model.ArticleTemplate;
 import io.resys.limaone.model.ArticleWorkflow;
 import io.resys.limaone.model.DecisionTable;
+import io.resys.limaone.model.DecisionTable.StatementType;
 import io.resys.limaone.model.Deployment;
 import io.resys.limaone.model.DialobForm;
 import io.resys.limaone.model.Flow;
@@ -35,6 +36,7 @@ import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.ImmutableArticle;
 import io.resys.limaone.model.ImmutableArticleTemplate;
 import io.resys.limaone.model.ImmutableArticleWorkflow;
+import io.resys.limaone.model.ImmutableDecisionStatement;
 import io.resys.limaone.model.ImmutableDecisionTable;
 import io.resys.limaone.model.ImmutableDeployment;
 import io.resys.limaone.model.ImmutableDialobForm;
@@ -82,14 +84,15 @@ public class ModifyAssetNameImpl extends AuthoringTemplate<ModifyAssetNameImpl, 
         
         final var model = nextWorld.getCurrentWorld().findAnyObject(props.getId());
         RepoAssert.isTrue(model.isPresent(), () -> "model must be loaded to rename it!");
-        final var nextState = buildNextState(model.get());
+        final var nextState = buildNextState(model.get(), props.getName());
         
         return nextWorld.mergeModel(props.getId(), props.getName(), nextState);
       });
   }
   
   @SuppressWarnings("unchecked")
-  private Model.Body buildNextState(Model<?> model) {
+  public static Model.Body buildNextState(Model<?> model, String name) {
+    
     final var bodyType = model.getBodyType();
     switch (bodyType) {
     case FLOW: {
@@ -98,8 +101,8 @@ public class ModifyAssetNameImpl extends AuthoringTemplate<ModifyAssetNameImpl, 
       
       return ImmutableFlow.builder()
           .from(start.getBody())
-          .flowName(props.getName())
-          .flowValue(flowValue.replace("id: " + start.getBody().getFlowName(), "id: " + props.getName()))
+          .flowName(name)
+          .flowValue(flowValue.replace("id: " + start.getBody().getFlowName(), "id: " + name))
           .build();
     }
     
@@ -107,7 +110,7 @@ public class ModifyAssetNameImpl extends AuthoringTemplate<ModifyAssetNameImpl, 
       final Model<Article> start = (Model<Article>) model;
       return ImmutableArticle.builder()
           .from(start.getBody())
-          .name(props.getName())
+          .name(name)
           .build();
     }
 
@@ -115,7 +118,7 @@ public class ModifyAssetNameImpl extends AuthoringTemplate<ModifyAssetNameImpl, 
       final Model<ArticleTemplate> start = (Model<ArticleTemplate>) model;
       return ImmutableArticleTemplate.builder()
           .from(start.getBody())
-          .name(props.getName())
+          .name(name)
           .build();
     }
     
@@ -123,7 +126,7 @@ public class ModifyAssetNameImpl extends AuthoringTemplate<ModifyAssetNameImpl, 
       final Model<ArticleWorkflow> start = (Model<ArticleWorkflow>) model;
       return ImmutableArticleWorkflow.builder()
           .from(start.getBody())
-          .flowName(props.getName())
+          .flowName(name)
           .build();
     }
     
@@ -131,7 +134,7 @@ public class ModifyAssetNameImpl extends AuthoringTemplate<ModifyAssetNameImpl, 
       final Model<Printout> start = (Model<Printout>) model;
       return ImmutablePrintout.builder()
           .from(start.getBody())
-          .serviceName(props.getName())
+          .serviceName(name)
           .build();
     }
     
@@ -139,16 +142,25 @@ public class ModifyAssetNameImpl extends AuthoringTemplate<ModifyAssetNameImpl, 
       final Model<PrintoutResource> start = (Model<PrintoutResource>) model;
       return ImmutablePrintoutResource.builder()
           .from(start.getBody())
-          .resourceName(props.getName())
+          .resourceName(name)
           .build();
     }
     
     case DECISION_TABLE: {
       final Model<DecisionTable> start = (Model<DecisionTable>) model;
-      return ImmutableDecisionTable.builder()
-          .from(start.getBody())
-          .name(props.getName())
-          .build();
+      final var next = ImmutableDecisionTable.builder().name(name);
+      for(final var node : start.getBody().getNodes()) {
+        if(node.getType() == StatementType.SET_NAME) {
+          next.addNodes(ImmutableDecisionStatement.builder()
+              .from(node)
+              .value(name)
+              .build());
+        } else {
+          next.addNodes(node);        
+        }
+      }
+      
+      return next.build();
     }
     
     case FLOW_TASK: {
@@ -157,7 +169,7 @@ public class ModifyAssetNameImpl extends AuthoringTemplate<ModifyAssetNameImpl, 
 
       return ImmutableFlowTask.builder()
           .from(start.getBody())
-          .taskValue(taskValue.replace("public class " + start.getBody().getTaskName(), "public class " + props.getName()))
+          .taskValue(taskValue.replace("public class " + start.getBody().getTaskName(), "public class " + name))
           .build();
     }
     
@@ -165,7 +177,7 @@ public class ModifyAssetNameImpl extends AuthoringTemplate<ModifyAssetNameImpl, 
       final Model<Deployment> start = (Model<Deployment>) model;
       return ImmutableDeployment.builder()
           .from(start.getBody())
-          .name(props.getName())
+          .name(name)
           .build();
     }
     
@@ -173,7 +185,7 @@ public class ModifyAssetNameImpl extends AuthoringTemplate<ModifyAssetNameImpl, 
       final Model<DialobForm> start = (Model<DialobForm>) model;
       return ImmutableDialobForm.builder()
           .from(start.getBody())
-          .formName(props.getName())
+          .formName(name)
           .build();
     }
     

@@ -26,17 +26,9 @@ import java.util.function.Consumer;
 import io.resys.limaone.authoring.CopyAny;
 import io.resys.limaone.authoring.ImmutableCopyAnyProps;
 import io.resys.limaone.authoring.ImmutableCopyAnyProps.Builder;
-import io.resys.limaone.model.DecisionTable;
-import io.resys.limaone.model.DecisionTable.StatementType;
-import io.resys.limaone.model.Flow;
-import io.resys.limaone.model.FlowTask;
-import io.resys.limaone.model.ImmutableDecisionStatement;
-import io.resys.limaone.model.ImmutableDecisionTable;
-import io.resys.limaone.model.ImmutableFlow;
-import io.resys.limaone.model.ImmutableFlowTask;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.persistence.AuthoringImpl.AuthoringConfig;
-import io.resys.limaone.persistence.ModelWorldDb.NextWorld;
+import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 
 public class CopyAnyImpl extends AuthoringTemplate<CopyAnyImpl, Model<?>> implements CopyAny {
@@ -68,66 +60,16 @@ public class CopyAnyImpl extends AuthoringTemplate<CopyAnyImpl, Model<?>> implem
         .author(getAuthor())
         .docsId(props.getIdOfObjectToCopy())
         .build(nextWorld -> {
-          final var body = internalBuild(nextWorld);
-          return nextWorld.newModel(props.getNewObjectName(), body, null, null);
+          
+          final var model = nextWorld.getCurrentWorld().findAnyObject(props.getIdOfObjectToCopy());
+          RepoAssert.isTrue(model.isPresent(), () -> "model must be loaded to rename it!");
+          final var nextState = copy(model.get());
+          return nextWorld.newModel(props.getNewObjectName(), nextState);
         });
   }
   
-  private Model.Body internalBuild(NextWorld nextWorld) {
-    
-    final var src = nextWorld.getCurrentWorld()
-      .findAnyObject(props.getIdOfObjectToCopy());
-    
-    if(src.isEmpty()) {
-      throw new CopyAsNotSupportedForObject("Copy object can't be found!");  
-    }
-    switch (src.get().getBodyType()) {
-      case FLOW: return copyFlow(src.get(), nextWorld);
-      case FLOW_TASK: return copyFlowTask(src.get(), nextWorld);
-      case DECISION_TABLE: return copyDecisionTable(src.get(), nextWorld);
-      default: throw new CopyAsNotSupportedForObject("Copy as not support for object: " + src.get().getBodyType());
-    }
-  }
   
-  private Model.Body copyFlow(Model<?> src, NextWorld nextWorld) {
-    final Flow flow = (Flow) src.getBody();
-    
-    
-    return ImmutableFlow.builder()
-      .flowName(props.getNewObjectName())
-      .flowValue(flow.getFlowValue().replace(flow.getFlowName(), props.getNewObjectName()))
-      .build();
-  }
-  
-  private Model.Body copyFlowTask(Model<?> src, NextWorld nextWorld) {
-    final FlowTask flowTask = (FlowTask) src.getBody();
-    
-    return ImmutableFlowTask.builder()
-      .taskName(props.getNewObjectName())
-      .taskValue(flowTask.getTaskValue().replace(flowTask.getTaskName(), props.getNewObjectName()))
-      .build();
-  }
-  
-  private Model.Body copyDecisionTable(Model<?> src, NextWorld nextWorld) {
-    final DecisionTable decisionTable = (DecisionTable) src.getBody();
-    final var next = ImmutableDecisionTable.builder().name(props.getNewObjectName());
-    for(final var node : decisionTable.getNodes()) {
-      if(node.getType() == StatementType.SET_NAME) {
-        next.addNodes(ImmutableDecisionStatement.builder()
-            .from(node)
-            .value(props.getNewObjectName())
-            .build());
-      } else {
-        next.addNodes(node);        
-      }
-    }
-    return next.build();
-  }
-  public static class CopyAsNotSupportedForObject extends RuntimeException {
-    private static final long serialVersionUID = -1398646745215966745L;
-
-    public CopyAsNotSupportedForObject(String message) {
-      super(message);
-    }
+  private Model.Body copy(Model<?> model) {
+    return ModifyAssetNameImpl.buildNextState(model, props.getNewObjectName());
   }
 }
