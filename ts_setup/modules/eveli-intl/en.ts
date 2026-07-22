@@ -1622,6 +1622,7 @@ export const en = {
   'fs.tabs.new.printout_page': 'New printout page',
   'fs.tabs.new.image': 'New image',
   'fs.direntRename.title': 'Rename',
+  'fs.direntRename.placeholder': 'Asset name required',
   'fs.direntHistory.title': 'Recent changes to this item',
   'fs.direntHistory.tableHeader.user': 'User',
   'fs.direntHistory.tableHeader.change': 'Change',

@@ -28,6 +28,14 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
   const formatted = lastUpdated ? DateTime.fromISO(lastUpdated).toFormat('d.M.yyyy HH:mm') : undefined;
   const lastUpdatedBy = dirent?.commitIndex?.updatedByAuthor;
 
+  const noRenamePossible = dirent?.type === 'ARTICLE_LINK'
+    || dirent?.type === 'DIALOB_FORM_META'
+    || dirent?.type === 'FOLDER'
+    || dirent?.type === 'LOCALE'
+    || dirent?.type === 'ARTICLE_PAGE'
+    || dirent?.type === 'PRINTOUT_PAGE'
+    || dirent?.type === 'UNKNOWN'
+
   function handleEdit() {
     if (dirent) {
       openAsset(dirent);
@@ -47,9 +55,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
     }
   }
 
-  function handleRename() {
 
-  }
 
   function handleDuplicate() {
     console.log('Duplicate:', dirent?.name);
@@ -110,7 +116,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
 
       <Divider className={classes.divider} />
 
-      <MenuItem disableRipple
+      <MenuItem disableRipple disabled={noRenamePossible}
         className={props.openSubmenu === 'rename' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('rename')}
       >
