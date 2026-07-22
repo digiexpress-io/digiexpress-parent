@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFsDirent } from '@dxs-ts/fs-api';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { FsDirentRenameProps } from './FsDirentRenameProps';
 
 
@@ -11,13 +11,22 @@ export interface OwnerState {
 }
 
 
+function getDisplayName(dirent: Fs.DirentBase | undefined): string {
+  if (!dirent) {
+    return '';
+  }
+  if (dirent.type === 'ARTICLE') {
+    const parts = dirent.fullPath.split('/');
+    return parts[parts.length - 2] ?? dirent.name;
+  }
+  return dirent.name;
+}
+
 export const useOwnerState = (props: FsDirentRenameProps): OwnerState => {
   const { dirent } = props;
   const { updateDirentName } = useFsDirent();
-  const init = dirent?.name ?? '';
+  const init = getDisplayName(dirent);
   const [name, setName] = React.useState(init);
-
-  console.log(dirent.fullPath)
 
   function onChangeName(value: string) {
     setName(value);
