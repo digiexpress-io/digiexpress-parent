@@ -47,6 +47,10 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
     }
   }
 
+  function handleRename() {
+
+  }
+
   function handleDuplicate() {
     console.log('Duplicate:', dirent?.name);
     props.onClose();
@@ -106,7 +110,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
 
       <Divider className={classes.divider} />
 
-      <MenuItem disableRipple disabled
+      <MenuItem disableRipple
         className={props.openSubmenu === 'rename' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('rename')}
       >

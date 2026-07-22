@@ -21,6 +21,10 @@ export const FsDirentMenuSub: React.FC<FsDirentMenuSubProps> = React.memo((props
     return null;
   }
 
+  if (!props.dirent) {
+    return;
+  }
+
   return (
     <>
       <Divider orientation="vertical" className={classes.dividerSub} />

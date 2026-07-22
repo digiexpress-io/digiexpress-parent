@@ -7,6 +7,7 @@ const MUI_NAME = 'FsDirentRename';
 export interface FsDirentRenameClasses {
   root: string;
   title: string;
+  titleRow: string;
   textField: string;
 }
 
@@ -16,6 +17,7 @@ export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
     title: ['title'],
+    titleRow: ['titleRow'],
     textField: ['textField'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -30,11 +32,17 @@ export const FsDirentRenameRoot = styled('div', {
   display: 'flex',
   flexDirection: 'column',
 
+  [`& .${MUI_NAME}-titleRow`]: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(1),
+  },
+
   [`& .${MUI_NAME}-title`]: {
     ...theme.typography.subtitle2,
     fontWeight: 500,
     color: FsColors.base.text,
-    marginBottom: theme.spacing(1),
   },
 
   [`& .${MUI_NAME}-textField`]: {

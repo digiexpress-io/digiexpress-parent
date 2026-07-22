@@ -26,6 +26,7 @@ function Component() {
   const { debugDirent } = useFetch('worker/rest/api/assets/fs/debugs.POST', {});
   const { putAny } = useFetch('worker/rest/api/assets/fs/dirents.PUT', {});
   const { putDescription } = useFetch('worker/rest/api/assets/fs/dirents/description/$id.PUT', {});
+  const { putName } = useFetch('worker/rest/api/assets/fs/dirents/name/$id.PUT', {});
   const { putLabels } = useFetch('worker/rest/api/assets/fs/dirents/labels/$id.PUT', {});
   const { postAny } = useFetch('worker/rest/api/assets/fs/dirents.POST', {});
   const { deleteAny } = useFetch('worker/rest/api/assets/fs/dirents/$id.DELETE', {});
@@ -38,6 +39,7 @@ function Component() {
     pushChange: async (change) => putAny(change.getCurrentProps()),
     pushCreate: async (change) => postAny(change.getCurrentProps()),
     pushDescription: putDescription,
+    pushName: putName,
     pushLabels: putLabels,
     deleteDirent: deleteAny,
   };
