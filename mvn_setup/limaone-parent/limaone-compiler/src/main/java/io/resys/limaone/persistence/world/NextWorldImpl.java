@@ -158,12 +158,12 @@ public class NextWorldImpl implements NextWorld {
   
   @Override
   public <T extends Body> Model<T> newModel(String fileName, T body) {
-    return newModel(fileName, body);
+    return newModel(fileName, body, null, null);
   }
 
   @Override
   public <T extends Body> Model<T> mergeModel(String id, String fileName, T body) {
-    return mergeModel(id, fileName, body);
+    return mergeModel(id, fileName, body, null, null);
   }
   
   @SuppressWarnings("unchecked")

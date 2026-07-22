@@ -44,6 +44,7 @@ import io.resys.limaone.authoring.ModifyFlow.ModifyFlowProps;
 import io.resys.limaone.authoring.ModifyFlowTask.ModifyFlowTaskProps;
 import io.resys.limaone.authoring.ModifyLabels.ModifyLabelsProps;
 import io.resys.limaone.authoring.ModifyLocale.ModifyLocaleProps;
+import io.resys.limaone.authoring.ModifyAssetName.ModifyNameProps;
 import io.resys.limaone.authoring.ModifyPrintout.ModifyPrintoutProps;
 import io.resys.limaone.authoring.ModifyPrintoutPage.ModifyPrintoutPageProps;
 import io.resys.limaone.authoring.ModifyPrintoutResource.ModifyPrintoutResourceProps;
@@ -199,6 +200,14 @@ public class AssetsFsController {
       @RequestBody ModifyDescriptionProps body)
   {
     return authoring.modifyModel().modifyDescription().props(body).build();
+  }
+  
+  @PutMapping("dirents/name/{id}")
+  public Uni<Model<?>> updateName(
+      @PathVariable("id") String id,
+      @RequestBody ModifyNameProps body)
+  {
+    return authoring.modifyModel().modifyAssetName().props(body).build();
   }
   
   @PutMapping("dirents/labels/{id}")

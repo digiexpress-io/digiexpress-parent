@@ -23,7 +23,9 @@ package io.resys.limaone.tests;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import io.resys.limaone.model.Article;
 import io.resys.limaone.model.ImmutableDescriptionLabel;
+import io.resys.limaone.model.Model;
 import io.resys.limaone.persistence.AuthoringImpl;
 import io.resys.limaone.tests.support.DbSupport;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Authoring_8_Meta_Test extends DbSupport {
 
   @Test
+  @SuppressWarnings("unchecked")
   public void stencilAssetLabelAndDescTest() {
     final var authoring = new AuthoringImpl(createConfig());
     
@@ -41,32 +44,41 @@ public class Authoring_8_Meta_Test extends DbSupport {
         .props(props -> props.name("Nice page template").content("# Header 1").type("Page"))
         .buildSync();
         
-    @SuppressWarnings("unused")
+
     final var article1 = authoring.newModel()
         .newArticle()
         .props(builder -> builder.name("My first article").order(100))
         .buildSync();
+
+    final Model<Article> renamedArticle = (Model<Article>) authoring.modifyModel().modifyAssetName()
+      .props(props -> props.id(article1.getId()).name("Renamed article1"))
+      .buildSync();
     
+    Assertions.assertEquals("Renamed article1", renamedArticle.getBody().getName());
+    
+    {
+      final var fs = authoring.worldFsQuery().findAllSync().flatAll();
+      final var found = fs.stream().filter(t -> t.getId().equals(article1.getId())).findFirst().get();
+      Assertions.assertEquals("articles/Renamed article1/article", found.getFullPath());    
+    }
     
     authoring.modifyModel().modifyDescription()
       .props(props -> props.id(template1.getId()).text("text text 1"))
       .buildSync();
     
     authoring.modifyModel().modifyLabels()
-    .props(props -> props.id(template1.getId()).addValues(ImmutableDescriptionLabel.builder()
-        .key("mundo")
-        .text("un")
-        .build()))
-    .buildSync();
-  
+      .props(props -> props.id(template1.getId()).addValues(ImmutableDescriptionLabel.builder()
+          .key("mundo")
+          .text("un")
+          .build()))
+      .buildSync();
     
+
     final var described = authoring.worldFsQuery().findAllSync().getDirents().stream()
       .flatMap(e -> e.getChildren().stream())
       .filter(d -> d.getId().equals(template1.getId()))
       .findFirst().orElseThrow();
     Assertions.assertEquals("text text 1", described.getProps().getAssetDescription());    
     Assertions.assertEquals("[DescriptionLabel{key=mundo, text=un}]", described.getProps().getLabels().toString());    
-    
-
   }
 }

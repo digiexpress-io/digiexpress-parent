@@ -48,6 +48,7 @@ import io.resys.limaone.authoring.ModifyFlow;
 import io.resys.limaone.authoring.ModifyFlowTask;
 import io.resys.limaone.authoring.ModifyLabels;
 import io.resys.limaone.authoring.ModifyLocale;
+import io.resys.limaone.authoring.ModifyAssetName;
 import io.resys.limaone.authoring.ModifyPrintout;
 import io.resys.limaone.authoring.ModifyPrintoutPage;
 import io.resys.limaone.authoring.ModifyPrintoutResource;
@@ -166,6 +167,8 @@ public class AuthoringImpl implements Authoring {
       @Override public ModifyPrintoutPage modifyPrintoutPage() { return new ModifyPrintoutPageImpl(config); }
       @Override public ModifyPrintoutResource modifyPrintoutResource() { return new ModifyPrintoutResourceImpl(config); }
       @Override public ModifyDescription modifyDescription() { return new ModifyDescriptionImpl(config); }
+      @Override public ModifyAssetName modifyAssetName() { return new ModifyAssetNameImpl(config); }
+
       @Override public ModifyLabels modifyLabels() { return new ModifyLabelsImpl(config); }
     };
   }
