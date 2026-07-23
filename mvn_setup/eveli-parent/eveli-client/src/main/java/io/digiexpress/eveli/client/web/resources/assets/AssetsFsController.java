@@ -32,19 +32,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.resys.limaone.authoring.Authoring;
+import io.resys.limaone.authoring.CopyAny.CopyAnyProps;
 import io.resys.limaone.authoring.DebugAny.DebugAnyProps;
 import io.resys.limaone.authoring.DebugAny.DebugResult;
 import io.resys.limaone.authoring.ModifyArticle.ModifyArticleProps;
 import io.resys.limaone.authoring.ModifyArticleLink.ModifyArticleLinkProps;
 import io.resys.limaone.authoring.ModifyArticlePage.ModifyArticlePageProps;
 import io.resys.limaone.authoring.ModifyArticleWorkflow.ModifyArticleWorkflowProps;
+import io.resys.limaone.authoring.ModifyAssetName.ModifyNameProps;
 import io.resys.limaone.authoring.ModifyDecisionTable.ModifyDecisionTableProps;
 import io.resys.limaone.authoring.ModifyDescription.ModifyDescriptionProps;
 import io.resys.limaone.authoring.ModifyFlow.ModifyFlowProps;
 import io.resys.limaone.authoring.ModifyFlowTask.ModifyFlowTaskProps;
 import io.resys.limaone.authoring.ModifyLabels.ModifyLabelsProps;
 import io.resys.limaone.authoring.ModifyLocale.ModifyLocaleProps;
-import io.resys.limaone.authoring.ModifyAssetName.ModifyNameProps;
 import io.resys.limaone.authoring.ModifyPrintout.ModifyPrintoutProps;
 import io.resys.limaone.authoring.ModifyPrintoutPage.ModifyPrintoutPageProps;
 import io.resys.limaone.authoring.ModifyPrintoutResource.ModifyPrintoutResourceProps;
@@ -208,6 +209,14 @@ public class AssetsFsController {
       @RequestBody ModifyNameProps body)
   {
     return authoring.modifyModel().modifyAssetName().props(body).build();
+  }
+  
+  @PostMapping("dirents/copy/{id}")
+  public Uni<Model<?>> copyAsset(
+      @PathVariable("id") String id,
+      @RequestBody CopyAnyProps body)
+  {
+    return authoring.copyAsModel().copyAny().props(body).build();
   }
   
   @PutMapping("dirents/labels/{id}")
