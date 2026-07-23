@@ -28,7 +28,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
   const formatted = lastUpdated ? DateTime.fromISO(lastUpdated).toFormat('d.M.yyyy HH:mm') : undefined;
   const lastUpdatedBy = dirent?.commitIndex?.updatedByAuthor;
 
-  const noRenamePossible = dirent?.type === 'ARTICLE_LINK'
+  const isNotCopyableOrRenamable = dirent?.type === 'ARTICLE_LINK'
     || dirent?.type === 'DIALOB_FORM_META'
     || dirent?.type === 'FOLDER'
     || dirent?.type === 'LOCALE'
@@ -56,11 +56,6 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
   }
 
 
-
-  function handleDuplicate() {
-    console.log('Duplicate:', dirent?.name);
-    props.onClose();
-  }
 
   function handleLock() {
     const action = dirent?.props?.locked ? 'Unlock' : 'Lock';
@@ -109,14 +104,19 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
         {dirent?.props?.locked ? intl.formatMessage({ id: 'fs.direntMenu.menuItem.unlock' }) : intl.formatMessage({ id: 'fs.direntMenu.menuItem.lock' })}
       </MenuItem>
 
-      <MenuItem disableRipple disabled className={classes.menuItem} onClick={handleDuplicate}>
+      <MenuItem disableRipple disabled={isNotCopyableOrRenamable}
+        className={props.openSubmenu === 'copy' ? classes.menuItemActive : classes.menuItem}
+        onClick={() => handleSubmenuToggle('copy')}
+      >
         <FsIcon icon={FsIcons.Copy} small />
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.duplicate' })}
+        <Box flex={1} />
+        <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
 
       <Divider className={classes.divider} />
 
-      <MenuItem disableRipple disabled={noRenamePossible}
+      <MenuItem disableRipple disabled={isNotCopyableOrRenamable}
         className={props.openSubmenu === 'rename' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('rename')}
       >

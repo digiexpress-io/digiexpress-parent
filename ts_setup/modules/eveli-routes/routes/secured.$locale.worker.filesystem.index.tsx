@@ -27,6 +27,7 @@ function Component() {
   const { putAny } = useFetch('worker/rest/api/assets/fs/dirents.PUT', {});
   const { putDescription } = useFetch('worker/rest/api/assets/fs/dirents/description/$id.PUT', {});
   const { putName } = useFetch('worker/rest/api/assets/fs/dirents/name/$id.PUT', {});
+  const { postCopy } = useFetch('worker/rest/api/assets/fs/dirents/copy/$id.POST', {});
   const { putLabels } = useFetch('worker/rest/api/assets/fs/dirents/labels/$id.PUT', {});
   const { postAny } = useFetch('worker/rest/api/assets/fs/dirents.POST', {});
   const { deleteAny } = useFetch('worker/rest/api/assets/fs/dirents/$id.DELETE', {});
@@ -40,6 +41,7 @@ function Component() {
     pushCreate: async (change) => postAny(change.getCurrentProps()),
     pushDescription: putDescription,
     pushName: putName,
+    pushCopy: async (props) => postCopy(props),
     pushLabels: putLabels,
     deleteDirent: deleteAny,
   };
