@@ -169,6 +169,7 @@ public class ModifyAssetNameImpl extends AuthoringTemplate<ModifyAssetNameImpl, 
 
       return ImmutableFlowTask.builder()
           .from(start.getBody())
+          .taskName(name)
           .taskValue(taskValue.replace("public class " + start.getBody().getTaskName(), "public class " + name))
           .build();
     }
@@ -188,6 +189,7 @@ public class ModifyAssetNameImpl extends AuthoringTemplate<ModifyAssetNameImpl, 
           .formName(name)
           .build();
     }
+
     
     case DIALOB_FORM_META:
     case PRINTOUT_PAGE:
