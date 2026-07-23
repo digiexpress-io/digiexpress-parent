@@ -182,6 +182,7 @@ public class ModifyAssetNameImpl extends AuthoringTemplate<ModifyAssetNameImpl, 
           .build();
     }
     
+    // Not supported at the moment
     case DIALOB_FORM: {
       final Model<DialobForm> start = (Model<DialobForm>) model;
       return ImmutableDialobForm.builder()
