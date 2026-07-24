@@ -373,8 +373,8 @@ public class TagomiPdfTest extends DbSupport {
         "expected visibility-cascaded answer feedBackTxt in flat data items");
 
     final var resources = new java.util.LinkedHashMap<String, String>();
-    resources.put("pop-theme", TestTemplate.toString("templates/pop-theme.typ"));
-    resources.put("pop-render", TestTemplate.toString("templates/pop-render.typ"));
+    resources.put("form-theme", TestTemplate.toString("templates/form-theme.typ"));
+    resources.put("form-render", TestTemplate.toString("templates/form-render.typ"));
 
     final var pdfBytes = renderSinglePagePdf(tagomiUrl, "session-state-doc", "Session state",
         TestTemplate.toString("templates/main.typ"), resources, props,
