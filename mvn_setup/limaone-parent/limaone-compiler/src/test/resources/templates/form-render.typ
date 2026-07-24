@@ -1,5 +1,5 @@
 // =============================================================
-// pop-render.typ — Renders a Dialob questionnaire printout (the
+// form-render.typ — Renders a Dialob questionnaire printout (the
 // "mifid"-style body) to PDF. Generic over any completed Dialob form.
 //
 // Input (doc-data) is the printout BODY produced by the dialob-printout
@@ -14,7 +14,7 @@
 //   }
 // =============================================================
 
-#import "pop-theme.typ": *
+#import "form-theme.typ": *
 
 
 // ─────────────────────────────────────────────────────────────

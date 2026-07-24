@@ -3,8 +3,8 @@
 // (the former data.mifid object) — no profile/customer/benefit wrapper.
 #let doc-data = sys.inputs.service.props
 
-#import "pop-theme.typ": *
-#import "pop-render.typ": *
+#import "form-theme.typ": *
+#import "form-render.typ": *
 
 // Header date from the questionnaire metadata (ISO "YYYY-MM-DDT…"):
 // prefer lastAnswer, fall back to created.

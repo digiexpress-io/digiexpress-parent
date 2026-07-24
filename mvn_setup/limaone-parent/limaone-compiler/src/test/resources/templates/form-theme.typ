@@ -1,9 +1,9 @@
 // =============================================================
-// pop-theme.typ — POP Pankki shared document theme
+// form-theme.typ
 // =============================================================
-// Register this file in Tagomi as a text/* resource named "pop-theme".
+// Register this file in Tagomi as a text/* resource named "form-theme".
 // Import in any template with:
-//   #import "pop-theme.typ": *
+//   #import "form-theme.typ": *
 //
 // Apply document-wide page setup at the top of your main template:
 //   #show: pop-setup.with(date: "03.03.2026")
