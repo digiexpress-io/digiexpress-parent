@@ -119,7 +119,8 @@ public interface Authoring {
     
     ModifyDescription modifyDescription();
     ModifyLabels modifyLabels();
-    
+    ModifyAssetName modifyAssetName();
+
     ModifyDeployment modifyDeployment();
     
     ModifyFlow modifyFlow();

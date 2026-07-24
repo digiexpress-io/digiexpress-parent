@@ -2,16 +2,16 @@ import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 
-const MUI_NAME = 'FsDirentRename';
+const MUI_NAME = 'FsDirentCopy';
 
-export interface FsDirentRenameClasses {
+export interface FsDirentCopyClasses {
   root: string;
   title: string;
   titleRow: string;
   textField: string;
 }
 
-export type FsDirentRenameClassKey = keyof FsDirentRenameClasses;
+export type FsDirentCopyClassKey = keyof FsDirentCopyClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -24,7 +24,7 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsDirentRenameRoot = styled('div', {
+export const FsDirentCopyRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState',

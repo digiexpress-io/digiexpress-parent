@@ -21,6 +21,9 @@ export interface FsDirentContextType {
 
   updateDirent(change: FsuChange): Promise<void>;
   updateDirentDescription(id: string, text?: string): Promise<void>;
+  updateDirentName(id: string, name: string): Promise<void>;
+  copyDirent(id: string, newObjectName: string): Promise<Fs.DirentBase>;
+
   updateDirentLabels(id: string, values: Fs.DescriptionLabel[]): Promise<void>;
   deleteDirent(id: string, bodyType: Fs.BodyType): Promise<void>;
   createDirent(change: FsuCreateChange): Promise<Fs.DirentBase>;
@@ -38,6 +41,8 @@ export interface FsDirentProviderProps {
     pushChange: (change: FsuChange) => Promise<void>;
     pushCreate: (change: FsuCreateChange) => Promise<string>;
     pushDescription: (props: { id: string; text?: string }) => Promise<void>;
+    pushName: (props: { id: string, name: string }) => Promise<void>;
+    pushCopy: (props: { id: string, newObjectName: string }) => Promise<string>;
     pushLabels: (props: { id: string; values: Fs.DescriptionLabel[] }) => Promise<void>;
     deleteDirent: (id: string, bodyType: Fs.BodyType) => Promise<void>;
   }
@@ -118,6 +123,31 @@ function _initCtx(initProps: {
     }
   }
 
+  async function updateDirentName(id: string, name: string): Promise<void> {
+    const bodyType = dirents.getDirent(id)?.type ?? 'ARTICLE';
+    try {
+      await persistenceUnit.pushName({ id, name });
+      const bodyName = dirents.getDirentName(id) ?? id;
+      notify({ id: 'fs.snackbar.saveSuccess', bodyName, bodyType });
+      refresh();
+    } catch (error: any) {
+      notify({ id: 'fs.snackbar.saveFailed', error, bodyType });
+    }
+  }
+
+  async function copyDirent(id: string, newObjectName: string): Promise<Fs.DirentBase> {
+    const bodyType = dirents.getDirent(id)?.type ?? 'ARTICLE';
+    try {
+      const newId = await persistenceUnit.pushCopy({ id, newObjectName });
+      notify({ id: 'fs.snackbar.saveSuccess', bodyType });
+      const updated = await refresh();
+      return updated.getDirent(newId)!;
+    } catch (error: any) {
+      notify({ id: 'fs.snackbar.saveFailed', error, bodyType });
+      throw error;
+    }
+  }
+
   async function updateDirentLabels(id: string, values: Fs.DescriptionLabel[]): Promise<void> {
     const bodyType = dirents.getDirent(id)?.type ?? 'ARTICLE';
     try {
@@ -177,6 +207,8 @@ function _initCtx(initProps: {
     createDirent,
     updateDirent,
     updateDirentDescription,
+    updateDirentName,
+    copyDirent,
     updateDirentLabels,
   };
 }

@@ -1,5 +1,5 @@
 import { Fs } from "@dxs-ts/fs-api";
 
-export interface FsDirentRenameProps {
+export interface FsDirentCopyProps {
   dirent: Fs.DirentBase;
 }

@@ -1,5 +1,8 @@
 package io.resys.limaone.fs;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 /*-
  * #%L
  * limaone-compiler
@@ -21,9 +24,11 @@ package io.resys.limaone.fs;
  */
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -35,6 +40,27 @@ import jakarta.annotation.Nullable;
 @JsonSerialize(as = ImmutableWorldFs.class) @JsonDeserialize(as = ImmutableWorldFs.class)
 public interface WorldFs {
   List<DirentBase> getDirents();
+  
+
+  @JsonIgnore
+  default List<DirentBase> flatAll() {
+    
+    final var result = new ArrayList<DirentBase>();
+    final var consumer = new Consumer<DirentBase>() {
+      @Override
+      public void accept(DirentBase t) {
+        result.addAll(t.getChildren());
+        t.getChildren().forEach(this);
+      }
+    };
+    
+    for(final var base : getDirents()) {
+      result.add(base);
+      consumer.accept(base);
+    }
+    
+    return Collections.unmodifiableList(result);
+  }
   
   @Value.Immutable
   @JsonSerialize(as = ImmutableDirentBase.class) @JsonDeserialize(as = ImmutableDirentBase.class)
@@ -51,5 +77,6 @@ public interface WorldFs {
     default boolean isDirectory() {
       return this.getType() == BodyType.FOLDER;
     }
+    
   }
 }
