@@ -151,6 +151,11 @@ public class FormDb_NotSupported implements FormDb {
       }
 
       @Override
+      public FormInstanceFlatDataQuery formInstanceFlatDataQuery() {
+        throw new RuntimeException("forms are disabled!");
+      }
+
+      @Override
       public FormFillReview formFillReview() {
         throw new RuntimeException("forms are disabled!");
       }

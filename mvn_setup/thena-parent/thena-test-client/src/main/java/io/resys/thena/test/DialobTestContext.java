@@ -81,7 +81,7 @@ public class DialobTestContext {
         .withExposedPorts(6379)
         .waitingFor(Wait.forListeningPort());
 
-    dialobForm = new GenericContainer<>("resys/dialob-boot:2.4.0")
+    dialobForm = new GenericContainer<>("resys/dialob-boot:2.4.3")
         .withNetwork(network)
         .withExposedPorts(8081)
         .withEnv("SPRING_REDIS_HOST", "redis")
@@ -102,7 +102,7 @@ public class DialobTestContext {
         .withEnv("DIALOB_TENANT_FIXED_ID", "00000000-0000-0000-0000-000000000000")
         .waitingFor(Wait.forHttp("/dialob/actuator/health").forPort(8081).forStatusCode(200));
 
-    dialobSession = new GenericContainer<>("resys/dialob-session-boot:2.4.0")
+    dialobSession = new GenericContainer<>("resys/dialob-session-boot:2.4.3")
         .withNetwork(network)
         .withExposedPorts(8082)
         .withEnv("SERVER_PORT", "8082")
