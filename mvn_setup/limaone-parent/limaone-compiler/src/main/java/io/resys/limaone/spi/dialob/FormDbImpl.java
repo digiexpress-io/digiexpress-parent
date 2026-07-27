@@ -35,6 +35,7 @@ import io.resys.limaone.spi.dialob.builders.FormFillQueryImpl;
 import io.resys.limaone.spi.dialob.builders.FormInstanceQueryImpl;
 import io.resys.limaone.spi.dialob.builders.FormMetaQueryImpl;
 import io.resys.limaone.spi.dialob.builders.FormQueryImpl;
+import io.resys.limaone.spi.dialob.builders.FormInstanceFlatDataQueryImpl;
 import io.resys.limaone.spi.dialob.builders.FormTagQueryImpl;
 import io.resys.limaone.spi.dialob.builders.MergeFormImpl;
 import io.resys.limaone.spi.dialob.builders.MergeFormInstanceImpl;
@@ -75,6 +76,7 @@ public class FormDbImpl implements FormDb {
       @Override public CreateFormInstance createFormInstance() { return new CreateFormInstanceImpl(formDbProps); }
       @Override public FormFillBuilder createFormFill() { return new FormFillBuilderImpl(formDbProps); }
       @Override public FormFillQuery formFillQuery() { return new FormFillQueryImpl(formDbProps); }
+      @Override public FormInstanceFlatDataQuery formInstanceFlatDataQuery() { return new FormInstanceFlatDataQueryImpl(formDbProps); }
       @Override public FormFillReview formFillReview() { return new FormFillReviewImpl(formDbProps); }
     };
   }

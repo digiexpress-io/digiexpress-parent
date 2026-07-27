@@ -43,6 +43,7 @@ import io.dialob.api.rest.IdAndRevision;
 import io.resys.limaone.spi.http.HttpClient.AnyProxy;
 import io.resys.limaone.spi.http.HttpClient.RawResponse;
 import io.smallrye.mutiny.Multi;
+import io.vertx.core.json.JsonObject;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 
@@ -211,7 +212,18 @@ public interface FormDb {
      * @return a new {@link FormFillQuery} for low-level form queries
      */
     FormFillQuery formFillQuery();
-    
+
+    /**
+     * Creates a low-level HTTP proxy query for the flat data document of a
+     * COMPLETED questionnaire (dialob: GET /questionnaires/{id}/session-state).
+     * Raw JSON passthrough intended for printout/PDF template pipelines.
+     * Supports the same language and timezone overrides as dialob's
+     * getQuestionnaireSessionState ({@code lang} and {@code tz} query parameters).
+     *
+     * @return a new {@link FormInstanceFlatDataQuery} for flat data queries
+     */
+    FormInstanceFlatDataQuery formInstanceFlatDataQuery();
+
     /**
      * Creates a read-only form state reconstruction engine for displaying completed forms.
      * Provides in-memory simulation of completed questionnaires with navigation support
@@ -725,7 +737,130 @@ public interface FormDb {
      */
     Uni<RawResponse> getOne(String formInstanceId);
   }
-  
+  /**
+   * Query for the flat data document of a COMPLETED form instance, as produced by
+   * dialob's printout writer (GET /questionnaires/{id}/session-state). The
+   * document is intended as direct input for printout/PDF template pipelines
+   * (e.g. Tagomi/Typst).
+   */
+  interface FormInstanceFlatDataQuery {
+
+    /**
+     * Specifies the target form instance.
+     *
+     * @param formInstanceId the unique identifier of the form instance
+     * @return this query builder for method chaining
+     */
+    FormInstanceFlatDataQuery instanceId(String formInstanceId);
+
+    /**
+     * Sets the language override for labels in the flat data document.
+     * When not set, dialob falls back to the form instance's own language.
+     *
+     * @param locale the language code (e.g. "en", "fi"), nullable
+     * @return this query builder for method chaining
+     */
+    FormInstanceFlatDataQuery locale(@Nullable String locale);
+
+    /**
+     * Sets the IANA timezone used to render the metadata audit timestamps
+     * (created/lastAnswer/lastSaved/completed). Dialob defaults to Europe/Helsinki.
+     *
+     * @param timeZone the IANA timezone (e.g. "Europe/Helsinki"), nullable
+     * @return this query builder for method chaining
+     */
+    FormInstanceFlatDataQuery timeZone(@Nullable String timeZone);
+
+    /**
+     * Retrieves the flat data of the form instance. Never fails - dialob's outcomes
+     * are mapped to {@link FormInstanceFlatData.Status} instead.
+     *
+     * @return a {@link Uni} containing the structured query result
+     */
+    Uni<FormInstanceFlatData> getOne();
+
+    /**
+     * Sync version of the same named method.
+     *
+     * @return the structured query result
+     */
+    FormInstanceFlatData getOneSync();
+
+    /**
+     * Shortcut for {@code instanceId(formInstanceId).locale(locale).getOne()}.
+     *
+     * @param formInstanceId the unique identifier of the form instance
+     * @param locale the language code override, nullable
+     * @return a {@link Uni} containing the structured query result
+     */
+    default Uni<FormInstanceFlatData> getOne(String formInstanceId, @Nullable String locale) {
+      return instanceId(formInstanceId).locale(locale).getOne();
+    }
+
+    /**
+     * Sync version of the same named method.
+     *
+     * @param formInstanceId the unique identifier of the form instance
+     * @param locale the language code override, nullable
+     * @return the structured query result
+     */
+    default FormInstanceFlatData getOneSync(String formInstanceId, @Nullable String locale) {
+      return instanceId(formInstanceId).locale(locale).getOneSync();
+    }
+  }
+
+  /**
+   * Result of a {@link FormInstanceFlatDataQuery}. The body document is present
+   * only when the form instance is COMPLETED.
+   *
+   * <p>Body structure:
+   * <pre>{@code
+   * {
+   *   "id": "…",                       // questionnaire id
+   *   "metadata":     { created, creator, formId, formRev, label, language,
+   *                     lastAnswer, owner, status, tenantId },   // all String; timestamps zoned per ?tz
+   *   "formMetadata": { created, creator, label, lastSaved, savedBy, tenantId },
+   *   "contextValues": { "<key>": <value>, … },   // raw context values map
+   *   "form":  { "pages": ["page1", …] },          // ordered page ids
+   *   "pages": {
+   *     "byId":    { "<pageId>": { type, label, hiddenPrint, groupIds:[…] } },
+   *     "pageIds": ["page1", …]
+   *   },
+   *   "groups": {
+   *     "byId":  { "<groupId>": { type, label, hiddenPrint, itemIds:[…] } },
+   *     "allIds": ["page1", …]                     // top-level group order
+   *   },
+   *   "items": {
+   *     "byId":  { "<itemId>": Item | Note },
+   *     "allIds": [ … ]                            // visible non-group leaf ids
+   *   }
+   * }
+   * }</pre>
+   */
+  @Value.Immutable
+  interface FormInstanceFlatData {
+    /**
+     * @return the form instance (questionnaire) id the query was made with
+     */
+    String getId();
+    Status getStatus();
+    Optional<JsonObject> getBody();
+    Optional<String> getMessage();
+
+    /**
+     * @return the body document encoded as a JSON string, or "{}" when absent
+     */
+    default String getBodyAsString() {
+      return getBody().map(JsonObject::encode).orElse("{}");
+    }
+
+    enum Status {
+      COMPLETED,
+      NOT_COMPLETED,
+      NOT_FOUND,
+      ERROR
+    }
+  }
   /**
    * Low-level HTTP proxy builder for form filling operations.
    * Provides direct HTTP passthrough with raw string payloads for performance-critical scenarios.
