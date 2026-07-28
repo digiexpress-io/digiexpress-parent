@@ -27,7 +27,7 @@ export const FsDirentPrintoutCreate: React.FC = () => {
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printout.orchestratorNameField.label' })}>
-          <FsDirentSelectSingle
+          <FsDirentSelectSingle required
             options={ownerState.flows}
             value={ownerState.orchestratorName}
             onChange={ownerState.onChangeOrchestratorName}

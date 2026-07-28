@@ -55,14 +55,6 @@ export const FsDirentPrintoutResourceCreate: React.FC = () => {
           />
         </FsDirentFormField>
 
-        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutResource.printoutPagesField.label' })}>
-          <FsDirentSelectMulti
-            options={ownerState.printoutPageOptions}
-            value={ownerState.printoutPageIds}
-            onChange={ownerState.onChangePrintoutPageIds}
-          />
-        </FsDirentFormField>
-
         {ownerState.contentType === 'text/*' ? (
           <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutResource.uploadBodyFieldText.label' })}>
             <MonacoReact
