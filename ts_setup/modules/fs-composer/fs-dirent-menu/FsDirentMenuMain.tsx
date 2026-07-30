@@ -36,6 +36,8 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
     || dirent?.type === 'PRINTOUT_PAGE'
     || dirent?.type === 'UNKNOWN'
 
+  const isDeleteForbidden = dirent?.type === 'FOLDER';
+
   function handleEdit() {
     if (dirent) {
       openAsset(dirent);
@@ -148,7 +150,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = React.memo((pro
 
       <Divider className={classes.divider} />
 
-      <MenuItem disableRipple className={classes.menuItemDelete} onClick={handleDelete}>
+      <MenuItem disableRipple className={classes.menuItemDelete} onClick={handleDelete} disabled={isDeleteForbidden}>
         <FsIcon icon={FsIcons.Delete} small />
         {intl.formatMessage({ id: 'fs.direntMenu.menuItem.delete' })}
       </MenuItem>

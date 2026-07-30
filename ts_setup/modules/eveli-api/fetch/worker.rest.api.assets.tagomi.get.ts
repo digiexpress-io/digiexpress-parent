@@ -173,8 +173,25 @@ class TagomiRestApiImpl implements TagomiApi.Backend {
     return this.fetch<ModelEnvelope<PrintoutPageBody>>(`/templates/${id}`, 'DELETE').then(toTemplate);
   }
 
-  compileTemplate(id: TagomiApi.ServiceId, locale: TagomiApi.LocaleId | string, props: object): Promise<TagomiApi.PdfEnvelope> {
-    return this.fetch(`/services/${id}/pdf/${locale}`, 'POST', props);
+  async compileTemplate(id: TagomiApi.ServiceId, locale: TagomiApi.LocaleId | string, props: object): Promise<TagomiApi.PdfEnvelope> {
+    const url = `${this.baseUrl}/services/${id}/pdf/${locale}`;
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(props),
+    });
+    if (!resp.ok) {
+      const statusMessage = await resp.text().catch(() => `HTTP ${resp.status}`);
+      return {
+        name: '',
+        localisedName: undefined,
+        locale: String(locale),
+        bodyBase64: '',
+        status: 'ERROR',
+        statusMessage,
+      };
+    }
+    return resp.json();
   }
 }
 
