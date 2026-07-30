@@ -33,9 +33,7 @@ export const FsPanelPreviewPrintoutPage: React.FC = () => {
   const pageProps = dirent?.type === 'PRINTOUT_PAGE' ? dirent.props as Fs.PrintoutPageProps : undefined;
 
   const serviceId = pageProps?.serviceId;
-  const localeProps = pageProps?.localeId
-    ? selectOptions.direntProps[pageProps.localeId] as Fs.LanguageProps | undefined
-    : undefined;
+  const localeProps = pageProps?.localeId ? selectOptions.direntProps[pageProps.localeId] as Fs.LanguageProps | undefined : undefined;
   const localeCode = localeProps?.localeCode;
 
   const onCompile = React.useCallback(async () => {

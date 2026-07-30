@@ -18,7 +18,6 @@ export interface FsDirentContextType {
   fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
   applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
   debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
-  compilePrintoutPage: (serviceId: string, localeCode: string) => Promise<Fs.PrintoutCompileResult>;
 
   updateDirent(change: FsuChange): Promise<void>;
   updateDirentDescription(id: string, text?: string): Promise<void>;
@@ -28,6 +27,8 @@ export interface FsDirentContextType {
   updateDirentLabels(id: string, values: Fs.DescriptionLabel[]): Promise<void>;
   deleteDirent(id: string, bodyType: Fs.BodyType): Promise<void>;
   createDirent(change: FsuCreateChange): Promise<Fs.DirentBase>;
+
+  compilePrintoutPage: (serviceId: string, localeCode: string) => Promise<Fs.PrintoutCompileResult>;
 }
 
 
@@ -39,7 +40,6 @@ export interface FsDirentProviderProps {
     fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
     applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
     debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
-    compilePrintoutPage: (serviceId: string, localeCode: string) => Promise<Fs.PrintoutCompileResult>;
     pushChange: (change: FsuChange) => Promise<void>;
     pushCreate: (change: FsuCreateChange) => Promise<string>;
     pushDescription: (props: { id: string; text?: string }) => Promise<void>;
@@ -47,6 +47,7 @@ export interface FsDirentProviderProps {
     pushCopy: (props: { id: string, newObjectName: string }) => Promise<string>;
     pushLabels: (props: { id: string; values: Fs.DescriptionLabel[] }) => Promise<void>;
     deleteDirent: (id: string, bodyType: Fs.BodyType) => Promise<void>;
+    compilePrintoutPage: (serviceId: string, localeCode: string) => Promise<Fs.PrintoutCompileResult>;
   }
   children: React.ReactNode;
 }

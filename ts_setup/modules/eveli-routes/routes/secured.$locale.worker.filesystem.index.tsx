@@ -34,7 +34,6 @@ function Component() {
   const { deleteAny } = useFetch('worker/rest/api/assets/fs/dirents/$id.DELETE', {});
 
   const persistenceUnit: FsDirentProviderProps['persistenceUnit'] = {
-    compilePrintoutPage: (serviceId, localeCode) => backend.compileTemplate(serviceId, localeCode, {}),
     fetchDirents: getDirents,
     fetchDirentBody: getDirentBody,
     applyTransientChanges,
@@ -46,6 +45,7 @@ function Component() {
     pushCopy: async (props) => postCopy(props),
     pushLabels: putLabels,
     deleteDirent: deleteAny,
+    compilePrintoutPage: (serviceId, localeCode) => backend.compileTemplate(serviceId, localeCode, {}),
   };
 
   return (
