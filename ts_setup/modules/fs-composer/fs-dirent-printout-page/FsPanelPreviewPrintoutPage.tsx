@@ -15,6 +15,13 @@ export const FsPanelPreviewPrintoutPage: React.FC = () => {
   const [compilationError, setCompilationError] = React.useState<string | undefined>(undefined);
 
   React.useEffect(() => {
+    setPdfBase64(undefined);
+    setPdfUrl('');
+    setCompilationError(undefined);
+    setIsCompiling(false);
+  }, [activeDirent?.id]);
+
+  React.useEffect(() => {
     if (!pdfBase64) {
       return;
     }
