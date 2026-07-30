@@ -174,7 +174,6 @@ class TagomiRestApiImpl implements TagomiApi.Backend {
   }
 
   compileTemplate(id: TagomiApi.ServiceId, locale: TagomiApi.LocaleId | string, props: object): Promise<TagomiApi.PdfEnvelope> {
-    console.log(id,locale,props)
     return this.fetch(`/services/${id}/pdf/${locale}`, 'POST', props);
   }
 }

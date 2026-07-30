@@ -1708,6 +1708,7 @@ export const en = {
   'fs.panelPreview.title': 'Preview',
   'fs.panelPreview.message.selectDirent': 'Select an asset from the tree to view a preview.',
   'fs.panelPreview.message.notAvailable': 'No preview available for this asset type.',
+  'fs.panelPreview.printoutPage.compile': 'Compile',
   'fs.panelOverview.title': 'Asset Overview',
   'fs.panelOverview.column.name': 'Name',
   'fs.panelOverview.column.lastUpdated': 'Last updated',

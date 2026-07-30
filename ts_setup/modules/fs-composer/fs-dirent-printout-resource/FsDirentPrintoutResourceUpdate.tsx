@@ -13,8 +13,9 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourcePr
   const ownerState = useUpdateOwnerState({ direntId });
   const classes = useUtilityClasses();
   const { getDirent, selectOptions } = useFsDirent();
+  const resourceProps = getDirent(direntId)!.props as Fs.PrintoutResourceProps;
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const [fileName, setFileName] = React.useState('');
+  const [fileName, setFileName] = React.useState(resourceProps.resourceName ?? '');
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -32,7 +33,6 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourcePr
       reader.readAsText(file);
     }
   }
-  const resourceProps = getDirent(direntId)!.props as Fs.PrintoutResourceProps;
   const previewSrc = ownerState.uploadBody || resourceProps.content || undefined;
 
   const connectedPages = resourceProps.printoutPageIds.map(pageId => {

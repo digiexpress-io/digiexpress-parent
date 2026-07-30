@@ -18,6 +18,7 @@ export interface FsDirentContextType {
   fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
   applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
   debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
+  compilePrintoutPage: (serviceId: string, localeCode: string) => Promise<Fs.PrintoutCompileResult>;
 
   updateDirent(change: FsuChange): Promise<void>;
   updateDirentDescription(id: string, text?: string): Promise<void>;
@@ -38,6 +39,7 @@ export interface FsDirentProviderProps {
     fetchDirentBody: (id: string, bodyType: Fs.BodyType) => Promise<Fs.WorldFsBody>;
     applyTransientChanges: (change: Fs.WrenchAstBodyChange) => Promise<Fs.WorldFsBody>;
     debugDirent: (debug: { id: string; input?: string; inputCSV?: string }) => Promise<Fs.DebugResponse>;
+    compilePrintoutPage: (serviceId: string, localeCode: string) => Promise<Fs.PrintoutCompileResult>;
     pushChange: (change: FsuChange) => Promise<void>;
     pushCreate: (change: FsuCreateChange) => Promise<string>;
     pushDescription: (props: { id: string; text?: string }) => Promise<void>;
@@ -203,6 +205,7 @@ function _initCtx(initProps: {
     fetchDirentBody: persistenceUnit.fetchDirentBody,
     applyTransientChanges: persistenceUnit.applyTransientChanges,
     debugDirent: persistenceUnit.debugDirent,
+    compilePrintoutPage: persistenceUnit.compilePrintoutPage,
     deleteDirent: pushDelete,
     createDirent,
     updateDirent,

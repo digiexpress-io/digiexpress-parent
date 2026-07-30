@@ -20,6 +20,7 @@ const MergedToolbar: React.FC = () => {
 
 
 function Component() {
+  const { backend } = useFetch('worker/rest/api/assets/tagomi.GET', {});
   const { getDirents } = useFetch('worker/rest/api/assets/fs.GET', {});
   const { getDirentBody } = useFetch('worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType.GET', {});
   const { applyTransientChanges } = useFetch('worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType/transient-changes.POST', {});
@@ -33,6 +34,7 @@ function Component() {
   const { deleteAny } = useFetch('worker/rest/api/assets/fs/dirents/$id.DELETE', {});
 
   const persistenceUnit: FsDirentProviderProps['persistenceUnit'] = {
+    compilePrintoutPage: (serviceId, localeCode) => backend.compileTemplate(serviceId, localeCode, {}),
     fetchDirents: getDirents,
     fetchDirentBody: getDirentBody,
     applyTransientChanges,

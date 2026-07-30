@@ -400,6 +400,12 @@ export declare namespace Fs {
     content?: string;
   }
 
+  export interface PrintoutCompileResult {
+    bodyBase64: string;
+    status: 'OK' | 'ERROR';
+    statusMessage: string | undefined;
+  }
+
   export interface TemplateProps extends PropsBase {
     type: 'ARTICLE_TEMPLATE';
     content: string;

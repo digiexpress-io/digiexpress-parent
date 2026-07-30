@@ -1,5 +1,4 @@
 import React from 'react';
-import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
 import { FsIcon, FsIcons } from '../fs-theme';
@@ -8,6 +7,7 @@ import { FsPanelPreviewWrench } from '../fs-panel-preview-wrench';
 import { FsPanelPreviewProps } from './FsPanelPreviewProps';
 import { useOwnerState } from './useOwnerState';
 import { FsPanelPreviewRoot, useUtilityClasses } from './useUtilityClasses';
+import { FsPanelPreviewPrintoutPage } from '../fs-dirent-printout-page';
 
 
 export const FsPanelPreview: React.FC<FsPanelPreviewProps> = (props) => {
@@ -40,8 +40,8 @@ export const FsPanelPreview: React.FC<FsPanelPreviewProps> = (props) => {
   if (ownerState.isPrintoutPage) {
     return (
       <FsPanel title={intl.formatMessage({ id: 'fs.panelPreview.title' })} icon={<FsIcon icon={FsIcons.Preview} large />} activeDirent={true}>
-        <FsPanelPreviewRoot className={classes.root} >
-          <Typography className={classes.content}>{intl.formatMessage({ id: 'fs.panelPreview.message.notAvailable' })}</Typography>
+        <FsPanelPreviewRoot className={classes.root}>
+          <FsPanelPreviewPrintoutPage />
         </FsPanelPreviewRoot>
       </FsPanel>
     );
