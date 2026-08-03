@@ -14,21 +14,6 @@ services:
       - ./_db/eveli_db_init:/docker-entrypoint-initdb.d
       - ./_db/eveli_db_data:/var/lib/postgresql/data
 
-# postgresql that represents DB that should be migrated to "upper one""
-  postgresqlmigfrom:
-    image: postgres:17
-    restart: always
-    ports:
-      - "5462:5432"
-    environment:
-      - POSTGRES_PASSWORD=password123
-      - POSTGRES_USER=mig-data
-      - TZ=Europe/Helsinki
-      - PGDATA=/var/lib/postgresql/data/pgdata
-    volumes:
-      - ./_db/mig_from_db_init:/docker-entrypoint-initdb.d
-      - ./_db/mig_from_eveli_db_data:/var/lib/postgresql/data
-
 # dialob related mess
   nginx:
     build: compose
@@ -63,7 +48,7 @@ services:
       - dialob-backend
 
   dialob-service:
-    image: resys/dialob-boot:2.4.2
+    image: resys/dialob-boot:2.4.3
     restart: no
     ports:
       - 8081:8081
@@ -93,7 +78,7 @@ services:
       - dialob-backend
 
   dialob-session:
-    image: resys/dialob-session-boot:2.4.2
+    image: resys/dialob-session-boot:2.4.3
     restart: no
     ports:
       - 8082:8082

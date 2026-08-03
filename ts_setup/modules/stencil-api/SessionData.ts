@@ -98,8 +98,10 @@ class SiteCache {
         return children;
       }
 
-      return (a1.body.parentId ? site.articles[a1.body.parentId].body.order + 1 : a1.body.order)
-        - (a2.body.parentId ? site.articles[a2.body.parentId].body.order + 1 : a2.body.order);
+
+
+      return (a1.body.parentId ? site.articles[a1.body.parentId]?.body.order + 1 : a1.body.order)
+        - (a2.body.parentId ? site.articles[a2.body.parentId]?.body.order + 1 : a2.body.order);
 
     }).forEach(article => this.visitArticle(article));
 
@@ -205,7 +207,7 @@ class SiteCache {
       links,
       workflows,
       children: [],
-      displayOrder: 10000 + article.body.order + (article.body.parentId ? this._site.articles[article.body.parentId].body.order : 0)
+      displayOrder: 10000 + article.body.order + (article.body.parentId ? this._site.articles[article.body.parentId]?.body.order : 0)
     });
 
     if (article.body.parentId) {
@@ -666,7 +668,10 @@ class ImmutableLinkSearchEntry implements StencilComposerApi.SearchDataEntry {
     values.push({ type: "LINK_VALUE", value: view.link.body.value, id: view.link.id });
 
     for (const label of view.labels) {
-      values.push({ type: "LINK_LABEL", value: label.label.labelValue, id: label.locale.id });
+      if (label.locale) {
+        values.push({ type: "LINK_LABEL", value: label.label.labelValue, id: label.locale.id });
+      }
+
     }
     return new ImmutableLinkSearchEntry({ id: this._id, values });
   }

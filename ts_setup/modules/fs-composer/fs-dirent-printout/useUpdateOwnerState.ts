@@ -68,7 +68,7 @@ class _ChangeState implements FsuChange {
         serviceId: c.printoutId,
         serviceName: c.serviceName || undefined,
         orchestratorName: c.orchestratorName || undefined,
-        localeLabels: Object.entries(c.intlValues).map(([locale, labelValue]) => ({ locale, labelValue })),
+        labels: Object.entries(c.intlValues).map(([locale, labelValue]) => ({ locale, labelValue })),
       },
     };
   }
@@ -114,6 +114,8 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
       return { id: p.id, localeName };
     });
 
+  console.log(connectedPages)
+
   function onChangeServiceName(value: string) {
     setState(prev => prev.withServiceName(value));
   }
@@ -123,6 +125,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   function onChangeIntlValue(locale: string, value: string) {
     setState(prev => prev.withIntlValues(locale, value));
   }
+
   return {
     assetPath: activeTabPath,
     isDirty: state.isDirty,

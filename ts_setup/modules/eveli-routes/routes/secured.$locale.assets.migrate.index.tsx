@@ -23,7 +23,7 @@ function Component() {
   const inputFile = React.useRef<HTMLInputElement>(null);
   const [uploadErrorText , setUploadErrorText] = React.useState<string>();
   const [open, setOpen] = React.useState(true);
-  const { migrateAsset } = useFetch('worker/rest/api/assets/migration.POST', {});
+  const { saveDeployment } = useFetch('worker/rest/api/assets/deployments.POST', {});
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     try {
@@ -31,7 +31,7 @@ function Component() {
       const enc = new TextDecoder("utf-8");
       const decoded = await file.arrayBuffer().then(d => enc.decode(d));
       const init: PublicationApi.PublicationUpload = JSON.parse(decoded);
-      await migrateAsset(init, () => {
+      await saveDeployment(init, () => {
         setOpen(false);
       });
     } catch (error: any) {

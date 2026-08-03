@@ -35,7 +35,7 @@ public class EveliPropsEnvir {
   private Caches cacheExpirations;
   
   @Data
-  public static class Caches{
+  public static class Caches {
     private Duration shortDeployment;
     private Duration longRuntime;
   }

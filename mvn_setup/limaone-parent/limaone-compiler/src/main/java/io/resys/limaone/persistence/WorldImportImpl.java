@@ -43,12 +43,16 @@ import io.resys.limaone.model.DecisionTable;
 import io.resys.limaone.model.DialobForm;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.FlowTask;
+import io.resys.limaone.model.ImmutableArticle;
 import io.resys.limaone.model.ImmutableArticleLink;
 import io.resys.limaone.model.ImmutableArticlePage;
 import io.resys.limaone.model.ImmutableArticleWorkflow;
 import io.resys.limaone.model.ImmutableDialobForm;
 import io.resys.limaone.model.ImmutableLocaleLabel;
 import io.resys.limaone.model.ImmutableModel;
+import io.resys.limaone.model.ImmutablePrintout;
+import io.resys.limaone.model.ImmutablePrintoutPage;
+import io.resys.limaone.model.ImmutablePrintoutResource;
 import io.resys.limaone.model.Locale;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
@@ -88,29 +92,33 @@ public class WorldImportImpl implements WorldImport {
   public Uni<ModelWorld> build() {
     Objects.requireNonNull(source, () -> "source must be defined!");
     
-    return config.getPersistence().worldBuilder()
-      .createdAt(OffsetDateTime.now())
-      .author(config.getEnvir().getCurrentUser().get().getUserName())
-      .docs(BodyType.without(BodyType.DEPLOYMENT, BodyType.DIALOB_FORM))
-      .build(nextWorld -> {
-        final var ctx = new ImportContext();
-        
-        source.getLocales().values().forEach(e -> merge(e, nextWorld, ctx));
-        source.getArticles().values().forEach(e -> merge(e, nextWorld, ctx));
-        
-        source.getArticleLinks().values().forEach(e -> merge(e, nextWorld, ctx));
-        source.getArticlePages().values().forEach(e -> merge(e, nextWorld, ctx));
-        source.getArticleTemplates().values().forEach(e -> merge(e, nextWorld, ctx));
-        source.getArticleWorkflows().values().forEach(e -> merge(e, nextWorld, ctx));
-        source.getFlows().values().forEach(e -> merge(e, nextWorld, ctx));
-        source.getFlowTasks().values().forEach(e -> merge(e, nextWorld, ctx));
-        source.getDecisionTables().values().forEach(e -> merge(e, nextWorld, ctx));
-        source.getPrintouts().values().forEach(e -> merge(e, nextWorld, ctx));
-        source.getPrintoutPages().values().forEach(e -> merge(e, nextWorld, ctx));
-        source.getPrintoutResources().values().forEach(e -> merge(e, nextWorld, ctx));
+    return config.getPersistence().createModelWorldDb().createDbIfNotPresent()
+        .onItem().transformToUni((ignore) -> 
+          config.getPersistence().worldBuilder()
+            .createdAt(OffsetDateTime.now())
+            .author(config.getEnvir().getCurrentUser().get().getUserName())
+            .docs(BodyType.without(BodyType.DEPLOYMENT, BodyType.DIALOB_FORM))
+            .build(nextWorld -> {
+              final var ctx = new ImportContext();
+              
+              source.getLocales().values().forEach(e -> merge(e, nextWorld, ctx));
+              source.getArticles().values().stream().filter(e -> e.getBody().getParentId() == null).forEach(e -> merge(e, nextWorld, ctx));
+              source.getArticles().values().stream().filter(e -> e.getBody().getParentId() != null).forEach(e -> merge(e, nextWorld, ctx));
+              source.getArticlePages().values().forEach(e -> merge(e, nextWorld, ctx));
+              
+              source.getArticleLinks().values().forEach(e -> merge(e, nextWorld, ctx));
 
-        return nextWorld.getCurrentWorld();
-      })
+              source.getArticleTemplates().values().forEach(e -> merge(e, nextWorld, ctx));
+              source.getArticleWorkflows().values().forEach(e -> merge(e, nextWorld, ctx));
+              source.getFlows().values().forEach(e -> merge(e, nextWorld, ctx));
+              source.getFlowTasks().values().forEach(e -> merge(e, nextWorld, ctx));
+              source.getDecisionTables().values().forEach(e -> merge(e, nextWorld, ctx));
+              source.getPrintouts().values().forEach(e -> merge(e, nextWorld, ctx));
+              source.getPrintoutPages().values().forEach(e -> merge(e, nextWorld, ctx));
+              source.getPrintoutResources().values().forEach(e -> merge(e, nextWorld, ctx));
+  
+              return nextWorld.getCurrentWorld();
+            }))
       .onItem().transformToUni(oldWorld -> {
         
         if(oldWorld.getForms().isEmpty()) {
@@ -152,13 +160,19 @@ public class WorldImportImpl implements WorldImport {
             d.getBody().getName().equalsIgnoreCase(target.getBody().getName()))
         .findFirst();
   
+    final var targetBody = ImmutableArticle.builder()
+        .from(target.getBody())
+        .parentId(ctx.getNewId(target.getBody().getParentId()))
+        .build();
+  
     final Model<Article> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(prev.get().getId(), target.getBody().getName(), target.getBody(), null, null);
+      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), targetBody);
     } else {
-      next = nextWorld.newModel(target.getBody().getName(), target.getBody(), null, null);
+      next = nextWorld.newModel(target.getId(), targetBody);
     }
     ctx.addNewId(target.getId(), next.getId());
+    
   }
   
   /**
@@ -186,10 +200,11 @@ public class WorldImportImpl implements WorldImport {
   
     final Model<ArticleLink> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(prev.get().getId(), targetBody.getValue(), targetBody, null, null);
+      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), targetBody);
     } else {
-      next = nextWorld.newModel(target.getBody().getValue(), target.getBody(), null, null);
+      next = nextWorld.newModel(target.getId(), targetBody);
     }
+    ctx.addNewId(target.getId(), next.getId());
   }
   
   /**
@@ -212,14 +227,16 @@ public class WorldImportImpl implements WorldImport {
     final var targetBody = ImmutableArticlePage.builder()
         .from(target.getBody())
         .article(ctx.getNewId(target.getBody().getArticle()))
+        .locale(ctx.getNewId(target.getBody().getLocale()))
         .build();
   
     final Model<ArticlePage> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), targetBody, null, null);
+      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), targetBody);
     } else {
-      next = nextWorld.newModel(target.getId(), targetBody, null, null);
+      next = nextWorld.newModel(target.getId(), targetBody);
     }
+    ctx.addNewId(target.getId(), next.getId());
   }
   
   /**
@@ -237,10 +254,11 @@ public class WorldImportImpl implements WorldImport {
   
     final Model<ArticleTemplate> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getName(), target.getBody(), null, null);
+      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), target.getBody());
     } else {
-      next = nextWorld.newModel(target.getBody().getName(), target.getBody(), null, null);
+      next = nextWorld.newModel(target.getId(), target.getBody());
     }
+    ctx.addNewId(target.getId(), next.getId());
   }
   
   /**
@@ -268,10 +286,11 @@ public class WorldImportImpl implements WorldImport {
     
     final Model<ArticleWorkflow> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), targetBody.getValue(), targetBody, null, null);
+      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), targetBody);
     } else {
-      next = nextWorld.newModel(targetBody.getValue(), targetBody, null, null);
+      next = nextWorld.newModel(target.getId(), targetBody);
     }
+    ctx.addNewId(target.getId(), next.getId());
   }
   
   /**
@@ -289,10 +308,11 @@ public class WorldImportImpl implements WorldImport {
   
     final Model<DecisionTable> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getName(), target.getBody(), null, null);
+      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), target.getBody());
     } else {
-      next = nextWorld.newModel(target.getBody().getName(), target.getBody(), null, null);
+      next = nextWorld.newModel(target.getId(), target.getBody());
     }
+    ctx.addNewId(target.getId(), next.getId());
   }
   
   /**
@@ -310,10 +330,11 @@ public class WorldImportImpl implements WorldImport {
   
     final Model<Flow> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getFlowName(), target.getBody(), null, null);
+      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), target.getBody());
     } else {
-      next = nextWorld.newModel(target.getBody().getFlowName(), target.getBody(), null, null);
+      next = nextWorld.newModel(target.getId(), target.getBody());
     }
+    ctx.addNewId(target.getId(), next.getId());
   }
   
   /**
@@ -331,10 +352,11 @@ public class WorldImportImpl implements WorldImport {
   
     final Model<FlowTask> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getTaskName(), target.getBody(), null, null);
+      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), target.getBody());
     } else {
-      next = nextWorld.newModel(target.getBody().getTaskName(), target.getBody(), null, null);
+      next = nextWorld.newModel(target.getBody().getTaskName(), target.getBody());
     }
+    ctx.addNewId(target.getId(), next.getId());
   }
   
   private void mergeLocale(Model<Locale> target, NextWorld nextWorld, ImportContext ctx) {
@@ -352,7 +374,7 @@ public class WorldImportImpl implements WorldImport {
       // no point in merging its same
       next = prev.get();
     } else {
-      next = nextWorld.newModel(target.getBody().getValue(), target.getBody(), null, null);
+      next = nextWorld.newModel(target.getId(), target.getBody());
     }
     ctx.addNewId(target.getId(), next.getId());
   }
@@ -367,13 +389,23 @@ public class WorldImportImpl implements WorldImport {
         .stream()
         .filter(d -> d.getId().equals(target.getId()) || d.getBody().getServiceName().equalsIgnoreCase(target.getBody().getServiceName()))
         .findFirst();
+    
+    final var targetBody = ImmutablePrintout.builder()
+        .from(target.getBody())
+        .labels(
+            target.getBody().getLabels().stream()
+              .map(label -> ImmutableLocaleLabel.builder().from(label).locale(ctx.getNewId(label.getLocale())).build())
+              .toList()
+        )
+        .build();
 
     final Model<Printout> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getServiceName(), target.getBody(), null, null);
+      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), targetBody);
     } else {
-      next = nextWorld.newModel(target.getBody().getServiceName(), target.getBody(), null, null);
+      next = nextWorld.newModel(target.getId(), targetBody);
     }
+    ctx.addNewId(target.getId(), next.getId());
   }
 
   /**
@@ -387,12 +419,19 @@ public class WorldImportImpl implements WorldImport {
         .filter(d -> d.getId().equals(target.getId()) || d.getBody().getServiceId().equalsIgnoreCase(target.getBody().getServiceId()))
         .findFirst();
 
+    
+    final var targetBody = ImmutablePrintoutPage.builder()
+        .from(target.getBody())
+        .printoutPageIds(target.getBody().getPrintoutPageIds().stream().map(old -> ctx.getNewId(old)).toList())
+        .build();
+    
     final Model<PrintoutPage> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getServiceId(), target.getBody(), null, null);
+      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), targetBody);
     } else {
-      next = nextWorld.newModel(target.getBody().getServiceId(), target.getBody(), null, null);
+      next = nextWorld.newModel(target.getId(), targetBody);
     }
+    ctx.addNewId(target.getId(), next.getId());
   }
 
   /**
@@ -405,13 +444,19 @@ public class WorldImportImpl implements WorldImport {
         .stream()
         .filter(d -> d.getId().equals(target.getId()) || d.getBody().getResourceName().equalsIgnoreCase(target.getBody().getResourceName()))
         .findFirst();
-
+    
+    final var targetBody = ImmutablePrintoutResource.builder()
+        .from(target.getBody())
+        .printoutPageIds(target.getBody().getPrintoutPageIds().stream().map(old -> ctx.getNewId(old)).toList())
+        .build();
+    
     final Model<PrintoutResource> next;
     if(prev.isPresent()) {
-      next = nextWorld.mergeModel(target.getId(), target.getBody().getResourceName(), target.getBody(), null, null);
+      next = nextWorld.mergeModel(prev.get().getId(), prev.get().getId(), targetBody);
     } else {
-      next = nextWorld.newModel(target.getBody().getResourceName(), target.getBody(), null, null);
+      next = nextWorld.newModel(target.getId(), targetBody);
     }
+    ctx.addNewId(target.getId(), next.getId());
   }
 
   @SuppressWarnings("unchecked")
@@ -512,7 +557,13 @@ public class WorldImportImpl implements WorldImport {
     }
     
     public String getNewId(String oldId) {
-      return objectId_replacements.get(oldId);
+      if(oldId == null) {
+        return null;
+      }
+      if(objectId_replacements.containsKey(oldId)) {
+        return objectId_replacements.get(oldId);        
+      }
+      return oldId;
     }
   }
 }

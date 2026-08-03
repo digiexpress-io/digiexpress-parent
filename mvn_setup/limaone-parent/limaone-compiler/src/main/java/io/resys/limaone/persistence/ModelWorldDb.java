@@ -70,11 +70,10 @@ public interface ModelWorldDb {
     ModelWorld getCurrentWorld();
     
     <T extends Model.Body> Model<T> newModel(String fileName, T body, @Nullable Description desc, @Nullable DescriptionLabels labels);
-    <T extends Model.Body> Model<T> mergeModel(String id, String fileName, T body, @Nullable Description desc, @Nullable DescriptionLabels labels);
-    
     <T extends Model.Body> Model<T> newModel(String fileName, T body);
-    <T extends Model.Body> Model<T> mergeModel(String id, String fileName, T body);
     
+    <T extends Model.Body> Model<T> mergeModel(String id, String fileName, T body, @Nullable Description desc, @Nullable DescriptionLabels labels);
+    <T extends Model.Body> Model<T> mergeModel(String id, String fileName, T body);
     <T extends Model.Body> Model<T> mergeModel(String id, DescriptionLabels labels);
     <T extends Model.Body> Model<T> mergeModel(String id, Description desc);
     
