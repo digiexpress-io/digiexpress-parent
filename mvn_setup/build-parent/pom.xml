@@ -44,7 +44,7 @@
     <commons-validator.version>1.10.0</commons-validator.version>
     
 
-    <dialob.version>2.4.0</dialob.version>
+    <dialob.version>2.4.3</dialob.version>
     <expressly.version>6.0.0</expressly.version>
     
     <javafaker.version>1.0.2</javafaker.version>
