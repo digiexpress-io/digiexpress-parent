@@ -25,6 +25,7 @@ import java.util.Objects;
 
 import io.dialob.api.form.Form;
 import io.dialob.api.proto.Actions;
+import io.dialob.api.questionnaire.Error;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.questionnaire.Questionnaire.Metadata;
 import io.dialob.questionnaire.service.api.FormActions;
@@ -84,8 +85,19 @@ public class FormFillReviewImpl implements FormFillReview {
           .build())
       .accept();
     
-    final var formActions = new FormActions();
+    final var formActions = new FormActions() {
+      private static final long serialVersionUID = -3301770055494048050L;
+      @Override
+      public void addError(Error error) {
+        // block error manipulation super.addError(error);
+      }
+      @Override
+      public void removeError(Error error) {
+        // block error manipulation super.removeError(error);
+      }
+    };
     envir.buildFullForm(new FormActionsUpdatesCallback(formActions));
+    
     
     return new Actions(envir.getRevision(), formActions.getActions());
   }

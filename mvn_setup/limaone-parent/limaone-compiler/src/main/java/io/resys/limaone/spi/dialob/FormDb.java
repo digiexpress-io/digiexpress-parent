@@ -43,8 +43,8 @@ import io.dialob.api.rest.IdAndRevision;
 import io.resys.limaone.spi.http.HttpClient.AnyProxy;
 import io.resys.limaone.spi.http.HttpClient.RawResponse;
 import io.smallrye.mutiny.Multi;
-import io.vertx.core.json.JsonObject;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 /**
@@ -228,6 +228,7 @@ public interface FormDb {
      * Creates a read-only form state reconstruction engine for displaying completed forms.
      * Provides in-memory simulation of completed questionnaires with navigation support
      * to show form state at any page or step without affecting the original data.
+     * All errors are hidden.
      * 
      * @return a new {@link FormFillReview} for read-only form state reconstruction
      */

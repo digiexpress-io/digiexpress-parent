@@ -154,6 +154,14 @@ public class SyncDialobAndProcess {
     return envir.getProperties().getFormDb().withTenant().formInstanceQuery().findOne(init.getQuestionnaireId())
       .onItem().transform(questionnaire -> {
         
+        if(questionnaire.isEmpty()) {
+          log.debug("Skipping execution because questionnaire: {} state is not completed!", init.getQuestionnaireId());
+          throw new SyncDialobAndProcessException(
+              "Can't transfer questionnaire to flow, " + 
+              "questionnaire for process: '" + init.getQuestionnaireId() + "' has been deleted!"
+          );
+        }
+        
         if(questionnaire.get().metadata().getStatus() != Status.COMPLETED) {
           log.debug("Skipping execution because questionnaire: {} state is not completed!", init.getQuestionnaireId());
           throw new SyncDialobAndProcessException(

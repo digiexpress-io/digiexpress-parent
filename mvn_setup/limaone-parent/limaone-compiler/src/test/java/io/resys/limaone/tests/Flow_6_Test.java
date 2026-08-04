@@ -1,5 +1,12 @@
 package io.resys.limaone.tests;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 /*-
  * #%L
  * limaone-compiler
@@ -24,12 +31,6 @@ import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
 import io.resys.limaone.program.FlowProgram.FlowResult;
 import io.resys.limaone.tests.support.TestTemplate;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -340,7 +341,7 @@ public class Flow_6_Test {
 
     Assertions.assertEquals(
       """
-      Message: Unrecognized field "wrongInputNameB" (class io.resys.limaone.spi.compiler.groovy.pkg_.FundEvalService$Input), not marked as ignorable (3 known properties: "metaClass", "fundQuestionA", "fundQuestionB"])
+      Message: flows/mapping/tasks/FundEvalService/errors/Unrecognized field "wrongInputNameB" (class io.resys.limaone.spi.compiler.groovy.pkg_.FundEvalService$Input), not marked as ignorable (3 known properties: "metaClass", "fundQuestionA", "fundQuestionB"])
        at [Source: UNKNOWN; byte offset: #UNKNOWN] (through reference chain: io.resys.limaone.spi.compiler.groovy.pkg_.FundEvalService$Input["wrongInputNameB"])
        props: {
         "wrongInputNameB" : "selectionA",
@@ -389,7 +390,7 @@ public class Flow_6_Test {
 
     Assertions.assertEquals(
       """
-      Message: Unrecognized field "additionalInput" (class io.resys.limaone.spi.compiler.groovy.pkg_.FundEvalService$Input), not marked as ignorable (3 known properties: "metaClass", "fundQuestionA", "fundQuestionB"])
+      Message: flows/mapping/tasks/FundEvalService/errors/Unrecognized field "additionalInput" (class io.resys.limaone.spi.compiler.groovy.pkg_.FundEvalService$Input), not marked as ignorable (3 known properties: "metaClass", "fundQuestionA", "fundQuestionB"])
        at [Source: UNKNOWN; byte offset: #UNKNOWN] (through reference chain: io.resys.limaone.spi.compiler.groovy.pkg_.FundEvalService$Input["additionalInput"])
        props: {
         "additionalInput" : "selectionA",
@@ -439,7 +440,7 @@ public class Flow_6_Test {
 
     Assertions.assertEquals(
       """
-      Message: -
+      Message: flows/mapping/tasks/FundEvalService/errors/null
        props: {
         "fundQuestionA" : "selectionA"
       }
@@ -487,7 +488,7 @@ public class Flow_6_Test {
 
     Assertions.assertEquals(
       """
-      Message: -
+      Message: flows/mapping/tasks/FundEvalService/errors/null
        props: { }
        statement: {
         "collection" : false,
@@ -532,7 +533,7 @@ public class Flow_6_Test {
 
     Assertions.assertEquals(
       """
-      Message: -
+      Message: flows/mapping/tasks/FundEvalService/errors/null
        props: { }
        statement: {
         "collection" : false,

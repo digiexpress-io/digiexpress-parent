@@ -45,11 +45,11 @@ import io.resys.limaone.ast.Flow_AST.ReturnsStatement;
 import io.resys.limaone.ast.Flow_AST.StartStatement;
 import io.resys.limaone.ast.Flow_AST.StatementType;
 import io.resys.limaone.ast.Flow_AST.SwitchStatement;
-import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType1;
-import io.resys.limaone.program.ImmutableFlowTaskResult;
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
 import io.resys.limaone.program.FlowProgram.FlowResult;
 import io.resys.limaone.program.FlowProgram.FlowResultLog;
+import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType1;
+import io.resys.limaone.program.ImmutableFlowTaskResult;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
 import io.resys.limaone.spi.program.assignment.AssignmentContext;
@@ -211,7 +211,7 @@ public class FlowProgramExecutor {
         assignment.assignFromTask(newFrame);
         
       } catch(Exception e) {
-        throw new StatementException(e.getMessage(), statement, inputs, e);
+        throw new StatementException("flows/" + root.getName() + "/tasks/" +statement.getFlowTaskName() + "/errors/" + e.getMessage(), statement, inputs, e);
       }
     }
     
