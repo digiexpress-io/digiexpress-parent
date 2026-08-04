@@ -22,6 +22,7 @@ package io.digiexpress.eveli.dialob.spi;
 
 import io.dialob.api.form.Form;
 import io.dialob.api.proto.Actions;
+import io.dialob.api.questionnaire.Error;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.questionnaire.Questionnaire.Metadata;
 import io.dialob.questionnaire.service.api.FormActions;
@@ -67,7 +68,18 @@ public class DialobReviewClientImpl implements DialobReviewClient {
           .accept();
         
         final var formActions = new FormActions();
-        envir.buildFullForm(new FormActionsUpdatesCallback(formActions));
+        envir.buildFullForm(new FormActionsUpdatesCallback(formActions) {
+          @Override
+          public FormActionsUpdatesCallback errorAdded(Error error) {
+            // don't add errors for review
+            return this;
+          }
+          @Override
+          public FormActionsUpdatesCallback errorRemoved(Error error) {
+            // Don't add errors for review
+            return this;
+          }
+        });
         
         return new Actions(envir.getRevision(), formActions.getActions());
       }
