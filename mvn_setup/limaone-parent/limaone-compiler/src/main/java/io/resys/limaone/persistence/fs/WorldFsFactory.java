@@ -44,6 +44,7 @@ import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Printout;
 import io.resys.limaone.model.PrintoutPage;
 import io.resys.limaone.model.PrintoutResource;
+import io.resys.limaone.model.PropertyObject;
 import io.resys.limaone.spi.dialob.FormDb.FormMetadata;
 import io.resys.thena.fs.entities.Entity;
 import io.resys.thena.fs.entities.Index;
@@ -281,6 +282,13 @@ public class WorldFsFactory {
       final var label = form.getMetadata().getLabel();
       return NodePathAndName.of(path.orElse("forms"), label);
     }
+    
+    case PROPERTY_OBJECT: {
+      final PropertyObject propObject = worldState.getBodyOfType(node);
+      worldState.putProps(node, n -> Props_PropertyObjectBuilder.of(worldState, n));
+      return NodePathAndName.of(path.orElse("property-objects"), propObject.getName());
+    }
+    
     default: throw new IllegalArgumentException("Not implemented: " + node);
     }
   }

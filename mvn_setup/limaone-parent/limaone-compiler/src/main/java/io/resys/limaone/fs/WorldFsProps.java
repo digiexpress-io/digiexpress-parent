@@ -167,6 +167,13 @@ public interface WorldFsProps {
     Map<String, String> getIntlValues();
   }
 
+  @Value.Immutable
+  interface PropertyObjectProps extends WorldFsProps {
+    String getContent(); // content of object, JSON/CSV
+    String getName();
+    String getObjectType();
+  }
+  
   interface AssetError {
     String getCode();
     ErrorSeverityType getSeverity();

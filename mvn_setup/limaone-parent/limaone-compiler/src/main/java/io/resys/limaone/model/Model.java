@@ -88,6 +88,7 @@ public interface Model<T extends Body>  extends Serializable {
     DEPLOYMENT(Deployment.class),
     
     FOLDER(Body.class),
+    PROPERTY_OBJECT(PropertyObject.class),
     UNKNOWN(Body.class);
     
     private final Class<? extends Body> bodyClass;
@@ -124,6 +125,7 @@ public interface Model<T extends Body>  extends Serializable {
     Map<String, Model<PrintoutPage>> getPrintoutPages();
     Map<String, Model<PrintoutResource>> getPrintoutResources();
     Map<String, Model<Printout>> getPrintouts();
+    Map<String, Model<PropertyObject>> getPropertyObjects();
 
 
     
@@ -172,6 +174,9 @@ public interface Model<T extends Body>  extends Serializable {
       }
       if (getPrintouts().containsKey(id)) {
         return Optional.ofNullable(getPrintouts().get(id));
+      }
+      if (getPropertyObjects().containsKey(id)) {
+        return Optional.ofNullable(getPropertyObjects().get(id));
       }
       return Optional.empty();
     }
@@ -268,6 +273,11 @@ public interface Model<T extends Body>  extends Serializable {
           final var map = new HashMap<>(this.getPrintoutResources());
           map.put(id, Model.of(current, body));
           builder.printoutResources(map);
+        }
+        case PROPERTY_OBJECT -> {
+          final var map = new HashMap<>(this.getPropertyObjects());
+          map.put(id, Model.of(current, body));
+          builder.propertyObjects(map);
         }
 
         case UNKNOWN, FOLDER, DIALOB_FORM_META -> 

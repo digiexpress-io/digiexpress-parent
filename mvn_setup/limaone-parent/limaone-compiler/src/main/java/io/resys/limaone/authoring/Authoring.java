@@ -137,6 +137,8 @@ public interface Authoring {
     ModifyPrintout modifyPrintout();
     ModifyPrintoutPage modifyPrintoutPage();
     ModifyPrintoutResource modifyPrintoutResource();
+    
+    ModifyPropertyObject modifyPropertyObject();
   }
   
   interface NewModel {
@@ -158,6 +160,8 @@ public interface Authoring {
     NewPrintout newPrintout();
     NewPrintoutPage newPrintoutPage();
     NewPrintoutResource newPrintoutResource();
+    
+    NewPropertyObject newPropertyObject();
   }
   
 

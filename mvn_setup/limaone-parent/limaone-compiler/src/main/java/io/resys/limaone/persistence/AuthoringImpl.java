@@ -52,6 +52,7 @@ import io.resys.limaone.authoring.ModifyAssetName;
 import io.resys.limaone.authoring.ModifyPrintout;
 import io.resys.limaone.authoring.ModifyPrintoutPage;
 import io.resys.limaone.authoring.ModifyPrintoutResource;
+import io.resys.limaone.authoring.ModifyPropertyObject;
 import io.resys.limaone.authoring.NewArticle;
 import io.resys.limaone.authoring.NewArticleLink;
 import io.resys.limaone.authoring.NewArticlePage;
@@ -65,6 +66,7 @@ import io.resys.limaone.authoring.NewLocale;
 import io.resys.limaone.authoring.NewPrintout;
 import io.resys.limaone.authoring.NewPrintoutPage;
 import io.resys.limaone.authoring.NewPrintoutResource;
+import io.resys.limaone.authoring.NewPropertyObject;
 import io.resys.limaone.authoring.TID;
 import io.resys.limaone.persistence.fs.WorldFsBodyQueryImpl;
 import io.resys.limaone.persistence.world.TID_FS;
@@ -170,6 +172,7 @@ public class AuthoringImpl implements Authoring {
       @Override public ModifyAssetName modifyAssetName() { return new ModifyAssetNameImpl(config); }
 
       @Override public ModifyLabels modifyLabels() { return new ModifyLabelsImpl(config); }
+      @Override public ModifyPropertyObject modifyPropertyObject() { return new ModifyPropertyObjectImpl(config); }
     };
   }
 
@@ -200,6 +203,7 @@ public class AuthoringImpl implements Authoring {
       @Override public NewPrintout newPrintout() { return new NewPrintoutImpl(config); }
       @Override public NewPrintoutPage newPrintoutPage() { return new NewPrintoutPageImpl(config); }
       @Override public NewPrintoutResource newPrintoutResource() { return new NewPrintoutResourceImpl(config); }
+      @Override public NewPropertyObject newPropertyObject() { return new NewPropertyObjectImpl(config); }
     };
   }
 
