@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PropertyObject_Test extends DbSupport {
 
   @Test
-  public void propertyTest1() {
+  public void propertyCreationTest() {
     final var authoring = new AuthoringImpl(createConfig());   
    
     final var property1 = authoring.newModel()
@@ -54,6 +54,7 @@ public class PropertyObject_Test extends DbSupport {
       
       final var body = worldState.getPropertyObjects().values().iterator().next().getBody();
       Assertions.assertEquals("default",  body.getObjectType()); 
+      Assertions.assertEquals("first",  worldState.getPropertyObjects().get(property1.getId()).getBody().getName()); 
     }
     
     authoring.newModel()
@@ -61,5 +62,66 @@ public class PropertyObject_Test extends DbSupport {
       .props(props -> props.name("po1.0").description("test release"))
       .buildSync();
      
+  }
+  
+  @Test
+  public void propertyDuplicateRejectTest() {
+    final var authoring = new AuthoringImpl(createConfig());   
+   
+    final var property1 = authoring.newModel()
+        .newPropertyObject()
+        .props(builder -> builder.objectType("default").name("first").content("{\"firstObjectValue\":\"one\"}").build())
+        .buildSync();
+    Assertions.assertNotNull(property1.getId());
+    Assertions.assertThrows(Exception.class, () -> authoring.newModel()
+          .newPropertyObject()
+          .props(builder -> builder.objectType("default").name("first").content("{\"firstObjectValue\":\"two\"}").build())
+          .buildSync());
+    final var worldState = authoring.worldQuery().docs(BodyType.values()).findAllSync();
+    Assertions.assertEquals(1, worldState.getPropertyObjects().size()); 
+    
+    final var body = worldState.getPropertyObjects().values().iterator().next().getBody();
+    Assertions.assertEquals("default",  body.getObjectType()); 
+    Assertions.assertEquals("first",  body.getName()); 
+    
+    authoring.newModel()
+      .newDeployment()
+      .props(props -> props.name("po1.0").description("test release"))
+      .buildSync();
+     
+  }
+  @Test
+  public void propertyModificationTest() {
+    final var authoring = new AuthoringImpl(createConfig());   
+    
+    final var property1 = authoring.newModel()
+        .newPropertyObject()
+        .props(builder -> builder.objectType("default").name("first").content("{\"firstObjectValue\":\"one\"}").build())
+        .buildSync();
+    Assertions.assertNotNull(property1.getId());
+
+    final var worldState = authoring.worldQuery().docs(BodyType.values()).findAllSync();
+    Assertions.assertEquals(1, worldState.getPropertyObjects().size()); 
+    
+    final var body = worldState.getPropertyObjects().values().iterator().next().getBody();
+    Assertions.assertEquals("default",  body.getObjectType()); 
+    Assertions.assertEquals("first",  body.getName()); 
+
+    final var updated = authoring.modifyModel()
+        .modifyPropertyObject()
+        .props(props -> props
+            .propertyObjectId(property1.getId())
+            .content("{\"firstObjectValue\":\"one_plus_one\"}")
+            .build()
+        )
+        .buildSync();
+
+    final var updatedWorldState = authoring.worldQuery().docs(BodyType.values()).findAllSync();
+    final var updatedBody = updatedWorldState.getPropertyObjects().values().iterator().next().getBody();
+    Assertions.assertEquals("default",  updatedBody.getObjectType()); 
+    Assertions.assertEquals("first",  updatedBody.getName()); 
+    Assertions.assertEquals("{\"firstObjectValue\":\"one_plus_one\"}",  updatedBody.getContent()); 
+    
+    
   }
 }
