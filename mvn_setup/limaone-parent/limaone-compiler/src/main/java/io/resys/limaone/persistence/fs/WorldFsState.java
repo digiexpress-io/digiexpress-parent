@@ -115,7 +115,11 @@ public class WorldFsState {
   
   
   public Locale getLocale(String localeId) {
-    return (Locale) nodes_by_object_id.get(localeId).getBody().get(); 
+    final var node = nodes_by_object_id.get(localeId);
+    if (node == null) {
+      throw new LocaleNotFoundException("Locale not found for id: " + localeId);
+    }
+    return (Locale) node.getBody().get();
   }
   
   @SuppressWarnings("unchecked")
@@ -146,4 +150,14 @@ public class WorldFsState {
     }
     return result.reversed();
   }
+  
+  
+  private static class LocaleNotFoundException extends RuntimeException {
+    public LocaleNotFoundException(String message) {
+      super(message);
+    }
+
+    private static final long serialVersionUID = 1L;
+    
+  } 
 }

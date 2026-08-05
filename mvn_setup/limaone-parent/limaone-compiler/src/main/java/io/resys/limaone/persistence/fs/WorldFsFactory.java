@@ -147,7 +147,11 @@ public class WorldFsFactory {
   }
   
   private NodePathAndName getPathAndName(NodeAndBody node) {
-    return worldState.getPathAndName(node, this::parsePathAndName);
+    try {
+      return worldState.getPathAndName(node, this::parsePathAndName);
+    } catch(Exception e) {
+      throw new FileSystemNodeException("Failed to parse node: " + node.getValue().toString() + ", bodyType: " + node.getBodyType() + ", because: " + e.getMessage(), e);
+    }
   }
 
   private NodePathAndName parsePathAndName(NodeAndBody node) {
@@ -345,5 +349,16 @@ public class WorldFsFactory {
     }
     
     return original;
+  }
+  
+  
+  private static class FileSystemNodeException extends RuntimeException {
+
+    private static final long serialVersionUID = 6790328348859474538L;
+
+    public FileSystemNodeException(String message, Throwable cause) {
+      super(message, cause);
+    }
+    
   }
 }

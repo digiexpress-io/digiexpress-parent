@@ -422,6 +422,8 @@ public class WorldImportImpl implements WorldImport {
     
     final var targetBody = ImmutablePrintoutPage.builder()
         .from(target.getBody())
+        .localeId(ctx.getNewId(target.getBody().getLocaleId()))
+        .serviceId(ctx.getNewId(target.getBody().getServiceId()))
         .printoutPageIds(target.getBody().getPrintoutPageIds().stream().map(old -> ctx.getNewId(old)).toList())
         .build();
     

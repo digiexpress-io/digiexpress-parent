@@ -14,8 +14,9 @@ export const useOwnerState = (props: FsPanelPreviewWrenchProps): OwnerState => {
   const [wrenchBody, setWrenchBody] = React.useState<Fs.WrenchBody | undefined>(undefined);
   const [flowAst, setFlowAst] = React.useState<Fs.FlowAst>();
 
-  // Hook up our debounced string (waits 500ms after typing stops)
-  const fromEdit: string | undefined = useDebounce(state?.getCurrentProps().changes['flowValue'] ?? wrenchBody?.flows[props.dirent.id]?.ast.parseTree.value);
+  const bodySyntax = useDebounce(state?.getCurrentProps().changes['flowValue'] ?? wrenchBody?.flows[props.dirent.id]?.ast.parseTree.value);
+
+
 
   React.useEffect(() => {
     fetchDirentBody(props.dirent.id, 'FLOW')
@@ -23,43 +24,35 @@ export const useOwnerState = (props: FsPanelPreviewWrenchProps): OwnerState => {
   }, [props.dirent.commitIndex?.treeId]);
 
   React.useEffect(function loadAst() {
-    if (!fromEdit) {
+    if (!bodySyntax) {
       return;
     }
     applyTransientChanges({
       id: props.dirent.id,
       bodyType: 'FLOW',
       bodyStatment: [],
-      bodySyntax: fromEdit,
+      bodySyntax: bodySyntax,
     }).then((body) => {
       const wb = body as Fs.WrenchAstBody<Fs.FlowAst>;
       setFlowAst(wb.ast);
     });
 
-  }, [props.dirent.id, fromEdit]);
+  }, [bodySyntax]);
 
   return {
     wrenchBody,
     flowAst: flowAst ?? wrenchBody?.flows[props.dirent.id]?.ast,
   };
-};
-
-
+}
 
 const delay = 1000;
-function useDebounce(value: string) {
+function useDebounce(value: string | undefined) {
   const [debouncedValue, setDebouncedValue] = React.useState(value);
 
   React.useEffect(() => {
-    // Set a timer to update the debounced value after the delay
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]); 
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value]);
 
   return debouncedValue;
 }

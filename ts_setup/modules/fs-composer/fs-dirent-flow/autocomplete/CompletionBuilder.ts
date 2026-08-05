@@ -101,7 +101,6 @@ export class CompletionBuilder {
     result.push(...Hint_TaskBodyMapping.accept(container));
     result.push(...Hint_TaskInputMapping.accept(container));
 
-    console.log('desc', navDesc, result);
     return result;
   }
 }

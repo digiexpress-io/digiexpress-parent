@@ -72,13 +72,14 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const [flow, setFlow] = React.useState<Fs.WrenchAstBody<Fs.FlowAst>>(() => initBody.flows[props.direntId]);
 
   function onChangeContent(value: string) {
-    onChangeCommands(value);
+    onChangeCommands(value, props.direntId);
     setState(prev => prev.withFlowValue(value));
   }
 
-  const onChangeCommands = useDebounce((bodySyntax: string) => {
+  const onChangeCommands = useDebounce((bodySyntax: string, id: string) => {
+
     applyTransientChanges({
-      id: props.direntId,
+      id,
       bodyType: 'FLOW',
       bodyStatment: [],
       bodySyntax,
@@ -86,6 +87,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
       const wb = body as Fs.WrenchAstBody<Fs.FlowAst>;
       setFlow(wb);
     });
+
   })
 
   return {
