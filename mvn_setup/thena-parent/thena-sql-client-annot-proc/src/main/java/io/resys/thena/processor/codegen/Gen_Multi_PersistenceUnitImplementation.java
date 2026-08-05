@@ -132,7 +132,7 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     classBuilder.addMethod(generateMergeBuilderMethod(className, operations));
 
     // Generate addAllToInserts(World) method
-    classBuilder.addMethod(generateAddAllToInsertsMethod(registry, className, interfaceName, operations, tables));
+    classBuilder.addMethod(generateAddAllToInsertsMethod(registry, className, interfaceName, tables));
     
     // Generate Builder class
     classBuilder.addType(generateBuilderClass(className, interfaceName, operations));
@@ -533,7 +533,6 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
       RegistryMetamodel registry,
       String className,
       String interfaceName,
-      Map<String, TypeName> operations,
       List<TableMetamodel> tables) {
 
     final var worldType = ClassName.get(registry.getPackageName(), registry.getName() + "DbQuery", registry.getWorldName());
@@ -545,34 +544,29 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
 
     method.addStatement("final var builder = $T.builder().from(this)", ClassName.bestGuess(className));
 
-    for (final var entry : operations.entrySet()) {
-      final var opKey = entry.getKey();
-      if (!opKey.endsWith("Inserts")) {
+    for (final var table : tables) {
+      final var insertAllMethod = table.getSqlMethods().stream()
+        .filter(m -> m.getType() == SqlMethodType.INSERT_ALL)
+        .findFirst()
+        .orElse(null);
+      if (insertAllMethod == null) {
         continue;
       }
 
-      final var tableName = opKey.substring(0, opKey.length() - "Inserts".length());
-      final var table = findTableByPascalName(tables, tableName);
-      if (table == null || findEntityTypeForTable(table) == null) {
+      final var insertEntityType = extractEntityType(insertAllMethod);
+      final var worldEntityType = findEntityTypeForTable(table);
+      if (insertEntityType == null || worldEntityType == null || !insertEntityType.equals(worldEntityType)) {
         continue;
       }
 
-      final var worldGetter = "get" + tableName;
-      method.addStatement("builder.addAll$L(world.$L().values().stream().toList())", opKey, worldGetter);
+      final var fieldName = buildOperationFieldName(table, SqlMethodType.INSERT_ALL);
+      final var worldGetter = "get" + NamingUtils.toPascalCase(table.getTableName());
+      method.addStatement("builder.addAll$L(world.$L().values().stream().toList())", fieldName, worldGetter);
     }
 
     method.addStatement("return builder.build()");
 
     return method.build();
-  }
-
-  private TableMetamodel findTableByPascalName(List<TableMetamodel> tables, String pascalName) {
-    for (final var table : tables) {
-      if (NamingUtils.toPascalCase(table.getTableName()).equals(pascalName)) {
-        return table;
-      }
-    }
-    return null;
   }
 
   private ClassName findEntityTypeForTable(TableMetamodel table) {
