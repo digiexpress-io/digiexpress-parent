@@ -49,7 +49,7 @@ public class PropertyObject_Test extends DbSupport {
     Assertions.assertNotNull(property2.getId());
 
     {
-      final var worldState = authoring.worldQuery().docs(BodyType.values()).findAllSync();
+      final var worldState = authoring.worldQuery().docs(BodyType.PROPERTY_OBJECT).findAllSync();
       Assertions.assertEquals(2, worldState.getPropertyObjects().size()); 
       
       final var body = worldState.getPropertyObjects().values().iterator().next().getBody();
