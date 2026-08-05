@@ -16,6 +16,14 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
     ownerState.onChangeContent(value ?? '');
   };
 
+  React.useEffect(() => {
+    if (!ownerState.isDirty) {
+      return;
+    }
+    const timer = setTimeout(() => { ownerState.push(); }, 1000);
+    return () => clearTimeout(timer);
+  }, [ownerState.content]);
+
   return (
     <FsDirentPrintoutPageRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>

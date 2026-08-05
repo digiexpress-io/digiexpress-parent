@@ -1,11 +1,9 @@
 import React from 'react';
-import { Button, Typography } from '@mui/material';
-import { useIntl } from 'react-intl';
+import { Typography } from '@mui/material';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 
 export const FsPanelPreviewPrintoutPage: React.FC = () => {
-  const intl = useIntl();
   const { activeDirent } = useFsNav();
   const { getDirent, selectOptions, compilePrintoutPage } = useFsDirent();
 
@@ -42,6 +40,7 @@ export const FsPanelPreviewPrintoutPage: React.FC = () => {
   const serviceId = pageProps?.serviceId;
   const localeProps = pageProps?.localeId ? selectOptions.direntProps[pageProps.localeId] as Fs.LanguageProps | undefined : undefined;
   const localeCode = localeProps?.localeCode;
+  const treeId = dirent?.commitIndex?.treeId;
 
   const onCompile = React.useCallback(async () => {
     if (!serviceId || !localeCode) {
@@ -63,11 +62,15 @@ export const FsPanelPreviewPrintoutPage: React.FC = () => {
     }
   }, [compilePrintoutPage, serviceId, localeCode]);
 
+  React.useEffect(() => {
+    if (!treeId || !serviceId || !localeCode) {
+      return;
+    }
+    onCompile();
+  }, [treeId]);
+
   return (
     <>
-      <Button variant='contained' onClick={onCompile} disabled={isCompiling}>
-        {intl.formatMessage({ id: 'fs.panelPreview.printoutPage.compile' })}
-      </Button>
       {compilationError && (<Typography color='error'>{compilationError}</Typography>)}
       {pdfBase64 && (
         <iframe

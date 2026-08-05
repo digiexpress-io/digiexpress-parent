@@ -8,6 +8,7 @@ export interface UpdateOwnerState {
   content: string;
   connectedResourceNames: string[];
   onChangeContent: (value: string) => void;
+  push: () => Promise<void>;
 }
 
 type _ChangeStateProps = {
@@ -66,7 +67,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
   const dirent = getDirent(props.direntId)!;
   const pageProps = dirent.props as Fs.PrintoutPageProps;
 
-  const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
+  const { state, update, push } = useFsuChange(props.direntId, () => new _ChangeState({
     pageId: props.direntId,
     bodyType: dirent.type,
     treeId: dirent?.commitIndex?.treeId!,
@@ -92,5 +93,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     content: state.content,
     connectedResourceNames,
     onChangeContent,
+    push,
   };
 };
