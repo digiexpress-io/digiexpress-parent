@@ -26,11 +26,13 @@ import java.util.Map;
 
 import javax.lang.model.element.Modifier;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -196,33 +198,43 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     return paramType;
   }
   
+  private static final ClassName JSON_CREATOR = ClassName.get("com.fasterxml.jackson.annotation", "JsonCreator");
+  private static final ClassName JSON_PROPERTY = ClassName.get("com.fasterxml.jackson.annotation", "JsonProperty");
+
+  private ParameterSpec jsonParam(TypeName type, String name) {
+    return ParameterSpec.builder(type, name)
+      .addAnnotation(AnnotationSpec.builder(JSON_PROPERTY).addMember("value", "$S", name).build())
+      .build();
+  }
+
   private MethodSpec generateConstructor(Map<String, TypeName> operations) {
     final var builder = MethodSpec.constructorBuilder()
-      .addModifiers(Modifier.PRIVATE);
-    
+      .addModifiers(Modifier.PUBLIC)
+      .addAnnotation(JSON_CREATOR);
+
     // Add standard parameters
-    builder.addParameter(ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(String.class)), "commitMessages");
-    builder.addParameter(ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(String.class)), "commitAuthors");
-    builder.addParameter(String.class, "tenantId");
-    builder.addParameter(ClassName.get(BatchStatus.class), "status");
-    builder.addParameter(String.class, "log");
-    builder.addParameter(ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(Message.class)), "commitLogs");
-    
+    builder.addParameter(jsonParam(ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(String.class)), "commitMessages"));
+    builder.addParameter(jsonParam(ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(String.class)), "commitAuthors"));
+    builder.addParameter(jsonParam(ClassName.get(String.class), "tenantId"));
+    builder.addParameter(jsonParam(ClassName.get(BatchStatus.class), "status"));
+    builder.addParameter(jsonParam(ClassName.get(String.class), "log"));
+    builder.addParameter(jsonParam(ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(Message.class)), "commitLogs"));
+
     builder.addStatement("this.commitMessages = commitMessages");
     builder.addStatement("this.commitAuthors = commitAuthors");
     builder.addStatement("this.tenantId = tenantId");
     builder.addStatement("this.status = status");
     builder.addStatement("this.log = log");
     builder.addStatement("this.commitLogs = commitLogs");
-    
+
     // Add operation parameters
     for (final var entry : operations.entrySet()) {
       final var fieldName = uncapitalize(entry.getKey());
       final var entityType = entry.getValue();
-      builder.addParameter(ParameterizedTypeName.get(ClassName.get(List.class), entityType), fieldName);
+      builder.addParameter(jsonParam(ParameterizedTypeName.get(ClassName.get(List.class), entityType), fieldName));
       builder.addStatement("this.$L = $L", fieldName, fieldName);
     }
-    
+
     return builder.build();
   }
   

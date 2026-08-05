@@ -25,10 +25,12 @@ import java.util.Map;
 
 import javax.lang.model.element.Modifier;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
@@ -91,10 +93,14 @@ public class Gen_Multi_WorldImplementation implements MultiTableCodeGenerator {
       .build();
   }
   
+  private static final ClassName JSON_CREATOR = ClassName.get("com.fasterxml.jackson.annotation", "JsonCreator");
+  private static final ClassName JSON_PROPERTY = ClassName.get("com.fasterxml.jackson.annotation", "JsonProperty");
+
   private MethodSpec generateConstructor(List<TableMetamodel> tables) {
     final var builder = MethodSpec.constructorBuilder()
-      .addModifiers(Modifier.PRIVATE);
-    
+      .addModifiers(Modifier.PUBLIC)
+      .addAnnotation(JSON_CREATOR);
+
     for (final var table : tables) {
       final var entityType = findEntityTypeForTable(table);
       if (entityType != null) {
@@ -104,11 +110,13 @@ public class Gen_Multi_WorldImplementation implements MultiTableCodeGenerator {
           ClassName.get(String.class),
           entityType
         );
-        builder.addParameter(paramType, fieldName);
+        builder.addParameter(ParameterSpec.builder(paramType, fieldName)
+          .addAnnotation(AnnotationSpec.builder(JSON_PROPERTY).addMember("value", "$S", fieldName).build())
+          .build());
         builder.addStatement("this.$L = $L", fieldName, fieldName);
       }
     }
-    
+
     return builder.build();
   }
   

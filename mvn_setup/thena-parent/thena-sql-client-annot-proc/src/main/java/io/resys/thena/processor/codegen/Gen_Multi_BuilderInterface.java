@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.lang.model.element.Modifier;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
@@ -132,7 +133,10 @@ public class Gen_Multi_BuilderInterface implements MultiTableCodeGenerator {
   
   private TypeSpec generatePersistenceUnitInterface(String interfaceName, Map<String, TypeName> operations) {
     final var persistenceUnit = TypeSpec.interfaceBuilder(interfaceName)
-      .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+      .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+      .addAnnotation(AnnotationSpec.builder(ClassName.get("com.fasterxml.jackson.databind.annotation", "JsonDeserialize"))
+        .addMember("as", "$T.class", ClassName.bestGuess("Immutable" + interfaceName))
+        .build());
     
     persistenceUnit.addMethod(MethodSpec.methodBuilder("getCommitMessages")
       .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)

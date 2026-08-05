@@ -22,7 +22,10 @@ package io.resys.thena.client.sample.entities;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 @Value.Immutable
+@JsonDeserialize(as = ImmutableBatch.class)
 public interface Batch {
   String getId();
   String getAppId();
