@@ -130,6 +130,9 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     classBuilder.addMethod(generateMergeListMethod(className, interfaceName));
     classBuilder.addMethod(generateMergeSingleMethod(className, interfaceName));
     classBuilder.addMethod(generateMergeBuilderMethod(className, operations));
+
+    // Generate addAllToInserts(World) method
+    classBuilder.addMethod(generateAddAllToInsertsMethod(registry, className, interfaceName, operations, tables));
     
     // Generate Builder class
     classBuilder.addType(generateBuilderClass(className, interfaceName, operations));
@@ -526,6 +529,63 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     return method.build();
   }
   
+  private MethodSpec generateAddAllToInsertsMethod(
+      RegistryMetamodel registry,
+      String className,
+      String interfaceName,
+      Map<String, TypeName> operations,
+      List<TableMetamodel> tables) {
+
+    final var worldType = ClassName.get(registry.getPackageName(), registry.getName() + "DbQuery", registry.getWorldName());
+
+    final var method = MethodSpec.methodBuilder("addAllToInserts")
+      .addModifiers(Modifier.PUBLIC)
+      .addParameter(worldType, "world")
+      .returns(ClassName.bestGuess(interfaceName));
+
+    method.addStatement("final var builder = $T.builder().from(this)", ClassName.bestGuess(className));
+
+    for (final var entry : operations.entrySet()) {
+      final var opKey = entry.getKey();
+      if (!opKey.endsWith("Inserts")) {
+        continue;
+      }
+
+      final var tableName = opKey.substring(0, opKey.length() - "Inserts".length());
+      final var table = findTableByPascalName(tables, tableName);
+      if (table == null || findEntityTypeForTable(table) == null) {
+        continue;
+      }
+
+      final var worldGetter = "get" + tableName;
+      method.addStatement("builder.addAll$L(world.$L().values().stream().toList())", opKey, worldGetter);
+    }
+
+    method.addStatement("return builder.build()");
+
+    return method.build();
+  }
+
+  private TableMetamodel findTableByPascalName(List<TableMetamodel> tables, String pascalName) {
+    for (final var table : tables) {
+      if (NamingUtils.toPascalCase(table.getTableName()).equals(pascalName)) {
+        return table;
+      }
+    }
+    return null;
+  }
+
+  private ClassName findEntityTypeForTable(TableMetamodel table) {
+    for (final var method : table.getSqlMethods()) {
+      if (method.getType() == SqlMethodType.SELECT_ALL && method.getParameters().isEmpty()) {
+        if (method.getReturnType() != null) {
+          return (ClassName) method.getReturnType();
+        }
+      }
+    }
+    return null;
+  }
+
   private String uncapitalize(String str) {
     if (str == null || str.isEmpty()) {
       return str;
