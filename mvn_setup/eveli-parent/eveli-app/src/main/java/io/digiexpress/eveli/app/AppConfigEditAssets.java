@@ -25,6 +25,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.digiexpress.eveli.app.assets.demo_object.DemoLocationPropertyObjectDescriptor;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
 import io.digiexpress.eveli.client.config.EveliPropsAssets;
@@ -48,4 +51,11 @@ public class AppConfigEditAssets {
     final var dev = EveliAutoConfigAssets.eveliEditEnvir(context, pgPool, envir, runtime, assetProps);
     return dev;
   }
+  
+  
+  @Bean
+  public DemoLocationPropertyObjectDescriptor demoLocationPropertyObjectDescriptor(ObjectMapper mapper) {
+    return new DemoLocationPropertyObjectDescriptor(mapper);
+  }
+
 }

@@ -1,5 +1,16 @@
 package io.digiexpress.eveli.client.config;
 
+import java.time.Duration;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /*-
  * #%L
  * eveli-client
@@ -21,7 +32,18 @@ package io.digiexpress.eveli.client.config;
  */
 
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
-import io.digiexpress.eveli.client.web.resources.assets.*;
+import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptor;
+import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptorFactory;
+import io.digiexpress.eveli.client.assets.property_object.spi.DefaultPropertyObjectDescriptor;
+import io.digiexpress.eveli.client.assets.property_object.spi.PropertyObjectDescriptorFactoryImpl;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsDialobController;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsFsController;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsPropertyObjectController;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsPublicationController;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsStencilController;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsTagomiController;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsWrenchController;
 import io.digiexpress.eveli.client.web.resources.worker.CockpitApiController;
 import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.persistence.AuthoringImpl;
@@ -32,14 +54,6 @@ import io.smallrye.mutiny.Uni;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import java.time.Duration;
 
 
 @ConditionalOnBean(name = EveliAutoConfigAssets.BEAN_NAME)
@@ -97,6 +111,17 @@ public class EveliAutoConfigAssets {
   public AssetsFsController assetsFsController(EveliEditEnvir context) {
     return new AssetsFsController(context.getAuthoring());
   }
+  
+  @Bean
+  public AssetsPropertyObjectController assetsPropertyController(EveliEditEnvir context, PropertyObjectDescriptorFactory descriptorFactory) {
+    return new AssetsPropertyObjectController(context.getAuthoring(), descriptorFactory);
+  }
+  
+  @Bean
+  public PropertyObjectDescriptorFactory propertyObjectDescriptorFactory(ObjectMapper mapper, PropertyObjectDescriptor ...descriptors) {
+    return new PropertyObjectDescriptorFactoryImpl(new DefaultPropertyObjectDescriptor(mapper), descriptors);
+  }
+  
   /**
    * Create this bean for edit envir
    */
@@ -129,4 +154,5 @@ public class EveliAutoConfigAssets {
     return createModelWorld.onItem().transform(e -> envir);
   }
 
+  
 }

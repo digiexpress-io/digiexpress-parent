@@ -87,8 +87,8 @@ public class AssetsPropertyObjectController {
     return Uni.createFrom().item(descriptorFactory.getRegisteredPropertyObjectTypes());
   }
   
-  @GetMapping("/objectSchema")
-  public Uni<JsonSchema> getObjectSchema(String objectType) {
+  @GetMapping("/objectSchema/{objectType}")
+  public Uni<JsonSchema> getObjectSchema(@PathVariable("objectType") String objectType) {
     return Uni.createFrom().item(
         descriptorFactory.getDescriptor(objectType).orElse(descriptorFactory.getDefaultDescriptor())
         .getSchema());
