@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.assets;
 
 import java.util.List;
+import java.util.Optional;
 
 /*-
  * #%L
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.module.jsonSchema.jakarta.JsonSchema;
 
+import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptor;
 import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptorFactory;
 import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.authoring.ModifyPropertyObject.ModifyPropertyObjectProps;
@@ -70,11 +72,37 @@ public class AssetsPropertyObjectController {
 
   @PostMapping("/objects")
   public Uni<Model<PropertyObject>> createResource(@RequestBody NewPropertyObjectProps body) {
+    String propertyType = body.getObjectType();
+    Optional<PropertyObjectDescriptor<?>> descriptor = descriptorFactory.getDescriptor(propertyType);
+    if (descriptor.isEmpty()) {
+      return Uni.createFrom().failure(new RuntimeException("Incorrect object type for property object creation:" + propertyType));
+    }
+    if (!descriptor.get().validateBody(body.getContent())) {
+      return Uni.createFrom().failure(new RuntimeException("Property object creation validation failed for input:" + body.getContent()));
+    }
     return composer.newModel().newPropertyObject().props(body).build();
   }
+  
   @PutMapping("/objects")
   public Uni<Model<PropertyObject>> updateResource(@RequestBody ModifyPropertyObjectProps body) {
-    return composer.modifyModel().modifyPropertyObject().props(body).build();
+    Uni<Model<?>> object = composer.worldQuery().getOneById(body.getPropertyObjectId());
+    return object.flatMap(o-> {
+      if (o.getBodyType() != BodyType.PROPERTY_OBJECT) {
+        return Uni.createFrom().failure(new RuntimeException("Incorrect body type for property object modification:" + o.getBodyType()));
+      }
+      PropertyObject body2 = (PropertyObject) o.getBody();
+      String propertyType = body2.getObjectType();
+      Optional<PropertyObjectDescriptor<?>> descriptor = descriptorFactory.getDescriptor(propertyType);
+      if (descriptor.isEmpty()) {
+        return Uni.createFrom().failure(new RuntimeException("Incorrect object type for property object modification:" + propertyType));
+      }
+      if (!descriptor.get().validateBody(body.getContent())) {
+        return Uni.createFrom().failure(new RuntimeException("Property object validation failed for input:" + body.getContent()));
+      }
+      return composer.modifyModel().modifyPropertyObject().props(body).build();
+    });
+    
+    
   }
   @DeleteMapping("/objects/{id}")
   public Uni<Model<?>> deleteResource(@PathVariable("id") String id) {
@@ -93,5 +121,5 @@ public class AssetsPropertyObjectController {
         descriptorFactory.getDescriptor(objectType).orElse(descriptorFactory.getDefaultDescriptor())
         .getSchema());
   }
-  
+
 }

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PropertyObjectDescriptorFactory {
-  Optional<PropertyObjectDescriptor> getDescriptor(String propertyObjectType);
-  PropertyObjectDescriptor getDefaultDescriptor();
+  Optional<PropertyObjectDescriptor<? extends BasePropertyObject>> getDescriptor(String propertyObjectType);
+  PropertyObjectDescriptor<? extends BasePropertyObject> getDefaultDescriptor();
   List<String> getRegisteredPropertyObjectTypes();
 }

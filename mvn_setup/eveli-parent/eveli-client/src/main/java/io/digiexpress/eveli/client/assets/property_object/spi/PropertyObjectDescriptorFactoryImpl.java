@@ -5,15 +5,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import io.digiexpress.eveli.client.assets.property_object.api.BasePropertyObject;
 import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptor;
 import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptorFactory;
 
 public class PropertyObjectDescriptorFactoryImpl implements PropertyObjectDescriptorFactory {
 
-  private Map<String, PropertyObjectDescriptor> descriptors = new HashMap<>();
-  private final PropertyObjectDescriptor defaultDescriptor;
+  private Map<String, PropertyObjectDescriptor<? extends BasePropertyObject>> descriptors = new HashMap<>();
+  private final PropertyObjectDescriptor<? extends BasePropertyObject> defaultDescriptor;
   
-  public PropertyObjectDescriptorFactoryImpl(PropertyObjectDescriptor defaultDesc, PropertyObjectDescriptor ...propDescriptors) {
+  public PropertyObjectDescriptorFactoryImpl(PropertyObjectDescriptor<? extends BasePropertyObject> defaultDesc, List<PropertyObjectDescriptor<? extends BasePropertyObject>> propDescriptors) {
     this.defaultDescriptor = defaultDesc;
     for (var desc : propDescriptors) {
       descriptors.put(desc.getPropertyObjectType(), desc);
@@ -21,7 +22,7 @@ public class PropertyObjectDescriptorFactoryImpl implements PropertyObjectDescri
   }
   
   @Override
-  public Optional<PropertyObjectDescriptor> getDescriptor(String propertyObjectType) {
+  public Optional<PropertyObjectDescriptor<? extends BasePropertyObject>> getDescriptor(String propertyObjectType) {
     return Optional.ofNullable(descriptors.get(propertyObjectType));
   }
 
@@ -30,7 +31,7 @@ public class PropertyObjectDescriptorFactoryImpl implements PropertyObjectDescri
     return descriptors.keySet().stream().toList();
   }
 
-  public PropertyObjectDescriptor getDefaultDescriptor() {
+  public PropertyObjectDescriptor<? extends BasePropertyObject> getDefaultDescriptor() {
     return defaultDescriptor;
   }
 

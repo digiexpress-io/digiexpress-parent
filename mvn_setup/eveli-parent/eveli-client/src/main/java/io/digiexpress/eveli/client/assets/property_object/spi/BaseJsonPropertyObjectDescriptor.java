@@ -1,10 +1,15 @@
 package io.digiexpress.eveli.client.assets.property_object.spi;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.jakarta.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.jakarta.JsonSchemaGenerator;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion;
+import com.networknt.schema.ValidationMessage;
 
 import io.digiexpress.eveli.client.assets.property_object.api.BasePropertyObject;
 import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptor;
@@ -17,13 +22,16 @@ public abstract class BaseJsonPropertyObjectDescriptor <T extends BasePropertyOb
 
   protected final ObjectMapper mapper;
   protected JsonSchema schema;
+  protected com.networknt.schema.JsonSchema validationSchema;
   
   public BaseJsonPropertyObjectDescriptor(ObjectMapper mapper) {
     this.mapper = mapper;
     JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(mapper);
     try {
       this.schema = schemaGen.generateSchema(getObjectClass());
-    } catch (JsonMappingException e) {
+      JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4);
+      this.validationSchema = factory.getSchema(mapper.writeValueAsString(this.schema));
+    } catch (JsonProcessingException e) {
       schema = null;
       log.error("Error initializing schema", e);
     }
@@ -47,6 +55,22 @@ public abstract class BaseJsonPropertyObjectDescriptor <T extends BasePropertyOb
     return schema;
   }
 
+  @Override
+  public boolean validateBody(String input) {
+    try {
+      JsonNode inputJson = mapper.readTree(input);
+      Set<ValidationMessage> messages = validationSchema.validate(inputJson);
+      if (!messages.isEmpty()) {
+        log.warn("Property object validation for input: {} failed with following messages: {}", input, messages);
+        return false;
+      }
+      return true;
+    }
+    catch (Exception e) {
+      log.warn("Property object validation for input: {} failed with error", input, e);
+      return false;
+    }
+  }
   
   protected abstract Class<T> getObjectClass();
 }

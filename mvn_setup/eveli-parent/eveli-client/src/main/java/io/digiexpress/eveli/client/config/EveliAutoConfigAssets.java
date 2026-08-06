@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
@@ -32,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.assets.property_object.api.BasePropertyObject;
 import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptor;
 import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptorFactory;
 import io.digiexpress.eveli.client.assets.property_object.spi.DefaultPropertyObjectDescriptor;
@@ -118,7 +120,7 @@ public class EveliAutoConfigAssets {
   }
   
   @Bean
-  public PropertyObjectDescriptorFactory propertyObjectDescriptorFactory(ObjectMapper mapper, PropertyObjectDescriptor ...descriptors) {
+  public PropertyObjectDescriptorFactory propertyObjectDescriptorFactory(ObjectMapper mapper, List<PropertyObjectDescriptor<? extends BasePropertyObject>> descriptors) {
     return new PropertyObjectDescriptorFactoryImpl(new DefaultPropertyObjectDescriptor(mapper), descriptors);
   }
   
