@@ -22,4 +22,5 @@ public class DefaultPropertyObjectDescriptor extends BaseJsonPropertyObjectDescr
     return DefaultPropertyObject.class;
   }
 
+
 }

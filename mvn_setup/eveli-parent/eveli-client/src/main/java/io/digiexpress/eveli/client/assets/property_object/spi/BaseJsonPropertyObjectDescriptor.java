@@ -6,11 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.jakarta.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.jakarta.JsonSchemaGenerator;
 
+import io.digiexpress.eveli.client.assets.property_object.api.BasePropertyObject;
 import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptor;
+import io.resys.limaone.model.Model;
+import io.resys.limaone.model.PropertyObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class BaseJsonPropertyObjectDescriptor <T> implements PropertyObjectDescriptor<T> {
+public abstract class BaseJsonPropertyObjectDescriptor <T extends BasePropertyObject> implements PropertyObjectDescriptor<T> {
 
   protected final ObjectMapper mapper;
   protected JsonSchema schema;
@@ -25,24 +28,16 @@ public abstract class BaseJsonPropertyObjectDescriptor <T> implements PropertyOb
       log.error("Error initializing schema", e);
     }
   }
-  
 
   @Override
-  public String convertToContent(T o) {
+  public T convertToObject(Model<PropertyObject> propObject) {
     try {
-      return mapper.writeValueAsString(o);
+      T result = mapper.readValue(propObject.getBody().getContent(), getObjectClass());
+      result.setName(propObject.getBody().getName());
+      result.setId(propObject.getId());
+      return result;
     } catch (JsonProcessingException e) {
-      log.error("Error converting object '{}'",o, e);
-    }
-    return null;
-  }
-
-  @Override
-  public T convertToObject(String content) {
-    try {
-      return mapper.readValue(content, getObjectClass());
-    } catch (JsonProcessingException e) {
-      log.error("Error converting object '{}'",content, e);
+      log.error("Error converting object '{}'",propObject, e);
     }
     return null;
   }
