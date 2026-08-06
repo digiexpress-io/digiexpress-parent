@@ -77,7 +77,14 @@ public class Gen_Multi_WorldImplementation implements MultiTableCodeGenerator {
         classBuilder.addMethod(generateGetter(table, entityType));
       }
     }
-    
+
+    // Generate wither methods (override single property, not additive)
+    for (final var table : tables) {
+      if (findEntityTypeForTable(table) != null) {
+        classBuilder.addMethod(generateWitherMethod(registry, table, tables));
+      }
+    }
+
     // Generate static builder class
     classBuilder.addType(generateBuilderClass(registry, tables));
     
@@ -137,6 +144,44 @@ public class Gen_Multi_WorldImplementation implements MultiTableCodeGenerator {
       .build();
   }
   
+  private MethodSpec generateWitherMethod(RegistryMetamodel registry, TableMetamodel targetTable, List<TableMetamodel> tables) {
+    final var entityType = findEntityTypeForTable(targetTable);
+    final var witherName = "with" + NamingUtils.toPascalCase(targetTable.getTableName());
+    final var paramType = ParameterizedTypeName.get(
+      ClassName.get(Map.class),
+      ClassName.get(String.class),
+      entityType
+    );
+    final var worldInterfaceName = registry.getName() + "DbQuery." + registry.getWorldName();
+    final var className = "Immutable" + registry.getWorldName();
+
+    final var method = MethodSpec.methodBuilder(witherName)
+      .addModifiers(Modifier.PUBLIC)
+      .addParameter(paramType, "value")
+      .returns(ClassName.get(registry.getPackageName(), worldInterfaceName));
+
+    final var args = new StringBuilder();
+    var first = true;
+    for (final var table : tables) {
+      if (findEntityTypeForTable(table) == null) {
+        continue;
+      }
+      if (!first) {
+        args.append(", ");
+      }
+      if (table == targetTable) {
+        args.append("value");
+      } else {
+        args.append("this.get").append(NamingUtils.toPascalCase(table.getTableName())).append("()");
+      }
+      first = false;
+    }
+
+    method.addStatement("return new $T($L)", ClassName.bestGuess(className), args.toString());
+
+    return method.build();
+  }
+
   private TypeSpec generateBuilderClass(RegistryMetamodel registry, List<TableMetamodel> tables) {
     final var builderClass = TypeSpec.classBuilder("Builder")
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC);

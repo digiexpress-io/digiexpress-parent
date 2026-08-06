@@ -20,6 +20,7 @@ package io.resys.thena.processor.codegen;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,6 +134,11 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
 
     // Generate addAllToInserts(World) method
     classBuilder.addMethod(generateAddAllToInsertsMethod(registry, className, interfaceName, tables));
+
+    // Generate wither methods (override single property, not additive)
+    for (final var wither : generateWitherMethods(className, interfaceName, operations)) {
+      classBuilder.addMethod(wither);
+    }
     
     // Generate Builder class
     classBuilder.addType(generateBuilderClass(className, interfaceName, operations));
@@ -567,6 +573,52 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     method.addStatement("return builder.build()");
 
     return method.build();
+  }
+
+  private record PropertySpecInfo(String pascalName, TypeName type, String getter) {}
+
+  private List<PropertySpecInfo> buildPropertySpecs(Map<String, TypeName> operations) {
+    final var specs = new ArrayList<PropertySpecInfo>();
+    specs.add(new PropertySpecInfo("CommitMessages", ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(String.class)), "getCommitMessages"));
+    specs.add(new PropertySpecInfo("CommitAuthors", ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(String.class)), "getCommitAuthors"));
+    specs.add(new PropertySpecInfo("TenantId", ClassName.get(String.class), "getTenantId"));
+    specs.add(new PropertySpecInfo("Status", ClassName.get(BatchStatus.class), "getStatus"));
+    specs.add(new PropertySpecInfo("Log", ClassName.get(String.class), "getLog"));
+    specs.add(new PropertySpecInfo("CommitLogs", ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(Message.class)), "getCommitLogs"));
+
+    for (final var entry : operations.entrySet()) {
+      final var key = entry.getKey();
+      specs.add(new PropertySpecInfo(key, ParameterizedTypeName.get(ClassName.get(List.class), entry.getValue()), "get" + key));
+    }
+
+    return specs;
+  }
+
+  private List<MethodSpec> generateWitherMethods(String className, String interfaceName, Map<String, TypeName> operations) {
+    final var specs = buildPropertySpecs(operations);
+    final var methods = new ArrayList<MethodSpec>();
+
+    for (final var target : specs) {
+      final var method = MethodSpec.methodBuilder("with" + target.pascalName())
+        .addModifiers(Modifier.PUBLIC)
+        .addParameter(target.type(), "value")
+        .returns(ClassName.bestGuess(interfaceName));
+
+      final var args = new StringBuilder();
+      var first = true;
+      for (final var spec : specs) {
+        if (!first) {
+          args.append(", ");
+        }
+        args.append(spec == target ? "value" : ("this." + spec.getter() + "()"));
+        first = false;
+      }
+
+      method.addStatement("return new $T($L)", ClassName.bestGuess(className), args.toString());
+      methods.add(method.build());
+    }
+
+    return methods;
   }
 
   private ClassName findEntityTypeForTable(TableMetamodel table) {
