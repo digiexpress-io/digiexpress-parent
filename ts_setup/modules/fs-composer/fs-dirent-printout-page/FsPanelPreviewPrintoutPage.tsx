@@ -7,22 +7,17 @@ export const FsPanelPreviewPrintoutPage: React.FC = () => {
   const { activeDirent } = useFsNav();
   const { getDirent, selectOptions, compilePrintoutPage } = useFsDirent();
 
-  const [isCompiling, setIsCompiling] = React.useState(false);
-  const [pdfBase64, setPdfBase64] = React.useState<string | undefined>(undefined);
+  const [pdfBase64, setPdfBase64] = React.useState('');
   const [pdfUrl, setPdfUrl] = React.useState('');
   const [compilationError, setCompilationError] = React.useState<string | undefined>(undefined);
 
   React.useEffect(() => {
-    setPdfBase64(undefined);
+    setPdfBase64('');
     setPdfUrl('');
     setCompilationError(undefined);
-    setIsCompiling(false);
   }, [activeDirent?.id]);
 
   React.useEffect(() => {
-    if (!pdfBase64) {
-      return;
-    }
     const binary = atob(pdfBase64);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) {
@@ -42,23 +37,21 @@ export const FsPanelPreviewPrintoutPage: React.FC = () => {
   const localeCode = localeProps?.localeCode;
   const treeId = dirent?.commitIndex?.treeId;
 
+
   const onCompile = React.useCallback(async () => {
     if (!serviceId || !localeCode) {
       return;
     }
-    setIsCompiling(true);
     setCompilationError(undefined);
     try {
       const result: Fs.PrintoutCompileResult = await compilePrintoutPage(serviceId, localeCode);
       if (result.status === 'OK') {
-        setPdfBase64(result.bodyBase64);
+        setPdfBase64(result.bodyBase64 ?? '');
       } else {
         setCompilationError(result.statusMessage ?? `Compilation failed: ${JSON.stringify(result)}`);
       }
     } catch (err) {
       setCompilationError(String(err));
-    } finally {
-      setIsCompiling(false);
     }
   }, [compilePrintoutPage, serviceId, localeCode]);
 
@@ -69,16 +62,15 @@ export const FsPanelPreviewPrintoutPage: React.FC = () => {
     onCompile();
   }, [treeId]);
 
+  if (!pdfBase64) {
+    return <>{compilationError && (<Typography color='error'>{compilationError}</Typography>)}</>;
+  }
+
   return (
-    <>
-      {compilationError && (<Typography color='error'>{compilationError}</Typography>)}
-      {pdfBase64 && (
-        <iframe
-          src={pdfUrl}
-          title='printout-preview'
-          style={{ border: 'none', minHeight: '90vh' }}
-        />
-      )}
-    </>
+    <iframe
+      src={pdfUrl}
+      title='printout-preview'
+      style={{ border: 'none', minHeight: '90vh' }}
+    />
   );
 };
