@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.assets;
 
+import java.util.List;
+
 /*-
  * #%L
  * eveli-client
@@ -29,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptor;
+import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptorFactory;
 import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.authoring.ModifyPropertyObject.ModifyPropertyObjectProps;
 import io.resys.limaone.authoring.NewPropertyObject.NewPropertyObjectProps;
@@ -48,6 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AssetsPropertyObjectController {
 
   private final Authoring composer;
+  private final PropertyObjectDescriptorFactory descriptorFactory;
 
   @GetMapping("/")
   public Uni<ModelWorld> root() {
@@ -76,5 +81,14 @@ public class AssetsPropertyObjectController {
         .props(props -> props.bodyType(BodyType.PROPERTY_OBJECT).id(id)).build();
   }
 
-
+  @GetMapping("/objectTypes")
+  public Uni<List<String>> getObjectTypes() {
+    return Uni.createFrom().item(descriptorFactory.getRegisteredPropertyObjectTypes());
+  }
+  
+  @GetMapping("/objectSchema")
+  public Uni<PropertyObjectDescriptor> getObjectSchemas(String objectType) {
+    return Uni.createFrom().item(descriptorFactory.getDescriptor(objectType));
+  }
+  
 }
