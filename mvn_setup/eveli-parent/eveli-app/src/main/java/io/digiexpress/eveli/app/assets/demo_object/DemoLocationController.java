@@ -21,14 +21,14 @@ public class DemoLocationController {
   @GetMapping
   public Uni<List<DemoLocationPropertyObject>> getDemoLocations() 
   {
-    var descriptor = descriptorFactory.getDescriptor(DemoLocationPropertyObjectDescriptor.getObjectType());
+    var descriptor = descriptorFactory.getDescriptor(DemoLocationPropertyObjectDescriptor.OBJECT_TYPE);
     return context.getAuthoring().worldQuery()
         .docs(
           BodyType.PROPERTY_OBJECT
         )
         .findAll()
         .map(wm->wm.getPropertyObjects().values().stream()
-            .filter(me-> DemoLocationPropertyObjectDescriptor.getObjectType().equals(me.getBody().getObjectType()))
+            .filter(me-> DemoLocationPropertyObjectDescriptor.OBJECT_TYPE.equals(me.getBody().getObjectType()))
             .map(model -> (DemoLocationPropertyObject)descriptor.get().convertToObject(model))
             .toList()
             );

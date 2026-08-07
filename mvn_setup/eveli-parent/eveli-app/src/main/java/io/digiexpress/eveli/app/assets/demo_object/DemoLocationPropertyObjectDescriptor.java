@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DemoLocationPropertyObjectDescriptor extends BaseJsonPropertyObjectDescriptor<DemoLocationPropertyObject> {
 
   
-  private static final String OBJECT_TYPE = "demo-location";
+  public static final String OBJECT_TYPE = "demo-location";
 
   public DemoLocationPropertyObjectDescriptor(ObjectMapper mapper) {
     super(mapper);
@@ -20,10 +20,6 @@ public class DemoLocationPropertyObjectDescriptor extends BaseJsonPropertyObject
     return OBJECT_TYPE;
   }
 
-  public static String getObjectType() {
-    return OBJECT_TYPE;
-  }
-  
   @Override
   protected Class<DemoLocationPropertyObject> getObjectClass() {
     return DemoLocationPropertyObject.class;

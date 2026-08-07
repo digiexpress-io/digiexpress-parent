@@ -23,14 +23,14 @@ public class DefaultPropertyController {
   @GetMapping
   public Uni<List<DefaultPropertyObject>> getDefaultProperties() 
   {
-    var descriptor = descriptorFactory.getDescriptor(DefaultPropertyObjectDescriptor.getObjectType());
+    var descriptor = descriptorFactory.getDescriptor(DefaultPropertyObjectDescriptor.OBJECT_TYPE);
     return context.getAuthoring().worldQuery()
         .docs(
           BodyType.PROPERTY_OBJECT
         )
         .findAll()
         .map(wm->wm.getPropertyObjects().values().stream()
-            .filter(me-> DefaultPropertyObjectDescriptor.getObjectType().equals(me.getBody().getObjectType()))
+            .filter(me-> DefaultPropertyObjectDescriptor.OBJECT_TYPE.equals(me.getBody().getObjectType()))
             .map(model -> (DefaultPropertyObject)descriptor.get().convertToObject(model))
             .toList()
             );

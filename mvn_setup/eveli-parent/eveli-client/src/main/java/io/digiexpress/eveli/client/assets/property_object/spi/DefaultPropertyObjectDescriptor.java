@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultPropertyObjectDescriptor extends BaseJsonPropertyObjectDescriptor<DefaultPropertyObject> {
 
   
-  private static final String OBJECT_TYPE = "default";
+  public static final String OBJECT_TYPE = "default";
 
   public DefaultPropertyObjectDescriptor(ObjectMapper mapper) {
     super(mapper);
@@ -19,10 +19,6 @@ public class DefaultPropertyObjectDescriptor extends BaseJsonPropertyObjectDescr
     return OBJECT_TYPE;
   }
 
-  public static String getObjectType() {
-    return OBJECT_TYPE;
-  }
-  
   @Override
   protected Class<DefaultPropertyObject> getObjectClass() {
     return DefaultPropertyObject.class;
