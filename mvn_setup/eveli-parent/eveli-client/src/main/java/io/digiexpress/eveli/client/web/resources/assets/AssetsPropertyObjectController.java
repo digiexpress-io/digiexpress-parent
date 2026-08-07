@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.module.jsonSchema.jakarta.JsonSchema;
 
+import io.digiexpress.eveli.client.assets.property_object.api.BasePropertyObject;
 import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptor;
 import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDescriptorFactory;
 import io.resys.limaone.authoring.Authoring;
@@ -117,9 +118,9 @@ public class AssetsPropertyObjectController {
   
   @GetMapping("/objectSchema/{objectType}")
   public Uni<JsonSchema> getObjectSchema(@PathVariable("objectType") String objectType) {
+    var descriptor = descriptorFactory.getDescriptor(objectType);
     return Uni.createFrom().item(
-        descriptorFactory.getDescriptor(objectType).orElse(descriptorFactory.getDefaultDescriptor())
-        .getSchema());
+        descriptor.map(d->d.getSchema()).orElse(null));
   }
 
 }

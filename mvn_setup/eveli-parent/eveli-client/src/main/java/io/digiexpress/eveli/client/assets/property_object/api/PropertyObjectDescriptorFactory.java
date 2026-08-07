@@ -5,6 +5,5 @@ import java.util.Optional;
 
 public interface PropertyObjectDescriptorFactory {
   Optional<PropertyObjectDescriptor<? extends BasePropertyObject>> getDescriptor(String propertyObjectType);
-  PropertyObjectDescriptor<? extends BasePropertyObject> getDefaultDescriptor();
   List<String> getRegisteredPropertyObjectTypes();
 }

@@ -46,6 +46,7 @@ import io.digiexpress.eveli.client.web.resources.assets.AssetsPublicationControl
 import io.digiexpress.eveli.client.web.resources.assets.AssetsStencilController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsTagomiController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWrenchController;
+import io.digiexpress.eveli.client.web.resources.property_objects.DefaultPropertyController;
 import io.digiexpress.eveli.client.web.resources.worker.CockpitApiController;
 import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.persistence.AuthoringImpl;
@@ -118,7 +119,16 @@ public class EveliAutoConfigAssets {
   public AssetsPropertyObjectController assetsPropertyController(EveliEditEnvir context, PropertyObjectDescriptorFactory descriptorFactory) {
     return new AssetsPropertyObjectController(context.getAuthoring(), descriptorFactory);
   }
-  
+
+  @Bean 
+  public DefaultPropertyController defaultPropertyController(EveliEditEnvir context, PropertyObjectDescriptorFactory descriptorFactory) {
+    return new DefaultPropertyController(context, descriptorFactory);
+  }
+  @Bean
+  public DefaultPropertyObjectDescriptor defaultPropertyObjectDescriptor(ObjectMapper mapper) {
+    return new DefaultPropertyObjectDescriptor(mapper);
+  }
+
   @Bean
   public PropertyObjectDescriptorFactory propertyObjectDescriptorFactory(ObjectMapper mapper, List<PropertyObjectDescriptor<? extends BasePropertyObject>> descriptors) {
     return new PropertyObjectDescriptorFactoryImpl(new DefaultPropertyObjectDescriptor(mapper), descriptors);

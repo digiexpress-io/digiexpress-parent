@@ -12,10 +12,8 @@ import io.digiexpress.eveli.client.assets.property_object.api.PropertyObjectDesc
 public class PropertyObjectDescriptorFactoryImpl implements PropertyObjectDescriptorFactory {
 
   private Map<String, PropertyObjectDescriptor<? extends BasePropertyObject>> descriptors = new HashMap<>();
-  private final PropertyObjectDescriptor<? extends BasePropertyObject> defaultDescriptor;
   
   public PropertyObjectDescriptorFactoryImpl(PropertyObjectDescriptor<? extends BasePropertyObject> defaultDesc, List<PropertyObjectDescriptor<? extends BasePropertyObject>> propDescriptors) {
-    this.defaultDescriptor = defaultDesc;
     for (var desc : propDescriptors) {
       descriptors.put(desc.getPropertyObjectType(), desc);
     }
@@ -31,8 +29,5 @@ public class PropertyObjectDescriptorFactoryImpl implements PropertyObjectDescri
     return descriptors.keySet().stream().toList();
   }
 
-  public PropertyObjectDescriptor<? extends BasePropertyObject> getDefaultDescriptor() {
-    return defaultDescriptor;
-  }
 
 }
