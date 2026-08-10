@@ -1,7 +1,13 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
+import { useUpdateOwnerState } from './useUpdateOwnerState';
+
+const CompileButton: React.FC<{ direntId: string }> = ({ direntId }) => {
+  const ownerState = useUpdateOwnerState({ direntId });
+  return <Button onClick={ownerState.push}>Compile</Button>;
+};
 
 export const FsPanelPreviewPrintoutPage: React.FC = () => {
   const { activeDirent } = useFsNav();
@@ -62,15 +68,17 @@ export const FsPanelPreviewPrintoutPage: React.FC = () => {
     onCompile();
   }, [treeId]);
 
-  if (!pdfBase64) {
-    return <>{compilationError && (<Typography color='error'>{compilationError}</Typography>)}</>;
-  }
-
   return (
-    <iframe
-      src={pdfUrl}
-      title='printout-preview'
-      style={{ border: 'none', minHeight: '90vh' }}
-    />
+    <>
+      {activeDirent && <CompileButton direntId={activeDirent.id} />}
+      {compilationError && <Typography color='error'>{compilationError}</Typography>}
+      {pdfBase64 && (
+        <iframe
+          src={pdfUrl}
+          title='printout-preview'
+          style={{ border: 'none', minHeight: '90vh' }}
+        />
+      )}
+    </>
   );
 };
