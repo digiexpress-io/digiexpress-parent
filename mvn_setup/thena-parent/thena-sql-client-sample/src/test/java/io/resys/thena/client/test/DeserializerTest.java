@@ -197,4 +197,50 @@ public class DeserializerTest {
     Assertions.assertEquals(List.of("3"),
         filtered.getBatchConsumersDeletes().stream().map(BatchConsumer::getId).toList());
   }
+
+  @Test
+  public void testWorldGetCount_sumsAcrossAllTables() {
+    final var world = ImmutableWorld.builder()
+        .putBatch("xxx", ImmutableBatch.builder()
+            .appId("appId")
+            .batchName("batchName")
+            .id("id")
+            .build())
+        .putBatchConsumer("1", batchConsumer("1"))
+        .putBatchConsumer("2", batchConsumer("2"))
+        .build();
+
+    Assertions.assertEquals(3, world.getCount());
+  }
+
+  @Test
+  public void testWorldGetCount_zeroWhenEmpty() {
+    final var world = ImmutableWorld.builder().build();
+    Assertions.assertEquals(0, world.getCount());
+  }
+
+  @Test
+  public void testPersistenceUnitGetCount_sumsInsertsUpdatesAndDeletes() {
+    final var unit = ImmutablePersistenceUnit.builder()
+        .addAllBatchConsumersInserts(List.of(batchConsumer("i1"), batchConsumer("i2")))
+        .addAllBatchConsumersUpdates(List.of(batchConsumer("u1")))
+        .addAllBatchConsumersDeletes(List.of(batchConsumer("d1"), batchConsumer("d2"), batchConsumer("d3")))
+        .build();
+
+    Assertions.assertEquals(6, unit.getCount());
+  }
+
+  @Test
+  public void testPersistenceUnitGetCount_matchesSumOfSplitChunks() {
+    final var deletes = List.of(batchConsumer("d1"), batchConsumer("d2"), batchConsumer("d3"));
+    final var inserts = List.of(batchConsumer("i1"), batchConsumer("i2"), batchConsumer("i3"), batchConsumer("i4"));
+
+    final var unit = ImmutablePersistenceUnit.builder()
+        .addAllBatchConsumersDeletes(deletes)
+        .addAllBatchConsumersInserts(inserts)
+        .build();
+
+    final var totalFromChunks = unit.split(3).stream().mapToLong(chunk -> chunk.getCount()).sum();
+    Assertions.assertEquals(unit.getCount(), totalFromChunks);
+  }
 }

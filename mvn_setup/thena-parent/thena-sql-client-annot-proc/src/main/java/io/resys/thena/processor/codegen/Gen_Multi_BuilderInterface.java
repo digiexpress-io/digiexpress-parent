@@ -191,6 +191,8 @@ public class Gen_Multi_BuilderInterface implements MultiTableCodeGenerator {
       .returns(ParameterizedTypeName.get(ClassName.get(List.class), ClassName.bestGuess(interfaceName)))
       .build());
 
+    persistenceUnit.addMethod(generateCountMethod(operations));
+
     return persistenceUnit.build();
   }
   
@@ -244,6 +246,20 @@ public class Gen_Multi_BuilderInterface implements MultiTableCodeGenerator {
   }
 
   
+  private MethodSpec generateCountMethod(Map<String, TypeName> operations) {
+    final var sumExpr = new StringBuilder("0L");
+    for (final var fieldName : operations.keySet()) {
+      sumExpr.append(" + this.get").append(fieldName).append("().size()");
+    }
+
+    return MethodSpec.methodBuilder("getCount")
+      .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
+      .addAnnotation(ClassName.get("com.fasterxml.jackson.annotation", "JsonIgnore"))
+      .returns(TypeName.LONG)
+      .addStatement("return $L", sumExpr.toString())
+      .build();
+  }
+
   private TypeSpec generateExceptionClass(RegistryMetamodel registry, String persistenceUnitName) {
     final var exceptionClassName = registry.getExceptionClassName();
     

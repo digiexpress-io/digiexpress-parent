@@ -96,6 +96,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import io.resys.thena.processor.model.Metamodel;
@@ -227,10 +228,29 @@ public class Gen_Multi_QueryInterface implements MultiTableCodeGenerator {
           .build());
       }
     }
-    
+
+    worldInterface.addMethod(generateWorldCountMethod(tables));
+
     return worldInterface.build();
   }
-  
+
+  private MethodSpec generateWorldCountMethod(List<TableMetamodel> tables) {
+    final var sumExpr = new StringBuilder("0L");
+    for (final var table : tables) {
+      if (findEntityTypeForTable(table) != null) {
+        final var getterName = "get" + NamingUtils.toPascalCase(table.getTableName());
+        sumExpr.append(" + this.").append(getterName).append("().size()");
+      }
+    }
+
+    return MethodSpec.methodBuilder("getCount")
+      .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
+      .addAnnotation(ClassName.get("com.fasterxml.jackson.annotation", "JsonIgnore"))
+      .returns(TypeName.LONG)
+      .addStatement("return $L", sumExpr.toString())
+      .build();
+  }
+
   private ClassName findEntityTypeForTable(TableMetamodel table) {
     for (final var method : table.getSqlMethods()) {
       if (method.getType() == SqlMethodType.SELECT_ALL && method.getParameters().isEmpty()) {
