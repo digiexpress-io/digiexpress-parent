@@ -140,6 +140,10 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     // Generate addAllToInserts(World) method
     classBuilder.addMethod(generateAddAllToInsertsMethod(registry, className, interfaceName, tables));
 
+    // Generate filterOut(World) method - the reverse of addAllToInserts: strips out entries
+    // that already exist in World, leaving only the ones that still need to be persisted.
+    classBuilder.addMethod(generateFilterOutMethod(registry, className, tables, operations));
+
     // Generate wither methods (override single property, not additive)
     for (final var wither : generateWitherMethods(className, interfaceName, operations)) {
       classBuilder.addMethod(wither);
@@ -577,6 +581,60 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
       method.addStatement("builder.addAll$L(world.$L().values().stream().toList())", fieldName, worldGetter);
     }
 
+    method.addStatement("return builder");
+
+    return method.build();
+  }
+
+  private MethodSpec generateFilterOutMethod(
+      RegistryMetamodel registry,
+      String className,
+      List<TableMetamodel> tables,
+      Map<String, TypeName> operations) {
+
+    final var worldType = ClassName.get(registry.getPackageName(), registry.getName() + "DbQuery", registry.getWorldName());
+
+    final var method = MethodSpec.methodBuilder("filterOut")
+      .addModifiers(Modifier.PUBLIC)
+      .addParameter(worldType, "world")
+      .returns(ClassName.bestGuess(className + ".Builder"));
+
+    method.addStatement(
+      "final var builder = $T.builder()\n" +
+      "  .tenantId(this.tenantId)\n" +
+      "  .status(this.status)\n" +
+      "  .log(this.log)\n" +
+      "  .addAllCommitMessages(this.commitMessages)\n" +
+      "  .addAllCommitAuthors(this.commitAuthors)\n" +
+      "  .addAllCommitLogs(this.commitLogs)",
+      ClassName.bestGuess(className));
+
+    for (final var table : tables) {
+      final var worldEntityType = findEntityTypeForTable(table);
+      final var worldGetter = "get" + NamingUtils.toPascalCase(table.getTableName());
+
+      for (final var opType : new SqlMethodType[] {SqlMethodType.INSERT_ALL, SqlMethodType.UPDATE_ALL, SqlMethodType.DELETE_ALL}) {
+        final var fieldName = buildOperationFieldName(table, opType);
+        if (fieldName == null || !operations.containsKey(fieldName)) {
+          continue;
+        }
+
+        final var camel = uncapitalize(fieldName);
+        final var entityType = operations.get(fieldName);
+
+        method.addCode("\n");
+        if (worldEntityType != null && worldEntityType.equals(entityType)) {
+          method.addStatement(
+            "builder.addAll$L(this.$L.stream().filter(e -> !world.$L().containsKey(e.getId())).toList())",
+            fieldName, camel, worldGetter);
+        } else {
+          // No matching World table to check against - pass through unfiltered rather than dropping data.
+          method.addStatement("builder.addAll$L(this.$L)", fieldName, camel);
+        }
+      }
+    }
+
+    method.addCode("\n");
     method.addStatement("return builder");
 
     return method.build();

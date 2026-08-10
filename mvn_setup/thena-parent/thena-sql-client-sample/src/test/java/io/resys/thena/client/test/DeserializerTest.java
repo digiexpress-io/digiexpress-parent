@@ -153,4 +153,48 @@ public class DeserializerTest {
     Assertions.assertEquals(List.of(inserts.get(2), inserts.get(3)), chunks.get(1).getBatchConsumersInserts());
     Assertions.assertEquals(List.of("did it"), chunks.get(1).getCommitMessages());
   }
+
+  @Test
+  public void testFilterOut_removesEntriesThatAlreadyExistInWorld() {
+    final var world = ImmutableWorld.builder()
+        .putBatchConsumer("1", batchConsumer("1"))
+        .putBatchConsumer("2", batchConsumer("2"))
+        .putBatchConsumer("3", batchConsumer("3"))
+        .build();
+
+    // blind batch: some of these already exist in the world, some don't
+    final var blindInserts = List.of(batchConsumer("2"), batchConsumer("3"), batchConsumer("4"), batchConsumer("5"));
+
+    final var unit = ImmutablePersistenceUnit.builder()
+        .addAllBatchConsumersInserts(blindInserts)
+        .addCommitMessage("blind import")
+        .build();
+
+    final var filtered = unit.filterOut(world).build();
+
+    final var remainingIds = filtered.getBatchConsumersInserts().stream().map(BatchConsumer::getId).toList();
+    Assertions.assertEquals(List.of("4", "5"), remainingIds);
+
+    // metadata passes through untouched
+    Assertions.assertEquals(List.of("blind import"), filtered.getCommitMessages());
+  }
+
+  @Test
+  public void testFilterOut_appliesToUpdatesAndDeletesToo() {
+    final var world = ImmutableWorld.builder()
+        .putBatchConsumer("1", batchConsumer("1"))
+        .build();
+
+    final var unit = ImmutablePersistenceUnit.builder()
+        .addAllBatchConsumersUpdates(List.of(batchConsumer("1"), batchConsumer("2")))
+        .addAllBatchConsumersDeletes(List.of(batchConsumer("1"), batchConsumer("3")))
+        .build();
+
+    final var filtered = unit.filterOut(world).build();
+
+    Assertions.assertEquals(List.of("2"),
+        filtered.getBatchConsumersUpdates().stream().map(BatchConsumer::getId).toList());
+    Assertions.assertEquals(List.of("3"),
+        filtered.getBatchConsumersDeletes().stream().map(BatchConsumer::getId).toList());
+  }
 }
