@@ -22,6 +22,7 @@ package io.resys.thena.processor.codegen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,7 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.TypeVariableName;
 
 import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.Message;
@@ -142,7 +144,12 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     for (final var wither : generateWitherMethods(className, interfaceName, operations)) {
       classBuilder.addMethod(wither);
     }
-    
+
+    // Generate split(maxSize) method + generic chunking helper
+    final var orderedFieldNames = orderedOperationFieldNames(tables, operations);
+    classBuilder.addMethod(generateSplitMethod(className, interfaceName, orderedFieldNames));
+    classBuilder.addMethod(generateChunkListHelperMethod());
+
     // Generate Builder class
     classBuilder.addType(generateBuilderClass(className, interfaceName, operations));
     
@@ -619,6 +626,126 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     }
 
     return methods;
+  }
+
+  // Delete-phase fields (in table order), then insert-phase, then update-phase - matches the
+  // phase/table ordering that Gen_Multi_BuilderImplementation.generatePersistMethod relies on.
+  private List<String> orderedOperationFieldNames(List<TableMetamodel> tables, Map<String, TypeName> operations) {
+    final var tablesByOrder = tables.stream()
+      .sorted((a, b) -> Integer.compare(a.getOrder(), b.getOrder()))
+      .toList();
+
+    final var deletes = new ArrayList<String>();
+    final var inserts = new ArrayList<String>();
+    final var updates = new ArrayList<String>();
+    final var seen = new HashSet<String>();
+
+    for (final var table : tablesByOrder) {
+      for (final var method : table.getSqlMethods()) {
+        final var fieldName = buildOperationFieldName(table, method.getType());
+        if (fieldName == null || !operations.containsKey(fieldName) || !seen.add(fieldName)) {
+          continue;
+        }
+
+        switch (method.getType()) {
+          case DELETE_ALL -> deletes.add(fieldName);
+          case INSERT_ALL -> inserts.add(fieldName);
+          case UPDATE_ALL -> updates.add(fieldName);
+          default -> { /* skip */ }
+        }
+      }
+    }
+
+    final var ordered = new ArrayList<String>();
+    ordered.addAll(deletes);
+    ordered.addAll(inserts);
+    ordered.addAll(updates);
+    return ordered;
+  }
+
+  private MethodSpec generateSplitMethod(String className, String interfaceName, List<String> orderedFieldNames) {
+    final var method = MethodSpec.methodBuilder("split")
+      .addModifiers(Modifier.PUBLIC)
+      .addAnnotation(Override.class)
+      .addParameter(TypeName.INT, "maxSize")
+      .returns(ParameterizedTypeName.get(ClassName.get(List.class), ClassName.bestGuess(interfaceName)));
+
+    final var totalCountExpr = new StringBuilder("0");
+    for (final var fieldName : orderedFieldNames) {
+      totalCountExpr.append(" + this.").append(uncapitalize(fieldName)).append(".size()");
+    }
+    method.addStatement("final var totalCount = $L", totalCountExpr.toString());
+
+    method.beginControlFlow("if (totalCount <= maxSize)");
+    method.addStatement("return $T.of(this)", List.class);
+    method.endControlFlow();
+
+    method.addCode("\n");
+    method.addStatement("final var numChunks = (totalCount + maxSize - 1) / maxSize");
+    method.addStatement("final var builders = new $T<$T>(numChunks)", ArrayList.class, ClassName.bestGuess("Builder"));
+    method.beginControlFlow("for (int i = 0; i < numChunks; i++)");
+    method.addStatement("builders.add($L.builder())", className);
+    method.endControlFlow();
+
+    method.addCode("\n");
+    method.addStatement("int cursor = 0");
+
+    for (final var fieldName : orderedFieldNames) {
+      final var camel = uncapitalize(fieldName);
+      method.addCode("\n");
+      method.addStatement("final var $LChunks = chunkList(this.$L, cursor, maxSize, numChunks)", camel, camel);
+      method.beginControlFlow("for (int i = 0; i < numChunks; i++)");
+      method.addStatement("builders.get(i).addAll$L($LChunks.get(i))", fieldName, camel);
+      method.endControlFlow();
+      method.addStatement("cursor += this.$L.size()", camel);
+    }
+
+    method.addCode("\n");
+    method.addStatement("final var result = new $T<$T>(numChunks)", ArrayList.class, ClassName.bestGuess(interfaceName));
+    method.beginControlFlow("for (int i = 0; i < numChunks; i++)");
+    method.addStatement(
+      "final var unit = builders.get(i)\n" +
+      "  .tenantId(this.tenantId)\n" +
+      "  .status(this.status)\n" +
+      "  .log(this.log)");
+    method.beginControlFlow("if (i == numChunks - 1)");
+    method.addStatement(
+      "unit\n" +
+      "  .addAllCommitMessages(this.commitMessages)\n" +
+      "  .addAllCommitAuthors(this.commitAuthors)\n" +
+      "  .addAllCommitLogs(this.commitLogs)");
+    method.endControlFlow();
+    method.addStatement("result.add(unit.build())");
+    method.endControlFlow();
+    method.addStatement("return result");
+
+    return method.build();
+  }
+
+  // Slices `data` into `numChunks` sublists aligned to maxSize-sized windows over the raw,
+  // caller-tracked `cursor` position - the same window every field in the ordered sequence shares.
+  private MethodSpec generateChunkListHelperMethod() {
+    final var typeVar = TypeVariableName.get("T");
+    final var listOfT = ParameterizedTypeName.get(ClassName.get(List.class), typeVar);
+    final var listOfListOfT = ParameterizedTypeName.get(ClassName.get(List.class), listOfT);
+
+    return MethodSpec.methodBuilder("chunkList")
+      .addModifiers(Modifier.PRIVATE, Modifier.STATIC)
+      .addTypeVariable(typeVar)
+      .addParameter(listOfT, "data")
+      .addParameter(TypeName.INT, "cursor")
+      .addParameter(TypeName.INT, "maxSize")
+      .addParameter(TypeName.INT, "numChunks")
+      .returns(listOfListOfT)
+      .addStatement("final $T result = new $T<>(numChunks)", listOfListOfT, ArrayList.class)
+      .beginControlFlow("for (int i = 0; i < numChunks; i++)")
+      .addStatement("final var chunkStart = i * maxSize")
+      .addStatement("final var fromLocal = $T.max(0, chunkStart - cursor)", Math.class)
+      .addStatement("final var toLocal = $T.min(data.size(), chunkStart + maxSize - cursor)", Math.class)
+      .addStatement("result.add(fromLocal < toLocal ? data.subList(fromLocal, toLocal) : $T.of())", List.class)
+      .endControlFlow()
+      .addStatement("return result")
+      .build();
   }
 
   private ClassName findEntityTypeForTable(TableMetamodel table) {

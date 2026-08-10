@@ -184,7 +184,13 @@ public class Gen_Multi_BuilderInterface implements MultiTableCodeGenerator {
     persistenceUnit.addMethod(generateMergeListMethod(interfaceName));
     persistenceUnit.addMethod(generateMergeSingleMethod(interfaceName));
     persistenceUnit.addMethod(generateMergeBuilderMethod(interfaceName, operations));
-    
+
+    persistenceUnit.addMethod(MethodSpec.methodBuilder("split")
+      .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+      .addParameter(TypeName.INT, "maxSize")
+      .returns(ParameterizedTypeName.get(ClassName.get(List.class), ClassName.bestGuess(interfaceName)))
+      .build());
+
     return persistenceUnit.build();
   }
   
