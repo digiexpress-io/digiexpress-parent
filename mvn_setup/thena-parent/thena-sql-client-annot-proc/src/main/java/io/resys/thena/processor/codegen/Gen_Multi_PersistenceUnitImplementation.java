@@ -50,6 +50,9 @@ import io.resys.thena.processor.support.NamingUtils;
 
 public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGenerator {
   
+  private static final ClassName JSON_CREATOR = ClassName.get("com.fasterxml.jackson.annotation", "JsonCreator");
+  private static final ClassName JSON_PROPERTY = ClassName.get("com.fasterxml.jackson.annotation", "JsonProperty");
+
   public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables, Metamodel metamodel) {
     final var className = "ImmutablePersistenceUnit";
     final var interfaceName = registry.getName() + "DbBuilder.PersistenceUnit";
@@ -206,9 +209,6 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     
     return paramType;
   }
-  
-  private static final ClassName JSON_CREATOR = ClassName.get("com.fasterxml.jackson.annotation", "JsonCreator");
-  private static final ClassName JSON_PROPERTY = ClassName.get("com.fasterxml.jackson.annotation", "JsonProperty");
 
   private ParameterSpec jsonParam(TypeName type, String name) {
     return ParameterSpec.builder(type, name)
@@ -278,7 +278,7 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
         ClassName.get(List.class),
         ClassName.bestGuess(interfaceName)
       ), "src")
-      .returns(ClassName.bestGuess(interfaceName))
+      .returns(ClassName.bestGuess(className))
       .addStatement("final var builder = $L.builder().from(this)", className)
       .addStatement("src.forEach(entry -> entry.merge(builder))")
       .addStatement("return builder.build()")
@@ -290,7 +290,7 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
       .addModifiers(Modifier.PUBLIC)
       .addAnnotation(Override.class)
       .addParameter(ClassName.bestGuess(interfaceName), "src")
-      .returns(ClassName.bestGuess(interfaceName))
+      .returns(ClassName.bestGuess(className))
       .addStatement("return merge($L.builder().from(src)).build()", className)
       .build();
   }
@@ -546,7 +546,7 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
     final var method = MethodSpec.methodBuilder("addAllToInserts")
       .addModifiers(Modifier.PUBLIC)
       .addParameter(worldType, "world")
-      .returns(ClassName.bestGuess(interfaceName));
+      .returns(ClassName.bestGuess(className + ".Builder"));
 
     method.addStatement("final var builder = $T.builder().from(this)", ClassName.bestGuess(className));
 
@@ -570,7 +570,7 @@ public class Gen_Multi_PersistenceUnitImplementation implements MultiTableCodeGe
       method.addStatement("builder.addAll$L(world.$L().values().stream().toList())", fieldName, worldGetter);
     }
 
-    method.addStatement("return builder.build()");
+    method.addStatement("return builder");
 
     return method.build();
   }
