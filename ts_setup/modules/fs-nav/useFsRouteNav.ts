@@ -48,7 +48,10 @@ export function useFsRouteNav() {
     .filter((t): t is FsTab => t !== undefined);
 
   const activeTabIndex = search.activeTab !== undefined
-    ? search.openTabs.findIndex((t: FsTabDescriptor) => toTabId(t) === search.activeTab)
+    ? Math.min(
+        search.openTabs.findIndex((t: FsTabDescriptor) => toTabId(t) === search.activeTab),
+        openTabs.length - 1
+      )
     : -1;
 
   const activeTab = activeTabIndex >= 0 ? openTabs[activeTabIndex] : undefined;
