@@ -54,8 +54,6 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourcePr
   });
 
 
-  console.log(resourceProps)
-
   return (
     <FsDirentPrintoutResourceRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printoutResource.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>

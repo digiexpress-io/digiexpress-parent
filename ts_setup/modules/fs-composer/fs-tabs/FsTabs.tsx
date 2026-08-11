@@ -35,7 +35,7 @@ export const FsTabs: React.FC<FsTabProps> = (props) => {
     <>
     <FsTabRoot ownerState={ownerState} className={classes.root}>
       {ownerState.tabs.map((tab, index) => (
-        <div key={index}
+        <div key={tab.tabId}
           onClick={() => ownerState.onTabClick(tab.tabId)}
           onContextMenu={(event) => handleContextMenu(event, tab.tabId)}
           className={`${classes.tab} ${tab.isActive ? classes.active : classes.inActive}

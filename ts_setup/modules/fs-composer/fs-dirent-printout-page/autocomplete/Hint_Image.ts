@@ -1,38 +1,20 @@
-import { Fs } from '@dxs-ts/fs-api';
 import { languages } from 'monaco-editor';
 import { PrintoutPageContainer } from './PrintoutPageCompletionBuilder';
 
 export class Hint_Image {
   static accept(container: PrintoutPageContainer): languages.CompletionItem[] {
-    const result: languages.CompletionItem[] = [];
-
-    const line = container.model.getLineContent(container.modelPosition.lineNumber);
-
-  
-
-    const linkedImages = Object.values(container.allProps)
-      .filter((p): p is Fs.PrintoutResourceProps => p.type === 'PRINTOUT_RESOURCE')
-      .filter(p => p.contentType === 'image/*');
-
-    for (const image of linkedImages) {
-      const range = {
+    return [{
+      label: 'Insert image',
+      kind: languages.CompletionItemKind.Function,
+      insertText: '',
+      detail: 'Open image picker dialog',
+      range: {
         startLineNumber: container.modelPosition.lineNumber,
+        startColumn: container.modelPosition.column,
         endLineNumber: container.modelPosition.lineNumber,
-        startColumn: 1,
-        endColumn: line.length + 1,
-      };
-
-      result.push({
-        label: `#image(resources.at("${image.resourceName}"), ...)`,
-        kind: languages.CompletionItemKind.Value,
-        insertText: `#image(sys.inputs.resources.at("${image.resourceName}"), width: 400pt)`,
-        detail: `Image resource: ${image.resourceName}`,
-        documentation: `Image: ${image.resourceName}\nResource ID: ${image.id}\nUsage: sys.inputs.resources.${image.resourceName}`,
-        range,
-        filterText: line,
-      });
-    }
-
-    return result;
+        endColumn: container.modelPosition.column,
+      },
+      command: { id: 'printout.openImageDialog', title: 'Insert image' },
+    }];
   }
 }

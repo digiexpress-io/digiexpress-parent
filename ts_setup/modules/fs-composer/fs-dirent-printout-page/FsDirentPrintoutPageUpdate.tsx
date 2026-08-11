@@ -8,6 +8,7 @@ import { FsDirentFormField } from '../fs-utilities';
 import { useUtilityClasses, FsDirentPrintoutPageRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPrintoutPageProps } from './FsDirentPrintoutPageProps';
+import { PrintoutPageCompletionBuilder } from './autocomplete';
 
 const _InsertImageDialog: React.FC<{
   open: boolean;
@@ -47,8 +48,6 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
     };
   }, []);
 
-
-
   const imageResources = React.useMemo(() =>
     Object.values(selectOptions.direntProps)
       .filter((p): p is Fs.PrintoutResourceProps => p.type === 'PRINTOUT_RESOURCE' && p.contentType === 'image/*'),
@@ -61,38 +60,38 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
 
   const beforeMount: BeforeMount = React.useCallback((monaco) => {
     completionDisposable.current?.dispose();
-    monaco.editor.addCommand({
-      id: 'printout.openImageDialog',
-      run: () => setDialogOpen(true),
-    });
+    const pageProps = getDirent(direntId)?.props as Fs.PrintoutPageProps | undefined;
     completionDisposable.current = monaco.languages.registerCompletionItemProvider('yaml', {
-      provideCompletionItems(_model, position) {
+      provideCompletionItems(model, position) {
+        if (!pageProps) {
+          return { suggestions: [] };
+        }
         return {
-          suggestions: [{
-            label: 'Insert image',
-            kind: monaco.languages.CompletionItemKind.Function,
-            insertText: '',
-            range: {
-              startLineNumber: position.lineNumber,
-              startColumn: position.column,
-              endLineNumber: position.lineNumber,
-              endColumn: position.column,
-            },
-            command: { id: 'printout.openImageDialog', title: 'Insert image' },
-          }],
+          suggestions: new PrintoutPageCompletionBuilder()
+            .withPageId(direntId)
+            .withPageProps(pageProps)
+            .withAllProps(selectOptions.direntProps)
+            .withModel(model)
+            .withPosition(position)
+            .build(),
         };
       },
     });
-  }, []);
+  }, [direntId, getDirent, selectOptions.direntProps]);
 
   const onMount: OnMount = React.useCallback((editor) => {
     editorRef.current = editor;
+    editor.addAction({
+      id: 'printout.openImageDialog',
+      label: 'Open image dialog',
+      run: () => setDialogOpen(true),
+    });
     editor.addAction({
       id: 'printout.insertImage',
       label: 'Insert image',
       contextMenuGroupId: 'navigation',
       contextMenuOrder: 1,
-      run: (ed) => ed.trigger('', 'printout.openImageDialog', {}),
+      run: () => setDialogOpen(true),
     });
   }, []);
 
