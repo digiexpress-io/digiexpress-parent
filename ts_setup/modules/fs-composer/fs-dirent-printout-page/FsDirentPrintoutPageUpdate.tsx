@@ -5,28 +5,44 @@ import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import * as monacoEditor from 'monaco-editor';
 import { FsDirentFormField } from '../fs-utilities';
-import { useUtilityClasses, FsDirentPrintoutPageRoot } from './useUtilityClasses';
+import { FsIcons } from '../fs-theme';
+import { useUtilityClasses, FsDirentPrintoutPageRoot, FsDirentPrintoutPageDialogList } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPrintoutPageProps } from './FsDirentPrintoutPageProps';
 import { PrintoutPageCompletionBuilder } from './autocomplete';
 
-const _InsertImageDialog: React.FC<{
+const InsertImageDialog: React.FC<{
   open: boolean;
+  direntId: string;
   images: Fs.PrintoutResourceProps[];
   onSelect: (resource: Fs.PrintoutResourceProps) => void;
   onClose: () => void;
-}> = ({ open, images, onSelect, onClose }) => {
+}> = ({ open, direntId, images, onSelect, onClose }) => {
+  const classes = useUtilityClasses();
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Insert image</DialogTitle>
       <DialogContent>
-        <List>
-          {images.map(image => (
-            <ListItemButton key={image.id} onClick={() => onSelect(image)}>
-              <ListItemText primary={image.resourceName} />
-            </ListItemButton>
-          ))}
-        </List>
+        <FsDirentPrintoutPageDialogList>
+          <List>
+            {images.map(image => (
+              <ListItemButton key={image.id} className={classes.dialogListItem} onClick={() => onSelect(image)}>
+                <ListItemText primary={image.resourceName} />
+                <div className={classes.dialogItemEnd}>
+                  {image.printoutPageIds.includes(direntId) && (
+                    <FsIcons.Checkmark className={classes.dialogCheckmark} />
+                  )}
+                  {image.content && (
+                    <img
+                      className={classes.dialogThumbnail}
+                      src={`data:${image.contentType === 'image/*' ? 'image/png' : image.contentType};base64,${image.content}`}
+                    />
+                  )}
+                </div>
+              </ListItemButton>
+            ))}
+          </List>
+        </FsDirentPrintoutPageDialogList>
       </DialogContent>
     </Dialog>
   );
@@ -134,8 +150,9 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
   return (
     <FsDirentPrintoutPageRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
-      <_InsertImageDialog
+      <InsertImageDialog
         open={dialogOpen}
+        direntId={direntId}
         images={imageResources}
         onSelect={handleImageSelect}
         onClose={() => setDialogOpen(false)}
