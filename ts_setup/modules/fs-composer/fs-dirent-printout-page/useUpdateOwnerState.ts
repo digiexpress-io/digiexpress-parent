@@ -8,6 +8,7 @@ export interface UpdateOwnerState {
   connectedResourceNames: string[];
   onChangeContent: (value: string) => void;
   push: () => Promise<void>;
+  syncResourceLinks: () => Promise<void>;
 }
 
 type _ChangeStateProps = {
@@ -60,8 +61,7 @@ class _ChangeState implements FsuChange {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { activeTabPath } = useFsNav();
-  const { selectOptions, getDirent } = useFsDirent();
-
+  const { selectOptions, getDirent, updateDirent } = useFsDirent();
 
   const dirent = getDirent(props.direntId)!;
   const pageProps = dirent.props as Fs.PrintoutPageProps;
@@ -75,7 +75,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
 
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
 
-
   const connectedResourceNames = Object.values(selectOptions.direntProps)
     .filter(p => p.type === 'PRINTOUT_RESOURCE')
     .map(p => p as Fs.PrintoutResourceProps)
@@ -86,6 +85,67 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withContent(value));
   }
 
+  async function syncResourceLinks(): Promise<void> {
+    const content = state.content;
+    const referencedNames = new Set<string>();
+    const pattern = /sys\.inputs\.resources\.at\("([^"]+)"\)/g;
+    let match = pattern.exec(content);
+    while (match !== null) {
+      referencedNames.add(match[1]);
+      match = pattern.exec(content);
+    }
+
+    const allPrintoutResources = Object.values(selectOptions.direntProps)
+      .filter((resource): resource is Fs.PrintoutResourceProps =>
+        resource.type === 'PRINTOUT_RESOURCE'
+      );
+
+    for (const resource of allPrintoutResources) {
+      const isLinked = resource.printoutPageIds.includes(props.direntId);
+      const isReferenced = referencedNames.has(resource.resourceName);
+
+      if (isLinked && !isReferenced) {
+        const resourceDirent = getDirent(resource.id);
+        if (!resourceDirent) {
+          continue;
+        }
+        await updateDirent({
+          id: resource.id,
+          treeId: resourceDirent.commitIndex?.treeId ?? '',
+          bodyType: 'PRINTOUT_RESOURCE',
+          isDirty: true,
+          getCurrentProps: () => ({
+            bodyType: 'PRINTOUT_RESOURCE',
+            id: resource.id,
+            changes: {
+              resourceId: resource.id,
+              printoutPageIds: resource.printoutPageIds.filter(pageId => pageId !== props.direntId),
+            },
+          }),
+        });
+      } else if (!isLinked && isReferenced) {
+        const resourceDirent = getDirent(resource.id);
+        if (!resourceDirent) {
+          continue;
+        }
+        await updateDirent({
+          id: resource.id,
+          treeId: resourceDirent.commitIndex?.treeId ?? '',
+          bodyType: 'PRINTOUT_RESOURCE',
+          isDirty: true,
+          getCurrentProps: () => ({
+            bodyType: 'PRINTOUT_RESOURCE',
+            id: resource.id,
+            changes: {
+              resourceId: resource.id,
+              printoutPageIds: [...resource.printoutPageIds, props.direntId],
+            },
+          }),
+        });
+      }
+    }
+  }
+
   return {
     assetPath: activeTabPath,
     isDirty: state.isDirty,
@@ -93,5 +153,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     connectedResourceNames,
     onChangeContent,
     push,
+    syncResourceLinks,
   };
 };

@@ -52,11 +52,12 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
   const intl = useIntl();
   const ownerState = useUpdateOwnerState({ direntId });
   const classes = useUtilityClasses();
-  const { selectOptions, updateDirent, getDirent } = useFsDirent();
+  const { selectOptions, getDirent } = useFsDirent();
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const editorRef = React.useRef<monacoEditor.editor.IStandaloneCodeEditor | undefined>(undefined);
   const completionDisposable = React.useRef<monacoEditor.IDisposable | undefined>(undefined);
+
 
   React.useEffect(() => {
     return () => {
@@ -107,7 +108,7 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
     });
   }, []);
 
-  const handleImageSelect = React.useCallback(async (resource: Fs.PrintoutResourceProps) => {
+  const handleImageSelect = React.useCallback((resource: Fs.PrintoutResourceProps) => {
     const editor = editorRef.current;
     if (!editor) {
       return;
@@ -123,29 +124,10 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
         endLineNumber: position.lineNumber,
         endColumn: position.column,
       },
-      text: `#image(sys.inputs.resources.at("${resource.resourceName}"), width: 400pt)`,
+      text: `#image(sys.inputs.resources.at("${resource.resourceName}"), width: 200pt)`,
     }]);
     setDialogOpen(false);
-    if (!resource.printoutPageIds.includes(direntId)) {
-      const resourceDirent = getDirent(resource.id);
-      if (resourceDirent) {
-        await updateDirent({
-          id: resource.id,
-          treeId: resourceDirent.commitIndex?.treeId ?? '',
-          bodyType: 'PRINTOUT_RESOURCE',
-          isDirty: true,
-          getCurrentProps: () => ({
-            bodyType: 'PRINTOUT_RESOURCE',
-            id: resource.id,
-            changes: {
-              resourceId: resource.id,
-              printoutPageIds: [...resource.printoutPageIds, direntId],
-            },
-          }),
-        });
-      }
-    }
-  }, [direntId, getDirent, updateDirent]);
+  }, []);
 
   return (
     <FsDirentPrintoutPageRoot className={classes.root}>
