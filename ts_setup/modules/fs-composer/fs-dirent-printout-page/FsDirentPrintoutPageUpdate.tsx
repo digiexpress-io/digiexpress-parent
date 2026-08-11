@@ -60,6 +60,7 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
 
   const beforeMount: BeforeMount = React.useCallback((monaco) => {
     completionDisposable.current?.dispose();
+    (monaco.editor as any).addCommand({ id: 'printout.openImageDialog', run: () => setDialogOpen(true) });
     const pageProps = getDirent(direntId)?.props as Fs.PrintoutPageProps | undefined;
     completionDisposable.current = monaco.languages.registerCompletionItemProvider('yaml', {
       provideCompletionItems(model, position) {
@@ -82,16 +83,11 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
   const onMount: OnMount = React.useCallback((editor) => {
     editorRef.current = editor;
     editor.addAction({
-      id: 'printout.openImageDialog',
-      label: 'Open image dialog',
-      run: () => setDialogOpen(true),
-    });
-    editor.addAction({
       id: 'printout.insertImage',
       label: 'Insert image',
       contextMenuGroupId: 'navigation',
       contextMenuOrder: 1,
-      run: () => setDialogOpen(true),
+      run: (ed) => ed.trigger('', 'printout.openImageDialog', {}),
     });
   }, []);
 
