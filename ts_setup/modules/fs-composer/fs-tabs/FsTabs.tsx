@@ -13,12 +13,12 @@ export const FsTabs: React.FC<FsTabProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(props);
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const [menuTabIndex, setMenuTabIndex] = React.useState<number | undefined>(undefined);
+  const [menuTabId, setMenuTabId] = React.useState<string | undefined>(undefined);
   const [menuAnchorPosition, setMenuAnchorPosition] = React.useState<{ top: number; left: number } | undefined>(undefined);
 
-  function handleContextMenu(event: React.MouseEvent, index: number) {
+  function handleContextMenu(event: React.MouseEvent, tabId: string) {
     event.preventDefault();
-    setMenuTabIndex(index);
+    setMenuTabId(tabId);
     setMenuAnchorPosition({ top: event.clientY, left: event.clientX });
     setMenuOpen(true);
   }
@@ -36,20 +36,20 @@ export const FsTabs: React.FC<FsTabProps> = (props) => {
     <FsTabRoot ownerState={ownerState} className={classes.root}>
       {ownerState.tabs.map((tab, index) => (
         <div key={index}
-          onClick={() => ownerState.onTabClick(index)}
-          onContextMenu={(event) => handleContextMenu(event, index)}
+          onClick={() => ownerState.onTabClick(tab.tabId)}
+          onContextMenu={(event) => handleContextMenu(event, tab.tabId)}
           className={`${classes.tab} ${tab.isActive ? classes.active : classes.inActive}
           ${tab.isError ? classes.tabError : ''}`}
         >
           <FsTab index={index} ownerState={ownerState} className={classes.tabTypography} />
 
-          <IconButton onClick={(event) => ownerState.onTabClose(index, event)}>
+          <IconButton onClick={(event) => ownerState.onTabClose(tab.tabId, event)}>
             <FsIcon icon={FsIcons.Close} large color={tab.isError ? FsColors.semantic.danger : FsColors.base.textSecondary} />
           </IconButton>
         </div>
       ))}
     </FsTabRoot>
-    <FsTabMenu open={menuOpen} tabIndex={menuTabIndex} anchorPosition={menuAnchorPosition} onClose={handleMenuClose} />
+    <FsTabMenu open={menuOpen} tabId={menuTabId} anchorPosition={menuAnchorPosition} onClose={handleMenuClose} />
     </>
   );
 };

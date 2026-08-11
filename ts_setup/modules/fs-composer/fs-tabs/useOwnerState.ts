@@ -7,7 +7,8 @@ import { FsTabProps } from "./FsTabProps";
 
 export interface OwnerState {
   tabs: {
-    id: string;
+    direntId: string;
+    tabId: string;
     isActive: boolean;
     isFirst: boolean;
     isLast: boolean;
@@ -15,26 +16,27 @@ export interface OwnerState {
     name: string;
   }[];
   activeTabIndex: number;
-  onTabClose: (index: number, event: React.MouseEvent) => void;
-  onTabClick: (index: number) => void;
+  onTabClose: (tabId: string, event: React.MouseEvent) => void;
+  onTabClick: (tabId: string) => void;
 }
 
 export function useOwnerState(_props: FsTabProps): OwnerState {
   const intl = useIntl();
-  const { openTabs, activeTabIndex, setActiveTab, closeTab } = useFsNav();
+  const { openTabs, openTabIds, activeTabIndex, setActiveTab, closeTab } = useFsNav();
   const { getDirent, getDirentName } = useFsDirent();
 
-  const onTabClick = (index: number) => {
-    setActiveTab(index);
+  const onTabClick = (tabId: string) => {
+    setActiveTab(tabId);
   };
 
-  const onTabClose = (index: number, event: React.MouseEvent) => {
+  const onTabClose = (tabId: string, event: React.MouseEvent) => {
     event.stopPropagation();
-    closeTab(index);
+    closeTab(tabId);
   };
 
   const tabs: OwnerState['tabs'] = openTabs.map((tab, index) => ({
-    id: tab.type === 'edit' ? tab.dirent.id : `__create__${tab.direntType.toLocaleLowerCase()}`,
+    direntId: tab.type === 'edit' ? tab.dirent.id : `__create__${tab.direntType.toLocaleLowerCase()}`,
+    tabId: openTabIds[index],
     name: tab.type === 'edit' ? (getDirentName(tab.dirent.id) ?? tab.dirent.name) : intl.formatMessage({ id: `fs.tabs.new.${tab.direntType.toLocaleLowerCase()}` }),
     isActive: activeTabIndex === index,
     isFirst: index === 0,

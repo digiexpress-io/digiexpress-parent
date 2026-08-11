@@ -1,5 +1,4 @@
 import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
-
 import { useFsNav } from '@dxs-ts/fs-nav';
 
 export interface UpdateOwnerState {
@@ -61,7 +60,7 @@ class _ChangeState implements FsuChange {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { activeTabPath } = useFsNav();
-  const { getDirent, selectOptions } = useFsDirent();
+  const { selectOptions, getDirent } = useFsDirent();
 
 
   const dirent = getDirent(props.direntId)!;

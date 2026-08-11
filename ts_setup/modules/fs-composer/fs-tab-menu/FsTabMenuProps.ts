@@ -1,6 +1,6 @@
 export interface FsTabMenuProps {
   anchorPosition: { top: number; left: number } | undefined;
-  tabIndex: number | undefined;
+  tabId: string | undefined;
   open: boolean;
   onClose: () => void;
 }

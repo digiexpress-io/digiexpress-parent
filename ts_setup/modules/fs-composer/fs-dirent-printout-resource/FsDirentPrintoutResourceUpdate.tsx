@@ -16,6 +16,7 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourcePr
   const resourceProps = getDirent(direntId)!.props as Fs.PrintoutResourceProps;
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = React.useState(resourceProps.resourceName ?? '');
+  const [previewUrl, setPreviewUrl] = React.useState<string | undefined>(undefined);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -24,16 +25,22 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourcePr
     }
     setFileName(file.name);
     const reader = new FileReader();
-    reader.onload = () => {
-      ownerState.onChangeUploadBody(reader.result as string);
-    };
     if (ownerState.contentType === 'image/*') {
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        const base64String = dataUrl.split(',')[1];
+        ownerState.onChangeUploadBody(base64String);
+        setPreviewUrl(dataUrl);
+      };
       reader.readAsDataURL(file);
     } else {
+      reader.onload = () => {
+        ownerState.onChangeUploadBody(reader.result as string);
+      };
       reader.readAsText(file);
     }
   }
-  const previewSrc = ownerState.uploadBody || resourceProps.content || undefined;
+  const previewSrc = previewUrl || (resourceProps.content ? `data:image/*;base64,${resourceProps.content}` : undefined);
 
   const connectedPages = resourceProps.printoutPageIds.map(pageId => {
     const pageProps = selectOptions.direntProps[pageId] as Fs.PrintoutPageProps | undefined;
@@ -45,6 +52,9 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourcePr
       : pageId;
     return { id: pageId, label: `${printoutName} / ${localeName}` };
   });
+
+
+  console.log(resourceProps)
 
   return (
     <FsDirentPrintoutResourceRoot className={classes.root}>

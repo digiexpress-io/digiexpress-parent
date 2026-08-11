@@ -43,13 +43,19 @@ export function useFsRouteNav() {
   const navigate = useNavigate();
   const { getDirent, getDirentName } = useFsDirent();
 
-  const openTabs: FsTab[] = (search.openTabs as FsTabDescriptor[])
-    .map((d: FsTabDescriptor) => toFsTab(d, getDirent))
-    .filter((t): t is FsTab => t !== undefined);
+  const openTabIds: string[] = [];
+  const openTabs: FsTab[] = [];
+  (search.openTabs as FsTabDescriptor[]).forEach((d: FsTabDescriptor) => {
+    const tab = toFsTab(d, getDirent);
+    if (tab !== undefined) {
+      openTabs.push(tab);
+      openTabIds.push(toTabId(d));
+    }
+  });
 
   const activeTabIndex = search.activeTab !== undefined
     ? Math.min(
-        search.openTabs.findIndex((t: FsTabDescriptor) => toTabId(t) === search.activeTab),
+        openTabIds.findIndex((id: string) => id === search.activeTab),
         openTabs.length - 1
       )
     : -1;
@@ -74,38 +80,29 @@ export function useFsRouteNav() {
     updateSearch(prev => mergeFsSearchParams({ type: 'create', direntType, instanceId: Date.now().toString(36) }, prev));
   }
 
-  function closeTab(index: number) {
-    const descriptor = search.openTabs[index];
-    if (!descriptor) return;
-    updateSearch(prev => closeFsTab(toTabId(descriptor), prev));
+  function closeTab(tabId: string) {
+    updateSearch(prev => closeFsTab(tabId, prev));
   }
 
   function closeAllTabs() {
     updateSearch(() => closeAllFsTabs());
   }
 
-  function closeTabsToTheRight(index: number) {
-    const descriptor = search.openTabs[index];
-    if (!descriptor) return;
-    updateSearch(prev => closeTabsToTheRightFn(toTabId(descriptor), prev));
+  function closeTabsToTheRight(tabId: string) {
+    updateSearch(prev => closeTabsToTheRightFn(tabId, prev));
   }
 
-  function closeOtherTabs(index: number) {
-    const descriptor = search.openTabs[index];
-    if (!descriptor) {
-      return;
-    }
-    updateSearch(prev => closeOtherFsTabs(toTabId(descriptor), prev));
+  function closeOtherTabs(tabId: string) {
+    updateSearch(prev => closeOtherFsTabs(tabId, prev));
   }
 
-  function setActiveTab(index: number) {
-    const descriptor = search.openTabs[index];
-    if (!descriptor) return;
-    updateSearch(prev => ({ ...prev, activeTab: toTabId(descriptor) }));
+  function setActiveTab(tabId: string) {
+    updateSearch(prev => ({ ...prev, activeTab: tabId }));
   }
 
   return {
     openTabs,
+    openTabIds,
     activeTabIndex,
     activeTabPath,
     activeDirent,

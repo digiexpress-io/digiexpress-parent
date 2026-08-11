@@ -1,7 +1,6 @@
 import React from 'react';
 import { MenuItem } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useFsNav } from '@dxs-ts/fs-nav';
 import { FsTabMenuProps } from './FsTabMenuProps';
 import { useOwnerState } from './useOwnerState';
 import { FsTabMenuRoot, useUtilityClasses } from './useUtilityClasses';
@@ -11,33 +10,6 @@ export const FsTabMenu: React.FC<FsTabMenuProps> = (props) => {
   const intl = useIntl();
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses();
-  const { closeTab, closeAllTabs, closeTabsToTheRight, closeOtherTabs } = useFsNav();
-
-  function handleClose() {
-    if (props.tabIndex !== undefined) {
-      closeTab(props.tabIndex);
-    }
-    props.onClose();
-  }
-
-  function handleCloseToTheRight() {
-    if (props.tabIndex !== undefined) {
-      closeTabsToTheRight(props.tabIndex);
-    }
-    props.onClose();
-  }
-
-  function handleCloseOthers() {
-    if (props.tabIndex !== undefined) {
-      closeOtherTabs(props.tabIndex);
-    }
-    props.onClose();
-  }
-
-  function handleCloseAll() {
-    closeAllTabs();
-    props.onClose();
-  }
 
   return (
     <FsTabMenuRoot
@@ -49,16 +21,16 @@ export const FsTabMenu: React.FC<FsTabMenuProps> = (props) => {
       anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
       transformOrigin={{ vertical: 'top', horizontal: 'left' }}
     >
-      <MenuItem className={classes.menuItem} onClick={handleClose}>
+      <MenuItem className={classes.menuItem} onClick={ownerState.onClose}>
         {intl.formatMessage({ id: 'fs.tabMenu.menuItem.close' })}
       </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={handleCloseToTheRight}>
+      <MenuItem className={classes.menuItem} onClick={ownerState.onCloseToTheRight}>
         {intl.formatMessage({ id: 'fs.tabMenu.menuItem.closeToTheRight' })}
       </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={handleCloseOthers}>
+      <MenuItem className={classes.menuItem} onClick={ownerState.onCloseOthers}>
         {intl.formatMessage({ id: 'fs.tabMenu.menuItem.closeOthers' })}
       </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={handleCloseAll}>
+      <MenuItem className={classes.menuItem} onClick={ownerState.onCloseAll}>
         {intl.formatMessage({ id: 'fs.tabMenu.menuItem.closeAll' })}
       </MenuItem>
     </FsTabMenuRoot>

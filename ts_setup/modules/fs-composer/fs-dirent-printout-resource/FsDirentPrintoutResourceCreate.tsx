@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Button } from '@mui/material';
 import { useIntl } from 'react-intl';
 import MonacoReact from '@monaco-editor/react';
-import { FsDirentFormField, FsDirentSelectMulti, FsDirentSelectSingle, FsDirentTextField } from '../fs-utilities';
+import { FsDirentFormField, FsDirentSelectSingle, FsDirentTextField } from '../fs-utilities';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
 import { useUtilityClasses, FsDirentPrintoutResourceRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
@@ -13,7 +13,8 @@ export const FsDirentPrintoutResourceCreate: React.FC = () => {
   const classes = useUtilityClasses();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = React.useState('');
-  const previewSrc = ownerState.uploadBody || undefined;
+  const [previewUrl, setPreviewUrl] = React.useState<string | undefined>(undefined);
+  const previewSrc = previewUrl || undefined;
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -22,12 +23,18 @@ export const FsDirentPrintoutResourceCreate: React.FC = () => {
     }
     setFileName(file.name);
     const reader = new FileReader();
-    reader.onload = () => {
-      ownerState.onChangeUploadBody(reader.result as string);
-    };
     if (ownerState.contentType === 'image/*') {
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        const base64String = dataUrl.split(',')[1];
+        ownerState.onChangeUploadBody(base64String);
+        setPreviewUrl(dataUrl);
+      };
       reader.readAsDataURL(file);
     } else {
+      reader.onload = () => {
+        ownerState.onChangeUploadBody(reader.result as string);
+      };
       reader.readAsText(file);
     }
   }

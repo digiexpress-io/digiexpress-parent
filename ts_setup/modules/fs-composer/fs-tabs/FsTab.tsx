@@ -15,12 +15,12 @@ export interface FsTabItemProps {
 export const FsTab: React.FC<FsTabItemProps> = ({ ownerState, className, index }) => {
   const tab = ownerState.tabs[index];
 
-  const isDirty = useFsuIsChanged(tab.id);
+  const isDirty = useFsuIsChanged(tab.direntId);
 
   return (
     <Tooltip title={tab.name} arrow enterDelay={700} placement="bottom">
       <span className={className}>
-        {isDirty && <FsDiffIndicator direntId={tab.id} />}
+        {isDirty && <FsDiffIndicator direntId={tab.direntId} />}
         <Typography variant='subtitle2'>{tab.name}</Typography>
       </span>
     </Tooltip>
