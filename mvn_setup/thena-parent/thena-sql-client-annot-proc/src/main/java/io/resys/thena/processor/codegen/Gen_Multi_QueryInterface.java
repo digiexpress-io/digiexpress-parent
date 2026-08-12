@@ -88,6 +88,7 @@ package io.resys.thena.processor.codegen;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import javax.lang.model.element.Modifier;
 
@@ -230,8 +231,30 @@ public class Gen_Multi_QueryInterface implements MultiTableCodeGenerator {
     }
 
     worldInterface.addMethod(generateWorldCountMethod(tables));
+    worldInterface.addMethod(generateWorldAcceptMethod(tables));
 
     return worldInterface.build();
+  }
+
+  private MethodSpec generateWorldAcceptMethod(List<TableMetamodel> tables) {
+    final var tablesByOrder = tables.stream()
+      .sorted((a, b) -> Integer.compare(a.getOrder(), b.getOrder()))
+      .toList();
+
+    final var consumerType = ParameterizedTypeName.get(ClassName.get(Consumer.class), ClassName.get(Object.class));
+
+    final var method = MethodSpec.methodBuilder("accept")
+      .addModifiers(Modifier.PUBLIC, Modifier.DEFAULT)
+      .addParameter(consumerType, "consumer");
+
+    for (final var table : tablesByOrder) {
+      if (findEntityTypeForTable(table) != null) {
+        final var getterName = "get" + NamingUtils.toPascalCase(table.getTableName());
+        method.addStatement("this.$L().values().forEach(consumer)", getterName);
+      }
+    }
+
+    return method.build();
   }
 
   private MethodSpec generateWorldCountMethod(List<TableMetamodel> tables) {

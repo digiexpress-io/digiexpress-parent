@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.resys.thena.client.sample.ImmutablePersistenceUnit;
 import io.resys.thena.client.sample.ImmutableWorld;
 import io.resys.thena.client.sample.Batch2DbQuery.World;
+import io.resys.thena.client.sample.entities.Batch;
 import io.resys.thena.client.sample.entities.BatchConsumer;
 import io.resys.thena.client.sample.entities.ImmutableBatch;
 import io.resys.thena.client.sample.entities.ImmutableBatchConsumer;
@@ -242,5 +243,35 @@ public class DeserializerTest {
 
     final var totalFromChunks = unit.split(3).stream().mapToLong(chunk -> chunk.getCount()).sum();
     Assertions.assertEquals(unit.getCount(), totalFromChunks);
+  }
+
+  @Test
+  public void testWorldAccept_visitsEveryEntityAcrossTables() {
+    final var world = ImmutableWorld.builder()
+        .putBatch("b1", ImmutableBatch.builder()
+            .appId("appId")
+            .batchName("batchName")
+            .id("b1")
+            .build())
+        .putBatchConsumer("1", batchConsumer("1"))
+        .putBatchConsumer("2", batchConsumer("2"))
+        .build();
+
+    final var visited = new ArrayList<Object>();
+    world.accept(visited::add);
+
+    Assertions.assertEquals(world.getCount(), (long) visited.size());
+    Assertions.assertEquals(1, visited.stream().filter(o -> o instanceof Batch).count());
+    Assertions.assertEquals(2, visited.stream().filter(o -> o instanceof BatchConsumer).count());
+  }
+
+  @Test
+  public void testWorldAccept_noOpOnEmptyWorld() {
+    final var world = ImmutableWorld.builder().build();
+
+    final var visited = new ArrayList<Object>();
+    world.accept(visited::add);
+
+    Assertions.assertTrue(visited.isEmpty());
   }
 }
