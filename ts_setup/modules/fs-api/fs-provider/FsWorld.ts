@@ -39,7 +39,10 @@ export class FsWorld {
     if (dirent.type === 'PRINTOUT_PAGE') {
       const pageProps = dirent.props as Fs.PrintoutPageProps | undefined;
       if (pageProps?.localeId) {
-        return this._flat_dirents[pageProps.localeId]?.name ?? dirent.name;
+        const localeName = this._flat_dirents[pageProps.localeId]?.name ?? dirent.name;
+        const parentProps = this._flat_dirents[pageProps.serviceId]?.props as Fs.PrintoutProps | undefined;
+        const label = parentProps?.intlValues?.[pageProps.localeId];
+        return label ? `${localeName}.${label}` : localeName;
       }
     }
     return dirent.name;
