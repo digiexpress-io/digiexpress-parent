@@ -1,6 +1,7 @@
 import { Fs } from '@dxs-ts/fs-api';
 import { Position, languages, editor } from 'monaco-editor';
 import { Hint_Image } from './Hint_Image';
+import { Hint_IncludeTemplate } from './Hint_IncludeTemplate';
 
 export interface PrintoutPageContainer {
   pageId: string;
@@ -58,6 +59,7 @@ export class PrintoutPageCompletionBuilder {
     const result: languages.CompletionItem[] = [];
 
     result.push(...Hint_Image.accept(container));
+    result.push(...Hint_IncludeTemplate.accept(container));
 
     return result;
   }

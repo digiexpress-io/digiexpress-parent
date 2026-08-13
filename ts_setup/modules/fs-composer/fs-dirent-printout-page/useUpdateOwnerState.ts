@@ -1,6 +1,6 @@
 import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
-import { PrintoutPageResourceSync } from './PrintoutPageResourceSync';
+import { PrintoutPageSync } from './PrintoutPageResourceSync';
 
 export interface UpdateOwnerState {
   assetPath: string | undefined;
@@ -9,7 +9,7 @@ export interface UpdateOwnerState {
   connectedResourceNames: string[];
   onChangeContent: (value: string) => void;
   push: () => Promise<void>;
-  syncResourceLinks: (content: string) => Promise<void>;
+  syncLinks: (content: string) => Promise<void>;
 }
 
 type _ChangeStateProps = {
@@ -86,14 +86,14 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withContent(value));
   }
 
-  async function syncResourceLinks(content: string): Promise<void> {
+  async function syncLinks(content: string): Promise<void> {
     const allPrintoutResources = Object.values(selectOptions.direntProps)
       .filter((resource): resource is Fs.PrintoutResourceProps => resource.type === 'PRINTOUT_RESOURCE');
 
-    const sync = new PrintoutPageResourceSync(props.direntId, allPrintoutResources);
-    const { toLink, toUnlink } = sync.computeChanges(content);
+    const sync = new PrintoutPageSync(props.direntId, pageProps, allPrintoutResources, selectOptions.direntProps);
+    const { resources, pageLinks } = sync.computeChanges(content);
 
-    for (const resource of toUnlink) {
+    for (const resource of resources.toUnlink) {
       const resourceDirent = getDirent(resource.id);
       if (!resourceDirent) {
         continue;
@@ -114,7 +114,7 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
       });
     }
 
-    for (const resource of toLink) {
+    for (const resource of resources.toLink) {
       const resourceDirent = getDirent(resource.id);
       if (!resourceDirent) {
         continue;
@@ -134,6 +134,26 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
         }),
       });
     }
+
+    if (pageLinks.toLink.length > 0 || pageLinks.toUnlink.length > 0) {
+      const newTemplateIds = new Set(pageProps.templateIds);
+      for (const id of pageLinks.toUnlink) { newTemplateIds.delete(id); }
+      for (const id of pageLinks.toLink) { newTemplateIds.add(id); }
+      await updateDirent({
+        id: props.direntId,
+        treeId: dirent.commitIndex?.treeId ?? '',
+        bodyType: 'PRINTOUT_PAGE',
+        isDirty: true,
+        getCurrentProps: () => ({
+          bodyType: 'PRINTOUT_PAGE',
+          id: props.direntId,
+          changes: {
+            pageId: props.direntId,
+            templateIds: [...newTemplateIds],
+          },
+        }),
+      });
+    }
   }
 
   return {
@@ -143,6 +163,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     connectedResourceNames,
     onChangeContent,
     push,
-    syncResourceLinks,
+    syncLinks,
   };
 };

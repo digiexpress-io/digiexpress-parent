@@ -5,7 +5,7 @@ import { useFsNav } from '@dxs-ts/fs-nav';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 
 const CompileButton: React.FC<{ direntId: string; onCompile: () => Promise<void> }> = ({ direntId, onCompile }) => {
-  const { push, syncResourceLinks, content } = useUpdateOwnerState({ direntId });
+  const { push, syncLinks, content } = useUpdateOwnerState({ direntId });
   const [disabled, setDisabled] = React.useState(false);
 
   const handleCompile = async () => {
@@ -13,7 +13,7 @@ const CompileButton: React.FC<{ direntId: string; onCompile: () => Promise<void>
     try {
       const capturedContent = content;
       const cooldown = new Promise<void>(resolve => setTimeout(resolve, 2000));
-      await syncResourceLinks(capturedContent);
+      await syncLinks(capturedContent);
       await push();
       await onCompile();
       await cooldown;
