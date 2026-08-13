@@ -1,5 +1,6 @@
 import { Fs, useFsDirent, FsuChange, useFsuChange } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
+import { PrintoutPageResourceSync } from './PrintoutPageResourceSync';
 
 export interface UpdateOwnerState {
   assetPath: string | undefined;
@@ -8,7 +9,7 @@ export interface UpdateOwnerState {
   connectedResourceNames: string[];
   onChangeContent: (value: string) => void;
   push: () => Promise<void>;
-  syncResourceLinks: () => Promise<void>;
+  syncResourceLinks: (content: string) => Promise<void>;
 }
 
 type _ChangeStateProps = {
@@ -85,64 +86,53 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     setState(prev => prev.withContent(value));
   }
 
-  async function syncResourceLinks(): Promise<void> {
-    const content = state.content;
-    const referencedNames = new Set<string>();
-    const pattern = /sys\.inputs\.resources\.at\("([^"]+)"\)/g;
-    let match = pattern.exec(content);
-    while (match !== null) {
-      referencedNames.add(match[1]);
-      match = pattern.exec(content);
+  async function syncResourceLinks(content: string): Promise<void> {
+    const allPrintoutResources = Object.values(selectOptions.direntProps)
+      .filter((resource): resource is Fs.PrintoutResourceProps => resource.type === 'PRINTOUT_RESOURCE');
+
+    const sync = new PrintoutPageResourceSync(props.direntId, allPrintoutResources);
+    const { toLink, toUnlink } = sync.computeChanges(content);
+
+    for (const resource of toUnlink) {
+      const resourceDirent = getDirent(resource.id);
+      if (!resourceDirent) {
+        continue;
+      }
+      await updateDirent({
+        id: resource.id,
+        treeId: resourceDirent.commitIndex?.treeId ?? '',
+        bodyType: 'PRINTOUT_RESOURCE',
+        isDirty: true,
+        getCurrentProps: () => ({
+          bodyType: 'PRINTOUT_RESOURCE',
+          id: resource.id,
+          changes: {
+            resourceId: resource.id,
+            printoutPageIds: resource.printoutPageIds.filter(pageId => pageId !== props.direntId),
+          },
+        }),
+      });
     }
 
-    const allPrintoutResources = Object.values(selectOptions.direntProps)
-      .filter((resource): resource is Fs.PrintoutResourceProps =>
-        resource.type === 'PRINTOUT_RESOURCE'
-      );
-
-    for (const resource of allPrintoutResources) {
-      const isLinked = resource.printoutPageIds.includes(props.direntId);
-      const isReferenced = referencedNames.has(resource.resourceName);
-
-      if (isLinked && !isReferenced) {
-        const resourceDirent = getDirent(resource.id);
-        if (!resourceDirent) {
-          continue;
-        }
-        await updateDirent({
-          id: resource.id,
-          treeId: resourceDirent.commitIndex?.treeId ?? '',
-          bodyType: 'PRINTOUT_RESOURCE',
-          isDirty: true,
-          getCurrentProps: () => ({
-            bodyType: 'PRINTOUT_RESOURCE',
-            id: resource.id,
-            changes: {
-              resourceId: resource.id,
-              printoutPageIds: resource.printoutPageIds.filter(pageId => pageId !== props.direntId),
-            },
-          }),
-        });
-      } else if (!isLinked && isReferenced) {
-        const resourceDirent = getDirent(resource.id);
-        if (!resourceDirent) {
-          continue;
-        }
-        await updateDirent({
-          id: resource.id,
-          treeId: resourceDirent.commitIndex?.treeId ?? '',
-          bodyType: 'PRINTOUT_RESOURCE',
-          isDirty: true,
-          getCurrentProps: () => ({
-            bodyType: 'PRINTOUT_RESOURCE',
-            id: resource.id,
-            changes: {
-              resourceId: resource.id,
-              printoutPageIds: [...resource.printoutPageIds, props.direntId],
-            },
-          }),
-        });
+    for (const resource of toLink) {
+      const resourceDirent = getDirent(resource.id);
+      if (!resourceDirent) {
+        continue;
       }
+      await updateDirent({
+        id: resource.id,
+        treeId: resourceDirent.commitIndex?.treeId ?? '',
+        bodyType: 'PRINTOUT_RESOURCE',
+        isDirty: true,
+        getCurrentProps: () => ({
+          bodyType: 'PRINTOUT_RESOURCE',
+          id: resource.id,
+          changes: {
+            resourceId: resource.id,
+            printoutPageIds: [...resource.printoutPageIds, props.direntId],
+          },
+        }),
+      });
     }
   }
 

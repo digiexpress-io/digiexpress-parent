@@ -5,11 +5,12 @@ import { useFsNav } from '@dxs-ts/fs-nav';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 
 const CompileButton: React.FC<{ direntId: string; onCompile: () => Promise<void> }> = ({ direntId, onCompile }) => {
-  const { push, syncResourceLinks } = useUpdateOwnerState({ direntId });
+  const { push, syncResourceLinks, content } = useUpdateOwnerState({ direntId });
 
   const handleCompile = async () => {
+    const capturedContent = content;
+    await syncResourceLinks(capturedContent);
     await push();
-    await syncResourceLinks();
     await onCompile();
   };
 
