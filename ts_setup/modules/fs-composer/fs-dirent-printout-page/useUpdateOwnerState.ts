@@ -12,6 +12,11 @@ export interface UpdateOwnerState {
   syncLinks: (content: string) => Promise<void>;
 }
 
+export interface PageOption {
+  id: string;
+  templateName: string;
+}
+
 type _ChangeStateProps = {
   pageId: string;
   bodyType: Fs.BodyType;

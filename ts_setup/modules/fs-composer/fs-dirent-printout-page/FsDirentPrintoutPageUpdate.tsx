@@ -1,99 +1,19 @@
 import React from 'react';
 import MonacoReact, { OnChange, OnMount, BeforeMount } from '@monaco-editor/react';
-import { Dialog, DialogContent, DialogTitle, List, ListItemButton, ListItemText, TextField, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import * as monacoEditor from 'monaco-editor';
 import { FsDirentFormField } from '../fs-utilities';
-import { FsIcons } from '../fs-theme';
-import { useUtilityClasses, FsDirentPrintoutPageRoot, FsDirentPrintoutPageDialogList } from './useUtilityClasses';
-import { useUpdateOwnerState } from './useUpdateOwnerState';
+import { useUtilityClasses, FsDirentPrintoutPageRoot } from './useUtilityClasses';
+import { PageOption, useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPrintoutPageProps } from './FsDirentPrintoutPageProps';
 import { PrintoutPageCompletionBuilder } from './autocomplete';
+import { Fs, useFsDirent } from '@dxs-ts/fs-api';
+import { InsertPageDialog } from './InsertPageDialog';
+import { InsertImageDialog } from './InsertImageDialog';
 
-interface _PageOption {
-  id: string;
-  templateName: string;
-}
 
-const InsertPageDialog: React.FC<{
-  open: boolean;
-  currentTemplateIds: string[];
-  pages: _PageOption[];
-  onSelect: (page: _PageOption) => void;
-  onClose: () => void;
-}> = ({ open, currentTemplateIds, pages, onSelect, onClose }) => {
-  const classes = useUtilityClasses();
-  const [filter, setFilter] = React.useState('');
 
-  const filtered = filter ? pages.filter(p => p.templateName.toLowerCase().includes(filter.toLowerCase())) : pages;
-
-  return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Insert printout page</DialogTitle>
-      <DialogContent>
-        <TextField
-          autoFocus
-          fullWidth
-          placeholder='Search...'
-          value={filter}
-          onChange={e => setFilter(e.target.value)}
-          size='small'
-        />
-        <FsDirentPrintoutPageDialogList>
-          <List>
-            {filtered.map(page => (
-              <ListItemButton key={page.id} className={classes.dialogListItem} onClick={() => onSelect(page)}>
-                <ListItemText primary={page.templateName} />
-                <div className={classes.dialogItemEnd}>
-                  {currentTemplateIds.includes(page.id) && (
-                    <FsIcons.Checkmark className={classes.dialogCheckmark} />
-                  )}
-                </div>
-              </ListItemButton>
-            ))}
-          </List>
-        </FsDirentPrintoutPageDialogList>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-const InsertImageDialog: React.FC<{
-  open: boolean;
-  direntId: string;
-  images: Fs.PrintoutResourceProps[];
-  onSelect: (resource: Fs.PrintoutResourceProps) => void;
-  onClose: () => void;
-}> = ({ open, direntId, images, onSelect, onClose }) => {
-  const classes = useUtilityClasses();
-  return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Insert image</DialogTitle>
-      <DialogContent>
-        <FsDirentPrintoutPageDialogList>
-          <List>
-            {images.map(image => (
-              <ListItemButton key={image.id} className={classes.dialogListItem} onClick={() => onSelect(image)}>
-                <ListItemText primary={image.resourceName} />
-                <div className={classes.dialogItemEnd}>
-                  {image.printoutPageIds.includes(direntId) && (
-                    <FsIcons.Checkmark className={classes.dialogCheckmark} />
-                  )}
-                  {image.content && (
-                    <img className={classes.dialogThumbnail}
-                      src={`data:${image.contentType === 'image/*' ? 'image/png' : image.contentType};base64,${image.content}`}
-                    />
-                  )}
-                </div>
-              </ListItemButton>
-            ))}
-          </List>
-        </FsDirentPrintoutPageDialogList>
-      </DialogContent>
-    </Dialog>
-  );
-};
 
 export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = ({ direntId }) => {
   const intl = useIntl();
@@ -101,7 +21,7 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
   const classes = useUtilityClasses();
   const { selectOptions, getDirent } = useFsDirent();
 
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
   const [pageDialogOpen, setPageDialogOpen] = React.useState(false);
   const editorRef = React.useRef<monacoEditor.editor.IStandaloneCodeEditor | undefined>(undefined);
   const completionDisposable = React.useRef<monacoEditor.IDisposable | undefined>(undefined);
@@ -118,8 +38,8 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
     [selectOptions.direntProps]
   );
 
-  const allPageOptions = React.useMemo((): _PageOption[] => {
-    const result: _PageOption[] = [];
+  const allPageOptions = React.useMemo((): PageOption[] => {
+    const result: PageOption[] = [];
     for (const [id, props] of Object.entries(selectOptions.direntProps)) {
       if (props.type !== 'PRINTOUT_PAGE' || id === direntId) {
         continue;
@@ -144,7 +64,7 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
 
   const beforeMount: BeforeMount = React.useCallback((monaco) => {
     completionDisposable.current?.dispose();
-    (monaco.editor as any).addCommand({ id: 'printout.openImageDialog', run: () => setDialogOpen(true) });
+    (monaco.editor as any).addCommand({ id: 'printout.openImageDialog', run: () => setImageDialogOpen(true) });
     (monaco.editor as any).addCommand({ id: 'printout.openPageDialog', run: () => setPageDialogOpen(true) });
     const pageProps = getDirent(direntId)?.props as Fs.PrintoutPageProps | undefined;
     completionDisposable.current = monaco.languages.registerCompletionItemProvider('yaml', {
@@ -183,7 +103,7 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
     });
   }, []);
 
-  const handlePageSelect = React.useCallback((page: _PageOption) => {
+  const handlePageSelect = React.useCallback((page: PageOption) => {
     const editor = editorRef.current;
     if (!editor) {
       return;
@@ -224,18 +144,18 @@ export const FsDirentPrintoutPageUpdate: React.FC<FsDirentPrintoutPageProps> = (
       },
       text: `#image(sys.inputs.resources.at("${resource.resourceName}"), width: 200pt)`,
     }]);
-    setDialogOpen(false);
+    setImageDialogOpen(false);
   }, []);
 
   return (
     <FsDirentPrintoutPageRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.printoutPage.sectionTitle.edit' }, { name: ownerState.assetPath })}</Typography>
       <InsertImageDialog
-        open={dialogOpen}
+        open={imageDialogOpen}
         direntId={direntId}
         images={imageResources}
         onSelect={handleImageSelect}
-        onClose={() => setDialogOpen(false)}
+        onClose={() => setImageDialogOpen(false)}
       />
       <InsertPageDialog
         open={pageDialogOpen}
