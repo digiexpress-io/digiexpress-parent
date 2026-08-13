@@ -1,20 +1,32 @@
 import React from 'react';
-import { Button, Typography } from '@mui/material';
+import { Button, CircularProgress, Typography } from '@mui/material';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 
 const CompileButton: React.FC<{ direntId: string; onCompile: () => Promise<void> }> = ({ direntId, onCompile }) => {
   const { push, syncResourceLinks, content } = useUpdateOwnerState({ direntId });
+  const [disabled, setDisabled] = React.useState(false);
 
   const handleCompile = async () => {
-    const capturedContent = content;
-    await syncResourceLinks(capturedContent);
-    await push();
-    await onCompile();
+    setDisabled(true);
+    try {
+      const capturedContent = content;
+      const cooldown = new Promise<void>(resolve => setTimeout(resolve, 2000));
+      await syncResourceLinks(capturedContent);
+      await push();
+      await onCompile();
+      await cooldown;
+    } finally {
+      setDisabled(false);
+    }
   };
 
-  return <Button onClick={handleCompile}>Compile</Button>;
+  return (
+    <Button onClick={handleCompile} disabled={disabled} startIcon={disabled ? <CircularProgress size={16} color='inherit' /> : undefined}>
+      {disabled ? 'Saving...' : 'Compile'}
+    </Button>
+  );
 };
 
 export const FsPanelPreviewPrintoutPage: React.FC = () => {

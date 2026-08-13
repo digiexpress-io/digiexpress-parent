@@ -76,7 +76,7 @@ public class Bundle_Lazy implements Bundle {
   @Override public OffsetDateTime getCreated() { return await().getCreated(); }
   @Override public OffsetDateTime getStartDate() { return await().getStartDate(); }
   @Override public OffsetDateTime getEndDate() { return await().getEndDate(); }
-  @Override public Bundle withCacheless() { return new Bundle_Lazy(envir, tid, runtime, 5); }
+  @Override public Bundle withCacheless() { return new Bundle_Lazy(envir, tid, runtime, 2); }
   @Override public BundleQuery<DialobProgram> queryDialobs() { return await().queryDialobs(); }
   @Override public BundleQuery<WorkflowProgram> queryWorkflows() { return await().queryWorkflows(); }
   @Override public BundleQuery<ArticleProgram> queryArticles() { return await().queryArticles(); }
