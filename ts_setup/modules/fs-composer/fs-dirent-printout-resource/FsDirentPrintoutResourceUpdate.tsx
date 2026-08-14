@@ -110,7 +110,7 @@ export const FsDirentPrintoutResourceUpdate: React.FC<FsDirentPrintoutResourcePr
         )}
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printoutResource.printoutPagesField.label' })}>
-          {connectedPages.map(e => <Typography>{e.label}</Typography>)}
+          {connectedPages.map(e => <Typography key={e.id}>{e.label}</Typography>)}
         </FsDirentFormField>
 
       </div>
