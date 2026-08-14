@@ -208,6 +208,7 @@ export const en = {
   'processTable.title': 'Stencil service execution history',
   'processTableHeader.workflow': 'Stencil service name',
   'processTableHeader.status': 'Status',
+  'processTableHeader.processId': 'Process ID',
   'processTableHeader.created': 'Created',
   'processTableHeader.questionnaireId': 'Questionnaire',
   'processTableHeader.taskRef': 'Task reference',

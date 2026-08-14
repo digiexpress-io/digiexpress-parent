@@ -207,6 +207,7 @@ export const fi = {
   'processTable.title': 'Työt',
   'processTableHeader.workflow': 'Stencil palvelu nimi',
   'processTableHeader.status': 'Tila',
+  'processTableHeader.processId': 'Process ID',
   'processTableHeader.created': 'Luotu',
   'processTableHeader.questionnaireId': 'Lomake tunnus',
   'processTableHeader.taskRef': 'Tehtävän viite',

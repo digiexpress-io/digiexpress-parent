@@ -19,6 +19,8 @@ export const EveliProcExecution: React.FC = () => {
     findLast6Months().then(setData);
   }, []);
 
+  console.log(data)
+
   const columns: ColumnDef<ProcExecutionApi.ProcessExecution, any>[] = [
     {
       header: intl.formatMessage({ id: 'processTableHeader.workflow' }),
@@ -42,6 +44,17 @@ export const EveliProcExecution: React.FC = () => {
       sortingFn: sortingFns.alphanumeric,
       size: 200,
       minSize: 200,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
+    },
+    {
+      header: intl.formatMessage({ id: 'processTableHeader.processId' }),
+      accessorKey: 'id',
+      filterFn: 'includesString',
+      sortingFn: sortingFns.alphanumeric,
+      size: 50,
+      minSize: 50,
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,

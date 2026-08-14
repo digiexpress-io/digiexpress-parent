@@ -207,6 +207,7 @@ export const sv = {
   'processTable.title': 'Arbeten',
   'processTableHeader.workflow': 'Stenciltjänstens namn',
   'processTableHeader.status': 'Status',
+  'processTableHeader.processId': 'Process ID',
   'processTableHeader.created': 'Skapad',
   'processTableHeader.questionnaireId': 'Formulär id',
   'processTableHeader.taskRef': 'Uppgiftsreferens',
