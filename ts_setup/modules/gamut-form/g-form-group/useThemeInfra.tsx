@@ -35,6 +35,7 @@ export const useUtilityClasses = (ownerState: GFormGroupProps) => {
   const slots = {
     root: ['root', ownerState.id],
     label: ['label'],
+    labelContent: ['labelContent'],
     body: ['body'],
     collapsible: ['collapsible']
   };
@@ -89,6 +90,10 @@ export const GFormGroupLabel = styled('div', {
 
   return {
     display: 'flex',
+    '& .GFormGroup-labelContent': {
+      display: 'flex',
+      alignItems: 'center',
+    },
     '& .MuiDivider-root': {
       display: label ? undefined : 'none',
       flexGrow: 1,

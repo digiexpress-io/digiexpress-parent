@@ -5,7 +5,7 @@ import { DialobApi } from '@dxs-ts/gamut-api';
 
 
 
-export const GFormGroupDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store, children }) => {
+export const GFormGroupDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store, disabled, children }) => {
   const desc = store.form.toDescription(element.id);
 
   // starts from 1: Page is group 1
@@ -18,6 +18,7 @@ export const GFormGroupDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
       id={element.id}
       label={store.form.toLabel(element.id)}
       description={desc}
+      disabled={disabled}
       children={children}
       level={parents.length}
       border={border}

@@ -2,6 +2,7 @@ import React from 'react';
 import { Divider, Typography } from '@mui/material';
 import { useThemeInfra, GFormGroupRoot } from './useThemeInfra';
 import { GFormGroupProps } from './g-form-group-types';
+import { GInputAdornment } from '../g-input-adornment';
 
 
 export const GFormGroup: React.FC<GFormGroupProps> = (initProps) => {
@@ -14,10 +15,11 @@ export const GFormGroup: React.FC<GFormGroupProps> = (initProps) => {
       <slots.collapsible ownerState={ownerState} className={classes.collapsible}>
         {isLabelDisplayedHere && (
           <slots.label ownerState={ownerState} className={classes.label}>
-            <div>
+            <div className={classes.labelContent}>
               <Typography>
                 {ownerState.label}
               </Typography>
+              <GInputAdornment id={ownerState.id} title={ownerState.label} disabled={ownerState.disabled} children={ownerState.description} />
             </div>
             <Divider flexItem />
           </slots.label>
