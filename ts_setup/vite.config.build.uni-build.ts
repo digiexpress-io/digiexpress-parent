@@ -50,12 +50,14 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           processImports: true
         }).build(),
       }),
+      /*
       visualizer({
         filename: './dist/stats.html',
         gzipSize: true,
         brotliSize: true,
         open: true, // auto-opens the treemap in your browser after build
       }),
+      */
     ],
     
     esbuild: {
