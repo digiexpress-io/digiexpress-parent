@@ -34,7 +34,7 @@ export const GMarkdown: React.FC<GMarkdownProps> = (initProps) => {
             h5: (props) => (<Typography variant={'h5'}>{props.children}</Typography>),
             h6: (props) => (<Typography variant={'body1'}>{props.children}</Typography>),
             p: (props) => (<Typography variant={'body1'}>{props.children}</Typography>),
-            li: (props) => (<li><Typography component="span" variant={'body1'}>{props.children}</Typography></li>),
+            li: (props) => (<li><Typography variant={'body1'}>{props.children}</Typography></li>),
             a: linkRenderer,
             ...(props.overrides ?? {})
         }} />

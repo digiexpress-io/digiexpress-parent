@@ -32,6 +32,9 @@ export const GMarkdownRoot = styled("div", {
     'ul:last-of-type': {
       marginBottom: theme.spacing(2),
     },
+    'li > p': {
+      margin: 0,
+    }
   };
 });
 
