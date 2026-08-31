@@ -38,7 +38,6 @@
   "peerDependencies": {
     "react": "*",
     "react-intl": "*",
-    "@material-table/core": "*",
     "@mui/material": "*",
     "@mui/icons-material": "*",
     "@mui/utils": "*",

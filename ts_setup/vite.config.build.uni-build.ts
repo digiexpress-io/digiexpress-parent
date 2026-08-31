@@ -2,7 +2,8 @@
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import svgr from 'vite-plugin-svgr';
-import dts from 'unplugin-dts/vite'
+import dts from 'unplugin-dts/vite';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 import { ConfigEnv, UserConfig } from 'vite';
 import { DTSBuilder, buildOneModule, ModuleRegistryCacheBuilder } from './vite'
@@ -48,8 +49,15 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           bundleTypes: true,
           processImports: true
         }).build(),
-      })
+      }),
+      visualizer({
+        filename: './dist/stats.html',
+        gzipSize: true,
+        brotliSize: true,
+        open: true, // auto-opens the treemap in your browser after build
+      }),
     ],
+    
     esbuild: {
       jsx: 'automatic',
       define: {

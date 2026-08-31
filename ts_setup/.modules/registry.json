@@ -787,8 +787,7 @@
           "@tanstack/react-query": "*",
           "@mui/material": "*",
           "notistack": "*",
-          "react-intl": "*",
-          "@material-table/core": "^6.4.4"
+          "react-intl": "*"
         },
         "keywords": [
           "eveli",
@@ -818,24 +817,21 @@
         "@tanstack/react-query",
         "@mui/material",
         "notistack",
-        "react-intl",
-        "@material-table/core"
+        "react-intl"
       ],
       "peerDependencies": [
         "react",
         "@tanstack/react-query",
         "@mui/material",
         "notistack",
-        "react-intl",
-        "@material-table/core"
+        "react-intl"
       ],
       "externalDependencies": [
         "react",
         "@tanstack/react-query",
         "@mui/material",
         "notistack",
-        "react-intl",
-        "@material-table/core"
+        "react-intl"
       ],
       "internalDependencies": [
         "@dxs-ts/envir-fetch",
@@ -875,7 +871,6 @@
         "@dxs-ts/contract-api",
         "@dxs-ts/ledger-api",
         "@dxs-ts/task-api",
-        "@material-table/core",
         "@dxs-ts/gamut-api"
       ],
       "actualExternalDependencies": [
@@ -883,8 +878,7 @@
         "@tanstack/react-query",
         "react-intl",
         "@mui/material",
-        "notistack",
-        "@material-table/core"
+        "notistack"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/envir-fetch",
@@ -1134,7 +1128,6 @@
         "peerDependencies": {
           "react": "*",
           "react-intl": "*",
-          "@material-table/core": "*",
           "@mui/material": "*",
           "@mui/icons-material": "*",
           "@mui/utils": "*",
@@ -1188,7 +1181,6 @@
         "@dxs-ts/fs-nav",
         "react",
         "react-intl",
-        "@material-table/core",
         "@mui/material",
         "@mui/icons-material",
         "@mui/utils",
@@ -1205,7 +1197,6 @@
       "peerDependencies": [
         "react",
         "react-intl",
-        "@material-table/core",
         "@mui/material",
         "@mui/icons-material",
         "@mui/utils",
@@ -1222,7 +1213,6 @@
       "externalDependencies": [
         "react",
         "react-intl",
-        "@material-table/core",
         "@mui/material",
         "@mui/icons-material",
         "@mui/utils",
@@ -1294,7 +1284,6 @@
         "@mui/utils",
         "@monaco-editor/react",
         "yaml",
-        "@material-table/core",
         "recharts",
         "@dxs-ts/user-profile",
         "@dxs-ts/gamut-shell",
@@ -1324,7 +1313,6 @@
         "@mui/utils",
         "@monaco-editor/react",
         "yaml",
-        "@material-table/core",
         "recharts",
         "@mui/system"
       ],
@@ -4601,7 +4589,6 @@
         "@dxs-ts/task-composer-v2"
       ],
       "externalDependencies": [
-        "@material-table/core",
         "@monaco-editor/react",
         "@mui/icons-material",
         "@mui/material",
@@ -4675,6 +4662,6 @@
       ]
     }
   },
-  "checksum": "068e45d650f417603e4840180f964148bc88c3162c3276cd843af9733ca32ed2",
-  "generatedAt": "2026-08-31T09:12:52.055Z"
+  "checksum": "820c7d2f479781243ebe4557dce1afd22a335bb604f7612421493e574d25a97f",
+  "generatedAt": "2026-08-31T09:30:16.496Z"
 }

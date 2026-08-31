@@ -130,14 +130,19 @@ interface RollupResolved {
 
 // Pure utility functions for the build config
 function _isExternal(id: string, externals: string[], rollupResolved: RollupResolved): boolean {
-
+  
   if(!rollupResolved.external.includes(id)) {
     rollupResolved.external.push(id);
   }
 
   // Handle MUI subpaths
-  if (id.startsWith('@mui')) return true;
-
+  if (id.startsWith('@mui')) {
+    return true;
+  }
+  // mangled elk
+  if(id.endsWith('elk.bundled.js')) {
+    return true;
+  }
   // Handle other external packages
   return externals.includes(id);
 }

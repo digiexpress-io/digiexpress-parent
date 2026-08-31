@@ -27,8 +27,7 @@
     "@tanstack/react-query": "*",
     "@mui/material": "*",
     "notistack": "*",
-    "react-intl": "*",
-    "@material-table/core": "^6.4.4"
+    "react-intl": "*"
   },
   "keywords": ["eveli", "api", "data", "business-logic"]
 }
