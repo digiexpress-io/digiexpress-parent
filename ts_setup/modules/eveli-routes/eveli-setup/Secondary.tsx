@@ -19,7 +19,7 @@ import {
 import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'
 import { _eveli_shell_useUtilityClasses as useUtilityClasses, EveliShellExplorer, EveliPermissions } from '@dxs-ts/eveli-primitives';
-import { EveliTenantFeatureEnabled, useTenantConfigFeatures } from '@dxs-ts/eveli-api';
+import { EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
 import { TaskCreate } from '@dxs-ts/task-composer-v2'
 import { AnyTaskRoute } from '../eveli-any-task-route';
 
@@ -28,20 +28,10 @@ import { AnyTaskRoute } from '../eveli-any-task-route';
 const CreateTaskButton: React.FC = () => {
   const classes = useUtilityClasses();
   const intl = useIntl();
-  const navigate = useNavigate();
-  const tenant = useTenantConfigFeatures();
   const [open, setOpen] = React.useState(false);
 
   function handleCreateTask() {
-
-    if(tenant.isEnabled('SMART_TASK')) {
-      setOpen(true);
-    } else {
-      navigate({
-        from: '/secured/$locale',
-        to: '/secured/$locale/worker/tasks/create'
-      })
-    }
+    setOpen(true);
   }
 
   function handleClose() {

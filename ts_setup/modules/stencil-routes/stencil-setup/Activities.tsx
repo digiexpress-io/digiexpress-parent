@@ -9,7 +9,6 @@ import { ArticleComposer } from '../stencil-article';
 import { LinkComposer } from '../stencil-link';
 import { WorkflowComposer } from '../stencil-workflow';
 import { LocaleComposer } from '../stencil-locale';
-import { ReleaseComposer } from '../stencil-release';
 import { NewPage } from '../stencil-page';
 import { MigrationComposer } from '../stencil-migration';
 import { TemplateComposer } from '../stencil-template';
@@ -110,17 +109,6 @@ export function useActivities(): ActivityProps[] {
       buttonViewAll: <FormattedMessage id="button.view.all.locales" />,
       permissionTypeCreate: 'CREATE_STENCIL_ASSET',
       permissionTypeView: 'NAV_TO_STENCIL_LOCALES'
-    },
-
-    {
-      composer: ReleaseComposer,
-      onView: () => nav.onNav({ type: 'RELEASES' }),
-      title: <FormattedMessage id="activities.release.title" />,
-      desc: <FormattedMessage id="activities.release.desc" />,
-      buttonCreate: <FormattedMessage id="release.create" />,
-      buttonViewAll: <FormattedMessage id="button.view.all.releases" />,
-      permissionTypeCreate: 'CREATE_STENCIL_ASSET',
-      permissionTypeView: 'NAV_TO_STENCIL_RELEASES'
     },
     {
       composer: TemplateComposer,

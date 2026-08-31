@@ -116,16 +116,6 @@ const Secondary: React.FC<{}> = () => {
           </Button>
         </EveliPermissions>
 
-
-          <EveliPermissions id='NAV_TO_STENCIL_RELEASES'>
-            <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
-              startIcon={<NewReleasesOutlinedIcon />}
-              onClick={() => onNav({ type: 'RELEASES' })}>
-              {intl.formatMessage({ id: 'menu.releases' })}
-            </Button>
-          </EveliPermissions>
-
-
         <Button variant='explorerInactive'
           startIcon={<HelpOutlineOutlinedIcon />}
           onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")}>

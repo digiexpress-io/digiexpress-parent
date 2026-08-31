@@ -25,7 +25,6 @@
     "@mui/utils": "*",
     "react-intl": "*",
     "@uiw/react-md-editor": "*",
-    "js-file-download": "*",
     "@monaco-editor/react": "*",
     "monaco-editor": "*"
   },

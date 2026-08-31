@@ -40,7 +40,6 @@
     "@dxs-ts/task-api": "*",
     "@dxs-ts/user-profile": "*",
     "@dxs-ts/xui-table": "*",
-    "@dxs-ts/task-composer-v1": "*",
     "@dxs-ts/task-composer-v2": "*",
     "@dxs-ts/task-feedback": "*",
 

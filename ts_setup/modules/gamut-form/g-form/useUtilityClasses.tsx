@@ -129,17 +129,7 @@ export const GFormRoot = styled("div", {
     '& .GInputBoolean-option': {
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
-    },
-
-
-    '& .react-date-picker__inputGroup': {
-      paddingLeft: theme.spacing(2) + '!important',
-      paddingRight: theme.spacing(2) + '!important',
-    },
-    '& .react-time-picker__inputGroup': {
-      paddingLeft: theme.spacing(2) + '!important',
-      paddingRight: theme.spacing(2) + '!important',
-    },
+    }
 
   };
 });

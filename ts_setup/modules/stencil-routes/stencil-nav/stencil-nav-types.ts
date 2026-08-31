@@ -21,8 +21,6 @@ export type ExplorerItem = (
   { type: 'LOCALES' } |
   { type: 'ASSISTANCE' } |
   { type: 'TEMPLATES' } |
-  { type: 'RELEASES' } |
-
 
   { type: 'ARTICLE_LINKS', article: string } |
   { type: 'ARTICLE_WORKFLOWS', article: string } |

@@ -362,7 +362,6 @@
           "@dxs-ts/task-api": "*",
           "@dxs-ts/user-profile": "*",
           "@dxs-ts/xui-table": "*",
-          "@dxs-ts/task-composer-v1": "*",
           "@dxs-ts/task-composer-v2": "*",
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/contract-api": "*",
@@ -417,7 +416,6 @@
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/task-feedback",
         "@dxs-ts/contract-api",
@@ -487,7 +485,6 @@
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/task-feedback",
         "@dxs-ts/contract-api",
@@ -548,7 +545,6 @@
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/task-feedback",
         "@dxs-ts/contract-api",
@@ -1047,33 +1043,33 @@
       ],
       "actualDependencies": [
         "react",
-        "react-intl",
-        "@mui/icons-material",
-        "@mui/material",
-        "luxon",
-        "@dxs-ts/xui-datetime",
-        "file-saver",
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api",
+        "@mui/material",
+        "react-intl",
         "@tanstack/react-table",
         "@dxs-ts/xui-table",
+        "luxon",
+        "@mui/icons-material",
+        "file-saver",
         "notistack",
         "@dxs-ts/task-api",
         "@mui/utils",
         "@tanstack/react-query",
         "numbro",
         "@tanstack/react-router",
+        "@dxs-ts/xui-datetime",
         "@mui/system",
         "@mui/x-tree-view"
       ],
       "actualExternalDependencies": [
         "react",
-        "react-intl",
-        "@mui/icons-material",
         "@mui/material",
-        "luxon",
-        "file-saver",
+        "react-intl",
         "@tanstack/react-table",
+        "luxon",
+        "@mui/icons-material",
+        "file-saver",
         "notistack",
         "@mui/utils",
         "@tanstack/react-query",
@@ -1083,11 +1079,11 @@
         "@mui/x-tree-view"
       ],
       "actualInternalDependencies": [
-        "@dxs-ts/xui-datetime",
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-api"
+        "@dxs-ts/task-api",
+        "@dxs-ts/xui-datetime"
       ],
       "missingDependencies": [],
       "unusedDependencies": [
@@ -1124,7 +1120,6 @@
           "@dxs-ts/fs-composer": "*",
           "@dxs-ts/user-profile": "*",
           "@dxs-ts/task-feedback": "*",
-          "@dxs-ts/task-composer-v1": "*",
           "@dxs-ts/task-composer-v2": "*",
           "@dxs-ts/contract-api": "*",
           "@dxs-ts/contract-composer": "*",
@@ -1181,7 +1176,6 @@
         "@dxs-ts/fs-composer",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
@@ -1262,7 +1256,6 @@
         "@dxs-ts/fs-composer",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
@@ -1294,7 +1287,6 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@mui/icons-material",
         "@tanstack/react-table",
@@ -1307,7 +1299,6 @@
         "@dxs-ts/user-profile",
         "@dxs-ts/gamut-shell",
         "@mui/system",
-        "notistack",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
         "@dxs-ts/tagomi-api",
@@ -1335,8 +1326,7 @@
         "yaml",
         "@material-table/core",
         "recharts",
-        "@mui/system",
-        "notistack"
+        "@mui/system"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/gamut-form-review",
@@ -1352,7 +1342,6 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/xui-table",
         "@dxs-ts/user-profile",
@@ -1371,7 +1360,9 @@
         "@dxs-ts/ledger-composer"
       ],
       "missingDependencies": [],
-      "unusedDependencies": []
+      "unusedDependencies": [
+        "notistack"
+      ]
     },
     "@dxs-ts/fs-api": {
       "name": "@dxs-ts/fs-api",
@@ -1461,7 +1452,7 @@
           "@dxs-ts/xui-datetime": "*"
         },
         "peerDependencies": {
-          "js-file-download": "*",
+          "file-saver": "*",
           "yaml": "*",
           "react-markdown": "*",
           "react": "*",
@@ -1491,7 +1482,7 @@
         "@dxs-ts/fs-api",
         "@dxs-ts/fs-nav",
         "@dxs-ts/xui-datetime",
-        "js-file-download",
+        "file-saver",
         "yaml",
         "react-markdown",
         "react",
@@ -1508,7 +1499,7 @@
         "monaco-editor"
       ],
       "peerDependencies": [
-        "js-file-download",
+        "file-saver",
         "yaml",
         "react-markdown",
         "react",
@@ -1525,7 +1516,7 @@
         "monaco-editor"
       ],
       "externalDependencies": [
-        "js-file-download",
+        "file-saver",
         "yaml",
         "react-markdown",
         "react",
@@ -1560,7 +1551,7 @@
         "@dxs-ts/xui-datetime",
         "luxon",
         "@dxs-ts/eveli-primitives",
-        "js-file-download",
+        "file-saver",
         "@mui/icons-material",
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api",
@@ -1579,7 +1570,7 @@
         "react-intl",
         "@uiw/react-md-editor",
         "luxon",
-        "js-file-download",
+        "file-saver",
         "@mui/icons-material",
         "@monaco-editor/react",
         "monaco-editor",
@@ -2114,8 +2105,6 @@
           "react-intl": "*",
           "react-markdown": "*",
           "react-leaflet": "*",
-          "react-date-picker": "*",
-          "react-time-picker": "*",
           "@mui/material": "*",
           "@mui/system": "*",
           "@mui/icons-material": "*",
@@ -2144,8 +2133,6 @@
         "react-intl",
         "react-markdown",
         "react-leaflet",
-        "react-date-picker",
-        "react-time-picker",
         "@mui/material",
         "@mui/system",
         "@mui/icons-material",
@@ -2162,8 +2149,6 @@
         "react-intl",
         "react-markdown",
         "react-leaflet",
-        "react-date-picker",
-        "react-time-picker",
         "@mui/material",
         "@mui/system",
         "@mui/icons-material",
@@ -2180,8 +2165,6 @@
         "react-intl",
         "react-markdown",
         "react-leaflet",
-        "react-date-picker",
-        "react-time-picker",
         "@mui/material",
         "@mui/system",
         "@mui/icons-material",
@@ -2235,8 +2218,6 @@
         "react-dom",
         "react-markdown",
         "react-leaflet",
-        "react-date-picker",
-        "react-time-picker",
         "numbro",
         "leaflet"
       ]
@@ -2706,7 +2687,6 @@
           "@dxs-ts/eveli-routes": "*",
           "@dxs-ts/xui-datetime": "*",
           "@dxs-ts/xui-table": "*",
-          "@dxs-ts/task-composer-v1": "*",
           "@dxs-ts/task-composer-v2": "*"
         },
         "peerDependencies": {},
@@ -2752,7 +2732,6 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2"
       ],
       "peerDependencies": [],
@@ -2792,7 +2771,6 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2"
       ],
       "actualDependencies": [
@@ -2853,7 +2831,6 @@
         "@dxs-ts/fs-nav",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2"
       ]
     },
@@ -3021,8 +2998,7 @@
           "@mui/x-tree-view": "*",
           "@mui/utils": "*",
           "react-intl": "*",
-          "@uiw/react-md-editor": "*",
-          "js-file-download": "*"
+          "@uiw/react-md-editor": "*"
         },
         "keywords": [
           "stencil",
@@ -3049,8 +3025,7 @@
         "@mui/x-tree-view",
         "@mui/utils",
         "react-intl",
-        "@uiw/react-md-editor",
-        "js-file-download"
+        "@uiw/react-md-editor"
       ],
       "peerDependencies": [
         "react",
@@ -3063,8 +3038,7 @@
         "@mui/x-tree-view",
         "@mui/utils",
         "react-intl",
-        "@uiw/react-md-editor",
-        "js-file-download"
+        "@uiw/react-md-editor"
       ],
       "externalDependencies": [
         "react",
@@ -3077,8 +3051,7 @@
         "@mui/x-tree-view",
         "@mui/utils",
         "react-intl",
-        "@uiw/react-md-editor",
-        "js-file-download"
+        "@uiw/react-md-editor"
       ],
       "internalDependencies": [
         "@dxs-ts/envir-fetch",
@@ -3104,8 +3077,6 @@
         "luxon",
         "@dxs-ts/xui-table",
         "@tanstack/react-router",
-        "js-file-download",
-        "@dxs-ts/xui-datetime",
         "@dxs-ts/envir-fetch"
       ],
       "actualExternalDependencies": [
@@ -3119,19 +3090,19 @@
         "@mui/utils",
         "@tanstack/react-table",
         "luxon",
-        "@tanstack/react-router",
-        "js-file-download"
+        "@tanstack/react-router"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/stencil-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/xui-table",
-        "@dxs-ts/xui-datetime",
         "@dxs-ts/envir-fetch"
       ],
       "missingDependencies": [],
-      "unusedDependencies": []
+      "unusedDependencies": [
+        "@dxs-ts/xui-datetime"
+      ]
     },
     "@dxs-ts/tagomi-api": {
       "name": "@dxs-ts/tagomi-api",
@@ -3205,7 +3176,6 @@
           "@mui/utils": "*",
           "react-intl": "*",
           "@uiw/react-md-editor": "*",
-          "js-file-download": "*",
           "@monaco-editor/react": "*",
           "monaco-editor": "*"
         },
@@ -3236,7 +3206,6 @@
         "@mui/utils",
         "react-intl",
         "@uiw/react-md-editor",
-        "js-file-download",
         "@monaco-editor/react",
         "monaco-editor"
       ],
@@ -3252,7 +3221,6 @@
         "@mui/utils",
         "react-intl",
         "@uiw/react-md-editor",
-        "js-file-download",
         "@monaco-editor/react",
         "monaco-editor"
       ],
@@ -3268,7 +3236,6 @@
         "@mui/utils",
         "react-intl",
         "@uiw/react-md-editor",
-        "js-file-download",
         "@monaco-editor/react",
         "monaco-editor"
       ],
@@ -3322,8 +3289,7 @@
         "@dxs-ts/xui-datetime",
         "luxon",
         "@tanstack/react-table",
-        "@uiw/react-md-editor",
-        "js-file-download"
+        "@uiw/react-md-editor"
       ]
     },
     "@dxs-ts/task-api": {
@@ -3368,105 +3334,6 @@
         "react-intl"
       ],
       "actualInternalDependencies": [],
-      "missingDependencies": [],
-      "unusedDependencies": []
-    },
-    "@dxs-ts/task-composer-v1": {
-      "name": "@dxs-ts/task-composer-v1",
-      "path": "modules/task-composer-v1",
-      "packageJson": {
-        "name": "@dxs-ts/task-composer-v1",
-        "version": "${project.version}",
-        "description": "Task composer v1",
-        "main": "./index.ts",
-        "type": "module",
-        "dependencies": {
-          "@dxs-ts/task-feedback": "*",
-          "@dxs-ts/task-api": "*"
-        },
-        "peerDependencies": {
-          "react": "*",
-          "react-intl": "*",
-          "@material-table/core": "*",
-          "@mui/material": "*",
-          "@mui/utils": "*",
-          "@mui/icons-material": "*",
-          "notistack": "*",
-          "@tanstack/react-router": "*",
-          "luxon": "*"
-        },
-        "keywords": [
-          "task-composer"
-        ],
-        "private": true
-      },
-      "dependencies": [
-        "@dxs-ts/task-feedback",
-        "@dxs-ts/task-api",
-        "react",
-        "react-intl",
-        "@material-table/core",
-        "@mui/material",
-        "@mui/utils",
-        "@mui/icons-material",
-        "notistack",
-        "@tanstack/react-router",
-        "luxon"
-      ],
-      "peerDependencies": [
-        "react",
-        "react-intl",
-        "@material-table/core",
-        "@mui/material",
-        "@mui/utils",
-        "@mui/icons-material",
-        "notistack",
-        "@tanstack/react-router",
-        "luxon"
-      ],
-      "externalDependencies": [
-        "react",
-        "react-intl",
-        "@material-table/core",
-        "@mui/material",
-        "@mui/utils",
-        "@mui/icons-material",
-        "notistack",
-        "@tanstack/react-router",
-        "luxon"
-      ],
-      "internalDependencies": [
-        "@dxs-ts/task-feedback",
-        "@dxs-ts/task-api"
-      ],
-      "actualDependencies": [
-        "@material-table/core",
-        "react-intl",
-        "react",
-        "@mui/material",
-        "@mui/icons-material",
-        "@dxs-ts/task-api",
-        "@mui/utils",
-        "luxon",
-        "notistack",
-        "@tanstack/react-router",
-        "@dxs-ts/task-feedback"
-      ],
-      "actualExternalDependencies": [
-        "@material-table/core",
-        "react-intl",
-        "react",
-        "@mui/material",
-        "@mui/icons-material",
-        "@mui/utils",
-        "luxon",
-        "notistack",
-        "@tanstack/react-router"
-      ],
-      "actualInternalDependencies": [
-        "@dxs-ts/task-api",
-        "@dxs-ts/task-feedback"
-      ],
       "missingDependencies": [],
       "unusedDependencies": []
     },
@@ -3797,7 +3664,7 @@
           "@mui/system": "*",
           "@mui/x-tree-view": "*",
           "@xyflow/react": "*",
-          "js-file-download": "*",
+          "file-saver": "*",
           "diff2html": "*",
           "elkjs": "*",
           "@monaco-editor/react": "*",
@@ -3830,7 +3697,7 @@
         "@mui/system",
         "@mui/x-tree-view",
         "@xyflow/react",
-        "js-file-download",
+        "file-saver",
         "diff2html",
         "elkjs",
         "@monaco-editor/react",
@@ -3850,7 +3717,7 @@
         "@mui/system",
         "@mui/x-tree-view",
         "@xyflow/react",
-        "js-file-download",
+        "file-saver",
         "diff2html",
         "elkjs",
         "@monaco-editor/react",
@@ -3870,7 +3737,7 @@
         "@mui/system",
         "@mui/x-tree-view",
         "@xyflow/react",
-        "js-file-download",
+        "file-saver",
         "diff2html",
         "elkjs",
         "@monaco-editor/react",
@@ -3900,13 +3767,12 @@
         "notistack",
         "@dxs-ts/envir-fetch",
         "@uiw/react-md-editor",
-        "js-file-download",
+        "file-saver",
         "luxon",
         "@mui/x-tree-view",
         "@mui/utils",
         "monaco-editor",
         "@tanstack/react-router",
-        "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api",
         "@xyflow/react",
         "elkjs"
@@ -3922,7 +3788,7 @@
         "yaml",
         "notistack",
         "@uiw/react-md-editor",
-        "js-file-download",
+        "file-saver",
         "luxon",
         "@mui/x-tree-view",
         "@mui/utils",
@@ -3935,11 +3801,12 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/wrench-api",
         "@dxs-ts/envir-fetch",
-        "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api"
       ],
       "missingDependencies": [],
-      "unusedDependencies": []
+      "unusedDependencies": [
+        "@dxs-ts/xui-datetime"
+      ]
     },
     "@dxs-ts/xui-datetime": {
       "name": "@dxs-ts/xui-datetime",
@@ -4158,7 +4025,6 @@
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/task-feedback",
         "@dxs-ts/contract-api",
@@ -4230,7 +4096,6 @@
         "@dxs-ts/fs-composer",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
@@ -4335,7 +4200,6 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2"
       ],
       "@dxs-ts/gamut": [
@@ -4372,10 +4236,6 @@
         "@dxs-ts/xui-datetime"
       ],
       "@dxs-ts/task-api": [],
-      "@dxs-ts/task-composer-v1": [
-        "@dxs-ts/task-feedback",
-        "@dxs-ts/task-api"
-      ],
       "@dxs-ts/task-composer-v2": [
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
@@ -4626,13 +4486,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-ide",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2"
-      ],
-      "@dxs-ts/task-composer-v1": [
-        "@dxs-ts/eveli-demo-app",
-        "@dxs-ts/eveli-routes",
-        "@dxs-ts/eveli-ide"
       ],
       "@dxs-ts/task-composer-v2": [
         "@dxs-ts/eveli-demo-app",
@@ -4644,7 +4498,6 @@
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-ide",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2"
       ],
       "@dxs-ts/user-profile": [
@@ -4745,7 +4598,6 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2"
       ],
       "externalDependencies": [
@@ -4766,7 +4618,6 @@
         "diff2html",
         "elkjs",
         "file-saver",
-        "js-file-download",
         "leaflet",
         "leaflet-geosearch",
         "luxon",
@@ -4816,16 +4667,14 @@
         "luxon",
         "numbro",
         "react",
-        "react-date-picker",
         "react-dom",
         "react-intl",
         "react-leaflet",
         "react-markdown",
-        "react-time-picker",
         "ts-md5"
       ]
     }
   },
-  "checksum": "fda206347f13609f6c5b39fc83710dd39b8e97517c42a7c56717dce64a7ef0be",
-  "generatedAt": "2026-06-29T13:37:16.070Z"
+  "checksum": "068e45d650f417603e4840180f964148bc88c3162c3276cd843af9733ca32ed2",
+  "generatedAt": "2026-08-31T09:12:52.055Z"
 }

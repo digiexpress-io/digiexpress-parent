@@ -22,7 +22,7 @@
     "@mui/system": "*",
     "@mui/x-tree-view": "*",
     "@xyflow/react": "*",
-    "js-file-download": "*",
+    "file-saver": "*",
     "diff2html": "*",
     "elkjs": "*",
     "@monaco-editor/react": "*",

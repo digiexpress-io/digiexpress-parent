@@ -5,11 +5,8 @@ import { Button } from '@mui/material';
 import { HelpOutlineOutlined as HelpOutlineOutlinedIcon } from '@mui/icons-material';
 
 import { useIntl } from "react-intl";
-import { useSnackbar } from "notistack";
 
-import { useFetch } from '@dxs-ts/envir-fetch';
-import { useTenantConfigFeatures } from '@dxs-ts/eveli-api';
-import { DialobDashboardSmart, DialobAdminView, DialobDashboardFetchProvider, DialobDashboardStateProvider, DialobAdminConfig  } from '@dxs-ts/eveli-primitives';
+import { DialobDashboardSmart } from '@dxs-ts/eveli-primitives';
 
 import { EveliSetup } from '../eveli-setup';
 import { EveliApp } from '../eveli-app';
@@ -20,8 +17,7 @@ export const Route = createFileRoute('/secured/$locale/assets/forms/')({
 })
 
 function Component() {
-  const { isEnabled } = useTenantConfigFeatures();
-  const main = isEnabled('DIALOB_DASHBOARD_SMART') ? MainSmart : Main;
+  const main = MainSmart;
 
   return (<EveliApp main={main} secondary={Secondary} toolbar={EveliSetup.Toolbar} />)
 
@@ -38,34 +34,6 @@ const MainSmart: React.FC<{}> = () => {
   </Box>)
 }
 
-
-const Main: React.FC<{}> = () => {
-  const intl = useIntl();
-  const theme = useTheme();
-
-  const { enqueueSnackbar } = useSnackbar();
-  const { dialobUrl } = useFetch('dialob.GET', {});
-  const config: DialobAdminConfig | undefined = React.useMemo(() => {
-    return {
-      csrf: undefined,
-      dialobApiUrl: dialobUrl,
-      setLoginRequired: () => { },
-      setTechnicalError: () => { },
-      language: intl.locale
-    }
-  }, [dialobUrl, intl.locale])
-
-  return (<Box sx={{ p: theme.spacing(1) }}>
-
-
-    <DialobDashboardFetchProvider>
-      <DialobDashboardStateProvider config={config} showNotification={enqueueSnackbar}>
-        <DialobAdminView />
-      </DialobDashboardStateProvider>
-    </DialobDashboardFetchProvider>
-
-  </Box>)
-}
 
 const Secondary: React.FC = () => {
   const intl = useIntl();

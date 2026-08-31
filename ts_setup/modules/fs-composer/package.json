@@ -13,7 +13,7 @@
     "@dxs-ts/xui-datetime": "*"
   },
   "peerDependencies": {
-    "js-file-download": "*",
+    "file-saver": "*",
     "yaml": "*",
     "react-markdown": "*",
     "react": "*",

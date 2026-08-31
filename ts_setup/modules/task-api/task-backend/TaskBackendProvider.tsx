@@ -31,11 +31,6 @@ export interface TaskBackendContextType {
     deleteOneAttachment: (taskId: string, attachment: TaskApi.Attachment) => Promise<unknown>;
     createManyAttachments: (taskId: string, files: FileList) => Promise<unknown>; 
     createOnTaskTransfer: (task: TaskApi.Task, command: TaskApi.TransferTaskCommand) => Promise<TaskApi.Task>;
-    paginateTasks: (queryProps: string) => Promise<{
-      data: TaskApi.Task[], // array of data
-      page: number, // current page we are on, starts with 0 = first page
-      totalCount: number // total entries on all the pages combined
-    }>;
 
     findAllTaskFormAssignments: (taskId: string) => Promise<TaskApi.FormAssignment[]>;
     findAllTasks: () => Promise<TaskApi.Task[]>;

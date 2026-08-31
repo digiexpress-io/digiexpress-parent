@@ -28,10 +28,6 @@ export const EveliFeatureMapping = {
   'STENCIL_LOCALE_FILTER': oneOf(['stencil_locale_filter']),                  
 
   'DIALOB_ENABLED': notOneOf(['wrench-disabled', 'stencil-disabled']),
-  'DIALOB_DASHBOARD_SMART': oneOf(['dialob_dashboard_smart']),
-
-  'WRENCH_RELEASES': notOneOf(['eveli_publication_only']),        
-  'STENCIL_RELEASES': notOneOf(['eveli_publication_only']),
 
   'FORM_REVIEW_FLASHY': oneOf(['visual_accommodation']),                    
   'FORM_REVIEW_NORMAL': notOneOf(['visual_accommodation']),
@@ -43,7 +39,6 @@ export const EveliFeatureMapping = {
 
   'SMART_TABLES': oneOf(['smart_tables']),
   
-  'SMART_TASK': oneOf(['smart_task']),
   'SMART_TASK_AUDIT': oneOf(['smart_task_audit']),
   'BATCHES': oneOf(['batches']),
   'AI_ASSISTANT': oneOf(['ai-assistant']),

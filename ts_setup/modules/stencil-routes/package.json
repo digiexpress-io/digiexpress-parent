@@ -23,8 +23,7 @@
     "@mui/x-tree-view": "*",
     "@mui/utils": "*",
     "react-intl": "*",
-    "@uiw/react-md-editor": "*",
-    "js-file-download": "*"
+    "@uiw/react-md-editor": "*"
   },
   "keywords": ["stencil", "routes", "navigation", "layouts"],
   "private": true

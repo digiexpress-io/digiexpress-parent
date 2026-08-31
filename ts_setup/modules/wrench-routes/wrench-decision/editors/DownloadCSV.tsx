@@ -3,7 +3,7 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Select, Menu
 import { HdesApi } from '@dxs-ts/wrench-api';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { CancelButton } from '@dxs-ts/eveli-primitives';
-import fileDownload from 'js-file-download';
+import FileSaver from 'file-saver';
 
 
 
@@ -28,8 +28,9 @@ export const saveCsv = (decision: HdesApi.AstDecision, delimiter: string) => {
       .join(delimiter);
   }).join("\r\n");
   
-  fileDownload(line0 + "\r\n" + lines, decision.name + '.csv');
-};
+
+	FileSaver.saveAs(line0 + "\r\n" + lines, decision.name + '.csv');
+}
 
 const DownloadCSV: React.FC<DownloadCSVProps> = ({ decision, onClose }) => {
   const intl = useIntl();

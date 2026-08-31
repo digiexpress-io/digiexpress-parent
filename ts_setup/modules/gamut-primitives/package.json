@@ -16,8 +16,6 @@
     "react-intl": "*",
     "react-markdown": "*",
     "react-leaflet": "*",
-    "react-date-picker": "*",
-    "react-time-picker": "*",
     "@mui/material": "*",
     "@mui/system": "*",
     "@mui/icons-material": "*",

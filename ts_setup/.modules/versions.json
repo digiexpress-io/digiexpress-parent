@@ -1,6 +1,7 @@
 {
   "lib-gamut": {
     "moduleName": "@dxs-ts/gamut",
+<<<<<<< HEAD
     "version": "2.0.77",
     "srcHash": "6f05e647ad16251275ae14cecd155c8738d495f5e9246bdd91b09fb5c3d04a8c",
     "lastPublished": "2026-08-28T08:09:58.540Z"
@@ -10,5 +11,16 @@
     "version": "2.0.77",
     "srcHash": "e76f73c354d09131c8bdf81e130d646ae156108cb9d50fea88db01f3f7930641",
     "lastPublished": "2026-08-28T08:09:58.540Z"
+=======
+    "version": "2.0.76",
+    "srcHash": "7d8ace8bec21f43f2676289c39de2448b2fbb76735739cddeb1c78113477b49d",
+    "lastPublished": "2026-08-31T09:06:05.902Z"
+  },
+  "lib-eveli": {
+    "moduleName": "@dxs-ts/eveli-ide",
+    "version": "2.0.76",
+    "srcHash": "0796bc4cda3cc945159831321533b6b2ea76566184798da5d0ee6cbdae1605d1",
+    "lastPublished": "2026-08-31T09:06:05.902Z"
+>>>>>>> 1cc6101b8 (deleted old deps)
   }
 }

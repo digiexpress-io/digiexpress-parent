@@ -113,17 +113,7 @@ export const Secondary: React.FC<{}> = () => {
             {intl.formatMessage({ id: 'menu.compare.wrench' })}
           </Button>
         </EveliPermissions>
-
-        <EveliTenantFeatureEnabled id='WRENCH_RELEASES'>
-          <EveliPermissions id='NAV_TO_WRENCH_RELEASES'>
-            <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
-              startIcon={<NewReleasesOutlinedIcon />}
-              onClick={() => onNav({ type: 'RELEASES' })}>
-              {intl.formatMessage({ id: 'menu.releases.wrench' })}
-            </Button>
-          </EveliPermissions>
-        </EveliTenantFeatureEnabled>
-
+        
         <Button variant='explorerInactive'
           startIcon={<HelpOutlineOutlinedIcon />}
           onClick={() => window.open("https://github.com/the-wrench-io/hdes-parent/wiki", "_blank")}>

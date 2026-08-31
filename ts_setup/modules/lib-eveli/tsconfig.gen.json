@@ -106,9 +106,6 @@
       "@dxs-ts/xui-table": [
         "./../xui-table/index.ts"
       ],
-      "@dxs-ts/task-composer-v1": [
-        "./../task-composer-v1/index.ts"
-      ],
       "@dxs-ts/task-composer-v2": [
         "./../task-composer-v2/index.ts"
       ]
@@ -219,17 +216,14 @@
       "path": "../xui-table"
     },
     {
-      "path": "../task-composer-v1"
-    },
-    {
       "path": "../task-composer-v2"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-05-29T10:45:18.154Z",
+    "at": "2026-08-31T09:12:52.056Z",
     "forModule": "@dxs-ts/eveli-ide",
-    "fromRegistry": "a1320c9a7322",
+    "fromRegistry": "068e45d650f4",
     "alias": {
       "@dxs-ts/eveli-ide": [
         "../task-composer-v2"

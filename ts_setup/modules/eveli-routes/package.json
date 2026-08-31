@@ -24,7 +24,6 @@
     "@dxs-ts/fs-composer": "*",
     "@dxs-ts/user-profile": "*",
     "@dxs-ts/task-feedback": "*",
-    "@dxs-ts/task-composer-v1": "*",
     "@dxs-ts/task-composer-v2": "*",
     "@dxs-ts/contract-api": "*",
     "@dxs-ts/contract-composer": "*",

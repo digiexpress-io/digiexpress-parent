@@ -10,7 +10,6 @@ import { DateTime } from "luxon";
 import { useFeedbackBackend, useIam, EveliTenantFeatureEnabled, useTenantConfigFeatures } from '@dxs-ts/eveli-api';
 import { FeedbackProvider } from '@dxs-ts/task-feedback';
 import { TaskApi, TaskBackendProvider, TaskBackendProviderProps } from '@dxs-ts/task-api';
-import { TasksTableProvider } from '@dxs-ts/task-composer-v1';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
 import { DialobReviewBasedOnForm, DialobReview as RealDialobReview } from '../dialob-review';
@@ -90,10 +89,8 @@ export const AnyTaskRoute: React.FC<{children: React.ReactNode}> = ({ children }
       }}
       >
         <FeedbackProvider backend={feedbackBackend}>
-          <TasksTableProvider>
-            {children}
-            <TaskCreate open={open} onClose={handleClose}/>
-          </TasksTableProvider>
+          {children}
+          <TaskCreate open={open} onClose={handleClose}/>
         </FeedbackProvider>
       </TaskBackendProvider>)
 }
@@ -101,22 +98,13 @@ export const AnyTaskRoute: React.FC<{children: React.ReactNode}> = ({ children }
 
 function useTaskNavigate(props: { setTaskCreateOpen: (open: boolean) => void}): TaskBackendProviderProps['navigate'] {
   const navigate = useNavigate();
-  const tenant = useTenantConfigFeatures();
-
   return {
     findAllTasks: () => navigate({
       from: '/secured/$locale/worker',
       to: '/secured/$locale/worker/tasks'
     }),
     createOneTask: () => {
-      if(tenant.isEnabled('SMART_TASK')) {
-        props.setTaskCreateOpen(true);
-      } else {
-        navigate({
-          from: '/secured/$locale/worker/tasks',
-          to: '/secured/$locale/worker/tasks/create',
-        })
-      }
+      props.setTaskCreateOpen(true);
     },
     openOneTask: (taskId: string) => navigate({
       from: '/secured/$locale/worker',
@@ -148,7 +136,7 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
   const { getUsers } = useFetch('$org/groupMembership.GET', {});
 
   const { unreadTasks, refetch } = useFetch('worker/rest/api/tasks/unread.GET', {});
-  const { paginateTasks, findAll } = useFetch('worker/rest/api/tasks.GET', {});
+  const { findAll } = useFetch('worker/rest/api/tasks.GET', {});
   const { deleteTask } = useFetch('worker/rest/api/tasks/$taskId.DELETE', {});
 
   const { transferTask } = useFetch('worker/rest/api/tasks/$taskId/transfers.PUT', {})
@@ -187,7 +175,6 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
     },
     deleteManyCustomerAssignment,
     getOneTaskAudit: getOneTaskAudit,
-    paginateTasks: paginateTasks,
     findAllAttachments: loadAttachments,
     findAllUsers: getUsers,
     createOnTaskTransfer: transferTask,

@@ -29,7 +29,6 @@ export type ExplorerItem = (
 
   { type: 'DEBUG' } |
   { type: 'ACTIVITIES' } |
-  { type: 'RELEASES' } |
   { type: 'COMPARE' } |
   { type: 'MIGRATIONS' }
 )
@@ -76,11 +75,5 @@ export function mergeWrenchSearchParams(activeItem: ExplorerItem, prev: WrenchRo
 
 function parseExplorerItems(search: Record<string, unknown>): ExplorerItem[] {
   const explorerItems = search['explorer'];
-  if (!Array.isArray(explorerItems)) {
-    return [{ type: 'RELEASES' }];
-  }
-  if (explorerItems.length === 0) {
-    return [{ type: 'RELEASES' }];
-  }
-  return explorerItems;
+  return explorerItems as ExplorerItem[];
 }

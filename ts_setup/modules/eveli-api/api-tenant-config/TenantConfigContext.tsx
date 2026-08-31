@@ -20,7 +20,6 @@ export const tenant_features = [
 
   "external-deployment",
   "smart_tables",
-  "smart_task",
   "smart_task_audit",
   "user_profile",
   'queues-visually-disabled',
@@ -30,7 +29,6 @@ export const tenant_features = [
   'stencil_locale_filter',
   'eveli_publication_only',
   'visual_accommodation',
-  'dialob_dashboard_smart',
   'batches',
   
   'tagomi',

@@ -45,7 +45,6 @@
     "@dxs-ts/eveli-routes": "*",
     "@dxs-ts/xui-datetime": "*",
     "@dxs-ts/xui-table": "*",
-    "@dxs-ts/task-composer-v1": "*",
     "@dxs-ts/task-composer-v2": "*"
   },
   "peerDependencies": {},

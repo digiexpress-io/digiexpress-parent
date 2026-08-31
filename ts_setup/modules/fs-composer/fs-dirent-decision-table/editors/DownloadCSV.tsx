@@ -3,7 +3,7 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Select, Menu
 import { FsDirentButtonCancel } from '../../fs-dirent-button-cancel';
 import { useIntl } from 'react-intl';
 import { Fs } from '@dxs-ts/fs-api';
-import fileDownload from 'js-file-download';
+import FileSaver from 'file-saver';
 
 interface DownloadCSVProps {
   decision: Fs.DecisionAst;
@@ -26,7 +26,7 @@ export const saveCsv = (decision: Fs.DecisionAst, delimiter: string) => {
       .join(delimiter);
   }).join("\r\n");
 
-  fileDownload(line0 + "\r\n" + lines, decision.name + '.csv');
+  FileSaver.saveAs(line0 + "\r\n" + lines, decision.name + '.csv');
 };
 
 const DownloadCSV: React.FC<DownloadCSVProps> = ({ decision, onClose }) => {

@@ -10,7 +10,6 @@ import { DecisionEdit, DecisionsView } from '../wrench-decision';
 import { ServiceEdit } from '../wrench-service';
 import { DebugView } from '../wrench-debug';
 import { ServicesView } from '../wrench-service/ServicesView';
-import { ReleasesView } from '../wrench-release';
 import { CompareView } from '../wrench-compare';
 import { useWrenchNav } from '../wrench-nav';
 
@@ -34,7 +33,6 @@ export const Main: React.FC<{}> = () => {
     }
     switch (activeItem.type) {
       case 'ACTIVITIES': return (<Box sx={root}><Activities /></Box>);
-      case 'RELEASES': return (<Box sx={root}><ReleasesView /></Box>);
       case 'DEBUG': return (<Box sx={root}><DebugView /></Box>);
       case 'SERVICES': return (<Box sx={root}><ServicesView /></Box>);
       case 'COMPARE': return (<Box sx={root}><CompareView /></Box>);

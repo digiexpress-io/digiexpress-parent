@@ -9,7 +9,6 @@ import { TemplatesView } from '../stencil-template';
 import { LinksView } from '../stencil-link';
 import { ExplorerItem, useStencilNav } from '../stencil-nav';
 import { SearchView } from '../stencil-search';
-import { ReleasesView } from '../stencil-release';
 import { Activities } from './Activities';
 import { ArticleTimestampsView } from '../stencil-locale/ArticleTimestampsView';
 import { StencilComposerApi } from '@dxs-ts/stencil-api';
@@ -35,7 +34,6 @@ const Main: React.FC<{}> = () => {
     }
 
     switch(explorer.type) {
-      case 'RELEASES': return (<Box sx={root}><ReleasesView /></Box>);
       case 'ACTIVITIES': return (<Box sx={root}><Activities /></Box>);
       case 'LOCALES': return (<Box sx={root}><LocalesView /></Box>);
       case 'SERVICES': return (<Box sx={root}><WorkflowsView /></Box>);

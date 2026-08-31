@@ -30,30 +30,6 @@ function hook(props: {}) {
             statusIntl: intl.formatMessage({ id: `task.status.${task.status?.toLowerCase()}`, defaultMessage: task.status })
           }
         }));
-    },
-
-    getTasks: async (page=0, size=20): Promise<QueryResult<TaskApi.Task>> => {
-      return params.fetch(url({}) + `?page=${page}&size=${size}`)
-        .then(response => response.json())
-        .then(json => {
-          return {
-            data: json.content, // array of data
-            page: json.pageable.pageNumber, // current page we are on, starts with 0 = first page
-            totalCount: json.totalElements // total entries on all the pages combined
-          };
-        });
-    },
-
-    paginateTasks: async (query: string) => {
-      return params.fetch(url({}) + `?${query}`)
-      .then(response => response.json())
-      .then(json => {
-        return {
-          data: json.content, // array of data
-          page: json.pageable.pageNumber, // current page we are on, starts with 0 = first page
-          totalCount: json.totalElements // total entries on all the pages combined
-        };
-      });
     }
   }
 }

@@ -10,7 +10,6 @@ import { DecisionComposer } from '../wrench-decision';
 import { ServiceComposer } from '../wrench-service';
 import { useWrenchNav } from '../wrench-nav';
 
-import ReleaseComposer from '../wrench-release';
 import MigrationComposer from '../wrench-migration';
 
 
@@ -103,16 +102,6 @@ export function useActivities(): ActivityProps[] {
       buttonViewAll: undefined,
       permissionTypeCreate: 'NAV_TO_WRENCH_DEBUG',
       permissionTypeView: 'NAV_TO_WRENCH_DEBUG'
-    },
-    {
-      composer: ReleaseComposer,
-      onView: () => nav.onNav({ type: 'RELEASES' }),
-      title: <FormattedMessage id="activities.releases.title" />,
-      desc: <FormattedMessage id="activities.releases.desc" />,
-      buttonCreate: <FormattedMessage id="buttons.create" />,
-      buttonViewAll: <FormattedMessage id="activities.releases.view" />,
-      permissionTypeCreate: 'CREATE_WRENCH_ASSET',
-      permissionTypeView: 'NAV_TO_WRENCH_RELEASES'
     },
     {
       composer: () => {
