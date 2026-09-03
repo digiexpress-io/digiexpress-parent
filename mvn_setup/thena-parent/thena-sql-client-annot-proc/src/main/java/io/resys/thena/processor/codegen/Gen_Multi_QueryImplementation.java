@@ -65,6 +65,8 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
         .build())
       .addAnnotation(ClassName.get("lombok", "RequiredArgsConstructor"));
     
+    classBuilder.addField(generateMetricsLoggerField(registry));
+
     classBuilder.addField(FieldSpec.builder(
       ClassName.get(ThenaSqlDataSource.class),
       "dataSource",
@@ -95,6 +97,22 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
       .build();
   }
   
+  private FieldSpec generateMetricsLoggerField(RegistryMetamodel registry) {
+    final var loggerTopic = registry.getPackageName() + "." +
+                            registry.getName().toLowerCase() + ".metrics";
+
+    return FieldSpec.builder(
+      ClassName.get("org.slf4j", "Logger"),
+      "metricsLog",
+      Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL
+    )
+    .initializer("$T.getLogger($S)",
+      ClassName.get("org.slf4j", "LoggerFactory"),
+      loggerTopic
+    )
+    .build();
+  }
+
   private MethodSpec generateConstructor(RegistryMetamodel registry) {
     return MethodSpec.constructorBuilder()
       .addModifiers(Modifier.PUBLIC)
@@ -300,7 +318,16 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
     code.unindent();
     code.unindent();
     code.add("}\n\n");
-    
+
+    final var logLabel = className + "." + "query" + NamingUtils.toPascalCase(table.getTableName()) + "." + sqlMethod.getMethodName();
+    final var propsExpr = sqlMethod.getParameters().isEmpty() ? "\"\"" : "sql.getProps().deepToString()";
+
+    code.add("final var metricsEnabled = metricsLog.isDebugEnabled();\n");
+    code.add("final var metricsStart = metricsEnabled ? $T.nanoTime() : 0L;\n", System.class);
+    code.add("final var metricsMessage = metricsEnabled ? ($S + \" query, props=\" + $L + \" sql=\" + sql.getValue()) : null;\n",
+      logLabel, propsExpr);
+    code.add("\n");
+
     code.add("@$T(\"unchecked\")\n", SuppressWarnings.class);
     code.add("final $T<$T> mapper = ($T<$T>) sql.getRowMapper();\n",
       ClassName.get(TenantSql.RowMapper.class),
@@ -323,6 +350,12 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
     if (sqlMethod.getType() == SqlMethodType.SELECT && sqlMethod.isOptional()) {
       code.add(".transform(($T<$T> rowset) -> {\n", RowSet.class, entityType);
       code.indent();
+      code.add("if (metricsEnabled) {\n");
+      code.indent();
+      code.add("final var tookMillis = ($T.nanoTime() - metricsStart) / 1_000_000;\n", System.class);
+      code.add("metricsLog.debug(\"{} | took={}ms rows={}\", metricsMessage, tookMillis, rowset.rowCount());\n");
+      code.unindent();
+      code.add("}\n");
       code.add("final var iterator = rowset.iterator();\n");
       code.add("if(iterator.hasNext()) {\n");
       code.indent();
@@ -335,6 +368,12 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
     } else if (sqlMethod.getType() == SqlMethodType.SELECT && !sqlMethod.isOptional()) {
       code.add(".transform(($T<$T> rowset) -> {\n", RowSet.class, entityType);
       code.indent();
+      code.add("if (metricsEnabled) {\n");
+      code.indent();
+      code.add("final var tookMillis = ($T.nanoTime() - metricsStart) / 1_000_000;\n", System.class);
+      code.add("metricsLog.debug(\"{} | took={}ms rows={}\", metricsMessage, tookMillis, rowset.rowCount());\n");
+      code.unindent();
+      code.add("}\n");
       code.add("final var iterator = rowset.iterator();\n");
       code.add("if(iterator.hasNext()) {\n");
       code.indent();
@@ -347,11 +386,29 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
       code.unindent();
       code.add("})\n");
     } else if (sqlMethod.getType() == SqlMethodType.SELECT_ALL && sqlMethod.isMultiWrapper()) {
-      code.add(".transformToMulti(($T<$T> rowset) -> $T.createFrom().iterable(rowset))\n",
-        RowSet.class, entityType, Multi.class);
+      code.add(".transformToMulti(($T<$T> rowset) -> {\n", RowSet.class, entityType);
+      code.indent();
+      code.add("if (metricsEnabled) {\n");
+      code.indent();
+      code.add("final var tookMillis = ($T.nanoTime() - metricsStart) / 1_000_000;\n", System.class);
+      code.add("metricsLog.debug(\"{} | took={}ms rows={}\", metricsMessage, tookMillis, rowset.rowCount());\n");
+      code.unindent();
+      code.add("}\n");
+      code.add("return $T.createFrom().iterable(rowset);\n", Multi.class);
+      code.unindent();
+      code.add("})\n");
     } else {
-      code.add(".transformToUni(($T<$T> rowset) -> $T.createFrom().iterable(rowset).collect().asList())\n",
-        RowSet.class, entityType, Multi.class);
+      code.add(".transformToUni(($T<$T> rowset) -> {\n", RowSet.class, entityType);
+      code.indent();
+      code.add("if (metricsEnabled) {\n");
+      code.indent();
+      code.add("final var tookMillis = ($T.nanoTime() - metricsStart) / 1_000_000;\n", System.class);
+      code.add("metricsLog.debug(\"{} | took={}ms rows={}\", metricsMessage, tookMillis, rowset.rowCount());\n");
+      code.unindent();
+      code.add("}\n");
+      code.add("return $T.createFrom().iterable(rowset).collect().asList();\n", Multi.class);
+      code.unindent();
+      code.add("})\n");
     }
     
     if (sqlMethod.getParameters().isEmpty()) {

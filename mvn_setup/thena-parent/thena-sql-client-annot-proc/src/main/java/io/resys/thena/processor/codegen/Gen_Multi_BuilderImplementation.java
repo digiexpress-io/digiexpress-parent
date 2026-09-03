@@ -64,7 +64,8 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
       .addSuperinterface(ClassName.get(registry.getPackageName(), builderInterfaceName));
     
     classBuilder.addField(generateLoggerField(registry));
-    
+    classBuilder.addField(generateMetricsLoggerField(registry));
+
     classBuilder.addField(FieldSpec.builder(
       ClassName.get(ThenaSqlClient.class),
       "tx",
@@ -114,6 +115,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     }
     
     classBuilder.addMethod(generateVisitExecutionMethod(registry, persistenceUnitName));
+    classBuilder.addMethod(generateBuildSqlMessageMethod());
     classBuilder.addMethod(generateVisitTxLogMethod());
     classBuilder.addMethod(generateVisitSuccessMethod(registry, persistenceUnitName));
     classBuilder.addMethod(generateVisitErrorMethod(registry, persistenceUnitName));
@@ -139,6 +141,22 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     .build();
   }
   
+  private FieldSpec generateMetricsLoggerField(RegistryMetamodel registry) {
+    final var loggerTopic = registry.getPackageName() + "." +
+                            registry.getName().toLowerCase() + ".metrics";
+
+    return FieldSpec.builder(
+      ClassName.get("org.slf4j", "Logger"),
+      "metricsLog",
+      Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL
+    )
+    .initializer("$T.getLogger($S)",
+      ClassName.get("org.slf4j", "LoggerFactory"),
+      loggerTopic
+    )
+    .build();
+  }
+
   private MethodSpec generateConstructor(RegistryMetamodel registry, String registryClassName) {
     return MethodSpec.constructorBuilder()
       .addModifiers(Modifier.PUBLIC)
@@ -320,6 +338,10 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     
     method.addStatement("visitTxLog(sql, type)");
     method.addCode("\n");
+    method.addStatement("final var metricsEnabled = metricsLog.isDebugEnabled()");
+    method.addStatement("final var metricsMessage = metricsEnabled ? buildSqlMessage(sql, type) : null");
+    method.addStatement("final var metricsStart = metricsEnabled ? $T.nanoTime() : 0L", System.class);
+    method.addCode("\n");
     method.addStatement("final var container = Immutable$L.builder()\n" +
       "  .tenantId(this.dataSource.getTenant().getId())\n" +
       "  .status($T.OK)\n" +
@@ -327,26 +349,50 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
       "  .build()",
       "PersistenceUnit",
       ClassName.get(BatchStatus.class));
-    
+
     method.addCode("\n");
-    method.addCode("return $T.apply(tx, sql)\n", 
+    method.addCode("return $T.apply(tx, sql)\n",
       ClassName.get("io.resys.thena.storesql.support", "Execute"));
     method.addCode("  .onItem().transform(row -> {\n");
-    method.addCode("    final var text = \"Inserted \" + (row == null ? 0 : row.rowCount()) + \" \" + type.getSimpleName() + \" entries\";\n");
+    method.addCode("    final var rowCount = row == null ? 0 : row.rowCount();\n");
+    method.addCode("    if (metricsEnabled) {\n");
+    method.addCode("      final var tookMillis = ($T.nanoTime() - metricsStart) / 1_000_000;\n", System.class);
+    method.addCode("      metricsLog.debug(\"{} | took={}ms rows={}\", metricsMessage, tookMillis, rowCount);\n");
+    method.addCode("    }\n");
+    method.addCode("    final var text = \"Inserted \" + rowCount + \" \" + type.getSimpleName() + \" entries\";\n");
     method.addCode("    final var updatedMessages = new $T<>(container.getCommitLogs());\n", ArrayList.class);
-    method.addCode("    updatedMessages.add($T.builder().text(text).build());\n", 
+    method.addCode("    updatedMessages.add($T.builder().text(text).build());\n",
       ClassName.get(ImmutableMessage.class));
     method.addCode("    return ($T) Immutable$L.builder().from(container)\n", ClassName.bestGuess(persistenceUnitName), "PersistenceUnit");
     method.addCode("      .commitLogs(updatedMessages)\n");
     method.addCode("      .build();\n");
     method.addCode("  })\n");
     method.addCode("  .onFailure().transform(t -> {\n");
+    method.addCode("    if (metricsEnabled) {\n");
+    method.addCode("      final var tookMillis = ($T.nanoTime() - metricsStart) / 1_000_000;\n", System.class);
+    method.addCode("      metricsLog.debug(\"{} | took={}ms FAILED\", metricsMessage, tookMillis);\n");
+    method.addCode("    }\n");
     method.addCode("    final var text = \"Failed to insert \" + sql.getProps().size() + \" \" + type.getSimpleName() + \" entries\";\n");
     method.addCode("    return new $LException(container, text, txLog.toString(), t);\n",
       registry.getName() + "Builder");
     method.addStatement("  })");
-    
+
     return method.build();
+  }
+
+  private MethodSpec generateBuildSqlMessageMethod() {
+    return MethodSpec.methodBuilder("buildSqlMessage")
+      .addModifiers(Modifier.PRIVATE)
+      .addParameter(ClassName.get(SqlTupleList.class), "sql")
+      .addParameter(ParameterizedTypeName.get(
+        ClassName.get(Class.class),
+        WildcardTypeName.subtypeOf(Object.class)
+      ), "type")
+      .returns(String.class)
+      .addStatement(
+        "return \"processing \" + sql.getProps().size() + \" entries of type: '\" + type.getSimpleName() + \"'\"\n" +
+        "  + sql.getPropsDeepString() + \" \" + sql.getValue()")
+      .build();
   }
   
   private MethodSpec generateVisitTxLogMethod() {
