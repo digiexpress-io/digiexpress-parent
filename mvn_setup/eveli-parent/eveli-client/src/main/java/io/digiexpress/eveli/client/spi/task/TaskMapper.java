@@ -31,6 +31,7 @@ import org.apache.commons.codec.binary.StringUtils;
 
 import io.digiexpress.eveli.client.api.ImmutableProcessInstance;
 import io.digiexpress.eveli.client.api.ImmutableTask;
+import io.digiexpress.eveli.client.api.ImmutableTaskAttachment;
 import io.digiexpress.eveli.client.api.ImmutableTaskComment;
 import io.digiexpress.eveli.client.api.ImmutableTaskCustomerAssignment;
 import io.digiexpress.eveli.client.api.TaskClient;
@@ -60,6 +61,7 @@ public class TaskMapper {
   public static final String LINK_TYPE_CLIENT_LOCALE = "client_locale";
   public static final String LINK_TYPE_ADDITIONAL_INFO = "additional_info";
   public static final String LINK_TYPE_TRANSFERRED_ID = "transferred_id";
+  public static final String LINK_TYPE_ATTACHMENT = "attachment";
   
   
   public static final String VIEWER_WORKER = "WORKER";
@@ -105,7 +107,18 @@ public class TaskMapper {
         .build();
   }
   
-
+  public static TaskClient.TaskAttachment map(GrimMissionLink link) {
+    var e = link.getLinkBody();
+    String createdVal = e.getString("created");
+    return ImmutableTaskAttachment.builder()
+        .name(e.getString("name"))
+        .created(createdVal != null ? OffsetDateTime.parse(createdVal) : null)
+        .creator(e.getString("creator"))
+        .size(e.getLong("size"))
+        .source(TaskClient.TaskAttachment.AttachmentSource.valueOf(e.getString("source")))
+        .build();
+  }
+  
   public static TaskClient.Task map(GrimMissionContainer cont) {
     return map(
         cont.getMission(), 
@@ -184,11 +197,15 @@ public class TaskMapper {
         .map(e -> e.getLinkBody().getMap().entrySet().stream().collect(Collectors.toMap(x -> x.getKey(), x -> x.getValue().toString())))
         .findFirst();
     
+    final var attachments = links.stream()
+        .filter(e -> TaskMapper.LINK_TYPE_ATTACHMENT.equals(e.getLinkType()))
+        .map(TaskMapper::map)
+        .toArray(TaskClient.TaskAttachment[]::new);
     
     final var customerAssignments = objectives.stream()
         .filter(objective -> OBJECTIVE_TYPE_CUSTOMER_ASSIGNMENT.equals(objective.getType()))
         .map(objective -> {
-          final TaskClient.TaskCustomerAssignment assignemnt = ImmutableTaskCustomerAssignment.builder()
+          final TaskClient.TaskCustomerAssignment assignment = ImmutableTaskCustomerAssignment.builder()
               .id(objective.getId())
               .serviceName(objective.getTitle())
               .description(objective.getDescription())
@@ -199,7 +216,7 @@ public class TaskMapper {
               .externalId(objective.getExternalId())
               .locale(objective.getLocale())
               .build();
-          return assignemnt;
+          return assignment;
         })
         .toList();
     
@@ -239,6 +256,7 @@ public class TaskMapper {
       .keyWords(keywords)
       .features(features)
       .additionalInfo(additionalInfo.orElse(null))
+      .addAttachments(attachments)
       
       .build();
     
