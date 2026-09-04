@@ -124,6 +124,15 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
       );
     }
     
+    if (command.getAttachments() != null) {
+      for (var attachment : command.getAttachments()) {
+        mission.addLink(newLink -> newLink
+          .linkValue(attachment.getName())
+          .linkBody(JsonObject.mapFrom(attachment))
+          .linkType(TaskMapper.LINK_TYPE_ATTACHMENT)
+          .build());
+      }
+    }
     
     // set the keywords
     for(final var keyword : commmand.getKeyWords()) {
@@ -154,7 +163,6 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
           .build());
     }
   
-    
     mission.build();
   }
   

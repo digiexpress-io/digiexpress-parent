@@ -78,6 +78,12 @@ public interface TaskClient {
     Multi<FormAssignment> findAll(String taskId);
   }
   
+  interface CreateTaskAttachment {
+    CreateTaskAttachment attachments(TaskAttachment ...attachments);
+    CreateTaskAttachment taskId(String taskId);
+    
+  }
+  
   interface CreateProcess {  
     CreateProcess questionnaireId(String questionnaire);
     CreateProcess userId(String userId);
@@ -186,7 +192,8 @@ public interface TaskClient {
     Uni<Task> createCustomerAssignment(String taskId, List<CreateCustomerAssignmentCommand> command);
     Uni<Task> addFormToCustomerAssignment(String taskId, List<AddFormToCustomerAssignmentCommand> command);
     Uni<Task> deleteCustomerTaskAssignment(String taskId, List<String> assignmentId);
-    
+    Uni<Task> addTaskAttachments(String taskId, List<TaskAttachment> attachments);
+    Uni<Task> addTaskAttachment(String taskId, TaskAttachment attachment);
     Uni<Void> addWorkerCommitViewer(String taskId);
     Uni<Void> addCustomerCommitViewer(String taskId);
 
@@ -269,6 +276,7 @@ public interface TaskClient {
     List<Checklist> getChecklist();
     
     Map<String, String> getDocumentProperties();
+    List<TaskAttachment> getAttachments();
     
     @Value.Default
     @Override default TaskCommandType getCommandType() { return TaskCommandType.CreateTask; }
@@ -412,6 +420,7 @@ public interface TaskClient {
 
     List<TaskComment> getComments();
     List<TaskCustomerAssignment> getCustomerAssignments();
+    List<TaskAttachment> getAttachments();
     
     @JsonIgnore
     default boolean isNewCustomerAssignment() {
@@ -523,6 +532,21 @@ public interface TaskClient {
     @Nullable LocalDate getDueDate();
     Boolean getCompleted();
     String getTitle();
+  }
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableTaskAttachment.class)
+  @JsonDeserialize(as = ImmutableTaskAttachment.class)
+  interface TaskAttachment {
+    enum AttachmentSource {
+      FRONTDESK, PORTAL_FORM, PORTAL_UPLOAD, TRANSFER 
+    }
+    String getName();
+    OffsetDateTime getCreated();
+    String getCreator();
+    Long getSize();
+    AttachmentSource getSource();
+    String getType();
   }
   
   @Value.Immutable
