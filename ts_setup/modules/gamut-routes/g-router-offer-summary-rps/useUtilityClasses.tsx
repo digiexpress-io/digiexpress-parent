@@ -93,11 +93,11 @@ export const GRouterOfferSummaryRpsRoot = styled('div', {
       marginLeft: theme.spacing(1.5),
     },
   },
-  [`.${MUI_NAME}-faceItem:nth-child(1) .MuiSvgIcon-root`]: { color: theme.palette.success.main },
-  [`.${MUI_NAME}-faceItem:nth-child(2) .MuiSvgIcon-root`]: { color: lighten(theme.palette.success.main, 0.4) },
+  [`.${MUI_NAME}-faceItem:nth-child(1) .MuiSvgIcon-root`]: { color: theme.palette.error.main },
+  [`.${MUI_NAME}-faceItem:nth-child(2) .MuiSvgIcon-root`]: { color: lighten(theme.palette.error.main, 0.3) },
   [`.${MUI_NAME}-faceItem:nth-child(3) .MuiSvgIcon-root`]: { color: theme.palette.warning.main },
-  [`.${MUI_NAME}-faceItem:nth-child(4) .MuiSvgIcon-root`]: { color: lighten(theme.palette.error.main, 0.3) },
-  [`.${MUI_NAME}-faceItem:nth-child(5) .MuiSvgIcon-root`]: { color: theme.palette.error.main },
+  [`.${MUI_NAME}-faceItem:nth-child(4) .MuiSvgIcon-root`]: { color: lighten(theme.palette.success.main, 0.4) },
+  [`.${MUI_NAME}-faceItem:nth-child(5) .MuiSvgIcon-root`]: { color: theme.palette.success.main },
 }));
 
 

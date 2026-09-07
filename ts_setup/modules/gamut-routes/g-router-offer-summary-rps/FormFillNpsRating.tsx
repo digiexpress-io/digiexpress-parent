@@ -12,11 +12,11 @@ import { GRouterOfferSummaryRpsRoot, GRouterOfferSummaryRpsTextField, useUtility
 
 
 const faces: { Icon: React.ElementType, labelKey: string }[] = [
-  { Icon: SentimentVerySatisfiedIcon, labelKey: 'gamut.nps.rating.excellent' },
-  { Icon: SentimentSatisfiedIcon,     labelKey: 'gamut.nps.rating.good'      },
-  { Icon: SentimentNeutralIcon,       labelKey: 'gamut.nps.rating.okay'      },
-  { Icon: SentimentDissatisfiedIcon,  labelKey: 'gamut.nps.rating.poor'      },
   { Icon: SentimentVeryDissatisfiedIcon, labelKey: 'gamut.nps.rating.terrible' },
+  { Icon: SentimentDissatisfiedIcon,  labelKey: 'gamut.nps.rating.poor'      },
+  { Icon: SentimentNeutralIcon,       labelKey: 'gamut.nps.rating.okay'      },
+  { Icon: SentimentSatisfiedIcon,     labelKey: 'gamut.nps.rating.good'      },
+  { Icon: SentimentVerySatisfiedIcon, labelKey: 'gamut.nps.rating.excellent' },
 ];
 
 
