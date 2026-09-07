@@ -84,7 +84,7 @@ export const GRouterOfferSummaryRpsRoot = styled('div', {
     },
     [theme.breakpoints.down('md')]: {
       flexDirection: 'row',
-      justifyContent: 'flex-start',
+      justifyContent: 'center',
       width: '100%',
       borderRadius: theme.spacing(0.5),
       padding: theme.spacing(0.5, 1),
@@ -98,6 +98,8 @@ export const GRouterOfferSummaryRpsRoot = styled('div', {
     [theme.breakpoints.down('md')]: {
       ...theme.typography.body2,
       marginLeft: theme.spacing(1.5),
+      minWidth: '6rem',
+      textAlign: 'left',
     },
   },
   [`.${MUI_NAME}-faceItemTerrible`]: {

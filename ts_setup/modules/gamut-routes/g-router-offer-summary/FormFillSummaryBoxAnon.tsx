@@ -10,9 +10,10 @@ import { useUtilityClasses } from "./useUtilityClasses";
 
 export const FormFillSummaryBoxAnon: React.FC<{
   topicLink: SiteApi.TopicLink | undefined,
+  productId: string;
   buttonBackToMsg: string,
   onNav: () => void
-}> = ({ topicLink, buttonBackToMsg, onNav }) => {
+}> = ({ topicLink, buttonBackToMsg, onNav, productId }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const [rating, setRating] = React.useState<number | undefined>(undefined);
@@ -47,7 +48,7 @@ export const FormFillSummaryBoxAnon: React.FC<{
 
       <Box className={classes.button}>
         <Button variant='contained' onClick={() => {
-          console.log({ rating, comment });
+          console.log({ rating, comment, productId });
           onNav();
         }}>
           {intl.formatMessage({ id: buttonBackToMsg })}

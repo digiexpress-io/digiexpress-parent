@@ -10,7 +10,6 @@ interface FormFillSummaryGreeterProps {
   productId: string;
   locale: string;
 }
-
 export const FormFillSummaryGreeter: React.FC<FormFillSummaryGreeterProps> = ({ pageId, productId, locale }) => {
   const anon = useIam();
   const site = useSite();
@@ -42,7 +41,7 @@ export const FormFillSummaryGreeter: React.FC<FormFillSummaryGreeterProps> = ({ 
 
 
   if (anonymousUser) {
-    return (<FormFillSummaryBoxAnon topicLink={topicLink} buttonBackToMsg={buttonBackToMsg} onNav={navBack} />)
+    return (<FormFillSummaryBoxAnon topicLink={topicLink} buttonBackToMsg={buttonBackToMsg} onNav={navBack} productId={productId} />)
   }
   return (<FormFillSummaryBox topicLink={topicLink} buttonBackToMsg={buttonBackToMsg} onNav={navBack} />)
 }
