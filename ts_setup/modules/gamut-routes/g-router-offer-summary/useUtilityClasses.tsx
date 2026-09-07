@@ -102,6 +102,11 @@ export const GRouterOfferSummaryRoot = styled("div", {
     '.GRouterOfferSummary-icon': {
       color: theme.palette.primary.main
     },
+    '.MuiListItemIcon-root': {
+      [theme.breakpoints.only('xs')]: {
+        display: 'none',
+      },
+    },
 
   }
 });
