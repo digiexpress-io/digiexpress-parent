@@ -88,7 +88,7 @@ export const my = {
   'gamut.forms.filling.authenticated_and_welcome': 'Hello {userName}!',
   'gamut.forms.filling.proceed_to_form': 'Sila klik di bawah untuk memulakan borang',
   'gamut.forms.filling.anonUser_and_welcome': 'Hello!',
-  'gamut.forms.filling.start': 'Anda akan memulakan borang ini',
+  'gamut.forms.filling.start': 'Anda akan memulakan borang ini:',
   'gamut.forms.filling.login-then-start.button': 'Log in now',
   'gamut.forms.filling.start.info1': 'Kemajuan borang anda disimpan secara automatik semasa anda pergi',
   'gamut.forms.filling.start.button': 'Teruskan membentuk',

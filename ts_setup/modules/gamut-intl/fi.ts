@@ -91,7 +91,7 @@ export const fi = {
   'gamut.forms.filling.proceed_to_form': 'Valitsemalla tästä aloitat lomakkeen täyttämisen',
   'gamut.forms.filling.proceed_to_form_anonUser': 'Valitsemalla Jatka lomakkeella aloitat lomakkeen täyttämisen. Jos haluat siihen vastauksen valitse Peruuta ja valitse Kirjaudu sisään ja valitse tämä lomake sieltä.',
   'gamut.forms.filling.anonUser_and_welcome': 'Terve!',
-  'gamut.forms.filling.start': 'Olet aloittamassa lomaketta',
+  'gamut.forms.filling.start': 'Olet aloittamassa lomaketta:',
   'gamut.forms.filling.login-then-start.button': 'Kirjaudu sisään',
   'gamut.forms.filling.start.info1': 'Lomake tallentuu automaattisesti sitä täytettäessä',
   'gamut.forms.filling.start.button': 'Jatka lomakkeella',
