@@ -10,6 +10,11 @@ export interface GRouterOfferSummaryRpsClasses {
   title: string;
   faces: string;
   faceItem: string;
+  faceItemTerrible: string;
+  faceItemPoor: string;
+  faceItemOkay: string;
+  faceItemGood: string;
+  faceItemExcellent: string;
   faceLabel: string;
 }
 export type GRouterOfferSummaryRpsClassKey = keyof GRouterOfferSummaryRpsClasses;
@@ -20,6 +25,11 @@ export const useUtilityClasses = () => {
     title: ['title'],
     faces: ['faces'],
     faceItem: ['faceItem'],
+    faceItemTerrible: ['faceItemTerrible'],
+    faceItemPoor: ['faceItemPoor'],
+    faceItemOkay: ['faceItemOkay'],
+    faceItemGood: ['faceItemGood'],
+    faceItemExcellent: ['faceItemExcellent'],
     faceLabel: ['faceLabel'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -66,9 +76,6 @@ export const GRouterOfferSummaryRpsRoot = styled('div', {
     display: 'flex',
     alignItems: 'center',
     transition: 'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-    '&:hover': {
-      backgroundColor: theme.palette.action.hover,
-    },
     [theme.breakpoints.up('md')]: {
       flexDirection: 'column',
       justifyContent: 'center',
@@ -93,11 +100,46 @@ export const GRouterOfferSummaryRpsRoot = styled('div', {
       marginLeft: theme.spacing(1.5),
     },
   },
-  [`.${MUI_NAME}-faceItem:nth-child(1) .MuiSvgIcon-root`]: { color: theme.palette.error.main },
-  [`.${MUI_NAME}-faceItem:nth-child(2) .MuiSvgIcon-root`]: { color: lighten(theme.palette.error.main, 0.3) },
-  [`.${MUI_NAME}-faceItem:nth-child(3) .MuiSvgIcon-root`]: { color: theme.palette.warning.main },
-  [`.${MUI_NAME}-faceItem:nth-child(4) .MuiSvgIcon-root`]: { color: lighten(theme.palette.success.main, 0.4) },
-  [`.${MUI_NAME}-faceItem:nth-child(5) .MuiSvgIcon-root`]: { color: theme.palette.success.main },
+  [`.${MUI_NAME}-faceItemTerrible`]: {
+    '& .MuiSvgIcon-root': {
+      color: theme.palette.error.main,
+    },
+    '&:hover, &[data-selected="true"]': {
+      backgroundColor: alpha(theme.palette.error.main, 0.1),
+    },
+  },
+  [`.${MUI_NAME}-faceItemPoor`]: {
+    '& .MuiSvgIcon-root': {
+      color: lighten(theme.palette.error.main, 0.3),
+    },
+    '&:hover, &[data-selected="true"]': {
+      backgroundColor: alpha(theme.palette.error.main, 0.1),
+    },
+  },
+  [`.${MUI_NAME}-faceItemOkay`]: {
+    '& .MuiSvgIcon-root': {
+      color: theme.palette.warning.main,
+    },
+    '&:hover, &[data-selected="true"]': {
+      backgroundColor: alpha(theme.palette.warning.main, 0.1),
+    },
+  },
+  [`.${MUI_NAME}-faceItemGood`]: {
+    '& .MuiSvgIcon-root': {
+      color: lighten(theme.palette.success.main, 0.4),
+    },
+    '&:hover, &[data-selected="true"]': {
+      backgroundColor: alpha(theme.palette.success.main, 0.1),
+    },
+  },
+  [`.${MUI_NAME}-faceItemExcellent`]: {
+    '& .MuiSvgIcon-root': {
+      color: theme.palette.success.main,
+    },
+    '&:hover, &[data-selected="true"]': {
+      backgroundColor: alpha(theme.palette.success.main, 0.1),
+    },
+  },
 }));
 
 

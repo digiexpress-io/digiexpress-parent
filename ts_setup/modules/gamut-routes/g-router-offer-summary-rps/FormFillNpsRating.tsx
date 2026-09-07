@@ -11,25 +11,25 @@ import {
 import { GRouterOfferSummaryRpsRoot, GRouterOfferSummaryRpsTextField, useUtilityClasses } from './useUtilityClasses';
 
 
-const faces: { Icon: React.ElementType, labelKey: string }[] = [
-  { Icon: SentimentVeryDissatisfiedIcon, labelKey: 'gamut.nps.rating.terrible' },
-  { Icon: SentimentDissatisfiedIcon,  labelKey: 'gamut.nps.rating.poor'      },
-  { Icon: SentimentNeutralIcon,       labelKey: 'gamut.nps.rating.okay'      },
-  { Icon: SentimentSatisfiedIcon,     labelKey: 'gamut.nps.rating.good'      },
-  { Icon: SentimentVerySatisfiedIcon, labelKey: 'gamut.nps.rating.excellent' },
-];
-
-
 export const FormFillNpsRating: React.FC = () => {
   const classes = useUtilityClasses();
   const intl = useIntl();
+  const [rating, setRating] = React.useState<number | undefined>(undefined);
+
+  const faces = [
+    { value: 1, Icon: SentimentVeryDissatisfiedIcon, labelKey: 'gamut.nps.rating.terrible', className: `${classes.faceItem} ${classes.faceItemTerrible}` },
+    { value: 2, Icon: SentimentDissatisfiedIcon,     labelKey: 'gamut.nps.rating.poor',     className: `${classes.faceItem} ${classes.faceItemPoor}` },
+    { value: 3, Icon: SentimentNeutralIcon,          labelKey: 'gamut.nps.rating.okay',     className: `${classes.faceItem} ${classes.faceItemOkay}` },
+    { value: 4, Icon: SentimentSatisfiedIcon,        labelKey: 'gamut.nps.rating.good',     className: `${classes.faceItem} ${classes.faceItemGood}` },
+    { value: 5, Icon: SentimentVerySatisfiedIcon,    labelKey: 'gamut.nps.rating.excellent', className: `${classes.faceItem} ${classes.faceItemExcellent}` },
+  ];
 
   return (
     <GRouterOfferSummaryRpsRoot className={classes.root}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.nps.title' })}</Typography>
       <div className={classes.faces}>
-        {faces.map(({ Icon, labelKey }) => (
-          <ButtonBase key={labelKey} className={classes.faceItem}>
+        {faces.map(({ value, Icon, labelKey, className }) => (
+          <ButtonBase key={labelKey} className={className} data-selected={rating === value} onClick={() => setRating(value)}>
             <Icon />
             <Typography className={classes.faceLabel}>{intl.formatMessage({ id: labelKey })}</Typography>
           </ButtonBase>
