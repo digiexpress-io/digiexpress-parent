@@ -1,5 +1,6 @@
-import { Box, Button, Divider, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
-import { PhoneEnabled as PhoneEnabledIcon } from '@mui/icons-material';
+import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import { PhoneEnabled as PhoneEnabledIcon, SupportAgent as SupportAgentIcon } from '@mui/icons-material';
+import { FormFillNpsRating } from '../g-router-offer-summary-rps';
 
 import { useIntl } from "react-intl";
 import { SiteApi } from "@dxs-ts/gamut-api";
@@ -17,22 +18,21 @@ export const FormFillSummaryBoxAnon: React.FC<{
   return (
     <Box className={classes.summaryLayout}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.forms.filling.summary.thank-you' })}</Typography>
+      <div className={classes.spacer} />
 
       <Typography className={classes.subTitle}>
         {intl.formatMessage({ id: 'gamut.forms.filling.summary' })}
         {intl.formatMessage({ id: 'gamut.textSeparator', defaultMessage: ' ' })}
         {topicLink?.name ?? "-"}
       </Typography>
-      <Typography className={classes.bodyText}>{intl.formatMessage({ id: 'gamut.forms.filling.summary.info1' })}</Typography>
-
-      <div className={classes.spacer} />
-      <div className={classes.spacer} />
-      <Divider className={classes.spacer} />
-      <div className={classes.spacer} />
-      <div className={classes.spacer} />
-
       <List disablePadding dense>
         <ListItem dense>
+          <ListItemIcon><SupportAgentIcon className={classes.icon} /></ListItemIcon>
+          <ListItemText>
+            <Typography className={classes.bodyText}>{intl.formatMessage({ id: 'gamut.forms.filling.summary.info1' })}</Typography>
+          </ListItemText>
+        </ListItem>
+        <ListItem>
           <ListItemIcon><PhoneEnabledIcon className={classes.icon} /></ListItemIcon>
           <ListItemText>
             <Typography className={classes.bodyText}>{intl.formatMessage({ id: 'gamut.forms.filling.summary.info6' })}</Typography>
@@ -40,7 +40,7 @@ export const FormFillSummaryBoxAnon: React.FC<{
         </ListItem>
       </List>
 
-      <div className={classes.spacer} />
+      <FormFillNpsRating />
 
       <Box className={classes.button}>
         <Button variant='contained' onClick={onNav}>

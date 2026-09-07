@@ -179,5 +179,12 @@ export const bs = {
   'gamut.feedback.feedbackViewerTitle': 'Povratna informacija klijenta',
   'gamut.feedback.feedbackViewerSubTitle': 'Odgovor organizacije',
   'dialob.review.title': 'Pregled obrasca',
-  'dialob.review.button.close': 'Zatvori'
+  'dialob.review.button.close': 'Zatvori',
+  'gamut.nps.title': 'Kako smo se pokazali?',
+  'gamut.nps.rating.excellent': 'Odlično',
+  'gamut.nps.rating.good': 'Dobro',
+  'gamut.nps.rating.okay': 'Prosječno',
+  'gamut.nps.rating.poor': 'Loše',
+  'gamut.nps.rating.terrible': 'Užasno',
+  'gamut.nps.comment.placeholder': 'Recite nam više (opcionalno)'
 }

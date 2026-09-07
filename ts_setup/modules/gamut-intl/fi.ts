@@ -185,5 +185,12 @@ export const fi = {
   'gamut.feedback.feedbackViewerSubTitle': 'Organisaation palaute',
   'dialob.review.title': 'Lomakkeen esikatselu',
   'dialob.review.button.close': 'Sulje',
-  'gamut.cockpit.selection.dialog': 'Select Cockpit'
+  'gamut.cockpit.selection.dialog': 'Select Cockpit',
+  'gamut.nps.title': 'Kuinka onnistuimme?',
+  'gamut.nps.rating.excellent': 'Erinomainen',
+  'gamut.nps.rating.good': 'Hyvä',
+  'gamut.nps.rating.okay': 'Ok',
+  'gamut.nps.rating.poor': 'Heikko',
+  'gamut.nps.rating.terrible': 'Erittäin huono',
+  'gamut.nps.comment.placeholder': 'Kerro lisää (valinnainen)'
 }

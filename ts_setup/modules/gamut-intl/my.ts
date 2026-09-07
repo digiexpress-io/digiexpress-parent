@@ -181,5 +181,12 @@ export const my = {
   'gamut.feedback.feedbackViewerTitle': 'Maklum balas pelanggan',
   'gamut.feedback.feedbackViewerSubTitle': 'Balasan organisasi',
   'dialob.review.title': 'Semakan borang',
-  'dialob.review.button.close': 'Tutup'
+  'dialob.review.button.close': 'Tutup',
+  'gamut.nps.title': 'Bagaimana kami lakukan?',
+  'gamut.nps.rating.excellent': 'Cemerlang',
+  'gamut.nps.rating.good': 'Baik',
+  'gamut.nps.rating.okay': 'Ok',
+  'gamut.nps.rating.poor': 'Lemah',
+  'gamut.nps.rating.terrible': 'Teruk',
+  'gamut.nps.comment.placeholder': 'Beritahu kami lebih lanjut (pilihan)'
 }

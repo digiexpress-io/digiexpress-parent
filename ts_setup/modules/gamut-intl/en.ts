@@ -185,5 +185,12 @@ export const en = {
   'gamut.feedback.feedbackViewerSubTitle': 'Organisation reply',
   'dialob.review.title': 'Form review',
   'dialob.review.button.close': 'Close',
-  'gamut.cockpit.selection.dialog': 'Select Cockpit'
+  'gamut.cockpit.selection.dialog': 'Select Cockpit',
+  'gamut.nps.title': 'How did we do?',
+  'gamut.nps.rating.excellent': 'Excellent',
+  'gamut.nps.rating.good': 'Good',
+  'gamut.nps.rating.okay': 'Okay',
+  'gamut.nps.rating.poor': 'Poor',
+  'gamut.nps.rating.terrible': 'Terrible',
+  'gamut.nps.comment.placeholder': 'Tell us more (optional)'
 }

@@ -60,7 +60,7 @@ export const GRouterOfferSummaryRoot = styled("div", {
         width: '55%',
       },
       [theme.breakpoints.down('md')]: {
-        padding: theme.spacing(5),
+        padding: theme.spacing(2),
         margin: theme.spacing(1),
         width: '85%'
       },

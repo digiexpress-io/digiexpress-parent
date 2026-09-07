@@ -205,6 +205,14 @@ gamut.feedback.feedbackViewerSubTitle,,Organisation reply,Organisaation palaute,
 dialob.review.title,,Form review,Lomakkeen esikatselu,Formulärgranskning,Semakan borang,Pregled obrasca
 dialob.review.button.close,,Close,Sulje,Stäng,Tutup,Zatvori
 gamut.cockpit.selection.dialog,,Select Cockpit,Select Cockpit,Select Cockpit,
+// ----------------------- NPS -------------------------,,,,,,
+gamut.nps.title,,How did we do?,Kuinka onnistuimme?,Hur gick det?,Bagaimana kami lakukan?,Kako smo se pokazali?
+gamut.nps.rating.excellent,,Excellent,Erinomainen,Utmärkt,Cemerlang,Odlično
+gamut.nps.rating.good,,Good,Hyvä,Bra,Baik,Dobro
+gamut.nps.rating.okay,,Okay,Ok,Okej,Ok,Prosječno
+gamut.nps.rating.poor,,Poor,Heikko,Dåligt,Lemah,Loše
+gamut.nps.rating.terrible,,Terrible,Erittäin huono,Mycket dåligt,Teruk,Užasno
+gamut.nps.comment.placeholder,,Tell us more (optional),Kerro lisää (valinnainen),Berätta mer (valfritt),Beritahu kami lebih lanjut (pilihan),Recite nam više (opcionalno)
 
 
 

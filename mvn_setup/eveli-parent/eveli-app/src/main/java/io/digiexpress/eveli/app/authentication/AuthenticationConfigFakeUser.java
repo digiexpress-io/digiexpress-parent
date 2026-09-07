@@ -208,7 +208,7 @@ public class AuthenticationConfigFakeUser  {
                     .build())
                 
                 .build())
-            .type(CustomerType.AUTH_CUSTOMER)
+            .type(CustomerType.ANON)
             .build();
       }
 

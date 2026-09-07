@@ -185,5 +185,12 @@ export const sv = {
   'gamut.feedback.feedbackViewerSubTitle': 'Organisationens svar',
   'dialob.review.title': 'Formulärgranskning',
   'dialob.review.button.close': 'Stäng',
-  'gamut.cockpit.selection.dialog': 'Select Cockpit'
+  'gamut.cockpit.selection.dialog': 'Select Cockpit',
+  'gamut.nps.title': 'Hur gick det?',
+  'gamut.nps.rating.excellent': 'Utmärkt',
+  'gamut.nps.rating.good': 'Bra',
+  'gamut.nps.rating.okay': 'Okej',
+  'gamut.nps.rating.poor': 'Dåligt',
+  'gamut.nps.rating.terrible': 'Mycket dåligt',
+  'gamut.nps.comment.placeholder': 'Berätta mer (valfritt)'
 }
