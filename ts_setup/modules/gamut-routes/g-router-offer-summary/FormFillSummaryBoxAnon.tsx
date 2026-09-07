@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { PhoneEnabled as PhoneEnabledIcon, SupportAgent as SupportAgentIcon } from '@mui/icons-material';
 import { FormFillNpsRating } from '../g-router-offer-summary-rps';
@@ -14,6 +15,8 @@ export const FormFillSummaryBoxAnon: React.FC<{
 }> = ({ topicLink, buttonBackToMsg, onNav }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
+  const [rating, setRating] = React.useState<number | undefined>(undefined);
+  const [comment, setComment] = React.useState('');
 
   return (
     <Box className={classes.summaryLayout}>
@@ -40,10 +43,13 @@ export const FormFillSummaryBoxAnon: React.FC<{
         </ListItem>
       </List>
 
-      <FormFillNpsRating />
+      <FormFillNpsRating rating={rating} onRatingChange={setRating} comment={comment} onCommentChange={setComment} />
 
       <Box className={classes.button}>
-        <Button variant='contained' onClick={onNav}>
+        <Button variant='contained' onClick={() => {
+          console.log({ rating, comment });
+          onNav();
+        }}>
           {intl.formatMessage({ id: buttonBackToMsg })}
         </Button>
       </Box>
