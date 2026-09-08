@@ -39,7 +39,11 @@ function hook(props: {}) {
     addAttachment: async(taskId: string, file: File) : Promise<Response|void> => {
       const fileName = file.name;
       return params
-        .fetch(url({ taskId }) + `/?filename=${fileName}`, { method, headers: {'Content-Type': file.type || 'application/octet-stream'}})
+        .fetch(url({ taskId }) + `/`, { 
+            method, 
+            body: JSON.stringify({filename: fileName, type: file.type, size: file.size}), 
+            headers: {'Content-Type': file.type || 'application/octet-stream'}
+        })
         .then(handleErrors)
         .then(response => response.json())
         .then((uploadResponse: TaskApi.AttachmentUploadResponse) => uploadFile(file, uploadResponse))
