@@ -423,6 +423,8 @@ export const sv = {
   'services.devmode.helper': 'Utvecklingsläge: Tjänsten visas endast i utvecklingsmiljön för testning och ingår inte i produktionsutgåvor.',
   'services.devmode.label': 'Utvecklingsläge',
   'services.devmode.tooltip': 'Utvecklingsläge',
+  'services.npsMode.label': 'NPS-läge',
+  'services.npsMode.helper': 'NPS-läge: Visar ett feedbackbetygswidget för användaren efter formulärinlämning',
   'services.disabledmode.label': 'Inaktiverat läge',
   'services.disabledmode.helper': 'Inaktiverat läge: Tjänsten visas inte på klientportalen',
   'services.disabledmode.tooltip': 'Inaktiverat läge',

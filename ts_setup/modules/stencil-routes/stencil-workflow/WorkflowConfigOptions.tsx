@@ -11,7 +11,7 @@ interface WorkflowIntl {
   helperText: string;
 }
 
-type WorkflowFeatureType = 'DEV' | 'ANON' | 'DISABLED' | 'ASSIGNABLE' | 'IN_HOUSE' | 'NONE';
+type WorkflowFeatureType = 'DEV' | 'ANON' | 'DISABLED' | 'ASSIGNABLE' | 'IN_HOUSE' | 'NPS' | 'NONE';
 
 const all_features: WorkflowIntl[] = [
   {
@@ -38,6 +38,11 @@ const all_features: WorkflowIntl[] = [
     value: 'IN_HOUSE',
     label: 'services.inHouseMode.label',
     helperText: 'services.inHouseMode.helper'
+  },
+  {
+    value: 'NPS',
+    label: 'services.npsMode.label',
+    helperText: 'services.npsMode.helper'
   },
   {
     value: 'NONE',
@@ -72,6 +77,10 @@ function getTypes(value: WorkflowOptions): WorkflowFeatureType[] {
   if (value.inHouse === true) {
     result.push('IN_HOUSE');
   }
+
+  if (value.nps === true) {
+    result.push('NPS');
+  }
   return result;
 }
 
@@ -81,7 +90,8 @@ export type WorkflowOptions = {
   anon: boolean | undefined,
   disabled: boolean | undefined,
   assignable: boolean | undefined,
-  inHouse: boolean | undefined
+  inHouse: boolean | undefined,
+  nps: boolean | undefined,
 }
 
 export const WorkflowConfigOptions: React.FC<{ onChange: (props: WorkflowOptions) => void, value: WorkflowOptions }> = ({ value, onChange }) => {
@@ -95,7 +105,8 @@ export const WorkflowConfigOptions: React.FC<{ onChange: (props: WorkflowOptions
       devMode: newState.includes('DEV') ? true : undefined,
       disabled: newState.includes('DISABLED') ? true : undefined,
       assignable: newState.includes('ASSIGNABLE') ? true : undefined,
-      inHouse: newState.includes('IN_HOUSE') ? true : undefined
+      inHouse: newState.includes('IN_HOUSE') ? true : undefined,
+      nps: newState.includes('NPS') ? true : undefined,
     });
   }
   const none = getIntl('NONE');

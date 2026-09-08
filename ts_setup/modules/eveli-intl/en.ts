@@ -427,6 +427,8 @@ export const en = {
   'services.devmode.tooltip': 'Development mode',
   'services.inHouseMode.label': 'In-house mode',
   'services.inHouseMode.helper': 'In-house mode: Workflow is for internal-use and allows organisation members to copy/paste a link to start an internal form',
+  'services.npsMode.label': 'NPS mode',
+  'services.npsMode.helper': 'NPS mode: Displays a feedback rating widget to the user after form submission',
   'services.disabledmode.label': 'Disabled mode',
   'services.disabledmode.helper': 'Disabled mode: Service does not appear on client portal',
   'services.disabledmode.tooltip': 'Disabled mode',

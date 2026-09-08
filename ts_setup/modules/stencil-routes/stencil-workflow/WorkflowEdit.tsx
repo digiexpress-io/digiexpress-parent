@@ -41,7 +41,8 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
     devMode: workflow.body.devMode,
     disabled: workflow.body.disabled,
     assignable: workflow.body.assignable,
-    inHouse: workflow.body.inHouse
+    inHouse: workflow.body.inHouse,
+    nps: workflow.body.nps,
   });
 
   const { flows: allFlows = [] } = useFetch('worker/rest/api/assets/wrench/flow-names.GET', {});
@@ -59,6 +60,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
       assignable: workflowOptions.assignable,
       disabled: workflowOptions.disabled,
       inHouse: workflowOptions.inHouse,
+      nps: workflowOptions.nps,
       labels,
       startDate: startdate ? startdate : undefined,
       endDate: enddate ? enddate : undefined,

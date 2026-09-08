@@ -423,6 +423,8 @@ export const fi = {
   'services.devmode.helper': 'Kehitystila: Palvelu näkyy vain kehitysympäristössä testausta varten, eikä se sisälly tuotantojulkaisuihin.',
   'services.devmode.label': 'Kehitystila',
   'services.devmode.tooltip': 'Kehitystila',
+  'services.npsMode.label': 'NPS-tila',
+  'services.npsMode.helper': 'NPS-tila: Näyttää palautearviointi-widgetin käyttäjälle lomakkeen lähettämisen jälkeen',
   'services.disabledmode.label': 'Ei käytössä',
   'services.disabledmode.helper': 'Palvelu ei ole portaalissa näkyvissä',
   'services.disabledmode.tooltip': 'Ei käytössä',
