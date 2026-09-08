@@ -195,6 +195,7 @@ public interface TaskClient {
     Uni<Task> changeDocProperties(String taskId, ChangeDocPropertiesCommand command);
     
     Uni<Task> addTaskAttachment(String taskId, TaskAttachment attachment);
+    Uni<Task> removeTaskAttachment(String taskId, String name);
     Uni<Void> addWorkerCommitViewer(String taskId);
     Uni<Void> addCustomerCommitViewer(String taskId);
 

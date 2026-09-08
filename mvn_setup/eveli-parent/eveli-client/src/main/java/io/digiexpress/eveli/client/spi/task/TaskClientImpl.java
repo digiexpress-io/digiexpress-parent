@@ -48,6 +48,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTaskComment;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateProcessVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.DeleteCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.DeleteOneTask;
+import io.digiexpress.eveli.client.spi.task.visitors.DeleteOneTaskAttachment;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllExternalTaskCommentsByReporterIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskByIdsVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskCommentsByTaskIdVisitor;
@@ -257,6 +258,13 @@ public class TaskClientImpl implements TaskClient {
         
         return ctx.getConfig().accept(new CreateOneTaskAttachment(userId, taskId, attachment));
       }
+      @Override
+      public Uni<Task> removeTaskAttachment(String taskId, String name) {
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        return ctx.getConfig().accept(new DeleteOneTaskAttachment(userId, taskId, name));
+      }
+      
+      
     };
   }
 

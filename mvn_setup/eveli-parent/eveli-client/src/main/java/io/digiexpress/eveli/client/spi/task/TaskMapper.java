@@ -116,6 +116,7 @@ public class TaskMapper {
         .creator(e.getString("creator"))
         .size(e.getLong("size"))
         .source(TaskClient.TaskAttachment.AttachmentSource.valueOf(e.getString("source")))
+        .type(e.getString("type"))
         .build();
   }
   

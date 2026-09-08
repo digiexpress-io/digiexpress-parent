@@ -22,23 +22,31 @@ package io.digiexpress.eveli.client.web.resources.worker;
 
 import java.net.URISyntaxException;
 import java.time.Duration;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.api.AttachmentCommands.AttachmentUpload;
+import io.digiexpress.eveli.client.api.ImmutableTaskAttachment;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.TaskAttachment;
+import io.digiexpress.eveli.client.api.TaskClient.TaskAttachment.AttachmentSource;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.smallrye.mutiny.Uni;
+import jakarta.activation.MimetypesFileTypeMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,6 +63,9 @@ public class AttachmentApiController {
   private final TaskClient taskClient;  
   private final WorkerAuthClient securityClient;
   private static final Duration timeout = Duration.ofMillis(10000);
+  private static final MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
+  
+  private record FileUploadUrlBody(String filename, Long size, String type) {}
   
   /**
    * Returns list of task attachments. 
@@ -114,16 +125,17 @@ public class AttachmentApiController {
   }
   
   @DeleteMapping("/tasks/{taskId}/files/{filename}")
-  public ResponseEntity<Void> deleteTaskAttachment(
+  public Uni<ResponseEntity<Void>> deleteTaskAttachment(
       @PathVariable String taskId, 
       @PathVariable String filename 
       ) 
       throws URISyntaxException 
   {
+    final var worker = securityClient.getUser().getPrincipal();
     final var authentication = securityClient.getUser();
     log.info("Attachment file DELETE API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
     if (!checkTaskAccess(taskId, authentication)) {
-      return ResponseEntity.notFound().build();
+      return Uni.createFrom().item(ResponseEntity.notFound().build());
     }
     final var processId = getProcessIdFromTask(taskId);
     if (processId != null) {
@@ -132,7 +144,12 @@ public class AttachmentApiController {
     else {
       client.remove().filename(filename).removeByTaskId(taskId);
     }
-    return ResponseEntity.noContent().build();
+    return taskClient.taskBuilder()
+      .userId(worker.getUsername(), worker.getEmail())
+      .removeTaskAttachment(taskId, filename)
+      .onItem().transform(task -> {
+        return ResponseEntity.noContent().build();
+      });
   }
   
   /**
@@ -145,24 +162,39 @@ public class AttachmentApiController {
    * @throws URISyntaxException
    */
   @PostMapping("/tasks/{taskId}/files/")
-  public ResponseEntity<AttachmentUpload> getTaskAttachmentUploadUrl(
+  public Uni<ResponseEntity<AttachmentUpload>> getTaskAttachmentUploadUrl(
       @PathVariable String taskId, 
-      @RequestParam(name="filename") String filename) 
+      @RequestBody FileUploadUrlBody file)
       throws URISyntaxException 
   {
+    final var worker = securityClient.getUser().getPrincipal();
     final var authentication = securityClient.getUser();
-    log.info("Attachment file POST API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
+    log.info("Attachment file POST API call for task id: {}, file: {}, from user {}", taskId, file.filename, authentication.getPrincipal().getUsername());
     if (!checkTaskAccess(taskId, authentication)) {
-      return ResponseEntity.notFound().build();
+      return Uni.createFrom().item(ResponseEntity.notFound().build());
     }
     final var processId = getProcessIdFromTask(taskId);
-    final var uploadUrl = processId != null ?
-        client.upload().encodePath(filename).processId(processId) :
-        client.upload().encodePath(filename).taskId(taskId);
-    if (uploadUrl.isPresent()) {
-      return ResponseEntity.ok(uploadUrl.get());
-    }
-    return ResponseEntity.notFound().build();
+    
+    TaskAttachment taskAttachment = ImmutableTaskAttachment.builder()
+        .name(file.filename)
+        .created(OffsetDateTime.now(ZoneId.of("UTC")))
+        .creator(authentication.getPrincipal().getUsername())
+        .size(file.size != null ? file.size : 0L)
+        .source(AttachmentSource.FRONTDESK)
+        .type(StringUtils.isAllBlank(file.type) ? fileTypeMap.getContentType(file.filename) : file.type)
+        .build();
+    return taskClient.taskBuilder()
+      .userId(worker.getUsername(), worker.getEmail())
+      .addTaskAttachment(taskId, taskAttachment)
+      .onItem().transform(task -> {
+        final var uploadUrl = processId != null ?
+            client.upload().encodePath(file.filename).processId(processId) :
+            client.upload().encodePath(file.filename).taskId(taskId);
+        if (uploadUrl.isPresent()) {
+          return ResponseEntity.ok(uploadUrl.get());
+        }
+        return ResponseEntity.notFound().build();
+      });
   }
 
   private boolean checkTaskAccess(String taskId, WorkerAuthClient.User authentication) {
