@@ -55,6 +55,7 @@ import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.resys.limaone.spi.program.input.DefaultAuthProgramInput;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,6 +71,15 @@ public class GamutUserActionsController {
   private final io.resys.limaone.program.Runtime runtime;
   private final FeedbackClient feedback;
   
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableRpsCommand.class)
+  @JsonDeserialize(as = ImmutableRpsCommand.class)
+  interface RpsCommand {
+    String getProductId();
+    int getRating();
+    @Nullable String getComment();
+  }
+
   @Value.Immutable
   @JsonSerialize(as = ImmutableAuthorizationAction.class)
   @JsonDeserialize(as = ImmutableAuthorizationAction.class)
@@ -115,6 +125,12 @@ public class GamutUserActionsController {
     return gamutClient.userMessagesQuery().findAllByUserId(customer);
   }
   
+  @PostMapping(value = "/rps")
+  public ResponseEntity<Void> submitRps(@RequestBody RpsCommand command) {
+    log.info("NPS feedback: productId={}, rating={}, comment={}", command.getProductId(), command.getRating(), command.getComment());
+    return ResponseEntity.ok().build();
+  }
+
   @PutMapping(path = "/feedback")
   public ResponseEntity<?> updateFeedback(@RequestBody UpsertFeedbackRankingCommand upsert) {
     final var isValid = upsert.getRating() == null || upsert.getRating() == 1 || upsert.getRating() == 5;

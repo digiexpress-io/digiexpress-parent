@@ -7,13 +7,18 @@ import { PhoneEnabled as PhoneEnabledIcon } from '@mui/icons-material';
 import { useIntl } from "react-intl";
 import { SiteApi } from "@dxs-ts/gamut-api";
 import { useUtilityClasses } from "./useUtilityClasses";
+import { FormFillNpsRating } from '../g-router-offer-summary-rps';
 
 
 export const FormFillSummaryBox: React.FC<{
   topicLink: SiteApi.TopicLink | undefined,
   buttonBackToMsg: string,
-  onNav: () => void
-}> = ({ topicLink, buttonBackToMsg, onNav }) => {
+  onNav: () => void,
+  rating: number | undefined,
+  onRatingChange: (value: number) => void,
+  comment: string,
+  onCommentChange: (value: string) => void,
+}> = ({ topicLink, buttonBackToMsg, onNav, rating, onRatingChange, comment, onCommentChange }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
 
@@ -62,6 +67,8 @@ export const FormFillSummaryBox: React.FC<{
       </List>
 
       <div className={classes.spacer} />
+
+      <FormFillNpsRating rating={rating} onRatingChange={onRatingChange} comment={comment} onCommentChange={onCommentChange} />
 
       <Box className={classes.button}>
         <Button variant='contained' onClick={onNav}>

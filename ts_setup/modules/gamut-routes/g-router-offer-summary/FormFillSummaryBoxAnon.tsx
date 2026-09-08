@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { PhoneEnabled as PhoneEnabledIcon, SupportAgent as SupportAgentIcon } from '@mui/icons-material';
 import { FormFillNpsRating } from '../g-router-offer-summary-rps';
-
 import { useIntl } from "react-intl";
 import { SiteApi } from "@dxs-ts/gamut-api";
 import { useUtilityClasses } from "./useUtilityClasses";
@@ -10,14 +9,16 @@ import { useUtilityClasses } from "./useUtilityClasses";
 
 export const FormFillSummaryBoxAnon: React.FC<{
   topicLink: SiteApi.TopicLink | undefined,
-  productId: string;
+  productId: string,
   buttonBackToMsg: string,
-  onNav: () => void
-}> = ({ topicLink, buttonBackToMsg, onNav, productId }) => {
+  onNav: () => void,
+  rating: number | undefined,
+  onRatingChange: (value: number) => void,
+  comment: string,
+  onCommentChange: (value: string) => void,
+}> = ({ topicLink, buttonBackToMsg, onNav, rating, onRatingChange, comment, onCommentChange }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const [rating, setRating] = React.useState<number | undefined>(undefined);
-  const [comment, setComment] = React.useState('');
 
   return (
     <Box className={classes.summaryLayout}>
@@ -44,13 +45,10 @@ export const FormFillSummaryBoxAnon: React.FC<{
         </ListItem>
       </List>
 
-      <FormFillNpsRating rating={rating} onRatingChange={setRating} comment={comment} onCommentChange={setComment} />
+      <FormFillNpsRating rating={rating} onRatingChange={onRatingChange} comment={comment} onCommentChange={onCommentChange} />
 
       <Box className={classes.button}>
-        <Button variant='contained' onClick={() => {
-          console.log({ rating, comment, productId });
-          onNav();
-        }}>
+        <Button variant='contained' onClick={onNav}>
           {intl.formatMessage({ id: buttonBackToMsg })}
         </Button>
       </Box>

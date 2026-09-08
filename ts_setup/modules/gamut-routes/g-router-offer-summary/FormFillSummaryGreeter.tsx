@@ -15,6 +15,8 @@ export const FormFillSummaryGreeter: React.FC<FormFillSummaryGreeterProps> = ({ 
   const site = useSite();
   const nav = useNavigate();
   const { refresh } = useOffers();
+  const [rating, setRating] = React.useState<number | undefined>(undefined);
+  const [comment, setComment] = React.useState('');
 
   const anonymousUser = anon.authType === 'ANON';
   const topic = site.views[pageId];
@@ -39,9 +41,40 @@ export const FormFillSummaryGreeter: React.FC<FormFillSummaryGreeterProps> = ({ 
     }
   }
 
+  function handleNav() {
+    if (rating !== undefined) {
+      window.fetch('/portal/secured/actions/rps', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId, rating, comment: comment || undefined }),
+      });
+    }
+    navBack();
+  }
 
   if (anonymousUser) {
-    return (<FormFillSummaryBoxAnon topicLink={topicLink} buttonBackToMsg={buttonBackToMsg} onNav={navBack} productId={productId} />)
+    return (
+      <FormFillSummaryBoxAnon
+        topicLink={topicLink}
+        buttonBackToMsg={buttonBackToMsg}
+        productId={productId}
+        rating={rating}
+        comment={comment}
+        onNav={handleNav}
+        onRatingChange={setRating}
+        onCommentChange={setComment}
+      />
+    )
   }
-  return (<FormFillSummaryBox topicLink={topicLink} buttonBackToMsg={buttonBackToMsg} onNav={navBack} />)
+  return (
+    <FormFillSummaryBox
+      topicLink={topicLink}
+      buttonBackToMsg={buttonBackToMsg}
+      onNav={handleNav}
+      rating={rating}
+      onRatingChange={setRating}
+      comment={comment}
+      onCommentChange={setComment}
+    />
+  )
 }
