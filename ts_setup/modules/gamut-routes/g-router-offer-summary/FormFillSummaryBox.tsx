@@ -67,9 +67,9 @@ export const FormFillSummaryBox: React.FC<{
       </List>
 
       <div className={classes.spacer} />
-
-      <FormFillNpsRating rating={rating} onRatingChange={onRatingChange} comment={comment} onCommentChange={onCommentChange} />
-
+      {(topicLink?.rps &&
+        <FormFillNpsRating rating={rating} onRatingChange={onRatingChange} comment={comment} onCommentChange={onCommentChange} />
+      )}
       <Box className={classes.button}>
         <Button variant='contained' onClick={onNav}>
           {intl.formatMessage({ id: buttonBackToMsg })}

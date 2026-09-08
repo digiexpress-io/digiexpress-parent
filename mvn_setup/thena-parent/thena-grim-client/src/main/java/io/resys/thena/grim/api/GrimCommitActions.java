@@ -36,11 +36,13 @@ import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.GrimObjective;
 import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.GrimRemark;
+import io.resys.thena.api.entities.grim.GrimRps;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeProcess;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewProcess;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRps;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.Message;
@@ -61,8 +63,18 @@ public interface GrimCommitActions {
   ModifyManyCommitViewers modifyManyCommitViewer();
   
   ModifyOneProc modifyOneProc();
-  
   CreateOneProc createOneProc();
+  
+  CreateOneRps createOneRps();
+  
+  
+  interface CreateOneRps {
+    CreateOneRps commitAuthor(String author);
+    CreateOneRps commitMessage(String message);
+    CreateOneRps rps(Consumer<NewRps> newRps);
+    
+    Uni<OneRpsEnvelope> build();
+  }
   
   interface CreateOneProc {
     CreateOneProc commitAuthor(String author);
@@ -157,6 +169,16 @@ public interface GrimCommitActions {
     List<Message> getMessages();
     
     @Nullable GrimProcess getProc();
+  }
+  
+  
+  @Value.Immutable
+  interface OneRpsEnvelope extends ThenaEnvelope {
+    String getRepoId();
+    CommitResultStatus getStatus();
+    List<Message> getMessages();
+    
+    @Nullable GrimRps getRps();
   }
   
   

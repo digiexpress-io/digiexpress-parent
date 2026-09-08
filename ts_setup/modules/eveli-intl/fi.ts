@@ -423,8 +423,8 @@ export const fi = {
   'services.devmode.helper': 'Kehitystila: Palvelu näkyy vain kehitysympäristössä testausta varten, eikä se sisälly tuotantojulkaisuihin.',
   'services.devmode.label': 'Kehitystila',
   'services.devmode.tooltip': 'Kehitystila',
-  'services.npsMode.label': 'NPS-tila',
-  'services.npsMode.helper': 'NPS-tila: Näyttää palautearviointi-widgetin käyttäjälle lomakkeen lähettämisen jälkeen',
+  'services.rpsMode.label': 'Ratings-tila',
+  'services.rpsMode.helper': 'Ratings-tila: Näyttää palautearviointi-widgetin käyttäjälle lomakkeen lähettämisen jälkeen',
   'services.disabledmode.label': 'Ei käytössä',
   'services.disabledmode.helper': 'Palvelu ei ole portaalissa näkyvissä',
   'services.disabledmode.tooltip': 'Ei käytössä',
@@ -1315,5 +1315,5 @@ export const fi = {
   'fs.dirent.configOption.ASSIGNABLE_MODE': 'Palvelun käytöntila',
   'fs.dirent.configOption.AUTH_ONLY_MODE': 'Vain kirjautuneille',
   'fs.dirent.configOption.IN_HOUSE_MODE': 'Sisäinen tila',
-  'fs.dirent.configOption.NPS_MODE': 'NPS-tila'
+  'fs.dirent.configOption.RPS_MODE': 'Ratings-tila'
 }

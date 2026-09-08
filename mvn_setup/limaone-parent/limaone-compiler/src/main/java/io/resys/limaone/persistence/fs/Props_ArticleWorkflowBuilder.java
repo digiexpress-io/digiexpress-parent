@@ -58,6 +58,9 @@ public class Props_ArticleWorkflowBuilder {
     }
     if (Boolean.TRUE.equals(service.getAnon())) {
       builder.addConfigOptions(ConfigOption.ANONYMOUS_MODE);
+    }
+    if (Boolean.TRUE.equals(service.getRps())) {
+      builder.addConfigOptions(ConfigOption.RPS_MODE);
     } 
 
     return builder

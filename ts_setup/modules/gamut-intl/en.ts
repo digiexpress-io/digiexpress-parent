@@ -186,11 +186,11 @@ export const en = {
   'dialob.review.title': 'Form review',
   'dialob.review.button.close': 'Close',
   'gamut.cockpit.selection.dialog': 'Select Cockpit',
-  'gamut.nps.title': 'How did we do?',
-  'gamut.nps.rating.excellent': 'Excellent',
-  'gamut.nps.rating.good': 'Good',
-  'gamut.nps.rating.okay': 'Okay',
-  'gamut.nps.rating.poor': 'Poor',
-  'gamut.nps.rating.terrible': 'Terrible',
-  'gamut.nps.comment.placeholder': 'Tell us more (optional)'
+  'gamut.rps.title': 'How did we do?',
+  'gamut.rps.rating.excellent': 'Excellent',
+  'gamut.rps.rating.good': 'Good',
+  'gamut.rps.rating.okay': 'Okay',
+  'gamut.rps.rating.poor': 'Poor',
+  'gamut.rps.rating.terrible': 'Terrible',
+  'gamut.rps.comment.placeholder': 'Tell us more (optional)'
 }

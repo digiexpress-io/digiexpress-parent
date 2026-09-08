@@ -62,6 +62,7 @@ public interface ModifyArticleWorkflow {
     @Nullable Boolean getDisabled();
     @Nullable Boolean getDevMode();
     @Nullable Boolean getAnon();
+    @Nullable Boolean getRps();
     @Nullable Boolean getAssignable();
     @Nullable Boolean getInHouse();
     

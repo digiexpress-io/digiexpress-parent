@@ -138,7 +138,7 @@ export const FsIcons = {
   Disabled: Block,
   Anonymous: VisibilityOff,
   InHouse: HomeWorkOutlined,
-  Nps: SentimentSatisfied,
+  Rps: SentimentSatisfied,
 
   // Utility
   Phone: Phone,

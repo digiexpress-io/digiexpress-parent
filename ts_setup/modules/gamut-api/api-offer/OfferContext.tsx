@@ -12,6 +12,7 @@ export const OfferProvider: React.FC<{
   children: React.ReactNode;
   options: { staleTime: number, queryKey: string };
   createOffer: OfferApi.CreateOfferFetchPOST;
+  createOfferRps: OfferApi.CreateOfferRpsFetchPOST;
   getAllOffers: OfferApi.GetOffersFetchGET;
   getOneOffer: OfferApi.GetOfferFetchGET;
   cancelOffer: OfferApi.CancelOfferFetchDELETE;
@@ -45,6 +46,7 @@ export const OfferProvider: React.FC<{
         return found;
       },
       refresh: data.refresh,
+      createOfferRps: data.createOfferRps,
       createOffer: data.createOffer,
       cancelOffer: data.cancelOffer,
       fetchOffer: data.fetchOffer,

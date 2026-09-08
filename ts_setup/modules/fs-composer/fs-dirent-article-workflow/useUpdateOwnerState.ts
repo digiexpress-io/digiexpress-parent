@@ -86,7 +86,7 @@ class _ChangeState implements FsuChange {
         anon: c.configOptions.includes('ANONYMOUS_MODE') || undefined,
         assignable: c.configOptions.includes('ASSIGNABLE_MODE') || undefined,
         inHouse: c.configOptions.includes('IN_HOUSE_MODE') || undefined,
-        nps: c.configOptions.includes('NPS_MODE') || undefined,
+        rps: c.configOptions.includes('RPS_MODE') || undefined,
       }
     };
   }

@@ -14,7 +14,8 @@ export const FormFillSummaryGreeter: React.FC<FormFillSummaryGreeterProps> = ({ 
   const anon = useIam();
   const site = useSite();
   const nav = useNavigate();
-  const { refresh } = useOffers();
+  const { refresh, createOfferRps } = useOffers();
+
   const [rating, setRating] = React.useState<number | undefined>(undefined);
   const [comment, setComment] = React.useState('');
 
@@ -43,11 +44,7 @@ export const FormFillSummaryGreeter: React.FC<FormFillSummaryGreeterProps> = ({ 
 
   function handleNav() {
     if (rating !== undefined) {
-      window.fetch('/portal/secured/actions/rps', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId, rating, comment: comment || undefined }),
-      });
+      createOfferRps({ productId, rating, locale, comment: comment });
     }
     navBack();
   }

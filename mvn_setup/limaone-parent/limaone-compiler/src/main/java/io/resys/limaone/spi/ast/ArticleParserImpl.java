@@ -160,6 +160,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
             .endDate(link.getBody().getEndDate())
             .startDate(link.getBody().getStartDate())
             .anon(Boolean.TRUE.equals(link.getBody().getAnon()))
+            .rps(Boolean.TRUE.equals(link.getBody().getRps()))
 
             .global(false)
             .workflow(true)

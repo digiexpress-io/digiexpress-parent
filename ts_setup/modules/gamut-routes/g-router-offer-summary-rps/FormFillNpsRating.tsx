@@ -23,16 +23,16 @@ export const FormFillNpsRating: React.FC<FormFillNpsRatingProps> = ({ rating, on
   const intl = useIntl();
 
   const faces = [
-    { value: 1, Icon: SentimentVeryDissatisfiedIcon, labelKey: 'gamut.nps.rating.terrible', className: `${classes.faceItem} ${classes.faceItemTerrible}` },
-    { value: 2, Icon: SentimentDissatisfiedIcon,     labelKey: 'gamut.nps.rating.poor',     className: `${classes.faceItem} ${classes.faceItemPoor}` },
-    { value: 3, Icon: SentimentNeutralIcon,          labelKey: 'gamut.nps.rating.okay',     className: `${classes.faceItem} ${classes.faceItemOkay}` },
-    { value: 4, Icon: SentimentSatisfiedIcon,        labelKey: 'gamut.nps.rating.good',     className: `${classes.faceItem} ${classes.faceItemGood}` },
-    { value: 5, Icon: SentimentVerySatisfiedIcon,    labelKey: 'gamut.nps.rating.excellent', className: `${classes.faceItem} ${classes.faceItemExcellent}` },
+    { value: 1, Icon: SentimentVeryDissatisfiedIcon, labelKey: 'gamut.rps.rating.terrible', className: `${classes.faceItem} ${classes.faceItemTerrible}` },
+    { value: 2, Icon: SentimentDissatisfiedIcon, labelKey: 'gamut.rps.rating.poor', className: `${classes.faceItem} ${classes.faceItemPoor}` },
+    { value: 3, Icon: SentimentNeutralIcon, labelKey: 'gamut.rps.rating.okay', className: `${classes.faceItem} ${classes.faceItemOkay}` },
+    { value: 4, Icon: SentimentSatisfiedIcon, labelKey: 'gamut.rps.rating.good', className: `${classes.faceItem} ${classes.faceItemGood}` },
+    { value: 5, Icon: SentimentVerySatisfiedIcon, labelKey: 'gamut.rps.rating.excellent', className: `${classes.faceItem} ${classes.faceItemExcellent}` },
   ];
 
   return (
     <GRouterOfferSummaryRpsRoot className={classes.root}>
-      <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.nps.title' })}</Typography>
+      <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.rps.title' })}</Typography>
       <div className={classes.faces}>
         {faces.map(({ value, Icon, labelKey, className }) => (
           <ButtonBase key={labelKey} className={className} data-selected={rating === value} onClick={() => onRatingChange(value)}>
@@ -47,7 +47,7 @@ export const FormFillNpsRating: React.FC<FormFillNpsRatingProps> = ({ rating, on
         fullWidth
         value={comment}
         onChange={(event) => onCommentChange(event.target.value)}
-        placeholder={intl.formatMessage({ id: 'gamut.nps.comment.placeholder' })}
+        placeholder={intl.formatMessage({ id: 'gamut.rps.comment.placeholder' })}
       />
     </GRouterOfferSummaryRpsRoot>
   );

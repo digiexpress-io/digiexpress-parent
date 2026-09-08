@@ -52,12 +52,17 @@ public interface GamutClient {
   CancelUserActionBuilder cancelUserActionBuilder();
   UserActionFillEventBuilder fillEvent();
   UserActionViewBuilder userActionViewBuilder();
+  RpsBuilder rpsBuilder();
   
   interface UserActionViewBuilder {
     UserActionViewBuilder customer(Participant customer);
     UserActionViewBuilder actionId(String actionId);
     Uni<Void> create();
-
+  }
+  
+  interface RpsBuilder {
+    RpsBuilder command(RpsCommand command);
+    Uni<Void> create();
   }
 
   
@@ -243,6 +248,17 @@ public interface GamutClient {
     List<String> getUserRoles();
     List<String> getAllowedProcessNames();
   }  
+  
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableRpsCommand.class)
+  @JsonDeserialize(as = ImmutableRpsCommand.class)
+  interface RpsCommand {
+    String getProductId();
+    int getRating();
+    String getLocale();
+    @Nullable String getComment();
+  }
   
   public static class UserActionNotAllowedException extends RuntimeException {
     private static final long serialVersionUID = 1781444267360040922L;

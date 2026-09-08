@@ -423,8 +423,8 @@ export const sv = {
   'services.devmode.helper': 'Utvecklingsläge: Tjänsten visas endast i utvecklingsmiljön för testning och ingår inte i produktionsutgåvor.',
   'services.devmode.label': 'Utvecklingsläge',
   'services.devmode.tooltip': 'Utvecklingsläge',
-  'services.npsMode.label': 'NPS-läge',
-  'services.npsMode.helper': 'NPS-läge: Visar ett feedbackbetygswidget för användaren efter formulärinlämning',
+  'services.rpsMode.label': 'Ratings-läge',
+  'services.rpsMode.helper': 'Ratings-läge: Visar ett feedbackbetygswidget för användaren efter formulärinlämning',
   'services.disabledmode.label': 'Inaktiverat läge',
   'services.disabledmode.helper': 'Inaktiverat läge: Tjänsten visas inte på klientportalen',
   'services.disabledmode.tooltip': 'Inaktiverat läge',
@@ -1314,5 +1314,5 @@ export const sv = {
   'fs.dirent.configOption.ASSIGNABLE_MODE': 'Assignable mode',
   'fs.dirent.configOption.AUTH_ONLY_MODE': 'Endast inloggade',
   'fs.dirent.configOption.IN_HOUSE_MODE': 'Internt läge',
-  'fs.dirent.configOption.NPS_MODE': 'NPS-läge'
+  'fs.dirent.configOption.RPS_MODE': 'Ratings-läge'
 }

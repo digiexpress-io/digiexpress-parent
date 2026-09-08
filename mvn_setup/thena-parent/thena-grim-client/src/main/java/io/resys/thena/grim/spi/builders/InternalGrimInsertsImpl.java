@@ -166,6 +166,7 @@ public class InternalGrimInsertsImpl {
     final var ins_missionData = registry.missionData().insertAll(inputBatch.getData());
     final var ins_assignments = registry.assignments().insertAll(inputBatch.getAssignments());
     final var ins_procs = registry.processes().insertAll(inputBatch.getProcs());
+    final var ins_rps = registry.rps().insertAll(inputBatch.getRps());
     
     
     final Uni<GrimBatchMissions> ins_mission_uni = Execute.apply(tx, ins_mission).onItem()
@@ -203,6 +204,10 @@ public class InternalGrimInsertsImpl {
     final Uni<GrimBatchMissions> ins_procs_uni = Execute.apply(tx, ins_procs).onItem()
         .transform(row -> successOutput(inputBatch, "Procs inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
         .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert procs \r\n" + inputBatch.getAssignments(), e));
+
+    final Uni<GrimBatchMissions> ins_rps_uni = Execute.apply(tx, ins_rps).onItem()
+        .transform(row -> successOutput(inputBatch, "Rps inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert rps \r\n" + inputBatch.getAssignments(), e));
 
     
     // INSERT COMMIT RELATED MODEL
@@ -259,7 +264,9 @@ public class InternalGrimInsertsImpl {
     		    ins_assignments_uni,
     		    
             ins_viewers_uni,
-            ins_commands_uni
+            ins_commands_uni,
+            
+            ins_rps_uni
     		 )
     		.with(GrimBatchMissions.class, (List<GrimBatchMissions> items) -> merge(inputBatch, items))
     		.onFailure(GrimMissionBatchException.class)

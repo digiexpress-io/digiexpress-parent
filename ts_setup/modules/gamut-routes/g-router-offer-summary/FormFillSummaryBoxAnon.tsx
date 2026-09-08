@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { PhoneEnabled as PhoneEnabledIcon, SupportAgent as SupportAgentIcon } from '@mui/icons-material';
-import { FormFillNpsRating } from '../g-router-offer-summary-rps';
+
 import { useIntl } from "react-intl";
 import { SiteApi } from "@dxs-ts/gamut-api";
 import { useUtilityClasses } from "./useUtilityClasses";
@@ -11,12 +11,13 @@ export const FormFillSummaryBoxAnon: React.FC<{
   topicLink: SiteApi.TopicLink | undefined,
   productId: string,
   buttonBackToMsg: string,
-  onNav: () => void,
   rating: number | undefined,
-  onRatingChange: (value: number) => void,
   comment: string,
+
+  onNav: () => void,
+  onRatingChange: (value: number) => void,
   onCommentChange: (value: string) => void,
-}> = ({ topicLink, buttonBackToMsg, onNav, rating, onRatingChange, comment, onCommentChange }) => {
+}> = ({ topicLink, buttonBackToMsg, onNav }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
 
@@ -44,8 +45,6 @@ export const FormFillSummaryBoxAnon: React.FC<{
           </ListItemText>
         </ListItem>
       </List>
-
-      <FormFillNpsRating rating={rating} onRatingChange={onRatingChange} comment={comment} onCommentChange={onCommentChange} />
 
       <Box className={classes.button}>
         <Button variant='contained' onClick={onNav}>

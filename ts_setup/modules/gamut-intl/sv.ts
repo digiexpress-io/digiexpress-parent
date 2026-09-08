@@ -186,11 +186,11 @@ export const sv = {
   'dialob.review.title': 'Formulärgranskning',
   'dialob.review.button.close': 'Stäng',
   'gamut.cockpit.selection.dialog': 'Select Cockpit',
-  'gamut.nps.title': 'Hur gick det?',
-  'gamut.nps.rating.excellent': 'Utmärkt',
-  'gamut.nps.rating.good': 'Bra',
-  'gamut.nps.rating.okay': 'Okej',
-  'gamut.nps.rating.poor': 'Dåligt',
-  'gamut.nps.rating.terrible': 'Mycket dåligt',
-  'gamut.nps.comment.placeholder': 'Berätta mer (valfritt)'
+  'gamut.rps.title': 'Hur gick det?',
+  'gamut.rps.rating.excellent': 'Utmärkt',
+  'gamut.rps.rating.good': 'Bra',
+  'gamut.rps.rating.okay': 'Okej',
+  'gamut.rps.rating.poor': 'Dåligt',
+  'gamut.rps.rating.terrible': 'Mycket dåligt',
+  'gamut.rps.comment.placeholder': 'Berätta mer (valfritt)'
 }

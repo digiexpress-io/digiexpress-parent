@@ -186,11 +186,11 @@ export const fi = {
   'dialob.review.title': 'Lomakkeen esikatselu',
   'dialob.review.button.close': 'Sulje',
   'gamut.cockpit.selection.dialog': 'Select Cockpit',
-  'gamut.nps.title': 'Kuinka onnistuimme?',
-  'gamut.nps.rating.excellent': 'Erinomainen',
-  'gamut.nps.rating.good': 'Hyvä',
-  'gamut.nps.rating.okay': 'Ok',
-  'gamut.nps.rating.poor': 'Heikko',
-  'gamut.nps.rating.terrible': 'Erittäin huono',
-  'gamut.nps.comment.placeholder': 'Kerro lisää (valinnainen)'
+  'gamut.rps.title': 'Kuinka onnistuimme?',
+  'gamut.rps.rating.excellent': 'Erinomainen',
+  'gamut.rps.rating.good': 'Hyvä',
+  'gamut.rps.rating.okay': 'Ok',
+  'gamut.rps.rating.poor': 'Heikko',
+  'gamut.rps.rating.terrible': 'Erittäin huono',
+  'gamut.rps.comment.placeholder': 'Kerro lisää (valinnainen)'
 }

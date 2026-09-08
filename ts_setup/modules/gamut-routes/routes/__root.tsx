@@ -69,6 +69,7 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           createOffer={offerFetch.fetchPost} 
           getOneOffer={offerFetch.fetchOneGet} 
           getAllOffers={offerFetch.fetchAllGet} 
+          createOfferRps={offerFetch.fetchRpsPost} 
           options={{ staleTime, queryKey: processesQueryKey }}>
           
           <ContractProvider 
@@ -112,6 +113,7 @@ const PublicSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           createOffer={publicOfferFetch.fetchPost} 
           getOneOffer={publicOfferFetch.fetchOneGet} 
           getAllOffers={publicOfferFetch.fetchAllGet} 
+          createOfferRps={publicOfferFetch.fetchRpsPost}
           options={{ staleTime, queryKey: processesQueryKey }}>
           <>
             <GRouterCockpits />

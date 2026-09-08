@@ -31,8 +31,8 @@ import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.grim.spi.datasource.GrimRegistrySqlImpl;
 import io.resys.thena.spi.InternalTenantQueryImpl;
-import io.resys.thena.spi.TenantRegistrySqlImpl;
 import io.resys.thena.spi.TenantDataSource.InternalTenantQuery;
+import io.resys.thena.spi.TenantRegistrySqlImpl;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +73,7 @@ public class GrimDbInternalTenantQuery extends InternalTenantQueryImpl implement
       .append(grim.goals().createTable().getValue())
       .append(grim.objectives().createTable().getValue())
       .append(grim.remarks().createTable().getValue())
+      .append(grim.rps().createTable().getValue())
 
       .append(grim.commands().createConstraints().getValue())
       .append(grim.assignments().createConstraints().getValue())
@@ -86,6 +87,8 @@ public class GrimDbInternalTenantQuery extends InternalTenantQueryImpl implement
       .append(grim.goals().createConstraints().getValue())
       .append(grim.objectives().createConstraints().getValue())
       .append(grim.remarks().createConstraints().getValue())
+      
+      .append(grim.rps().createConstraints().getValue())
       .toString();
 
       
@@ -148,8 +151,8 @@ public class GrimDbInternalTenantQuery extends InternalTenantQueryImpl implement
       .append(grim.commitViewers().dropTable().getValue())
       .append(grim.processes().dropTable().getValue())
       .append(grim.missions().dropTable().getValue())
-      .append(grim.commits().dropTable().getValue());
-
+      .append(grim.commits().dropTable().getValue())
+      .append(grim.rps().dropTable().getValue());
     
       
       if(log.isDebugEnabled()) {

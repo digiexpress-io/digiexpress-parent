@@ -12,6 +12,7 @@ import { CockpitStore } from '@dxs-ts/gamut-cockpit-store';
 export interface UsePropulateProps {
   options: { staleTime: number, queryKey: string };
   createOffer: OfferApi.CreateOfferFetchPOST;
+  createOfferRps: OfferApi.CreateOfferRpsFetchPOST;
   getAllOffers: OfferApi.GetOffersFetchGET;
   getOneOffer: OfferApi.GetOfferFetchGET;
   cancelOffer: OfferApi.CancelOfferFetchDELETE;
@@ -20,6 +21,7 @@ export interface UsePropulateProps {
 export interface PopulateOfferContext {
   offers: readonly OfferApi.Offer[];
   isPending: boolean;
+  createOfferRps: (request: OfferApi.OfferRps) => Promise<void>;
   createOffer: (request: OfferApi.OfferRequest) => Promise<OfferApi.Offer>;
   cancelOffer: (offerId: string) => Promise<void>;
   fetchOffer: (offerId: string) => Promise<OfferApi.Offer>;
@@ -96,6 +98,11 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
   }, [refetch, props.createOffer, site]);
 
 
+  const createOfferRps: (request: OfferApi.OfferRps) => Promise<void> = React.useCallback(async (request) => {
+    return await props.createOfferRps(request).then(_resp => { });
+  }, [refetch, props.createOfferRps, site]);
+
+
   // Create new offer and reload after that
   const fetchOffer: (request: OfferApi.OfferId) => Promise<OfferApi.Offer> = React.useCallback(async (request) => {
     const newOffer: OfferApi.Offer = await props.getOneOffer(request).then(resp => resp.json()).then(data => mapToOffer(data, site));
@@ -138,6 +145,7 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
     return { 
       offers: offerData?.offers ?? [], 
       isPending: !isContextLoaded, 
-      createOffer, refresh, cancelOffer, getLocalisedOfferName, fetchOffer };
-  }, [offerData?.hash, isContextLoaded, createOffer, refresh, cancelOffer, getLocalisedOfferName, fetchOffer]);
+      createOffer, refresh, cancelOffer, getLocalisedOfferName, fetchOffer, createOfferRps
+    };
+  }, [offerData?.hash, isContextLoaded, createOffer, refresh, cancelOffer, getLocalisedOfferName, fetchOffer, createOfferRps]);
 }

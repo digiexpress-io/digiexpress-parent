@@ -24,13 +24,13 @@ import java.time.OffsetDateTime;
 import java.util.function.Consumer;
 
 import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
-import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewProcess;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRps;
 import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.grim.api.GrimCommitActions.CreateOneProc;
-import io.resys.thena.grim.api.GrimCommitActions.OneProcEnvelope;
-import io.resys.thena.grim.api.ImmutableOneProcEnvelope;
+import io.resys.thena.grim.api.GrimCommitActions.CreateOneRps;
+import io.resys.thena.grim.api.GrimCommitActions.OneRpsEnvelope;
+import io.resys.thena.grim.api.ImmutableOneRpsEnvelope;
 import io.resys.thena.grim.spi.GrimDataSource;
 import io.resys.thena.grim.spi.GrimDataSource.GrimBatchMissions;
 import io.resys.thena.grim.spi.GrimDataSource.GrimState;
@@ -44,49 +44,47 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class CreateOneProcImpl implements CreateOneProc {
+public class CreateOneRpsImpl implements CreateOneRps {
 
   private final GrimDataSource state;
   private final String tenantId;
   
   private String author;
   private String message;
-  private Consumer<NewProcess> newProc;
+  private Consumer<NewRps> newRps;
   
   @Override
-  public CreateOneProc commitAuthor(String author) {
+  public CreateOneRps commitAuthor(String author) {
     this.author = RepoAssert.notEmpty(author, () -> "author can't be empty!"); 
     return this;
   }
   @Override
-  public CreateOneProc commitMessage(String message) {
+  public CreateOneRps commitMessage(String message) {
     this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!");
     return this;
   }
   @Override
-  public CreateOneProc proc(Consumer<NewProcess> newProc) {
-    RepoAssert.notNull(newProc, () -> "newProc can't be empty!");
-    this.newProc = newProc;
+  public CreateOneRps rps(Consumer<NewRps> newRps) {
+    RepoAssert.notNull(newRps, () -> "newRps can't be empty!");
+    this.newRps = newRps;
     return this;
   }
 
   @Override
-  public Uni<OneProcEnvelope> build() {
+  public Uni<OneRpsEnvelope> build() {
     final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(tenantId).build();
     return this.state.withGrimTransaction(scope, this::doInTx);
   }
   
-  private Uni<OneProcEnvelope> doInTx(GrimState tx) {
-    return tx.missionProcSequences().nextVal().onItem()
-        .transformToUni(nextVal -> createRequest(tx, nextVal))
-        .onItem().transformToUni(request -> createResponse(tx, request))
-        .onFailure(CreateOneProcException.class).recoverWithItem(ex -> {
-          final CreateOneProcException error = (CreateOneProcException) ex;          
-          return ImmutableOneProcEnvelope.builder()
+  private Uni<OneRpsEnvelope> doInTx(GrimState tx) {
+    return createResponse(tx, createRequest(tx))
+        .onFailure(CreateOneRpsException.class).recoverWithItem(ex -> {
+          final CreateOneRpsException error = (CreateOneRpsException) ex;          
+          return ImmutableOneRpsEnvelope.builder()
             .repoId(tenantId)
             .addMessages(ImmutableMessage.builder()
                 .text(new StringBuilder()
-                  .append("Commit to: '").append(tenantId).append("'").append(" is rejected.")
+                  .append("Commit to: '").append(tenantId).append("'").append(" is rejected for RPS.")
                   .append(System.lineSeparator())
                   .append("Message: ").append(error.getMessage())
                   .toString())
@@ -97,15 +95,15 @@ public class CreateOneProcImpl implements CreateOneProc {
         });
   }
   
-  private Uni<OneProcEnvelope> createResponse(GrimState tx, GrimBatchMissions request) {
+  private Uni<OneRpsEnvelope> createResponse(GrimState tx, GrimBatchMissions request) {
     return tx.batchMany(request).onItem().transform(rsp -> {
       if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
-        throw new CreateOneProcException("Failed to create mission!", rsp);
+        throw new CreateOneRpsException("Failed to create RPS!", rsp);
       }
       
-      final OneProcEnvelope result = ImmutableOneProcEnvelope.builder()
+      final OneRpsEnvelope result = ImmutableOneRpsEnvelope.builder()
           .repoId(tenantId)
-          .proc(rsp.getProcs().iterator().next())
+          .rps(rsp.getRps().iterator().next())
           .addAllMessages(rsp.getMessages())
           .status(BatchStatus.mapStatus(rsp.getStatus()))
           .build();
@@ -113,7 +111,7 @@ public class CreateOneProcImpl implements CreateOneProc {
     });
   }
   
-  private Uni<GrimBatchMissions> createRequest(GrimState tx, Long nextVal) {
+  private GrimBatchMissions createRequest(GrimState tx) {
     final var start = ImmutableGrimBatchMissions.builder()
         .tenantId(tenantId)
         .status(BatchStatus.OK)
@@ -134,9 +132,9 @@ public class CreateOneProcImpl implements CreateOneProc {
           .build()
     );
     
-    final var newMissionProc = new NewProcessBuilder(logger, null, nextVal);
-    this.newProc.accept(newMissionProc);
-    final var created = newMissionProc.close();
+    final var newRpsBuilder = new NewRpsBuilder(logger);
+    this.newRps.accept(newRpsBuilder);
+    final var created = newRpsBuilder.close();
     
     next = ImmutableGrimBatchMissions.builder()
         .from(start)
@@ -144,13 +142,13 @@ public class CreateOneProcImpl implements CreateOneProc {
         .from(logger.close())
         .build();
   
-    return Uni.createFrom().item(next);
+    return next;
   }
   
-  public static class CreateOneProcException extends RuntimeException {
+  public static class CreateOneRpsException extends RuntimeException {
     private static final long serialVersionUID = -6202574733069488724L;
     private final GrimBatchMissions batch;
-    public CreateOneProcException(String message, GrimBatchMissions batch) {
+    public CreateOneRpsException(String message, GrimBatchMissions batch) {
       super(message + System.lineSeparator() + " " +
           String.join(System.lineSeparator() + " ", batch.getMessages().stream().map(e -> e.getText()).toList()));
       

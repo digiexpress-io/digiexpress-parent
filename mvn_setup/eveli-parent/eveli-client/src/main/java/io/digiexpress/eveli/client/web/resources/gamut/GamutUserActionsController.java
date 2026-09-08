@@ -47,6 +47,7 @@ import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentDownloadUrl;
 import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
+import io.digiexpress.eveli.client.api.GamutClient.RpsCommand;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionAttachment;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
@@ -55,7 +56,6 @@ import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.resys.limaone.spi.program.input.DefaultAuthProgramInput;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,15 +70,7 @@ public class GamutUserActionsController {
   private final GamutAuthClient authClient;
   private final io.resys.limaone.program.Runtime runtime;
   private final FeedbackClient feedback;
-  
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableRpsCommand.class)
-  @JsonDeserialize(as = ImmutableRpsCommand.class)
-  interface RpsCommand {
-    String getProductId();
-    int getRating();
-    @Nullable String getComment();
-  }
+
 
   @Value.Immutable
   @JsonSerialize(as = ImmutableAuthorizationAction.class)
@@ -126,9 +118,8 @@ public class GamutUserActionsController {
   }
   
   @PostMapping(value = "/rps")
-  public ResponseEntity<Void> submitRps(@RequestBody RpsCommand command) {
-    log.info("NPS feedback: productId={}, rating={}, comment={}", command.getProductId(), command.getRating(), command.getComment());
-    return ResponseEntity.ok().build();
+  public Uni<ResponseEntity<Void>> submitRps(@RequestBody RpsCommand command) {
+    return gamutClient.rpsBuilder().command(command).create().onItem().transform(ignore -> ResponseEntity.ok().build());
   }
 
   @PutMapping(path = "/feedback")

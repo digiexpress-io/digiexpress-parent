@@ -180,11 +180,11 @@ export const bs = {
   'gamut.feedback.feedbackViewerSubTitle': 'Odgovor organizacije',
   'dialob.review.title': 'Pregled obrasca',
   'dialob.review.button.close': 'Zatvori',
-  'gamut.nps.title': 'Kako smo se pokazali?',
-  'gamut.nps.rating.excellent': 'Odlično',
-  'gamut.nps.rating.good': 'Dobro',
-  'gamut.nps.rating.okay': 'Prosječno',
-  'gamut.nps.rating.poor': 'Loše',
-  'gamut.nps.rating.terrible': 'Užasno',
-  'gamut.nps.comment.placeholder': 'Recite nam više (opcionalno)'
+  'gamut.rps.title': 'Kako smo se pokazali?',
+  'gamut.rps.rating.excellent': 'Odlično',
+  'gamut.rps.rating.good': 'Dobro',
+  'gamut.rps.rating.okay': 'Prosječno',
+  'gamut.rps.rating.poor': 'Loše',
+  'gamut.rps.rating.terrible': 'Užasno',
+  'gamut.rps.comment.placeholder': 'Recite nam više (opcionalno)'
 }
