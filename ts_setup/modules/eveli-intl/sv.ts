@@ -1307,5 +1307,12 @@ export const sv = {
   'task.audit.ai.similar.unavailable': 'Ingen liknande feedback tillgänglig',
   'taskcard.body.customerName.none': 'Ej angiven',
   'taskcard.body.form.canPublishFeedback.yes': 'Ja',
-  'taskcard.body.form.representative.placeholder': 'Representantens namn'
+  'taskcard.body.form.representative.placeholder': 'Representantens namn',
+  'fs.dirent.configOption.DEV_MODE': 'Utvecklingsläge',
+  'fs.dirent.configOption.DISABLED_MODE': 'Inaktiverat läge',
+  'fs.dirent.configOption.ANONYMOUS_MODE': 'Anonymt läge',
+  'fs.dirent.configOption.ASSIGNABLE_MODE': 'Assignable mode',
+  'fs.dirent.configOption.AUTH_ONLY_MODE': 'Endast inloggade',
+  'fs.dirent.configOption.IN_HOUSE_MODE': 'Internt läge',
+  'fs.dirent.configOption.NPS_MODE': 'NPS-läge'
 }

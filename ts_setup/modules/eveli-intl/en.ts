@@ -1582,6 +1582,7 @@ export const en = {
   'fs.dirent.configOption.ASSIGNABLE_MODE': 'Assignable mode',
   'fs.dirent.configOption.AUTH_ONLY_MODE': 'Auth-only mode',
   'fs.dirent.configOption.IN_HOUSE_MODE': 'In-house mode',
+  'fs.dirent.configOption.NPS_MODE': 'NPS mode',
   'fs.direntTextField.required': '* Required',
   'fs.direntSelectSingle.required': '* Required',
   'fs.direntSelectGrouped.localeFilter.label': 'Filter by locale',

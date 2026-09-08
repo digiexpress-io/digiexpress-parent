@@ -1308,5 +1308,12 @@ export const fi = {
   'taskcard.body.customerName.none': 'Ei määritelty',
   'taskcard.body.form.canPublishFeedback.yes': 'Kyllä',
   'taskcard.body.form.representative.placeholder': 'Edustajan nimi',
-  'fs.dirent.language.localeCodeField.placeholder': 'fi'
+  'fs.dirent.language.localeCodeField.placeholder': 'fi',
+  'fs.dirent.configOption.DEV_MODE': 'Kehitystila',
+  'fs.dirent.configOption.DISABLED_MODE': 'Ei käytössä',
+  'fs.dirent.configOption.ANONYMOUS_MODE': 'Anonyymi käyttäjä',
+  'fs.dirent.configOption.ASSIGNABLE_MODE': 'Palvelun käytöntila',
+  'fs.dirent.configOption.AUTH_ONLY_MODE': 'Vain kirjautuneille',
+  'fs.dirent.configOption.IN_HOUSE_MODE': 'Sisäinen tila',
+  'fs.dirent.configOption.NPS_MODE': 'NPS-tila'
 }

@@ -48,6 +48,7 @@ const ConfigIcon: React.FC<{ type: Fs.ConfigOption, className: string }> = ({ ty
     case 'ANONYMOUS_MODE': return <FsIcon small icon={FsIcons.Anonymous} className={className} tooltip={tooltip} />;
     case 'AUTH_ONLY_MODE': return <FsIcon small icon={FsIcons.Locked} className={className} tooltip={tooltip} />;
     case 'IN_HOUSE_MODE': return <FsIcon small icon={FsIcons.InHouse} className={className} tooltip={tooltip} />;
+    case 'NPS_MODE': return <FsIcon small icon={FsIcons.Nps} className={className} tooltip={tooltip} />;
   }
 }
 
