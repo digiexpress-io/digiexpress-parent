@@ -241,6 +241,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
               .formTag(link.getBody().getFormTag())
               .formId(link.getBody().getFormId())
               .type(LINK_TYPE_WORKFLOW)
+              .rps(false)
               .build();
           result.add(resource);
         }
