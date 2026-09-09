@@ -1,13 +1,12 @@
-import { Box } from '@mui/material';
-import { Container, Grid2, Paper, Typography } from '@mui/material';
+import { Container, Grid2 } from '@mui/material';
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Bar, BarChart, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, Cell, Legend, Pie, Tooltip, XAxis, YAxis } from 'recharts';
 
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { TaskApi } from '@dxs-ts/task-api';
 
-import { OVERDUE_FILL_COLORS, PieChartSlot, priorityColorMap, statusColorMap, BarChartSlot, BarLabel } from './useUtilityClasses';
+import { PieChartSlot, priorityColorMap, statusColorMap, BarChartSlot, BarLabel } from './useUtilityClasses';
 import { withDs } from './WithDashboardData';
 
 

@@ -11,14 +11,14 @@ import {
 import { GRouterOfferSummaryRpsRoot, GRouterOfferSummaryRpsTextField, useUtilityClasses } from './useUtilityClasses';
 
 
-export interface FormFillNpsRatingProps {
+export interface FormFillRpsRatingProps {
   rating: number | undefined;
   comment: string;
   onRatingChange: (value: number) => void;
   onCommentChange: (value: string) => void;
 }
 
-export const FormFillNpsRating: React.FC<FormFillNpsRatingProps> = ({ rating, onRatingChange, comment, onCommentChange }) => {
+export const FormFillRpsRating: React.FC<FormFillRpsRatingProps> = ({ rating, onRatingChange, comment, onCommentChange }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
 

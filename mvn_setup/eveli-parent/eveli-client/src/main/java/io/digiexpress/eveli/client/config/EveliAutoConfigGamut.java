@@ -91,12 +91,13 @@ public class EveliAutoConfigGamut {
 
   @Bean
   public GamutUserActionsController gamutUserActionsController(
-      io.resys.limaone.program.Runtime envir, 
+      io.resys.limaone.program.Runtime envir,
       FeedbackClient feedback,
-      GamutClient gamutClient,  
+      GamutClient gamutClient,
       GamutAuthClient crmClient,
-      DialobFillEventPublisher publisher) {
+      DialobFillEventPublisher publisher,
+      TaskClient taskClient) {
 
-    return new GamutUserActionsController(publisher, gamutClient, crmClient, envir, feedback);
+    return new GamutUserActionsController(publisher, gamutClient, crmClient, envir, feedback, taskClient);
   }
 }
