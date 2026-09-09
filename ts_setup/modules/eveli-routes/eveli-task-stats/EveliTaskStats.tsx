@@ -5,28 +5,32 @@ import { Bar, BarChart, Cell, Legend, Pie, Tooltip, XAxis, YAxis } from 'rechart
 
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { TaskApi } from '@dxs-ts/task-api';
+import { GrimRps } from '@dxs-ts/eveli-api/fetch/worker.rest.api.tasks.get';
 
 import { PieChartSlot, priorityColorMap, statusColorMap, BarChartSlot, BarLabel } from './useUtilityClasses';
 import { withDs } from './WithDashboardData';
+import { CustomerRatings } from '../eveli-customer-ratings';
 
 
 
 export const EveliTaskStats: React.FC = () => {
   const taskFetch = useFetch('worker/rest/api/tasks.GET', {})
   const [dashboard, setDashboard] = React.useState<TaskApi.TaskDasboard>();
+  const [rps, setRps] = React.useState<GrimRps[]>();
 
   React.useEffect(() => {
-    taskFetch.dashboard().then(setDashboard)
+    taskFetch.dashboard().then(setDashboard);
+    taskFetch.findAllRps().then(setRps);
   }, []);
 
   if(!dashboard) {
     return (<>...loading</>)
   }
-  return (<EveliTaskBody dashoard={dashboard}/>)
+  return (<EveliTaskBody dashoard={dashboard} rps={rps} />)
 }
 
 
-const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard }> = ({dashoard}) => {
+const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard; rps: GrimRps[] | undefined }> = ({dashoard, rps}) => {
   const intl = useIntl();
 
   function getStatusName(item: TaskApi.GrimMissionAttributeEvent): string {
@@ -39,6 +43,7 @@ const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard }> = ({dashoard})
 
   return (
     <Container maxWidth='lg'>
+      <CustomerRatings rps={rps} />
       <Grid2 container spacing={2}>
         
         <PieChartSlot 

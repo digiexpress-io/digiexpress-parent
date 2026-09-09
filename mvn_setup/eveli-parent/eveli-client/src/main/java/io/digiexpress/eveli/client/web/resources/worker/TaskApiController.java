@@ -72,6 +72,7 @@ import io.resys.limaone.program.ImmutableParticipantId;
 import io.resys.limaone.program.ImmutableWorkflowDefaultProps;
 import io.resys.limaone.program.WorkflowProgram;
 import io.resys.limaone.program.WorkflowProgram.WorkflowFormResult;
+import io.resys.thena.api.entities.grim.GrimRps;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.AllArgsConstructor;
@@ -468,6 +469,14 @@ public class TaskApiController {
   public Uni<KeyWordsResponse> getKeyWords() {
     return taskClient.queryTaskKeywords().findAllKeywords()
         .onItem().transform(resp -> new KeyWordsResponse(resp));
+  }
+  
+
+  @GetMapping(value = "/rps")
+  public Multi<GrimRps> findAllRps() {
+    final var config = taskClient.unwrap().getConfig();
+    final var grim = config.getClient().grim(config.getTenantName());
+    return grim.find().rpsQuery().findAll();
   }
   
   @Data

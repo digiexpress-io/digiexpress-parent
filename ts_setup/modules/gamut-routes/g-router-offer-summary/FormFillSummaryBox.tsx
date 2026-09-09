@@ -7,7 +7,7 @@ import { PhoneEnabled as PhoneEnabledIcon } from '@mui/icons-material';
 import { useIntl } from "react-intl";
 import { SiteApi } from "@dxs-ts/gamut-api";
 import { useUtilityClasses } from "./useUtilityClasses";
-import { FormFillNpsRating } from '../g-router-offer-summary-rps';
+import { FormFillRpsRating } from '../g-router-offer-summary-rps';
 
 
 export const FormFillSummaryBox: React.FC<{
@@ -68,7 +68,7 @@ export const FormFillSummaryBox: React.FC<{
 
       <div className={classes.spacer} />
       {(topicLink?.rps &&
-        <FormFillNpsRating rating={rating} onRatingChange={onRatingChange} comment={comment} onCommentChange={onCommentChange} />
+        <FormFillRpsRating rating={rating} onRatingChange={onRatingChange} comment={comment} onCommentChange={onCommentChange} />
       )}
       <Box className={classes.button}>
         <Button variant='contained' onClick={onNav}>

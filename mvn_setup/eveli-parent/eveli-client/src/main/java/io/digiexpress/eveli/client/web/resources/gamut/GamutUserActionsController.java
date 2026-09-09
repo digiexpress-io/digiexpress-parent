@@ -52,10 +52,8 @@ import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionAttachment;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
-import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.resys.limaone.spi.program.input.DefaultAuthProgramInput;
-import io.resys.thena.api.entities.grim.GrimRps;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -72,8 +70,6 @@ public class GamutUserActionsController {
   private final GamutAuthClient authClient;
   private final io.resys.limaone.program.Runtime runtime;
   private final FeedbackClient feedback;
-  private final TaskClient taskClient;
-
 
   @Value.Immutable
   @JsonSerialize(as = ImmutableAuthorizationAction.class)
@@ -123,13 +119,6 @@ public class GamutUserActionsController {
   @PostMapping(value = "/rps")
   public Uni<ResponseEntity<Void>> submitRps(@RequestBody RpsCommand command) {
     return gamutClient.rpsBuilder().command(command).create().onItem().transform(ignore -> ResponseEntity.ok().build());
-  }
-  
-  @GetMapping(value = "/rps")
-  public Multi<GrimRps> findAllRps() {
-    final var config = taskClient.unwrap().getConfig();
-    final var grim = config.getClient().grim(config.getTenantName());
-    return grim.find().rpsQuery().findAll();
   }
   
   @PutMapping(path = "/feedback")

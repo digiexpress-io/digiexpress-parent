@@ -1285,6 +1285,7 @@
         "@monaco-editor/react",
         "yaml",
         "recharts",
+        "@dxs-ts/eveli-api/fetch/worker.rest.api.tasks.get",
         "@dxs-ts/user-profile",
         "@dxs-ts/gamut-shell",
         "@mui/system",
@@ -1332,6 +1333,7 @@
         "@dxs-ts/task-api",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/xui-table",
+        "@dxs-ts/eveli-api/fetch/worker.rest.api.tasks.get",
         "@dxs-ts/user-profile",
         "@dxs-ts/gamut-shell",
         "@dxs-ts/stencil-routes",
@@ -1347,7 +1349,9 @@
         "@dxs-ts/fs-nav",
         "@dxs-ts/ledger-composer"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "@dxs-ts/eveli-api/fetch/worker.rest.api.tasks.get"
+      ],
       "unusedDependencies": [
         "notistack"
       ]
@@ -4662,6 +4666,6 @@
       ]
     }
   },
-  "checksum": "820c7d2f479781243ebe4557dce1afd22a335bb604f7612421493e574d25a97f",
-  "generatedAt": "2026-08-31T09:51:36.670Z"
+  "checksum": "ccbde9d68884e1af88dd59b88a6202cfa3c29976b794a059a36a24f215b72c45",
+  "generatedAt": "2026-09-09T10:02:51.069Z"
 }

@@ -98,6 +98,6 @@ public class EveliAutoConfigGamut {
       DialobFillEventPublisher publisher,
       TaskClient taskClient) {
 
-    return new GamutUserActionsController(publisher, gamutClient, crmClient, envir, feedback, taskClient);
+    return new GamutUserActionsController(publisher, gamutClient, crmClient, envir, feedback);
   }
 }
