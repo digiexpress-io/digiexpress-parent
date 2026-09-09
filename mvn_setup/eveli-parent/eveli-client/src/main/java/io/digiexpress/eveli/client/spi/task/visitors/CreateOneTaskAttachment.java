@@ -43,16 +43,29 @@ public class CreateOneTaskAttachment implements TaskStoreConfig.MergeTaskVisitor
   private void createTaskAttachment(TaskClient.TaskAttachment attachment, MergeMission merge) {
     final var usedFor = attachment.getSource() == AttachmentSource.PORTAL_FORM || attachment.getSource() == AttachmentSource.PORTAL_UPLOAD ? TaskMapper.VIEWER_CUSTOMER : TaskMapper.VIEWER_WORKER;
     
-    merge.addLink(link -> {
+    var currentLink = merge.getCurrentState().getLinks().values().stream()
+        .filter(l -> TaskMapper.LINK_TYPE_ATTACHMENT.equals(l.getLinkType()))
+        .filter(l -> attachment.getName().equals(l.getLinkValue()))
+        .findFirst();
+    
+    if (currentLink.isPresent()) {
+      merge.modifyLink(currentLink.get().getId(), link -> {
+        link.linkBody(JsonObject.mapFrom(attachment))
+        .build();
+      });
+    }
+    else {
       // create new link
-      link
-          .linkType(TaskMapper.LINK_TYPE_ATTACHMENT)
-          .linkValue(attachment.getName())
-          .linkBody(JsonObject.mapFrom(attachment))
-          .build();
-      
-    })
-    .addViewer(newViewer -> newViewer.userId(userId).usedFor(usedFor).currentTxCommit().build())
+      merge.addLink(link -> {
+        link
+            .linkType(TaskMapper.LINK_TYPE_ATTACHMENT)
+            .linkValue(attachment.getName())
+            .linkBody(JsonObject.mapFrom(attachment))
+            .build();
+        
+      });
+    }
+    merge.addViewer(newViewer -> newViewer.userId(userId).usedFor(usedFor).currentTxCommit().build())
     .build();
   }
 

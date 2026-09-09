@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +40,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
+import io.digiexpress.eveli.client.api.AttachmentCommands.AttachmentStatus;
 import io.digiexpress.eveli.client.api.AttachmentCommands.AttachmentUpload;
+import io.digiexpress.eveli.client.api.ImmutableAttachment;
 import io.digiexpress.eveli.client.api.ImmutableTaskAttachment;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAttachment;
@@ -77,20 +80,31 @@ public class AttachmentApiController {
    * @throws URISyntaxException
    */
   @GetMapping("/tasks/{taskId}/files/")
-  public ResponseEntity<List<Attachment>> listTaskAttachments(@PathVariable String taskId) 
+  public Uni<ResponseEntity<List<Attachment>>> listTaskAttachments(@PathVariable String taskId) 
       throws URISyntaxException 
   {
     final var authentication = securityClient.getUser();
     log.debug("Attachment list GET API call for task id: {} from user {}", taskId, authentication.getPrincipal().getUsername());
     if (!checkTaskAccess(taskId, authentication)) {
-      return ResponseEntity.notFound().build();
+      return Uni.createFrom().item(ResponseEntity.notFound().build());
     }
-    final var processId = getProcessIdFromTask(taskId);
-    final var result = processId != null ? client.query().processId(processId) : client.query().taskId(taskId);
-    
-    return ResponseEntity.ok(result);
+    return taskClient.queryTasks().findOneById(taskId).map(ot -> {
+      return ot.map(t->{
+        return ResponseEntity.ok(t.getAttachments().stream().map(a -> taskAttachmentToAttachment(a)).toList());
+      }).orElse(ResponseEntity.notFound().build());
+    });
   }
   
+  private Attachment taskAttachmentToAttachment(TaskAttachment ta) {
+    ZonedDateTime time = ta.getCreated().toZonedDateTime();
+    return ImmutableAttachment.builder()
+        .created(time)
+        .name(ta.getName())
+        .size(ta.getSize())
+        .status(AttachmentStatus.OK)
+        .updated(time)
+        .build();
+  }
 
   /**
    * Returns Signed URL for downloading attachment file in location header in HTTP response with status FOUND (302).
@@ -193,7 +207,7 @@ public class AttachmentApiController {
         if (uploadUrl.isPresent()) {
           return ResponseEntity.ok(uploadUrl.get());
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
       });
   }
 
