@@ -5,7 +5,7 @@ import { Bar, BarChart, Cell, Legend, Pie, Tooltip, XAxis, YAxis } from 'rechart
 
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { TaskApi } from '@dxs-ts/task-api';
-import { GrimRps } from '@dxs-ts/eveli-api/fetch/worker.rest.api.tasks.get';
+import { GrimRps } from '@dxs-ts/eveli-api';
 
 import { PieChartSlot, priorityColorMap, statusColorMap, BarChartSlot, BarLabel } from './useUtilityClasses';
 import { withDs } from './WithDashboardData';

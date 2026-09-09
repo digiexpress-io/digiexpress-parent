@@ -86,7 +86,7 @@ public class Bundle_Lazy implements Bundle {
   @Override public BundleQuery<TagomiProgram> queryTagomis() { return await().queryTagomis(); }
   
   public Bundle await() {
-    if(debounce.asMap().containsKey(getTid())) {
+    if(debounce.asMap().containsKey(getTid()) && bundle != null) {
       return bundle;
     }
     debounce.put(getTid(), getTid());

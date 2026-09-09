@@ -241,7 +241,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
               .formTag(link.getBody().getFormTag())
               .formId(link.getBody().getFormId())
               .type(LINK_TYPE_WORKFLOW)
-              .rps(false)
+              .rps(link.getBody().getRps())
               .build();
           result.add(resource);
         }
@@ -282,7 +282,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
             .desc(label.getLabelValue())
             .path(visitArticlePath(article))
             .value(link.getBody().getValue())
-            .workflow(false).anon(true).global(false).assignable(false)
+            .workflow(false).anon(true).global(false).assignable(false).rps(false)
             .type(link.getBody().getContentType())
             .build();
         result.add(resource);
@@ -308,7 +308,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
               .desc(label.getLabelValue())
               .path(visitArticlePath(article))
               .value(link.getBody().getValue())
-              .workflow(false).anon(true).global(true).assignable(false)
+              .workflow(false).anon(true).global(true).assignable(false).rps(false)
               .type(link.getBody().getContentType())
               .build();
           result.add(resource);

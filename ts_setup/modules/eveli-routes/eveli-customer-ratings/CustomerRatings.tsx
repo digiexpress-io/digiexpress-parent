@@ -1,6 +1,5 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { Box, Typography } from '@mui/material';
 import {
   SentimentVerySatisfied as SentimentVerySatisfiedIcon,
   SentimentSatisfied as SentimentSatisfiedIcon,
@@ -11,14 +10,10 @@ import {
 
 import {
   EveliCustomerRatingsRoot,
-  EveliCustomerRatingsTitle,
-  EveliCustomerRatingsHeaderText,
-  EveliCustomerRatingsBodyText,
-  EveliCustomerRatingsIconCell,
-  EveliCustomerRatingsColorCell,
-  averageBg,
-  getRpsColumnBg,
-  getRpsColumnIconColor,
+  useUtilityClasses,
+  getRpsColumnProps,
+  getAverageProps,
+  RatingKey,
 } from './useUtilityClasses';
 
 
@@ -41,8 +36,6 @@ interface RpsTableRow {
   average: number;
 }
 
-type RatingKey = 'count5' | 'count4' | 'count3' | 'count2' | 'count1';
-
 interface RpsColumn {
   key: RatingKey;
   Icon: React.ElementType;
@@ -60,17 +53,7 @@ function aggregate(rps: RpsTableCol[]): RpsTableRow[] {
   const map = new Map<string, RpsTableRow>();
   for (const entry of rps) {
     const key = `${entry.workflowName}__${entry.formName}`;
-    const row = map.get(key) ?? {
-      workflowName: entry.workflowName,
-      formName: entry.formName,
-      count5: 0,
-      count4: 0,
-      count3: 0,
-      count2: 0,
-      count1: 0,
-      total: 0,
-      average: 0
-    };
+    const row = map.get(key) ?? { workflowName: entry.workflowName, formName: entry.formName, count5: 0, count4: 0, count3: 0, count2: 0, count1: 0, total: 0, average: 0 };
     map.set(key, row);
     (row as any)[`count${entry.rating}`]++;
     row.total++;
@@ -84,48 +67,63 @@ function aggregate(rps: RpsTableCol[]): RpsTableRow[] {
 }
 
 export const CustomerRatings: React.FC<{ rps: RpsTableCol[] | undefined }> = ({ rps }) => {
-  const theme = useTheme();
+  const classes = useUtilityClasses();
   const rows = aggregate(rps ?? []);
-  const bg = getRpsColumnBg(theme);
-  const iconColor = getRpsColumnIconColor(theme);
 
   return (
     <EveliCustomerRatingsRoot>
-      <EveliCustomerRatingsTitle>Customer Ratings</EveliCustomerRatingsTitle>
-      <Table size='small'>
-        <TableHead>
-          <TableRow>
-            <TableCell><EveliCustomerRatingsHeaderText>Workflow</EveliCustomerRatingsHeaderText></TableCell>
-            <TableCell><EveliCustomerRatingsHeaderText>Form</EveliCustomerRatingsHeaderText></TableCell>
-            {COLUMNS.map(({ key, Icon }) => (
-              <EveliCustomerRatingsColorCell key={key} align='center' bgColor={bg[key]}>
-                <EveliCustomerRatingsIconCell iconColor={iconColor[key]}>
-                  <Icon />
-                </EveliCustomerRatingsIconCell>
-              </EveliCustomerRatingsColorCell>
-            ))}
-            <TableCell align='center'><EveliCustomerRatingsHeaderText>Total</EveliCustomerRatingsHeaderText></TableCell>
-            <TableCell align='center'><EveliCustomerRatingsHeaderText>Average</EveliCustomerRatingsHeaderText></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={`${row.workflowName}__${row.formName}`}>
-              <TableCell><EveliCustomerRatingsBodyText>{row.workflowName}</EveliCustomerRatingsBodyText></TableCell>
-              <TableCell><EveliCustomerRatingsBodyText>{row.formName}</EveliCustomerRatingsBodyText></TableCell>
-              {COLUMNS.map(({ key }) => (
-                <EveliCustomerRatingsColorCell key={key} align='center' bgColor={bg[key]}>
-                  <EveliCustomerRatingsBodyText>{row[key]}</EveliCustomerRatingsBodyText>
-                </EveliCustomerRatingsColorCell>
-              ))}
-              <TableCell align='center'><EveliCustomerRatingsBodyText>{row.total}</EveliCustomerRatingsBodyText></TableCell>
-              <EveliCustomerRatingsColorCell align='center' bgColor={averageBg(theme, row.average)}>
-                <EveliCustomerRatingsBodyText>{row.average.toFixed(2)}</EveliCustomerRatingsBodyText>
-              </EveliCustomerRatingsColorCell>
-            </TableRow>
+      <Typography className={classes.title}>Customer Ratings</Typography>
+      <Box display='flex' flexDirection='column'>
+
+        <Box display='flex' flexDirection='row' className={classes.row}>
+          <Box className={classes.nameColumn}>
+            <Box className={classes.header}><Typography>Workflow</Typography></Box>
+          </Box>
+          <Box className={classes.nameColumn}>
+            <Box className={classes.header}><Typography>Form</Typography></Box>
+          </Box>
+          {COLUMNS.map(({ key, Icon }) => (
+            <Box key={key} className={classes.columnWrapper}>
+              <Box className={classes.header} {...getRpsColumnProps(key)}><Icon /></Box>
+            </Box>
           ))}
-        </TableBody>
-      </Table>
+          <Box className={classes.totalSection}>
+            <Box className={classes.header}><Typography>Total</Typography></Box>
+          </Box>
+          <Box className={classes.totalSection}>
+            <Box className={classes.header}><Typography>Average</Typography></Box>
+          </Box>
+        </Box>
+
+        {rows.map((row, index) => (
+          <Box key={index} display='flex' flexDirection='row' className={classes.row}>
+            <Box className={classes.nameColumn}>
+              <Box className={classes.cell}><Typography className={classes.cellValue}>{row.workflowName}</Typography></Box>
+            </Box>
+            <Box className={classes.nameColumn}>
+              <Box className={classes.cell}><Typography className={classes.cellValue}>{row.formName}</Typography></Box>
+            </Box>
+            {COLUMNS.map(({ key }) => (
+              <Box key={key} className={classes.columnWrapper}>
+                <Box className={classes.countsPanel} {...getRpsColumnProps(key)}>
+                  <Box className={classes.cell}><Typography className={classes.cellValue}>{row[key]}</Typography></Box>
+                </Box>
+              </Box>
+            ))}
+            <Box className={classes.totalSection}>
+              <Box className={classes.cell}><Typography className={classes.cellValue}>{row.total}</Typography></Box>
+            </Box>
+            <Box className={classes.totalSection}>
+              <Box className={classes.cell}>
+                <Typography className={classes.averageText} {...getAverageProps(row.average)}>
+                  {row.average.toFixed(2)}
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+        ))}
+
+      </Box>
     </EveliCustomerRatingsRoot>
   );
 };
