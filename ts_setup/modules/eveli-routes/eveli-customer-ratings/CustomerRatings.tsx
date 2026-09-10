@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import { Box, IconButton, Typography } from '@mui/material';
 import { InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
 
@@ -65,20 +66,21 @@ function aggregate(rps: RpsTableCol[]): RpsTableRow[] {
 
 export const CustomerRatings: React.FC<{ rps: RpsTableCol[] | undefined }> = ({ rps }) => {
   const classes = useUtilityClasses();
+  const intl = useIntl();
   const rows = aggregate(rps ?? []);
   const [dialogData, setDialogData] = React.useState<RpsTableRow | undefined>(undefined);
 
   return (
     <EveliCustomerRatingsRoot>
-      <Typography className={classes.title}>Customer Ratings</Typography>
+      <Typography className={classes.title}>{intl.formatMessage({ id: 'rps.table.title' })}</Typography>
       <Box display='flex' flexDirection='column'>
 
         <Box display='flex' flexDirection='row' className={classes.row}>
           <Box className={classes.nameColumn}>
-            <Box className={classes.header}><Typography>Workflow</Typography></Box>
+            <Box className={classes.header}><Typography>{intl.formatMessage({ id: 'rps.table.workflow' })}</Typography></Box>
           </Box>
           <Box className={classes.nameColumn}>
-            <Box className={classes.header}><Typography>Form</Typography></Box>
+            <Box className={classes.header}><Typography>{intl.formatMessage({ id: 'rps.table.form' })}</Typography></Box>
           </Box>
           {COLUMNS.map(({ key, Icon }) => (
             <Box key={key} className={classes.columnWrapper}>
@@ -86,10 +88,10 @@ export const CustomerRatings: React.FC<{ rps: RpsTableCol[] | undefined }> = ({ 
             </Box>
           ))}
           <Box className={classes.totalSection}>
-            <Box className={classes.header}><Typography>Total</Typography></Box>
+            <Box className={classes.header}><Typography>{intl.formatMessage({ id: 'rps.table.total' })}</Typography></Box>
           </Box>
           <Box className={classes.totalSection}>
-            <Box className={classes.header}><Typography>Average</Typography></Box>
+            <Box className={classes.header}><Typography>{intl.formatMessage({ id: 'rps.table.average' })}</Typography></Box>
           </Box>
         </Box>
 

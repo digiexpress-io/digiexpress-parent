@@ -1315,5 +1315,17 @@ export const fi = {
   'fs.dirent.configOption.ASSIGNABLE_MODE': 'Palvelun käytöntila',
   'fs.dirent.configOption.AUTH_ONLY_MODE': 'Vain kirjautuneille',
   'fs.dirent.configOption.IN_HOUSE_MODE': 'Sisäinen tila',
-  'fs.dirent.configOption.RPS_MODE': 'Ratings-tila'
+  'fs.dirent.configOption.RPS_MODE': 'Ratings-tila',
+  'rps.rating.excellent': 'Erinomainen',
+  'rps.rating.good': 'Hyvä',
+  'rps.rating.okay': 'Ok',
+  'rps.rating.poor': 'Heikko',
+  'rps.rating.terrible': 'Erittäin huono',
+  'rps.sort.newest': 'Järjestä uusin ensin',
+  'rps.sort.oldest': 'Järjestä vanhin ensin',
+  'rps.table.title': 'Asiakasarvioinnit',
+  'rps.table.workflow': 'Työnkulku',
+  'rps.table.form': 'Lomake',
+  'rps.table.total': 'Yhteensä',
+  'rps.table.average': 'Keskiarvo'
 }

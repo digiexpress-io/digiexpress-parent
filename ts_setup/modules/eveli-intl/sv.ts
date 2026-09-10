@@ -1314,5 +1314,17 @@ export const sv = {
   'fs.dirent.configOption.ASSIGNABLE_MODE': 'Assignable mode',
   'fs.dirent.configOption.AUTH_ONLY_MODE': 'Endast inloggade',
   'fs.dirent.configOption.IN_HOUSE_MODE': 'Internt läge',
-  'fs.dirent.configOption.RPS_MODE': 'Ratings-läge'
+  'fs.dirent.configOption.RPS_MODE': 'Ratings-läge',
+  'rps.rating.excellent': 'Utmärkt',
+  'rps.rating.good': 'Bra',
+  'rps.rating.okay': 'Okej',
+  'rps.rating.poor': 'Dåligt',
+  'rps.rating.terrible': 'Mycket dåligt',
+  'rps.sort.newest': 'Sortera senaste först',
+  'rps.sort.oldest': 'Sortera äldsta först',
+  'rps.table.title': 'Kundbetyg',
+  'rps.table.workflow': 'Arbetsflöde',
+  'rps.table.form': 'Formulär',
+  'rps.table.total': 'Totalt',
+  'rps.table.average': 'Genomsnitt'
 }

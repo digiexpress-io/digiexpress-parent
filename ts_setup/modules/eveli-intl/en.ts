@@ -1780,5 +1780,17 @@ export const en = {
   'fs.bodyType.PRINTOUT_PAGE': 'Printout page',
   'fs.bodyType.PRINTOUT_RESOURCE': 'Printout resource',
   'fs.bodyType.DEPLOYMENT': 'Deployment',
-  'fs.bodyType.FOLDER': 'Folder'
+  'fs.bodyType.FOLDER': 'Folder',
+  'rps.rating.excellent': 'Excellent',
+  'rps.rating.good': 'Good',
+  'rps.rating.okay': 'Okay',
+  'rps.rating.poor': 'Poor',
+  'rps.rating.terrible': 'Terrible',
+  'rps.sort.newest': 'Sort by most recent',
+  'rps.sort.oldest': 'Sort by oldest',
+  'rps.table.title': 'Customer Ratings',
+  'rps.table.workflow': 'Workflow',
+  'rps.table.form': 'Form',
+  'rps.table.total': 'Total',
+  'rps.table.average': 'Average'
 }

@@ -1,4 +1,4 @@
-import { List, Paper, generateUtilityClass, styled, Theme, alpha, lighten } from '@mui/material';
+import { Box, List, Paper, generateUtilityClass, styled, Theme, alpha, lighten } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
 
@@ -22,6 +22,10 @@ export interface EveliCustomerRatingsClasses {
   commentButton: string;
   dialogListItem: string;
   dialogListItemIcon: string;
+  dialogRatingsFilterItem: string;
+  dialogRatingsFilterButton: string;
+  dialogRatingsFilterButtonSelected: string;
+  dialogSortButton: string;
 }
 
 export type EveliCustomerRatingsClassKey = keyof EveliCustomerRatingsClasses;
@@ -42,6 +46,10 @@ export const useUtilityClasses = () => {
     commentButton: ['commentButton'],
     dialogListItem: ['dialogListItem'],
     dialogListItemIcon: ['dialogListItemIcon'],
+    dialogRatingsFilterItem: ['dialogRatingsFilterItem'],
+    dialogRatingsFilterButton: ['dialogRatingsFilterButton'],
+    dialogRatingsFilterButtonSelected: ['dialogRatingsFilterButtonSelected'],
+    dialogSortButton: ['dialogSortButton'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -171,6 +179,46 @@ export const EveliCustomerRatingsDialogRoot = styled(List, {
     },
 
     ...ratingIconColorRules(theme, `.${MUI_NAME}-dialogListItemIcon`),
+  };
+});
+
+export const EveliCustomerRatingsDialogFilter = styled(Box, {
+  name: MUI_NAME,
+  slot: 'DialogFilter',
+})(({ theme }) => {
+  return {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing(0.5),
+
+    [`& .${MUI_NAME}-dialogRatingsFilterItem`]: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+
+    [`& .${MUI_NAME}-dialogRatingsFilterItem .MuiTypography-root`]: {
+      color: theme.palette.text.primary,
+    },
+
+    [`& .${MUI_NAME}-dialogRatingsFilterItem .Mui-disabled ~ .MuiTypography-root`]: {
+      color: theme.palette.action.disabled,
+    },
+
+    ...ratingIconColorRules(theme, `.${MUI_NAME}-dialogRatingsFilterButton`),
+
+    [`& .${MUI_NAME}-dialogRatingsFilterButton.${MUI_NAME}-dialogRatingsFilterButtonSelected .MuiSvgIcon-root`]: {
+      color: theme.palette.text.primary,
+    },
+
+    [`& .${MUI_NAME}-dialogRatingsFilterButton.Mui-disabled .MuiSvgIcon-root`]: {
+      color: theme.palette.action.disabled,
+    },
+
+    [`& .${MUI_NAME}-dialogSortButton`]: {
+      marginLeft: 'auto',
+      minWidth: '30ch'
+    },
   };
 });
 
