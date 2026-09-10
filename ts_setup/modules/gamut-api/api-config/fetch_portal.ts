@@ -67,11 +67,12 @@ export function createSubjectFetch(url: (string | undefined) = '/portal/secured/
 export function createContractFetch(url: (string | undefined) = '/portal/secured/actions') {
   const appendContractAttachment: ContractApi.AppendContractAttachmentFetchPOST = async (contractId: ContractApi.ContractId, files: FileList) => {
     const filesByName: Record<string, File> = {};
-    const body: { name: string, fileType: string }[] = [];
+    const body: { name: string, fileType: string, size: number }[] = [];
     for (const file of Array.from(files)) {
       body.push({
         name: file.name,
         fileType: file.type || 'application/octet-stream',
+        size: file.size
       });
       filesByName[file.name] = file;
     }
