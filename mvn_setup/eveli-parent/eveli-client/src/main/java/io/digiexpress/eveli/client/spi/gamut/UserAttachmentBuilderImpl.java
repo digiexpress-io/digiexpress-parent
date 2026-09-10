@@ -23,9 +23,11 @@ import java.nio.charset.StandardCharsets;
  */
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Flow.Publisher;
 
 import com.google.common.hash.Hashing;
 
@@ -37,9 +39,11 @@ import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionAttachment;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentBuilder;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
+import io.digiexpress.eveli.client.api.ImmutableTaskAttachment;
 import io.digiexpress.eveli.client.api.ImmutableUserActionAttachment;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.TaskClient.TaskAttachment.AttachmentSource;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -85,13 +89,35 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
       .onItem().transformToMulti(found -> {
         final var process = found.orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
         
-        return Multi.createFrom().items(this.attachments.stream())
-          .onItem().transformToUni(file -> Uni.createFrom().item(visitAttachment(process, file)))
-          .concatenate();
+        if (process.getTaskId() == null) {
+          // no task created yet, can't create task attachments
+          return mapAttachmentsToUserAction(process);
+        }
+        return taskClient.taskBuilder()
+          .addTaskAttachments(process.getTaskId(), this.attachments.stream().map(a -> mapToTaskAttachment(a)).toList())
+          .onItem().transformToMulti(task-> {
+            return mapAttachmentsToUserAction(process);
+          });
       });
-    
   }
 
+  private Publisher<? extends UserActionAttachment> mapAttachmentsToUserAction(final ProcessInstance process) {
+    return Multi.createFrom().items(this.attachments.stream())
+      .onItem().transformToUni(file -> Uni.createFrom().item(visitAttachment(process, file)))
+      .concatenate();
+  }
+
+
+  private TaskClient.TaskAttachment mapToTaskAttachment(UserAttachmentUploadInit a) {
+    return ImmutableTaskAttachment.builder()
+        .created(OffsetDateTime.now())
+        .creator(actionId)
+        .name(a.getName())
+        .size(a.getSize())
+        .source(AttachmentSource.PORTAL_UPLOAD)
+        .type(a.getFileType())
+        .build();
+  }
 
   private UserActionAttachment visitAttachment(ProcessInstance process, UserAttachmentUploadInit file) {
     final var taskId = process.getTaskId();
