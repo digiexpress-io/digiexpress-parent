@@ -1,6 +1,8 @@
 package io.digiexpress.eveli.app;
  
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+
 /*-
  * #%L
  * eveli-app
@@ -23,27 +25,20 @@ package io.digiexpress.eveli.app;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-import io.digiexpress.eveli.client.api.CommsClient;
-import io.digiexpress.eveli.client.spi.comms.CommsClientDummy;
-import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
-import io.digiexpress.eveli.client.spi.dms.DocContainerClientDummy;
+import io.digiexpress.eveli.client.api.AttachmentCommands;
+import io.digiexpress.eveli.client.spi.attachments.AttachmentCommandsDummy;
 
-@Configuration
-public class MockServicesProvider {
+/**
+ * AttachmentCommands dummy bean is in separate autoconfiguration class to ensure its initialization 
+ * only if no other beans of same type are not initialized. @Configuration annotated classes are initialized before auto-configuration.
+ */
+@AutoConfiguration
+public class MockAttachmentServicesProvider {
 
   @Bean
-  @ConditionalOnMissingBean
-  public CommsClient notificationCommands() {
-    return new CommsClientDummy();
+  @ConditionalOnMissingBean(AttachmentCommands.class)
+  public AttachmentCommands attachmentCommands() {
+    return new AttachmentCommandsDummy();
   }
-
-  
-  @Bean
-  @ConditionalOnMissingBean
-  public DocContainerClient docContainerClient() {
-    return new DocContainerClientDummy();
-  }
-
 }

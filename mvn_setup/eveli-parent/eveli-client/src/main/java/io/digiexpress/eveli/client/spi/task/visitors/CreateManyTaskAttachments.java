@@ -1,5 +1,8 @@
 package io.digiexpress.eveli.client.spi.task.visitors;
 
+import java.util.List;
+import java.util.Map;
+
 /*-
  * #%L
  * eveli-client
@@ -25,6 +28,7 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskAttachment.AttachmentSourc
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
+import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
@@ -35,35 +39,42 @@ import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CreateOneTaskAttachment implements TaskStoreConfig.MergeTaskVisitor<TaskClient.Task> {
+public class CreateManyTaskAttachments implements TaskStoreConfig.MergeTaskVisitor<TaskClient.Task> {
   private final String userId;
   private final String taskId;
-  private final TaskClient.TaskAttachment attachment;
+  private final List<TaskClient.TaskAttachment> attachments;
+  private String usedFor = TaskMapper.VIEWER_WORKER;
   
-  private void createTaskAttachment(TaskClient.TaskAttachment attachment, MergeMission merge) {
-    final var usedFor = attachment.getSource() == AttachmentSource.PORTAL_FORM || attachment.getSource() == AttachmentSource.PORTAL_UPLOAD ? TaskMapper.VIEWER_CUSTOMER : TaskMapper.VIEWER_WORKER;
+  private void createTaskAttachments(List<TaskClient.TaskAttachment> attachments, MergeMission merge) {
+    Map<String, GrimMissionLink> previousLinks = merge.getCurrentState().getLinks();
     
-    var currentLink = merge.getCurrentState().getLinks().values().stream()
-        .filter(l -> TaskMapper.LINK_TYPE_ATTACHMENT.equals(l.getLinkType()))
-        .filter(l -> attachment.getName().equals(l.getLinkValue()))
-        .findFirst();
-    
-    if (currentLink.isPresent()) {
-      merge.modifyLink(currentLink.get().getId(), link -> {
-        link.linkBody(JsonObject.mapFrom(attachment))
-        .build();
-      });
-    }
-    else {
-      // create new link
-      merge.addLink(link -> {
-        link
-            .linkType(TaskMapper.LINK_TYPE_ATTACHMENT)
-            .linkValue(attachment.getName())
-            .linkBody(JsonObject.mapFrom(attachment))
-            .build();
-        
-      });
+    for (var attachment : attachments) {
+      if (attachment.getSource() == AttachmentSource.PORTAL_FORM || attachment.getSource() == AttachmentSource.PORTAL_UPLOAD) {
+        usedFor = TaskMapper.VIEWER_CUSTOMER;
+      }
+      
+      var currentLink = previousLinks.values().stream()
+          .filter(l -> TaskMapper.LINK_TYPE_ATTACHMENT.equals(l.getLinkType()))
+          .filter(l -> attachment.getName().equals(l.getLinkValue()))
+          .findFirst();
+      
+      if (currentLink.isPresent()) {
+        merge.modifyLink(currentLink.get().getId(), link -> {
+          link.linkBody(JsonObject.mapFrom(attachment))
+          .build();
+        });
+      }
+      else {
+        // create new link
+        merge.addLink(link -> {
+          link
+              .linkType(TaskMapper.LINK_TYPE_ATTACHMENT)
+              .linkValue(attachment.getName())
+              .linkBody(JsonObject.mapFrom(attachment))
+              .build();
+          
+        });
+      }
     }
     merge.addViewer(newViewer -> newViewer.userId(userId).usedFor(usedFor).currentTxCommit().build())
     .build();
@@ -71,10 +82,10 @@ public class CreateOneTaskAttachment implements TaskStoreConfig.MergeTaskVisitor
 
   @Override
   public ModifyOneMission start(GrimStructuredTenant config, ModifyOneMission builder) {
-    builder.missionId(taskId).modifyMission(merge -> createTaskAttachment(attachment, merge));
+    builder.missionId(taskId).modifyMission(merge -> createTaskAttachments(attachments, merge));
     return builder
         .commitAuthor(userId)
-        .commitMessage("Creating tasks by: " + CreateOneTaskAttachment.class.getSimpleName());
+        .commitMessage("Creating task attachments by: " + CreateManyTaskAttachments.class.getSimpleName());
   }
 
   @Override
@@ -82,7 +93,7 @@ public class CreateOneTaskAttachment implements TaskStoreConfig.MergeTaskVisitor
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope;
     }
-    throw TaskException.builder("CREATE_TASK_ATTACHMENT_SAVE_FAIL").add(config, envelope).build(); 
+    throw TaskException.builder("CREATE_TASK_ATTACHMENTS_SAVE_FAIL").add(config, envelope).build(); 
   }
 
   @Override

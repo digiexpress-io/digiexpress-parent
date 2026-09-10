@@ -41,6 +41,7 @@ import org.springframework.web.util.UriUtils;
 
 import com.google.cloud.WriteChannel;
 import com.google.cloud.spring.storage.GoogleStorageResource;
+import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.HttpMethod;
@@ -310,5 +311,48 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
         return null;
       }
     };
+  }
+
+  @Override
+  public AttachmentContentDownloadBuilder contentDownload() {
+    return new AttachmentContentDownloadBuilder() {
+      private String filename = null;
+      private String processId = null;
+      private String taskId = null;      
+      @Override
+      public AttachmentContentDownloadBuilder taskId(String taskId) {
+        this.taskId = taskId;
+        return this;
+      }
+      
+      @Override
+      public AttachmentContentDownloadBuilder processId(String processId) {
+        this.processId = processId;
+        return this;
+      }
+      
+      @Override
+      public AttachmentContentDownloadBuilder filename(String filename) {
+        this.filename = filename;
+        return this;
+      }
+      
+      @Override
+      public byte[] build() {
+        AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
+        String gsFile = null;
+        if (processId != null) {
+          gsFile = String.format("processes/%s/files/%s", processId, filename);
+        }
+        else {
+          AttachmentAssert.notEmpty(taskId, () -> "taskId or processId must be defined!");
+          gsFile = String.format("tasks/%s/files/%s", taskId, filename);
+        }
+        BlobId blobId = BlobId.of(downloadBucket, gsFile);
+        Blob blob = storage.get(blobId);
+        return blob.getContent();
+      }
+    };
+
   }
 }

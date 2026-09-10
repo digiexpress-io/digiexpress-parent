@@ -42,6 +42,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.AddWorkerCommitViewer;
 import io.digiexpress.eveli.client.spi.task.visitors.ChangeDocProperties;
 import io.digiexpress.eveli.client.spi.task.visitors.CompleteCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateCustomerAssignment;
+import io.digiexpress.eveli.client.spi.task.visitors.CreateManyTaskAttachments;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTaskAttachment;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTaskComment;
@@ -262,6 +263,10 @@ public class TaskClientImpl implements TaskClient {
       public Uni<Task> removeTaskAttachment(String taskId, String name) {
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
         return ctx.getConfig().accept(new DeleteOneTaskAttachment(userId, taskId, name));
+      }
+      @Override
+      public Uni<Task> addTaskAttachments(String taskId, List<TaskAttachment> attachments) {
+        return ctx.getConfig().accept(new CreateManyTaskAttachments(userId, taskId, attachments));
       }
       
       

@@ -154,4 +154,31 @@ public class AttachmentCommandsDummy implements AttachmentCommands {
       }
     };
   }
+
+
+  @Override
+  public AttachmentContentDownloadBuilder contentDownload() {
+    return new AttachmentContentDownloadBuilder() {
+      
+      @Override
+      public AttachmentContentDownloadBuilder taskId(String taskId) {
+        return this;
+      }
+      
+      @Override
+      public AttachmentContentDownloadBuilder processId(String processId) {
+        return this;
+      }
+      
+      @Override
+      public AttachmentContentDownloadBuilder filename(String filename) {
+        return this;
+      }
+      
+      @Override
+      public byte[] build() {
+        return new byte[0];
+      }
+    };
+  }
 }
