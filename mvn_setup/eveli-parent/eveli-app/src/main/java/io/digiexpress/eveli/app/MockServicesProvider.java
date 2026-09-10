@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Configuration;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CommsClient;
-import io.digiexpress.eveli.client.spi.AttachmentCommandsDummy;
+import io.digiexpress.eveli.client.spi.attachments.AttachmentCommandsDummy;
 import io.digiexpress.eveli.client.spi.comms.CommsClientDummy;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClientDummy;

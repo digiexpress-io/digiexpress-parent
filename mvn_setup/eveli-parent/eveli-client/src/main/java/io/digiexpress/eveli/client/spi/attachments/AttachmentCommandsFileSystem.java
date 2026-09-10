@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi;
+package io.digiexpress.eveli.client.spi.attachments;
 
 /*-
  * #%L
@@ -33,7 +33,7 @@ import io.digiexpress.eveli.client.api.ImmutableAttachment;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class AttachmentCommandsDummy implements AttachmentCommands {
+public class AttachmentCommandsFileSystem implements AttachmentCommands {
   
   private final static URL dummyUrl = getDummyUrl();
   private final static Attachment dummyAttachment = ImmutableAttachment.builder()
