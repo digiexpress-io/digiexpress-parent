@@ -111,7 +111,7 @@ export const CustomerRatingsCommentsDialog: React.FC<{
   return (
     <Dialog open={data !== undefined} onClose={onClose} maxWidth='lg' fullWidth slotProps={{ paper: { sx: { height: '90vh' } } }}>
       <DialogTitle>
-        {data?.workflowName}: {data?.formName}
+        {data?.formName}: {data?.workflowName} 
         <EveliCustomerRatingsDialogFilter>
           <RatingsFilter selected={selectedRatings} available={availableRatings} onToggle={toggleRating} />
           <Button variant='text' size='small' className={classes.dialogSortButton}
