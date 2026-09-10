@@ -129,6 +129,7 @@ public interface GamutClient {
   interface UserAttachmentUploadInit {
     String getName();
     String getFileType();
+    Long getSize();
   }
   
   @Value.Immutable
