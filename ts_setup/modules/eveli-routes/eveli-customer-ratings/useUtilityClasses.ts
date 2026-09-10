@@ -1,7 +1,4 @@
-import { generateUtilityClass, styled } from '@mui/material';
-import { Paper } from '@mui/material';
-import { Theme } from '@mui/material/styles';
-import { alpha, lighten } from '@mui/material/styles';
+import { List, Paper, generateUtilityClass, styled, Theme, alpha, lighten } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
 
@@ -22,6 +19,9 @@ export interface EveliCustomerRatingsClasses {
   cell: string;
   row: string;
   totalSection: string;
+  commentButton: string;
+  dialogListItem: string;
+  dialogListItemIcon: string;
 }
 
 export type EveliCustomerRatingsClassKey = keyof EveliCustomerRatingsClasses;
@@ -39,6 +39,9 @@ export const useUtilityClasses = () => {
     cell: ['cell'],
     row: ['row'],
     totalSection: ['totalSection'],
+    commentButton: ['commentButton'],
+    dialogListItem: ['dialogListItem'],
+    dialogListItemIcon: ['dialogListItemIcon'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -47,11 +50,7 @@ export const useUtilityClasses = () => {
 export const EveliCustomerRatingsRoot = styled(Paper, {
   name: MUI_NAME,
   slot: 'Root',
-  shouldForwardProp: (prop) => prop !== 'ownerState',
 })(({ theme }) => {
-  const bg = columnBg(theme);
-  const ic = columnIconColor(theme);
-
   return {
     padding: theme.spacing(2),
     marginTop: theme.spacing(2),
@@ -84,7 +83,7 @@ export const EveliCustomerRatingsRoot = styled(Paper, {
 
     [`& .${MUI_NAME}-nameColumn`]: {
       width: '20%',
-      flexShrink: 0
+      flexShrink: 0,
     },
 
     [`& .${MUI_NAME}-totalSection`]: {
@@ -130,11 +129,7 @@ export const EveliCustomerRatingsRoot = styled(Paper, {
       borderBottomRightRadius: theme.spacing(1),
     },
 
-    [`& .${MUI_NAME}-countsPanel[data-rps-key="count5"]`]: { backgroundColor: bg.count5 },
-    [`& .${MUI_NAME}-countsPanel[data-rps-key="count4"]`]: { backgroundColor: bg.count4 },
-    [`& .${MUI_NAME}-countsPanel[data-rps-key="count3"]`]: { backgroundColor: bg.count3 },
-    [`& .${MUI_NAME}-countsPanel[data-rps-key="count2"]`]: { backgroundColor: bg.count2 },
-    [`& .${MUI_NAME}-countsPanel[data-rps-key="count1"]`]: { backgroundColor: bg.count1 },
+    ...ratingBgColorRules(theme, `.${MUI_NAME}-countsPanel`),
 
     [`& .${MUI_NAME}-header[data-rps-key]`]: {
       justifyContent: 'center',
@@ -142,11 +137,7 @@ export const EveliCustomerRatingsRoot = styled(Paper, {
       '& .MuiSvgIcon-root': { fontSize: '2.5rem' },
     },
 
-    [`& .${MUI_NAME}-header[data-rps-key="count5"] .MuiSvgIcon-root`]: { color: ic.count5 },
-    [`& .${MUI_NAME}-header[data-rps-key="count4"] .MuiSvgIcon-root`]: { color: ic.count4 },
-    [`& .${MUI_NAME}-header[data-rps-key="count3"] .MuiSvgIcon-root`]: { color: ic.count3 },
-    [`& .${MUI_NAME}-header[data-rps-key="count2"] .MuiSvgIcon-root`]: { color: ic.count2 },
-    [`& .${MUI_NAME}-header[data-rps-key="count1"] .MuiSvgIcon-root`]: { color: ic.count1 },
+    ...ratingIconColorRules(theme, `.${MUI_NAME}-header`),
 
     [`& .${MUI_NAME}-cell`]: {
       height: 35,
@@ -154,10 +145,34 @@ export const EveliCustomerRatingsRoot = styled(Paper, {
       alignItems: 'center',
       paddingRight: theme.spacing(1),
     },
+
+    [`& .${MUI_NAME}-commentButton`]: {
+      marginLeft: 'auto',
+    },
   };
 });
 
 
+
+export const EveliCustomerRatingsDialogRoot = styled(List, {
+  name: MUI_NAME,
+  slot: 'DialogRoot',
+})(({ theme }) => {
+  return {
+    [`& .${MUI_NAME}-dialogListItem`]: {
+      paddingTop: theme.spacing(1.5),
+      paddingBottom: theme.spacing(1.5),
+      alignItems: 'flex-start',
+    },
+
+    [`& .${MUI_NAME}-dialogListItemIcon`]: {
+      minWidth: 40,
+      marginTop: theme.spacing(0.5),
+    },
+
+    ...ratingIconColorRules(theme, `.${MUI_NAME}-dialogListItemIcon`),
+  };
+});
 
 export function getRpsColumnProps(key: RatingKey): { 'data-rps-key': RatingKey } {
   return { 'data-rps-key': key };
@@ -173,23 +188,33 @@ export function getAverageProps(average: number): { 'data-rps-avg': AverageLevel
   return { 'data-rps-avg': 'good' };
 }
 
-function columnBg(theme: Theme): Record<RatingKey, string> {
-  return {
+function ratingBgColorRules(theme: Theme, parentClass: string): Record<string, { backgroundColor: string }> {
+  const bg: Record<RatingKey, string> = {
     count5: alpha(theme.palette.success.main, 0.15),
     count4: alpha(theme.palette.success.main, 0.08),
     count3: alpha(theme.palette.warning.main, 0.15),
     count2: alpha(theme.palette.error.main, 0.08),
     count1: alpha(theme.palette.error.main, 0.15),
   };
+  const rules: Record<string, { backgroundColor: string }> = {};
+  for (const key of Object.keys(bg) as RatingKey[]) {
+    rules[`& ${parentClass}[data-rps-key="${key}"]`] = { backgroundColor: bg[key] };
+  }
+  return rules;
 }
 
-function columnIconColor(theme: Theme): Record<RatingKey, string> {
-  return {
+function ratingIconColorRules(theme: Theme, parentClass: string): Record<string, { color: string }> {
+  const ic: Record<RatingKey, string> = {
     count5: theme.palette.success.main,
     count4: lighten(theme.palette.success.main, 0.3),
     count3: theme.palette.warning.main,
     count2: lighten(theme.palette.error.main, 0.2),
     count1: theme.palette.error.main,
   };
+  const rules: Record<string, { color: string }> = {};
+  for (const key of Object.keys(ic) as RatingKey[]) {
+    rules[`& ${parentClass}[data-rps-key="${key}"] .MuiSvgIcon-root`] = { color: ic[key] };
+  }
+  return rules;
 }
 

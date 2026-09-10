@@ -1,12 +1,6 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
-import {
-  SentimentVerySatisfied as SentimentVerySatisfiedIcon,
-  SentimentSatisfied as SentimentSatisfiedIcon,
-  SentimentNeutral as SentimentNeutralIcon,
-  SentimentDissatisfied as SentimentDissatisfiedIcon,
-  SentimentVeryDissatisfied as SentimentVeryDissatisfiedIcon,
-} from '@mui/icons-material';
+import { Box, IconButton, Typography } from '@mui/material';
+import { InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
 
 import {
   EveliCustomerRatingsRoot,
@@ -15,6 +9,8 @@ import {
   getAverageProps,
   RatingKey,
 } from './useUtilityClasses';
+import { CustomerRatingsCommentsDialog } from './CustomerRatingsCommentsDialog';
+import { RpsComment, RATING_ICONS } from './types';
 
 
 interface RpsTableCol {
@@ -22,6 +18,8 @@ interface RpsTableCol {
   workflowName: string;
   formName: string;
   rating: number;
+  comment: string | undefined;
+  createdAt: string;
 }
 
 interface RpsTableRow {
@@ -34,33 +32,32 @@ interface RpsTableRow {
   count1: number;
   total: number;
   average: number;
+  comments: RpsComment[];
 }
 
-interface RpsColumn {
-  key: RatingKey;
-  Icon: React.ElementType;
-}
+const COLUMNS = ([5, 4, 3, 2, 1] as const).map(rating => ({
+  key: `count${rating}` as RatingKey,
+  Icon: RATING_ICONS[rating],
+}));
 
-const COLUMNS: RpsColumn[] = [
-  { key: 'count5', Icon: SentimentVerySatisfiedIcon },
-  { key: 'count4', Icon: SentimentSatisfiedIcon },
-  { key: 'count3', Icon: SentimentNeutralIcon },
-  { key: 'count2', Icon: SentimentDissatisfiedIcon },
-  { key: 'count1', Icon: SentimentVeryDissatisfiedIcon },
-];
 
 function aggregate(rps: RpsTableCol[]): RpsTableRow[] {
   const map = new Map<string, RpsTableRow>();
   for (const entry of rps) {
     const key = `${entry.workflowName}__${entry.formName}`;
-    const row = map.get(key) ?? { workflowName: entry.workflowName, formName: entry.formName, count5: 0, count4: 0, count3: 0, count2: 0, count1: 0, total: 0, average: 0 };
+    const row = map.get(key) ?? { workflowName: entry.workflowName, formName: entry.formName, count5: 0, count4: 0, count3: 0, count2: 0, count1: 0, total: 0, average: 0, comments: [] };
     map.set(key, row);
-    (row as any)[`count${entry.rating}`]++;
+    const countKey = `count${entry.rating}` as RatingKey;
+    row[countKey]++;
     row.total++;
+    if (entry.comment) {
+      row.comments.push({ text: entry.comment, createdAt: entry.createdAt, rating: entry.rating });
+    }
   }
   return Array.from(map.values())
     .map(row => ({
       ...row,
+      comments: row.comments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
       average: Math.round(((row.count5 * 5 + row.count4 * 4 + row.count3 * 3 + row.count2 * 2 + row.count1) / row.total) * 100) / 100,
     }))
     .sort((a, b) => b.total - a.total);
@@ -69,6 +66,7 @@ function aggregate(rps: RpsTableCol[]): RpsTableRow[] {
 export const CustomerRatings: React.FC<{ rps: RpsTableCol[] | undefined }> = ({ rps }) => {
   const classes = useUtilityClasses();
   const rows = aggregate(rps ?? []);
+  const [dialogData, setDialogData] = React.useState<RpsTableRow | undefined>(undefined);
 
   return (
     <EveliCustomerRatingsRoot>
@@ -118,12 +116,18 @@ export const CustomerRatings: React.FC<{ rps: RpsTableCol[] | undefined }> = ({ 
                 <Typography className={classes.averageText} {...getAverageProps(row.average)}>
                   {row.average.toFixed(2)}
                 </Typography>
+                <IconButton size='small' className={classes.commentButton} disabled={row.comments.length === 0} onClick={() => setDialogData(row)}>
+                  <InfoOutlinedIcon fontSize='small' />
+                </IconButton>
               </Box>
             </Box>
           </Box>
         ))}
 
       </Box>
+
+      <CustomerRatingsCommentsDialog data={dialogData} onClose={() => setDialogData(undefined)} />
+
     </EveliCustomerRatingsRoot>
   );
 };
