@@ -55,6 +55,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       assignable: workflowOptions.assignable,
       disabled: workflowOptions.disabled,
       inHouse: workflowOptions.inHouse,
+      rps: workflowOptions.rps,
       startDate: startdate ? startdate : undefined,
       endDate: enddate ? enddate : undefined,
       flowName: flowName,

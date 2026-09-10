@@ -425,6 +425,7 @@ export const sv = {
   'services.devmode.tooltip': 'Utvecklingsläge',
   'services.rpsMode.label': 'Ratings-läge',
   'services.rpsMode.helper': 'Ratings-läge: Visar ett feedbackbetygswidget för användaren efter formulärinlämning',
+  'services.rpsMode.tooltip': 'Ratings-läge',
   'services.disabledmode.label': 'Inaktiverat läge',
   'services.disabledmode.helper': 'Inaktiverat läge: Tjänsten visas inte på klientportalen',
   'services.disabledmode.tooltip': 'Inaktiverat läge',

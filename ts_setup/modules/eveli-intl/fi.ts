@@ -425,6 +425,7 @@ export const fi = {
   'services.devmode.tooltip': 'Kehitystila',
   'services.rpsMode.label': 'Ratings-tila',
   'services.rpsMode.helper': 'Ratings-tila: Näyttää palautearviointi-widgetin käyttäjälle lomakkeen lähettämisen jälkeen',
+  'services.rpsMode.tooltip': 'Ratings-tila',
   'services.disabledmode.label': 'Ei käytössä',
   'services.disabledmode.helper': 'Palvelu ei ole portaalissa näkyvissä',
   'services.disabledmode.tooltip': 'Ei käytössä',

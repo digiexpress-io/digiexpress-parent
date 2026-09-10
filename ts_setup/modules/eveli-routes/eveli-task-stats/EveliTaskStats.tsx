@@ -43,7 +43,7 @@ const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard; rps: GrimRps[] |
 
   return (
     <Container maxWidth='lg'>
-      <CustomerRatings rps={rps} />
+      {(rps && rps.length > 0) && <CustomerRatings rps={rps} />}
       <Grid2 container spacing={2}>
         
         <PieChartSlot 

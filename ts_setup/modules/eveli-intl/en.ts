@@ -429,6 +429,7 @@ export const en = {
   'services.inHouseMode.helper': 'In-house mode: Workflow is for internal-use and allows organisation members to copy/paste a link to start an internal form',
   'services.rpsMode.label': 'Ratings mode',
   'services.rpsMode.helper': 'Ratings mode: Displays a sentiment rating widget to the user after form submission',
+  'services.rpsMode.tooltip': 'Ratings mode',
   'services.disabledmode.label': 'Disabled mode',
   'services.disabledmode.helper': 'Disabled mode: Service does not appear on client portal',
   'services.disabledmode.tooltip': 'Disabled mode',

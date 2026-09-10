@@ -61,7 +61,13 @@ function aggregate(rps: RpsTableCol[]): RpsTableRow[] {
       comments: row.comments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
       average: Math.round(((row.count5 * 5 + row.count4 * 4 + row.count3 * 3 + row.count2 * 2 + row.count1) / row.total) * 100) / 100,
     }))
-    .sort((a, b) => b.total - a.total);
+    .sort((a, b) => {
+      const byForm = a.formName.localeCompare(b.formName);
+      if (byForm !== 0) {
+        return byForm;
+      }
+      return a.workflowName.localeCompare(b.workflowName);
+    });
 }
 
 export const CustomerRatings: React.FC<{ rps: RpsTableCol[] | undefined }> = ({ rps }) => {
@@ -77,10 +83,10 @@ export const CustomerRatings: React.FC<{ rps: RpsTableCol[] | undefined }> = ({ 
 
         <Box display='flex' flexDirection='row' className={classes.row}>
           <Box className={classes.nameColumn}>
-            <Box className={classes.header}><Typography>{intl.formatMessage({ id: 'rps.table.workflow' })}</Typography></Box>
+            <Box className={classes.header}><Typography>{intl.formatMessage({ id: 'rps.table.form' })}</Typography></Box>
           </Box>
           <Box className={classes.nameColumn}>
-            <Box className={classes.header}><Typography>{intl.formatMessage({ id: 'rps.table.form' })}</Typography></Box>
+            <Box className={classes.header}><Typography>{intl.formatMessage({ id: 'rps.table.workflow' })}</Typography></Box>
           </Box>
           {COLUMNS.map(({ key, Icon }) => (
             <Box key={key} className={classes.columnWrapper}>
@@ -98,10 +104,10 @@ export const CustomerRatings: React.FC<{ rps: RpsTableCol[] | undefined }> = ({ 
         {rows.map((row, index) => (
           <Box key={index} display='flex' flexDirection='row' className={classes.row}>
             <Box className={classes.nameColumn}>
-              <Box className={classes.cell}><Typography className={classes.cellValue}>{row.workflowName}</Typography></Box>
+              <Box className={classes.cell}><Typography className={classes.cellValue}>{row.formName}</Typography></Box>
             </Box>
             <Box className={classes.nameColumn}>
-              <Box className={classes.cell}><Typography className={classes.cellValue}>{row.formName}</Typography></Box>
+              <Box className={classes.cell}><Typography className={classes.cellValue}>{row.workflowName}</Typography></Box>
             </Box>
             {COLUMNS.map(({ key }) => (
               <Box key={key} className={classes.columnWrapper}>
