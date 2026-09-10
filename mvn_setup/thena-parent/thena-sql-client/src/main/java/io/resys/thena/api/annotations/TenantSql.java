@@ -171,8 +171,8 @@ public @interface TenantSql {
     
     /**
      * Wrapper type for the result.
-     * UNI wraps result as Uni<List<Entity>>
-     * MULTI wraps result as Multi<Entity>
+     * UNI wraps result as {@code Uni<List<Entity>>}
+     * MULTI wraps result as {@code Multi<Entity>}
      */
     WrapperType wrapper() default WrapperType.UNI;
     
