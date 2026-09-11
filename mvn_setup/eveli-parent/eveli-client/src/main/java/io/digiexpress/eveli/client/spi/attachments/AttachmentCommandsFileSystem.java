@@ -36,8 +36,6 @@ import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.util.UriUtils;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
@@ -45,30 +43,30 @@ import io.digiexpress.eveli.client.api.ImmutableAttachment;
 import io.digiexpress.eveli.client.api.ImmutableAttachmentUpload;
 import io.digiexpress.eveli.client.spi.asserts.AttachmentAssert;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Filesystem based attachment commands
+ * Filesystem based attachment commands.
+ * 
  * Mainly for local testing.
  * 
  */
 @RequiredArgsConstructor
 @Slf4j
 public class AttachmentCommandsFileSystem implements AttachmentCommands {
+  private static final String PROCESS_PATH_PATTERN = "%s/processes/%s/files/%s";
+  private static final String TASK_PATH_PATTERN = "%s/tasks/%s/files/%s";
   private final String rootDirectory;
   private final String attachmentUrlPath;
   private final String attachmentServer;
   
-  private final ResourceLoader resourceLoader;
 
   @Override
   public AttachmentQuery query() {
     return new AttachmentQuery() {
       @Override
       public List<Attachment> taskId(String taskId) {
-        final var pathString = String.format("%s/tasks/%s/files/", rootDirectory, taskId);
+        final var pathString = String.format(TASK_PATH_PATTERN, rootDirectory, taskId, "");
         try {
           return getAttachments(pathString, Optional.empty(), Optional.of(taskId));
         } catch (IOException e) {
@@ -79,7 +77,7 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
 
       @Override
       public List<Attachment> processId(String processId) {
-        final var pathString = String.format("%s/processes/%s/files/", rootDirectory, processId);
+        final var pathString = String.format(PROCESS_PATH_PATTERN, rootDirectory, processId, "");
         try {
           return getAttachments(pathString, Optional.of(processId), Optional.empty());
         } catch (IOException e) {
@@ -100,7 +98,7 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         AttachmentAssert.notEmpty(taskId, () -> "taskId must be defined!");
 
-        final var file = String.format("%s/tasks/%s/files/%s", attachmentUrlPath, taskId, filename);
+        final var file = String.format(TASK_PATH_PATTERN, attachmentUrlPath, taskId, filename);
         return Optional.ofNullable(getAttachmentUrl(file));
       }
 
@@ -109,7 +107,7 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         AttachmentAssert.notEmpty(processId, () -> "processId must be defined!");
 
-        final var file = String.format("%s/processes/%s/files/%s", attachmentUrlPath, processId, filename);
+        final var file = String.format(PROCESS_PATH_PATTERN, attachmentUrlPath, processId, filename);
         return Optional.ofNullable(getAttachmentUrl(file));
       }
 
@@ -137,7 +135,7 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         AttachmentAssert.notEmpty(taskId, () -> "taskId must be defined!");
 
-        final var file = String.format("%s/tasks/%s/files/%s", attachmentUrlPath, taskId, filename);
+        final var file = String.format(TASK_PATH_PATTERN, attachmentUrlPath, taskId, filename);
 
         return Optional.of(ImmutableAttachmentUpload.builder().putRequestUrl(file).build());
       }
@@ -147,7 +145,7 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         AttachmentAssert.notEmpty(processId, () -> "processId must be defined!");
 
-        final var file = String.format("%s/processes/%s/files/%s", attachmentUrlPath, processId, filename);
+        final var file = String.format(PROCESS_PATH_PATTERN, attachmentUrlPath, processId, filename);
 
         return Optional.of(ImmutableAttachmentUpload.builder().putRequestUrl(file).build());
       }
@@ -193,33 +191,13 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
     }
   }
 
-
-  public static Builder builder() {
-    return new Builder();
-  }
-
-  @Setter
-  @Accessors(fluent = true)
-  public static class Builder {
-    private String rootDirectory;
-    private ResourceLoader resourceLoader;
-    private String attachmentUrlBase;
-    private String attachmentServer;
-
-    public AttachmentCommandsFileSystem build() {
-      AttachmentAssert.notEmpty(rootDirectory, () -> "rootDirectory must be defined!");
-      AttachmentAssert.notNull(resourceLoader, () -> "resourceLoader must be defined!");
-      return new AttachmentCommandsFileSystem(rootDirectory, attachmentUrlBase, attachmentServer ,resourceLoader);
-    }
-  }
-
   @Override
   public AttachmentRemoveBuilder remove() {
     return new AttachmentRemoveBuilder() {
       private String fileName;
       @Override
       public void removeByTaskId(String taskId) {
-        final var blobName = String.format("%s/tasks/%s/files/%s", rootDirectory, taskId, fileName);
+        final var blobName = String.format(TASK_PATH_PATTERN, rootDirectory, taskId, fileName);
         File file = FileUtils.getFile(blobName);
         try {
           FileUtils.delete(file);
@@ -230,7 +208,7 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
       
       @Override
       public void removeByProcessId(String processId) {
-        final var blobName = String.format("%s/processes/%s/files/%s", rootDirectory, processId, fileName);
+        final var blobName = String.format(PROCESS_PATH_PATTERN, rootDirectory, processId, fileName);
         File file = FileUtils.getFile(blobName);
         try {
           FileUtils.delete(file);
@@ -276,11 +254,11 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         String fileWithPath = null;
         if (processId != null) {
-          fileWithPath = String.format("%s/processes/%s/files/%s", rootDirectory, processId, filename);
+          fileWithPath = String.format(PROCESS_PATH_PATTERN, rootDirectory, processId, filename);
         }
         else {
           AttachmentAssert.notEmpty(taskId, () -> "taskId or processId must be defined!");
-          fileWithPath = String.format("%s/tasks/%s/files/%s", rootDirectory, taskId, filename);
+          fileWithPath = String.format(TASK_PATH_PATTERN, rootDirectory, taskId, filename);
         }
         try {
           File file = FileUtils.getFile(fileWithPath);
@@ -336,11 +314,11 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         String fileWithPath = null;
         if (processId != null) {
-          fileWithPath = String.format("%s/processes/%s/files/%s", rootDirectory, processId, filename);
+          fileWithPath = String.format(PROCESS_PATH_PATTERN, rootDirectory, processId, filename);
         }
         else {
           AttachmentAssert.notEmpty(taskId, () -> "taskId or processId must be defined!");
-          fileWithPath = String.format("%s/tasks/%s/files/%s", rootDirectory, taskId, filename);
+          fileWithPath = String.format(TASK_PATH_PATTERN, rootDirectory, taskId, filename);
         }
         try {
           File file = FileUtils.getFile(fileWithPath);

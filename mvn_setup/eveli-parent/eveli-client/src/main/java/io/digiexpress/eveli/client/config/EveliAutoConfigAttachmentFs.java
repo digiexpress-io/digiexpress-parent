@@ -24,7 +24,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProp
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ResourceLoader;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
@@ -38,8 +37,8 @@ import io.digiexpress.eveli.client.web.resources.worker.AttachmentFilesystemCont
 public class EveliAutoConfigAttachmentFs {
   
   @Bean
-  public AttachmentCommands attachmentCommandFs(ResourceLoader resourceLoader, EveliPropsAttachmentFs props) {
-    return new AttachmentCommandsFileSystem(props.getRootDirectory(), props.getAttachmentUrlBase(), props.getAttachmentServer(), resourceLoader);
+  public AttachmentCommands attachmentCommandFs(EveliPropsAttachmentFs props) {
+    return new AttachmentCommandsFileSystem(props.getRootDirectory(), props.getAttachmentUrlBase(), props.getAttachmentServer());
   }
   
   @Bean
