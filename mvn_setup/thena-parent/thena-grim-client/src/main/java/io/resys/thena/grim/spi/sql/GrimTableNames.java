@@ -46,6 +46,7 @@ public abstract class GrimTableNames {
   public abstract String getGrimRemark();
   
   public abstract String getGrimProcesses();
+  public abstract String getGrimRps();
   
   public GrimTableNames toRepo(Tenant repo) {
     final String prefix = repo.getPrefix();
@@ -74,6 +75,7 @@ public abstract class GrimTableNames {
         .grimObjective(     prefix + DEFAULTS.getGrimObjective())
         .grimObjectiveGoal( prefix + DEFAULTS.getGrimObjectiveGoal())
         .grimRemark(        prefix + DEFAULTS.getGrimRemark())
+        .grimRps(           prefix + DEFAULTS.getGrimRps())
         
 
         
@@ -98,6 +100,7 @@ public abstract class GrimTableNames {
         .grimObjectiveGoal("grim_objective_goal")
         .grimRemark("grim_remark")
         .grimMissionRef("grim_mission_ref")
+        .grimRps("grim_rps")
         
         .build();
   }

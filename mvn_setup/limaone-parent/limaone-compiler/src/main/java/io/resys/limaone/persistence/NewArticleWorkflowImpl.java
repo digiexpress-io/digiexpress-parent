@@ -78,6 +78,7 @@ public class NewArticleWorkflowImpl extends AuthoringTemplate<NewArticleWorkflow
         .disabled(props.getDisabled())
         .devMode(props.getDevMode())
         .anon(Boolean.TRUE.equals(props.getAnon()))
+        .rps(Boolean.TRUE.equals(props.getRps()))
         .assignable(Boolean.TRUE.equals(props.getAssignable()) ? true : null)
         .value(props.getValue())
         .startDate(props.getStartDate())

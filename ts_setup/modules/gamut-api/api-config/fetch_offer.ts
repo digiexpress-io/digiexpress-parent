@@ -51,7 +51,12 @@ export function createPublicOfferFetch(url: (string | undefined) = '/portal/feed
     });
     return response;
   }
-  return { fetchAllGet, fetchOneGet, fetchPost, fetchDelete };
+
+  const fetchRpsPost: OfferApi.CreateOfferRpsFetchPOST = async (_offer) => {
+    return {} as any;
+  }
+
+  return { fetchAllGet, fetchOneGet, fetchPost, fetchDelete, fetchRpsPost };
 }
 
 
@@ -107,5 +112,14 @@ export function createOfferFetch(url: (string | undefined) = '/portal/secured/ac
     return response;
   }
 
-  return { fetchAllGet, fetchOneGet, fetchPost, fetchDelete };
+  const fetchRpsPost: OfferApi.CreateOfferRpsFetchPOST = async (offer) => {
+    const response = await window.fetch('/portal/secured/actions/rps', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(offer),
+    });
+    return response;
+  }
+
+  return { fetchAllGet, fetchOneGet, fetchPost, fetchDelete, fetchRpsPost };
 }

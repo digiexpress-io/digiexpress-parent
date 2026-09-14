@@ -69,6 +69,8 @@ public interface ThenaGrimObject {
     GRIM_REMARK,
     GRIM_COMMANDS,
 
+    GRIM_RPS,
+    
     GRIM_ASSIGNMENT,
     GRIM_MISSION_DATA,
     

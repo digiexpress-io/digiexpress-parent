@@ -47,6 +47,7 @@ import io.resys.thena.api.entities.grim.GrimObjective;
 import io.resys.thena.api.entities.grim.GrimObjectiveGoal;
 import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.GrimRemark;
+import io.resys.thena.api.entities.grim.GrimRps;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
@@ -76,7 +77,8 @@ public interface GrimDataSource extends TenantDataSource {
     
     Uni<GrimBatchMissions> batchMany(GrimBatchMissions output);
     Uni<GrimBatchForViewers> batchMany(GrimBatchForViewers output);
-
+    
+    InternalRpsQuery rps();
     InternalMissionQuery missions();
     InternalMissionLabelQuery missionLabels();
     InternalMissionStatsQuery missionStats();
@@ -116,6 +118,10 @@ public interface GrimDataSource extends TenantDataSource {
     Multi<GrimProcess> findAllNotArchivedyUserId(String userId);
     Multi<GrimProcess> findAllAnsweredFrom(OffsetDateTime pickupFrom);
     
+  }
+  
+  interface InternalRpsQuery {
+    Multi<GrimRps> findAll();
   }
   
   interface InternalCommitQuery {
@@ -205,6 +211,8 @@ public interface GrimDataSource extends TenantDataSource {
   
   @Value.Immutable
   interface GrimBatchMissions {
+    
+    List<GrimRps> getRps();
     List<GrimMission> getMissions();
     List<GrimProcess> getProcs();
     List<GrimMissionLabel> getMissionLabels();
@@ -250,6 +258,7 @@ public interface GrimDataSource extends TenantDataSource {
       return 
         this.getMissions().isEmpty() &&
         this.getProcs().isEmpty() &&
+        this.getRps().isEmpty() &&
         this.getMissionLabels().isEmpty() &&
         this.getLinks().isEmpty() &&
         this.getRemarks().isEmpty() &&

@@ -36,7 +36,6 @@ import io.resys.thena.grim.spi.GrimDataSource.GrimBatchMissions;
 import io.resys.thena.grim.spi.GrimDataSource.GrimState;
 import io.resys.thena.grim.spi.ImmutableGrimBatchMissions;
 import io.resys.thena.grim.spi.commitlog.GrimCommitBuilder;
-import io.resys.thena.grim.spi.create.CreateOneMissionsImpl.CreateOneMissionException;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
@@ -81,8 +80,8 @@ public class CreateOneProcImpl implements CreateOneProc {
     return tx.missionProcSequences().nextVal().onItem()
         .transformToUni(nextVal -> createRequest(tx, nextVal))
         .onItem().transformToUni(request -> createResponse(tx, request))
-        .onFailure(CreateOneMissionException.class).recoverWithItem(ex -> {
-          final CreateOneMissionException error = (CreateOneMissionException) ex;          
+        .onFailure(CreateOneProcException.class).recoverWithItem(ex -> {
+          final CreateOneProcException error = (CreateOneProcException) ex;          
           return ImmutableOneProcEnvelope.builder()
             .repoId(tenantId)
             .addMessages(ImmutableMessage.builder()
@@ -101,7 +100,7 @@ public class CreateOneProcImpl implements CreateOneProc {
   private Uni<OneProcEnvelope> createResponse(GrimState tx, GrimBatchMissions request) {
     return tx.batchMany(request).onItem().transform(rsp -> {
       if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
-        throw new CreateOneMissionException("Failed to create mission!", rsp);
+        throw new CreateOneProcException("Failed to create mission!", rsp);
       }
       
       final OneProcEnvelope result = ImmutableOneProcEnvelope.builder()

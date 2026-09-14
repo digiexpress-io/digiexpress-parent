@@ -25,6 +25,7 @@ import io.resys.thena.grim.spi.GrimDataSource;
 import io.resys.thena.grim.spi.create.CreateManyMissionsImpl;
 import io.resys.thena.grim.spi.create.CreateOneMissionsImpl;
 import io.resys.thena.grim.spi.create.CreateOneProcImpl;
+import io.resys.thena.grim.spi.create.CreateOneRpsImpl;
 import io.resys.thena.grim.spi.modify.ModifyManyCommitViewersImpl;
 import io.resys.thena.grim.spi.modify.ModifyManyMissionsImpl;
 import io.resys.thena.grim.spi.modify.ModifyOneMissionImpl;
@@ -63,6 +64,10 @@ public class GrimCommitActionsImpl implements GrimCommitActions {
   @Override
   public CreateOneProc createOneProc() {
     return new CreateOneProcImpl(state, repoId);
+  }
+  @Override
+  public CreateOneRps createOneRps() {
+    return new CreateOneRpsImpl(state, repoId);
   }
 
 }

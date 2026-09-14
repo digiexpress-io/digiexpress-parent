@@ -42,8 +42,16 @@ export declare namespace OfferApi {
     locale: string;
   }
 
+  export interface OfferRps {
+    productId: string; // links technical id, linked to workflow
+    locale: string;
+    rating: number;
+    comment: string | undefined
+  }
 
   export type CreateOfferFetchPOST = (request: OfferRequest, cockpitId: string | undefined) => Promise<Response>;
+  export type CreateOfferRpsFetchPOST = (request: OfferRps) => Promise<Response>;
+
   export type GetOffersFetchGET = (cockpitId: string | undefined) => Promise<Response>;
   export type GetOfferFetchGET = (offerId: OfferId) => Promise<Response>;
   export type CancelOfferFetchDELETE = (request: Offer) => Promise<Response>;
@@ -52,6 +60,7 @@ export declare namespace OfferApi {
   export interface OfferContextType {
     offers: readonly Offer[];
     isPending: boolean;
+    createOfferRps: (request: OfferRps) => Promise<void>;
     createOffer: (request: OfferRequest) => Promise<Offer>;
     cancelOffer: (offerId: OfferId) => Promise<void>;
     fetchOffer: (offerId: OfferId) => Promise<Offer>;

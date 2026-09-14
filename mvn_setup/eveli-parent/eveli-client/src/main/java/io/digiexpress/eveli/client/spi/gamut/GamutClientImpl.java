@@ -42,6 +42,10 @@ public class GamutClientImpl implements GamutClient {
 
 
   @Override
+  public RpsBuilder rpsBuilder() {
+    return new RpsBuilderImpl(envir, taskClient);
+  }
+  @Override
   public UserActionFillEventBuilder fillEvent() {
     return new UserActionFillEventBuilderImpl();
   }
@@ -173,4 +177,5 @@ public class GamutClientImpl implements GamutClient {
       }
     };
   }
+
 }

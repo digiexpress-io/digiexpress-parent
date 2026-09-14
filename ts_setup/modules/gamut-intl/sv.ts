@@ -91,7 +91,7 @@ export const sv = {
   'gamut.forms.filling.proceed_to_form': 'Klicka nedan för att starta formuläret',
   'gamut.forms.filling.proceed_to_form_anonUser': 'Genom att välja Fortsätt med formulär börjar du fylla i formuläret. Om du vill ha svar väljer du Avbryt och väljer Logga in och väljer det här formuläret därifrån.',
   'gamut.forms.filling.anonUser_and_welcome': 'Hej!',
-  'gamut.forms.filling.start': 'Du är på väg att starta detta formulär',
+  'gamut.forms.filling.start': 'Du är på väg att starta detta formulär:',
   'gamut.forms.filling.login-then-start.button': 'Logga in nu',
   'gamut.forms.filling.start.info1': 'Dina formulärförlopp sparas automatiskt när du går',
   'gamut.forms.filling.start.button': 'Fortsätt att bilda',
@@ -185,5 +185,12 @@ export const sv = {
   'gamut.feedback.feedbackViewerSubTitle': 'Organisationens svar',
   'dialob.review.title': 'Formulärgranskning',
   'dialob.review.button.close': 'Stäng',
-  'gamut.cockpit.selection.dialog': 'Select Cockpit'
+  'gamut.cockpit.selection.dialog': 'Select Cockpit',
+  'gamut.rps.title': 'Hur gick det?',
+  'gamut.rps.rating.excellent': 'Utmärkt',
+  'gamut.rps.rating.good': 'Bra',
+  'gamut.rps.rating.okay': 'Okej',
+  'gamut.rps.rating.poor': 'Dåligt',
+  'gamut.rps.rating.terrible': 'Mycket dåligt',
+  'gamut.rps.comment.placeholder': 'Berätta mer (valfritt)'
 }

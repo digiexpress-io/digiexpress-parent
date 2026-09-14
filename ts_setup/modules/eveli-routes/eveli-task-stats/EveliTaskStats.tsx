@@ -1,33 +1,36 @@
-import { Box } from '@mui/material';
-import { Container, Grid2, Paper, Typography } from '@mui/material';
+import { Container, Grid2 } from '@mui/material';
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Bar, BarChart, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, Cell, Legend, Pie, Tooltip, XAxis, YAxis } from 'recharts';
 
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { TaskApi } from '@dxs-ts/task-api';
+import { GrimRps } from '@dxs-ts/eveli-api';
 
-import { OVERDUE_FILL_COLORS, PieChartSlot, priorityColorMap, statusColorMap, BarChartSlot, BarLabel } from './useUtilityClasses';
+import { PieChartSlot, priorityColorMap, statusColorMap, BarChartSlot, BarLabel } from './useUtilityClasses';
 import { withDs } from './WithDashboardData';
+import { CustomerRatings } from '../eveli-customer-ratings';
 
 
 
 export const EveliTaskStats: React.FC = () => {
   const taskFetch = useFetch('worker/rest/api/tasks.GET', {})
   const [dashboard, setDashboard] = React.useState<TaskApi.TaskDasboard>();
+  const [rps, setRps] = React.useState<GrimRps[]>();
 
   React.useEffect(() => {
-    taskFetch.dashboard().then(setDashboard)
+    taskFetch.dashboard().then(setDashboard);
+    taskFetch.findAllRps().then(setRps);
   }, []);
 
   if(!dashboard) {
     return (<>...loading</>)
   }
-  return (<EveliTaskBody dashoard={dashboard}/>)
+  return (<EveliTaskBody dashoard={dashboard} rps={rps} />)
 }
 
 
-const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard }> = ({dashoard}) => {
+const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard; rps: GrimRps[] | undefined }> = ({dashoard, rps}) => {
   const intl = useIntl();
 
   function getStatusName(item: TaskApi.GrimMissionAttributeEvent): string {
@@ -40,6 +43,7 @@ const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard }> = ({dashoard})
 
   return (
     <Container maxWidth='lg'>
+      {(rps && rps.length > 0) && <CustomerRatings rps={rps} />}
       <Grid2 container spacing={2}>
         
         <PieChartSlot 

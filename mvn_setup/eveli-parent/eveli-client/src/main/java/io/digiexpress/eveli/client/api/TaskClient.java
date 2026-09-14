@@ -44,6 +44,7 @@ import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
+import io.resys.thena.api.entities.grim.GrimRps;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -56,6 +57,7 @@ public interface TaskClient {
   TaskCommandBuilder taskBuilder();  
   PaginateTasks paginateTasks();
   QueryTasks queryTasks();
+  QueryRps queryRps();
   
   DeleteTasks deleteTasks();
   DeleteProcesses deleteProcesses();
@@ -72,7 +74,9 @@ public interface TaskClient {
   
   QueryFormAssignments queryFormAssignments();
   
-  
+  interface QueryRps {
+    Multi<GrimRps> findAll();
+  }
   
   interface QueryFormAssignments {
     Multi<FormAssignment> findAll(String taskId);

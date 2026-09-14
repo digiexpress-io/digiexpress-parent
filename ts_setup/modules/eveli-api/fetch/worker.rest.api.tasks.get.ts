@@ -1,15 +1,17 @@
 import { createFileFetch } from '@dxs-ts/envir-fetch';
 import { TaskApi } from '@dxs-ts/task-api';
 import { useIntl } from 'react-intl';
+import { GrimRps } from '../api-rps';
+
 
 
 export const Hook = createFileFetch('worker/rest/api/tasks.GET')({
   hook
 })
 
-function hook(props: {}) {
+function hook(_props: {}) {
   const params = Hook.useParams();
-  const { path, contextPath, method, url } = params;
+  const { url } = params;
   const intl = useIntl();
 
   return {
@@ -29,6 +31,11 @@ function hook(props: {}) {
             statusIntl: intl.formatMessage({ id: `task.status.${task.status?.toLowerCase()}`, defaultMessage: task.status })
           }
         }));
+    },
+
+    findAllRps: async (): Promise<GrimRps[]> => {
+      return params.fetch(url({}) + `/rps`)
+        .then(response => response.json());
     }
   }
 }

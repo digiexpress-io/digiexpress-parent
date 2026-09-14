@@ -196,6 +196,7 @@ public class LocalizedSiteBuilder {
           .value(link.getValue())
           .assignable(link.getAssignable())
           .anon(link.getAnon())
+          .rps(link.getRps())
           .workflow(link.getWorkflow())
           .startDate(link.getStartDate())
           .endDate(link.getEndDate())

@@ -31,6 +31,7 @@ import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
 import io.resys.thena.api.entities.grim.GrimProcess;
+import io.resys.thena.api.entities.grim.GrimRps;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimContainerVersion;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
@@ -55,9 +56,15 @@ public interface GrimQueryActions {
   MissionCommitQuery commitQuery();
   MissionStatsQuery missionStatsQuery();
   
+  RpsQuery rpsQuery();
+  
   MissionProcsQuery missionProcsQuery();
   MissionProcDeleteQuery missionProcDeleteQuery();
   
+  
+  interface RpsQuery {
+    Multi<GrimRps> findAll();
+  }
   
   interface MissionProcsQuery {
     // force form to load

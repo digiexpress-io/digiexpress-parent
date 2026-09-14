@@ -87,7 +87,7 @@ export const bs = {
   'gamut.forms.filling.authenticated_and_welcome': 'Zdravo {userName}!',
   'gamut.forms.filling.proceed_to_form': 'Kliknite ispod da pokrenete obrazac',
   'gamut.forms.filling.anonUser_and_welcome': 'Hello!',
-  'gamut.forms.filling.start': 'Popunjavanje obrasca započinje',
+  'gamut.forms.filling.start': 'Popunjavanje obrasca započinje:',
   'gamut.forms.filling.login-then-start.button': 'Prijavi se sada',
   'gamut.forms.filling.start.info1': 'Obrazac se automatski sprema tokom popunjavanja',
   'gamut.forms.filling.start.button': 'Nastavak na obrazac',
@@ -179,5 +179,12 @@ export const bs = {
   'gamut.feedback.feedbackViewerTitle': 'Povratna informacija klijenta',
   'gamut.feedback.feedbackViewerSubTitle': 'Odgovor organizacije',
   'dialob.review.title': 'Pregled obrasca',
-  'dialob.review.button.close': 'Zatvori'
+  'dialob.review.button.close': 'Zatvori',
+  'gamut.rps.title': 'Kako smo se pokazali?',
+  'gamut.rps.rating.excellent': 'Odlično',
+  'gamut.rps.rating.good': 'Dobro',
+  'gamut.rps.rating.okay': 'Prosječno',
+  'gamut.rps.rating.poor': 'Loše',
+  'gamut.rps.rating.terrible': 'Užasno',
+  'gamut.rps.comment.placeholder': 'Recite nam više (opcionalno)'
 }
