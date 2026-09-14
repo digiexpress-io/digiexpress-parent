@@ -31,7 +31,7 @@ import org.mockito.Mockito;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.server.ResponseStatusException;
 
-import io.digiexpress.eveli.client.api.ContentDeployedEvent;
+import io.digiexpress.eveli.client.spi.assets.ContentDeployedEvent;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsPublicationController;
 import io.digiexpress.eveli.client.web.resources.assets.ImmutableCreatePublication;
 import io.resys.limaone.authoring.Authoring;

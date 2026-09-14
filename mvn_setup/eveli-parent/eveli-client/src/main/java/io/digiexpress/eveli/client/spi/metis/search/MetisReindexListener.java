@@ -23,7 +23,7 @@ package io.digiexpress.eveli.client.spi.metis.search;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
-import io.digiexpress.eveli.client.api.ContentDeployedEvent;
+import io.digiexpress.eveli.client.spi.assets.ContentDeployedEvent;
 import io.digiexpress.eveli.client.config.EveliPropsMetisSearch;
 import io.resys.metis.search.api.MetisSearchClient;
 import lombok.RequiredArgsConstructor;

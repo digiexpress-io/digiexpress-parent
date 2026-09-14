@@ -39,7 +39,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.digiexpress.eveli.client.api.ContentDeployedEvent;
+import io.digiexpress.eveli.client.spi.assets.ContentDeployedEvent;
 import io.digiexpress.eveli.client.spi.assets.EveliDeployment;
 import io.digiexpress.eveli.client.spi.assets.LivePublications;
 import io.resys.limaone.authoring.Authoring;

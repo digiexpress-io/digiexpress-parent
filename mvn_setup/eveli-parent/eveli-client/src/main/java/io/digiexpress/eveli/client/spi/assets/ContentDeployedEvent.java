@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.api;
+package io.digiexpress.eveli.client.spi.assets;
 
 /*-
  * #%L

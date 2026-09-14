@@ -42,7 +42,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
-import io.digiexpress.eveli.client.api.ContentDeployedEvent;
+import io.digiexpress.eveli.client.spi.assets.ContentDeployedEvent;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
 import io.digiexpress.eveli.client.config.EveliPropsMetisSearch;
 import io.digiexpress.eveli.client.spi.metis.search.MetisLiveIndexTrigger;

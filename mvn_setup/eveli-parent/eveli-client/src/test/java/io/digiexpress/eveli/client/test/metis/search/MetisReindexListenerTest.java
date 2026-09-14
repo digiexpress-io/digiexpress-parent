@@ -23,7 +23,7 @@ package io.digiexpress.eveli.client.test.metis.search;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import io.digiexpress.eveli.client.api.ContentDeployedEvent;
+import io.digiexpress.eveli.client.spi.assets.ContentDeployedEvent;
 import io.digiexpress.eveli.client.config.EveliPropsMetisSearch;
 import io.digiexpress.eveli.client.spi.metis.search.MetisLiveIndexTrigger;
 import io.digiexpress.eveli.client.spi.metis.search.MetisReindexListener;
