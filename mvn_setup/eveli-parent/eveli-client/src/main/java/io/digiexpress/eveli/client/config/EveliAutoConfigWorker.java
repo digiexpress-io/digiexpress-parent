@@ -39,9 +39,9 @@ import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.digiexpress.eveli.client.spi.dialob.DialobScheduler;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
-import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
 import io.digiexpress.eveli.client.web.resources.worker.AttachmentApiController;
 import io.digiexpress.eveli.client.web.resources.worker.FeedbackApiController;
+import io.digiexpress.eveli.client.web.resources.worker.PdfApiController;
 import io.digiexpress.eveli.client.web.resources.worker.ProcessApiController;
 import io.digiexpress.eveli.client.web.resources.worker.SchedulerApiCotroller;
 import io.digiexpress.eveli.client.web.resources.worker.TaskApiController;
@@ -58,14 +58,10 @@ public class EveliAutoConfigWorker {
     return new AttachmentApiController(attachments, taskClient, security);
   }
   @Bean 
-  public PrintoutController printoutController(
-      WorkerAuthClient authClient,  
-      TaskClient taskClient, 
-      PdfClient pdfClient
-  ) {
-    return new PrintoutController(taskClient, authClient, pdfClient);
+  public PdfApiController pdfApiController(WorkerAuthClient security, TaskClient taskClient, PdfClient pdfClient) {
+    return new PdfApiController(pdfClient, taskClient, security);
   }
-  
+
   @Bean
   public UserProfileController userProfileController(UserProfileClient useProfileClient, WorkerAuthClient authClient) {
     return new UserProfileController(useProfileClient, authClient);

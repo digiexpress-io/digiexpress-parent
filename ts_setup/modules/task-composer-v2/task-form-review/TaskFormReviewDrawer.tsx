@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateUtilityClass, styled, Typography, Drawer, useMediaQuery, useTheme, Box, IconButton, ButtonGroup } from '@mui/material';
+import { generateUtilityClass, styled, Typography, Drawer, useMediaQuery, useTheme, Box, IconButton, ButtonGroup, Tooltip } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { PictureAsPdfRounded as PictureAsPdfRoundedIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
@@ -24,6 +24,15 @@ export const TaskFormReviewDrawer: React.FC<FormReviewDrawerProps> = ({ assignme
   const classes = useUtilityClasses();
   const backend = useTaskBackend();
   const { task } = useTaskDashboard();
+  const questionnaireId = assignment?.questionnaireId ?? task.questionnaireId;
+
+  async function handlePdfClick() {
+    try {
+      openPdf(await backend.persistence.getOneTaskPdf({ taskId: task.id, questionnaireId, fields: [] }));
+    } catch (error) {
+      console.error('Failed to create task pdf:', error);
+    }
+  }
 
   return (
     <StyledFormReview className={classes.reviewDrawer}
@@ -37,18 +46,22 @@ export const TaskFormReviewDrawer: React.FC<FormReviewDrawerProps> = ({ assignme
 
         <ButtonGroup>
           <IconButton onClick={onClose}><CloseIcon color='primary' /></IconButton>
-          <IconButton onClick={async () => {
-              const pdfBlob = await backend.persistence.getOneTaskPdf({ taskId: task.id, fields: [] });
-              const pdfUrl = URL.createObjectURL(pdfBlob);
-              const _newWindow = window.open(pdfUrl, '_blank');
-            }}><PictureAsPdfRoundedIcon color='primary'/>
-          </IconButton>
+          <Tooltip title={intl.formatMessage({ id: 'task.pdf.print' })}>
+            <IconButton onClick={handlePdfClick}><PictureAsPdfRoundedIcon color='primary'/></IconButton>
+          </Tooltip>
         </ButtonGroup>
       </Box>
-      {open && <backend.slots.DialobReview task={{ id: task.id, questionnaireId: assignment?.questionnaireId ?? task.questionnaireId }} onClose={onClose} />}
+      {open && <backend.slots.DialobReview task={{ id: task.id, questionnaireId }} onClose={onClose} />}
     </StyledFormReview>
   );
 };
+
+
+function openPdf(pdfBlob: Blob) {
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+  window.open(pdfUrl, '_blank');
+  window.setTimeout(() => URL.revokeObjectURL(pdfUrl), 60000);
+}
 
 
 const MUI_NAME = 'FormReview';

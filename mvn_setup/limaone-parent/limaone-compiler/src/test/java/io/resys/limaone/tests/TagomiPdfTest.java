@@ -137,7 +137,7 @@ public class TagomiPdfTest extends DbSupport {
 
   private byte[] renderSinglePagePdf(
       TagomiUrl tagomiUrl, String serviceName, String label,
-      String pageContent, Map<String, String> resources,
+      String pageContent, Map<String, String> resources, Map<String, String> images,
       JsonObject props, String savePdfName) {
     final var objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     final var renderer = new TagomiPdfRendererImpl(objectMapper, tagomiUrl.getTagomiUrl());
@@ -172,6 +172,16 @@ public class TagomiPdfTest extends DbSupport {
           .buildSync();
     }
 
+    for (final var image : images.entrySet()) {
+      authoring.newModel().newPrintoutResource()
+          .props(p -> p
+              .resourceName(image.getKey())
+              .contentType("image/*")
+              .uploadBody(image.getValue())
+              .printoutPageIds(List.of(page.getId())))
+          .buildSync();
+    }
+
     final var world = authoring.worldQuery().docs(BodyType.values()).findAllSync();
     final var compiler = new CompilerImpl(config.getEnvir());
     final var runtime = compiler.compile(world).id(world.getName()).build();
@@ -193,7 +203,7 @@ public class TagomiPdfTest extends DbSupport {
   @Test
   public void compilePdfFromTypstTemplate(TagomiUrl tagomiUrl) {
     renderSinglePagePdf(tagomiUrl, "test-doc", "Test",
-        "= Hello World\nThis is a test PDF.", Map.of(), new JsonObject(),
+        "= Hello World\nThis is a test PDF.", Map.of(), Map.of(), new JsonObject(),
         "compilePdfFromTypstTemplate");
   }
 
@@ -372,12 +382,28 @@ public class TagomiPdfTest extends DbSupport {
     Assertions.assertTrue(props.getJsonObject("items").getJsonObject("byId").containsKey("feedBackTxt"),
         "expected visibility-cascaded answer feedBackTxt in flat data items");
 
+    // eveli adds the task data to the same props
+    final var comment = "customer message about the feedback";
+    props.put("task", new JsonObject()
+        .put("taskRef", "202609-1")
+        .put("subject", "Session state")
+        .put("status", "OPEN")
+        .put("priority", "NORMAL")
+        .put("created", "2026-09-05T10:15:00+03:00")
+        .put("customerName", "Test Customer")
+        .put("comments", new JsonArray().add(new JsonObject()
+            .put("created", "2026-09-05T10:20:00+03:00")
+            .put("userName", "John Smith")
+            .put("source", "PORTAL")
+            .put("commentText", comment))));
+
     final var resources = new java.util.LinkedHashMap<String, String>();
     resources.put("form-theme", TestTemplate.toString("templates/form-theme.typ"));
     resources.put("form-render", TestTemplate.toString("templates/form-render.typ"));
+    final var images = Map.of("digiexpress-logo", Base64.getEncoder().encodeToString(TestTemplate.toBytes("templates/digiexpress-logo.png")));
 
     final var pdfBytes = renderSinglePagePdf(tagomiUrl, "session-state-doc", "Session state",
-        TestTemplate.toString("templates/main.typ"), resources, props,
+        TestTemplate.toString("templates/main.typ"), resources, images, props,
         "renderPrintoutFromSessionState");
     Assertions.assertTrue(pdfBytes.length > 1000,
         "PDF should have content, got " + pdfBytes.length + " bytes");
@@ -393,5 +419,8 @@ public class TagomiPdfTest extends DbSupport {
               + "PDF text was:\n" + text);
     }
     log.info("verified {} dialob answer values present in the PDF: {}", expectedValues.size(), expectedValues);
+    Assertions.assertTrue(text.contains("202609-1"), "task reference from task props is missing in the rendered PDF");
+    Assertions.assertTrue(text.contains("Test Customer"), "customer name from task props is missing in the rendered PDF");
+    Assertions.assertTrue(text.contains(comment), "customer message from task props is missing in the rendered PDF");
   }
 }

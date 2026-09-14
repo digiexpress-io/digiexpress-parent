@@ -119,4 +119,6 @@ eveli.envir.dev-enabled: false
 eveli.tenant-features: batches-dev, ai-assistant
 
 eveli.tagomi.service-url: http://localhost:8085
+eveli.tagomi.task-pdf-service-name: task-pdf
+eveli.tagomi.task-pdf-default-locale: en
 

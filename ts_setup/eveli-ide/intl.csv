@@ -59,6 +59,8 @@ task.pdf.options.select.EXTERNAL_COMMENTS,From preview,Customer messages,Viestik
 task.pdf.options.select,From preview,PDF Printing options,PDF Tuloste listätiedot,PDF-utskriftsalternativ,PDF-utskriftsalternativ
 task.pdf.print,From preview,Print PDF,Tulosta PDF,Skriv ut PDF,Skriv ut PDF
 task.pdf.options.select.desc,From preview,Select addition data tobe included to generated pdf document,Valitse pdf-dokumenttiin sisällytettävät lisätiedot,Välj tilläggsdata som ska inkluderas i genererat pdf-dokument,Valitse luotuun pdf-dokumenttiin sisällytettävät lisätiedot
+task.pdf.notCompleted,Task form review,PDF can not be created because the form is not completed,PDF:ää ei voi luoda koska lomaketta ei ole lähetetty,PDF kan inte skapas eftersom formuläret inte är slutfört,
+task.pdf.failed,Task form review,PDF creation failed: {cause},PDF:n luonti epäonnistui: {cause},PDF-skapandet misslyckades: {cause},
 task.form.review,Task detail,View form,Avaa lomake,Visa formulär,
 task.created,Task detail,Created,Luotu,Skapad,
 task.updated,Task detail,Updated,Päivitetty,Uppdaterad,
