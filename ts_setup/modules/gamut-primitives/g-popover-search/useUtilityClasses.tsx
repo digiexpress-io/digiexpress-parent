@@ -15,6 +15,7 @@ export interface GPopoverSearchClasses {
   quickSearchFilterItem: string;
 
   resultsContainer: string;
+  resultsLoading: string;
   resultsDividerTitle: string;
   inputField: string;
   inputFieldContainer: string;
@@ -34,6 +35,7 @@ export const useUtilityClasses = () => {
     quickSearch: ['quickSearch'],
     quickSearchFilterItem: ['quickSearchFilterItem'],
     resultsContainer: ['resultsContainer'],
+    resultsLoading: ['resultsLoading'],
     inputField: ['inputField'],
     inputFieldContainer: ['inputFieldContainer'],
     resultsDividerTitle: ['resultsDividerTitle'],
@@ -72,6 +74,7 @@ export const GSearchMuiPopover = styled(Popover, {
       styles.quickSearch,
       styles.quickSearchFilterItem,
       styles.resultsContainer,
+      styles.resultsLoading,
       styles.inputField,
       styles.inputFieldContainer,
       styles.resultsDividerTitle,
@@ -151,6 +154,12 @@ export const GSearchMuiPopover = styled(Popover, {
       [theme.breakpoints.up('md')]: {
         maxWidth: '1000px',
       },
+    },
+    '& .GPopoverSearch-resultsLoading': {
+      display: 'flex',
+      justifyContent: 'center',
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
     },
     '& .GPopoverSearch-resultsDividerTitle': {
       ...theme.typography.h1,

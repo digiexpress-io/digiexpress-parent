@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeProps, TextField, Typography, Chip, Grid2, Link, Divider, Alert, Box } from '@mui/material';
+import { useThemeProps, TextField, Typography, Chip, Grid2, Link, Divider, Alert, Box, CircularProgress } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { Circle as CircleIcon } from '@mui/icons-material';
 import { Close as CloseIcon } from '@mui/icons-material';
@@ -163,6 +163,7 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
               <TextField
                 className={classes.inputField}
                 placeholder={intl.formatMessage({ id: 'gamut.search.popover.input.placeholder' })}
+                value={state.searchString ?? ''}
                 onChange={({ currentTarget }) => setState(prev => prev!.find(currentTarget.value))}
               />
             </Grid2>
@@ -201,7 +202,11 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
           <Grid2>
             <Grid2 size={{ lg: 3, xl: 3 }} />
             <Grid2 size={{ lg: 9, xl: 9 }} className={classes.resultsContainer} aria-busy={backend.loading}>
-              {noResults ? (
+              {backend.showLoader ? (
+                <Box className={classes.resultsLoading}>
+                  <CircularProgress size={32} aria-label={intl.formatMessage({ id: 'gamut.loading' })} />
+                </Box>
+              ) : noResults ? (
                 <Alert severity='info' variant='outlined'>
                   {intl.formatMessage({ id: 'gamut.search.results.noResults' })}
                   {intl.formatMessage({ id: 'gamut.noValueIndicatorColon' })} {state.searchString}

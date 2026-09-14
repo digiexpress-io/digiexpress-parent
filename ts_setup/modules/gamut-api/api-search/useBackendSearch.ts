@@ -7,8 +7,24 @@ import { SearchApi } from './search-types';
 
 const DEBOUNCE_MS = 350;
 const TIMEOUT_MS = 8000;
+const LOADER_DELAY_MS = 250;
 
 const UNAVAILABLE = 'unavailable';
+
+function useLoader(inProgress: boolean, delayMs: number): boolean {
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!inProgress) {
+      setLoading(false);
+      return;
+    }
+    const id = window.setTimeout(() => setLoading(true), delayMs);
+    return () => window.clearTimeout(id);
+  }, [inProgress, delayMs]);
+
+  return loading;
+}
 
 interface Answer {
   query: string;
@@ -21,12 +37,14 @@ export function useBackendSearch(searchString: string | undefined): SearchApi.Ba
 
   const [answered, setAnswered] = React.useState<Answer | undefined>(undefined);
   const [unavailable, setUnavailable] = React.useState(false);
+  const [inProgress, setInProgress] = React.useState(false);
 
   const query = searchString?.trim() ?? '';
 
   React.useEffect(() => {
     setUnavailable(false);
     setAnswered(undefined);
+    setInProgress(false);
   }, [locale, siteSearchFetch]);
 
   React.useEffect(() => {
@@ -43,6 +61,10 @@ export function useBackendSearch(searchString: string | undefined): SearchApi.Ba
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), DEBOUNCE_MS + TIMEOUT_MS);
     const debounce = window.setTimeout(() => {
+      if (cancelled) {
+        return;
+      }
+      setInProgress(true);
       siteSearchFetch.fetchSiteSearchGet(query, locale, undefined, controller.signal)
         .then(async response => {
           if (response.status === 404 || response.status === 401 || response.status === 403) {
@@ -63,6 +85,7 @@ export function useBackendSearch(searchString: string | undefined): SearchApi.Ba
             return;
           }
           window.clearTimeout(timeout);
+          setInProgress(false);
           if (next === UNAVAILABLE) {
             setUnavailable(true);
             return;
@@ -76,6 +99,7 @@ export function useBackendSearch(searchString: string | undefined): SearchApi.Ba
       window.clearTimeout(debounce);
       window.clearTimeout(timeout);
       controller.abort();
+      setInProgress(false);
     };
   }, [query, locale, siteSearchFetch, unavailable]);
 
@@ -84,8 +108,10 @@ export function useBackendSearch(searchString: string | undefined): SearchApi.Ba
     : (query.length === 0 || answered?.query === query) ? 'ready' : 'pending';
 
   const results = unavailable ? undefined : answered?.results;
+  const loading = status === 'pending';
+  const showLoader = useLoader(inProgress, LOADER_DELAY_MS);
 
   return React.useMemo(
-    () => ({ status, results, query: answered?.query, loading: status === 'pending' }),
-    [status, results, answered]);
+    () => ({ status, results, query: answered?.query, loading, showLoader }),
+    [status, results, answered, loading, showLoader]);
 }

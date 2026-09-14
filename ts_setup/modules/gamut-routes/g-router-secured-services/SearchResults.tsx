@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Divider, Link, List, ListItem, Typography } from '@mui/material';
+import { Alert, Box, CircularProgress, Divider, Link, List, ListItem, Typography } from '@mui/material';
 import { Circle as CircleIcon } from '@mui/icons-material';
 
 import { GLinkPhone, GLinkHyper, GLinkFormUnlockedSearchResults, GLinkFormLocked } from '@dxs-ts/gamut-primitives';
@@ -66,7 +66,11 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
 
   return (
     <div className={classes.searchResults} aria-busy={backend.loading}>
-      {noResults ? (
+      {backend.showLoader ? (
+        <Box className={classes.resultsLoading}>
+          <CircularProgress size={32} aria-label={intl.formatMessage({ id: 'gamut.loading' })} />
+        </Box>
+      ) : noResults ? (
         <Alert severity='info' variant='outlined'>
           {intl.formatMessage({ id: 'gamut.search.results.noResults' })}
           {intl.formatMessage({ id: 'gamut.noValueIndicatorColon' })} {search.searchString}

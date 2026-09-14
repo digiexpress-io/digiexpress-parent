@@ -30,6 +30,7 @@ export declare namespace SearchApi {
     status: BackendSearchStatus;
     results: BackendSearchResult[] | undefined;
     loading: boolean;
+    showLoader: boolean;
     query: string | undefined;
   }
 
