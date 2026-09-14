@@ -118,8 +118,8 @@ public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthori
       return new AuthorizationDecision(true);    
     }
 
-    // anybody can access portal site
-    if(path.equals(SITE_PATH)) {
+    // anybody can access portal site, including its sub resources such as /portal/site/search
+    if(path.startsWith(SITE_PATH)) {
       log.debug("Portal path, authorized");
       return new AuthorizationDecision(true);    
     }

@@ -121,6 +121,7 @@ export const FrontdeskApp: React.FC = () => {
                     'smart_tables',
                     'user_profile',
                     'batches',
+                    'metis',
                     'tagomi'
                   ]}>
 

@@ -119,6 +119,10 @@
       <artifactId>eveli-integration-suomifi-rest</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-starter-model-ollama</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
     </dependency>

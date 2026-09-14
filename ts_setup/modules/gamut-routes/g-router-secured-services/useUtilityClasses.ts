@@ -10,6 +10,7 @@ export interface GRouterSecuredServicesClasses {
   root: string;
   searchFilterButtons: string,
   searchResults: string,
+  resultsLoading: string,
   resultsDividerTitle: string,
   resultsDivider: string,
   servicesBreadcrumbs: string,
@@ -36,6 +37,7 @@ export const useUtilityClasses = () => {
     root: ['root'],
     searchFilterButtons: ['searchFilterButtons'],
     searchResults: ['searchResults'],
+    resultsLoading: ['resultsLoading'],
     resultsDividerTitle: ['resultsDividerTitle'],
     resultsDivider: ['resultsDivider'],
     servicesBreadcrumbs: ['servicesBreadcrumbs'],
@@ -53,6 +55,7 @@ export const GRouterSecuredServicesRoot = styled("div", {
     return [
       styles.root,
       styles.searchResults,
+      styles.resultsLoading,
       styles.searchFilterButtons,
       styles.resultsDividerTitle,
       styles.resultsDivider,
@@ -83,6 +86,12 @@ export const GRouterSecuredServicesRoot = styled("div", {
     '& .GRouterSecuredServices-searchResults': {
       gap: theme.spacing(1),
       padding: theme.spacing(1),
+    },
+    '& .GRouterSecuredServices-resultsLoading': {
+      display: 'flex',
+      justifyContent: 'center',
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
     },
     '& .GRouterSecuredServices-searchFilterButtons': {
       display: 'flex',

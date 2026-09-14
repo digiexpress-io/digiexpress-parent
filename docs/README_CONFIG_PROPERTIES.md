@@ -72,6 +72,62 @@ Here are given properties which depend from environment and require customizatio
 
 * `eveli.feedback.enabled` - boolean flag to enable feedback functionality. 
 
+## Metis AI platform properties
+
+See `mvn_setup/metis-parent/README.md` for the architecture. Semantic site search is the first capability.
+
+The platform flag alone is a valid deployment; it wires the models and the status endpoint but no capability.
+
+* `eveli.metis.enabled`: boolean flag to enable the platform. Requires `spring.ai.model.*` below, since Metis needs an `EmbeddingModel` and a `ChatClient` bean. Enables `GET /worker/rest/api/metis/status`, which reports the resolved provider and models plus one entry per capability with its own state.
+
+### AI model properties
+
+Metis uses Spring AI, so the provider is chosen entirely through configuration. The defaults keep Spring AI from creating any model bean:
+
+* `spring.ai.model.chat`, `spring.ai.model.embedding`: set both to `ollama` when enabling Metis, `none` otherwise.
+* `spring.ai.ollama.base-url`: Ollama endpoint, `http://localhost:11434` locally. On GCloud this must be overridden (`SPRING_AI_OLLAMA_BASE_URL`); leaving the YAML default talks to localhost inside the container.
+* `spring.ai.ollama.embedding.options.model`: embedding model, `bge-m3`.
+* `spring.ai.ollama.chat.options.model`, `spring.ai.ollama.chat.options.temperature`: model used to generate human readable descriptions during indexing, `llama3.2` at a low temperature.
+
+## Metis semantic site search properties
+
+Semantic site search indexes the deployed portal content into PostgreSQL and serves the portal search from it. It is off by default: with `eveli.metis.search.enabled` unset no search beans are created and the portal keeps using its client-side keyword search. It needs `eveli.metis.enabled` as well, for the models. See `mvn_setup/metis-parent/README.md#semantic-site-search` for the setup.
+
+* `eveli.metis.search.enabled`: boolean flag to enable the capability. Requires `eveli.metis.enabled` as well; enabling search alone fails boot with an explicit error. Requires a database with the `vector` extension available. This flag also decides whether the search schema is migrated at all: `classpath:db/metis/search` is appended to the Flyway locations only while it is true, so a database that never enables semantic site search never needs pgvector. The first enable on a given database has to be able to `CREATE EXTENSION vector`, `pg_trgm` and `unaccent`, or have them pre-created by a DBA (typical on Cloud SQL, where the app role cannot `CREATE EXTENSION`).
+* `spring.flyway.ignore-migration-patterns`: applications set this to `"*:missing"`. After search has been enabled, Flyway records `V4_x` in the shared `flyway_schema_history`. Turning `eveli.metis.search.enabled` off removes `classpath:db/metis/search` from Flyway locations, so those files look **missing** (applied in the database, not on the classpath). With `validate-on-migrate: true`, that would refuse to boot. `*:missing` tells Flyway to ignore that validate error. The tables stay. The pattern is `type:state` (`*` = versioned and repeatable); Flyway cannot limit it to V4_x, so a deleted already-applied script under `db/postgresql` would also be ignored.
+* `eveli.metis.search.locales`: comma-separated locales to index, defaults to `en, fi, sv`. Only these three have a PostgreSQL stemmer, other locales are indexed without stemming.
+* `eveli.metis.search.auto-reindex-on-startup`: start an indexing job on boot when the index is still empty. Defaults to true (Java and YAML). This is how the first index is built in a deployed environment, no manual call needed. Set it false if you enable search only via env and do not want a boot-time job.
+* `eveli.metis.search.reindex-on-deployment`: reindex after content is deployed or a scheduled publication goes live, defaults to true. Documents whose content hash is unchanged cost nothing.
+* `eveli.metis.search.live-publication-check-seconds`: how often to check whether a scheduled publication has gone live, default `60`. Also the catch-up after a restart that missed the instant.
+
+Query tuning, the defaults are the values the evaluation harness was tuned against:
+
+* `eveli.metis.search.query.vector-weight` / `eveli.metis.search.query.fts-weight`: weights of the semantic and keyword rankings when they are fused, defaults `0.8` and `0.2`.
+* `eveli.metis.search.query.rrf-k`: reciprocal rank fusion constant, default `60`. Higher values flatten the influence of the top ranks.
+* `eveli.metis.search.query.default-limit` / `eveli.metis.search.query.max-results`: both default to `8`. The caller cannot ask for more than `max-results`. Keep them equal or callers silently get fewer rows than they asked for.
+* `eveli.metis.search.query.min-results-before-fallback`: below this number of keyword hits the trigram similarity fallback is used, which catches typos, default `1`.
+* `eveli.metis.search.query.trgm-threshold`: minimum trigram similarity for that fallback, default `0.2`.
+* `eveli.metis.search.query.score-drop-off-ratio`: drop vector hits scoring below this fraction of the best match for the same query, default `0.90`. Not applied to a keyword-only list, so form-name hits stay.
+* `eveli.metis.search.query.min-vector-score`: when even the best vector match is below this, the query has no semantic answer, default `0.30`.
+* `eveli.metis.search.query.min-vector-score-without-keyword`: when primary full-text search is empty, a best vector score below this is treated as no answer, default `0.45`. Gibberish typically scores 0.30–0.45. Does not apply when the query matched a title or other `websearch_to_tsquery` hit. Does not fall through to the trigram keyword fallback.
+* `eveli.metis.search.query.max-query-chars`: public queries longer than this are truncated, default `400`.
+* `eveli.metis.search.query.timeout-seconds`: upper bound for answering one search, default `5`. Query embedding is given two seconds less than this; if it misses, hybrid still returns keyword ranking instead of failing.
+* `eveli.metis.search.query.concurrency` / `eveli.metis.search.query.queue-capacity`: bounded search executor, defaults `4` and `50`. A full queue answers `fallback: true` without embedding.
+* `eveli.metis.search.query.embed-concurrency`: how many query embeddings may be in flight in the JVM. Unset means the same as `query.concurrency` (so production overlapping searches still get semantic ranking). Set `1` on CPU-only Ollama (`application-dev.yml` does). When the cap is hit, a *different* uncached query fails fast and hybrid continues as keyword ranking; the same string joins the in-flight embed. Index-time `embed()` is not gated. `bge-m3` on one Ollama process still serializes internally; this cap is how many HTTP embeds we are willing to have in that queue so the last still finishes inside `timeout-seconds`.
+* `eveli.metis.search.query.rate-limit-requests` / `eveli.metis.search.query.rate-limit-window-seconds`: in-memory per remote address, default 10 requests / 10s. Over-limit also answers `fallback: true`.
+* Portal `GET /portal/site/search` answers `fallback: true` while the latest reindex job is `RUNNING`, `CANCELLING`, `FAILED`, or `CANCELLED`, so visitors keep keyword search until a job `COMPLETED`. `GET /worker/rest/api/metis/search/status` shows the failed or cancelled job so an operator can re-run reindex.
+
+Indexing tuning:
+
+* `eveli.metis.search.indexing.embedding-dimension`: documents the expected width of `metis_search_index.embedding`, `1024` for `bge-m3`. It does **not** alter the schema; the column is `VECTOR(1024)` in the migration. A mismatch fails the reindex job. Changing the width is a Flyway concern.
+* `eveli.metis.search.indexing.concurrency`: documents processed in parallel, default `1`, which is optimal for CPU-only Ollama. Raise it when Ollama runs on a GPU.
+* `eveli.metis.search.indexing.document-timeout-seconds`: upper bound for metadata plus embedding of one document, measured from when that document starts (not from when it was queued), default `600`.
+* `eveli.metis.search.indexing.abandoned-after-seconds`: how long a running job may report no progress before another instance may reclaim it, default `3600`.
+* `eveli.metis.search.indexing.max-llm-context-chars`, `eveli.metis.search.indexing.max-page-chars`: truncation limits for the text handed to the metadata model and for the indexed page body.
+* `eveli.metis.search.indexing.generic-topic-threshold`: a topic linking **more than** this many workflows (so 5 or more at the default of 4) is treated as a generic listing page. Its page text, headings and sibling link titles are dropped from each workflow document. The topic title is still used as the document category and is still handed to the metadata model.
+* `eveli.metis.search.indexing.metadata-prompt-version`: folded into the content hash. Bump it when the prompt changes so a normal reindex reprocesses every document.
+
+The embedding model id is folded into each document's content hash, so switching `spring.ai.ollama.embedding.options.model` and running a normal reindex reprocesses every row. `POST /worker/rest/api/metis/search/reindex?force=true` is still there for anything the hash cannot see. `POST /worker/rest/api/metis/search/reindex?replace=true` stops a running job and starts a new one; `POST /worker/rest/api/metis/search/reindex/cancel` stops without starting another. The model id is recorded on the job and is visible through `GET /worker/rest/api/metis/search/status`. A job is not finished because `state` is `COMPLETED` if `processedCount + skippedCount` is less than `totalCount` — that used to happen when queued documents hit the timeout together; that path now fails the job and leaves the previous index in place.
 
 ## Backend configuration properties
 
@@ -84,3 +140,4 @@ List of features:
 - queues-visually-disabled: queues UI is not available
 - batches: batches are enabled
 - batches-dev: development batches are enabled
+- metis: Metis status and reindex page is shown in the worker UI
