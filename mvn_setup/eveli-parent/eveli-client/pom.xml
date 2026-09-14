@@ -37,6 +37,10 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>limaone-compiler</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>metis-client</artifactId>
+    </dependency>
 
     
     <dependency>

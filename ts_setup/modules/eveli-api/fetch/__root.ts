@@ -18,7 +18,7 @@ function uberFetchWithAuthAndErrorHandling()  {
         if (response.status === 401 || response.status === 403) {
   // login and redo
           return loginOn401().then(() => window.fetch(input, mergedInit))
-        } else if (response.status === 404) {
+        } else if (response.status === 404 || response.status === 409) {
           return response;
         } else if (!response.ok) {
           throw Error(response.statusText);

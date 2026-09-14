@@ -8,3 +8,15 @@ eveli:
     - path-pattern: /worker/rest/api/tasks/**
       method: POST,PUT,DELETE
       roles: ROLE_ADMIN
+    - path-pattern: /worker/rest/api/metis/status
+      method: GET
+      roles: ROLE_Authorized
+    - path-pattern: /worker/rest/api/metis/search/**
+      method: GET
+      roles: ROLE_Authorized
+    - path-pattern: /worker/rest/api/metis/search/reindex
+      method: POST
+      roles: ROLE_ASSET_ADMIN
+    - path-pattern: /worker/rest/api/metis/search/reindex/**
+      method: POST
+      roles: ROLE_ASSET_ADMIN

@@ -66,6 +66,8 @@ public class PropertyAuthorizationTest {
   Collection userRole = createAuthorities("ROLE_USER");
   Collection adminRole = createAuthorities("ROLE_ADMIN");
   Collection otherRole = createAuthorities("ROLE_NOUSER");
+  Collection authorizedRole = createAuthorities("ROLE_Authorized");
+  Collection assetAdminRole = createAuthorities("ROLE_ASSET_ADMIN");
   @Test
   public void testAllAccess() {
 
@@ -111,6 +113,58 @@ public class PropertyAuthorizationTest {
     Assertions.assertTrue(testAccess(adminRole, policy));
     Assertions.assertFalse(testAccess(otherRole, policy));
 
+  }
+
+  @Test
+  public void testMetisPlatformStatusIsReadableByAnyWorker() {
+    SpringSecurityPolicy policy = setupPolicy();
+    Mockito.when(request.getServletPath()).thenReturn("/worker/rest/api/metis/status");
+
+    Mockito.when(request.getMethod()).thenReturn("GET");
+    Assertions.assertTrue(testAccess(authorizedRole, policy));
+    Assertions.assertFalse(testAccess(otherRole, policy));
+  }
+
+  @Test
+  public void testAnUnknownMetisCapabilityIsNotReadable() {
+    SpringSecurityPolicy policy = setupPolicy();
+    Mockito.when(request.getServletPath()).thenReturn("/worker/rest/api/metis/feedback/status");
+
+    Mockito.when(request.getMethod()).thenReturn("GET");
+    Assertions.assertFalse(testAccess(authorizedRole, policy));
+    Assertions.assertFalse(testAccess(assetAdminRole, policy));
+  }
+
+  @Test
+  public void testMetisSearchStatusIsReadableByAnyWorker() {
+    SpringSecurityPolicy policy = setupPolicy();
+    Mockito.when(request.getServletPath()).thenReturn("/worker/rest/api/metis/search/status");
+
+    Mockito.when(request.getMethod()).thenReturn("GET");
+    Assertions.assertTrue(testAccess(authorizedRole, policy));
+    Assertions.assertFalse(testAccess(otherRole, policy));
+  }
+
+  @Test
+  public void testMetisSearchReindexNeedsTheAssetAdminRole() {
+    SpringSecurityPolicy policy = setupPolicy();
+    Mockito.when(request.getServletPath()).thenReturn("/worker/rest/api/metis/search/reindex");
+
+    Mockito.when(request.getMethod()).thenReturn("POST");
+    Assertions.assertTrue(testAccess(assetAdminRole, policy));
+    Assertions.assertFalse(testAccess(authorizedRole, policy));
+    Assertions.assertFalse(testAccess(otherRole, policy));
+  }
+
+  @Test
+  public void testMetisSearchReindexCancelNeedsTheAssetAdminRole() {
+    SpringSecurityPolicy policy = setupPolicy();
+    Mockito.when(request.getServletPath()).thenReturn("/worker/rest/api/metis/search/reindex/cancel");
+
+    Mockito.when(request.getMethod()).thenReturn("POST");
+    Assertions.assertTrue(testAccess(assetAdminRole, policy));
+    Assertions.assertFalse(testAccess(authorizedRole, policy));
+    Assertions.assertFalse(testAccess(otherRole, policy));
   }
 
   private SpringSecurityPolicy setupPolicy() {

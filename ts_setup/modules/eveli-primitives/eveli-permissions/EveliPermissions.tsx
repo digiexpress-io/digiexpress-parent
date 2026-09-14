@@ -11,6 +11,7 @@ const EveliPermissionMapping = {
   'NAV_TO_TASKS': oneOf(['TASK_ALL_VIEW', 'TASK_ALL_EDIT']),
   'NAV_TO_DIALOB': oneOf(['DIALOB_VIEW', 'DIALOB_EDIT']),
   'NAV_TO_RELEASES': oneOf(['RELEASE_VIEW', 'RELEASE_EDIT']), //eveli publications
+  'NAV_TO_METIS': oneOf(['RELEASE_VIEW', 'RELEASE_EDIT']),
   'NAV_TO_TASK_GROUP': oneOf(['TASK_GROUP_VIEW', 'TASK_GROUP_EDIT']),
 
   'NAV_TO_TASKS_FEEDBACK': oneOf(['FEEDBACK_VIEW', 'FEEBACK_EDIT']),

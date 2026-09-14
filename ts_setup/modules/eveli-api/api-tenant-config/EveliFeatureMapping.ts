@@ -41,6 +41,7 @@ export const EveliFeatureMapping = {
   
   'SMART_TASK_AUDIT': oneOf(['smart_task_audit']),
   'BATCHES': oneOf(['batches']),
+  'METIS': oneOf(['metis']),
   'AI_ASSISTANT': oneOf(['ai-assistant']),
 
 }
@@ -58,8 +59,9 @@ export const EveliFeatureMapping = {
  8. queues-visually-disabled: Show / hide the Queues feature from the UI
  9. feedback-visually-disabled: Show / hide the feedback feature from the UI
  10. user_profile: Show / hide the user profile feature from the UI
- 11. smart_tables: All tables are persistant - they save user-defined configurations
- 12: batches: Enable / disable batch processing features
+  11. smart_tables: All tables are persistant - they save user-defined configurations
+  12. batches: Enable / disable batch processing features
+  13. metis: Show / hide the Metis status and reindex page in the worker UI
 */
 
 export type EveliFeatureType = keyof typeof EveliFeatureMapping;

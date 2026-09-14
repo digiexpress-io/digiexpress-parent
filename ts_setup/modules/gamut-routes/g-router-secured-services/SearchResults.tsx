@@ -40,21 +40,32 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
   const iam = useIam();
   const intl = useIntl();
   const classes = useUtilityClasses();
+  const { views } = useSite();
 
-  const noResults = search.topics.length === 0 &&
-    search.forms.length === 0 &&
-    search.phones.length === 0 &&
-    search.internal.length === 0 &&
-    search.external.length === 0;
+  const backend = SearchApi.useBackendSearch(search.searchString);
+  const semantic = SearchApi.useSemanticResults(views, search, backend);
+
+  const topics = semantic?.topics ?? search.topics;
+  const forms = semantic?.forms ?? search.forms;
+  const phones = backend.loading ? [] : search.phones;
+  const internal = backend.loading ? [] : search.internal;
+  const external = backend.loading ? [] : search.external;
+
+  const noResults = !backend.loading &&
+    topics.length === 0 &&
+    forms.length === 0 &&
+    phones.length === 0 &&
+    internal.length === 0 &&
+    external.length === 0;
 
   const childTopicIds = new Set(
-    (Object.values(useSite().views) as SiteApi.TopicView[])
+    (Object.values(views) as SiteApi.TopicView[])
       .flatMap(topic => topic.children ?? [])
       .map(child => child.id)
   );
 
   return (
-    <div className={classes.searchResults}>
+    <div className={classes.searchResults} aria-busy={backend.loading}>
       {noResults ? (
         <Alert severity='info' variant='outlined'>
           {intl.formatMessage({ id: 'gamut.search.results.noResults' })}
@@ -62,9 +73,9 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
         </Alert>
       ) : (
         <>
-          <ResultsDivider searchState={search} title='gamut.search.results.serviceLinks' isHidden={search.topics.length === 0} />
+          <ResultsDivider searchState={search} title='gamut.search.results.serviceLinks' isHidden={topics.length === 0} />
             <List dense>
-              {search.topics.map((topic) => {
+              {topics.map((topic) => {
                 const isChild = childTopicIds.has(topic.id);
 
                 return (
@@ -79,8 +90,8 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
               })}
             </List>
 
-            <ResultsDivider searchState={search} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={search.forms.length === 0} />
-            {search.forms.map((form) => (
+            <ResultsDivider searchState={search} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={forms.length === 0} />
+            {forms.map((form) => (
               <ListItem dense key={form.linkToForm.id}>
 
               { iam.isFormLinkEnabled(form.linkToForm) ?
@@ -100,27 +111,27 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
             </ListItem>
           ))}
 
-            <ResultsDivider searchState={search} title='gamut.search.results.phoneLinks' isHidden={search.phones.length === 0} />
+            <ResultsDivider searchState={search} title='gamut.search.results.phoneLinks' isHidden={phones.length === 0} />
             <List dense>
-              {search.phones.map((phone) => (
+              {phones.map((phone) => (
                 <ListItem key={phone.id}>
                   <GLinkPhone label={phone.name} value={phone.value} />
                 </ListItem>
               ))}
             </List>
 
-            <ResultsDivider searchState={search} title='gamut.search.results.internalLinks' isHidden={search.internal.length === 0} />
+            <ResultsDivider searchState={search} title='gamut.search.results.internalLinks' isHidden={internal.length === 0} />
             <List dense>
-              {...search.internal.map((link) => (
+              {...internal.map((link) => (
                 <ListItem key={link.name}>
                   <GLinkHyper label={link.name} value={link.value} key={link.id} />
                 </ListItem>
               ))}
             </List>
 
-            <ResultsDivider searchState={search} title='gamut.search.results.externalLinks' isHidden={search.external.length === 0} />
+            <ResultsDivider searchState={search} title='gamut.search.results.externalLinks' isHidden={external.length === 0} />
             <List dense>
-              {...search.external.map((link) => (
+              {...external.map((link) => (
                 <ListItem key={link.name}>
                   <GLinkHyper label={link.name} value={link.value} key={link.id} />
                 </ListItem>

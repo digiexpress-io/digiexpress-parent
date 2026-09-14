@@ -18,6 +18,7 @@ import { Route as PublicLocaleAuthRouteImport } from './routes/public.$locale.au
 import { Route as SecuredLocalePublicationsIndexRouteImport } from './routes/secured.$locale.publications.index'
 import { Route as SecuredLocaleWorkerTasksRouteImport } from './routes/secured.$locale.worker.tasks'
 import { Route as SecuredLocaleWorkerProfileRouteImport } from './routes/secured.$locale.worker.profile'
+import { Route as SecuredLocaleWorkerMetisRouteImport } from './routes/secured.$locale.worker.metis'
 import { Route as SecuredLocaleWorkerLedgersRouteImport } from './routes/secured.$locale.worker.ledgers'
 import { Route as SecuredLocaleWorkerContractsRouteImport } from './routes/secured.$locale.worker.contracts'
 import { Route as SecuredLocaleWorkerCockpitsRouteImport } from './routes/secured.$locale.worker.cockpits'
@@ -27,6 +28,7 @@ import { Route as SecuredLocaleWorkerTasksIndexRouteImport } from './routes/secu
 import { Route as SecuredLocaleWorkerTaskActivityIndexRouteImport } from './routes/secured.$locale.worker.task-activity.index'
 import { Route as SecuredLocaleWorkerQueuesIndexRouteImport } from './routes/secured.$locale.worker.queues.index'
 import { Route as SecuredLocaleWorkerMonitoringIndexRouteImport } from './routes/secured.$locale.worker.monitoring.index'
+import { Route as SecuredLocaleWorkerMetisIndexRouteImport } from './routes/secured.$locale.worker.metis.index'
 import { Route as SecuredLocaleWorkerLedgersIndexRouteImport } from './routes/secured.$locale.worker.ledgers.index'
 import { Route as SecuredLocaleWorkerInHouseIndexRouteImport } from './routes/secured.$locale.worker.in-house.index'
 import { Route as SecuredLocaleWorkerHelpIndexRouteImport } from './routes/secured.$locale.worker.help.index'
@@ -104,6 +106,12 @@ const SecuredLocaleWorkerProfileRoute =
     path: '/profile',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
+const SecuredLocaleWorkerMetisRoute =
+  SecuredLocaleWorkerMetisRouteImport.update({
+    id: '/metis',
+    path: '/metis',
+    getParentRoute: () => SecuredLocaleWorkerRoute,
+  } as any)
 const SecuredLocaleWorkerLedgersRoute =
   SecuredLocaleWorkerLedgersRouteImport.update({
     id: '/ledgers',
@@ -157,6 +165,12 @@ const SecuredLocaleWorkerMonitoringIndexRoute =
     id: '/monitoring/',
     path: '/monitoring/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
+  } as any)
+const SecuredLocaleWorkerMetisIndexRoute =
+  SecuredLocaleWorkerMetisIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => SecuredLocaleWorkerMetisRoute,
   } as any)
 const SecuredLocaleWorkerLedgersIndexRoute =
   SecuredLocaleWorkerLedgersIndexRouteImport.update({
@@ -338,6 +352,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker/cockpits': typeof SecuredLocaleWorkerCockpitsRouteWithChildren
   '/secured/$locale/worker/contracts': typeof SecuredLocaleWorkerContractsRouteWithChildren
   '/secured/$locale/worker/ledgers': typeof SecuredLocaleWorkerLedgersRouteWithChildren
+  '/secured/$locale/worker/metis': typeof SecuredLocaleWorkerMetisRouteWithChildren
   '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
   '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
@@ -356,6 +371,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
   '/secured/$locale/worker/in-house': typeof SecuredLocaleWorkerInHouseIndexRoute
   '/secured/$locale/worker/ledgers/': typeof SecuredLocaleWorkerLedgersIndexRoute
+  '/secured/$locale/worker/metis/': typeof SecuredLocaleWorkerMetisIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
   '/secured/$locale/worker/task-activity': typeof SecuredLocaleWorkerTaskActivityIndexRoute
@@ -398,6 +414,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
   '/secured/$locale/worker/in-house': typeof SecuredLocaleWorkerInHouseIndexRoute
   '/secured/$locale/worker/ledgers': typeof SecuredLocaleWorkerLedgersIndexRoute
+  '/secured/$locale/worker/metis': typeof SecuredLocaleWorkerMetisIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
   '/secured/$locale/worker/task-activity': typeof SecuredLocaleWorkerTaskActivityIndexRoute
@@ -429,6 +446,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker/cockpits': typeof SecuredLocaleWorkerCockpitsRouteWithChildren
   '/secured/$locale/worker/contracts': typeof SecuredLocaleWorkerContractsRouteWithChildren
   '/secured/$locale/worker/ledgers': typeof SecuredLocaleWorkerLedgersRouteWithChildren
+  '/secured/$locale/worker/metis': typeof SecuredLocaleWorkerMetisRouteWithChildren
   '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
   '/secured/$locale/publications/': typeof SecuredLocalePublicationsIndexRoute
@@ -447,6 +465,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker/help/': typeof SecuredLocaleWorkerHelpIndexRoute
   '/secured/$locale/worker/in-house/': typeof SecuredLocaleWorkerInHouseIndexRoute
   '/secured/$locale/worker/ledgers/': typeof SecuredLocaleWorkerLedgersIndexRoute
+  '/secured/$locale/worker/metis/': typeof SecuredLocaleWorkerMetisIndexRoute
   '/secured/$locale/worker/monitoring/': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues/': typeof SecuredLocaleWorkerQueuesIndexRoute
   '/secured/$locale/worker/task-activity/': typeof SecuredLocaleWorkerTaskActivityIndexRoute
@@ -479,6 +498,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/cockpits'
     | '/secured/$locale/worker/contracts'
     | '/secured/$locale/worker/ledgers'
+    | '/secured/$locale/worker/metis'
     | '/secured/$locale/worker/profile'
     | '/secured/$locale/worker/tasks'
     | '/secured/$locale/publications'
@@ -497,6 +517,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/help'
     | '/secured/$locale/worker/in-house'
     | '/secured/$locale/worker/ledgers/'
+    | '/secured/$locale/worker/metis/'
     | '/secured/$locale/worker/monitoring'
     | '/secured/$locale/worker/queues'
     | '/secured/$locale/worker/task-activity'
@@ -539,6 +560,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/help'
     | '/secured/$locale/worker/in-house'
     | '/secured/$locale/worker/ledgers'
+    | '/secured/$locale/worker/metis'
     | '/secured/$locale/worker/monitoring'
     | '/secured/$locale/worker/queues'
     | '/secured/$locale/worker/task-activity'
@@ -569,6 +591,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/cockpits'
     | '/secured/$locale/worker/contracts'
     | '/secured/$locale/worker/ledgers'
+    | '/secured/$locale/worker/metis'
     | '/secured/$locale/worker/profile'
     | '/secured/$locale/worker/tasks'
     | '/secured/$locale/publications/'
@@ -587,6 +610,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/help/'
     | '/secured/$locale/worker/in-house/'
     | '/secured/$locale/worker/ledgers/'
+    | '/secured/$locale/worker/metis/'
     | '/secured/$locale/worker/monitoring/'
     | '/secured/$locale/worker/queues/'
     | '/secured/$locale/worker/task-activity/'
@@ -678,6 +702,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SecuredLocaleWorkerProfileRouteImport
       parentRoute: typeof SecuredLocaleWorkerRoute
     }
+    '/secured/$locale/worker/metis': {
+      id: '/secured/$locale/worker/metis'
+      path: '/metis'
+      fullPath: '/secured/$locale/worker/metis'
+      preLoaderRoute: typeof SecuredLocaleWorkerMetisRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
+    }
     '/secured/$locale/worker/ledgers': {
       id: '/secured/$locale/worker/ledgers'
       path: '/ledgers'
@@ -740,6 +771,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/secured/$locale/worker/monitoring'
       preLoaderRoute: typeof SecuredLocaleWorkerMonitoringIndexRouteImport
       parentRoute: typeof SecuredLocaleWorkerRoute
+    }
+    '/secured/$locale/worker/metis/': {
+      id: '/secured/$locale/worker/metis/'
+      path: '/'
+      fullPath: '/secured/$locale/worker/metis/'
+      preLoaderRoute: typeof SecuredLocaleWorkerMetisIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerMetisRoute
     }
     '/secured/$locale/worker/ledgers/': {
       id: '/secured/$locale/worker/ledgers/'
@@ -1037,6 +1075,20 @@ const SecuredLocaleWorkerLedgersRouteWithChildren =
     SecuredLocaleWorkerLedgersRouteChildren,
   )
 
+interface SecuredLocaleWorkerMetisRouteChildren {
+  SecuredLocaleWorkerMetisIndexRoute: typeof SecuredLocaleWorkerMetisIndexRoute
+}
+
+const SecuredLocaleWorkerMetisRouteChildren: SecuredLocaleWorkerMetisRouteChildren =
+  {
+    SecuredLocaleWorkerMetisIndexRoute: SecuredLocaleWorkerMetisIndexRoute,
+  }
+
+const SecuredLocaleWorkerMetisRouteWithChildren =
+  SecuredLocaleWorkerMetisRoute._addFileChildren(
+    SecuredLocaleWorkerMetisRouteChildren,
+  )
+
 interface SecuredLocaleWorkerTasksRouteChildren {
   SecuredLocaleWorkerTasksIndexRoute: typeof SecuredLocaleWorkerTasksIndexRoute
   SecuredLocaleWorkerTasksTaskIdIndexRoute: typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
@@ -1062,6 +1114,7 @@ interface SecuredLocaleWorkerRouteChildren {
   SecuredLocaleWorkerCockpitsRoute: typeof SecuredLocaleWorkerCockpitsRouteWithChildren
   SecuredLocaleWorkerContractsRoute: typeof SecuredLocaleWorkerContractsRouteWithChildren
   SecuredLocaleWorkerLedgersRoute: typeof SecuredLocaleWorkerLedgersRouteWithChildren
+  SecuredLocaleWorkerMetisRoute: typeof SecuredLocaleWorkerMetisRouteWithChildren
   SecuredLocaleWorkerProfileRoute: typeof SecuredLocaleWorkerProfileRoute
   SecuredLocaleWorkerTasksRoute: typeof SecuredLocaleWorkerTasksRouteWithChildren
   SecuredLocaleWorkerDashboardIndexRoute: typeof SecuredLocaleWorkerDashboardIndexRoute
@@ -1087,6 +1140,7 @@ const SecuredLocaleWorkerRouteChildren: SecuredLocaleWorkerRouteChildren = {
   SecuredLocaleWorkerContractsRoute:
     SecuredLocaleWorkerContractsRouteWithChildren,
   SecuredLocaleWorkerLedgersRoute: SecuredLocaleWorkerLedgersRouteWithChildren,
+  SecuredLocaleWorkerMetisRoute: SecuredLocaleWorkerMetisRouteWithChildren,
   SecuredLocaleWorkerProfileRoute: SecuredLocaleWorkerProfileRoute,
   SecuredLocaleWorkerTasksRoute: SecuredLocaleWorkerTasksRouteWithChildren,
   SecuredLocaleWorkerDashboardIndexRoute:

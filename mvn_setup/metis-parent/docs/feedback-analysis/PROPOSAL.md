@@ -1,8 +1,17 @@
-# AI tools integration API
+# Feedback analysis, proposal
 
-*WIP*
+*WIP, not implemented.*
 
 **Note:** This is a proposal for the API, all naming, endpoints, and data structures are subject to change based on the implementation details and requirements.
+
+This is a candidate second Metis capability. It predates the platform split and is kept here as
+the design input for it; the shapes below are the domain proposal, not the final packaging. When
+it is built it takes a capability slot the same way site search does, see
+[how to add a capability](../../README.md#adding-a-capability): package `io.resys.metis.feedback.*`,
+configuration under `eveli.metis.feedback.*`, Flyway band `V5_x` under `db/metis/feedback`,
+endpoints under `/worker/rest/api/metis/feedback`, and its own `eveliPermissions.yaml` entries.
+It would reuse the platform's `EmbeddingService` for the similarity search and
+`StructuredChatService` for the classification prompts rather than talking to a model directly.
 
 ## Feedback analysis tools
 

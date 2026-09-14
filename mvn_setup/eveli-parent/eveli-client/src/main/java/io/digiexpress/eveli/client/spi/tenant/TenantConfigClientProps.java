@@ -39,6 +39,7 @@ public class TenantConfigClientProps implements TenantConfigClient {
   
   public final static String BATCHES = "batches";
   public final static String BATCHES_DEV = "batches-dev";
+  public final static String METIS = "metis";
   
   // just for doc purpose 
   private final static String FEEDBACK_VISUALLY_DISABLED = "feedback-visually-disabled";

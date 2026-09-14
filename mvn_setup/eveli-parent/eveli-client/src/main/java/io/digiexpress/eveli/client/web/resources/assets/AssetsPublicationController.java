@@ -26,6 +26,7 @@ import java.time.ZoneOffset;
 import java.util.Optional;
 
 import org.immutables.value.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +39,9 @@ import org.springframework.web.server.ResponseStatusException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.digiexpress.eveli.client.api.ContentDeployedEvent;
 import io.digiexpress.eveli.client.spi.assets.EveliDeployment;
+import io.digiexpress.eveli.client.spi.assets.LivePublications;
 import io.resys.limaone.authoring.Authoring;
 import io.resys.limaone.model.Model.BodyType;
 import io.smallrye.mutiny.Multi;
@@ -57,6 +60,7 @@ public class AssetsPublicationController {
   
   private final Authoring authoring;
   private final boolean isReadOnly;
+  private final ApplicationEventPublisher publisher;
   
 
   @GetMapping
@@ -103,6 +107,11 @@ public class AssetsPublicationController {
       .description(publication.getDescription())
       .liveDate(liveDate))
       .build()
+      .onItem().invoke(ignore -> {
+        if (LivePublications.isLive(liveDate, now)) {
+          publisher.publishEvent(new ContentDeployedEvent("assets-publication"));
+        }
+      })
       .onItem().transform(deployment -> EveliDeployment.from(deployment, null));
   }
   

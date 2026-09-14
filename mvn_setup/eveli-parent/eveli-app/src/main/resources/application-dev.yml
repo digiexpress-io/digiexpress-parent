@@ -14,6 +14,23 @@ spring:
     enabled: true
     locations: classpath:db/postgresql
     validate-on-migrate: true
+    # V4_x stays in flyway_schema_history after search is turned off; see README_CONFIG_PROPERTIES.
+    ignore-migration-patterns: "*:missing"
+  ai:
+    # Repeated from application.yml because spring-boot:run pins spring.config.location
+    # to the profile files only, so the base application.yml is not read locally.
+    model:
+      chat: ollama
+      embedding: ollama
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: llama3.2
+          temperature: 0.2
+      embedding:
+        options:
+          model: bge-m3
 
 management:
   server:
@@ -116,7 +133,16 @@ eveli.user-registry.service-url:
 eveli.envir.cache-expirations.short-deployment: PT1M
 eveli.envir.cache-expirations.long-runtime: PT30M
 eveli.envir.dev-enabled: false
-eveli.tenant-features: batches-dev, ai-assistant
+eveli.tenant-features: batches-dev, ai-assistant, metis
 
 eveli.tagomi.service-url: http://localhost:8085
+
+# metis: needs the ollama service from eveli-local-docker
+eveli.metis.enabled: true
+
+eveli.metis.search.enabled: true
+eveli.metis.search.locales: en, fi, sv
+eveli.metis.search.auto-reindex-on-startup: true
+eveli.metis.search.reindex-on-deployment: true
+eveli.metis.search.query.embed-concurrency: 1
 
