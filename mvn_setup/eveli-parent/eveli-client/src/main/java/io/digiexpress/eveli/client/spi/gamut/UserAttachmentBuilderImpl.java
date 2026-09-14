@@ -60,6 +60,7 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
   private final AttachmentCommands attachmentCommands;
   private final List<UserAttachmentUploadInit> attachments = new ArrayList<>();
   private String actionId;
+  private Customer customer;
   
 
   @Override
@@ -77,6 +78,7 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
   }
   @Override
   public UserAttachmentBuilder customer(Customer customer) {
+    this.customer = customer;
     return this;
   }
 
@@ -93,7 +95,7 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
           // no task created yet, can't create task attachments
           return mapAttachmentsToUserAction(process);
         }
-        return taskClient.taskBuilder()
+        return taskClient.taskBuilder().userId(customer.getPrincipal().getUsername(), null)
           .addTaskAttachments(process.getTaskId(), this.attachments.stream().map(a -> mapToTaskAttachment(a)).toList())
           .onItem().transformToMulti(task-> {
             return mapAttachmentsToUserAction(process);
@@ -111,7 +113,7 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
   private TaskClient.TaskAttachment mapToTaskAttachment(UserAttachmentUploadInit a) {
     return ImmutableTaskAttachment.builder()
         .created(OffsetDateTime.now())
-        .creator(actionId)
+        .creator(customer.getPrincipal().getUsername())
         .name(a.getName())
         .size(a.getSize())
         .source(AttachmentSource.PORTAL_UPLOAD)

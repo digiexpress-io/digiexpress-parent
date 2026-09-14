@@ -53,7 +53,7 @@ public class GamutClientImpl implements GamutClient {
 
   @Override
   public UserActionQuery userActionQuery() {
-    return new UserActionsQueryImpl(envir, taskClient, attachmentsCommands);
+    return new UserActionsQueryImpl(envir, taskClient);
   }
 
   @Override
