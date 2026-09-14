@@ -4,11 +4,11 @@ Metis is the AI platform for digiexpress. It owns the model configuration and th
 primitives, and each thing built on top of it is a **capability** with its own client, its own
 configuration sub-tree, its own migrations and its own endpoints.
 
-Site search is the first capability.
+Semantic site search is the first capability.
 
 | Capability | Id | Status | Docs |
 | --- | --- | --- | --- |
-| Site search | `site-search` | Implemented | [How it works](docs/site-search/IMPLEMENTATION.md) · [this README](#site-search) |
+| Semantic site search | `site-search` | Implemented | [How it works](docs/site-search/IMPLEMENTATION.md) · [this README](#semantic-site-search) |
 | Feedback analysis | `feedback` | Proposal only | [docs/feedback-analysis/PROPOSAL.md](docs/feedback-analysis/PROPOSAL.md) |
 
 The library is `metis-client` (`io.resys.metis`). Configuration, REST and Flyway live in
@@ -24,7 +24,7 @@ io.resys.metis
 ├── api                  MetisClient, MetisConfig, MetisStatus
 ├── spi                  MetisClientImpl: capability wiring and platform status
 ├── spi.ai               EmbeddingService, StructuredChatService  (shared, capability-agnostic)
-└── search               the site search capability
+└── search               the semantic site search capability
     ├── api              MetisSearchClient, MetisSearchConfig, MetisSearchIndexStatus, ...
     └── spi              MetisSearchClientImpl, spi.index, spi.query
 ```
@@ -87,7 +87,7 @@ Everything else lives under `/worker/rest/api/metis/<capability>/`.
 
 ---
 
-## Site search
+## Semantic site search
 
 Semantic search over published portal content. It indexes each workflow link per locale into
 PostgreSQL (`tsvector` + embedding) and fuses vector and full-text rankings with reciprocal rank
@@ -123,7 +123,7 @@ The database must provide `vector` (pgvector), `pg_trgm` and `unaccent`.
 
 #### 2. Embedding / chat provider
 
-Site search needs a reachable chat model (metadata during index) and embedding model (index +
+Semantic site search needs a reachable chat model (metadata during index) and embedding model (index +
 search), both configured at the platform level. `eveli-app` and `eveli-app-gcloud` both ship the
 Ollama starter.
 
@@ -192,7 +192,7 @@ stop immediately. Poll `GET /worker/rest/api/metis/search/status` until the stat
 
 #### 4. Content and first index
 
-Site search indexes the **live published** bundle. Authoring import does not trigger a reindex.
+Semantic site search indexes the **live published** bundle. Authoring import does not trigger a reindex.
 There must be a live publication, or the job fails without touching rows.
 
 With `auto-reindex-on-startup: true` the first boot starts the job in the background. The portal
@@ -261,7 +261,7 @@ Ranking, the document model, and the 0.45 empty-query floor are in
 
 ## Adding a capability
 
-Say the capability is `feedback`. Each step has a matching one in site search to copy from.
+Say the capability is `feedback`. Each step has a matching one in semantic site search to copy from.
 
 1. **Package.** `io.resys.metis.feedback.api` for the client and its config, `…feedback.spi` for
    the implementation. Depend on `spi.ai` for models, never on another capability. If a primitive
@@ -272,7 +272,7 @@ Say the capability is `feedback`. Each step has a matching one in site search to
    independent of the hosting application.
 3. **Flyway band.** A new location `db/metis/feedback`, registered in `CAPABILITY_LOCATIONS` in
    `EveliAutoConfigMetisFlyway`. All Metis locations share one schema history table, so each
-   capability owns a major version band and numbers inside it: site search is `V4_x`, so feedback
+   capability owns a major version band and numbers inside it: semantic site search is `V4_x`, so feedback
    takes `V5_x`. Prefix tables with `metis_feedback_`.
 4. **Wiring.** A new `EveliAutoConfigMetisFeedback`, conditional on
    `eveli.metis.feedback.enabled`, and added to the `@Import` list of both `Application` classes.

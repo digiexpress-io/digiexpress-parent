@@ -48,7 +48,7 @@ public class MetisClientImpl implements MetisClient {
   public MetisSearchClient search() {
     if (search == null) {
       throw new IllegalStateException(
-          "Metis site search is not enabled, set eveli.metis.search.enabled");
+          "Metis semantic site search is not enabled, set eveli.metis.search.enabled");
     }
     return search;
   }
@@ -95,7 +95,7 @@ public class MetisClientImpl implements MetisClient {
       return status.enabled(true).state(CapabilityState.READY)
           .detail(indexed + " documents indexed").build();
     } catch (RuntimeException e) {
-      log.warn("Metis could not read the site search state, because of: {}", e.toString(), e);
+      log.warn("Metis could not read the semantic site search state, because of: {}", e.toString(), e);
       return status.enabled(true).state(CapabilityState.ERROR).detail(e.toString()).build();
     }
   }

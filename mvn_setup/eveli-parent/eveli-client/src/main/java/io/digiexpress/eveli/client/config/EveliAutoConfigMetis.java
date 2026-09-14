@@ -131,7 +131,7 @@ public class EveliAutoConfigMetis {
   @Bean
   public MetisClient metisClient(MetisConfig config, ObjectProvider<MetisSearchClient> search) {
     final var siteSearch = search.getIfAvailable();
-    log.info("Metis enabled, provider: {}, chat model: {}, embedding model: {}, site search: {}",
+    log.info("Metis enabled, provider: {}, chat model: {}, embedding model: {}, semantic site search: {}",
         config.getProvider(), config.getChatModelId(), config.getEmbeddingModelId(),
         siteSearch == null ? "disabled" : "enabled");
     return new MetisClientImpl(config, siteSearch);

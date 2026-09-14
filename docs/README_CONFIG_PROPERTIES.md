@@ -74,7 +74,7 @@ Here are given properties which depend from environment and require customizatio
 
 ## Metis AI platform properties
 
-See `mvn_setup/metis-parent/README.md` for the architecture. Site search is the first capability.
+See `mvn_setup/metis-parent/README.md` for the architecture. Semantic site search is the first capability.
 
 The platform flag alone is a valid deployment; it wires the models and the status endpoint but no capability.
 
@@ -89,11 +89,11 @@ Metis uses Spring AI, so the provider is chosen entirely through configuration. 
 * `spring.ai.ollama.embedding.options.model`: embedding model, `bge-m3`.
 * `spring.ai.ollama.chat.options.model`, `spring.ai.ollama.chat.options.temperature`: model used to generate human readable descriptions during indexing, `llama3.2` at a low temperature.
 
-## Metis site search properties
+## Metis semantic site search properties
 
-Site search indexes the deployed portal content into PostgreSQL and serves the portal search from it. It is off by default: with `eveli.metis.search.enabled` unset no search beans are created and the portal keeps using its client-side keyword search. It needs `eveli.metis.enabled` as well, for the models. See `mvn_setup/metis-parent/README.md#site-search` for the setup.
+Semantic site search indexes the deployed portal content into PostgreSQL and serves the portal search from it. It is off by default: with `eveli.metis.search.enabled` unset no search beans are created and the portal keeps using its client-side keyword search. It needs `eveli.metis.enabled` as well, for the models. See `mvn_setup/metis-parent/README.md#semantic-site-search` for the setup.
 
-* `eveli.metis.search.enabled`: boolean flag to enable the capability. Requires `eveli.metis.enabled` as well; enabling search alone fails boot with an explicit error. Requires a database with the `vector` extension available. This flag also decides whether the search schema is migrated at all: `classpath:db/metis/search` is appended to the Flyway locations only while it is true, so a database that never enables site search never needs pgvector. The first enable on a given database has to be able to `CREATE EXTENSION vector`, `pg_trgm` and `unaccent`, or have them pre-created by a DBA (typical on Cloud SQL, where the app role cannot `CREATE EXTENSION`).
+* `eveli.metis.search.enabled`: boolean flag to enable the capability. Requires `eveli.metis.enabled` as well; enabling search alone fails boot with an explicit error. Requires a database with the `vector` extension available. This flag also decides whether the search schema is migrated at all: `classpath:db/metis/search` is appended to the Flyway locations only while it is true, so a database that never enables semantic site search never needs pgvector. The first enable on a given database has to be able to `CREATE EXTENSION vector`, `pg_trgm` and `unaccent`, or have them pre-created by a DBA (typical on Cloud SQL, where the app role cannot `CREATE EXTENSION`).
 * `spring.flyway.ignore-migration-patterns`: applications set this to `"*:missing"`. After search has been enabled, Flyway records `V4_x` in the shared `flyway_schema_history`. Turning `eveli.metis.search.enabled` off removes `classpath:db/metis/search` from Flyway locations, so those files look **missing** (applied in the database, not on the classpath). With `validate-on-migrate: true`, that would refuse to boot. `*:missing` tells Flyway to ignore that validate error. The tables stay. The pattern is `type:state` (`*` = versioned and repeatable); Flyway cannot limit it to V4_x, so a deleted already-applied script under `db/postgresql` would also be ignored.
 * `eveli.metis.search.locales`: comma-separated locales to index, defaults to `en, fi, sv`. Only these three have a PostgreSQL stemmer, other locales are indexed without stemming.
 * `eveli.metis.search.auto-reindex-on-startup`: start an indexing job on boot when the index is still empty. Defaults to true (Java and YAML). This is how the first index is built in a deployed environment, no manual call needed. Set it false if you enable search only via env and do not want a boot-time job.

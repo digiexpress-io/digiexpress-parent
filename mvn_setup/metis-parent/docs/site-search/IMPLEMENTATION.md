@@ -1,16 +1,16 @@
-# Metis site search: how it works
+# Metis semantic site search: how it works
 
 Enablement (flags, Flyway, Ollama, GCloud) is in the
-[Metis README](../../README.md#site-search). Properties are in
+[Metis README](../../README.md#semantic-site-search). Properties are in
 [docs/README_CONFIG_PROPERTIES.md](../../../../docs/README_CONFIG_PROPERTIES.md).
 
 Citizens search in Gamut. Staff use Eveli. Authors publish a limaone **bundle**
 (pages, topics, workflow links) as a **publication**, which can go live
 immediately or at a future `liveDate`. Metis is the Digiexpress AI platform;
-site search is the first capability on it.
+semantic site search is the first capability on it.
 
 The portal already filtered the site JSON in the browser: form titles, topic
-names, phones, hyperlinks. Site search replaces the **form and topic** lists
+names, phones, hyperlinks. Semantic site search replaces the **form and topic** lists
 when the backend returns a real ranking. Phones and hyperlinks stay on that
 client-side filter. The point is queries in everyday language that do not
 appear in the form title — keyword search cannot do that, vector search can
@@ -203,7 +203,7 @@ might have changed”.
 ## Store
 
 Flyway location `classpath:db/metis/search`, appended only while search is
-enabled. Site search owns **V4_x** (`V4_1__metis_search.sql`); later
+enabled. Semantic site search owns **V4_x** (`V4_1__metis_search.sql`); later
 capabilities take V5_x+. A database that never enables search never needs
 pgvector. Extensions: `vector`, `pg_trgm`, `unaccent` (app role
 `CREATE EXTENSION`, or a DBA pre-creates them — typical on Cloud SQL).

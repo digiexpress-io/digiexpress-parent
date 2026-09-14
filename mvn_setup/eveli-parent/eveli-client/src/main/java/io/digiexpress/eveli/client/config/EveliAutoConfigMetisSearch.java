@@ -175,7 +175,7 @@ public class EveliAutoConfigMetisSearch {
         ? embeddingModel.getClass().getSimpleName()
         : platform.getEmbeddingModelId();
 
-    log.info("Metis site search enabled for locales: {}, embedding model: {}",
+    log.info("Metis semantic site search enabled for locales: {}, embedding model: {}",
         config.getLocales(), embeddingModelId);
 
     return new MetisSearchClientImpl(

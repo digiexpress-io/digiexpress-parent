@@ -25,7 +25,7 @@ import io.smallrye.mutiny.Uni;
 
 public interface MetisClient {
 
-  /** @throws IllegalStateException when site search is not enabled */
+  /** @throws IllegalStateException when semantic site search is not enabled */
   MetisSearchClient search();
 
   boolean isSearchEnabled();
