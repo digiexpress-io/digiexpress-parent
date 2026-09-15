@@ -59,6 +59,8 @@ export const sv = {
   'task.pdf.options.select': 'PDF-utskriftsalternativ',
   'task.pdf.print': 'Skriv ut PDF',
   'task.pdf.options.select.desc': 'Välj tilläggsdata som ska inkluderas i genererat pdf-dokument',
+  'task.pdf.notCompleted': 'PDF kan inte skapas eftersom formuläret inte är slutfört',
+  'task.pdf.failed': 'PDF-skapandet misslyckades: {cause}',
   'task.form.review': 'Visa formulär',
   'task.created': 'Skapad',
   'task.updated': 'Uppdaterad',

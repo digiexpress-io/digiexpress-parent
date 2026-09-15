@@ -331,13 +331,12 @@ export declare namespace TaskApi {
   export type GrimMissionAttributeEventType = ('STATUS' | 'PRIORITY' | 'STATUS_DATE' | 'OVERDUE' | 'ROLE' | 'QUESTIONNAIRE');
 
 
+  export type TaskPdfRequestField = 'CUSTOMER_NAME' | 'CUSTOMER_SSN' | 'EXTERNAL_COMMENTS';
+
   export interface TaskPdfRequest {
     taskId: string;
-    fields: (
-      'CUSTOMER_NAME' |
-      'CUSTOMER_SSN' |
-      'EXTERNAL_COMMENTS'
-     )[];
+    questionnaireId?: string;
+    fields: TaskPdfRequestField[];
   }
 
 

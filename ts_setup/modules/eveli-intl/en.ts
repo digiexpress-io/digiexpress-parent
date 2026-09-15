@@ -59,6 +59,8 @@ export const en = {
   'task.pdf.options.select': 'PDF Printing options',
   'task.pdf.print': 'Print PDF',
   'task.pdf.options.select.desc': 'Select addition data tobe included to generated pdf document',
+  'task.pdf.notCompleted': 'PDF can not be created because the form is not completed',
+  'task.pdf.failed': 'PDF creation failed: {cause}',
   'task.form.review': 'View form',
   'task.created': 'Created',
   'task.updated': 'Updated',

@@ -2,15 +2,16 @@
 // form-render.typ — Renders a Dialob questionnaire printout (the
 // "mifid"-style body) to PDF. Generic over any completed Dialob form.
 //
-// Input (doc-data) is the printout BODY produced by the dialob-printout
-// service — i.e. GET /questionnaire/{id}/printout — which is exactly the
-// object POP used to nest under data.mifid:
+// Input (doc-data) is the flat data document of the COMPLETED form
+// instance — i.e. GET /questionnaires/{id}/session-state — which is exactly
+// the object POP used to nest under data.mifid, plus the eveli task data:
 //   doc-data = {
 //     id, metadata, formMetadata, contextValues,
 //     form:   { pages: [pageId, ...] },
 //     pages:  { byId: { pageId: { label, groupIds, hiddenPrint } } },
 //     groups: { byId: { groupId: { label, itemIds, hiddenPrint } } },
 //     items:  { byId: { itemId:  { type, label, key, value, hiddenPrint } } },
+//     task:   { taskRef, subject, status, ..., customerName?, customerSsn?, comments? },
 //   }
 // =============================================================
 
@@ -23,7 +24,9 @@
 
 #let _shown(node) = not node.at("hiddenPrint", default: false)
 
-#let _yesno(v) = boolean-text(v)
+#let _blank(s) = s == none or (type(s) == str and s.trim() == "")
+
+#let _yesno(v, locale: "fi") = yes-no(locale, v)
 
 // Format an integer with thin-space thousands separators ("56 777" style).
 #let _fmt-int(n) = {
@@ -41,6 +44,25 @@
 }
 
 #let _fmt-eur(n) = _fmt-int(n) + " €"
+
+// Display text of one answer value by Dialob item type.
+#let _value-text(item, locale: "fi") = {
+  let kind = item.at("type", default: "")
+  let raw = item.at("value", default: none)
+  if raw == none { return "" }
+  if kind == "boolean" {
+    _yesno(raw, locale: locale)
+  } else if kind == "number" {
+    if type(raw) == int or type(raw) == float { _fmt-int(raw) } else { str(raw) }
+  } else if kind == "date" {
+    fmt-date(str(raw))
+  } else if kind == "multichoice" {
+    let vals = if type(raw) == array { raw } else { (raw,) }
+    vals.filter(x => x != none).map(x => str(x)).join(", ")
+  } else {
+    str(raw)
+  }
+}
 
 
 // ─────────────────────────────────────────────────────────────
@@ -61,45 +83,15 @@
 
 
 // ─────────────────────────────────────────────────────────────
-// RISK-IMAGE MARKER PARSING
-//   "[[\"/risk-images/imageriskLevel1.png\"]]" → "/risk-images/…"
-// Some forms serialize inline image references as a JSON-encoded nested
-// array in a note label. We grab the inner path, then look up the basename
-// in `images-data` (supplied by the consuming app, keyed by filename).
-// ─────────────────────────────────────────────────────────────
-
-#let _parse-image-marker(s) = {
-  if s == none or type(s) != str { return none }
-  let t = s
-  while t.starts-with(" ")   { t = t.slice(1) }
-  while t.ends-with(" ")     { t = t.slice(0, t.len() - 1) }
-  if not (t.starts-with("[[\"") and t.ends-with("\"]]")) { return none }
-  t.slice(3, t.len() - 3)
-}
-
-#let _render-risk-image(path, width: 70%) = {
-  let parts = path.split("/")
-  let name = parts.at(parts.len() - 1)
-  let data = images-data.at(name, default: none)
-  if data == none { return }
-  v(0.4em)
-  align(center)[
-    #image(data, format: "png", width: width)
-  ]
-  v(0.4em)
-}
-
-
-// ─────────────────────────────────────────────────────────────
 // NOTE RENDERING — markdown-lite
-// Handles: ## h2, ### h3, #### h4, ##### h5 (kv-row style),
-//          - bullets, **bold** inline, blank lines as spacing,
-//          [["…image-path…"]] tokens are skipped.
+// Handles: # h1, ## h2, ### h3, #### h4, ##### h5 (kv-row style),
+//          - and * bullets, 1. numbered items, **bold** inline,
+//          blank lines as spacing, [["…image-path…"]] tokens are skipped.
 // ─────────────────────────────────────────────────────────────
 
 #let _render-note(body) = {
   if body == none or body == "" { return }
-  // Skip image-reference notes entirely (they're handled elsewhere).
+  // Legacy image-marker notes ("[[...]]") carry no text, skip them.
   if body.starts-with("[[") and body.ends-with("]]") { return }
 
   let lines = body.split("\n")
@@ -139,13 +131,26 @@
       v(0.4em)
       text(11pt, weight: "bold")[#line.slice(3)]
       v(0.2em)
-    } else if line.starts-with("- ") {
+    } else if line.starts-with("# ") {
+      v(0.4em)
+      text(11.5pt, weight: "bold")[#line.slice(2)]
+      v(0.2em)
+    } else if line.starts-with("- ") or line.starts-with("* ") {
       in-list = true
       grid(
         columns: (10pt, 1fr),
         gutter: 4pt,
         align(top + right)[•],
         _render-inline(line.slice(2)),
+      )
+    } else if line.matches(regex("^[0-9]+\\. ")).len() > 0 {
+      in-list = true
+      let idx = line.position(". ")
+      grid(
+        columns: (16pt, 1fr),
+        gutter: 4pt,
+        align(top + right)[#line.slice(0, idx + 1)],
+        _render-inline(line.slice(idx + 2)),
       )
     } else {
       _render-inline(line)
@@ -159,41 +164,29 @@
 // ITEM RENDERING
 // ─────────────────────────────────────────────────────────────
 
-#let _render-item(item, id: "") = {
+#let _render-item(item, id: "", locale: "fi") = {
   if not _shown(item) { return }
-  let t = item.at("type", default: "")
+  let kind = item.at("type", default: "")
+  let label = item.at("label", default: "")
+  if label == none { label = "" }
 
-  if t == "note" {
-    // Inline image marker (e.g. a risk-level image) → render the referenced
-    // PNG. Falls through to plain note rendering when the label isn't a marker.
-    let img-path = _parse-image-marker(item.at("label", default: ""))
-    if img-path != none {
-      _render-risk-image(img-path)
-      return
-    }
-    _render-note(item.at("label", default: ""))
-  } else if t == "boolean" {
-    data-row(item.at("label", default: "") + ":", _yesno(item.at("value", default: none)))
-  } else if t == "number" {
+  if kind == "note" {
+    _render-note(label)
+  } else if kind == "boolean" {
+    data-row(label + ":", _yesno(item.at("value", default: none), locale: locale))
+  } else if kind == "number" {
     // Values arrive raw from Dialob; format numerics with thin-space separators.
-    let raw = item.at("value", default: none)
-    let display = if raw == none { "" } else if type(raw) == int or type(raw) == float {
-      _fmt-int(raw)
-    } else {
-      str(raw)
-    }
-    data-row(item.at("label", default: "") + ":", display)
-  } else if t == "decimal" or t == "text" or t == "list" {
-    let v = item.at("value", default: "")
-    if v == none { v = "" }
-    data-row(item.at("label", default: "") + ":", str(v))
-  } else if t == "multichoice" {
-    let lbl = item.at("label", default: "")
+    data-row(label + ":", _value-text(item, locale: locale))
+  } else if kind == "date" {
+    data-row(label + ":", _value-text(item, locale: locale))
+  } else if kind == "decimal" or kind == "text" or kind == "list" or kind == "time" {
+    data-row(label + ":", _value-text(item, locale: locale))
+  } else if kind == "multichoice" {
     let vals = item.at("value", default: ())
     if type(vals) != array { vals = (vals,) }
-    [#lbl:]
+    [#label:]
     linebreak()
-    for v in vals {
+    for v in vals.filter(x => x != none) {
       grid(
         columns: (60pt, 10pt, 1fr),
         gutter: 4pt,
@@ -219,7 +212,7 @@
   inst-ids
 }
 
-#let _render-rowgroup(items-by-id, root-id) = {
+#let _render-rowgroup(items-by-id, root-id, locale: "fi") = {
   let root = items-by-id.at(root-id, default: (:))
   if not _shown(root) { return }
   let instances = _rowgroup-instances(items-by-id, root-id)
@@ -230,7 +223,10 @@
   let cell-ids = first.at("key", default: ())
   if type(cell-ids) != array or cell-ids.len() == 0 { return }
 
-  let headers = cell-ids.map(cid => items-by-id.at(cid, default: (:)).at("label", default: ""))
+  let headers = cell-ids.map(cid => {
+    let l = items-by-id.at(cid, default: (:)).at("label", default: "")
+    if l == none { "" } else { l }
+  })
 
   // Build rows.
   let rows = ()
@@ -239,12 +235,7 @@
     if not _shown(inst) { continue }
     let inst-cells = inst.at("key", default: ())
     if type(inst-cells) != array { continue }
-    let row = inst-cells.map(cid => {
-      let cell = items-by-id.at(cid, default: (:))
-      let cv = cell.at("value", default: "")
-      if cv == none { cv = "" }
-      str(cv)
-    })
+    let row = inst-cells.map(cid => _value-text(items-by-id.at(cid, default: (:)), locale: locale))
     rows.push(row)
   }
 
@@ -283,7 +274,7 @@
   any
 }
 
-#let _render-group(mifid, group-id, depth: 1) = {
+#let _render-group(mifid, group-id, depth: 1, locale: "fi") = {
   let groups-by-id = mifid.at("groups", default: (:)).at("byId", default: (:))
   let items-by-id  = mifid.at("items",  default: (:)).at("byId", default: (:))
 
@@ -309,12 +300,12 @@
     if cid in items-by-id {
       let it = items-by-id.at(cid)
       if it.at("type", default: "") == "rowgroup" {
-        _render-rowgroup(items-by-id, cid)
+        _render-rowgroup(items-by-id, cid, locale: locale)
       } else {
-        _render-item(it, id: cid)
+        _render-item(it, id: cid, locale: locale)
       }
     } else if cid in groups-by-id {
-      _render-group(mifid, cid, depth: depth + 1)
+      _render-group(mifid, cid, depth: depth + 1, locale: locale)
     }
   }
 }
@@ -324,7 +315,7 @@
 // PAGE RENDERING
 // ─────────────────────────────────────────────────────────────
 
-#let _render-page(mifid, page-id) = {
+#let _render-page(mifid, page-id, locale: "fi") = {
   let pages-by-id  = mifid.at("pages", default: (:)).at("byId", default: (:))
   let items-by-id  = mifid.at("items",  default: (:)).at("byId", default: (:))
   let groups-by-id = mifid.at("groups", default: (:)).at("byId", default: (:))
@@ -346,11 +337,73 @@
       gid in items-by-id and items-by-id.at(gid).at("type", default: "") == "rowgroup"
     )
     if is-item-rowgroup and not _group-has-content(mifid, gid) {
-      _render-rowgroup(items-by-id, gid)
+      _render-rowgroup(items-by-id, gid, locale: locale)
+    } else if gid in items-by-id and gid not in groups-by-id {
+      _render-item(items-by-id.at(gid), id: gid, locale: locale)
     } else {
-      _render-group(mifid, gid)
+      _render-group(mifid, gid, locale: locale)
     }
   }
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// TASK SUMMARY — task and form data as data-rows (first page)
+// ─────────────────────────────────────────────────────────────
+
+#let _render-summary(mifid, locale: "fi") = {
+  let meta = mifid.at("metadata", default: (:))
+  let form-meta = mifid.at("formMetadata", default: (:))
+  let task = mifid.at("task", default: (:))
+
+  let rows = (
+    ("reference", task.at("taskRef", default: none)),
+    ("subject", task.at("subject", default: none)),
+    ("status", t-enum(locale, "status-values", task.at("status", default: none))),
+    ("priority", t-enum(locale, "priority-values", task.at("priority", default: none))),
+    ("created", fmt-datetime(task.at("created", default: none))),
+    ("due-date", fmt-date(task.at("dueDate", default: none))),
+    ("assigned", task.at("assignedUser", default: none)),
+    ("customer", task.at("customerName", default: none)),
+    ("customer-ssn", task.at("customerSsn", default: none)),
+    ("form", form-meta.at("label", default: meta.at("label", default: none))),
+    ("form-submitted", fmt-datetime(meta.at("lastAnswer", default: none))),
+    ("form-language", t-enum(locale, "language-values", meta.at("language", default: none))),
+  ).filter(((key, value)) => not _blank(value))
+
+  if rows.len() == 0 { return }
+  for (key, value) in rows {
+    data-row(t(locale, key) + ":", value)
+  }
+  v(0.5em)
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// CUSTOMER MESSAGES — external task comments, when requested
+// ─────────────────────────────────────────────────────────────
+
+#let _render-comments(mifid, locale: "fi") = {
+  let comments = mifid.at("task", default: (:)).at("comments", default: none)
+  if comments == none or type(comments) != array or comments.len() == 0 { return }
+
+  section-title(upper(t(locale, "messages")))
+  table(
+    columns: (auto, auto, 1fr),
+    stroke: none,
+    inset: (x: 6pt, y: 4pt),
+    text(weight: "bold")[#t(locale, "message-date")],
+    text(weight: "bold")[#t(locale, "message-author")],
+    text(weight: "bold")[#t(locale, "message-text")],
+    ..comments.map(c => {
+      let author = c.at("userName", default: none)
+      let source = t-enum(locale, "source-values", c.at("source", default: none))
+      let by = if _blank(author) { source } else if _blank(source) { author } else { author + " (" + source + ")" }
+      let message = c.at("commentText", default: "")
+      if message == none { message = "" }
+      ([#fmt-datetime(c.at("created", default: none))], [#by], [#message])
+    }).flatten(),
+  )
 }
 
 
@@ -358,9 +411,11 @@
 // DOCUMENT RENDERER
 // ─────────────────────────────────────────────────────────────
 
-#let render-document(doc-data) = {
+#let render-document(doc-data, locale: "fi") = {
   // `doc-data` IS the Dialob printout body (the former `data.mifid` object).
   let mifid = doc-data
+
+  _render-summary(mifid, locale: locale)
 
   let page-ids = mifid.at("form", default: (:)).at("pages", default: ())
   if page-ids.len() == 0 {
@@ -370,6 +425,8 @@
 
   for (i, pid) in page-ids.enumerate() {
     if i > 0 { pagebreak() }
-    _render-page(mifid, pid)
+    _render-page(mifid, pid, locale: locale)
   }
+
+  _render-comments(mifid, locale: locale)
 }
