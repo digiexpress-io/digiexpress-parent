@@ -43,6 +43,7 @@ import io.digiexpress.eveli.client.spi.asserts.TaskAssert.TaskException;
 import io.resys.limaone.program.TagomiProgram;
 import io.resys.limaone.program.TagomiProgram.PdfStatus;
 import io.resys.limaone.spi.dialob.FormDb;
+import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -150,7 +151,11 @@ public class ProcessQuestionnairePdfBuilderImpl implements ProcessQuestionnaireP
 
     final var program = runtime.getBundle().queryTagomis().name(serviceName).getOne();
     final var locale = visitLocale(program, props);
-    final var result = program.run(locale, props).await().atMost(timeout);
+    final var workerPool = runtime.getProperties().getWorkerPool();
+    final var workerTimeout = runtime.getProperties().getWorkerPoolMaxTimeout();
+    final var result = program.run(locale, props)
+        .runSubscriptionOn(workerPool)
+        .await().atMost(workerTimeout);
     if (result.getStatus() != PdfStatus.OK) {
       throw new TaskException("PDF rendering FAILED for printout: " + serviceName + ", locale: " + locale + ", cause: " + result.getStatusMessage());
     }
@@ -161,12 +166,19 @@ public class ProcessQuestionnairePdfBuilderImpl implements ProcessQuestionnaireP
     if (process != null) {
       return;
     }
+    final var workerPool = Infrastructure.getDefaultWorkerPool();
     if (processId != null) {
-      process = taskClient.queryTaskProcesess().getOneById(processId).await().atMost(timeout);
+      process = taskClient.queryTaskProcesess().getOneById(processId)
+          .runSubscriptionOn(workerPool)
+          .await().atMost(timeout);
     } else if (taskId != null) {
-      process = taskClient.queryTaskProcesess().findOneByTaskId(taskId).await().atMost(timeout).orElse(null);
+      process = taskClient.queryTaskProcesess().findOneByTaskId(taskId)
+          .runSubscriptionOn(workerPool)
+          .await().atMost(timeout).orElse(null);
     } else if (task != null) {
-      process = taskClient.queryTaskProcesess().findOneByTaskId(task.getId()).await().atMost(timeout).orElse(null);
+      process = taskClient.queryTaskProcesess().findOneByTaskId(task.getId())
+          .runSubscriptionOn(workerPool)
+          .await().atMost(timeout).orElse(null);
     }
   }
 
@@ -178,7 +190,9 @@ public class ProcessQuestionnairePdfBuilderImpl implements ProcessQuestionnaireP
       TaskAssert.notNull(process, () -> "taskId can't be null!");
       taskId = process.getTaskId();
     }
-    task = taskClient.queryTasks().getOneById(taskId).await().atMost(timeout);
+    task = taskClient.queryTasks().getOneById(taskId)
+        .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
+        .await().atMost(timeout);
   }
 
   private String visitFormInstanceId() {

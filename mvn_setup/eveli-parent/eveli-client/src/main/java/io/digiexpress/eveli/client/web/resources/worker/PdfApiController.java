@@ -40,6 +40,7 @@ import io.digiexpress.eveli.client.api.PdfClient.PdfRequestFields;
 import io.digiexpress.eveli.client.api.PdfClient.QuestionnairePdfRequest;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.smallrye.mutiny.infrastructure.Infrastructure;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,13 +63,15 @@ public class PdfApiController {
 
     final var authentication = securityClient.getUser();
     log.debug("Questionnaire pdf POST API call for task id: {} from user {}", taskId, authentication.getPrincipal().getUsername());
-    final var found = taskClient.queryTasks().findOneById(taskId).await().atMost(timeout);
+    final var found = taskClient.queryTasks().findOneById(taskId)
+        .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
+        .await().atMost(timeout);
     if (found.isEmpty()) {
       log.warn("Questionnaire pdf for task id: {} FAILED: task not found", taskId);
       return ResponseEntity.notFound().build();
     }
     final var task = found.get();
-    if (!checkTaskAccess(task, authentication)) {
+    if (!isAuthorized(task, authentication)) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
@@ -96,7 +99,7 @@ public class PdfApiController {
     }
   }
 
-  private boolean checkTaskAccess(TaskClient.Task task, WorkerAuthClient.User authentication) {
+  private boolean isAuthorized(TaskClient.Task task, WorkerAuthClient.User authentication) {
     log.debug("Checking task {} access for user {}", task.getId(), authentication.getPrincipal().getUsername());
     final List<String> roles = authentication.getPrincipal().getRoles();
     if (!authentication.getPrincipal().isAdmin() && !authentication.getPrincipal().isAccessGranted(task.getAssignedRoles())) {
