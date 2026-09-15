@@ -103,13 +103,13 @@ public class AttachmentFilesystemController {
   public ResponseEntity<Void> uploadTaskAttachment(
       @PathVariable String taskId, 
       @PathVariable String filename, 
-      @RequestBody MultipartFile file)
+      @RequestBody byte[] file)
       throws URISyntaxException 
   {
     try {
-      client.contentUpload().filename(filename).taskId(taskId).build(file.getBytes());
-    } catch (IOException e) {
-      log.error("Error uploading task file {}", file.getOriginalFilename(), e);
+      client.contentUpload().filename(filename).taskId(taskId).build(file);
+    } catch (Exception e) {
+      log.error("Error uploading task file {}", filename, e);
     }
     return ResponseEntity.ok().build();
   }
