@@ -22,6 +22,7 @@ package io.digiexpress.eveli.client.api;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.api.PdfClient.PdfRequestFields;
+import io.smallrye.mutiny.Uni;
 
 public interface QuestionnaireAttachmentCommands {
   // only used in WRENCH FLOW
@@ -45,6 +46,6 @@ public interface QuestionnaireAttachmentCommands {
      * @return
      */
     QuestionnaireAttachmentBuilder attachmentPattern(String pattern);
-    Attachment build();
+    Uni<Attachment> build();
   }
 }

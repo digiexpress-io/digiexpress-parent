@@ -540,7 +540,7 @@ public interface TaskClient {
   @JsonDeserialize(as = ImmutableTaskAttachment.class)
   interface TaskAttachment {
     enum AttachmentSource {
-      FRONTDESK, PORTAL_FORM, PORTAL_UPLOAD, TRANSFER 
+      FRONTDESK, PORTAL_FORM, PORTAL_UPLOAD, TRANSFER, FLOW
     }
     String getName();
     OffsetDateTime getCreated();
