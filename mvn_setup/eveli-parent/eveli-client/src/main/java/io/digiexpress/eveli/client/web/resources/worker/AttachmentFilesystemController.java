@@ -1,6 +1,5 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
-import java.io.IOException;
 
 /*-
  * #%L
@@ -25,7 +24,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +32,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
@@ -106,11 +103,7 @@ public class AttachmentFilesystemController {
       @RequestBody byte[] file)
       throws URISyntaxException 
   {
-    try {
-      client.contentUpload().filename(filename).taskId(taskId).build(file);
-    } catch (Exception e) {
-      log.error("Error uploading task file {}", filename, e);
-    }
+    client.contentUpload().filename(filename).taskId(taskId).build(file);
     return ResponseEntity.ok().build();
   }
   
@@ -121,11 +114,7 @@ public class AttachmentFilesystemController {
       @RequestBody byte[] file)
           throws URISyntaxException 
   {
-    try {
-      client.contentUpload().filename(filename).processId(processId).build(file);
-    } catch (Exception e) {
-      log.error("Error uploading process file {}", filename, e);
-    }
+    client.contentUpload().filename(filename).processId(processId).build(file);
     return ResponseEntity.ok().build();
   }
 

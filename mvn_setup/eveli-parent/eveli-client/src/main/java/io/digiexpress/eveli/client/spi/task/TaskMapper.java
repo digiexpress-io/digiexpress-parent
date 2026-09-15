@@ -107,18 +107,6 @@ public class TaskMapper {
         .build();
   }
   
-  public static TaskClient.TaskAttachment map(GrimMissionLink link) {
-    var e = link.getLinkBody();
-    String createdVal = e.getString("created");
-    return ImmutableTaskAttachment.builder()
-        .name(e.getString("name"))
-        .created(createdVal != null ? OffsetDateTime.parse(createdVal) : null)
-        .creator(e.getString("creator"))
-        .size(e.getLong("size"))
-        .source(TaskClient.TaskAttachment.AttachmentSource.valueOf(e.getString("source")))
-        .type(e.getString("type"))
-        .build();
-  }
   
   public static TaskClient.Task map(GrimMissionContainer cont) {
     return map(
@@ -200,7 +188,7 @@ public class TaskMapper {
     
     final var attachments = links.stream()
         .filter(e -> TaskMapper.LINK_TYPE_ATTACHMENT.equals(e.getLinkType()))
-        .map(TaskMapper::map)
+        .map(e-> e.getLinkBody().mapTo(TaskClient.TaskAttachment.class))
         .toArray(TaskClient.TaskAttachment[]::new);
     
     final var customerAssignments = objectives.stream()
