@@ -354,7 +354,6 @@ public class TaskApiController {
         .actionId(actionId)
         .addAll(raw)
         .createMany()
-        
         .collect().asList().onItem().transform(entries -> new ResponseEntity<>(entries, HttpStatus.CREATED))
         .onFailure().recoverWithItem(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
         

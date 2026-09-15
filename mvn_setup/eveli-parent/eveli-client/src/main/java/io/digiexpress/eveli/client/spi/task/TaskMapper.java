@@ -31,7 +31,6 @@ import org.apache.commons.codec.binary.StringUtils;
 
 import io.digiexpress.eveli.client.api.ImmutableProcessInstance;
 import io.digiexpress.eveli.client.api.ImmutableTask;
-import io.digiexpress.eveli.client.api.ImmutableTaskAttachment;
 import io.digiexpress.eveli.client.api.ImmutableTaskComment;
 import io.digiexpress.eveli.client.api.ImmutableTaskCustomerAssignment;
 import io.digiexpress.eveli.client.api.TaskClient;
