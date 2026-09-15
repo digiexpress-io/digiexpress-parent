@@ -25,6 +25,7 @@ import java.time.Duration;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.spi.attachments.AttachmentCommandsDummy;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
@@ -102,7 +103,7 @@ public class FeedbackTaskEnvirSetup {
         .await().atMost(Duration.ofMinutes(1));
     log.info("Repo created: " + repo);
     
-    return new TaskClientImpl(null, null, store, null);
+    return new TaskClientImpl(null, new AttachmentCommandsDummy(), null, store, null);
   }
   
 }

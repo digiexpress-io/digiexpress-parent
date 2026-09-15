@@ -262,7 +262,7 @@ public class EveliAutoConfig {
     store.query().createIfNot().await().atMost(Duration.ofMinutes(1));
     
     final var fileClient = new TaskFileClientImpl(attachmentCommands, restTemplate);    
-    return new TaskClientImpl(fileClient, docContainerClient, store, envirClient);
+    return new TaskClientImpl(fileClient, attachmentCommands, docContainerClient, store, envirClient);
   }
 
   @Bean

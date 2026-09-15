@@ -29,10 +29,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.ImmutableTaskArchivePointer;
 import io.digiexpress.eveli.client.api.ImmutableTaskDasboard;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskFileClient;
+import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
@@ -75,6 +77,7 @@ public class TaskClientImpl implements TaskClient {
 
   
   private final TaskFileClient taskFilesClient;
+  private final AttachmentCommands attachmentCommands;
   private final DocContainerClient docContainerClient;
   private final TaskStore ctx;
   private final io.resys.limaone.program.Runtime envir;
@@ -164,10 +167,15 @@ public class TaskClientImpl implements TaskClient {
       public Uni<Task> createTask(CreateTaskCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         if(command.getQuestionnaireId() == null) {
-          return ctx.getConfig().accept(new CreateOneTask(userId, command, null));  
+          return ctx.getConfig().accept(new CreateOneTask(userId, command, null, null));  
         }
+        
         return new CustomerAccountClientImpl(taskClient).accountQuery().getOneByAnyId(command.getQuestionnaireId())
-          .onItem().transformToUni(account -> ctx.getConfig().accept(new CreateOneTask(userId, command, account)));
+            .onItem().transformToUni(customerAccount -> {
+              List<Attachment> taskFiles = attachmentCommands.query().processId(customerAccount.getId());
+              return Uni.combine().all().unis(Uni.createFrom().item(customerAccount), Uni.createFrom().item(taskFiles)).asTuple();
+            })
+          .onItem().transformToUni(tuple -> ctx.getConfig().accept(new CreateOneTask(userId, command, tuple.getItem1(), tuple.getItem2())));
         
       }
       @Override
@@ -268,8 +276,6 @@ public class TaskClientImpl implements TaskClient {
       public Uni<Task> addTaskAttachments(String taskId, List<TaskAttachment> attachments) {
         return ctx.getConfig().accept(new CreateManyTaskAttachments(userId, taskId, attachments));
       }
-      
-      
     };
   }
 

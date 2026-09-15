@@ -34,6 +34,7 @@ import org.springframework.test.context.ContextConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.spi.attachments.AttachmentCommandsDummy;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
@@ -110,7 +111,7 @@ public abstract class TaskEnvirSetupDebugDb {
           .await().atMost(Duration.ofMinutes(1));
 
       log.info("repo created: {}", repo);
-      return new TaskClientImpl(null, null, store, null);
+      return new TaskClientImpl(null, new AttachmentCommandsDummy(), null, store, null);
     }
   }
 }

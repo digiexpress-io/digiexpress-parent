@@ -38,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
+import io.digiexpress.eveli.client.spi.attachments.AttachmentCommandsDummy;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
@@ -124,7 +125,7 @@ public abstract class TaskEnvirSetup {
       log.info("repo created: {}", repo);
       
 
-      return new TaskClientImpl(null, null, store, null);
+      return new TaskClientImpl(null, new AttachmentCommandsDummy(), null, store, null);
     }
   }
 }

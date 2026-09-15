@@ -28,6 +28,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tika.Tika;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,7 +50,6 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskAttachment;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAttachment.AttachmentSource;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.smallrye.mutiny.Uni;
-import jakarta.activation.MimetypesFileTypeMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,7 +66,7 @@ public class AttachmentApiController {
   private final TaskClient taskClient;  
   private final WorkerAuthClient securityClient;
   private static final Duration timeout = Duration.ofMillis(10000);
-  private static final MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
+  private final Tika tika = new Tika();
   
   private record FileUploadUrlBody(String filename, Long size, String type) {}
   
@@ -195,7 +195,7 @@ public class AttachmentApiController {
         .creator(authentication.getPrincipal().getUsername())
         .size(file.size != null ? file.size : 0L)
         .source(AttachmentSource.FRONTDESK)
-        .type(StringUtils.isAllBlank(file.type) ? fileTypeMap.getContentType(file.filename) : file.type)
+        .type(StringUtils.isAllBlank(file.type) ? tika.detect(file.filename) : file.type)
         .build();
     return taskClient.taskBuilder()
       .userId(worker.getUsername(), worker.getEmail())
