@@ -277,7 +277,7 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
       }
       
       @Override
-      public Attachment build(byte[] content) {
+      public Attachment build(byte[] content) throws IOException {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         String gsFile = null;
         if (processId != null) {
@@ -305,10 +305,7 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
             builder.taskId(taskId);
           }
           return builder.build();
-        } catch (IOException e) {
-          log.warn("Error writing attachment: ", e);
         }
-        return null;
       }
     };
   }

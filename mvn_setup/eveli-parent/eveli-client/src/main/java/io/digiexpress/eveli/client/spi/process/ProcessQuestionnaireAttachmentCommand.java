@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.client.spi.process;
 
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAttachment;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAttachment.AttachmentSource;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.unchecked.Unchecked;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -77,7 +79,7 @@ public class ProcessQuestionnaireAttachmentCommand implements QuestionnaireAttac
           ProcessInstance process = proc.get();
           String searchTaskId = taskId != null ? taskId : process.getTaskId();
           return tasks.queryTasks().getOneById(searchTaskId)
-          .onItem().transform(task-> createAndUploadAttachment(task, process))
+          .onItem().transform(Unchecked.function(task-> createAndUploadAttachment(task, process)))
           .onItem().transformToUni(attachment-> {
             return tasks.taskBuilder().addTaskAttachment(searchTaskId, createTaskAttachment(attachment.getName(), attachment.getSize()))
             .onItem().transform(t -> attachment);
@@ -85,7 +87,7 @@ public class ProcessQuestionnaireAttachmentCommand implements QuestionnaireAttac
         });
       }
 
-      Attachment createAndUploadAttachment(Task task, ProcessInstance process) {
+      private Attachment createAndUploadAttachment(Task task, ProcessInstance process) throws IOException {
         String formName = process.getFormName();
         String id = process.getId().toString();
 

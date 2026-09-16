@@ -1,6 +1,8 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
 
+import java.io.IOException;
+
 /*-
  * #%L
  * eveli-client
@@ -57,13 +59,14 @@ public class AttachmentFilesystemController {
    * @param taskId id for task to find attachment.
    * @param filename attachment file name.
    * @throws URISyntaxException
+   * @throws IOException 
    */
   @GetMapping("/tasks/{taskId}/files/{filename}")
   public ResponseEntity<byte[]> getTaskAttachment(
       @PathVariable String taskId, 
       @PathVariable String filename 
       ) 
-      throws URISyntaxException 
+      throws URISyntaxException, IOException 
   {
     final var authentication = securityClient.getUser();
     log.debug("Attachment file GET API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
@@ -78,13 +81,14 @@ public class AttachmentFilesystemController {
    * @param taskId id for task to find attachment.
    * @param filename attachment file name.
    * @throws URISyntaxException
+   * @throws IOException 
    */
   @GetMapping("/processes/{processId}/files/{filename}")
   public ResponseEntity<byte[]> getProcessAttachment(
       @PathVariable String processId, 
       @PathVariable String filename 
       ) 
-          throws URISyntaxException 
+          throws URISyntaxException, IOException 
   {
     final var authentication = securityClient.getUser();
     log.debug("Attachment file GET API call for proces id: {}, file: {}, from user {}", processId, filename, authentication.getPrincipal().getUsername());
@@ -101,7 +105,7 @@ public class AttachmentFilesystemController {
       @PathVariable String taskId, 
       @PathVariable String filename, 
       @RequestBody byte[] file)
-      throws URISyntaxException 
+      throws URISyntaxException, IOException 
   {
     client.contentUpload().filename(filename).taskId(taskId).build(file);
     return ResponseEntity.ok().build();
@@ -112,7 +116,7 @@ public class AttachmentFilesystemController {
       @PathVariable String processId, 
       @PathVariable String filename, 
       @RequestBody byte[] file)
-          throws URISyntaxException 
+          throws URISyntaxException, IOException 
   {
     client.contentUpload().filename(filename).processId(processId).build(file);
     return ResponseEntity.ok().build();

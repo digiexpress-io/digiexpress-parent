@@ -250,7 +250,7 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
       }
       
       @Override
-      public Attachment build(byte[] content) {
+      public Attachment build(byte[] content) throws IOException {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         String fileWithPath = null;
         if (processId != null) {
@@ -260,26 +260,21 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
           AttachmentAssert.notEmpty(taskId, () -> "taskId or processId must be defined!");
           fileWithPath = String.format(TASK_PATH_PATTERN, rootDirectory, taskId, filename);
         }
-        try {
-          File file = FileUtils.getFile(fileWithPath);
-          FileUtils.writeByteArrayToFile(file, content);
-          io.digiexpress.eveli.client.api.ImmutableAttachment.Builder builder = ImmutableAttachment.builder()
-            .name(filename)
-            .created(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
-            .updated(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
-            .size((long)content.length)
-            .status(AttachmentStatus.OK);
-          if (processId != null) {            
-            builder.processId(processId);
-          }
-          else if (taskId != null) {
-            builder.taskId(taskId);
-          }
-          return builder.build();
-        } catch (IOException e) {
-          log.warn("Error writing attachment: ", e);
+        File file = FileUtils.getFile(fileWithPath);
+        FileUtils.writeByteArrayToFile(file, content);
+        io.digiexpress.eveli.client.api.ImmutableAttachment.Builder builder = ImmutableAttachment.builder()
+          .name(filename)
+          .created(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
+          .updated(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
+          .size((long)content.length)
+          .status(AttachmentStatus.OK);
+        if (processId != null) {            
+          builder.processId(processId);
         }
-        return null;
+        else if (taskId != null) {
+          builder.taskId(taskId);
+        }
+        return builder.build();
       }
     };
   }
@@ -310,7 +305,7 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
       }
       
       @Override
-      public byte[] build() {
+      public byte[] build() throws IOException {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         String fileWithPath = null;
         if (processId != null) {
@@ -320,13 +315,8 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
           AttachmentAssert.notEmpty(taskId, () -> "taskId or processId must be defined!");
           fileWithPath = String.format(TASK_PATH_PATTERN, rootDirectory, taskId, filename);
         }
-        try {
-          File file = FileUtils.getFile(fileWithPath);
-          return FileUtils.readFileToByteArray(file);
-        } catch (IOException e) {
-          log.warn("Error writing attachment: ", e);
-        }
-        return null;
+        File file = FileUtils.getFile(fileWithPath);
+        return FileUtils.readFileToByteArray(file);
       }
     };
   }
