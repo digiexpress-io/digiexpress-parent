@@ -26,6 +26,7 @@ import java.util.HashMap;
  */
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -73,20 +74,21 @@ public class TransferTaskVisitor {
       // pass the task down the pipeline 
       Uni.combine().all().unis(
         Uni.createFrom().item(getQuestionnairePropsFromFlow(task)), 
-        Uni.createFrom().item(task)).asTuple()
+        Uni.createFrom().item(task),
+        getProcessId()).asTuple()
     )
     .onItem().transformToUni(Unchecked.function(tuple -> {
-      return createDocContainer(tuple.getItem2(), tuple.getItem1())
+      return createDocContainer(tuple.getItem2(), tuple.getItem1(), tuple.getItem3())
           .onItem().transformToUni(created -> updateTask(created, tuple.getItem1(), tuple.getItem2()));
     }));
   }
   
-  private Uni<DocContainerEnvelope> createDocContainer(Task task, Map<String, String> props) throws IOException {
+  private Uni<DocContainerEnvelope> createDocContainer(Task task, Map<String, String> props, Optional<String> processId) throws IOException {
     final var container = docContainerClient.createDoc().task(task);
     
     for(final var file : task.getAttachments()) {
       container.addDocument(ImmutableDoc.builder()
-          .body(getContent(file))
+          .body(getContent(file, processId))
           .bodyType(file.getType())
           .mimeType(file.getType())
           .name(file.getName())
@@ -106,11 +108,11 @@ public class TransferTaskVisitor {
   }
 
 
-  private ByteArrayInputStream getContent(final TaskAttachment file) throws IOException {
+  private ByteArrayInputStream getContent(final TaskAttachment file, Optional<String> processId) throws IOException {
     return new ByteArrayInputStream(
         attachmentCommands.contentDownload()
           .filename(file.getName())
-          .processId(command.getProcessId())
+          .processId(processId.orElse(null))
           .taskId(taskId)
           .build());
   }
@@ -165,5 +167,14 @@ public class TransferTaskVisitor {
     } catch(Exception error) {
       return Map.of("failed", ExceptionUtils.getStackTrace(error)); 
     }      
+  }
+  
+  private Uni<Optional<String>> getProcessId() {
+    final var config = ctx.getConfig();
+    final var grim = config.getClient().grim(config.getTenantName());
+    return grim.find().missionProcsQuery()
+      .includeFormBody(false)
+      .findOneByMissionId(taskId)
+      .map(optional -> optional.map(p->p.getId().toString()));
   }
 }
