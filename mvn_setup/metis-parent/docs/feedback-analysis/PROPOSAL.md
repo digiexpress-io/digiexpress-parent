@@ -8,7 +8,7 @@ This is a candidate second Metis capability. It predates the platform split and 
 the design input for it; the shapes below are the domain proposal, not the final packaging. When
 it is built it takes a capability slot the same way semantic site search does, see
 [how to add a capability](../../README.md#adding-a-capability): package `io.resys.metis.feedback.*`,
-configuration under `eveli.metis.feedback.*`, Flyway band `V5_x` under `db/metis/feedback`,
+configuration under `eveli.metis.feedback.*`, Flyway band `V5_x` under `db/postgresql`,
 endpoints under `/worker/rest/api/metis/feedback`, and its own `eveliPermissions.yaml` entries.
 It would reuse the platform's `EmbeddingService` for the similarity search and
 `StructuredChatService` for the classification prompts rather than talking to a model directly.

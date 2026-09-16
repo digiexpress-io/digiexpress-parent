@@ -1,7 +1,8 @@
 # Metis semantic site search: how it works
 
-Enablement (flags, Flyway, Ollama, GCloud) is in the
-[Metis README](../../README.md#semantic-site-search). Properties are in
+Enablement (flags, Flyway, Ollama including registry pull / air-gap, GCloud,
+Kubernetes replica lock) is in the
+[Metis README](../../README.md#first-deployment). Properties are in
 [docs/README_CONFIG_PROPERTIES.md](../../../../docs/README_CONFIG_PROPERTIES.md).
 
 Citizens search in Gamut. Staff use Eveli. Authors publish a limaone **bundle**
@@ -249,15 +250,16 @@ stands in for “helpers might have changed”.
 
 ## Store
 
-Flyway location `classpath:db/metis/search`, appended only while search is
-enabled. Semantic site search owns **V4_x** (`V4_1__metis_search.sql`); later
-capabilities take V5_x+. A database that never enables search never needs
-pgvector. Extensions: `vector`, `pg_trgm`, `unaccent` (app role
-`CREATE EXTENSION`, or a DBA pre-creates them — typical on Cloud SQL).
+Flyway `classpath:db/postgresql` always includes `V4_1__metis_search.sql`. Semantic site search
+owns **V4_x**; later capabilities take V5_x+ under the same location. The script uses only
+built-in types so vanilla PostgreSQL still migrates. When `eveli.metis.search.enabled` is true,
+boot runs an idempotent ensure: `CREATE EXTENSION vector`, `pg_trgm`, `unaccent`, then
+`embedding VECTOR(1024)` plus HNSW and trigram indexes. The app role needs `CREATE EXTENSION`,
+or a DBA pre-creates them (typical on Cloud SQL).
 
 `metis_search_index`: unique `(workflow_id, locale)`; GIN on `search_vector`
 (full-text); HNSW on `embedding` (the usual pgvector index for cosine
-nearest-neighbour); GIN trigram on `search_text`. Stemmer follows locale
+nearest-neighbour, added when search is enabled); GIN trigram on `search_text`. Stemmer follows locale
 (`finnish` / `swedish` / `english`, else `simple`). Title **A** outranks
 description **B**, which outranks `ai_metadata` **C**, which outranks page
 text **D**.
@@ -287,9 +289,14 @@ is on the job.
   starts the job. Immediate publishes do not need this tick.
 - `POST …/reindex` — manual start. Query flags below.
 
-`tryStart` inserts `RUNNING`. A second insert hits the unique index; the
-caller gets HTTP 409 and the current job (`accepted: false`). Only one job in
-the cluster.
+`tryStart` inserts `RUNNING`. A second insert hits the unique index (or the
+`WHERE NOT EXISTS` filter); duplicate recovery returns no id. The caller gets
+HTTP 409 and the current job (`accepted: false`). That is the lock working, not
+a cluster failure: one Kubernetes replica wins, the others no-op and stay
+healthy. Only one job in the cluster. If the winner dies, no progress for
+`abandoned-after-seconds` (3600, from last progress, not start) marks the job
+failed so another instance can claim. A clean shutdown marks the local job
+`FAILED` and releases the claim.
 
 The two query flags on `POST …/reindex` do different jobs and can be combined.
 

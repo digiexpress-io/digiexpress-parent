@@ -104,49 +104,82 @@ the `spring.ai.model.*` keys (env, Secret Manager, or YAML).
 
 ### First deployment
 
-Do the infra steps **before** setting the flags. The first enable runs
-`db/metis/search/V4_1__metis_search.sql` (`CREATE EXTENSION`, `metis_search_index`,
-`metis_search_reindex_job` including `bundle_hash`). If that fails, the
-application does not boot.
+Operator runbook for `eveli-app` / `eveli-app-gcloud` on any client. You can roll this
+release **without** enabling Metis. Enabling search later is a separate, explicit step.
+
+#### This release vs enabling search
+
+Flyway always applies `db/postgresql/V4_1__metis_search.sql`. That script uses only built-in
+PostgreSQL types (`metis_search_index`, `metis_search_reindex_job`). Extra unused tables are
+expected. Vanilla `postgres:17` is enough for migrate and boot **while the flags stay off**.
+
+pgvector, Ollama, and the Metis flags are required only when you turn search **on**. Then boot
+creates the `vector` / `pg_trgm` / `unaccent` extensions, the `embedding VECTOR(1024)` column,
+and the HNSW / trigram indexes. If that ensure fails, **search enable fails boot** with a clear
+error; flags off still boot.
+
+Local DBs that already applied an older `V4_1` from `db/metis/search` will see a Flyway checksum
+mismatch. Run `flyway repair` on those databases. Fresh databases just apply the new `V4_1`.
 
 #### 1. Database
 
-The database must provide `vector` (pgvector), `pg_trgm` and `unaccent`.
+**All clients (flags off).** Official PostgreSQL of the same major as the rest of the stack, with
+contrib available for a later enable. Cloud SQL / RDS: no image change for tables-only.
 
-- Use a pgvector image, not vanilla PostgreSQL. Local compose uses `pgvector/pgvector:pg17`.
-  Recreate an existing `postgres:17` volume/service before enabling, or `CREATE EXTENSION vector`
-  fails.
-- The application role must be allowed to `CREATE EXTENSION`, **or** a DBA pre-creates all three:
+**When enabling search:**
+
+- Self-hosted: the server must have pgvector binaries. Local compose uses `pgvector/pgvector:pg17`
+  (official PostgreSQL 17 plus pgvector). Switching `postgres:17` → `pgvector/pgvector:pg17` on
+  the **same volume / `PGDATA`** does not rewrite existing databases, tables, or rows. No
+  dump/restore. **Do not delete or recreate the volume** — that would wipe data. Do not jump
+  majors this way (`17` → `18` needs `pg_upgrade` or dump/restore). After the image switch,
+  pgvector is *available*, not *enabled*; the column and indexes appear on the next boot with
+  search enabled.
+- Cloud SQL / RDS: there is no image switch. Allow-list `vector`, `pg_trgm`, `unaccent`. Existing
+  data is untouched. The app role often cannot `CREATE EXTENSION`; a DBA should pre-create all
+  three before setting the flags:
   `CREATE EXTENSION IF NOT EXISTS vector; CREATE EXTENSION IF NOT EXISTS pg_trgm; CREATE EXTENSION IF NOT EXISTS unaccent;`
-- Column width is `VECTOR(1024)` in the migration. That matches `bge-m3`. A different embedding
-  width needs a new migration, not a property change.
+- Column width is `VECTOR(1024)` (matches `bge-m3`). A different embedding width is a schema
+  change, not a property change.
 
-#### 2. Embedding / chat provider
+#### 2. Models / network
 
-Semantic site search needs a reachable chat model (metadata during index) and embedding model (index +
-search), both configured at the platform level. `eveli-app` and `eveli-app-gcloud` both ship the
-Ollama starter.
+Semantic site search needs a reachable chat model (metadata during index) and embedding model
+(index + search). `eveli-app` and `eveli-app-gcloud` both ship the Ollama starter.
 
-- Ollama (or compatible) reachable from the app, typically `http://<host>:11434`
-- Pull models before the first reindex: `bge-m3` (1024-d embeddings) and `llama3.2` (metadata)
+- Ollama (or compatible) must be reachable from the **app** process, typically `http://<host>:11434`.
+- `SPRING_AI_OLLAMA_BASE_URL` must not stay `localhost` in GKE / Cloud Run; that talks to the
+  container itself.
+- Models must exist **before the first reindex**, not only before boot: `bge-m3` (1024-d
+  embeddings) and `llama3.2` (metadata).
+- `ollama pull` downloads from Ollama’s public registry (`registry.ollama.ai`) and needs outbound
+  HTTPS. Clients that prohibit egress cannot rely on `ollama-init`. Offline options: copy a
+  pre-populated Ollama data directory, `ollama create` from a local GGUF, or an internal mirror.
+  If the model is already on the volume, `ollama-init` skips pull.
+- CPU-only Ollama: set `eveli.metis.search.query.embed-concurrency=1` and leave
+  `indexing.concurrency` at `1`. A few hundred documents take hours. Do not gate liveness on
+  reindex completion.
 
 #### 3. Application config
 
 Required on the **eveli-app** or **eveli-app-gcloud** process (env vars, Secret Manager, or YAML —
-same keys). Both flags and the two `spring.ai.model.*` values must be set together: the platform
-flag alone gives model beans and `/metis/status` but no search, and the platform flag without a
-provider fails boot because Metis needs `EmbeddingModel` and `ChatClient` beans.
+same keys) **when enabling search**. Both flags and the two `spring.ai.model.*` values must be set
+together: the platform flag alone gives model beans and `/metis/status` but no search; search
+without the platform fails boot; the platform without a provider fails boot because Metis needs
+`EmbeddingModel` and `ChatClient` beans.
 
-| Key | First-deploy value | Notes |
+The worker UI is a third switch. `metis` in `eveli.tenant-features` (or on a user profile) shows
+the sidebar item. It does not start the platform.
+
+| Key | First-enable value | Notes |
 | --- | --- | --- |
 | `eveli.metis.enabled` | `true` | Platform: models, shared primitives, `/metis/status` |
-| `eveli.metis.search.enabled` | `true` | This capability, and the `db/metis/search` Flyway location |
+| `eveli.metis.search.enabled` | `true` | This capability. Triggers the pgvector ensure at boot |
 | `spring.ai.model.chat` | `ollama` | Must not stay `none` |
 | `spring.ai.model.embedding` | `ollama` | Must not stay `none` |
-| `spring.ai.ollama.base-url` | provider URL | e.g. `http://localhost:11434` |
+| `spring.ai.ollama.base-url` | provider URL | e.g. `http://localhost:11434` locally |
 | `spring.ai.ollama.embedding.options.model` | `bge-m3` | Must match `VECTOR(1024)` |
 | `spring.ai.ollama.chat.options.model` | `llama3.2` | Used only during indexing |
-| `spring.flyway.ignore-migration-patterns` | `*:missing` | After search is enabled, `V4_x` is in `flyway_schema_history`. Turning the flag off removes the Flyway location, so those files look missing and `validate-on-migrate` would refuse to boot. This ignores that error (tables stay). It is `type:state`, not “only V4”, so a deleted core `V3_x` file would also be ignored. |
 
 Recommended:
 
@@ -158,7 +191,7 @@ Recommended:
 | `eveli.metis.search.live-publication-check-seconds` | `60` | Picks up a scheduled publication once it is live |
 | `eveli.metis.search.query.embed-concurrency` | unset (= `query.concurrency`, 4) | Overlapping citizen searches keep semantic ranking. Set `1` on CPU-only Ollama. |
 
-`eveli-app` and `eveli-app-gcloud` both `@Import` `EveliAutoConfigMetisFlyway` (always),
+`eveli-app` and `eveli-app-gcloud` both `@Import` `EveliAutoConfigMetisFlags` (always),
 `EveliAutoConfigMetis` and `EveliAutoConfigMetisSearch` (each conditional on its own flag).
 
 On GCloud, YAML stays off. Turn a given environment on with env or Secret Manager (the process
@@ -172,12 +205,7 @@ SPRING_AI_MODEL_EMBEDDING=ollama
 SPRING_AI_OLLAMA_BASE_URL=http://<ollama-host>:11434
 ```
 
-`SPRING_AI_OLLAMA_BASE_URL` is required there; the YAML default is localhost and will not reach
-Ollama from a Cloud Run/GKE container. Model names can stay at the YAML defaults (`bge-m3`,
-`llama3.2`) unless you override them.
-
-The Cloud SQL app role often cannot `CREATE EXTENSION`. Pre-create `vector`, `pg_trgm` and
-`unaccent` before the first enable, or Flyway fails and the application does not boot.
+Model names can stay at the YAML defaults (`bge-m3`, `llama3.2`) unless you override them.
 
 Worker JWT roles after enable:
 
@@ -190,33 +218,58 @@ In-flight work is at most `eveli.metis.search.indexing.concurrency` documents (d
 stop immediately. Poll `GET /worker/rest/api/metis/search/status` until the state is no longer
 `RUNNING` or `CANCELLING`.
 
-#### 4. Content and first index
+#### 4. Kubernetes replicas
+
+Several pods may try to start the same reindex at once (startup, deploy event, 60 s reconciler,
+or a manual POST). A partial unique index allows at most one row in `RUNNING` or `CANCELLING`.
+The winner inserts the job. Losers get `accepted: false` and the worker API returns **HTTP 409**.
+That is the lock working, not a cluster failure. Loser pods stay healthy and keep serving the last
+`COMPLETED` index (or keyword fallback).
+
+If the winner dies, `last_progress_at` plus `eveli.metis.search.indexing.abandoned-after-seconds`
+(default 3600) fails the stuck row so another pod can claim. A clean shutdown marks the local job
+`FAILED` and releases the claim.
+
+The portal per-IP rate limit is in-memory **per pod**. Do not gate liveness or readiness on reindex
+completion; the job runs in the background.
+
+#### 5. Content and first index
 
 Semantic site search indexes the **live published** bundle. Authoring import does not trigger a reindex.
 There must be a live publication, or the job fails without touching rows.
 
 With `auto-reindex-on-startup: true` the first boot starts the job in the background. The portal
-serves traffic immediately and falls back to keyword search until the job finishes. A few hundred
-documents against CPU-only Ollama takes hours; `GET /worker/rest/api/metis/search/status` shows
-progress and the embedding model id.
+serves traffic immediately and falls back to keyword search (`fallback: true`) until a job
+`COMPLETED`. Scheduled publications (`liveDate` in the future) are indexed when they go live (the
+60 s reconciler), not at create time. Immediate publishes still start a job right away.
 
 To force a rebuild later: `POST /worker/rest/api/metis/search/reindex?force=true`. Switching
 `spring.ai.ollama.embedding.options.model` or bumping
 `eveli.metis.search.indexing.metadata-prompt-version` already invalidates stored hashes, so a
 normal reindex reprocesses those rows.
 
-#### 5. Check
+#### 6. Check
 
-- App boots (Flyway applied `V4_1` only on this database)
-- `GET /worker/rest/api/metis/status` reports the platform, with `site-search` in the capability
-  list
+- App boots. With flags off, Flyway has applied `V4_1` and there is no pgvector requirement.
+- After enable: `GET /worker/rest/api/metis/status` reports the platform, with `site-search` in the
+  capability list
 - `GET /worker/rest/api/metis/search/status` → `COMPLETED` (or `RUNNING` on first index). Treat
   `COMPLETED` as done only when `processedCount + skippedCount` equals `totalCount`.
 - `GET /portal/site/search?q=...&locale=fi` returns results, or `fallback: true` while a reindex
   is in flight or the latest job is `FAILED` / `CANCELLED` (until the next `COMPLETED`)
 
-Scheduled publications (`liveDate` in the future) are indexed when they go live, not at create
-time. Immediate publishes still start a job right away.
+#### What typically goes wrong
+
+| Symptom | Cause | Action |
+| --- | --- | --- |
+| Flyway validate fails on `V4_1` checksum | This database already applied the old `db/metis/search` script | `flyway repair` |
+| Boot fails with CREATE EXTENSION / vector | Search enabled on vanilla Postgres, or app role cannot create extensions | Switch to `pgvector/pgvector:pg17` **keeping the volume**, or DBA pre-creates extensions |
+| Data gone after “switching to pgvector” | Volume / `PGDATA` was deleted | Restore from backup. Image switch must keep the volume |
+| Search enable fails, Ollama connection refused | `SPRING_AI_OLLAMA_BASE_URL` still localhost inside the cluster | Point it at the Ollama service |
+| Reindex fails, model not found | Empty Ollama volume and no pull (air-gap or init skipped) | Pre-seed models or allow `registry.ollama.ai` |
+| Job `FAILED`, no rows | No live publication | Publish, then reindex |
+| HTTP 409 / `accepted: false` from another pod | Replica lock | Ignore; one winner is enough |
+| `COMPLETED` but portal still `fallback: true` | `processedCount + skippedCount` < `totalCount`, or a later job failed | Re-run reindex; treat incomplete COMPLETED as not done |
 
 ### Local development
 
@@ -224,10 +277,11 @@ time. Immediate publishes still start a job right away.
 cd mvn_setup/eveli-parent/eveli-local-docker && docker compose up -d postgresql ollama ollama-init
 ```
 
-`ollama-init` pulls `bge-m3` and `llama3.2` once (large download). `application-dev.yml` already
-enables both flags and sets the Ollama models. `spring-boot:run` pins `spring.config.location` to
-the profile files only, so the base `application.yml` is not read locally — keep the flags in
-`application-dev.yml`:
+`ollama-init` pulls `bge-m3` and `llama3.2` from `registry.ollama.ai` unless they are already in
+`./_db/ollama_data` (large download on first run). Air-gapped machines must pre-seed that volume.
+`application-dev.yml` already enables both flags and sets the Ollama models. `spring-boot:run`
+pins `spring.config.location` to the profile files only, so the base `application.yml` is not
+read locally — keep the flags in `application-dev.yml`:
 
 ```yaml
 eveli.metis.enabled: true
@@ -270,10 +324,9 @@ Say the capability is `feedback`. Each step has a matching one in semantic site 
    new `EveliPropsMetisFeedback`. Keep the metis-client config type separate from the Spring
    properties type, as `MetisSearchConfig` and `EveliPropsMetisSearch` are, so the library stays
    independent of the hosting application.
-3. **Flyway band.** A new location `db/metis/feedback`, registered in `CAPABILITY_LOCATIONS` in
-   `EveliAutoConfigMetisFlyway`. All Metis locations share one schema history table, so each
-   capability owns a major version band and numbers inside it: semantic site search is `V4_x`, so feedback
-   takes `V5_x`. Prefix tables with `metis_feedback_`.
+3. **Flyway band.** Add `V5_x` under `db/postgresql` like any other eveli-client migration
+   (semantic site search is `V4_x`). Prefix tables with `metis_feedback_`. Do not add a separate
+   Flyway location or gate migrations on a capability flag.
 4. **Wiring.** A new `EveliAutoConfigMetisFeedback`, conditional on
    `eveli.metis.feedback.enabled`, and added to the `@Import` list of both `Application` classes.
    It owns its beans, controllers and any listeners.
