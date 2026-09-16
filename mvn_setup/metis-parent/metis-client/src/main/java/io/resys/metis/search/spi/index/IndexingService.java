@@ -199,7 +199,7 @@ public class IndexingService {
     }
   }
 
-  /** The VECTOR(n) width is set by Flyway; this property only checks that it still matches. */
+  /** The VECTOR(n) width is created when search is enabled; this property only checks that it still matches. */
   private void assertEmbeddingColumnWidth() {
     final var columnType = MetisSearchSql.await(index().embeddingColumnType());
     final var expected = "vector(" + config.getEmbeddingDimension() + ")";
@@ -207,7 +207,7 @@ public class IndexingService {
       throw new IllegalStateException(
           "eveli.metis.search.indexing.embedding-dimension is " + config.getEmbeddingDimension()
           + " but metis_search_index.embedding is " + columnType
-          + ". The column width is a Flyway concern, change the migration rather than this property.");
+          + ". The column width is created when search is enabled, not by this property.");
     }
   }
 

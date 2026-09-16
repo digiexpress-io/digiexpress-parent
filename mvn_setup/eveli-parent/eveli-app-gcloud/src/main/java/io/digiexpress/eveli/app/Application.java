@@ -35,7 +35,7 @@ import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
 import io.digiexpress.eveli.client.config.EveliAutoConfigGamut;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.config.EveliAutoConfigMetis;
-import io.digiexpress.eveli.client.config.EveliAutoConfigMetisFlyway;
+import io.digiexpress.eveli.client.config.EveliAutoConfigMetisFlags;
 import io.digiexpress.eveli.client.config.EveliAutoConfigMetisSearch;
 import io.digiexpress.eveli.client.config.EveliAutoConfigPermissions;
 import io.digiexpress.eveli.client.config.EveliAutoConfigWorker;
@@ -61,7 +61,7 @@ import lombok.extern.slf4j.Slf4j;
     EveliAutoConfigGamut.class,
     EveliAutoConfigWorker.class,
     EveliAutoConfigPermissions.class,
-    EveliAutoConfigMetisFlyway.class,
+    EveliAutoConfigMetisFlags.class,
     EveliAutoConfigMetis.class,
     EveliAutoConfigMetisSearch.class
 })

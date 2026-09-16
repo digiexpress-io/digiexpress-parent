@@ -14,8 +14,6 @@ spring:
     enabled: true
     locations: classpath:db/postgresql
     validate-on-migrate: true
-    # V4_x stays in flyway_schema_history after search is turned off; see README_CONFIG_PROPERTIES.
-    ignore-migration-patterns: "*:missing"
   ai:
     # Repeated from application.yml because spring-boot:run pins spring.config.location
     # to the profile files only, so the base application.yml is not read locally.

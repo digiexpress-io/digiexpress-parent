@@ -40,6 +40,50 @@ public final class MetisSearchSql {
         .build();
   }
 
+  /**
+   * Adds pgvector-dependent objects the first time search is enabled. Flyway {@code V4_1}
+   * only creates built-in-type tables so vanilla PostgreSQL still migrates.
+   */
+  public static void ensureSearchExtensions(Pool pgPool, int embeddingDimension) {
+    if (embeddingDimension < 1) {
+      throw new IllegalArgumentException("embeddingDimension must be positive");
+    }
+    try {
+      exec(pgPool, "CREATE EXTENSION IF NOT EXISTS vector");
+      exec(pgPool, "CREATE EXTENSION IF NOT EXISTS pg_trgm");
+      exec(pgPool, "CREATE EXTENSION IF NOT EXISTS unaccent");
+      exec(pgPool, "ALTER TABLE metis_search_index ADD COLUMN IF NOT EXISTS embedding VECTOR("
+          + embeddingDimension + ")");
+      exec(pgPool, """
+          CREATE INDEX IF NOT EXISTS idx_metis_search_embedding
+            ON metis_search_index USING hnsw (embedding vector_cosine_ops)
+          """);
+      exec(pgPool, """
+          CREATE INDEX IF NOT EXISTS idx_metis_search_trgm
+            ON metis_search_index USING GIN (search_text gin_trgm_ops)
+          """);
+      exec(pgPool, "COMMENT ON COLUMN metis_search_index.embedding IS "
+          + "'Embedding vector written at index time. Width matches the embedding model (1024 for bge-m3)'");
+      exec(pgPool, "COMMENT ON INDEX idx_metis_search_embedding IS "
+          + "'HNSW cosine index for nearest-neighbour vector search'");
+      exec(pgPool, "COMMENT ON INDEX idx_metis_search_trgm IS "
+          + "'Trigram GIN index for the typo / compound-word fallback over search_text'");
+    } catch (RuntimeException e) {
+      throw new IllegalStateException(
+          "eveli.metis.search.enabled is true but PostgreSQL does not have pgvector "
+              + "(extension \"vector\") or the app role cannot CREATE EXTENSION. "
+              + "Use image pgvector/pgvector:pg17 and keep the existing volume "
+              + "(do not delete PGDATA), or have a DBA run: "
+              + "CREATE EXTENSION vector; CREATE EXTENSION pg_trgm; CREATE EXTENSION unaccent. "
+              + "Cause: " + e.getMessage(),
+          e);
+    }
+  }
+
+  private static void exec(Pool pgPool, String sql) {
+    await(pgPool.query(sql).execute());
+  }
+
   public static void truncate(MetisSearchDb db) {
     await(db.query().queryMetisSearchIndex().deleteAll(true));
     await(db.query().queryMetisSearchReindexJob().deleteAll(true));

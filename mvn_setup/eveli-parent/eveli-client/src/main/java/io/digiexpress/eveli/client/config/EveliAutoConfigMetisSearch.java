@@ -154,6 +154,7 @@ public class EveliAutoConfigMetisSearch {
     final var query = config.getQuery();
     final var indexing = config.getIndexing();
 
+    MetisSearchSql.ensureSearchExtensions(pgPool, indexing.getEmbeddingDimension());
     final var db = MetisSearchSql.create(pgPool);
     final var documentBuilder = new SiteSearchDocumentBuilder(platform, indexing);
     final var contentReader = new SiteContentReader(runtime, config, documentBuilder);

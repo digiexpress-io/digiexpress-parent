@@ -132,8 +132,7 @@ public class MetisSearchIntegrationTest {
 
     Flyway.configure()
         .dataSource(postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword())
-        // db/metis is opt-in in production, see EveliAutoConfigMetisFlyway.
-        .locations("classpath:db/postgresql", "classpath:db/metis/search")
+        .locations("classpath:db/postgresql")
         .load()
         .migrate();
 
@@ -146,6 +145,7 @@ public class MetisSearchIntegrationTest {
             .setPassword(postgres.getPassword()),
         new PoolOptions().setMaxSize(5));
     waitUntilPostgresqlAcceptsConnections(pgPool);
+    MetisSearchSql.ensureSearchExtensions(pgPool, 1024);
     db = MetisSearchSql.create(pgPool);
   }
 
@@ -412,7 +412,7 @@ public class MetisSearchIntegrationTest {
     final var previous = jobService.tryStart("stub", "pub-1").orElseThrow();
     jobService.setBundleHash(previous, "hash-aaa");
     jobService.markCompleted(previous, 0, 0, 1);
-    Assertions.assertFalse(client.isPublicationIndexed("pub-1"));
+    Assertions.assertFalse(client.index().isPublicationIndexed("pub-1"));
 
     liveTrigger(client, "pub-1").startIfLivePublicationChanged();
     awaitNewerJob(previous, "pub-1", JobState.COMPLETED, 10_000);
@@ -461,7 +461,7 @@ public class MetisSearchIntegrationTest {
         CONFIG, hybridSearch, vectorSearch, ftsSearch,
         indexingService(finnishSite(true)), jobService, neverRuns::add, DIRECT, "stub");
 
-    final var started = client.startReindex(false).await().indefinitely();
+    final var started = client.index().startReindex(false).await().indefinitely();
     Assertions.assertTrue(started.getAccepted());
     Assertions.assertTrue(jobService.tryStart("stub").isEmpty(), "the claim is held");
 
@@ -550,7 +550,7 @@ public class MetisSearchIntegrationTest {
     final var client = new MetisSearchClientImpl(
         CONFIG, hybridSearch, vectorSearch, ftsSearch,
         indexingService(finnishSite(true)), jobService, DIRECT, DIRECT, "stub");
-    Assertions.assertFalse(client.isIndexReadyForPortal());
+    Assertions.assertFalse(client.index().isIndexReadyForPortal());
     Assertions.assertTrue(jobService.latest().isEmpty());
 
     final var props = new EveliPropsMetisSearch();
@@ -578,20 +578,20 @@ public class MetisSearchIntegrationTest {
     Assertions.assertFalse(ready.getResults().isEmpty());
 
     final var inflightJob = jobService.tryStart("stub").orElseThrow();
-    Assertions.assertTrue(client.isReindexInFlight());
-    Assertions.assertFalse(client.isIndexReadyForPortal());
+    Assertions.assertTrue(client.index().isReindexInFlight());
+    Assertions.assertFalse(client.index().isIndexReadyForPortal());
     final var inflight = controller.findByText("kirjasto", "fi", 8, request).await().indefinitely();
     Assertions.assertTrue(inflight.getFallback(), "portal visitors must keep keyword search during a rebuild");
     Assertions.assertTrue(inflight.getResults().isEmpty());
 
     Assertions.assertTrue(jobService.requestCancel(false, false));
-    Assertions.assertTrue(client.isReindexInFlight(), "CANCELLING is still in flight");
+    Assertions.assertTrue(client.index().isReindexInFlight(), "CANCELLING is still in flight");
     Assertions.assertTrue(controller.findByText("kirjasto", "fi", 8, request)
         .await().indefinitely().getFallback());
 
     jobService.markCancelled(inflightJob, 0, 0, 1);
-    Assertions.assertFalse(client.isReindexInFlight());
-    Assertions.assertFalse(client.isIndexReadyForPortal());
+    Assertions.assertFalse(client.index().isReindexInFlight());
+    Assertions.assertFalse(client.index().isIndexReadyForPortal());
     final var afterCancel = controller.findByText("kirjasto", "fi", 8, request).await().indefinitely();
     Assertions.assertTrue(afterCancel.getFallback(),
         "a cancelled job leaves a mixed table, portal keeps keyword search");
@@ -641,10 +641,10 @@ public class MetisSearchIntegrationTest {
               blockingUntilCancelledOnceGenerator(started)),
           jobService, reindexPool, DIRECT, "stub");
 
-      Assertions.assertTrue(client.startReindex(true).await().indefinitely().getAccepted());
+      Assertions.assertTrue(client.index().startReindex(true).await().indefinitely().getAccepted());
       Assertions.assertTrue(started.await(5, TimeUnit.SECONDS));
 
-      final var cancelled = client.cancelReindex().await().indefinitely();
+      final var cancelled = client.index().cancelReindex().await().indefinitely();
       Assertions.assertTrue(cancelled.getAccepted());
       awaitState(JobState.CANCELLED, 10_000);
       Assertions.assertEquals(3L, countRows(), "cancel must not wipe the index");
@@ -668,10 +668,10 @@ public class MetisSearchIntegrationTest {
               blockingUntilCancelledOnceGenerator(started)),
           jobService, reindexPool, DIRECT, "stub");
 
-      final var first = client.startReindex(false).await().indefinitely();
+      final var first = client.index().startReindex(false).await().indefinitely();
       Assertions.assertTrue(started.await(5, TimeUnit.SECONDS));
 
-      final var replace = client.startReindex(false, true).await().indefinitely();
+      final var replace = client.index().startReindex(false, true).await().indefinitely();
       Assertions.assertTrue(replace.getAccepted());
       Assertions.assertEquals(JobState.CANCELLING, replace.getState());
 

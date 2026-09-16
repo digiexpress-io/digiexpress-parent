@@ -13,8 +13,6 @@ spring:
     enabled: true
     locations: classpath:db/postgresql
     validate-on-migrate: true
-    # V4_x stays in flyway_schema_history after search is turned off; see README_CONFIG_PROPERTIES.
-    ignore-migration-patterns: "*:missing"
   ai:
     # Metis needs these; set both to ollama together with eveli.metis.enabled.
     model:

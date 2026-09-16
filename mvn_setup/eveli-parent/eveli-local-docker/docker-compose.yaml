@@ -1,7 +1,8 @@
 services:
   
   # Same PostgreSQL major version as the plain postgres:17 image, with pgvector
-  # added for the metis search index.
+  # added for the metis search index. Switching from postgres:17 to this image
+  # on the existing volume does not rewrite data; do not delete PGDATA.
   postgresql:
     image: pgvector/pgvector:pg17
     restart: always
