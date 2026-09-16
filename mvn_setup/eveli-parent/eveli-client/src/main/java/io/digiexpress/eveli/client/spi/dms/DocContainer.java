@@ -35,7 +35,6 @@ public interface DocContainer {
   @Value.Immutable
   interface Doc {
     String getName();
-    String getExternalId();
     InputStream getBody();
     String getBodyType();
     String getMimeType();

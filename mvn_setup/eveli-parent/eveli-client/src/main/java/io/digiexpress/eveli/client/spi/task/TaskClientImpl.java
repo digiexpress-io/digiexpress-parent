@@ -33,7 +33,6 @@ import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.ImmutableTaskArchivePointer;
 import io.digiexpress.eveli.client.api.ImmutableTaskDasboard;
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.TaskFileClient;
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
@@ -74,9 +73,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class TaskClientImpl implements TaskClient {
-
   
-  private final TaskFileClient taskFilesClient;
   private final AttachmentCommands attachmentCommands;
   private final DocContainerClient docContainerClient;
   private final TaskStore ctx;
@@ -225,7 +222,7 @@ public class TaskClientImpl implements TaskClient {
       public Uni<Task> transferTask(String taskId, TransferTaskCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
-        return new TransferTaskVisitor(envir, ctx, taskFilesClient, docContainerClient, userId, taskId, command).accept();
+        return new TransferTaskVisitor(envir, ctx, attachmentCommands, docContainerClient, userId, taskId, command).accept();
       }
       @Override
       public Uni<Task> completeCustomerAssignment(String taskId, CompleteCustomerAssignmentCommand command) {

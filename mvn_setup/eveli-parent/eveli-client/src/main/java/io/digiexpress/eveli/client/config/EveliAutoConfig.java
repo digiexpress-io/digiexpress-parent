@@ -63,7 +63,6 @@ import io.digiexpress.eveli.client.spi.process.PdfClientRest;
 import io.digiexpress.eveli.client.spi.process.ProcessQuestionnaireAttachmentCommand;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
-import io.digiexpress.eveli.client.spi.task.TaskFileClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
 import io.digiexpress.eveli.client.spi.taskaudit.TaskAuditClientImpl;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
@@ -261,8 +260,7 @@ public class EveliAutoConfig {
     final var store = new TaskStoreImpl(config);
     store.query().createIfNot().await().atMost(Duration.ofMinutes(1));
     
-    final var fileClient = new TaskFileClientImpl(attachmentCommands, restTemplate);    
-    return new TaskClientImpl(fileClient, attachmentCommands, docContainerClient, store, envirClient);
+    return new TaskClientImpl(attachmentCommands, docContainerClient, store, envirClient);
   }
 
   @Bean

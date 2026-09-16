@@ -97,7 +97,7 @@ public class GamutTestConfig {
       .tenantName("gamut-grim")
       .client(grimClient)
       .build());
-    this.taskClient = new TaskClientImpl(null, new AttachmentCommandsDummy(), null, taskStore, null);
+    this.taskClient = new TaskClientImpl(new AttachmentCommandsDummy(), null, taskStore, null);
   }
 
   public AuthoringImpl.AuthoringConfig createAuthoringConfig(FormDb formDb) {

@@ -111,7 +111,7 @@ public abstract class TaskEnvirSetupDebugDb {
           .await().atMost(Duration.ofMinutes(1));
 
       log.info("repo created: {}", repo);
-      return new TaskClientImpl(null, new AttachmentCommandsDummy(), null, store, null);
+      return new TaskClientImpl(new AttachmentCommandsDummy(), null, store, null);
     }
   }
 }

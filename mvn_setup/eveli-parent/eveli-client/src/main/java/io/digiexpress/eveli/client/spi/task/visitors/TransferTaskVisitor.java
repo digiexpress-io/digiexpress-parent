@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.task.visitors;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -23,18 +25,16 @@ import java.util.HashMap;
  * #L%
  */
 
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
+import io.digiexpress.eveli.client.api.TaskClient.TaskAttachment;
 import io.digiexpress.eveli.client.api.TaskClient.TransferTaskCommand;
-import io.digiexpress.eveli.client.api.TaskFileClient;
-import io.digiexpress.eveli.client.api.TaskFileClient.TaskFile;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.dms.DocContainerEnvelope;
@@ -44,10 +44,9 @@ import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStore;
 import io.resys.limaone.program.FlowProgram.FlowResult;
 import io.resys.limaone.spi.program.input.DefaultProgramInput;
-import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.smallrye.mutiny.Uni;
-import io.vertx.core.json.JsonObject;
+import io.smallrye.mutiny.unchecked.Unchecked;
 import lombok.RequiredArgsConstructor;
 
 
@@ -56,7 +55,7 @@ public class TransferTaskVisitor {
   
   private final io.resys.limaone.program.Runtime envir;
   private final TaskStore ctx;
-  private final TaskFileClient taskFileClient;
+  private final AttachmentCommands attachmentCommands;
   private final DocContainerClient docContainerClient;
 
   private final String userId;
@@ -74,28 +73,23 @@ public class TransferTaskVisitor {
       // pass the task down the pipeline 
       Uni.combine().all().unis(
         Uni.createFrom().item(getQuestionnairePropsFromFlow(task)), 
-        getTaskFiles(), 
         Uni.createFrom().item(task)).asTuple()
     )
-    .onItem().transformToUni(tuple -> {
-      return createDocContainer(tuple.getItem3(), tuple.getItem1(), tuple.getItem2())
-          .onItem().transformToUni(created -> updateTask(created, tuple.getItem1(), tuple.getItem2(), tuple.getItem3()));
-    });
-
+    .onItem().transformToUni(Unchecked.function(tuple -> {
+      return createDocContainer(tuple.getItem2(), tuple.getItem1())
+          .onItem().transformToUni(created -> updateTask(created, tuple.getItem1(), tuple.getItem2()));
+    }));
   }
   
-  
-  
-  private Uni<DocContainerEnvelope> createDocContainer(Task task, Map<String, String> props, List<TaskFile> files) {
+  private Uni<DocContainerEnvelope> createDocContainer(Task task, Map<String, String> props) throws IOException {
     final var container = docContainerClient.createDoc().task(task);
     
-    for(final var file : files) {
+    for(final var file : task.getAttachments()) {
       container.addDocument(ImmutableDoc.builder()
-          .body(file.getBody())
-          .bodyType(file.getBodyType())
-          .mimeType(file.getMimeType())
+          .body(getContent(file))
+          .bodyType(file.getType())
+          .mimeType(file.getType())
           .name(file.getName())
-          .externalId(file.getExternalId())
           .build()); 
     }
     Map<String,String> allProps = new HashMap<>(task.getDocumentProperties());
@@ -110,39 +104,21 @@ public class TransferTaskVisitor {
         .props(allProps)
         .build();
   }
-  
-  private Uni<List<TaskFile>> getTaskFiles() {
-    
-    final var config = ctx.getConfig();
-    final var grim = config.getClient().grim(config.getTenantName());
-    
-    final Uni<Optional<GrimProcess>> procQuery;
-    if(command.getProcessId() == null) {
-      procQuery = grim.find().missionProcsQuery().findOneByMissionId(taskId);
-    } else {
-      procQuery = grim.find().missionProcsQuery().findOneById(command.getProcessId());
-    }
-    
-    return procQuery.onItem().transformToUni(process -> {
-      
-      return taskFileClient.queryTaskFiles().findAll(taskId, process.map(e -> e.getId())).onItem().transform(files -> {
-        if(files.isEmpty()) {
-          throw TaskException.builder("TRANSFER_TASK_FAIL_NO_FILES_TO_TRANSFER")
-            .add(
-                "transfer-files-fail", 
-                "Task transfer must contain at least 1 file!", JsonObject.mapFrom(command)).build(); 
-        }
-        return files;
-      });
-      
-    });
+
+
+  private ByteArrayInputStream getContent(final TaskAttachment file) throws IOException {
+    return new ByteArrayInputStream(
+        attachmentCommands.contentDownload()
+          .filename(file.getName())
+          .processId(command.getProcessId())
+          .taskId(taskId)
+          .build());
   }
   
   
   private Uni<TaskClient.Task> updateTask(
       DocContainerEnvelope env, 
-      Map<String, String> props, 
-      List<TaskFile> files, 
+      Map<String, String> props,
       Task previousVerison) {
     
     final var config = ctx.getConfig();
