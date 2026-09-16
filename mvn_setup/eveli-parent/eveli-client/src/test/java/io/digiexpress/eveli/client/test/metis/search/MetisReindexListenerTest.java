@@ -29,6 +29,7 @@ import io.digiexpress.eveli.client.spi.metis.search.MetisLiveIndexTrigger;
 import io.digiexpress.eveli.client.spi.metis.search.MetisReindexListener;
 import io.resys.metis.search.api.ImmutableMetisSearchIndexStatus;
 import io.resys.metis.search.api.MetisSearchClient;
+import io.resys.metis.search.api.MetisSearchClient.IndexQuery;
 import io.resys.metis.search.api.MetisSearchIndexStatus.JobState;
 import io.smallrye.mutiny.Uni;
 
@@ -61,7 +62,7 @@ public class MetisReindexListenerTest {
   @Test
   void startupReindexesAnEmptyIndex() {
     final var search = search();
-    Mockito.when(search.getIndexStatus()).thenReturn(Uni.createFrom().item(
+    Mockito.when(search.index().getIndexStatus()).thenReturn(Uni.createFrom().item(
         ImmutableMetisSearchIndexStatus.builder().state(JobState.NONE).indexedDocuments(0).build()));
     final var trigger = Mockito.mock(MetisLiveIndexTrigger.class);
     Mockito.when(trigger.startNow(false, false)).thenReturn(Uni.createFrom().item(
@@ -72,13 +73,13 @@ public class MetisReindexListenerTest {
     listener(search, props, trigger).onApplicationReady();
 
     Mockito.verify(trigger, Mockito.timeout(1_000)).startNow(false, false);
-    Mockito.verify(search, Mockito.never()).startReindex(Mockito.anyBoolean());
+    Mockito.verify(search.index(), Mockito.never()).startReindex(Mockito.anyBoolean());
   }
 
   @Test
   void startupSkipsWhenTheIndexAlreadyHasDocuments() {
     final var search = search();
-    Mockito.when(search.getIndexStatus()).thenReturn(Uni.createFrom().item(
+    Mockito.when(search.index().getIndexStatus()).thenReturn(Uni.createFrom().item(
         ImmutableMetisSearchIndexStatus.builder().state(JobState.COMPLETED).indexedDocuments(12).build()));
     final var trigger = Mockito.mock(MetisLiveIndexTrigger.class);
     final var props = new EveliPropsMetisSearch();
@@ -87,8 +88,8 @@ public class MetisReindexListenerTest {
     listener(search, props, trigger).onApplicationReady();
 
     Mockito.verify(trigger, Mockito.after(200).never()).startNow(Mockito.anyBoolean(), Mockito.anyBoolean());
-    Mockito.verify(search, Mockito.never()).startReindex(Mockito.anyBoolean());
-    Mockito.verify(search, Mockito.never()).startReindex(
+    Mockito.verify(search.index(), Mockito.never()).startReindex(Mockito.anyBoolean());
+    Mockito.verify(search.index(), Mockito.never()).startReindex(
         Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.any());
   }
 
@@ -98,6 +99,8 @@ public class MetisReindexListenerTest {
   }
 
   private static MetisSearchClient search() {
-    return Mockito.mock(MetisSearchClient.class);
+    final var search = Mockito.mock(MetisSearchClient.class);
+    Mockito.when(search.index()).thenReturn(Mockito.mock(IndexQuery.class));
+    return search;
   }
 }

@@ -83,8 +83,8 @@ public class MetisClientImpl implements MetisClient {
       return status.enabled(false).state(CapabilityState.DISABLED).build();
     }
     try {
-      final var indexed = search.countIndexedDocuments();
-      if (!search.isIndexReadyForPortal()) {
+      final var indexed = search.index().countIndexedDocuments();
+      if (!search.index().isIndexReadyForPortal()) {
         return status.enabled(true).state(CapabilityState.NOT_READY)
             .detail("Portal is serving keyword search until a reindex completes").build();
       }

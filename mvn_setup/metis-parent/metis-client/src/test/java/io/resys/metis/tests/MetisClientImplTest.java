@@ -28,6 +28,7 @@ import io.resys.metis.api.ImmutableMetisConfig;
 import io.resys.metis.api.MetisClient;
 import io.resys.metis.api.MetisStatus.CapabilityState;
 import io.resys.metis.search.api.MetisSearchClient;
+import io.resys.metis.search.api.MetisSearchClient.IndexQuery;
 import io.resys.metis.spi.MetisClientImpl;
 
 public class MetisClientImplTest {
@@ -47,9 +48,9 @@ public class MetisClientImplTest {
 
   @Test
   void searchIsReadyWhenTheIndexHasDocuments() {
-    final var searchClient = Mockito.mock(MetisSearchClient.class);
-    Mockito.when(searchClient.isIndexReadyForPortal()).thenReturn(true);
-    Mockito.when(searchClient.countIndexedDocuments()).thenReturn(12L);
+    final var searchClient = searchClient();
+    Mockito.when(searchClient.index().isIndexReadyForPortal()).thenReturn(true);
+    Mockito.when(searchClient.index().countIndexedDocuments()).thenReturn(12L);
 
     final var search = capability(client(searchClient));
     Assertions.assertTrue(search.getEnabled());
@@ -59,9 +60,9 @@ public class MetisClientImplTest {
 
   @Test
   void searchIsNotReadyUntilAReindexHasCompleted() {
-    final var searchClient = Mockito.mock(MetisSearchClient.class);
-    Mockito.when(searchClient.isIndexReadyForPortal()).thenReturn(false);
-    Mockito.when(searchClient.countIndexedDocuments()).thenReturn(12L);
+    final var searchClient = searchClient();
+    Mockito.when(searchClient.index().isIndexReadyForPortal()).thenReturn(false);
+    Mockito.when(searchClient.index().countIndexedDocuments()).thenReturn(12L);
 
     final var search = capability(client(searchClient));
     Assertions.assertTrue(search.getEnabled());
@@ -71,9 +72,9 @@ public class MetisClientImplTest {
 
   @Test
   void searchIsNotReadyWhenTheIndexIsEmpty() {
-    final var searchClient = Mockito.mock(MetisSearchClient.class);
-    Mockito.when(searchClient.isIndexReadyForPortal()).thenReturn(true);
-    Mockito.when(searchClient.countIndexedDocuments()).thenReturn(0L);
+    final var searchClient = searchClient();
+    Mockito.when(searchClient.index().isIndexReadyForPortal()).thenReturn(true);
+    Mockito.when(searchClient.index().countIndexedDocuments()).thenReturn(0L);
 
     final var search = capability(client(searchClient));
     Assertions.assertTrue(search.getEnabled());
@@ -83,13 +84,19 @@ public class MetisClientImplTest {
 
   @Test
   void searchReportsErrorWhenTheIndexCannotBeRead() {
-    final var searchClient = Mockito.mock(MetisSearchClient.class);
-    Mockito.when(searchClient.isIndexReadyForPortal()).thenThrow(new IllegalStateException("db is down"));
+    final var searchClient = searchClient();
+    Mockito.when(searchClient.index().isIndexReadyForPortal()).thenThrow(new IllegalStateException("db is down"));
 
     final var search = capability(client(searchClient));
     Assertions.assertTrue(search.getEnabled());
     Assertions.assertEquals(CapabilityState.ERROR, search.getState());
     Assertions.assertTrue(search.getDetail().contains("db is down"));
+  }
+
+  private static MetisSearchClient searchClient() {
+    final var search = Mockito.mock(MetisSearchClient.class);
+    Mockito.when(search.index()).thenReturn(Mockito.mock(IndexQuery.class));
+    return search;
   }
 
   private static MetisClient client(MetisSearchClient search) {

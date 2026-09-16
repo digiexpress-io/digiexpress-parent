@@ -29,5 +29,6 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "eveli.metis")
 public class EveliPropsMetis {
 
+  /** Platform flag: model beans, shared primitives, GET /worker/rest/api/metis/status. Requires spring.ai.model.chat and spring.ai.model.embedding, not none. */
   private Boolean enabled;
 }

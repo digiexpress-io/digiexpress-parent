@@ -41,6 +41,7 @@ import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.metis.search.api.ImmutableMetisSearchIndexStatus;
 import io.resys.metis.search.api.MetisSearchClient;
+import io.resys.metis.search.api.MetisSearchClient.IndexQuery;
 import io.resys.metis.search.api.MetisSearchIndexStatus.JobState;
 import io.smallrye.mutiny.Uni;
 
@@ -49,39 +50,42 @@ public class MetisLiveIndexTriggerTest {
   @Test
   void startsAJobWhenTheLivePublicationIsNotYetIndexed() {
     final var search = Mockito.mock(MetisSearchClient.class);
-    Mockito.when(search.isPublicationIndexed("pub-live")).thenReturn(false);
-    Mockito.when(search.isReindexInFlight()).thenReturn(false);
-    Mockito.when(search.startReindex(false, false, "pub-live"))
+    final var index = index(search);
+    Mockito.when(index.isPublicationIndexed("pub-live")).thenReturn(false);
+    Mockito.when(index.isReindexInFlight()).thenReturn(false);
+    Mockito.when(index.startReindex(false, false, "pub-live"))
         .thenReturn(Uni.createFrom().item(accepted()));
 
     trigger(search, world("pub-live", OffsetDateTime.now().minusHours(1)))
         .startIfLivePublicationChanged();
 
-    Mockito.verify(search).startReindex(false, false, "pub-live");
+    Mockito.verify(index).startReindex(false, false, "pub-live");
   }
 
   @Test
   void skipsWhenAReindexIsAlreadyInFlight() {
     final var search = Mockito.mock(MetisSearchClient.class);
-    Mockito.when(search.isPublicationIndexed("pub-live")).thenReturn(false);
-    Mockito.when(search.isReindexInFlight()).thenReturn(true);
+    final var index = index(search);
+    Mockito.when(index.isPublicationIndexed("pub-live")).thenReturn(false);
+    Mockito.when(index.isReindexInFlight()).thenReturn(true);
 
     trigger(search, world("pub-live", OffsetDateTime.now().minusHours(1)))
         .startIfLivePublicationChanged();
 
-    Mockito.verify(search, Mockito.never()).startReindex(
+    Mockito.verify(index, Mockito.never()).startReindex(
         Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.any());
   }
 
   @Test
   void skipsWhenTheLivePublicationIsAlreadyIndexed() {
     final var search = Mockito.mock(MetisSearchClient.class);
-    Mockito.when(search.isPublicationIndexed("pub-live")).thenReturn(true);
+    final var index = index(search);
+    Mockito.when(index.isPublicationIndexed("pub-live")).thenReturn(true);
 
     trigger(search, world("pub-live", OffsetDateTime.now().minusHours(1)))
         .startIfLivePublicationChanged();
 
-    Mockito.verify(search, Mockito.never()).startReindex(
+    Mockito.verify(index, Mockito.never()).startReindex(
         Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.any());
   }
 
@@ -92,9 +96,7 @@ public class MetisLiveIndexTriggerTest {
     trigger(search, world("pub-future", OffsetDateTime.now().plusHours(1)))
         .startIfLivePublicationChanged();
 
-    Mockito.verify(search, Mockito.never()).isPublicationIndexed(Mockito.any());
-    Mockito.verify(search, Mockito.never()).startReindex(
-        Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.any());
+    Mockito.verify(search, Mockito.never()).index();
   }
 
   @Test
@@ -106,15 +108,14 @@ public class MetisLiveIndexTriggerTest {
     trigger(search, world("pub-live", OffsetDateTime.now().minusHours(1)), props)
         .startIfLivePublicationChanged();
 
-    Mockito.verify(search, Mockito.never()).isPublicationIndexed(Mockito.any());
-    Mockito.verify(search, Mockito.never()).startReindex(
-        Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.any());
+    Mockito.verify(search, Mockito.never()).index();
   }
 
   @Test
   void aManualStartStampsTheLivePublicationId() {
     final var search = Mockito.mock(MetisSearchClient.class);
-    Mockito.when(search.startReindex(false, false, "pub-live"))
+    final var index = index(search);
+    Mockito.when(index.startReindex(false, false, "pub-live"))
         .thenReturn(Uni.createFrom().item(accepted()));
 
     final var status = trigger(search, world("pub-live", OffsetDateTime.now().minusHours(1)))
@@ -122,7 +123,13 @@ public class MetisLiveIndexTriggerTest {
         .await().indefinitely();
 
     Assertions.assertTrue(status.getAccepted());
-    Mockito.verify(search).startReindex(false, false, "pub-live");
+    Mockito.verify(index).startReindex(false, false, "pub-live");
+  }
+
+  private static IndexQuery index(MetisSearchClient search) {
+    final var index = Mockito.mock(IndexQuery.class);
+    Mockito.when(search.index()).thenReturn(index);
+    return index;
   }
 
   private static MetisLiveIndexTrigger trigger(MetisSearchClient search, ImmutableModelWorld world) {

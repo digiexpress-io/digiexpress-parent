@@ -64,21 +64,8 @@ public class MetisSearchClientImpl implements MetisSearchClient {
   }
 
   @Override
-  public Uni<MetisSearchIndexStatus> startReindex(boolean force, boolean replace, String publicationId) {
-    return blocking(() -> doStartReindex(force, replace, publicationId));
-  }
-
-  @Override
-  public boolean isPublicationIndexed(String publicationId) {
-    return jobService.isPublicationIndexed(publicationId, indexingService.currentBundleHash().orElse(null));
-  }
-
-  @Override
-  public Uni<MetisSearchIndexStatus> cancelReindex() {
-    return blocking(() -> {
-      final var accepted = jobService.requestCancel(false, false);
-      return latestStatus(accepted);
-    });
+  public IndexQuery index() {
+    return new IndexQueryImpl();
   }
 
   private MetisSearchIndexStatus doStartReindex(boolean force, boolean replace, String publicationId) {
@@ -136,26 +123,6 @@ public class MetisSearchClientImpl implements MetisSearchClient {
     }
   }
 
-  @Override
-  public Uni<MetisSearchIndexStatus> getIndexStatus() {
-    return blocking(() -> latestStatus(true));
-  }
-
-  @Override
-  public boolean isReindexInFlight() {
-    return jobService.hasInflightJob();
-  }
-
-  @Override
-  public boolean isIndexReadyForPortal() {
-    return jobService.isIndexReadyForPortal();
-  }
-
-  @Override
-  public long countIndexedDocuments() {
-    return indexingService.countIndexedDocuments();
-  }
-
   /** Worker pool: awaiting Thena SQL on the Vert.x loop deadlocks; reindexExecutor can be busy for hours. */
   private <T> Uni<T> blocking(java.util.function.Supplier<T> supplier) {
     return Uni.createFrom().item(supplier)
@@ -175,6 +142,46 @@ public class MetisSearchClientImpl implements MetisSearchClient {
             .state(accepted ? JobState.NONE : JobState.RUNNING)
             .indexedDocuments(indexed)
             .build());
+  }
+
+  private class IndexQueryImpl implements IndexQuery {
+    @Override
+    public Uni<MetisSearchIndexStatus> startReindex(boolean force, boolean replace, String publicationId) {
+      return blocking(() -> doStartReindex(force, replace, publicationId));
+    }
+
+    @Override
+    public boolean isPublicationIndexed(String publicationId) {
+      return jobService.isPublicationIndexed(publicationId, indexingService.currentBundleHash().orElse(null));
+    }
+
+    @Override
+    public Uni<MetisSearchIndexStatus> cancelReindex() {
+      return blocking(() -> {
+        final var accepted = jobService.requestCancel(false, false);
+        return latestStatus(accepted);
+      });
+    }
+
+    @Override
+    public Uni<MetisSearchIndexStatus> getIndexStatus() {
+      return blocking(() -> latestStatus(true));
+    }
+
+    @Override
+    public boolean isReindexInFlight() {
+      return jobService.hasInflightJob();
+    }
+
+    @Override
+    public boolean isIndexReadyForPortal() {
+      return jobService.isIndexReadyForPortal();
+    }
+
+    @Override
+    public long countIndexedDocuments() {
+      return indexingService.countIndexedDocuments();
+    }
   }
 
   private class SearchQueryImpl implements SearchQuery {

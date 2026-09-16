@@ -44,7 +44,7 @@ public class MetisSearchApiController {
 
   @GetMapping("/status")
   public Uni<MetisSearchIndexStatus> status() {
-    return search.getIndexStatus();
+    return search.index().getIndexStatus();
   }
 
   @PostMapping("/reindex")
@@ -57,7 +57,7 @@ public class MetisSearchApiController {
 
   @PostMapping("/reindex/cancel")
   public Uni<ResponseEntity<MetisSearchIndexStatus>> cancel() {
-    return search.cancelReindex().onItem().transform(this::toResponse);
+    return search.index().cancelReindex().onItem().transform(this::toResponse);
   }
 
   private ResponseEntity<MetisSearchIndexStatus> toResponse(MetisSearchIndexStatus status) {

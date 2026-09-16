@@ -42,7 +42,7 @@ public class MetisReindexListener {
     if (!Boolean.TRUE.equals(props.getAutoReindexOnStartup())) {
       return;
     }
-    search.getIndexStatus().subscribe().with(indexStatus -> {
+    search.index().getIndexStatus().subscribe().with(indexStatus -> {
       if (indexStatus.getIndexedDocuments() > 0) {
         log.info("Metis index already holds {} document(s), skipping the startup reindex",
             indexStatus.getIndexedDocuments());

@@ -57,10 +57,10 @@ public class MetisLiveIndexTrigger {
         return;
       }
       final var id = liveId.get();
-      if (search.isPublicationIndexed(id)) {
+      if (search.index().isPublicationIndexed(id)) {
         return;
       }
-      if (search.isReindexInFlight()) {
+      if (search.index().isReindexInFlight()) {
         log.debug("Metis waiting for the in-flight reindex before indexing live publication: {}", id);
         return;
       }
@@ -71,11 +71,11 @@ public class MetisLiveIndexTrigger {
 
   public Uni<MetisSearchIndexStatus> startNow(boolean force, boolean replace) {
     return onWorker(resolveLivePublicationId())
-        .onItem().transformToUni(liveId -> search.startReindex(force, replace, liveId.orElse(null)))
+        .onItem().transformToUni(liveId -> search.index().startReindex(force, replace, liveId.orElse(null)))
         .onFailure().recoverWithUni(error -> {
           log.error("Metis could not resolve the live publication for a manual reindex, because of: {}",
               error.toString(), error);
-          return search.startReindex(force, replace, null);
+          return search.index().startReindex(force, replace, null);
         });
   }
 
@@ -100,7 +100,7 @@ public class MetisLiveIndexTrigger {
   }
 
   private void startReindex(boolean force, boolean replace, String publicationId) {
-    search.startReindex(force, replace, publicationId).subscribe().with(status -> {
+    search.index().startReindex(force, replace, publicationId).subscribe().with(status -> {
       if (status.getAccepted()) {
         log.info("Metis starting an incremental reindex for live publication: {}", publicationId);
         return;

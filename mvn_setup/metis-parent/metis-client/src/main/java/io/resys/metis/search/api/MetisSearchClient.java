@@ -28,27 +28,7 @@ public interface MetisSearchClient {
 
   SearchQuery query();
 
-  default Uni<MetisSearchIndexStatus> startReindex(boolean force) {
-    return startReindex(force, false, null);
-  }
-
-  default Uni<MetisSearchIndexStatus> startReindex(boolean force, boolean replace) {
-    return startReindex(force, replace, null);
-  }
-
-  Uni<MetisSearchIndexStatus> startReindex(boolean force, boolean replace, String publicationId);
-
-  boolean isPublicationIndexed(String publicationId);
-
-  Uni<MetisSearchIndexStatus> cancelReindex();
-
-  Uni<MetisSearchIndexStatus> getIndexStatus();
-
-  boolean isReindexInFlight();
-
-  boolean isIndexReadyForPortal();
-
-  long countIndexedDocuments();
+  IndexQuery index();
 
   interface SearchQuery {
     SearchQuery locale(String locale);
@@ -58,6 +38,43 @@ public interface MetisSearchClient {
     SearchQuery mode(SearchMode mode);
 
     Uni<List<MetisSearchResult>> findByText(String text);
+  }
+
+  interface IndexQuery {
+
+    /**
+     * Claims at most one cluster-wide job. {@code force} rebuilds every document even
+     * when the content hash matches. {@code replace} cancels an in-flight job and starts
+     * another once it drains. {@code publicationId} is stamped on the job so later
+     * ticks can skip work that is already indexed.
+     *
+     * @return {@code accepted=false} (HTTP 409 at the API) when another replica already
+     *         holds the in-flight claim; that is the lock working, not a failure
+     */
+    Uni<MetisSearchIndexStatus> startReindex(boolean force, boolean replace, String publicationId);
+
+    default Uni<MetisSearchIndexStatus> startReindex(boolean force) {
+      return startReindex(force, false, null);
+    }
+
+    default Uni<MetisSearchIndexStatus> startReindex(boolean force, boolean replace) {
+      return startReindex(force, replace, null);
+    }
+
+    Uni<MetisSearchIndexStatus> cancelReindex();
+
+    Uni<MetisSearchIndexStatus> getIndexStatus();
+
+    /** True when a completed or still in-flight job already covers this live publication at the current bundle hash. */
+    boolean isPublicationIndexed(String publicationId);
+
+    /** True while any replica holds a RUNNING or CANCELLING job. */
+    boolean isReindexInFlight();
+
+    /** True only after a job has COMPLETED. Until then the portal serves keyword search. */
+    boolean isIndexReadyForPortal();
+
+    long countIndexedDocuments();
   }
 
   enum SearchMode {

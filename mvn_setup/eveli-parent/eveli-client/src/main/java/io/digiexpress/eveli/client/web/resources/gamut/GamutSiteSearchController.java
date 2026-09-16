@@ -100,7 +100,7 @@ public class GamutSiteSearchController {
 
   private boolean isIndexReadyForPortal() {
     try {
-      return search.isIndexReadyForPortal();
+      return search.index().isIndexReadyForPortal();
     } catch (RuntimeException error) {
       log.error("Metis reindex status check failed, serving the keyword fallback, because of: {}",
           error.toString(), error);

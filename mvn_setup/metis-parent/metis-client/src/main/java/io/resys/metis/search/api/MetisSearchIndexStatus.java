@@ -34,6 +34,7 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableMetisSearchIndexStatus.class)
 public interface MetisSearchIndexStatus {
 
+  /** False when another replica already holds the in-flight job (HTTP 409). That is the lock working. */
   @Value.Default
   default boolean getAccepted() {
     return true;
