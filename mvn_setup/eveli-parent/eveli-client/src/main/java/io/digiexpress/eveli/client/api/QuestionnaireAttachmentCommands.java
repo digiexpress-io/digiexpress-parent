@@ -24,6 +24,10 @@ import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.api.PdfClient.PdfRequestFields;
 import io.smallrye.mutiny.Uni;
 
+/**
+ * Command class to create PDF from questionnaire and upload it as task attachment.
+ * 
+ */
 public interface QuestionnaireAttachmentCommands {
   // only used in WRENCH FLOW
   QuestionnaireAttachmentBuilder attachmentBuilder();
