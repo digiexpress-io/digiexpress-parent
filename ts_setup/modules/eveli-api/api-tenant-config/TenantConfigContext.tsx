@@ -30,6 +30,7 @@ export const tenant_features = [
   'eveli_publication_only',
   'visual_accommodation',
   'batches',
+  'metis',
   
   'tagomi',
   'contract',

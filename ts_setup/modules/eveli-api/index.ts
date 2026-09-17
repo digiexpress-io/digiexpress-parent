@@ -12,6 +12,7 @@ export * from './api-queue'
 export * from './api-rps'
 export * from './api-health'
 export * from './api-feedback-backend'
+export * from './api-metis'
 
 export { tree as fetchtree } from './fetchTree.gen'
 export { FetchProvider } from '@dxs-ts/envir-fetch'

@@ -13,7 +13,8 @@ import {
   HealthAndSafetyOutlined as HealthAndSafetyOutlinedIcon,
   HomeWorkOutlined as HomeWorkOutlinedIcon,
   PersonOutlineOutlined as PersonOutlineOutlinedIcon,
-  WorkOutlineOutlined as WorkOutlineOutlinedIcon
+  WorkOutlineOutlined as WorkOutlineOutlinedIcon,
+  TravelExploreOutlined as TravelExploreOutlinedIcon
 } from '@mui/icons-material';
 
 import { useIntl } from 'react-intl';
@@ -190,6 +191,20 @@ export const Secondary: React.FC = () => {
         >
           {intl.formatMessage({ id: 'menu.batches', defaultMessage: 'Batches' })}
         </Button>
+      </EveliTenantFeatureEnabled>
+
+      <EveliTenantFeatureEnabled id='METIS'>
+        <EveliPermissions id='NAV_TO_METIS'>
+          <Button startIcon={<TravelExploreOutlinedIcon />}
+            variant={location.pathname.includes('metis') ? 'explorerActive' : 'explorerInactive'}
+            onClick={() => navigate({
+              from: '/secured/$locale',
+              to: '/secured/$locale/worker/metis'
+            })}
+          >
+            {intl.formatMessage({ id: 'menu.metis', defaultMessage: 'Metis' })}
+          </Button>
+        </EveliPermissions>
       </EveliTenantFeatureEnabled>
 
       <EveliPermissions id='NAV_TO_HEALTH'>

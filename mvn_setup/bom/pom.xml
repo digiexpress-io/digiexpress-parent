@@ -40,6 +40,11 @@
         <artifactId>limaone-compiler</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>metis-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>io.digiexpress</groupId>

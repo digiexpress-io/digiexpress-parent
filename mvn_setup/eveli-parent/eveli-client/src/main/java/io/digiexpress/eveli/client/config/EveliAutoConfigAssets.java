@@ -77,7 +77,7 @@ public class EveliAutoConfigAssets {
       WorkerAuthClient security,
       ApplicationEventPublisher publisher
   ) {
-    return new AssetsPublicationController(context.getAuthoring(), false);
+    return new AssetsPublicationController(context.getAuthoring(), false, publisher);
   }
   
   @Bean
