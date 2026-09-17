@@ -15,6 +15,24 @@ The library is `metis-client` (`io.resys.metis`). Configuration, REST and Flyway
 `eveli-client`, the same split as `eveli-permissions`. Properties are listed in
 [docs/README_CONFIG_PROPERTIES.md](../../docs/README_CONFIG_PROPERTIES.md).
 
+> [!IMPORTANT]
+> **How enable works today — two client blockers, neither is Flyway.**
+>
+> **1. pgvector is not in `V4_1`.** Flyway only creates built-in-type tables so vanilla
+> Postgres still migrates with the flags off. The `vector` / `pg_trgm` / `unaccent`
+> extensions, `embedding VECTOR(1024)` column, and HNSW / trigram indexes are applied
+> at boot by `MetisSearchSql.ensureSearchExtensions` when `eveli.metis.search.enabled=true`.
+> Search enable **fails boot** if that SQL cannot run (no pgvector binaries, or the app
+> role cannot `CREATE EXTENSION`).
+>
+> **2. Ollama models are not in the app image and must be pulled.** First enable needs
+> `bge-m3` and `llama3.2` already on the Ollama volume. `ollama pull` talks to the
+> **public** registry (`registry.ollama.ai`) over outbound HTTPS. Air-gapped or
+> egress-locked clients **cannot** use `ollama-init` / `ollama pull`. Plan this before
+> turning the flags on: pre-seed the Ollama data directory from a machine that can pull,
+> `ollama create` from a local GGUF, or an internal mirror. If the model is already on
+> the volume, pull is skipped. Details in [First deployment](#first-deployment).
+
 ---
 
 ## Layout
@@ -109,14 +127,11 @@ release **without** enabling Metis. Enabling search later is a separate, explici
 
 #### This release vs enabling search
 
-Flyway always applies `db/postgresql/V4_1__metis_search.sql`. That script uses only built-in
-PostgreSQL types (`metis_search_index`, `metis_search_reindex_job`). Extra unused tables are
-expected. Vanilla `postgres:17` is enough for migrate and boot **while the flags stay off**.
-
-pgvector, Ollama, and the Metis flags are required only when you turn search **on**. Then boot
-creates the `vector` / `pg_trgm` / `unaccent` extensions, the `embedding VECTOR(1024)` column,
-and the HNSW / trigram indexes. If that ensure fails, **search enable fails boot** with a clear
-error; flags off still boot.
+See the **IMPORTANT** callout at the top of this README. Short version: Flyway always
+applies `db/postgresql/V4_1__metis_search.sql` (built-in types only). Extra unused tables
+are expected. Vanilla `postgres:17` is enough while the flags stay off. pgvector and
+Ollama are required only when you turn search **on**; the ensure is
+`MetisSearchSql.ensureSearchExtensions`, not Flyway. If it fails, search enable fails boot.
 
 Local DBs that already applied an older `V4_1` from `db/metis/search` will see a Flyway checksum
 mismatch. Run `flyway repair` on those databases. Fresh databases just apply the new `V4_1`.

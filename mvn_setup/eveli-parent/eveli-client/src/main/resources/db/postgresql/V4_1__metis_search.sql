@@ -18,6 +18,15 @@
 -- #L%
 ---
 
+-- CAVEAT: built-in types only. Do not add CREATE EXTENSION, VECTOR, HNSW, or
+-- gin_trgm_ops here — vanilla postgres:17 must be able to apply this migration
+-- with eveli.metis.search.enabled=false.
+--
+-- pgvector objects are created at boot when search is turned on, in one DO block:
+-- MetisSearchSql.ensureSearchExtensions (vector / pg_trgm / unaccent, embedding
+-- VECTOR(1024), HNSW + trigram indexes). That is not a Flyway step. Enabling
+-- search without pgvector binaries (or a DBA CREATE EXTENSION) fails boot.
+
 CREATE TABLE metis_search_index (
     id              BIGSERIAL PRIMARY KEY,
     workflow_id     TEXT NOT NULL,

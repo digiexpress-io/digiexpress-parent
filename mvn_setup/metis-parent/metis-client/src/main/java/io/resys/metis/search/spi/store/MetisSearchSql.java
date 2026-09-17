@@ -42,32 +42,39 @@ public final class MetisSearchSql {
 
   /**
    * Adds pgvector-dependent objects the first time search is enabled. Flyway {@code V4_1}
-   * only creates built-in-type tables so vanilla PostgreSQL still migrates.
+   * only creates built-in-type tables so vanilla PostgreSQL still migrates. One {@code DO}
+   * block; {@code VECTOR} is applied via {@code EXECUTE} so it is parsed after the
+   * extension exists.
    */
   public static void ensureSearchExtensions(Pool pgPool, int embeddingDimension) {
     if (embeddingDimension < 1) {
       throw new IllegalArgumentException("embeddingDimension must be positive");
     }
     try {
-      exec(pgPool, "CREATE EXTENSION IF NOT EXISTS vector");
-      exec(pgPool, "CREATE EXTENSION IF NOT EXISTS pg_trgm");
-      exec(pgPool, "CREATE EXTENSION IF NOT EXISTS unaccent");
-      exec(pgPool, "ALTER TABLE metis_search_index ADD COLUMN IF NOT EXISTS embedding VECTOR("
-          + embeddingDimension + ")");
       exec(pgPool, """
-          CREATE INDEX IF NOT EXISTS idx_metis_search_embedding
-            ON metis_search_index USING hnsw (embedding vector_cosine_ops)
-          """);
-      exec(pgPool, """
-          CREATE INDEX IF NOT EXISTS idx_metis_search_trgm
-            ON metis_search_index USING GIN (search_text gin_trgm_ops)
-          """);
-      exec(pgPool, "COMMENT ON COLUMN metis_search_index.embedding IS "
-          + "'Embedding vector written at index time. Width matches the embedding model (1024 for bge-m3)'");
-      exec(pgPool, "COMMENT ON INDEX idx_metis_search_embedding IS "
-          + "'HNSW cosine index for nearest-neighbour vector search'");
-      exec(pgPool, "COMMENT ON INDEX idx_metis_search_trgm IS "
-          + "'Trigram GIN index for the typo / compound-word fallback over search_text'");
+          DO $metis_search_ensure$
+          BEGIN
+            EXECUTE $e$ CREATE EXTENSION IF NOT EXISTS vector $e$;
+            EXECUTE $e$ CREATE EXTENSION IF NOT EXISTS pg_trgm $e$;
+            EXECUTE $e$ CREATE EXTENSION IF NOT EXISTS unaccent $e$;
+            EXECUTE $e$ ALTER TABLE metis_search_index ADD COLUMN IF NOT EXISTS embedding VECTOR(%d) $e$;
+            EXECUTE $e$
+              CREATE INDEX IF NOT EXISTS idx_metis_search_embedding
+                ON metis_search_index USING hnsw (embedding vector_cosine_ops)
+            $e$;
+            EXECUTE $e$
+              CREATE INDEX IF NOT EXISTS idx_metis_search_trgm
+                ON metis_search_index USING GIN (search_text gin_trgm_ops)
+            $e$;
+            EXECUTE $c$ COMMENT ON COLUMN metis_search_index.embedding IS
+              'Embedding vector written at index time. Width matches the embedding model (1024 for bge-m3)' $c$;
+            EXECUTE $c$ COMMENT ON INDEX idx_metis_search_embedding IS
+              'HNSW cosine index for nearest-neighbour vector search' $c$;
+            EXECUTE $c$ COMMENT ON INDEX idx_metis_search_trgm IS
+              'Trigram GIN index for the typo / compound-word fallback over search_text' $c$;
+          END
+          $metis_search_ensure$
+          """.formatted(embeddingDimension));
     } catch (RuntimeException e) {
       throw new IllegalStateException(
           "eveli.metis.search.enabled is true but PostgreSQL does not have pgvector "
