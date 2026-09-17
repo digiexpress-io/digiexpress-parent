@@ -2,8 +2,11 @@ package io.digiexpress.eveli.client.spi.task.visitors;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /*-
  * #%L
@@ -85,10 +88,12 @@ public class TransferTaskVisitor {
   
   private Uni<DocContainerEnvelope> createDocContainer(Task task, Map<String, String> props, Optional<String> processId) throws IOException {
     final var container = docContainerClient.createDoc().task(task);
-    
+    List<InputStream> streams = new ArrayList<>();
     for(final var file : task.getAttachments()) {
+      InputStream contentStream = getContent(file, processId);
+      streams.add(contentStream);
       container.addDocument(ImmutableDoc.builder()
-          .body(getContent(file, processId))
+          .body(contentStream)
           .bodyType(file.getType())
           .mimeType(file.getType())
           .name(file.getName())
@@ -104,7 +109,16 @@ public class TransferTaskVisitor {
         .createdBy(task.getClientIdentificator())
         .externalId(taskId)
         .props(allProps)
-        .build();
+        .build()
+        .onItem().invoke(()-> {
+          streams.forEach(str -> {
+            try {
+              str.close();
+            } catch (IOException e) {
+              // ignore
+            }
+          });
+        });
   }
 
 
