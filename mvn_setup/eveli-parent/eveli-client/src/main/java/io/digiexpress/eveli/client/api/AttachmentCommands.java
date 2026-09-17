@@ -1,6 +1,5 @@
 package io.digiexpress.eveli.client.api;
 
-import java.io.IOException;
 
 /*-
  * #%L
@@ -87,7 +86,7 @@ public interface AttachmentCommands {
      * @return
      */
     AttachmentContentUploadBuilder taskId(String taskId);
-    Attachment build(byte[] content) throws IOException;
+    Attachment build(byte[] content);
   }
   
   /**
@@ -113,7 +112,7 @@ public interface AttachmentCommands {
      * @return
      */
     AttachmentContentDownloadBuilder taskId(String taskId);
-    byte[] build() throws IOException;
+    byte[] build();
   }
   
   interface AttachmentRemoveBuilder {

@@ -42,20 +42,16 @@ import io.digiexpress.eveli.client.web.resources.worker.AttachmentFilesystemCont
 public class EveliAutoConfigAttachmentFs {
   
   @Bean
-  public AttachmentCommands attachmentCommandFs(EveliPropsAttachmentFs props) {
+  public AttachmentCommands attachmentCommandFs(EveliPropsAttachmentFs props) throws IOException {
     String directory = props.getRootDirectory();
-    try {
-      Path currentDirectory = Paths.get(directory);
-      if (!currentDirectory.isAbsolute()) {
-        String tmpDirsLocation = System.getProperty("java.io.tmpdir");
-        Path tempDirectory = Paths.get(tmpDirsLocation, directory);
-        if (!Files.exists(tempDirectory)) {
-          Files.createDirectory(tempDirectory);
-        }
-        directory = tempDirectory.toAbsolutePath().toString();
+    Path currentDirectory = Paths.get(directory);
+    if (!currentDirectory.isAbsolute()) {
+      String tmpDirsLocation = System.getProperty("java.io.tmpdir");
+      Path tempDirectory = Paths.get(tmpDirsLocation, directory);
+      if (!Files.exists(tempDirectory)) {
+        Files.createDirectory(tempDirectory);
       }
-    } catch (IOException e) {
-      e.printStackTrace();
+      directory = tempDirectory.toAbsolutePath().toString();
     }
     return new AttachmentCommandsFileSystem(directory, props.getAttachmentUrlBase(), props.getAttachmentServer());
   }

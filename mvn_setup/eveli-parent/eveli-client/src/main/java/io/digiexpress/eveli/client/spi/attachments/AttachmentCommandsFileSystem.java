@@ -2,6 +2,7 @@ package io.digiexpress.eveli.client.spi.attachments;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 
 /*-
@@ -70,8 +71,7 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
         try {
           return getAttachments(pathString, Optional.empty(), Optional.of(taskId));
         } catch (IOException e) {
-          log.error("Exception listing attachments", e);
-          return List.of();
+          throw new UncheckedIOException(e);
         }
       }
 
@@ -81,8 +81,7 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
         try {
           return getAttachments(pathString, Optional.of(processId), Optional.empty());
         } catch (IOException e) {
-          log.error("Exception listing attachments", e);
-          return List.of();
+          throw new UncheckedIOException(e);
         }
       }
     };
@@ -182,12 +181,12 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
     return result;
   }
 
-  private URL getAttachmentUrl(String filename) {
+  private URL getAttachmentUrl(String filename) throws URISyntaxException {
     try {
       return new URL(attachmentServer + filename);
     } catch (MalformedURLException e) {
       log.error("Failed to create URL from filename {}", filename, e);
-      return null;
+      throw new URISyntaxException(attachmentServer + filename, e.getMessage());
     }
   }
 
@@ -202,7 +201,7 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
         try {
           FileUtils.delete(file);
         } catch (IOException e) {
-          log.error("File {} deletion failed", blobName, e);
+          throw new UncheckedIOException(e);
         }
       }
       
@@ -213,7 +212,7 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
         try {
           FileUtils.delete(file);
         } catch (IOException e) {
-          log.error("File {} deletion failed", blobName, e);
+          throw new UncheckedIOException(e);
         }
       }
       
@@ -250,31 +249,36 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
       }
       
       @Override
-      public Attachment build(byte[] content) throws IOException {
-        AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
-        String fileWithPath = null;
-        if (processId != null) {
-          fileWithPath = String.format(PROCESS_PATH_PATTERN, rootDirectory, processId, filename);
+      public Attachment build(byte[] content) {
+        try {
+          AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
+          String fileWithPath = null;
+          if (processId != null) {
+            fileWithPath = String.format(PROCESS_PATH_PATTERN, rootDirectory, processId, filename);
+          }
+          else {
+            AttachmentAssert.notEmpty(taskId, () -> "taskId or processId must be defined!");
+            fileWithPath = String.format(TASK_PATH_PATTERN, rootDirectory, taskId, filename);
+          }
+          File file = FileUtils.getFile(fileWithPath);
+          FileUtils.writeByteArrayToFile(file, content);
+          io.digiexpress.eveli.client.api.ImmutableAttachment.Builder builder = ImmutableAttachment.builder()
+            .name(filename)
+            .created(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
+            .updated(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
+            .size((long)content.length)
+            .status(AttachmentStatus.OK);
+          if (processId != null) {            
+            builder.processId(processId);
+          }
+          else if (taskId != null) {
+            builder.taskId(taskId);
+          }
+          return builder.build();
         }
-        else {
-          AttachmentAssert.notEmpty(taskId, () -> "taskId or processId must be defined!");
-          fileWithPath = String.format(TASK_PATH_PATTERN, rootDirectory, taskId, filename);
+        catch (IOException e) {
+          throw new UncheckedIOException(e);
         }
-        File file = FileUtils.getFile(fileWithPath);
-        FileUtils.writeByteArrayToFile(file, content);
-        io.digiexpress.eveli.client.api.ImmutableAttachment.Builder builder = ImmutableAttachment.builder()
-          .name(filename)
-          .created(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
-          .updated(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
-          .size((long)content.length)
-          .status(AttachmentStatus.OK);
-        if (processId != null) {            
-          builder.processId(processId);
-        }
-        else if (taskId != null) {
-          builder.taskId(taskId);
-        }
-        return builder.build();
       }
     };
   }
@@ -305,7 +309,7 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
       }
       
       @Override
-      public byte[] build() throws IOException {
+      public byte[] build() {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         String fileWithPath = null;
         if (processId != null) {
@@ -316,7 +320,11 @@ public class AttachmentCommandsFileSystem implements AttachmentCommands {
           fileWithPath = String.format(TASK_PATH_PATTERN, rootDirectory, taskId, filename);
         }
         File file = FileUtils.getFile(fileWithPath);
-        return FileUtils.readFileToByteArray(file);
+        try {
+          return FileUtils.readFileToByteArray(file);
+        } catch (IOException e) {
+          throw new UncheckedIOException(e);
+        }
       }
     };
   }

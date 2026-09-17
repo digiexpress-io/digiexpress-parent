@@ -50,7 +50,6 @@ import io.resys.limaone.program.FlowProgram.FlowResult;
 import io.resys.limaone.spi.program.input.DefaultProgramInput;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.unchecked.Unchecked;
 import lombok.RequiredArgsConstructor;
 
 
@@ -80,13 +79,13 @@ public class TransferTaskVisitor {
         Uni.createFrom().item(task),
         getProcessId()).asTuple()
     )
-    .onItem().transformToUni(Unchecked.function(tuple -> {
+    .onItem().transformToUni(tuple -> {
       return createDocContainer(tuple.getItem2(), tuple.getItem1(), tuple.getItem3())
           .onItem().transformToUni(created -> updateTask(created, tuple.getItem1(), tuple.getItem2()));
-    }));
+    });
   }
   
-  private Uni<DocContainerEnvelope> createDocContainer(Task task, Map<String, String> props, Optional<String> processId) throws IOException {
+  private Uni<DocContainerEnvelope> createDocContainer(Task task, Map<String, String> props, Optional<String> processId) {
     final var container = docContainerClient.createDoc().task(task);
     List<InputStream> streams = new ArrayList<>();
     for(final var file : task.getAttachments()) {
@@ -122,7 +121,7 @@ public class TransferTaskVisitor {
   }
 
 
-  private ByteArrayInputStream getContent(final TaskAttachment file, Optional<String> processId) throws IOException {
+  private ByteArrayInputStream getContent(final TaskAttachment file, Optional<String> processId) {
     return new ByteArrayInputStream(
         attachmentCommands.contentDownload()
           .filename(file.getName())

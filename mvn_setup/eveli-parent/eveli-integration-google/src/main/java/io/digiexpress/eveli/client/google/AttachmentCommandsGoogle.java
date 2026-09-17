@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.google;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 
 /*-
  * #%L
@@ -277,7 +278,7 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
       }
       
       @Override
-      public Attachment build(byte[] content) throws IOException {
+      public Attachment build(byte[] content) {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         String gsFile = null;
         if (processId != null) {
@@ -305,6 +306,9 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
             builder.taskId(taskId);
           }
           return builder.build();
+        }
+        catch (IOException e) {
+          throw new UncheckedIOException(e);
         }
       }
     };
