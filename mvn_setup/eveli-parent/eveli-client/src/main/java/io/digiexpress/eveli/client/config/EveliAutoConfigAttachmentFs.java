@@ -1,5 +1,10 @@
 package io.digiexpress.eveli.client.config;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 
 /*-
@@ -38,7 +43,21 @@ public class EveliAutoConfigAttachmentFs {
   
   @Bean
   public AttachmentCommands attachmentCommandFs(EveliPropsAttachmentFs props) {
-    return new AttachmentCommandsFileSystem(props.getRootDirectory(), props.getAttachmentUrlBase(), props.getAttachmentServer());
+    String directory = props.getRootDirectory();
+    try {
+      Path currentDirectory = Paths.get(directory);
+      if (!currentDirectory.isAbsolute()) {
+        String tmpDirsLocation = System.getProperty("java.io.tmpdir");
+        Path tempDirectory = Paths.get(tmpDirsLocation, directory);
+        if (!Files.exists(tempDirectory)) {
+          Files.createDirectory(tempDirectory);
+        }
+        directory = tempDirectory.toAbsolutePath().toString();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return new AttachmentCommandsFileSystem(directory, props.getAttachmentUrlBase(), props.getAttachmentServer());
   }
   
   @Bean
