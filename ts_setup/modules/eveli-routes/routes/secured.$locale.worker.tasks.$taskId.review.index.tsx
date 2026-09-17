@@ -18,9 +18,11 @@ function Component() {
   const options = React.useState<TaskApi.TaskPdfRequest['fields']>([]);
 
   async function handlePdfClick() {
-    const pdfBlob = await backend.persistence.getOneTaskPdf({ taskId, fields: options[0] });
-    const pdfUrl = URL.createObjectURL(pdfBlob);
-    const _newWindow = window.open(pdfUrl, '_blank');
+    try {
+      openPdf(await backend.persistence.getOneTaskPdf({ taskId, fields: options[0] }));
+    } catch (error) {
+      console.error('Failed to create task pdf:', error);
+    }
   }
 
   return (
@@ -38,6 +40,13 @@ function Component() {
       </Box>
     </Container>
   )
+}
+
+
+function openPdf(pdfBlob: Blob) {
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+  window.open(pdfUrl, '_blank');
+  window.setTimeout(() => URL.revokeObjectURL(pdfUrl), 60000);
 }
 
 

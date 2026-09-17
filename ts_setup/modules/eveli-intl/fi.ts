@@ -59,6 +59,8 @@ export const fi = {
   'task.pdf.options.select': 'PDF Tuloste listätiedot',
   'task.pdf.print': 'Tulosta PDF',
   'task.pdf.options.select.desc': 'Valitse pdf-dokumenttiin sisällytettävät lisätiedot',
+  'task.pdf.notCompleted': 'PDF:ää ei voi luoda koska lomaketta ei ole lähetetty',
+  'task.pdf.failed': 'PDF:n luonti epäonnistui: {cause}',
   'task.form.review': 'Avaa lomake',
   'task.created': 'Luotu',
   'task.updated': 'Päivitetty',

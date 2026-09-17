@@ -151,7 +151,7 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
   const { downloadAttachmentLink } = useFetch('worker/rest/api/tasks/$taskId/files/$filename.GET', {});
   const { addAttachment } = useFetch('worker/rest/api/tasks/$taskId/files.POST', {});
   const { deleteAttachment } = useFetch('worker/rest/api/tasks/$taskId/files/$filename.DELETE', {});
-  const { pdfTaskCallback } = useFetch('worker/rest/api/pdf.POST', {});
+  const { pdfTaskCallback } = useFetch('worker/rest/api/tasks/$taskId/pdf.POST', {});
   const { getTaskFormAssignment } = useFetch('worker/rest/api/tasks/$taskId/form-assignments.GET', []);
   const { createManyTaskCustomerAssignments } = useFetch('worker/rest/api/tasks/$taskId/form-assignments.POST', []);
 

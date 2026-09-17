@@ -21,38 +21,59 @@ package io.digiexpress.eveli.client.api;
  */
 
 import java.util.Collection;
+import java.util.List;
+
+import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
+import jakarta.annotation.Nullable;
 
 public interface PdfClient {
 
   ProcessQuestionnairePdfBuilder pdfBuilder();
-  public enum PdfRequestFields {
+
+  enum PdfRequestFields {
     CUSTOMER_NAME,
     CUSTOMER_SSN,
     EXTERNAL_COMMENTS
   }
-  
+
   interface ProcessQuestionnairePdfBuilder {
-    /**
-     * Process ID is required if process is not given
-     * @param processId
-     * @return
-     */
     ProcessQuestionnairePdfBuilder processId(String processId);
-    /**
-     * Task ID is required if task is not given
-     * @param taskId
-     * @return
-     */
     ProcessQuestionnairePdfBuilder taskId(String taskId);
     ProcessQuestionnairePdfBuilder process(ProcessInstance process);
     ProcessQuestionnairePdfBuilder task(Task task);
+    ProcessQuestionnairePdfBuilder questionnaireId(String questionnaireId);
     ProcessQuestionnairePdfBuilder requestFields(PdfRequestFields ...field);
     ProcessQuestionnairePdfBuilder requestFields(Collection<PdfRequestFields> fields);
     ProcessQuestionnairePdfBuilder docType(String dt);
     ProcessQuestionnairePdfBuilder docCategory(String dc);
     byte[] build();
+  }
+
+  @JsonSerialize(as = ImmutableQuestionnairePdfRequest.class)
+  @JsonDeserialize(as = ImmutableQuestionnairePdfRequest.class)
+  @Value.Immutable
+  interface QuestionnairePdfRequest {
+    @Nullable String getQuestionnaireId();
+    List<PdfRequestFields> getFields();
+  }
+
+  public static class PdfNotCompletedException extends RuntimeException {
+    private static final long serialVersionUID = -7523524077568331982L;
+    public PdfNotCompletedException(String message) {
+      super(message);
+    }
+  }
+
+  public static class PdfNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = 8635913148318841936L;
+    public PdfNotFoundException(String message) {
+      super(message);
+    }
   }
 }
