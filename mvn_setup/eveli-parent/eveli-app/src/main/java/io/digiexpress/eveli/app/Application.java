@@ -34,6 +34,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import io.digiexpress.eveli.client.config.DialobAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
+import io.digiexpress.eveli.client.config.EveliAutoConfigAttachmentFs;
 import io.digiexpress.eveli.client.config.EveliAutoConfigGamut;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.config.EveliAutoConfigMetis;
@@ -60,6 +61,7 @@ import lombok.extern.slf4j.Slf4j;
     EveliAutoConfigGamut.class,
     EveliAutoConfigWorker.class,
     EveliAutoConfigPermissions.class,
+    EveliAutoConfigAttachmentFs.class,
     EveliAutoConfigMetisFlags.class,
     EveliAutoConfigMetis.class,
     EveliAutoConfigMetisSearch.class

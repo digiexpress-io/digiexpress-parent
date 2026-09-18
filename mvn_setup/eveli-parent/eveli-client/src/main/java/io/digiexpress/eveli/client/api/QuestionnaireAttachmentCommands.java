@@ -22,7 +22,12 @@ package io.digiexpress.eveli.client.api;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.api.PdfClient.PdfRequestFields;
+import io.smallrye.mutiny.Uni;
 
+/**
+ * Command class to create PDF from questionnaire and upload it as task attachment.
+ * 
+ */
 public interface QuestionnaireAttachmentCommands {
   // only used in WRENCH FLOW
   QuestionnaireAttachmentBuilder attachmentBuilder();
@@ -45,6 +50,6 @@ public interface QuestionnaireAttachmentCommands {
      * @return
      */
     QuestionnaireAttachmentBuilder attachmentPattern(String pattern);
-    Attachment build();
+    Uni<Attachment> build();
   }
 }

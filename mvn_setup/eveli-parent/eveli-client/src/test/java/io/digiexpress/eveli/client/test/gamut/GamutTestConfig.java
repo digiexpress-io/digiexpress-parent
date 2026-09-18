@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.test.gamut;
  */
 
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.spi.attachments.AttachmentCommandsDummy;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
@@ -96,7 +97,7 @@ public class GamutTestConfig {
       .tenantName("gamut-grim")
       .client(grimClient)
       .build());
-    this.taskClient = new TaskClientImpl(null, null, taskStore, null);
+    this.taskClient = new TaskClientImpl(new AttachmentCommandsDummy(), null, taskStore, null);
   }
 
   public AuthoringImpl.AuthoringConfig createAuthoringConfig(FormDb formDb) {

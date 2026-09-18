@@ -70,11 +70,12 @@ export function createDialobFetch(url: (string | undefined) = '/portal/secured/a
 
   const fetchAttachmentPost: DialobApi.FetchAttachmentPOST = async (procId, files) =>{
     const filesByName: Record<string, File> = {};
-    const body: { name: string, fileType: string }[] = [];
+    const body: { name: string, fileType: string, size: number }[] = [];
     for (const file of Array.from(files)) {
       body.push({
         name: file.name,
         fileType: file.type || 'application/octet-stream',
+        size: file.size
       });
       filesByName[file.name] = file;
     }

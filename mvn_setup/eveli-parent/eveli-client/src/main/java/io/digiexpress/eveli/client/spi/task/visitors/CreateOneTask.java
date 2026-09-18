@@ -5,10 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.google.common.collect.ImmutableList;
+import org.apache.tika.Tika;
 
-import io.digiexpress.eveli.client.api.CustomerAccountClient.CrmAccountType;
-import io.digiexpress.eveli.client.api.CustomerAccountClient.CustomerAccount;
+import com.google.common.collect.ImmutableList;
 
 /*-
  * #%L
@@ -30,9 +29,14 @@ import io.digiexpress.eveli.client.api.CustomerAccountClient.CustomerAccount;
  * #L%
  */
 
+import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
+import io.digiexpress.eveli.client.api.CustomerAccountClient.CrmAccountType;
+import io.digiexpress.eveli.client.api.CustomerAccountClient.CustomerAccount;
+import io.digiexpress.eveli.client.api.ImmutableTaskAttachment;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.CreateTaskCommand;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
+import io.digiexpress.eveli.client.api.TaskClient.TaskAttachment.AttachmentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.spi.task.TaskException;
@@ -53,6 +57,8 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
   private final String userId;
   private final CreateTaskCommand command;
   @Nullable private final CustomerAccount account;
+  @Nullable private final List<Attachment> attachments;
+  private final Tika tika = new Tika();
   
   private void createTask(CreateTaskCommand commmand, NewMission mission) {
     final var status = commmand.getStatus() == null ? TaskStatus.NEW: commmand.getStatus();
@@ -124,6 +130,25 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
       );
     }
     
+    if (command.getAttachments() != null) {
+      for (var attachment : command.getAttachments()) {
+        mission.addLink(newLink -> newLink
+          .linkValue(attachment.getName())
+          .linkBody(JsonObject.mapFrom(attachment))
+          .linkType(TaskMapper.LINK_TYPE_ATTACHMENT)
+          .build());
+      }
+    }
+
+    if (attachments != null) {
+      for (var attachment : attachments) {
+        mission.addLink(newLink -> newLink
+            .linkValue(attachment.getName())
+            .linkBody(JsonObject.mapFrom(mapToTaskAttachment(attachment)))
+            .linkType(TaskMapper.LINK_TYPE_ATTACHMENT)
+            .build());
+      }
+    }
     
     // set the keywords
     for(final var keyword : commmand.getKeyWords()) {
@@ -154,11 +179,22 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
           .build());
     }
   
-    
     mission.build();
   }
   
   
+  private TaskClient.TaskAttachment mapToTaskAttachment(Attachment attachment) {
+    return ImmutableTaskAttachment.builder()
+        .created(attachment.getCreated().toOffsetDateTime())
+        .creator(userId)
+        .name(attachment.getName())
+        .size(attachment.getSize())
+        .source(AttachmentSource.PORTAL_FORM)
+        .type(tika.detect(attachment.getName()))
+        .build();
+  }
+
+
   private List<String> getCrmFeatures(CustomerAccount account) {
     if(account == null) {
       return Collections.emptyList();

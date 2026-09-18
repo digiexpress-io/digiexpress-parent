@@ -65,7 +65,6 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
   private final io.resys.limaone.program.Runtime runtime;
   private final TaskClient taskClient;
-  private final AttachmentCommands attachmentsCommands;
 
   private Participant customer;
   private String cockpitId;
@@ -149,16 +148,8 @@ public class UserActionsQueryImpl implements UserActionQuery {
             .findFirst();
       });
   }
-
-  private AttachmentsContext visitAttachments(ProcessInstance process) {
-    final List<AttachmentCommands.Attachment> processAttachments = attachmentsCommands.query().processId(process.getId().toString());
-    final List<AttachmentCommands.Attachment> taskAttachments = process.getTaskId() == null ? 
-      Collections.emptyList() : 
-      attachmentsCommands.query().taskId(process.getTaskId().toString());
-    return new AttachmentsContext(processAttachments, taskAttachments);
-  }
   
-  private ImmutableUserActionAttachment visitAttachment(ProcessInstance process, AttachmentCommands.Attachment source) {
+  private ImmutableUserActionAttachment visitAttachment(ProcessInstance process, TaskClient.TaskAttachment source) {
     final var id = UserAttachmentBuilderImpl.attachmentId(source.getName(), process);
     
     return ImmutableUserActionAttachment.builder()
@@ -168,7 +159,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .name(source.getName())
         .created(source.getCreated().toString())
         .size(source.getSize())
-        .status(source.getStatus().name())
+        .status("OK")
         .build();
   }
   
@@ -273,8 +264,6 @@ public class UserActionsQueryImpl implements UserActionQuery {
           return action;
         }).toList();
     
-    final var att = visitAttachments(process);
-    
     return ImmutableUserAction.builder()
         .id(process.getId().toString())
         .taskId(Optional.ofNullable(process.getTaskId()).map(e -> e.toString()).orElse(null))
@@ -293,8 +282,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
         .viewed(messages.isViewed())
         .updated(messages.getUpdated())
-        .addAllAttachments(att.getProcessAttachments().stream().map(attachment -> visitAttachment(process, attachment)).toList())
-        .addAllAttachments(att.getTaskAttachments().stream().map(attachment -> visitAttachment(process, attachment)).toList())
+        .addAllAttachments(task.map(t -> t.getAttachments().stream().map(attachment -> visitAttachment(process, attachment)).toList()).orElse(List.of()))
         .subActions(subActions)
         .addAllMessages(messages.getMessages())
         .cockpitId(process.getCockpitId())

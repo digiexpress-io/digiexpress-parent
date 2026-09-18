@@ -1,26 +1,7 @@
 package io.digiexpress.eveli.client.spi.process;
 
-/*-
- * #%L
- * eveli-client
- * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.time.Duration;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,22 +10,25 @@ import org.apache.commons.lang3.StringUtils;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
+import io.digiexpress.eveli.client.api.ImmutableTaskAttachment;
 import io.digiexpress.eveli.client.api.PdfClient;
 import io.digiexpress.eveli.client.api.PdfClient.PdfRequestFields;
 import io.digiexpress.eveli.client.api.QuestionnaireAttachmentCommands;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
+import io.digiexpress.eveli.client.api.TaskClient.TaskAttachment;
+import io.digiexpress.eveli.client.api.TaskClient.TaskAttachment.AttachmentSource;
+import io.smallrye.mutiny.Uni;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ProcessQuestionnaireAttachmentCommand implements QuestionnaireAttachmentCommands{
-  private static final Duration timeout = Duration.ofMillis(10000);
+public class ProcessQuestionnaireAttachmentCommand implements QuestionnaireAttachmentCommands {
   
   private final AttachmentCommands attachments;
   private final PdfClient pdf;
   private final TaskClient tasks;
-
+  
   @Override
   public QuestionnaireAttachmentBuilder attachmentBuilder() {
     return new QuestionnaireAttachmentBuilder() {
@@ -76,27 +60,35 @@ public class ProcessQuestionnaireAttachmentCommand implements QuestionnaireAttac
       }
       
       @Override
-      public Attachment build() {
-        ProcessInstance process;
-        
+      public Uni<Attachment> build() {
+        Uni<Optional<ProcessInstance>> instance;
         if (questionnaireId != null) {
-          process = tasks.queryTaskProcesess().findOneByQuestionnaireId(questionnaireId).await().atMost(timeout).get();
-          processId = process.getId().toString();
+          instance = tasks.queryTaskProcesess().findOneByQuestionnaireId(questionnaireId);
         } else if (processId != null) {
-          process = tasks.queryTaskProcesess().getOneById(processId).await().atMost(timeout);
+          instance = tasks.queryTaskProcesess().findOneById(processId);
         } else {
           if (taskId == null) {
             throw new IllegalStateException("Process or task Id is missing");
           }
-          Optional<ProcessInstance> taskProcess = tasks.queryTaskProcesess().findOneByTaskId(taskId).await().atMost(timeout);
-          process = taskProcess.get();
-          processId = process.getId().toString();
+          instance = tasks.queryTaskProcesess().findOneByTaskId(taskId);
         }
         
-        
+        return instance.onItem().transformToUni(proc -> {
+          ProcessInstance process = proc.get();
+          String searchTaskId = taskId != null ? taskId : process.getTaskId();
+          return tasks.queryTasks().getOneById(searchTaskId)
+          .onItem().transform(task-> createAndUploadAttachment(task, process))
+          .onItem().transformToUni(attachment-> {
+            return tasks.taskBuilder().addTaskAttachment(searchTaskId, createTaskAttachment(attachment.getName(), attachment.getSize()))
+            .onItem().transform(t -> attachment);
+          });
+        });
+      }
+
+      private Attachment createAndUploadAttachment(Task task, ProcessInstance process) {
         String formName = process.getFormName();
-        Task task = tasks.queryTasks().getOneById(taskId != null ? taskId : process.getTaskId()).await().atMost(timeout);
-        String taskRef = task.getTaskRef();
+        String id = process.getId().toString();
+
         byte[] content = pdf.pdfBuilder().process(process).task(task)
             .requestFields(requestedFields)
             .docType(docType)
@@ -104,8 +96,19 @@ public class ProcessQuestionnaireAttachmentCommand implements QuestionnaireAttac
             .build();
 
         String attachmentName = getAttachmentName(task, formName);
-            "%s-%s.pdf".formatted(StringUtils.firstNonBlank(formName, "NA"), StringUtils.firstNonBlank(taskRef, "NA"));
-        return attachments.contentUpload().processId(processId).filename(attachmentName).build(content);
+        Attachment attachment = attachments.contentUpload().processId(id).filename(attachmentName).build(content);
+        return attachment;
+      }
+      
+      private TaskAttachment createTaskAttachment(String name, Long length) {
+        return ImmutableTaskAttachment.builder()
+            .created(OffsetDateTime.now(ZoneId.of("UTC")))
+            .creator(AttachmentSource.FLOW.toString())
+            .name(name)
+            .size(length)
+            .source(AttachmentSource.FLOW)
+            .type("application/pdf")
+            .build();
       }
 
       private String getAttachmentName(Task task, String formName) {

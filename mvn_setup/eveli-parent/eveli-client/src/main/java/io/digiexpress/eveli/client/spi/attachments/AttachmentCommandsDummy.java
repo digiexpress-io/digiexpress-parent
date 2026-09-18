@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi;
+package io.digiexpress.eveli.client.spi.attachments;
 
 /*-
  * #%L
@@ -151,6 +151,33 @@ public class AttachmentCommandsDummy implements AttachmentCommands {
       @Override
       public Attachment build(byte[] content) {
         return dummyAttachment;
+      }
+    };
+  }
+
+
+  @Override
+  public AttachmentContentDownloadBuilder contentDownload() {
+    return new AttachmentContentDownloadBuilder() {
+      
+      @Override
+      public AttachmentContentDownloadBuilder taskId(String taskId) {
+        return this;
+      }
+      
+      @Override
+      public AttachmentContentDownloadBuilder processId(String processId) {
+        return this;
+      }
+      
+      @Override
+      public AttachmentContentDownloadBuilder filename(String filename) {
+        return this;
+      }
+      
+      @Override
+      public byte[] build() {
+        return new byte[0];
       }
     };
   }

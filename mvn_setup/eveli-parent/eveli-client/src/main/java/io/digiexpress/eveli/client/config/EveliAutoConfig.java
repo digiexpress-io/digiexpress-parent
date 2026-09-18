@@ -63,7 +63,6 @@ import io.digiexpress.eveli.client.spi.pdf.PdfClientImpl;
 import io.digiexpress.eveli.client.spi.process.ProcessQuestionnaireAttachmentCommand;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
-import io.digiexpress.eveli.client.spi.task.TaskFileClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
 import io.digiexpress.eveli.client.spi.taskaudit.TaskAuditClientImpl;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
@@ -120,7 +119,8 @@ import lombok.extern.slf4j.Slf4j;
     EveliPropsTagomi.class,
     EveliPropsContract.class,
     EveliPropsCockpit.class,
-    DialobConfigProps.class
+    DialobConfigProps.class,
+    EveliPropsAttachmentFs.class
 })
 @Slf4j
 public class EveliAutoConfig {
@@ -259,8 +259,7 @@ public class EveliAutoConfig {
     final var store = new TaskStoreImpl(config);
     store.query().createIfNot().await().atMost(Duration.ofMinutes(1));
     
-    final var fileClient = new TaskFileClientImpl(attachmentCommands, restTemplate);    
-    return new TaskClientImpl(fileClient, docContainerClient, store, envirClient);
+    return new TaskClientImpl(attachmentCommands, docContainerClient, store, envirClient);
   }
 
   @Bean

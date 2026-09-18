@@ -1,11 +1,13 @@
-package io.digiexpress.eveli.client.google;
+package io.digiexpress.eveli.client.spi.attachments;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.MalformedURLException;
 
 /*-
  * #%L
- * eveli-integration-google
+ * eveli-client
  * %%
  * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
  * %%
@@ -25,61 +27,62 @@ import java.io.UncheckedIOException;
 
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.util.UriUtils;
-
-import com.google.cloud.WriteChannel;
-import com.google.cloud.spring.storage.GoogleStorageResource;
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.HttpMethod;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.Storage.BlobListOption;
-import com.google.cloud.storage.Storage.SignUrlOption;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.ImmutableAttachment;
 import io.digiexpress.eveli.client.api.ImmutableAttachmentUpload;
 import io.digiexpress.eveli.client.spi.asserts.AttachmentAssert;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Filesystem based attachment commands.
+ * 
+ * Mainly for local testing.
+ * 
+ */
 @RequiredArgsConstructor
 @Slf4j
-public class AttachmentCommandsGoogle implements AttachmentCommands {
-
-  private final String downloadBucket;
-  private final Storage storage;
-  private final ResourceLoader resourceLoader;
+public class AttachmentCommandsFileSystem implements AttachmentCommands {
+  private static final String PROCESS_PATH_PATTERN = "%s/processes/%s/files/%s";
+  private static final String TASK_PATH_PATTERN = "%s/tasks/%s/files/%s";
+  private final String rootDirectory;
+  private final String attachmentUrlPath;
+  private final String attachmentServer;
+  
 
   @Override
   public AttachmentQuery query() {
     return new AttachmentQuery() {
       @Override
       public List<Attachment> taskId(String taskId) {
-        final var pathString = String.format("tasks/%s/files/", taskId);
-        return getAttachments(pathString, Optional.empty(), Optional.of(taskId));
+        final var pathString = String.format(TASK_PATH_PATTERN, rootDirectory, taskId, "");
+        try {
+          return getAttachments(pathString, Optional.empty(), Optional.of(taskId));
+        } catch (IOException e) {
+          throw new UncheckedIOException(e);
+        }
       }
 
       @Override
       public List<Attachment> processId(String processId) {
-        final var pathString = String.format("processes/%s/files/", processId);
-        return getAttachments(pathString, Optional.of(processId), Optional.empty());
+        final var pathString = String.format(PROCESS_PATH_PATTERN, rootDirectory, processId, "");
+        try {
+          return getAttachments(pathString, Optional.of(processId), Optional.empty());
+        } catch (IOException e) {
+          throw new UncheckedIOException(e);
+        }
       }
     };
   }
@@ -94,8 +97,8 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         AttachmentAssert.notEmpty(taskId, () -> "taskId must be defined!");
 
-        final var gsFile = String.format("gs://%s/tasks/%s/files/%s", downloadBucket, taskId, filename);
-        return Optional.ofNullable(getAttachmentUrl(gsFile));
+        final var file = String.format(TASK_PATH_PATTERN, attachmentUrlPath, taskId, filename);
+        return Optional.ofNullable(getAttachmentUrl(file));
       }
 
       @Override
@@ -103,8 +106,8 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         AttachmentAssert.notEmpty(processId, () -> "processId must be defined!");
 
-        final var gsFile = String.format("gs://%s/processes/%s/files/%s", downloadBucket, processId, filename);
-        return Optional.ofNullable(getAttachmentUrl(gsFile));
+        final var file = String.format(PROCESS_PATH_PATTERN, attachmentUrlPath, processId, filename);
+        return Optional.ofNullable(getAttachmentUrl(file));
       }
 
       @Override
@@ -131,11 +134,9 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         AttachmentAssert.notEmpty(taskId, () -> "taskId must be defined!");
 
-        final var gsFile = String.format("gs://%s/tasks/%s/files/%s", downloadBucket, taskId, filename);
-        final var result = getAttachmentUploadUrl(gsFile);
+        final var file = String.format(TASK_PATH_PATTERN, attachmentUrlPath, taskId, filename);
 
-        return result == null ? Optional.empty()
-            : Optional.of(ImmutableAttachmentUpload.builder().putRequestUrl(result.toString()).build());
+        return Optional.of(ImmutableAttachmentUpload.builder().putRequestUrl(file).build());
       }
 
       @Override
@@ -143,11 +144,9 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
         AttachmentAssert.notEmpty(processId, () -> "processId must be defined!");
 
-        final var gsFile = String.format("gs://%s/processes/%s/files/%s", downloadBucket, processId, filename);
-        final var result = getAttachmentUploadUrl(gsFile);
+        final var file = String.format(PROCESS_PATH_PATTERN, attachmentUrlPath, processId, filename);
 
-        return result == null ? Optional.empty()
-            : Optional.of(ImmutableAttachmentUpload.builder().putRequestUrl(result.toString()).build());
+        return Optional.of(ImmutableAttachmentUpload.builder().putRequestUrl(file).build());
       }
 
       @Override
@@ -164,65 +163,30 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
     };
   }
 
-  private List<Attachment> getAttachments(String pathString, Optional<String> processId, Optional<String> taskId) {
+  private List<Attachment> getAttachments(String pathString, Optional<String> processId, Optional<String> taskId) throws IOException {
     final var result = new ArrayList<Attachment>();
-    final var blobs = storage.list(downloadBucket, BlobListOption.currentDirectory(),
-        BlobListOption.prefix(pathString));
-    for (final var blob : blobs.iterateAll()) {
-      final var filenameFromPath = getFilenameFromPath(blob.getName());
+    
+    Collection<File> files = FileUtils.listFiles(new File(pathString), null, true);
+    for (final var file : files) {
+      final var filenameFromPath = file.getName();
       if (!StringUtils.isEmpty(filenameFromPath)) {
         result.add(ImmutableAttachment.builder().name(filenameFromPath)
             .processId(processId)
             .taskId(taskId)
-            .created(ZonedDateTime.ofInstant(Instant.ofEpochMilli(blob.getCreateTime()), ZoneOffset.UTC))
-            .updated(ZonedDateTime.ofInstant(Instant.ofEpochMilli(blob.getUpdateTime()), ZoneOffset.UTC))
-            .size(blob.getSize()).status(AttachmentStatus.OK).build());
+            .created(ZonedDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneOffset.UTC))
+            .updated(ZonedDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneOffset.UTC))
+            .size(file.length()).status(AttachmentStatus.OK).build());
       }
     }
     return result;
   }
 
-  private String getFilenameFromPath(String name) {
-    return FilenameUtils.getName(name);
-  }
-
-  private URL getAttachmentUrl(String gsFile) {
-    URL result = null;
-    Resource file = resourceLoader.getResource(gsFile);
-    if (file.exists() && file instanceof GoogleStorageResource) {
-      GoogleStorageResource storage = (GoogleStorageResource) file;
-      result = storage.createSignedUrl(TimeUnit.MINUTES, 5, SignUrlOption.withV4Signature());
-    }
-    return result;
-  }
-
-  private URL getAttachmentUploadUrl(String gsFile) {
-    URL result = null;
-    Resource file = resourceLoader.getResource(gsFile);
-    if (file instanceof GoogleStorageResource) {
-      GoogleStorageResource storage = (GoogleStorageResource) file;
-      result = storage.createSignedUrl(TimeUnit.MINUTES, 5, SignUrlOption.withV4Signature(),
-          SignUrlOption.httpMethod(HttpMethod.PUT));
-    }
-    return result;
-  }
-
-  public static Builder builder() {
-    return new Builder();
-  }
-
-  @Setter
-  @Accessors(fluent = true)
-  public static class Builder {
-    private String downloadBucket;
-    private Storage storage;
-    private ResourceLoader resourceLoader;
-
-    public AttachmentCommandsGoogle build() {
-      AttachmentAssert.notEmpty(downloadBucket, () -> "downloadBucket must be defined!");
-      AttachmentAssert.notNull(storage, () -> "storage must be defined!");
-      AttachmentAssert.notNull(resourceLoader, () -> "resourceLoader must be defined!");
-      return new AttachmentCommandsGoogle(downloadBucket, storage, resourceLoader);
+  private URL getAttachmentUrl(String filename) throws URISyntaxException {
+    try {
+      return new URL(attachmentServer + filename);
+    } catch (MalformedURLException e) {
+      log.error("Failed to create URL from filename {}", filename, e);
+      throw new URISyntaxException(attachmentServer + filename, e.getMessage());
     }
   }
 
@@ -232,17 +196,24 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
       private String fileName;
       @Override
       public void removeByTaskId(String taskId) {
-        final var blobName = String.format("tasks/%s/files/%s", taskId, fileName);
-        boolean deleted = storage.delete(downloadBucket, blobName);
-        AttachmentAssert.isTrue(deleted, ()->String.format("File %s for task %s not found", fileName, taskId));
+        final var blobName = String.format(TASK_PATH_PATTERN, rootDirectory, taskId, fileName);
+        File file = FileUtils.getFile(blobName);
+        try {
+          FileUtils.delete(file);
+        } catch (IOException e) {
+          throw new UncheckedIOException(e);
+        }
       }
       
       @Override
       public void removeByProcessId(String processId) {
-        final var blobName = String.format("processes/%s/files/%s", processId, fileName);
-        boolean deleted = storage.delete(downloadBucket, blobName);
-        AttachmentAssert.isTrue(deleted, ()->String.format("File %s for process %s not found", fileName, processId));
-        
+        final var blobName = String.format(PROCESS_PATH_PATTERN, rootDirectory, processId, fileName);
+        File file = FileUtils.getFile(blobName);
+        try {
+          FileUtils.delete(file);
+        } catch (IOException e) {
+          throw new UncheckedIOException(e);
+        }
       }
       
       @Override
@@ -279,25 +250,23 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
       
       @Override
       public Attachment build(byte[] content) {
-        AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
-        String gsFile = null;
-        if (processId != null) {
-          gsFile = String.format("processes/%s/files/%s", processId, filename);
-        }
-        else {
-          AttachmentAssert.notEmpty(taskId, () -> "taskId or processId must be defined!");
-          gsFile = String.format("tasks/%s/files/%s", taskId, filename);
-        }
-        BlobId blobId = BlobId.of(downloadBucket, gsFile);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
-        try (WriteChannel writer = storage.writer(blobInfo)) {
-          int writtenBytes = writer.write(ByteBuffer.wrap(content));
-          log.debug("wrote {} bytes in content upload", writtenBytes);
+        try {
+          AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
+          String fileWithPath = null;
+          if (processId != null) {
+            fileWithPath = String.format(PROCESS_PATH_PATTERN, rootDirectory, processId, filename);
+          }
+          else {
+            AttachmentAssert.notEmpty(taskId, () -> "taskId or processId must be defined!");
+            fileWithPath = String.format(TASK_PATH_PATTERN, rootDirectory, taskId, filename);
+          }
+          File file = FileUtils.getFile(fileWithPath);
+          FileUtils.writeByteArrayToFile(file, content);
           io.digiexpress.eveli.client.api.ImmutableAttachment.Builder builder = ImmutableAttachment.builder()
             .name(filename)
             .created(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
             .updated(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
-            .size((long)writtenBytes)
+            .size((long)content.length)
             .status(AttachmentStatus.OK);
           if (processId != null) {            
             builder.processId(processId);
@@ -316,6 +285,7 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
 
   @Override
   public AttachmentContentDownloadBuilder contentDownload() {
+
     return new AttachmentContentDownloadBuilder() {
       private String filename = null;
       private String processId = null;
@@ -341,19 +311,21 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
       @Override
       public byte[] build() {
         AttachmentAssert.notEmpty(filename, () -> "filename must be defined!");
-        String gsFile = null;
+        String fileWithPath = null;
         if (processId != null) {
-          gsFile = String.format("processes/%s/files/%s", processId, filename);
+          fileWithPath = String.format(PROCESS_PATH_PATTERN, rootDirectory, processId, filename);
         }
         else {
           AttachmentAssert.notEmpty(taskId, () -> "taskId or processId must be defined!");
-          gsFile = String.format("tasks/%s/files/%s", taskId, filename);
+          fileWithPath = String.format(TASK_PATH_PATTERN, rootDirectory, taskId, filename);
         }
-        BlobId blobId = BlobId.of(downloadBucket, gsFile);
-        Blob blob = storage.get(blobId);
-        return blob.getContent();
+        File file = FileUtils.getFile(fileWithPath);
+        try {
+          return FileUtils.readFileToByteArray(file);
+        } catch (IOException e) {
+          throw new UncheckedIOException(e);
+        }
       }
     };
-
   }
 }

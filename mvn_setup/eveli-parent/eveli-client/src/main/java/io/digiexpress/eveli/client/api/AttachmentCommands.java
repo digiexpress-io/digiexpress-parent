@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.client.api;
 
+
 /*-
  * #%L
  * eveli-client
@@ -36,7 +37,8 @@ public interface AttachmentCommands {
   AttachmentUploadBuilder upload();
   AttachmentUrlBuilder url();
   AttachmentRemoveBuilder remove();
-  AttachmentContentUploadBuilder contentUpload(); 
+  AttachmentContentUploadBuilder contentUpload();
+  AttachmentContentDownloadBuilder contentDownload();
   
   interface AttachmentQuery {
     List<Attachment> processId(String processId);
@@ -85,6 +87,32 @@ public interface AttachmentCommands {
      */
     AttachmentContentUploadBuilder taskId(String taskId);
     Attachment build(byte[] content);
+  }
+  
+  /**
+   * Builder for attachment upload from generated/batch content.
+   * 
+   */
+  interface AttachmentContentDownloadBuilder {
+    /**
+     * Filename for content. Required.
+     * @param filename
+     * @return
+     */
+    AttachmentContentDownloadBuilder filename(String filename);
+    /**
+     * If process ID is provided then content is attached to process.
+     * @param processId
+     * @return
+     */
+    AttachmentContentDownloadBuilder processId(String processId);
+    /**
+     * Task ID should be given if process for task is missing, in this case content is attached to task.
+     * @param taskId
+     * @return
+     */
+    AttachmentContentDownloadBuilder taskId(String taskId);
+    byte[] build();
   }
   
   interface AttachmentRemoveBuilder {

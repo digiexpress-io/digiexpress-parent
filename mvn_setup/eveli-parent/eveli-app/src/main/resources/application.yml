@@ -106,6 +106,14 @@ eveli.org.service-url:
 eveli.envir.cache-expirations.short-deployment: PT30M
 eveli.envir.cache-expirations.long-runtime: PT60M
 
+eveli:
+  attachment:
+    fs:
+      enabled: true
+      root-directory: attachments
+      attachment-url-base: /worker/rest/api/attachments/fs
+      attachment-server: http://localhost:8080
+ 
 # metis: also set spring.ai.model.chat/embedding to ollama when enabling
 eveli.metis.enabled: false
 
