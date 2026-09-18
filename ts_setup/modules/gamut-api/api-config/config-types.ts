@@ -4,6 +4,7 @@ import { createDialobFetch, createPublicDialobFetch } from './fetch_dialob';
 import { createOfferFetch, createPublicOfferFetch } from './fetch_offer';
 import { createAuthFeedbackFetch, createContractFetch, createSubjectFetch } from './fetch_portal';
 import { createBookingFetch } from './fetch_booking';
+import { createSiteSearchFetch } from './fetch_search';
 
 
 
@@ -25,6 +26,7 @@ export namespace ConfigApi {
     subjectFetch: createSubjectFetch(),
     bookingFetch: createBookingFetch(),
     authFeedbackFetch: createAuthFeedbackFetch(),
+    siteSearchFetch: createSiteSearchFetch(),
 
     iamLiveness: 60000,
     staleTime: 60 * 1000,

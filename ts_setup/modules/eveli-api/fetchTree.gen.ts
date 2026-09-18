@@ -70,7 +70,10 @@ import { Hook as workerRestApiFeedbackGET } from './fetch/worker.rest.api.feedba
 import { Hook as workerRestApiHealthGET } from './fetch/worker.rest.api.health.get.ts'
 import { Hook as workerRestApiIamLivenessGET } from './fetch/worker.rest.api.iam.liveness.ts'
 import { Hook as workerRestApiLedgersGET } from './fetch/worker.rest.api.ledgers.get.ts'
-import { Hook as workerRestApiPdfPOST } from './fetch/worker.rest.api.pdf.post.ts'
+import { Hook as workerRestApiMetisSearchReindexCancelPOST } from './fetch/worker.rest.api.metis.search.reindex.cancel.post.ts'
+import { Hook as workerRestApiMetisSearchReindexPOST } from './fetch/worker.rest.api.metis.search.reindex.post.ts'
+import { Hook as workerRestApiMetisSearchStatusGET } from './fetch/worker.rest.api.metis.search.status.get.ts'
+import { Hook as workerRestApiMetisStatusGET } from './fetch/worker.rest.api.metis.status.get.ts'
 import { Hook as workerRestApiProcessesGET } from './fetch/worker.rest.api.processes.get.ts'
 import { Hook as workerRestApiQueuesConfigsGET } from './fetch/worker.rest.api.queues.configs.get.ts'
 import { Hook as workerRestApiQueuesDeliveriesGET } from './fetch/worker.rest.api.queues.deliveries.get.ts'
@@ -87,6 +90,7 @@ import { Hook as workerRestApiTasksTaskIdFormAssignmentsDELETE } from './fetch/w
 import { Hook as workerRestApiTasksTaskIdFormAssignmentsGET } from './fetch/worker.rest.api.tasks.$taskId.form-assignments.get.ts'
 import { Hook as workerRestApiTasksTaskIdFormAssignmentsPOST } from './fetch/worker.rest.api.tasks.$taskId.form-assignments.post.ts'
 import { Hook as workerRestApiTasksTaskIdGET } from './fetch/worker.rest.api.tasks.$taskId.get.ts'
+import { Hook as workerRestApiTasksTaskIdPdfPOST } from './fetch/worker.rest.api.tasks.$taskId.pdf.post.ts'
 import { Hook as workerRestApiTasksTaskIdPUT } from './fetch/worker.rest.api.tasks.$taskId.put.ts'
 import { Hook as workerRestApiTasksTaskIdReviewActionsGET } from './fetch/worker.rest.api.tasks.$taskId.review-actions.ts'
 import { Hook as workerRestApiTasksTaskIdReviewsGET } from './fetch/worker.rest.api.tasks.$taskId.reviews.ts'
@@ -457,9 +461,24 @@ const workerRestApiLedgersGETRoute = workerRestApiLedgersGET.update({
   method: 'GET',
 })
 
-const workerRestApiPdfPOSTRoute = workerRestApiPdfPOST.update({
-  path: 'worker/rest/api/pdf',
+const workerRestApiMetisSearchReindexCancelPOSTRoute = workerRestApiMetisSearchReindexCancelPOST.update({
+  path: 'worker/rest/api/metis/search/reindex/cancel',
   method: 'POST',
+})
+
+const workerRestApiMetisSearchReindexPOSTRoute = workerRestApiMetisSearchReindexPOST.update({
+  path: 'worker/rest/api/metis/search/reindex',
+  method: 'POST',
+})
+
+const workerRestApiMetisSearchStatusGETRoute = workerRestApiMetisSearchStatusGET.update({
+  path: 'worker/rest/api/metis/search/status',
+  method: 'GET',
+})
+
+const workerRestApiMetisStatusGETRoute = workerRestApiMetisStatusGET.update({
+  path: 'worker/rest/api/metis/status',
+  method: 'GET',
 })
 
 const workerRestApiProcessesGETRoute = workerRestApiProcessesGET.update({
@@ -540,6 +559,11 @@ const workerRestApiTasksTaskIdFormAssignmentsPOSTRoute = workerRestApiTasksTaskI
 const workerRestApiTasksTaskIdGETRoute = workerRestApiTasksTaskIdGET.update({
   path: 'worker/rest/api/tasks/$taskId',
   method: 'GET',
+})
+
+const workerRestApiTasksTaskIdPdfPOSTRoute = workerRestApiTasksTaskIdPdfPOST.update({
+  path: 'worker/rest/api/tasks/$taskId/pdf',
+  method: 'POST',
 })
 
 const workerRestApiTasksTaskIdPUTRoute = workerRestApiTasksTaskIdPUT.update({
@@ -1175,12 +1199,36 @@ declare module '@dxs-ts/envir-fetch' {
       hook: typeof workerRestApiLedgersGETRoute
     }
 
-    'worker/rest/api/pdf.POST': {
-      id: 'worker/rest/api/pdf.POST',
-      path: 'worker/rest/api/pdf',
+    'worker/rest/api/metis/search/reindex/cancel.POST': {
+      id: 'worker/rest/api/metis/search/reindex/cancel.POST',
+      path: 'worker/rest/api/metis/search/reindex/cancel',
       method: 'POST',
       params: {},
-      hook: typeof workerRestApiPdfPOSTRoute
+      hook: typeof workerRestApiMetisSearchReindexCancelPOSTRoute
+    }
+
+    'worker/rest/api/metis/search/reindex.POST': {
+      id: 'worker/rest/api/metis/search/reindex.POST',
+      path: 'worker/rest/api/metis/search/reindex',
+      method: 'POST',
+      params: {},
+      hook: typeof workerRestApiMetisSearchReindexPOSTRoute
+    }
+
+    'worker/rest/api/metis/search/status.GET': {
+      id: 'worker/rest/api/metis/search/status.GET',
+      path: 'worker/rest/api/metis/search/status',
+      method: 'GET',
+      params: {},
+      hook: typeof workerRestApiMetisSearchStatusGETRoute
+    }
+
+    'worker/rest/api/metis/status.GET': {
+      id: 'worker/rest/api/metis/status.GET',
+      path: 'worker/rest/api/metis/status',
+      method: 'GET',
+      params: {},
+      hook: typeof workerRestApiMetisStatusGETRoute
     }
 
     'worker/rest/api/processes.GET': {
@@ -1311,6 +1359,14 @@ declare module '@dxs-ts/envir-fetch' {
       hook: typeof workerRestApiTasksTaskIdGETRoute
     }
 
+    'worker/rest/api/tasks/$taskId/pdf.POST': {
+      id: 'worker/rest/api/tasks/$taskId/pdf.POST',
+      path: 'worker/rest/api/tasks/$taskId/pdf',
+      method: 'POST',
+      params: {taskId: string},
+      hook: typeof workerRestApiTasksTaskIdPdfPOSTRoute
+    }
+
     'worker/rest/api/tasks/$taskId.PUT': {
       id: 'worker/rest/api/tasks/$taskId.PUT',
       path: 'worker/rest/api/tasks/$taskId',
@@ -1408,4 +1464,5 @@ declare module '@dxs-ts/envir-fetch' {
     }
   }
 }
-export const tree = RootHook.update({'$org/groupMembership.GET': orgGroupMembershipGETRoute, '$org/groupsList.GET': orgGroupsListGETRoute, '$org/userInfo.GET': orgUserInfoGETRoute, 'config.GET': configGETRoute, 'dialob.GET': dialobGETRoute, 'worker/rest/api/assets/deployments/$deploymentId.GET': workerRestApiAssetsDeploymentsDeploymentIdGETRoute, 'worker/rest/api/assets/deployments/$deploymentId.PUT': workerRestApiAssetsDeploymentsDeploymentIdPUTRoute, 'worker/rest/api/assets/deployments.POST': workerRestApiAssetsDeploymentsPOSTRoute, 'worker/rest/api/assets/dialob/fill/$sessionId.GET': workerRestApiAssetsDialobFillSessionIdGETRoute, 'worker/rest/api/assets/dialob/fill/$sessionId.POST': workerRestApiAssetsDialobFillSessionIdPOSTRoute, 'worker/rest/api/assets/dialob.GET': workerRestApiAssetsDialobGETRoute, 'worker/rest/api/assets/dialob/proxy/forms/$formId.DELETE': workerRestApiAssetsDialobProxyFormsFormIdDELETERoute, 'worker/rest/api/assets/dialob/proxy/forms/$formId.GET': workerRestApiAssetsDialobProxyFormsFormIdGETRoute, 'worker/rest/api/assets/dialob/proxy/forms.POST': workerRestApiAssetsDialobProxyFormsPOSTRoute, 'worker/rest/api/assets/dialob/tags.GET': workerRestApiAssetsDialobTagsGETRoute, 'worker/rest/api/assets/fs/debugs.POST': workerRestApiAssetsFsDebugsPOSTRoute, 'worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType.GET': workerRestApiAssetsFsDirentsIdBodiesBodyTypeGETRoute, 'worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType/transient-changes.POST': workerRestApiAssetsFsDirentsIdBodiesBodyTypeTransientChangesPOSTRoute, 'worker/rest/api/assets/fs/dirents/$id.DELETE': workerRestApiAssetsFsDirentsIdDELETERoute, 'worker/rest/api/assets/fs/dirents/copy/$id.POST': workerRestApiAssetsFsDirentsCopyIdPOSTRoute, 'worker/rest/api/assets/fs/dirents/description/$id.PUT': workerRestApiAssetsFsDirentsDescriptionIdPUTRoute, 'worker/rest/api/assets/fs/dirents/labels/$id.PUT': workerRestApiAssetsFsDirentsLabelsIdPUTRoute, 'worker/rest/api/assets/fs/dirents/name/$id.PUT': workerRestApiAssetsFsDirentsNameIdPUTRoute, 'worker/rest/api/assets/fs/dirents.POST': workerRestApiAssetsFsDirentsPOSTRoute, 'worker/rest/api/assets/fs/dirents.PUT': workerRestApiAssetsFsDirentsPUTRoute, 'worker/rest/api/assets/fs.GET': workerRestApiAssetsFsGETRoute, 'worker/rest/api/assets/publications.GET': workerRestApiAssetsPublicationsGETRoute, 'worker/rest/api/assets/publications.POST': workerRestApiAssetsPublicationsPOSTRoute, 'worker/rest/api/assets/stencil/$assetType.DELETE': workerRestApiAssetsStencilAssetTypeDELETERoute, 'worker/rest/api/assets/stencil/$assetType.POST': workerRestApiAssetsStencilAssetTypePOSTRoute, 'worker/rest/api/assets/stencil/$assetType.PUT': workerRestApiAssetsStencilAssetTypePUTRoute, 'worker/rest/api/assets/stencil/commitlogs.GET': workerRestApiAssetsStencilCommitlogsGETRoute, 'worker/rest/api/assets/stencil.GET': workerRestApiAssetsStencilGETRoute, 'worker/rest/api/assets/stencil/releases/$releaseId.GET': workerRestApiAssetsStencilReleasesReleaseIdGETRoute, 'worker/rest/api/assets/tagomi.GET': workerRestApiAssetsTagomiGETRoute, 'worker/rest/api/assets/workflows/$workflowId.PUT': workerRestApiAssetsWorkflowsWorkflowIdPUTRoute, 'worker/rest/api/assets/workflows.GET': workerRestApiAssetsWorkflowsGETRoute, 'worker/rest/api/assets/wrench/commands/$id.GET': workerRestApiAssetsWrenchCommandsIdGETRoute, 'worker/rest/api/assets/wrench/commands.POST': workerRestApiAssetsWrenchCommandsPOSTRoute, 'worker/rest/api/assets/wrench/commitlogs.GET': workerRestApiAssetsWrenchCommitlogsGETRoute, 'worker/rest/api/assets/wrench/copyas.POST': workerRestApiAssetsWrenchCopyasPOSTRoute, 'worker/rest/api/assets/wrench/dataModels.GET': workerRestApiAssetsWrenchDataModelsGETRoute, 'worker/rest/api/assets/wrench/debugs.POST': workerRestApiAssetsWrenchDebugsPOSTRoute, 'worker/rest/api/assets/wrench/diff.GET': workerRestApiAssetsWrenchDiffGETRoute, 'worker/rest/api/assets/wrench/flow-names.GET': workerRestApiAssetsWrenchFlowNamesGETRoute, 'worker/rest/api/assets/wrench/importTag.POST': workerRestApiAssetsWrenchImportTagPOSTRoute, 'worker/rest/api/assets/wrench/resources/$id.DELETE': workerRestApiAssetsWrenchResourcesIdDELETERoute, 'worker/rest/api/assets/wrench/resources.POST': workerRestApiAssetsWrenchResourcesPOSTRoute, 'worker/rest/api/assets/wrench/resources.PUT': workerRestApiAssetsWrenchResourcesPUTRoute, 'worker/rest/api/assets/wrench/summary/$tagId.GET': workerRestApiAssetsWrenchSummaryTagIdGETRoute, 'worker/rest/api/batches/$batchName/instances.POST': workerRestApiBatchesBatchNameInstancesPOSTRoute, 'worker/rest/api/batches.GET': workerRestApiBatchesGETRoute, 'worker/rest/api/batches/steps/$stepId.GET': workerRestApiBatchesStepsStepIdGETRoute, 'worker/rest/api/cockpits/$cockpitId.GET': workerRestApiCockpitsCockpitIdGETRoute, 'worker/rest/api/cockpits/$cockpitId/tenants.POST': workerRestApiCockpitsCockpitIdTenantsPOSTRoute, 'worker/rest/api/cockpits/activity/current-state.POST': workerRestApiCockpitsActivityCurrentStatePOSTRoute, 'worker/rest/api/cockpits.GET': workerRestApiCockpitsGETRoute, 'worker/rest/api/cockpits.POST': workerRestApiCockpitsPOSTRoute, 'worker/rest/api/contracts.GET': workerRestApiContractsGETRoute, 'worker/rest/api/feedback/$feedbackId.DELETE': workerRestApiFeedbackFeedbackIdDELETERoute, 'worker/rest/api/feedback/$feedbackId/enabled.GET': workerRestApiFeedbackFeedbackIdEnabledGETRoute, 'worker/rest/api/feedback/$feedbackId.GET': workerRestApiFeedbackFeedbackIdGETRoute, 'worker/rest/api/feedback/$feedbackId.POST': workerRestApiFeedbackFeedbackIdPOSTRoute, 'worker/rest/api/feedback/$feedbackId.PUT': workerRestApiFeedbackFeedbackIdPUTRoute, 'worker/rest/api/feedback/$feedbackId/sentiment-and-subcategory.GET': workerRestApiFeedbackFeedbackIdSentimentAndSubcategoryGETRoute, 'worker/rest/api/feedback/$feedbackId/similar.GET': workerRestApiFeedbackFeedbackIdSimilarGETRoute, 'worker/rest/api/feedback/$feedbackId/templates.GET': workerRestApiFeedbackFeedbackIdTemplatesGETRoute, 'worker/rest/api/feedback.GET': workerRestApiFeedbackGETRoute, 'worker/rest/api/health.GET': workerRestApiHealthGETRoute, 'worker/rest/api/iam/liveness.GET': workerRestApiIamLivenessGETRoute, 'worker/rest/api/ledgers.GET': workerRestApiLedgersGETRoute, 'worker/rest/api/pdf.POST': workerRestApiPdfPOSTRoute, 'worker/rest/api/processes.GET': workerRestApiProcessesGETRoute, 'worker/rest/api/queues/configs.GET': workerRestApiQueuesConfigsGETRoute, 'worker/rest/api/queues/deliveries.GET': workerRestApiQueuesDeliveriesGETRoute, 'worker/rest/api/queues/messages.GET': workerRestApiQueuesMessagesGETRoute, 'worker/rest/api/tasks/$taskId/audits.GET': workerRestApiTasksTaskIdAuditsGETRoute, 'worker/rest/api/tasks/$taskId/comments.GET': workerRestApiTasksTaskIdCommentsGETRoute, 'worker/rest/api/tasks/$taskId/comments.POST': workerRestApiTasksTaskIdCommentsPOSTRoute, 'worker/rest/api/tasks/$taskId.DELETE': workerRestApiTasksTaskIdDELETERoute, 'worker/rest/api/tasks/$taskId/files/$filename.DELETE': workerRestApiTasksTaskIdFilesFilenameDELETERoute, 'worker/rest/api/tasks/$taskId/files/$filename.GET': workerRestApiTasksTaskIdFilesFilenameGETRoute, 'worker/rest/api/tasks/$taskId/files.GET': workerRestApiTasksTaskIdFilesGETRoute, 'worker/rest/api/tasks/$taskId/files.POST': workerRestApiTasksTaskIdFilesPOSTRoute, 'worker/rest/api/tasks/$taskId/form-assignments.DELETE': workerRestApiTasksTaskIdFormAssignmentsDELETERoute, 'worker/rest/api/tasks/$taskId/form-assignments.GET': workerRestApiTasksTaskIdFormAssignmentsGETRoute, 'worker/rest/api/tasks/$taskId/form-assignments.POST': workerRestApiTasksTaskIdFormAssignmentsPOSTRoute, 'worker/rest/api/tasks/$taskId.GET': workerRestApiTasksTaskIdGETRoute, 'worker/rest/api/tasks/$taskId.PUT': workerRestApiTasksTaskIdPUTRoute, 'worker/rest/api/tasks/$taskId/review-actions.GET': workerRestApiTasksTaskIdReviewActionsGETRoute, 'worker/rest/api/tasks/$taskId/reviews.GET': workerRestApiTasksTaskIdReviewsGETRoute, 'worker/rest/api/tasks/$taskId/transfers.PUT': workerRestApiTasksTaskIdTransfersPUTRoute, 'worker/rest/api/tasks.GET': workerRestApiTasksGETRoute, 'worker/rest/api/tasks/in-house/$id.GET': workerRestApiTasksInHouseIdGETRoute, 'worker/rest/api/tasks/in-house.GET': workerRestApiTasksInHouseGETRoute, 'worker/rest/api/tasks.POST': workerRestApiTasksPOSTRoute, 'worker/rest/api/tasks/unread.GET': workerRestApiTasksUnreadGETRoute, 'worker/rest/api/tenant-configs.GET': workerRestApiTenantConfigsGETRoute, 'worker/rest/api/userprofiles/$profileId.GET': workerRestApiUserprofilesProfileIdGETRoute, 'worker/rest/api/version.GET': workerRestApiVersionGETRoute})
+
+export const tree = RootHook.update({'$org/groupMembership.GET': orgGroupMembershipGETRoute, '$org/groupsList.GET': orgGroupsListGETRoute, '$org/userInfo.GET': orgUserInfoGETRoute, 'config.GET': configGETRoute, 'dialob.GET': dialobGETRoute, 'worker/rest/api/assets/deployments/$deploymentId.GET': workerRestApiAssetsDeploymentsDeploymentIdGETRoute, 'worker/rest/api/assets/deployments/$deploymentId.PUT': workerRestApiAssetsDeploymentsDeploymentIdPUTRoute, 'worker/rest/api/assets/deployments.POST': workerRestApiAssetsDeploymentsPOSTRoute, 'worker/rest/api/assets/dialob/fill/$sessionId.GET': workerRestApiAssetsDialobFillSessionIdGETRoute, 'worker/rest/api/assets/dialob/fill/$sessionId.POST': workerRestApiAssetsDialobFillSessionIdPOSTRoute, 'worker/rest/api/assets/dialob.GET': workerRestApiAssetsDialobGETRoute, 'worker/rest/api/assets/dialob/proxy/forms/$formId.DELETE': workerRestApiAssetsDialobProxyFormsFormIdDELETERoute, 'worker/rest/api/assets/dialob/proxy/forms/$formId.GET': workerRestApiAssetsDialobProxyFormsFormIdGETRoute, 'worker/rest/api/assets/dialob/proxy/forms.POST': workerRestApiAssetsDialobProxyFormsPOSTRoute, 'worker/rest/api/assets/dialob/tags.GET': workerRestApiAssetsDialobTagsGETRoute, 'worker/rest/api/assets/fs/debugs.POST': workerRestApiAssetsFsDebugsPOSTRoute, 'worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType.GET': workerRestApiAssetsFsDirentsIdBodiesBodyTypeGETRoute, 'worker/rest/api/assets/fs/dirents/$id/bodies/$bodyType/transient-changes.POST': workerRestApiAssetsFsDirentsIdBodiesBodyTypeTransientChangesPOSTRoute, 'worker/rest/api/assets/fs/dirents/$id.DELETE': workerRestApiAssetsFsDirentsIdDELETERoute, 'worker/rest/api/assets/fs/dirents/copy/$id.POST': workerRestApiAssetsFsDirentsCopyIdPOSTRoute, 'worker/rest/api/assets/fs/dirents/description/$id.PUT': workerRestApiAssetsFsDirentsDescriptionIdPUTRoute, 'worker/rest/api/assets/fs/dirents/labels/$id.PUT': workerRestApiAssetsFsDirentsLabelsIdPUTRoute, 'worker/rest/api/assets/fs/dirents/name/$id.PUT': workerRestApiAssetsFsDirentsNameIdPUTRoute, 'worker/rest/api/assets/fs/dirents.POST': workerRestApiAssetsFsDirentsPOSTRoute, 'worker/rest/api/assets/fs/dirents.PUT': workerRestApiAssetsFsDirentsPUTRoute, 'worker/rest/api/assets/fs.GET': workerRestApiAssetsFsGETRoute, 'worker/rest/api/assets/publications.GET': workerRestApiAssetsPublicationsGETRoute, 'worker/rest/api/assets/publications.POST': workerRestApiAssetsPublicationsPOSTRoute, 'worker/rest/api/assets/stencil/$assetType.DELETE': workerRestApiAssetsStencilAssetTypeDELETERoute, 'worker/rest/api/assets/stencil/$assetType.POST': workerRestApiAssetsStencilAssetTypePOSTRoute, 'worker/rest/api/assets/stencil/$assetType.PUT': workerRestApiAssetsStencilAssetTypePUTRoute, 'worker/rest/api/assets/stencil/commitlogs.GET': workerRestApiAssetsStencilCommitlogsGETRoute, 'worker/rest/api/assets/stencil.GET': workerRestApiAssetsStencilGETRoute, 'worker/rest/api/assets/stencil/releases/$releaseId.GET': workerRestApiAssetsStencilReleasesReleaseIdGETRoute, 'worker/rest/api/assets/tagomi.GET': workerRestApiAssetsTagomiGETRoute, 'worker/rest/api/assets/workflows/$workflowId.PUT': workerRestApiAssetsWorkflowsWorkflowIdPUTRoute, 'worker/rest/api/assets/workflows.GET': workerRestApiAssetsWorkflowsGETRoute, 'worker/rest/api/assets/wrench/commands/$id.GET': workerRestApiAssetsWrenchCommandsIdGETRoute, 'worker/rest/api/assets/wrench/commands.POST': workerRestApiAssetsWrenchCommandsPOSTRoute, 'worker/rest/api/assets/wrench/commitlogs.GET': workerRestApiAssetsWrenchCommitlogsGETRoute, 'worker/rest/api/assets/wrench/copyas.POST': workerRestApiAssetsWrenchCopyasPOSTRoute, 'worker/rest/api/assets/wrench/dataModels.GET': workerRestApiAssetsWrenchDataModelsGETRoute, 'worker/rest/api/assets/wrench/debugs.POST': workerRestApiAssetsWrenchDebugsPOSTRoute, 'worker/rest/api/assets/wrench/diff.GET': workerRestApiAssetsWrenchDiffGETRoute, 'worker/rest/api/assets/wrench/flow-names.GET': workerRestApiAssetsWrenchFlowNamesGETRoute, 'worker/rest/api/assets/wrench/importTag.POST': workerRestApiAssetsWrenchImportTagPOSTRoute, 'worker/rest/api/assets/wrench/resources/$id.DELETE': workerRestApiAssetsWrenchResourcesIdDELETERoute, 'worker/rest/api/assets/wrench/resources.POST': workerRestApiAssetsWrenchResourcesPOSTRoute, 'worker/rest/api/assets/wrench/resources.PUT': workerRestApiAssetsWrenchResourcesPUTRoute, 'worker/rest/api/assets/wrench/summary/$tagId.GET': workerRestApiAssetsWrenchSummaryTagIdGETRoute, 'worker/rest/api/batches/$batchName/instances.POST': workerRestApiBatchesBatchNameInstancesPOSTRoute, 'worker/rest/api/batches.GET': workerRestApiBatchesGETRoute, 'worker/rest/api/batches/steps/$stepId.GET': workerRestApiBatchesStepsStepIdGETRoute, 'worker/rest/api/cockpits/$cockpitId.GET': workerRestApiCockpitsCockpitIdGETRoute, 'worker/rest/api/cockpits/$cockpitId/tenants.POST': workerRestApiCockpitsCockpitIdTenantsPOSTRoute, 'worker/rest/api/cockpits/activity/current-state.POST': workerRestApiCockpitsActivityCurrentStatePOSTRoute, 'worker/rest/api/cockpits.GET': workerRestApiCockpitsGETRoute, 'worker/rest/api/cockpits.POST': workerRestApiCockpitsPOSTRoute, 'worker/rest/api/contracts.GET': workerRestApiContractsGETRoute, 'worker/rest/api/feedback/$feedbackId.DELETE': workerRestApiFeedbackFeedbackIdDELETERoute, 'worker/rest/api/feedback/$feedbackId/enabled.GET': workerRestApiFeedbackFeedbackIdEnabledGETRoute, 'worker/rest/api/feedback/$feedbackId.GET': workerRestApiFeedbackFeedbackIdGETRoute, 'worker/rest/api/feedback/$feedbackId.POST': workerRestApiFeedbackFeedbackIdPOSTRoute, 'worker/rest/api/feedback/$feedbackId.PUT': workerRestApiFeedbackFeedbackIdPUTRoute, 'worker/rest/api/feedback/$feedbackId/sentiment-and-subcategory.GET': workerRestApiFeedbackFeedbackIdSentimentAndSubcategoryGETRoute, 'worker/rest/api/feedback/$feedbackId/similar.GET': workerRestApiFeedbackFeedbackIdSimilarGETRoute, 'worker/rest/api/feedback/$feedbackId/templates.GET': workerRestApiFeedbackFeedbackIdTemplatesGETRoute, 'worker/rest/api/feedback.GET': workerRestApiFeedbackGETRoute, 'worker/rest/api/health.GET': workerRestApiHealthGETRoute, 'worker/rest/api/iam/liveness.GET': workerRestApiIamLivenessGETRoute, 'worker/rest/api/ledgers.GET': workerRestApiLedgersGETRoute, 'worker/rest/api/metis/search/reindex/cancel.POST': workerRestApiMetisSearchReindexCancelPOSTRoute, 'worker/rest/api/metis/search/reindex.POST': workerRestApiMetisSearchReindexPOSTRoute, 'worker/rest/api/metis/search/status.GET': workerRestApiMetisSearchStatusGETRoute, 'worker/rest/api/metis/status.GET': workerRestApiMetisStatusGETRoute, 'worker/rest/api/processes.GET': workerRestApiProcessesGETRoute, 'worker/rest/api/queues/configs.GET': workerRestApiQueuesConfigsGETRoute, 'worker/rest/api/queues/deliveries.GET': workerRestApiQueuesDeliveriesGETRoute, 'worker/rest/api/queues/messages.GET': workerRestApiQueuesMessagesGETRoute, 'worker/rest/api/tasks/$taskId/audits.GET': workerRestApiTasksTaskIdAuditsGETRoute, 'worker/rest/api/tasks/$taskId/comments.GET': workerRestApiTasksTaskIdCommentsGETRoute, 'worker/rest/api/tasks/$taskId/comments.POST': workerRestApiTasksTaskIdCommentsPOSTRoute, 'worker/rest/api/tasks/$taskId.DELETE': workerRestApiTasksTaskIdDELETERoute, 'worker/rest/api/tasks/$taskId/files/$filename.DELETE': workerRestApiTasksTaskIdFilesFilenameDELETERoute, 'worker/rest/api/tasks/$taskId/files/$filename.GET': workerRestApiTasksTaskIdFilesFilenameGETRoute, 'worker/rest/api/tasks/$taskId/files.GET': workerRestApiTasksTaskIdFilesGETRoute, 'worker/rest/api/tasks/$taskId/files.POST': workerRestApiTasksTaskIdFilesPOSTRoute, 'worker/rest/api/tasks/$taskId/form-assignments.DELETE': workerRestApiTasksTaskIdFormAssignmentsDELETERoute, 'worker/rest/api/tasks/$taskId/form-assignments.GET': workerRestApiTasksTaskIdFormAssignmentsGETRoute, 'worker/rest/api/tasks/$taskId/form-assignments.POST': workerRestApiTasksTaskIdFormAssignmentsPOSTRoute, 'worker/rest/api/tasks/$taskId.GET': workerRestApiTasksTaskIdGETRoute, 'worker/rest/api/tasks/$taskId/pdf.POST': workerRestApiTasksTaskIdPdfPOSTRoute, 'worker/rest/api/tasks/$taskId.PUT': workerRestApiTasksTaskIdPUTRoute, 'worker/rest/api/tasks/$taskId/review-actions.GET': workerRestApiTasksTaskIdReviewActionsGETRoute, 'worker/rest/api/tasks/$taskId/reviews.GET': workerRestApiTasksTaskIdReviewsGETRoute, 'worker/rest/api/tasks/$taskId/transfers.PUT': workerRestApiTasksTaskIdTransfersPUTRoute, 'worker/rest/api/tasks.GET': workerRestApiTasksGETRoute, 'worker/rest/api/tasks/in-house/$id.GET': workerRestApiTasksInHouseIdGETRoute, 'worker/rest/api/tasks/in-house.GET': workerRestApiTasksInHouseGETRoute, 'worker/rest/api/tasks.POST': workerRestApiTasksPOSTRoute, 'worker/rest/api/tasks/unread.GET': workerRestApiTasksUnreadGETRoute, 'worker/rest/api/tenant-configs.GET': workerRestApiTenantConfigsGETRoute, 'worker/rest/api/userprofiles/$profileId.GET': workerRestApiUserprofilesProfileIdGETRoute, 'worker/rest/api/version.GET': workerRestApiVersionGETRoute})

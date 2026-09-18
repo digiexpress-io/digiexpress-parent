@@ -81,6 +81,7 @@ class _CreateState implements FsuCreateChange {
         anon: current.configOptions.includes('ANONYMOUS_MODE') || undefined,
         assignable: current.configOptions.includes('ASSIGNABLE_MODE') || undefined,
         inHouse: current.configOptions.includes('IN_HOUSE_MODE') || undefined,
+        rps: current.configOptions.includes('RPS_MODE') || undefined,
       },
     };
   }

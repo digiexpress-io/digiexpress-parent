@@ -22,9 +22,10 @@ export const GRouterProductContent: React.FC<GRouterProductOwnerState> = (props)
   return (
     <div className={classes.productTitle}>
       <Typography className={classes.productTitle}>{intl.formatMessage({ id: 'gamut.forms.filling.welcome' })}</Typography>
-      <Typography className={classes.productSubTitle}>{intl.formatMessage({ id: 'gamut.forms.filling.start' })}
-        {intl.formatMessage({ id: 'gamut.textSeparatorColon' })}
-        {topicLink?.name ?? "-"}
+      <Typography className={classes.productSubTitle}>
+        {intl.formatMessage({ id: 'gamut.forms.filling.start' })}
+        {intl.formatMessage({ id: 'gamut.textSeparator', defaultMessage: ' ' })}
+        {topicLink?.name ?? "--"}
       </Typography>
 
       <List disablePadding dense>

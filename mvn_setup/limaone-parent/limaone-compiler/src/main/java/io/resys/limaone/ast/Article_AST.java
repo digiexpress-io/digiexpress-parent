@@ -46,6 +46,7 @@ public interface Article_AST extends Simple_AST {
     Boolean getWorkflow();
     Boolean getGlobal();
     Boolean getAnon();
+    Boolean getRps();
     Boolean getAssignable();
     @Nullable OffsetDateTime getStartDate();
     @Nullable OffsetDateTime getEndDate();

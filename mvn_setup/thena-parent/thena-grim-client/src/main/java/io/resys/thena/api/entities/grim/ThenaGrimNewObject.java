@@ -83,6 +83,21 @@ public interface ThenaGrimNewObject {
     void build();
   }
   
+  interface NewRps {
+    NewRps workflowName(String name);
+    NewRps externalId(String externalId);
+    NewRps locale(String locale);
+    
+    NewRps formName(String formName);
+    NewRps formVersion(String formVersion);
+    NewRps rating(Integer rating);
+    
+    NewRps comment(@Nullable String comment);
+    
+    void build();
+    
+  }
+  
   interface NewProcess {
     NewProcess workflowName(String name);
     

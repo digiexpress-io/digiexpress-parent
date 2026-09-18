@@ -51,6 +51,7 @@ export declare namespace SiteApi {
     global?: boolean;
     workflow?: boolean;
     anon: boolean | undefined;
+    rps: boolean | undefined;
     path?: string;
   }
 

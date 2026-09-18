@@ -1,7 +1,10 @@
 services:
   
+  # Same PostgreSQL major version as the plain postgres:17 image, with pgvector
+  # added for the metis search index. Switching from postgres:17 to this image
+  # on the existing volume does not rewrite data; do not delete PGDATA.
   postgresql:
-    image: postgres:17
+    image: pgvector/pgvector:pg17
     restart: always
     ports:
       - "5433:5432"
@@ -13,6 +16,35 @@ services:
     volumes:
       - ./_db/eveli_db_init:/docker-entrypoint-initdb.d
       - ./_db/eveli_db_data:/var/lib/postgresql/data
+
+# metis AI models, needed when eveli.metis.enabled=true (any capability)
+  ollama:
+    image: ollama/ollama:latest
+    restart: always
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_NUM_PARALLEL=4
+    volumes:
+      - ./_db/ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
+
+  ollama-init:
+    image: ollama/ollama:latest
+    depends_on:
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ./compose/ollama-init.sh:/ollama-init.sh:ro
+    entrypoint: ["/bin/sh", "/ollama-init.sh"]
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    restart: "no"
 
 # dialob related mess
   nginx:

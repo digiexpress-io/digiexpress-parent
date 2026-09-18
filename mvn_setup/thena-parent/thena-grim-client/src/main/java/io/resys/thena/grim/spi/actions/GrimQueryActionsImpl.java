@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.resys.thena.api.entities.grim.GrimProcess;
+import io.resys.thena.api.entities.grim.GrimRps;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
@@ -60,6 +61,16 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
       @Override
       public Uni<List<GrimUniqueMissionLabel>> findAllUnique() {
         return startingState.toGrimState(repoId).onItem().transformToUni(state -> state.missionLabels().findAllUnique());
+      }
+    };
+  }
+  
+  @Override
+  public RpsQuery rpsQuery() {
+    return new RpsQuery() {
+      @Override
+      public Multi<GrimRps> findAll() {
+        return startingState.toGrimState(repoId).onItem().transformToMulti(state -> state.rps().findAll());
       }
     };
   }

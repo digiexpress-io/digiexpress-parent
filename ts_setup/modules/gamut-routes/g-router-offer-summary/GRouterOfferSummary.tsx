@@ -1,21 +1,10 @@
 import React from 'react';
 import { Container, Toolbar, useThemeProps } from '@mui/material';
-import { useNavigate } from '@tanstack/react-router';
 
-import {
-  useSite,
-  useIam,
-  useOffers
-} from '@dxs-ts/gamut-api';
-
-import {
-  GFooter,
-  GLayout,
-  GLogo,
-} from '@dxs-ts/gamut-primitives';
-import { GShell, GShellClassName, } from '@dxs-ts/gamut-shell';
-
-import { GRouterOfferSummaryRoot, MUI_NAME, useUtilityClasses, SummaryBox } from './useUtilityClasses';
+import { GFooter, GLayout, GLogo } from '@dxs-ts/gamut-primitives';
+import { GShell, GShellClassName } from '@dxs-ts/gamut-shell';
+import { GRouterOfferSummaryRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
+import { FormFillSummaryGreeter } from './FormFillSummaryGreeter';
 
 
 export interface GRouterOfferSummaryProps {
@@ -26,44 +15,13 @@ export interface GRouterOfferSummaryProps {
 }
 
 export const GRouterOfferSummary: React.FC<GRouterOfferSummaryProps> = (initProps) => {
-  const { refresh } = useOffers();
-  const nav = useNavigate();
-  const anon = useIam();
-  const site = useSite();
-
-  const anonymousUser = anon.authType === 'ANON';
-  const buttonBackToMsg = anonymousUser ? 'gamut.public.forms.summary.button.backToServicesHome' : 'gamut.forms.summary.button.back-to-overview';
 
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,
   });
   const { locale } = props;
-
-  const topic = site.views[props.pageId];
-  const topicLink = topic.links.find(l => l.id === props.productId)
-
   const classes = useUtilityClasses();
-
-
-  function navBack() {
-    if (anonymousUser) {
-      nav({
-        from: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary',
-        params: { locale },
-        to: '/public/$locale'
-      })
-    }
-    else {
-      refresh();
-      nav({
-        from: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary',
-        params: { viewId: 'user-overview' },
-        to: '/secured/$locale/views/$viewId',
-      })
-    }
-  }
-
 
   return (
     <GShell drawerOpen={false}>
@@ -76,7 +34,7 @@ export const GRouterOfferSummary: React.FC<GRouterOfferSummaryProps> = (initProp
       <main role='main'>
         <Container>
           <GRouterOfferSummaryRoot className={classes.root}>
-            <SummaryBox topicLink={topicLink} buttonBackToMsg={buttonBackToMsg} onNav={navBack} />
+            <FormFillSummaryGreeter locale={locale} pageId={props.pageId} productId={props.productId} />
           </GRouterOfferSummaryRoot>
         </Container>
       </main>

@@ -38,5 +38,18 @@ public class EveliPropsTagomi {
    * RUST web app url
    */
   private String serviceUrl;
- 
+
+
+  /**
+   * Printout(service name) used for rendering the task questionnaire PDF
+   */
+  private String taskPdfServiceName;
+
+
+  /**
+   * Locale used for the task questionnaire PDF when the printout has no page
+   * for the questionnaire's own language
+   */
+  private String taskPdfDefaultLocale;
+
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeProps, TextField, Typography, Chip, Grid2, Link, Divider, Alert, Box } from '@mui/material';
+import { useThemeProps, TextField, Typography, Chip, Grid2, Link, Divider, Alert, Box, CircularProgress } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { Circle as CircleIcon } from '@mui/icons-material';
 import { Close as CloseIcon } from '@mui/icons-material';
@@ -99,7 +99,9 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   const noValueIndicatorColon = intl.formatMessage({ id: 'gamut.noValueIndicatorColon' });
   const [state, setState] = React.useState<SearchApi.SearchState>();
 
-  
+  const backend = SearchApi.useBackendSearch(state?.searchString);
+
+  const semantic = SearchApi.useSemanticResults(views, state, backend);
 
   React.useEffect(() => {
     setState(SearchApi.getInstance(views, noValueIndicatorColon));
@@ -109,11 +111,18 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
     return (<></>)
   }
 
-  const noResults = state.topics.length === 0 &&
-    state.forms.length === 0 &&
-    state.phones.length === 0 &&
-    state.internal.length === 0 &&
-    state.external.length === 0;
+  const topics = semantic?.topics ?? state.topics;
+  const forms = semantic?.forms ?? state.forms;
+  const phones = backend.loading ? [] : state.phones;
+  const internal = backend.loading ? [] : state.internal;
+  const external = backend.loading ? [] : state.external;
+
+  const noResults = !backend.loading &&
+    topics.length === 0 &&
+    forms.length === 0 &&
+    phones.length === 0 &&
+    internal.length === 0 &&
+    external.length === 0;
 
   function handleFilterByType(type: SearchApi.FilterMode) {
     setState(prev => prev!.filterMode(prev!.searchOptionType === type ? 'ALL' : type));
@@ -154,6 +163,7 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
               <TextField
                 className={classes.inputField}
                 placeholder={intl.formatMessage({ id: 'gamut.search.popover.input.placeholder' })}
+                value={state.searchString ?? ''}
                 onChange={({ currentTarget }) => setState(prev => prev!.find(currentTarget.value))}
               />
             </Grid2>
@@ -191,17 +201,21 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
 
           <Grid2>
             <Grid2 size={{ lg: 3, xl: 3 }} />
-            <Grid2 size={{ lg: 9, xl: 9 }} className={classes.resultsContainer}>
-              {noResults ? (
+            <Grid2 size={{ lg: 9, xl: 9 }} className={classes.resultsContainer} aria-busy={backend.loading}>
+              {backend.showLoader ? (
+                <Box className={classes.resultsLoading}>
+                  <CircularProgress size={32} aria-label={intl.formatMessage({ id: 'gamut.loading' })} />
+                </Box>
+              ) : noResults ? (
                 <Alert severity='info' variant='outlined'>
                   {intl.formatMessage({ id: 'gamut.search.results.noResults' })}
                   {intl.formatMessage({ id: 'gamut.noValueIndicatorColon' })} {state.searchString}
                 </Alert>
               ) : (
                 <>
-                    <ResultsDivider searchState={state} title='gamut.search.results.serviceLinks' className={classes.resultsDividerTitle} isHidden={state.topics.length === 0} />
+                    <ResultsDivider searchState={state} title='gamut.search.results.serviceLinks' className={classes.resultsDividerTitle} isHidden={topics.length === 0} />
                     {
-                      state.topics.map((topic) => (
+                      topics.map((topic) => (
                         <TopicLinkSlot 
                           key={topic.id}
                           onClose={anchor.anchorProps.onClose} 
@@ -212,9 +226,9 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
                         </TopicLinkSlot>))
                     }
 
-                    <ResultsDivider searchState={state} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={state.forms.length === 0} />
+                    <ResultsDivider searchState={state} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={forms.length === 0} />
 
-                    {state.forms.map((form) => {
+                    {forms.map((form) => {
                       const authType = iam.getFormLinkAuthType(form.linkToForm);
 
                       return (
@@ -229,14 +243,14 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
                         />
                       );
                     })}
-                    <ResultsDivider searchState={state} title='gamut.search.results.phoneLinks' className={classes.resultsDividerTitle} isHidden={state.phones.length === 0} />
-                    {state.phones.map((phone) => (<GLinkPhone key={phone.id} label={phone.name} value={phone.value} />))}
+                    <ResultsDivider searchState={state} title='gamut.search.results.phoneLinks' className={classes.resultsDividerTitle} isHidden={phones.length === 0} />
+                    {phones.map((phone) => (<GLinkPhone key={phone.id} label={phone.name} value={phone.value} />))}
 
                     <ResultsDivider searchState={state} title='gamut.search.results.internalExternalLinks' className={classes.resultsDividerTitle}
-                      isHidden={state.external.length === 0 && state.internal.length === 0}
+                      isHidden={external.length === 0 && internal.length === 0}
                     />
-                    {...state.internal.map((link) => (<GLinkHyper label={link.name} value={link.value} key={link.id} />))}
-                    {...state.external.map((link) => (<GLinkHyper label={link.name} value={link.value} key={link.id} />))}
+                    {...internal.map((link) => (<GLinkHyper label={link.name} value={link.value} key={link.id} />))}
+                    {...external.map((link) => (<GLinkHyper label={link.name} value={link.value} key={link.id} />))}
                 </>
               )}
             </Grid2>

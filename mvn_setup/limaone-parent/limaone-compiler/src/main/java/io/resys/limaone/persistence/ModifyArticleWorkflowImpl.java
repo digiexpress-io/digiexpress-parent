@@ -92,6 +92,7 @@ public class ModifyArticleWorkflowImpl extends AuthoringTemplate<ModifyArticleWo
       .startDate(props.getStartDate())
       .endDate(props.getEndDate())
       
+      .rps(props.getRps())
       .formName(props.getFormName())
       .formTag(props.getFormTag())
       .formId(props.getFormId())

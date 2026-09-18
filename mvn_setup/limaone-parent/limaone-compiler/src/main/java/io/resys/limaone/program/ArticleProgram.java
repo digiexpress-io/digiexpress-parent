@@ -118,6 +118,7 @@ public interface ArticleProgram extends Program {
     
     @Nullable Boolean getAssignable();
     @Nullable Boolean getAnon();
+    @Nullable Boolean getRps();
     @Nullable OffsetDateTime getStartDate();
     @Nullable OffsetDateTime getEndDate();
     @Nullable String getFormId();

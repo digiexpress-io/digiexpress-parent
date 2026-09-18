@@ -25,9 +25,6 @@ eveli:
     - path-pattern: /worker/rest/api/queues/**
       method: GET
       roles: ROLE_TASK_ADMIN
-    - path-pattern: /worker/rest/api/pdf
-      method: GET,POST
-      roles: ROLE_TASK_WORKER,ROLE_TASK_ADMIN
     - path-pattern: /worker/rest/api/assets/**
       method: GET,POST,PUT,DELETE
       roles: ROLE_ASSET_ADMIN
@@ -55,3 +52,16 @@ eveli:
     - path-pattern: /worker/rest/api/cockpits/**
       method: GET,POST,PUT
       roles: ROLE_Authorized
+    # Per capability; not /metis/**.
+    - path-pattern: /worker/rest/api/metis/status
+      method: GET
+      roles: ROLE_Authorized
+    - path-pattern: /worker/rest/api/metis/search/**
+      method: GET
+      roles: ROLE_Authorized
+    - path-pattern: /worker/rest/api/metis/search/reindex
+      method: POST
+      roles: ROLE_ASSET_ADMIN
+    - path-pattern: /worker/rest/api/metis/search/reindex/**
+      method: POST
+      roles: ROLE_ASSET_ADMIN

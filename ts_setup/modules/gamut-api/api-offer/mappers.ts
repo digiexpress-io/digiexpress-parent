@@ -69,7 +69,10 @@ export function mapToOffer(data: LegacyProcessApi.Process, site: SiteApi.Site | 
       const parentPage = Object.values(site.topics).find(topic => topic.id.substring(4) === data.inputParentContextId);
 
       const productInCurrentLocale = page ? Object.values(site.links)
-        .map(link => { console.log(link.name, link.type); return link;})
+        .map(link => {
+          // console.log(link.name, link.type); 
+          return link;
+        })
         .filter(link => link.type === 'workflow')
         .find(link => link.value === data.name) : null;
 

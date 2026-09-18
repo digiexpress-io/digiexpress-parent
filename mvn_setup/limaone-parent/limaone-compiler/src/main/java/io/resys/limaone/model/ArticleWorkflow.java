@@ -54,6 +54,9 @@ public interface ArticleWorkflow extends Body {
   @Nullable Boolean getAnon();
   
   @JsonInclude(JsonInclude.Include.NON_NULL) 
+  @Nullable Boolean getRps();
+  
+  @JsonInclude(JsonInclude.Include.NON_NULL) 
   @Nullable Boolean getDisabled();
   
   @JsonInclude(JsonInclude.Include.NON_NULL) 

@@ -65,6 +65,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.ModifyProcessVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.PaginateTasksImpl;
 import io.digiexpress.eveli.client.spi.task.visitors.TaskDiffVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.TransferTaskVisitor;
+import io.resys.thena.api.entities.grim.GrimRps;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -87,6 +88,18 @@ public class TaskClientImpl implements TaskClient {
   @Override
   public PaginateTasks paginateTasks() {
     return new PaginateTasksImpl(ctx);
+  }
+  
+  @Override
+  public QueryRps queryRps() {
+    return new QueryRps() {
+      @Override
+      public Multi<GrimRps> findAll() {
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().rpsQuery().findAll();
+      }
+    };
   }
   
   @Override

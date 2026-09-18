@@ -46,6 +46,7 @@ import {
   Block,
   VisibilityOff,
   HomeWorkOutlined,
+  SentimentSatisfied,
 
   // Utility Icons
   Search,
@@ -137,6 +138,7 @@ export const FsIcons = {
   Disabled: Block,
   Anonymous: VisibilityOff,
   InHouse: HomeWorkOutlined,
+  Rps: SentimentSatisfied,
 
   // Utility
   Phone: Phone,

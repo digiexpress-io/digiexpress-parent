@@ -64,7 +64,7 @@ public interface NewArticleWorkflow {
     @Nullable Boolean getAnon();
     @Nullable Boolean getDisabled();
     @Nullable Boolean getAssignable();
-    
+    @Nullable Boolean getRps();
     @Nullable OffsetDateTime getStartDate();
     @Nullable OffsetDateTime getEndDate();
     

@@ -34,4 +34,5 @@ public interface GrimRegistry {
   GrimRemarkRegistry remarks();
   GrimCommandsRegistry commands();
   GrimProcessRegistry processes();
+  GrimRpsRegistry rps();
 }

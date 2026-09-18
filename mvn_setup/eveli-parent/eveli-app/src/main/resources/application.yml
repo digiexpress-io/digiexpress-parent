@@ -13,6 +13,20 @@ spring:
     enabled: true
     locations: classpath:db/postgresql
     validate-on-migrate: true
+  ai:
+    # Metis needs these; set both to ollama together with eveli.metis.enabled.
+    model:
+      chat: none
+      embedding: none
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: llama3.2
+          temperature: 0.2
+      embedding:
+        options:
+          model: bge-m3
 
 management:
   server:
@@ -100,3 +114,10 @@ eveli:
       attachment-url-base: /worker/rest/api/attachments/fs
       attachment-server: http://localhost:8080
  
+# metis: also set spring.ai.model.chat/embedding to ollama when enabling
+eveli.metis.enabled: false
+
+eveli.metis.search.enabled: false
+eveli.metis.search.locales: en, fi, sv
+eveli.metis.search.auto-reindex-on-startup: true
+eveli.metis.search.reindex-on-deployment: true

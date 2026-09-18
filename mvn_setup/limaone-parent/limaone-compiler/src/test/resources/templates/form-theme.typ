@@ -6,82 +6,142 @@
 //   #import "form-theme.typ": *
 //
 // Apply document-wide page setup at the top of your main template:
-//   #show: pop-setup.with(date: "03.03.2026")
+//   #show: pop-setup.with(date: "03.03.2026", title: "Lomake")
+//
+// Attach the image resource "digiexpress-logo" (png) to the printout page to
+// get the logo into the footer.
 // =============================================================
 
-// ---- i18n (labels) ------------------------------------------
-// Shape mirrors the legacy handlebars labels JSON: `reco.<key>`, `form.<key>`,
-// `mifid.{title,groups,items,pages}`, `boolean.{true,false}`, `complexProduct`,
-// `assignment`, `documentsPresented`. Missing keys fall back to the provided
-// default (or the key itself), so the document still renders even when a
-// language file is incomplete (e.g. en.json lacks `complexProduct`).
-#let _svc           = sys.inputs.at("service", default: (:))
-#let labels         = _svc.at("labels", default: (:))
-#let lang           = _svc.at("lang",   default: "fi")
-// Image bytes keyed by filename, supplied by compile.sh from the risk-images/
-// folder. Each value is `bytes` after the host's __base64__ → bytes mapping.
-#let images-data    = _svc.at("images", default: (:))
+// Image resources attached to the printout page (bytes after the host's
+// __base64__ → bytes mapping), keyed by resource name.
+#let _resources     = sys.inputs.at("resources", default: (:))
+#let logo           = _resources.at("digiexpress-logo", default: none)
 
-#let _labels-reco   = labels.at("reco",   default: (:))
-#let _labels-form   = labels.at("form",   default: (:))
-#let _labels-mifid  = labels.at("mifid",  default: (:))
-#let _labels-bool   = labels.at("boolean", default: (:))
 
-#let reco-text(key, default: none) = {
-  let v = _labels-reco.at(key, default: none)
-  if v == none { if default == none { key } else { default } } else { v }
+// ---- Task printout texts ------------------------------------
+// Texts of the task questionnaire printout per questionnaire language,
+// english is the fallback.
+#let strings = (
+  en: (
+    yes: "Yes",
+    no: "No",
+    empty: "-",
+    reference: "Task reference",
+    subject: "Subject",
+    status: "Status",
+    priority: "Priority",
+    created: "Task created",
+    due-date: "Due date",
+    assigned: "Assigned to",
+    form: "Form",
+    form-submitted: "Form submitted",
+    form-language: "Form language",
+    questionnaire: "Questionnaire",
+    customer: "Customer",
+    customer-ssn: "Customer identifier",
+    messages: "Customer messages",
+    message-date: "Date",
+    message-author: "Author",
+    message-text: "Message",
+    status-values: (
+      NEW: "New", OPEN: "Open", COMPLETED: "Completed", TRANSFERRED: "Transferred",
+      REJECTED: "Rejected", DELEGATED: "Delegated", WAITING: "Waiting",
+    ),
+    priority-values: (LOW: "Low", NORMAL: "Normal", HIGH: "High"),
+    source-values: (FRONTDESK: "Case worker", PORTAL: "Customer"),
+    language-values: (fi: "Finnish", en: "English", sv: "Swedish"),
+  ),
+  fi: (
+    yes: "Kyllä",
+    no: "Ei",
+    empty: "-",
+    reference: "Tehtävän viite",
+    subject: "Aihe",
+    status: "Tila",
+    priority: "Prioriteetti",
+    created: "Tehtävä luotu",
+    due-date: "Määräpäivä",
+    assigned: "Käsittelijä",
+    form: "Lomake",
+    form-submitted: "Lomake lähetetty",
+    form-language: "Lomakkeen kieli",
+    questionnaire: "Lomake",
+    customer: "Asiakas",
+    customer-ssn: "Asiakkaan tunnus",
+    messages: "Asiakkaan viestit",
+    message-date: "Päivämäärä",
+    message-author: "Lähettäjä",
+    message-text: "Viesti",
+    status-values: (
+      NEW: "Uusi", OPEN: "Avoin", COMPLETED: "Valmis", TRANSFERRED: "Siirretty",
+      REJECTED: "Hylätty", DELEGATED: "Delegoitu", WAITING: "Odottaa",
+    ),
+    priority-values: (LOW: "Matala", NORMAL: "Normaali", HIGH: "Korkea"),
+    source-values: (FRONTDESK: "Käsittelijä", PORTAL: "Asiakas"),
+    language-values: (fi: "suomi", en: "englanti", sv: "ruotsi"),
+  ),
+  sv: (
+    yes: "Ja",
+    no: "Nej",
+    empty: "-",
+    reference: "Uppgiftens referens",
+    subject: "Ämne",
+    status: "Status",
+    priority: "Prioritet",
+    created: "Uppgiften skapad",
+    due-date: "Förfallodag",
+    assigned: "Handläggare",
+    form: "Formulär",
+    form-submitted: "Formuläret skickat",
+    form-language: "Formulärets språk",
+    questionnaire: "Formulär",
+    customer: "Kund",
+    customer-ssn: "Kundens identifierare",
+    messages: "Kundens meddelanden",
+    message-date: "Datum",
+    message-author: "Avsändare",
+    message-text: "Meddelande",
+    status-values: (
+      NEW: "Ny", OPEN: "Öppen", COMPLETED: "Slutförd", TRANSFERRED: "Överförd",
+      REJECTED: "Avvisad", DELEGATED: "Delegerad", WAITING: "Väntar",
+    ),
+    priority-values: (LOW: "Låg", NORMAL: "Normal", HIGH: "Hög"),
+    source-values: (FRONTDESK: "Handläggare", PORTAL: "Kund"),
+    language-values: (fi: "finska", en: "engelska", sv: "svenska"),
+  ),
+)
+
+#let _strings(locale) = strings.at(locale, default: strings.en)
+
+#let t(locale, key) = {
+  let v = _strings(locale).at(key, default: none)
+  if v == none { v = strings.en.at(key, default: key) }
+  v
 }
 
-#let form-label(key, default: none) = {
-  let v = _labels-form.at(key, default: none)
-  if v == none { if default == none { key } else { default } } else { v }
+#let t-enum(locale, group, value) = {
+  if value == none { return "" }
+  let values = _strings(locale).at(group, default: (:))
+  let v = values.at(str(value), default: none)
+  if v == none { v = strings.en.at(group, default: (:)).at(str(value), default: str(value)) }
+  v
 }
 
-#let mifid-title(default: "SOVELTUVUUSARVIOINTI") = {
-  let v = _labels-mifid.at("title", default: none)
-  if v == none { default } else { v }
+#let yes-no(locale, v) = {
+  if v == true { t(locale, "yes") }
+  else if v == false { t(locale, "no") }
+  else { t(locale, "empty") }
 }
 
-#let mifid-group(id, default: none) = {
-  let groups = _labels-mifid.at("groups", default: (:))
-  let v = groups.at(id, default: none)
-  if v == none { if default == none { id } else { default } } else { v }
+// ISO "YYYY-MM-DD…" → "DD.MM.YYYY" (+ " HH:MM" for date-times)
+#let fmt-date(iso) = {
+  if type(iso) != str or iso.len() < 10 { return "" }
+  iso.slice(8, 10) + "." + iso.slice(5, 7) + "." + iso.slice(0, 4)
 }
 
-#let boolean-text(v) = {
-  if v == true  { _labels-bool.at("true",  default: "Kyllä") }
-  else if v == false { _labels-bool.at("false", default: "Ei") }
-  else { "-" }
-}
-
-#let complex-product-labels() = labels.at("complexProduct", default: none)
-#let last-disclaimer-labels() = _labels-form.at("lastDisclaimer", default: ())
-
-// Replace every "{name}" occurrence in `template` with the matching entry from
-// `vars` (a dict). Returns the substituted string.
-#let fmt(template, vars) = {
-  let out = template
-  for (k, v) in vars.pairs() {
-    out = out.replace("{" + k + "}", str(v))
-  }
-  out
-}
-
-// For "Label text: {placeholder} €"-style templates, return the part before
-// the first "{" with any trailing whitespace stripped — used as a label
-// in the two-column data-row layout.
-#let label-prefix(template) = {
-  let i = template.position("{")
-  let s = if i == none { template } else { template.slice(0, i) }
-  while s.ends-with(" ") { s = s.slice(0, s.len() - 1) }
-  s
-}
-
-// For the same templates, return the suffix after the closing "}" — usually
-// " €". Leading whitespace is preserved so the value reads "1234 €".
-#let value-suffix(template) = {
-  let i = template.position("}")
-  if i == none { "" } else { template.slice(i + 1) }
+#let fmt-datetime(iso) = {
+  if type(iso) != str or iso.len() < 16 { return fmt-date(iso) }
+  fmt-date(iso) + " " + iso.slice(11, 16)
 }
 
 
@@ -96,31 +156,14 @@
 #let pop-bg-warn  = rgb("#fffbeb")
 #let pop-warn     = rgb("#d97706")
 
-// ---- Allocation category palette (5 asset classes) ----------
-// Used consistently across all pie charts in the document.
-#let alloc-colors = (
-  rgb("#f87171"),  // Lyhyt korko ja käteinen — red
-  rgb("#34d399"),  // Pitkä korko             — emerald
-  rgb("#818cf8"),  // Osake                   — indigo
-  rgb("#059669"),  // Reaaliomaisuus          — dark green
-  rgb("#a78bfa"),  // Vaihtoehtoinen          — violet
-)
-
-#let alloc-labels = (
-  reco-text("chart.shortInterest",     default: "Lyhyt korko ja käteinen"),
-  reco-text("chart.longInterest",      default: "Pitkä korko"),
-  reco-text("chart.share",             default: "Osake"),
-  reco-text("chart.realAssets",        default: "Reaaliomaisuus"),
-  reco-text("chart.alternativeAssets", default: "Vaihtoehtoinen"),
-)
-
 // =============================================================
 // DOCUMENT SETUP
-// Use with: #show: pop-setup.with(date: "03.03.2026")
+// Use with: #show: pop-setup.with(date: "03.03.2026", title: "Lomake")
 // Parameters:
 //   date       — date string shown in header, e.g. "03.03.2026"
+//   title      — header title
 // =============================================================
-#let pop-setup(date: "03.03.2026", body) = {
+#let pop-setup(date: "03.03.2026", title: none, body) = {
   set page(
     paper: "a4",
     margin: (x: 1.5cm, top: 2.8cm, bottom: 1.8cm),
@@ -138,7 +181,7 @@
           #set text(8pt, fill: white)
           #grid(
             columns: (1fr, auto),
-            text(weight: "bold")[#upper(mifid-title())],
+            text(weight: "bold")[#upper(if title == none { "" } else { title })],
             text[#date #h(6pt) #pg / #total],
           )
         ]
@@ -147,6 +190,8 @@
     },
     footer: [
       #line(length: 100%, stroke: 0.5pt + pop-border)
+      #v(4pt)
+      #if logo != none { align(right)[#image(logo, format: "png", height: 14pt)] }
     ],
   )
   set text(font: "Segoe UI", size: 9pt, fill: pop-dark)
@@ -248,48 +293,4 @@
     content,
   )
   v(3pt)
-}
-
-#let alloc-legend-row(idx, pct, show-pct: true) = {
-  if show-pct {
-    grid(
-      columns: (10pt, 1fr, auto),
-      column-gutter: 5pt,
-      block(width: 10pt, height: 10pt, fill: alloc-colors.at(idx), radius: 2pt, stroke: none),
-      text(7.5pt)[#alloc-labels.at(idx)],
-      text(7.5pt, weight: "bold")[#pct\%],
-    )
-  } else {
-    grid(
-      columns: (10pt, 1fr),
-      column-gutter: 5pt,
-      block(width: 10pt, height: 10pt, fill: alloc-colors.at(idx), radius: 2pt, stroke: none),
-      text(7.5pt)[#alloc-labels.at(idx)],
-    )
-  }
-  v(2pt)
-}
-
-// Default: show only category labels alongside the color swatches.
-// Percentages now live inside each donut, so the side legend is for labels.
-#let alloc-legend(data-percents, show-pct: false) = {
-  for (i, pct) in data-percents.enumerate() {
-    alloc-legend-row(i, pct, show-pct: show-pct)
-  }
-}
-
-// Horizontal legend — colour swatches + category labels in a single row.
-// Used underneath chart rows so the labels don't crowd one chart's column.
-#let alloc-legend-horizontal() = {
-  set text(8pt)
-  align(center, stack(dir: ltr, spacing: 14pt,
-    ..range(alloc-labels.len()).map(i =>
-      grid(
-        columns: (10pt, auto),
-        column-gutter: 5pt,
-        block(width: 10pt, height: 10pt, fill: alloc-colors.at(i), radius: 2pt, stroke: none),
-        [#alloc-labels.at(i)],
-      )
-    )
-  ))
 }

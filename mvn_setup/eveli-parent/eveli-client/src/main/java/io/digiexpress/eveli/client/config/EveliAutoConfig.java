@@ -59,7 +59,7 @@ import io.digiexpress.eveli.client.spi.feedback.FeedbackCategoriesReaderImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.spi.health.HealthClientImpl;
-import io.digiexpress.eveli.client.spi.process.PdfClientRest;
+import io.digiexpress.eveli.client.spi.pdf.PdfClientImpl;
 import io.digiexpress.eveli.client.spi.process.ProcessQuestionnaireAttachmentCommand;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
@@ -112,7 +112,6 @@ import lombok.extern.slf4j.Slf4j;
     EveliPropsEmail.class, 
     EveliPropsGamut.class,
     EveliPropsFeedback.class,
-    EveliPropsPrintout.class,
     EveliPropsTask.class,
     EveliPropsMq.class,
     EveliPropsEnvir.class,
@@ -318,12 +317,11 @@ public class EveliAutoConfig {
 
   @Bean
   public PdfClient pdfClient(
-      TaskClient client, 
-      FormDb dialob, 
-      EveliPropsPrintout printoutConfig, 
-      RestTemplate restTemplate, 
-      ObjectMapper om) {
-    return new PdfClientRest(client, dialob, restTemplate, printoutConfig.getServiceUrl(), om);
+      TaskClient taskClient,
+      FormDb formDb,
+      io.resys.limaone.program.Runtime runtime,
+      EveliPropsTagomi tagomiConfig) {
+    return new PdfClientImpl(taskClient, formDb, runtime, tagomiConfig.getTaskPdfServiceName(), tagomiConfig.getTaskPdfDefaultLocale());
   }
 
   @Bean

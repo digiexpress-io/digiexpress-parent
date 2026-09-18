@@ -232,6 +232,14 @@ public class TestTemplate {
       throw new RuntimeException(e.getMessage(), e);
     }
   }
+
+  public static byte[] toBytes(String fullPath) {
+    try {
+      return IOUtils.toByteArray(TestTemplate.class.getClassLoader().getResource(fullPath));
+    } catch(Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
   
   @Value
   public static class Deps {

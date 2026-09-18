@@ -34,11 +34,13 @@ import io.resys.thena.grim.spi.GrimDataSource.InternalMissionSequence;
 import io.resys.thena.grim.spi.GrimDataSource.InternalMissionStatsQuery;
 import io.resys.thena.grim.spi.GrimDataSource.InternalProcQuery;
 import io.resys.thena.grim.spi.GrimDataSource.InternalProcessSequence;
+import io.resys.thena.grim.spi.GrimDataSource.InternalRpsQuery;
 import io.resys.thena.grim.spi.GrimDataSource.TransactionFunction;
 import io.resys.thena.grim.spi.builders.InternalCommitQuerySqlImpl;
 import io.resys.thena.grim.spi.builders.InternalCommitTreeQuerySqlImpl;
 import io.resys.thena.grim.spi.builders.InternalCommitViewerQuerySqlImpl;
 import io.resys.thena.grim.spi.builders.InternalGrimInsertsImpl;
+import io.resys.thena.grim.spi.builders.InternalGrimRpsSqlImpl;
 import io.resys.thena.grim.spi.builders.InternalMissionContainerQuerySqlImpl;
 import io.resys.thena.grim.spi.builders.InternalMissionLabelSqlImpl;
 import io.resys.thena.grim.spi.builders.InternalMissionRemarkQuerySqlImpl;
@@ -114,5 +116,9 @@ public class GrimDbStateImpl implements GrimState {
   @Override
   public InternalProcessSequence missionProcSequences() {
     return new InternalProcessSequenceSqlImpl(dataSource);
+  }
+  @Override
+  public InternalRpsQuery rps() {
+    return new InternalGrimRpsSqlImpl(dataSource);
   }
 }
