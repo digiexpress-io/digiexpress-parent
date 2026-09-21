@@ -64,10 +64,10 @@ import lombok.extern.slf4j.Slf4j;
 @ContextConfiguration(classes = { EveliAutoConfigJpa.class, TaskEnvirSetup.TaskEnvirSetupConfig.class })
 public abstract class TaskEnvirSetup {
 
-  private static PostgreSQLContainer<?> CONTAINER;
-  private static AtomicInteger TEST_INDEX = new AtomicInteger(0);
-  private static io.vertx.mutiny.pgclient.PgPool PGPOOL;
-  private static GrimClient THENA_STATE;
+  protected static PostgreSQLContainer<?> CONTAINER;
+  protected static AtomicInteger TEST_INDEX = new AtomicInteger(0);
+  protected static io.vertx.mutiny.pgclient.PgPool PGPOOL;
+  protected static GrimClient THENA_STATE;
   public static ServiceInit SERVICE_INIT = new ServiceInit() {
     @Override
     public <T> T get(Class<T> type) {
