@@ -8,7 +8,30 @@
   </parent>
   <name>eveli-client</name>
   <artifactId>eveli-client</artifactId>
-
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>Jar Package</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>Jar Tests Package</id>
+            <phase>package</phase>
+              <goals>
+                <goal>test-jar</goal>
+              </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>

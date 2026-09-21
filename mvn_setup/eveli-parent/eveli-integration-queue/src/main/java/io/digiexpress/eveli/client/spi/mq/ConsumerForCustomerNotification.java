@@ -32,6 +32,7 @@ import io.digiexpress.eveli.client.spi.mq.WrenchFlowCommand.TaskNotification;
 import io.digiexpress.thena.mq.client.api.ImmutableMessageResponse;
 import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
+import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +65,12 @@ public class ConsumerForCustomerNotification implements ThenaMqConsumer {
     try {
       final var notification = msg.getBodyValue().mapTo(TaskNotification.class);
       
-      final var process = processClient.queryTaskProcesess().findOneByTaskId(notification.getTaskId()).await().atMost(timeout);
+      // this query should be run in separate thread (done with runSubscriptionOn),
+      // as notifications are sent from async code
+      // and waiting here results in timeout exception. Issue #783
+      final var process = processClient.queryTaskProcesess().findOneByTaskId(notification.getTaskId())
+          .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
+          .await().atMost(timeout);
       final Optional<String> userId = process.map(p->p.getUserId());
       
       if (userId.isEmpty()) {
