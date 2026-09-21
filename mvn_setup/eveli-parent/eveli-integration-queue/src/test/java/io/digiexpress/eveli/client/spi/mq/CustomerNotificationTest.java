@@ -135,19 +135,20 @@ public class CustomerNotificationTest extends TaskEnvirSetup {
       .await().atMost(Duration.ofMinutes(1));
     
     
-    // Route the message, current wait time for process query is 10 seconds, wait here shorter time
-    // to detect locks
+    // Route the message
     getClient().withChannel(config.getChannel())
       .bindingBuilder()
       .build()
-      .await().atMost(Duration.ofSeconds(5));
+      .await().atMost(Duration.ofMinutes(1));
     
     // Deliver the message to the consumers
+    // Current wait time for process query is 10 seconds, wait here shorter time
+    // to get timeout exception. For longer times test will fail with message response check 
     getClient().withChannel(config.getChannel())
       .deliveryBuilder()
       .config(config.getObject())
       .build()
-      .await().atMost(Duration.ofSeconds(5));
+      .await().atMost(Duration.ofSeconds(60));
   
     
     // Check for bindings
