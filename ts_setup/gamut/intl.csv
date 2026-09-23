@@ -46,7 +46,7 @@ gamut.buttons.close,,Close,Sulje,Nära,Tutup,Zatvori
 gamut.buttons.reply,,Reply,Vastaa,Svar,Balas,Odgovori
 gamut.buttons.serviceSelect,,Our services,Palvelumme,Våra tjänster,Perkhidmatan kami,Naše usluge
 gamut.buttons.attachment.add,,Add attachment,Lisää liite,Lägg till bilaga,Tambah lampiran,Dodaj prilog
-gamut.buttons.sort-last-modified.offers,,Sort by last modified,Järjestä viimeksi muokattu mukaan,Sortera efter senaste modifiering,Isih mengikut terakhir diubah suai,
+gamut.buttons.sort-last-modified,,Sort by last modified,Järjestä viimeksi muokattu mukaan,Sortera efter senaste modifiering,Isih mengikut terakhir diubah suai,
 ,,,,,,
 // ------------------- GAMUT LOCALES ----------------------,,,,#VALUE!,,
 gamut.locale.en,,English,Englanti,Engelska,Inggeris,Engleski

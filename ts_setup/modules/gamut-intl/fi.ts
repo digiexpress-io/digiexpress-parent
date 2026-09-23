@@ -38,7 +38,7 @@ export const fi = {
   'gamut.buttons.reply': 'Vastaa',
   'gamut.buttons.serviceSelect': 'Palvelumme',
   'gamut.buttons.attachment.add': 'Lisää liite',
-  'gamut.buttons.sort-last-modified.offers': 'Järjestä viimeksi muokattu mukaan',
+  'gamut.buttons.sort-last-modified': 'Järjestä viimeksi muokattu mukaan',
   'gamut.locale.en': 'Englanti',
   'gamut.locale.fi': 'Suomi',
   'gamut.locale.sv': 'Ruotsi',

@@ -28,7 +28,7 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
   const props = useThemeProps({ props: initProps, name: MUI_NAME });
   const classes = useUtilityClasses();
 
-  const { contracts } = useContracts();
+  const { contracts, sortOrder } = useContracts();
   const { site } = useSite();
   const { getLocalisedOfferName } = useOffers();
   const { getSubject } = useComms();
@@ -90,12 +90,12 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
             return a.hasUnviewedMessages ? -1 : 1;
           }
           if (b.lastMsgDate !== a.lastMsgDate) {
-            return b.lastMsgDate - a.lastMsgDate;
+            return sortOrder === 'ASC' ? a.lastMsgDate - b.lastMsgDate : b.lastMsgDate - a.lastMsgDate;
           }
-        
+
           const aUpdated = a.contract.updated?.toMillis?.() ?? 0;
           const bUpdated = b.contract.updated?.toMillis?.() ?? 0;
-          return bUpdated - aUpdated;
+          return sortOrder === 'ASC' ? aUpdated - bUpdated : bUpdated - aUpdated;
         })        
         .map(({ contract }) => mapToItem(contract))
         .map((contract) => (

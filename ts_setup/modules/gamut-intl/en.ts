@@ -38,7 +38,7 @@ export const en = {
   'gamut.buttons.reply': 'Reply',
   'gamut.buttons.serviceSelect': 'Our services',
   'gamut.buttons.attachment.add': 'Add attachment',
-  'gamut.buttons.sort-last-modified.offers': 'Sort by last modified',
+  'gamut.buttons.sort-last-modified': 'Sort by last modified',
   'gamut.locale.en': 'English',
   'gamut.locale.fi': 'Finnish',
   'gamut.locale.sv': 'Swedish',

@@ -20,7 +20,7 @@ export interface InboxItem {
 
 export function useInboxItems(): InboxItem[] {
   const { site } = useSite();
-  const { subjects } = useComms();
+  const { subjects, sortOrder } = useComms();
   const { getContract } = useContracts();
   const { getLocalisedOfferName, getOffer } = useOffers();
   const intl = useIntl();
@@ -32,7 +32,8 @@ export function useInboxItems(): InboxItem[] {
     getLocalisedOfferName,
     getOffer,
     intl,
-    iam
+    iam,
+    sortOrder
   );
 
   return visitor.visit(subjects);
@@ -47,7 +48,8 @@ class InboxItemsProcessorVisitor {
     private getLocalisedOfferName: (site: any, offerName: string) => string,
     private getOffer: (id: string) => OfferApi.Offer | undefined,
     private intl: ReturnType<typeof useIntl>,
-    private iam: ReturnType<typeof useIam>
+    private iam: ReturnType<typeof useIam>,
+    private sortOrder: CommsApi.SubjectSortOrder
   ) { }
 
   visit(subjects: readonly CommsApi.Subject[]): InboxItem[] {
@@ -64,7 +66,7 @@ class InboxItemsProcessorVisitor {
         }
         const aDate = a.lastExchange?.created ?? a.created;
         const bDate = b.lastExchange?.created ?? b.created;
-        return bDate.toMillis() - aDate.toMillis();
+        return this.sortOrder === 'ASC' ? aDate.toMillis() - bDate.toMillis() : bDate.toMillis() - aDate.toMillis();
       })
       .map((subject) => {
         const contractId = subject.contractId;

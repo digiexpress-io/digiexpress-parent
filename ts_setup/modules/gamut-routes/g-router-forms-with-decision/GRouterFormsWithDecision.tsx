@@ -1,8 +1,7 @@
 import React from 'react';
 import { Container, Divider, Drawer, useThemeProps } from '@mui/material';
-
-
 import { useNavigate } from '@tanstack/react-router';
+import { useIntl } from 'react-intl';
 
 import {
   GLayout,
@@ -11,8 +10,10 @@ import {
   GAppBar,
   GUserOverviewMenu,
   GContracts,
+  GSort,
 } from '@dxs-ts/gamut-primitives';
 
+import { useContracts } from '@dxs-ts/gamut-api';
 import { GShell, GShellClassName, } from '@dxs-ts/gamut-shell';
 import { GRouterFormsWithDecisionRoot, MUI_NAME, useUtilityClasses, WithDecisionBreadcrumbs, WithDecisionTitle } from './useUtilityClasses';
 
@@ -26,8 +27,9 @@ export interface GRouterFormsWithDecisionProps {
 
 export const GRouterFormsWithDecision: React.FC<GRouterFormsWithDecisionProps> = (initProps) => {
   const nav = useNavigate();
-
+  const intl = useIntl();
   const classes = useUtilityClasses();
+  const { toggleContractSortOrder, sortOrder } = useContracts();
 
   const props = useThemeProps({
     props: initProps,
@@ -80,6 +82,7 @@ export const GRouterFormsWithDecision: React.FC<GRouterFormsWithDecisionProps> =
                 topTitle,
                 left: () => (<>
                   <Divider />
+                  <GSort onClick={toggleContractSortOrder} direction={sortOrder} label={intl.formatMessage({ id: 'gamut.buttons.sort-last-modified' })} />
                   <GContracts
                     filter={(contract => contract.status === 'COMPLETED' || contract.status === 'REJECTED')}
                     slotProps={{ item: { onClick: handleContractItemClick } }}

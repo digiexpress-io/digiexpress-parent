@@ -1,8 +1,7 @@
 import React from 'react';
 import { Container, Divider, Drawer, useThemeProps } from '@mui/material';
-
 import { useNavigate } from '@tanstack/react-router';
-
+import { useIntl } from 'react-intl';
 
 import {
   GLayout,
@@ -11,8 +10,10 @@ import {
   GAppBar,
   GUserOverviewMenu,
   GInbox,
+  GSort,
 } from '@dxs-ts/gamut-primitives';
 
+import { useComms } from '@dxs-ts/gamut-api';
 import { GShell, GShellClassName, } from '@dxs-ts/gamut-shell';
 
 import { Bread, GRouterInboxRoot, MUI_NAME, Top, useUtilityClasses } from './useUtilityClasses';
@@ -28,6 +29,8 @@ export interface GRouterInboxProps {
 
 export const GRouterInbox: React.FC<GRouterInboxProps> = (initProps) => {
   const nav = useNavigate();
+  const intl = useIntl();
+  const { toggleSubjectSortOrder, sortOrder } = useComms();
 
   const props = useThemeProps({
     props: initProps,
@@ -83,6 +86,7 @@ export const GRouterInbox: React.FC<GRouterInboxProps> = (initProps) => {
                 topTitle: () => <Top />,
                 left: () => (<>
                   <Divider />
+                  <GSort onClick={toggleSubjectSortOrder} direction={sortOrder} label={intl.formatMessage({ id: 'gamut.buttons.sort-last-modified' })} />
                   <GInbox onOpenOffer={onOpenOffer} slotProps={{
                     attachment: { onClick: handleAttachmentClick },
                     item: { onClick: handleSubjectClick },

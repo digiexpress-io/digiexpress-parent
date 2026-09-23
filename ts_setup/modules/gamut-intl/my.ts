@@ -38,7 +38,7 @@ export const my = {
   'gamut.buttons.reply': 'Balas',
   'gamut.buttons.serviceSelect': 'Perkhidmatan kami',
   'gamut.buttons.attachment.add': 'Tambah lampiran',
-  'gamut.buttons.sort-last-modified.offers': 'Isih mengikut terakhir diubah suai',
+  'gamut.buttons.sort-last-modified': 'Isih mengikut terakhir diubah suai',
   'gamut.locale.en': 'Inggeris',
   'gamut.locale.fi': 'Bahasa Finland',
   'gamut.locale.sv': 'Bahasa Sweden',
