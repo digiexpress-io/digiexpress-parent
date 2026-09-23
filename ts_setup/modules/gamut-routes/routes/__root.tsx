@@ -56,13 +56,15 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       fetchCockpitsGet={siteFetch.fetchCockpitsGet}
       fetchSiteGet={siteFetch.fetchSiteGet}
       fetchFeedbackGet={authFeedbackFetch.fetchFeedbackGet}
-      fetchFeedbackRatingPut={authFeedbackFetch.fetchFeedbackRatingPut}>
+      fetchFeedbackRatingPut={authFeedbackFetch.fetchFeedbackRatingPut}
+      staleTime={staleTime} refetchTime={staleTime}>
 
       <DialobProvider 
         fetchActionGet={dialobFetch.fetchActionGet} 
         fetchActionPost={dialobFetch.fetchActionPost} 
         fetchReviewGet={dialobFetch.fetchReviewGet}
-        fetchAttachmentPost={dialobFetch.fetchAttachmentPost}>
+        fetchAttachmentPost={dialobFetch.fetchAttachmentPost}
+      >
         
         <OfferProvider 
           cancelOffer={offerFetch.fetchDelete}

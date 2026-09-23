@@ -35,7 +35,7 @@ export function usePopulateContext(props: UsePropulateProps): PopulateContractCo
   // tanstack query config
   const { data: processes, error, refetch, isPending } = useQuery({
     staleTime,
-    refetchInterval: 15000,
+    refetchInterval: staleTime,
     queryKey: [queryKey],
     queryFn: () => getContracts()
       .then(data => { 
