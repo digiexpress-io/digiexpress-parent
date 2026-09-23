@@ -32,24 +32,29 @@ import org.springframework.context.annotation.Configuration;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.spi.attachments.AttachmentCommandsDummy;
 import io.digiexpress.eveli.client.spi.attachments.AttachmentCommandsFileSystem;
 import io.digiexpress.eveli.client.web.resources.worker.AttachmentFilesystemController;
 
 
 
 @Configuration
-@ConditionalOnBooleanProperty(matchIfMissing = false, havingValue = true, prefix = "eveli.attachment.fs", name = "enabled")
 public class EveliAutoConfigAttachmentFs {
   
+  @ConditionalOnBooleanProperty(matchIfMissing = false, havingValue = true, prefix = "eveli.attachment.fs", name = "enabled")
   @Bean
-  public AttachmentCommands attachmentCommandFs(EveliPropsAttachmentFs props) throws IOException {
+  public AttachmentCommands attachmentCommandFs(EveliPropsAttachmentFs props)  {
     String directory = props.getRootDirectory();
-    Path currentDirectory = Paths.get(directory);
+    final Path currentDirectory = Paths.get(directory);
     if (!currentDirectory.isAbsolute()) {
-      String tmpDirsLocation = System.getProperty("java.io.tmpdir");
-      Path tempDirectory = Paths.get(tmpDirsLocation, directory);
+      final var tmpDirsLocation = System.getProperty("java.io.tmpdir");
+      final var tempDirectory = Paths.get(tmpDirsLocation, directory);
       if (!Files.exists(tempDirectory)) {
-        Files.createDirectory(tempDirectory);
+        try {
+          Files.createDirectory(tempDirectory);
+        } catch(IOException e) {
+          throw new RuntimeException("Failed to setup 'eveli.attachment.fs', failed to create temp dir: '" + tempDirectory.toAbsolutePath().toString() + "', error: " + e.getMessage(), e);
+        }
       }
       directory = tempDirectory.toAbsolutePath().toString();
     }
@@ -59,5 +64,12 @@ public class EveliAutoConfigAttachmentFs {
   @Bean
   public AttachmentFilesystemController attachmentFilesystemController(AttachmentCommands client, WorkerAuthClient securityClient) {
     return new AttachmentFilesystemController(client, securityClient);
+  }
+  
+  
+  @Bean
+  @ConditionalOnBooleanProperty(matchIfMissing = true, havingValue = false, prefix = "eveli.attachment.fs", name = "enabled")
+  public AttachmentCommands attachmentCommands() {
+    return new AttachmentCommandsDummy();
   }
 }

@@ -138,11 +138,4 @@ eveli.tagomi.task-pdf-service-name: task-pdf
 eveli.tagomi.task-pdf-default-locale: en
 
 # metis: needs the ollama service from eveli-local-docker
-eveli.metis.enabled: true
-
-eveli.metis.search.enabled: true
-eveli.metis.search.locales: en, fi, sv
-eveli.metis.search.auto-reindex-on-startup: true
-eveli.metis.search.reindex-on-deployment: true
-eveli.metis.search.query.embed-concurrency: 1
-
+eveli.metis.enabled: false
