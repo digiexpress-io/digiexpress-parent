@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeProps, Typography, Grid } from '@mui/material';
+import { useThemeProps, Typography, Grid2 } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useNavigate } from '@tanstack/react-router';
 
@@ -65,7 +65,7 @@ export const GUserOverview: React.FC<GUserOverviewProps> = (initProps) => {
   const Root = initProps.component ?? GUserOverviewRoot;
 
   function isItemDisabled(id: GUserOverviewMenuView) {
-    if(props.slotProps && props.slotProps[id]) {
+    if (props.slotProps && props.slotProps[id]) {
       return props.slotProps[id].disabled;
     }
     return false;
@@ -73,18 +73,17 @@ export const GUserOverview: React.FC<GUserOverviewProps> = (initProps) => {
 
   return (
     <Root ownerState={ownerState} className={classes.root}>
-      <Grid container spacing={1} height='100%' width='75%'>
-
-        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+      <Grid2 container spacing={1} className={classes.overviewItemLayout}>
+        <Grid2 size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
           <Item title={props.userName}>
             <Typography>{props.userAddress}</Typography>
             <Typography>{props.userCityAndCountry}</Typography>
             <Typography>{props.userZipcode}</Typography>
           </Item>
-        </Grid>
+        </Grid2>
 
         {isItemDisabled('services') ? <></> : (
-          <Grid item xs={12} sm={12} md={6} lg={6} xl={6} className='serviceSelect'>
+          <Grid2 size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }} className='serviceSelect'>
             <Item
               viewId='services'
               onClick={handleClick}
@@ -92,70 +91,70 @@ export const GUserOverview: React.FC<GUserOverviewProps> = (initProps) => {
               buttonLabel={intl.formatMessage({ id: 'gamut.services' })}
               count={props.topicCount}
             />
-          </Grid>)
+          </Grid2>)
         }
 
-      {isItemDisabled('requests-in-progress') ? <></> : (
-        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-          <Item 
-            viewId='requests-in-progress'
-            onClick={handleClick}
-            title={intl.formatMessage({ id: 'gamut.userOverview.unfinished-forms.detail.title' })}
-            buttonLabel={intl.formatMessage({ id: 'gamut.forms' })}
-            count={props.startedForms}
-          />
-        </Grid>)
+        {isItemDisabled('requests-in-progress') ? <></> : (
+          <Grid2 size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
+            <Item
+              viewId='requests-in-progress'
+              onClick={handleClick}
+              title={intl.formatMessage({ id: 'gamut.userOverview.unfinished-forms.detail.title' })}
+              buttonLabel={intl.formatMessage({ id: 'gamut.forms' })}
+              count={props.startedForms}
+            />
+          </Grid2>)
         }
 
-      {isItemDisabled('awaiting-decision') ? <></> : (
-        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-          <Item 
-            onClick={handleClick}
-            viewId='awaiting-decision'
-            title={intl.formatMessage({ id: 'gamut.userOverview.waiting-forms.detail.title' })}
-            buttonLabel={intl.formatMessage({ id: 'gamut.forms' })}
-            count={props.waitingForms}
-          />
-        </Grid>)
+        {isItemDisabled('awaiting-decision') ? <></> : (
+          <Grid2 size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
+            <Item
+              onClick={handleClick}
+              viewId='awaiting-decision'
+              title={intl.formatMessage({ id: 'gamut.userOverview.waiting-forms.detail.title' })}
+              buttonLabel={intl.formatMessage({ id: 'gamut.forms' })}
+              count={props.waitingForms}
+            />
+          </Grid2>)
         }
 
-      {isItemDisabled('with-decision') ? <></> : (
-        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-          <Item
-            onClick={handleClick}
-            viewId='with-decision'
-            title={intl.formatMessage({ id: 'gamut.userOverview.decided-forms.detail.title' })}
-            buttonLabel={intl.formatMessage({ id: 'gamut.forms' })}
-            count={props.decidedForms}
-          />
-        </Grid>)
+        {isItemDisabled('with-decision') ? <></> : (
+          <Grid2 size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
+            <Item
+              onClick={handleClick}
+              viewId='with-decision'
+              title={intl.formatMessage({ id: 'gamut.userOverview.decided-forms.detail.title' })}
+              buttonLabel={intl.formatMessage({ id: 'gamut.forms' })}
+              count={props.decidedForms}
+            />
+          </Grid2>)
         }
 
-      {isItemDisabled('inbox') ? <></> : (
-        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-          <Item
-            onClick={handleClick}
-            viewId='inbox'
-            title={intl.formatMessage({ id: 'gamut.userOverview.inbox.detail.title' })}
-            buttonLabel={intl.formatMessage({ id: 'gamut.new-messages' })}
-            count={props.newMessages}
-          />
-        </Grid>)
+        {isItemDisabled('inbox') ? <></> : (
+          <Grid2 size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
+            <Item
+              onClick={handleClick}
+              viewId='inbox'
+              title={intl.formatMessage({ id: 'gamut.userOverview.inbox.detail.title' })}
+              buttonLabel={intl.formatMessage({ id: 'gamut.new-messages' })}
+              count={props.newMessages}
+            />
+          </Grid2>)
         }
 
-      {isItemDisabled('bookings') ? <></> : (
-        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-          <Item
-            onClick={handleClick}
-            viewId='bookings'
-            title={intl.formatMessage({ id: 'gamut.userOverview.bookings.detail.title' })}
-            buttonLabel={intl.formatMessage({ id: 'gamut.bookings' })}
-            count={props.bookings}
-          />
-        </Grid>)
+        {isItemDisabled('bookings') ? <></> : (
+          <Grid2 size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
+            <Item
+              onClick={handleClick}
+              viewId='bookings'
+              title={intl.formatMessage({ id: 'gamut.userOverview.bookings.detail.title' })}
+              buttonLabel={intl.formatMessage({ id: 'gamut.bookings' })}
+              count={props.bookings}
+            />
+          </Grid2>)
         }
 
-      </Grid>
+      </Grid2>
     </Root>
   )
 }

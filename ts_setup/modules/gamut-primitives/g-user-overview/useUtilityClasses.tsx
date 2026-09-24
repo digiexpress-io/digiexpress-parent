@@ -23,7 +23,7 @@ export const GUserOverviewDetail = styled(Box, {
   slot: 'OverviewItem',
   overridesResolver: (_props, styles) => {
     return [
-      styles.overviewItem
+      styles.overviewItem,
     ];
   },
 })<{ ownerState: GUserOverviewDetailProps }>(({ theme, ownerState }) => {
@@ -70,13 +70,14 @@ export const GUserOverviewDetail = styled(Box, {
     [theme.breakpoints.down('md')]: {
       minHeight: '10vh',
     },
+
   };
 });
 
 export const GUserOverviewRoot = styled(Box, {
   name: MUI_NAME,
   slot: 'Root',
-  overridesResolver: (props, styles) => {
+  overridesResolver: (_props, styles) => {
     return [
       styles.root,
     ];
@@ -88,6 +89,16 @@ export const GUserOverviewRoot = styled(Box, {
     justifyContent: 'center',
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(1),
+    '& .GUserOverview-overviewItemLayout': {
+      gap: theme.spacing(1),
+      [theme.breakpoints.up('md')]: {
+        width: '75%',
+      },
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1)
+      }
+    },  
     '& .GUserOverviewItem-serviceSelect': {
       [theme.breakpoints.up('md')]: {
         display: 'none'
@@ -114,7 +125,8 @@ export const useUtilityClasses = () => {
     overviewItemCount: ['overviewItemCount'],
     overviewItemCountAvatar: ['overviewItemCountAvatar'],
     overviewItemCountAvatarLabel: ['overviewItemCountAvatarLabel'],
-    overviewItemButtonLabel: ['overviewItemButtonLabel']
+    overviewItemButtonLabel: ['overviewItemButtonLabel'],
+    overviewItemLayout: ['overviewItemLayout']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
