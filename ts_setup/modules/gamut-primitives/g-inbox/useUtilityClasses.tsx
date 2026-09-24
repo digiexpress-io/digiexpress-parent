@@ -103,9 +103,8 @@ export const GInboxRoot = styled("div", {
       fontSize: theme.typography.body2.fontSize,
       display: 'flex',
       [theme.breakpoints.down('sm')]: {
-        justifyContent: 'flex-end',
-        textAlign: 'right',
-        flex: '1 1 0%',
+        justifyContent: 'flex-start',
+        flex: '0 0 100%',
         minWidth: 0,
         maxWidth: '100%',
       },
