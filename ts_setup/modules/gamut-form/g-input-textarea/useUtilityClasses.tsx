@@ -56,8 +56,9 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
       adornment: { id, children: props.description, title: label ?? '', disabled: props.disabled }
     }
   }
+  const isCharLimitVisible = !!charLimit && !props.disabled;
   const classes = useUtilityClasses(props.id, variant);
-  return { classes, ownerState, props, slots, charLimit, currentLength, isAtLimit };
+  return { classes, ownerState, props, slots, isCharLimitVisible, charLimit, currentLength, isAtLimit };
 }
 
 
@@ -104,7 +105,6 @@ interface OwnerState {
   isAtLimit?: boolean;
 }
 
-// ------------------- MATERIAL INFRA, ALLOWS STYLE OVERRIDES --------------
 export const GInputTextAreaRoot = styled("div", {
   name: MUI_NAME,
   slot: 'Root',
@@ -160,7 +160,6 @@ export const GInputTextAreaRoot = styled("div", {
 });
 
 
-// ------------------- MATERIAL INFRA, CSS CLASS NAMES FOR SELECTORS -------
 const useUtilityClasses = (itemId: string, variant: string) => {
   const slots = {
     root: ['root', variant, itemId],

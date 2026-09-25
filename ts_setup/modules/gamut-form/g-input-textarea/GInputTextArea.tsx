@@ -40,12 +40,12 @@ export interface GInputTextAreaProps {
 }
 
 export const GInputTextArea: React.FC<GInputTextAreaProps> = (initProps) => {
-  const { classes, slots, ownerState, props, charLimit, currentLength } = useThemeInfra(initProps);
+  const { classes, slots, ownerState, props, isCharLimitVisible, charLimit, currentLength } = useThemeInfra(initProps);
 
   return (
     <GInputTextAreaRoot className={classes.root} ownerState={ownerState} as={props.component}>
       <GInputBase id={props.id} slots={slots.slots} slotProps={slots.slotProps} />
-      {charLimit !== undefined && (
+      {isCharLimitVisible && (
         <Typography variant="caption" className={classes.charCount}>
           {currentLength} / {charLimit}
         </Typography>
