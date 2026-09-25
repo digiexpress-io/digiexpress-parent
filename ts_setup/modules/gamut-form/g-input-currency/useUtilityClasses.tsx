@@ -30,7 +30,10 @@ export const GInputCurrencyRoot = styled("div", {
       },
       '& .MuiOutlinedInput-root.Mui-disabled': {
         backgroundColor: theme.palette.background.paper,
-      }
+      },
+      '& .MuiInputAdornment-positionStart': {
+        marginLeft: theme.spacing(1),
+      },
     }
   }
 

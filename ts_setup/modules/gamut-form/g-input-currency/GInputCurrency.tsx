@@ -80,33 +80,42 @@ export const GInputCurrency: React.FC<GInputCurrencyProps> = (initProps) => {
 }
 
 
-function formatCurrency(raw: string): string {
+const FI_FORMAT = new Intl.NumberFormat('fi-FI', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+function formatFinnish(raw: string): string {
   const numeric = parseFloat(raw);
   if (isNaN(numeric)) {
-    return '0.00';
+    return '0,00';
   }
-  return numeric.toFixed(2);
+  return FI_FORMAT.format(numeric);
 }
 
-function sanitizeInput(raw: string): string {
-  // strip anything that's not a digit or decimal point
-  const cleaned = raw.replace(/[^0-9.]/g, '');
-  // allow only one decimal point
-  const parts = cleaned.split('.');
+function formatWhileTyping(raw: string): string {
+  const parts = raw.split('.');
+  const intPart = parts[0] ? new Intl.NumberFormat('fi-FI').format(parseInt(parts[0], 10)) : '';
+  return parts.length === 2 ? intPart + ',' + parts[1] : intPart;
+}
+
+function toRawDecimal(raw: string): string {
+  const cleaned = raw.replace(/\s/g, '').replace(',', '.');
+  const sanitized = cleaned.replace(/[^0-9.]/g, '');
+  const parts = sanitized.split('.');
   if (parts.length > 2) {
     return parts[0] + '.' + parts.slice(1).join('');
   }
-  // cap to 2 decimal digits while typing
   if (parts.length === 2 && parts[1].length > 2) {
     return parts[0] + '.' + parts[1].slice(0, 2);
   }
-  return cleaned;
+  return sanitized;
 }
 
 
 const ReadOnlyCurrencyInput: React.FC<GInputBaseAnyProps & GInputCurrencyProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
-  const display = props.value ? formatCurrency(props.value) : '--';
+  const display = props.value ? formatFinnish(props.value) : '--';
   return (
     <TextField value={display} className={classes.input}
       slotProps={{
@@ -121,26 +130,43 @@ const ReadOnlyCurrencyInput: React.FC<GInputBaseAnyProps & GInputCurrencyProps> 
 
 const CurrencyInput: React.FC<GInputBaseAnyProps & GInputCurrencyProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [displayValue, setDisplayValue] = React.useState(() => formatFinnish(props.value ?? '0.00'));
+  const cursorOffset = React.useRef<number | null>(null);
+
+  React.useLayoutEffect(() => {
+    if (cursorOffset.current !== null && inputRef.current) {
+      inputRef.current.setSelectionRange(cursorOffset.current, cursorOffset.current);
+      cursorOffset.current = null;
+    }
+  });
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const sanitized = sanitizeInput(event.target.value);
-    const synthetic = { ...event, target: { ...event.target, value: sanitized } };
+    const raw = event.target.value;
+    const cursor = (event.target as HTMLInputElement).selectionStart ?? raw.length;
+
+    const decimal = toRawDecimal(raw);
+    const formatted = formatWhileTyping(decimal);
+
+    const spacesBeforeCursorOld = (raw.slice(0, cursor).match(/\s/g) ?? []).length;
+    const spacesBeforeCursorNew = (formatted.slice(0, cursor).match(/\s/g) ?? []).length;
+    cursorOffset.current = cursor + (spacesBeforeCursorNew - spacesBeforeCursorOld);
+
+    setDisplayValue(formatted);
+    const synthetic = { ...event, target: { ...event.target, value: decimal } };
     props.onChange(synthetic as React.ChangeEvent<HTMLInputElement>);
   }
 
   function handleBlur() {
-    const formatted = formatCurrency(props.value ?? '');
-    const synthetic = {
-      target: { value: formatted }
-    } as React.ChangeEvent<HTMLInputElement>;
-    props.onChange(synthetic);
+    setDisplayValue(formatFinnish(props.value ?? '0.00'));
   }
 
   return (
     <TextField
       disabled={props.disabled}
-      value={props.value ?? '0.00'}
+      value={displayValue}
       name={props.name}
+      inputRef={inputRef}
       onChange={handleChange}
       onBlur={handleBlur}
       className={classes.input}
@@ -148,7 +174,7 @@ const CurrencyInput: React.FC<GInputBaseAnyProps & GInputCurrencyProps> = (props
       inputMode="decimal"
       slotProps={{
         input: {
-          startAdornment: props.currency  ? <InputAdornment position="start">{props.currency}</InputAdornment> : undefined,
+          startAdornment: props.currency ? <InputAdornment position="start">{props.currency}</InputAdornment> : undefined,
         }
       }}
     />
