@@ -74,11 +74,172 @@ platform; without `eveli.metis.enabled` the page still opens but reports that Me
 | Key | Meaning |
 | --- | --- |
 | `eveli.metis.enabled` | Platform: model beans, shared primitives, `GET /metis/status` |
-| `spring.ai.model.chat`, `spring.ai.model.embedding` | Provider, must not stay `none` |
-| `spring.ai.ollama.*` | Provider URL and model ids |
+| `spring.ai.model.chat`, `spring.ai.model.embedding` | Provider, `ollama` or `google-genai`, each set independently. Must not stay `none` |
+| `spring.ai.ollama.*` | Ollama URL and model ids |
+| `eveli.metis.google-genai.*` | Gemini on Vertex AI: project, location, model ids |
 | `eveli.metis.<capability>.enabled` | One capability |
 | `eveli.metis.<capability>.*` | That capability's tuning |
 | `eveli.tenant-features` including `metis` | Worker UI: sidebar and `/secured/$locale/worker/metis/` |
+
+## Google GenAI (Vertex AI)
+
+Gemini on Vertex AI is the second provider next to Ollama. Spring AI's value for it is
+`google-genai`, set on `spring.ai.model.chat` and/or `spring.ai.model.embedding`; the two are
+independent, so chat on Vertex with `bge-m3` on Ollama also works.
+
+### How it is wired
+
+- Only the plain Spring AI modules `spring-ai-google-genai` and `spring-ai-google-genai-embedding`
+  are on the classpath (both apps; optional in `eveli-client`), not the Google starters. The
+  starters' embedding connection bean is unconditional and they select on a second key
+  (`spring.ai.model.embedding.text`), which would break every deployment that does not use Vertex.
+- `EveliAutoConfigMetisGoogleGenAi` (imported by both apps) creates the Google `Client`, the
+  `ChatModel` and the `EmbeddingModel`, each only when its key is `google-genai` and
+  `eveli.metis.enabled` is true. Ollama's auto-configuration turns itself off for any value other
+  than `ollama`. Nothing Google-related is created otherwise.
+- `build-parent` pins `google.genai.version` (1.73.0). Spring AI 1.1.8 brings 1.37.0, which builds
+  a wrong host for the `eu` multi-region and sends embeddings to `:predict`, which
+  `gemini-embedding-2` rejects. Keep the pin until Spring AI brings 1.73.0 or later itself.
+- Authentication is Application Default Credentials. There is no Metis property for it.
+- Spring AI 1.1.x never sends an embedding `taskType`, so documents and queries are embedded the
+  same way.
+
+### What to set
+
+| Key | Value | Notes |
+| --- | --- | --- |
+| `spring.ai.model.chat`, `spring.ai.model.embedding` | `google-genai` | Either or both |
+| `eveli.metis.google-genai.project-id` | GCP project | Required once selected; billed for Vertex |
+| `eveli.metis.google-genai.location` | `eu` | Required once selected. One location for both models, see below |
+| `eveli.metis.google-genai.chat.model` | `gemini-3.1-flash-lite` (default) | Also `.temperature` (`0.2`) and `.thinking-level` (`MINIMAL`; thinking tokens are billed as output) |
+| `eveli.metis.google-genai.embedding.model` | `gemini-embedding-2` (default) | |
+| `eveli.metis.google-genai.embedding.dimensions` | `1024` (default) | Must equal `eveli.metis.search.indexing.embedding-dimension`; the reindex fails fast otherwise |
+| `GOOGLE_APPLICATION_CREDENTIALS` (env) | path to a service-account key | Only where there is no Workload Identity, e.g. locally |
+
+Suggested with Vertex: `eveli.metis.search.indexing.concurrency: 4`,
+`eveli.metis.search.indexing.document-timeout-seconds: 120` and `spring.ai.retry.max-attempts: 3`
+(`StructuredChatService` already retries).
+
+Environment-variable form:
+
+```
+EVELI_METIS_ENABLED=true
+EVELI_METIS_SEARCH_ENABLED=true
+SPRING_AI_MODEL_CHAT=google-genai
+SPRING_AI_MODEL_EMBEDDING=google-genai
+EVELI_METIS_GOOGLEGENAI_PROJECTID=<project>
+EVELI_METIS_GOOGLEGENAI_LOCATION=eu
+```
+
+### Location and models
+
+`eu` is the EU multi-region endpoint (`aiplatform.eu.rep.googleapis.com`). It keeps processing in
+the EU and is the only EU location that serves both default models. Checked on 2026-09-25:
+
+| Model | `eu` | `global` | single EU regions (`europe-west1/4`, `europe-north1`) |
+| --- | --- | --- | --- |
+| `gemini-3.1-flash-lite` | yes | yes | no |
+| `gemini-embedding-2` | yes | – | – |
+| `gemini-embedding-001` | no | yes | yes |
+
+`global` also works for chat but may process requests outside the EU. Recheck before production;
+Google adds locations over time.
+
+### GCP setup
+
+Replace `PROJECT`, and `NS` / `KSA` with the namespace and Kubernetes service account the
+`frontdesk-app` pod runs as.
+
+```bash
+gcloud services enable aiplatform.googleapis.com --project PROJECT
+gcloud iam service-accounts create metis-vertex --project PROJECT --display-name "Metis Vertex AI caller"
+gcloud projects add-iam-policy-binding PROJECT \
+  --member "serviceAccount:metis-vertex@PROJECT.iam.gserviceaccount.com" --role roles/aiplatform.user
+```
+
+On GKE, bind it through Workload Identity; no key file, no secret, no env var:
+
+```bash
+gcloud iam service-accounts add-iam-policy-binding metis-vertex@PROJECT.iam.gserviceaccount.com \
+  --role roles/iam.workloadIdentityUser --member "serviceAccount:PROJECT.svc.id.goog[NS/KSA]"
+kubectl annotate serviceaccount KSA -n NS \
+  iam.gke.io/gcp-service-account=metis-vertex@PROJECT.iam.gserviceaccount.com
+```
+
+Locally, either `gcloud auth application-default login` (runs as you), or create a JSON key for
+`metis-vertex` (console: Service Accounts → Keys → Add key), keep it outside the repository and
+start with `GOOGLE_APPLICATION_CREDENTIALS` pointing at it (runs with the deployed permissions).
+
+Also: check the Vertex quotas on `eu` for both models, and set a budget alert on the project.
+
+### Before production
+
+- **Data leaves the cluster:** site content (public), citizen search strings and, once feedback
+  analysis is wired, feedback text. Google's Vertex terms exclude training on customer data. This
+  needs sign-off under the customer's data-processing agreement. If search strings may not leave,
+  keep `spring.ai.model.embedding: ollama` and only chat on Vertex.
+- **Use the Gemini score thresholds** below, not the Java defaults, which are the `bge-m3`
+  calibration. Recheck them after a large content change or a metadata prompt change.
+- **Switching the embedding model reindexes by itself.** The portal serves keyword search until
+  the job with the new model completes (see [Content and first index](#5-content-and-first-index)).
+
+### Score thresholds
+
+Cosine scores depend on the embedding model, so the three query thresholds are per model. The Java
+defaults are the `bge-m3` calibration; `application-dev.yml` and the gcloud `application.yml`
+set the Gemini values.
+
+| Property | `bge-m3` (Java default) | `gemini-embedding-2` |
+| --- | --- | --- |
+| `eveli.metis.search.query.min-vector-score` | 0.30 | 0.60 |
+| `eveli.metis.search.query.min-vector-score-without-keyword` | 0.45 | 0.63 |
+| `eveli.metis.search.query.score-drop-off-ratio` | 0.90 | 0.95 |
+
+Calibrated on 2026-09-25 against the local 258-document index (120 fi, 115 sv, 23 en) with a
+local query set, `docs/site-search/eval-queries.json` (gitignored): 38 real queries and 19 noise
+queries (gibberish, pizza, football, bitcoin and car repairs per locale). Scores were taken from
+the real `HybridSearchService` over a grid of 246 combinations.
+
+- Gemini scores run higher and closer together than `bge-m3`. Noise scores 0.47–0.62 (max
+  0.616); the weakest real query scores 0.652. With the `bge-m3` values every noise query
+  returned results.
+- `min-vector-score-without-keyword` decides most queries: 25 of the 38 real queries and all
+  noise have no primary keyword hit. 0.63 sits in the gap; 0.62–0.65 gave identical results, 0.70
+  empties two real queries. The margin is about 0.02 on each side.
+- `min-vector-score` does not change this set. It drops the vector list when a nonsense query
+  happens to hit a keyword; real queries with a keyword hit all score 0.685 or more.
+- `score-drop-off-ratio` sets how many related services show. 0.95: 38/38 first, 1.8 results per
+  query. 0.92: 37/38 first, 2.7 results. 0.90: 37/38, 3.4 results. A neighbour boosted by a
+  keyword hit took first place for "haluan vuokrata kunnan asunnon" below 0.95.
+
+| Thresholds | First place (of 38) | Noise with results (of 19) | Results per query |
+| --- | --- | --- | --- |
+| `bge-m3` values: 0.30 / 0.45 / 0.90 | 37 | 19 | 3.4 |
+| Gemini values: 0.60 / 0.63 / 0.95 | 38 | 0 | 1.8 |
+
+To recalibrate, embed each query in the eval file with the deployed model, rank it against the
+index with `FtsSearchService` / `VectorSearchService` / `HybridSearchService` at zero thresholds,
+and pick the no-keyword floor between the highest noise score and the lowest real best score.
+
+### Cost
+
+List prices checked 2026-09-25, 1 USD ≈ 0.87 EUR, VAT excluded. Vertex prices:
+`gemini-3.1-flash-lite` $0.25 / $1.50 per 1M input / output tokens on `global`, taken here as
++10% for `eu` like regional endpoints (not separately published, verify);
+`gemini-embedding-2` $0.20 per 1M text tokens. Example site: 900 documents (300 workflows × 3
+locales), about 450 + 350 chat tokens and 600 embedded tokens each.
+
+| | Ollama on GPU | Ollama on CPU | Vertex AI (`eu`) |
+| --- | --- | --- | --- |
+| Fixed cost per month | ≈ €410–550 per always-on node (spot ≈ €200), ×2 for HA | ≈ €80–120 of node capacity | €0 |
+| One full reindex, 900 documents | included | included (takes hours) | ≈ €0.65 |
+| Publish with 10% changed | included | included | ≈ €0.06 |
+| 50,000 unique searches | included | included, often misses the 2 s query budget | ≈ €0.07 |
+| 5,000 feedbacks classified and embedded | included | included | ≈ €3 |
+| Typical month | ≈ €410–550 | ≈ €80–120 | **under €5** |
+
+A fractional GPU node costs as much as about 800 full reindexes a month on Vertex. Self-hosting
+pays off only when data residency or contract terms rule out a managed model.
 
 ## Endpoints
 
@@ -161,6 +322,11 @@ contrib available for a later enable. Cloud SQL / RDS: no image change for table
 
 Semantic site search needs a reachable chat model (metadata during index) and embedding model
 (index + search). `eveli-app` and `eveli-app-gcloud` both ship the Ollama starter.
+Both also ship Gemini on Vertex AI (`google-genai`); see
+[Google GenAI (Vertex AI)](#google-genai-vertex-ai) for its settings, GCP setup and cost. With
+Vertex, `gemini-embedding-2` is asked for `1024` dimensions, so the `VECTOR(1024)` column stays.
+
+Ollama:
 
 - Ollama (or compatible) must be reachable from the **app** process, typically `http://<host>:11434`.
 - `SPRING_AI_OLLAMA_BASE_URL` must not stay `localhost` in GKE / Cloud Run; that talks to the
@@ -190,11 +356,16 @@ the sidebar item. It does not start the platform.
 | --- | --- | --- |
 | `eveli.metis.enabled` | `true` | Platform: models, shared primitives, `/metis/status` |
 | `eveli.metis.search.enabled` | `true` | This capability. Triggers the pgvector ensure at boot |
-| `spring.ai.model.chat` | `ollama` | Must not stay `none` |
-| `spring.ai.model.embedding` | `ollama` | Must not stay `none` |
-| `spring.ai.ollama.base-url` | provider URL | e.g. `http://localhost:11434` locally |
-| `spring.ai.ollama.embedding.options.model` | `bge-m3` | Must match `VECTOR(1024)` |
-| `spring.ai.ollama.chat.options.model` | `llama3.2` | Used only during indexing |
+| `spring.ai.model.chat` | `ollama` or `google-genai` | Must not stay `none` |
+| `spring.ai.model.embedding` | `ollama` or `google-genai` | Must not stay `none`. Can differ from chat |
+| `spring.ai.ollama.base-url` | provider URL | Ollama only. e.g. `http://localhost:11434` locally |
+| `spring.ai.ollama.embedding.options.model` | `bge-m3` | Ollama only. Must match `VECTOR(1024)` |
+| `spring.ai.ollama.chat.options.model` | `llama3.2` | Ollama only. Used only during indexing |
+| `eveli.metis.google-genai.project-id` | GCP project | Google only. Billed for Vertex AI |
+| `eveli.metis.google-genai.location` | `eu` | Google only. EU multi-region, one location for both models |
+| `eveli.metis.google-genai.chat.model` | `gemini-3.1-flash-lite` | Google only. Also `.temperature` (`0.2`), `.thinking-level` (`MINIMAL`) |
+| `eveli.metis.google-genai.embedding.model` | `gemini-embedding-2` | Google only |
+| `eveli.metis.google-genai.embedding.dimensions` | `1024` | Google only. Must equal `indexing.embedding-dimension`; a reindex fails fast otherwise |
 
 Recommended:
 
@@ -208,6 +379,9 @@ Recommended:
 
 `eveli-app` and `eveli-app-gcloud` both `@Import` `EveliAutoConfigMetisFlags` (always),
 `EveliAutoConfigMetis` and `EveliAutoConfigMetisSearch` (each conditional on its own flag).
+Both also import `EveliAutoConfigMetisGoogleGenAi`, which creates the Gemini beans only for the
+`spring.ai.model.*` keys set to `google-genai`. Locally, `gcloud auth application-default login`
+provides the credentials.
 
 On GCloud, YAML stays off. Turn a given environment on with env or Secret Manager (the process
 already imports `sm://`):
@@ -221,6 +395,17 @@ SPRING_AI_OLLAMA_BASE_URL=http://<ollama-host>:11434
 ```
 
 Model names can stay at the YAML defaults (`bge-m3`, `llama3.2`) unless you override them.
+
+For Vertex AI instead of Ollama:
+
+```
+EVELI_METIS_ENABLED=true
+EVELI_METIS_SEARCH_ENABLED=true
+SPRING_AI_MODEL_CHAT=google-genai
+SPRING_AI_MODEL_EMBEDDING=google-genai
+EVELI_METIS_GOOGLEGENAI_PROJECTID=<project>
+EVELI_METIS_GOOGLEGENAI_LOCATION=eu
+```
 
 Worker JWT roles after enable:
 
@@ -259,9 +444,15 @@ serves traffic immediately and falls back to keyword search (`fallback: true`) u
 60 s reconciler), not at create time. Immediate publishes still start a job right away.
 
 To force a rebuild later: `POST /worker/rest/api/metis/search/reindex?force=true`. Switching
-`spring.ai.ollama.embedding.options.model` or bumping
+the embedding model (provider or model id) or bumping
 `eveli.metis.search.indexing.metadata-prompt-version` already invalidates stored hashes, so a
 normal reindex reprocesses those rows.
+
+A switch of embedding model also starts that reindex by itself. The startup reindex runs when no
+completed job used the current model, the live-publication check does not count jobs of another
+model, and the portal serves keyword search until a job with the current model completes. Vectors
+of two models have the same width, so without this pgvector would rank them against each other
+without any error.
 
 #### 6. Check
 
@@ -288,25 +479,28 @@ normal reindex reprocesses those rows.
 
 ### Local development
 
+`application-dev.yml` has Metis off with both `spring.ai.model.*` on `ollama`. `spring-boot:run`
+pins `spring.config.location` to the profile files only, so the base `application.yml` is not
+read locally — keep the settings in `application-dev.yml`.
+
+With Ollama, set `eveli.metis.enabled` and `eveli.metis.search.enabled` to true and start the
+models too:
+
 ```bash
 cd mvn_setup/eveli-parent/eveli-local-docker && docker compose up -d postgresql ollama ollama-init
 ```
 
 `ollama-init` pulls `bge-m3` and `llama3.2` from `registry.ollama.ai` unless they are already in
 `./_db/ollama_data` (large download on first run). Air-gapped machines must pre-seed that volume.
-`application-dev.yml` already enables both flags and sets the Ollama models. `spring-boot:run`
-pins `spring.config.location` to the profile files only, so the base `application.yml` is not
-read locally — keep the flags in `application-dev.yml`:
+With CPU Ollama also set `eveli.metis.search.query.embed-concurrency: 1` (one query embed at a
+time) and `eveli.metis.search.indexing.concurrency: 1`. Production leaves `embed-concurrency`
+unset so it matches `query.concurrency` (4).
 
-```yaml
-eveli.metis.enabled: true
-eveli.metis.search.enabled: true
-eveli.metis.search.query.embed-concurrency: 1
-spring.ai.model.chat: ollama
-spring.ai.model.embedding: ollama
-```
-
-`embed-concurrency: 1` keeps CPU Ollama at one query embed at a time. Production leaves it unset so it matches `query.concurrency` (4).
+With Vertex AI, set both `spring.ai.model.*` to `google-genai`, enable the flags and uncomment
+the `eveli.metis.google-genai.*` block at the end of `application-dev.yml`, with your project id.
+Only PostgreSQL is needed (`docker compose up -d postgresql`). Start with
+`GOOGLE_APPLICATION_CREDENTIALS` pointing at a `metis-vertex` key, or after
+`gcloud auth application-default login` (see [GCP setup](#gcp-setup)).
 
 To index a limaone dump without authoring, activate the `prod` profile (and typically
 `eveli.assets.enabled=false` so the runtime uses the external provider) with an `EveliDeployment`
@@ -323,8 +517,9 @@ happens when the capability is off (the endpoint 404s). A slow embedding model, 
 in-flight unique query embeds than `query.embed-concurrency`, does **not** take that path:
 hybrid returns keyword ranking and omits vector fusion.
 
-Ranking, the document model, and the 0.45 empty-query floor are in
-[IMPLEMENTATION.md](docs/site-search/IMPLEMENTATION.md).
+Ranking, the document model, and the empty-query floor are in
+[IMPLEMENTATION.md](docs/site-search/IMPLEMENTATION.md). The threshold values per embedding model
+are in [Score thresholds](#score-thresholds).
 
 ---
 

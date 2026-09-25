@@ -346,7 +346,9 @@ returns `limit` (8). Three lists are involved:
    (`unaccent()` + `word_similarity >=` cannot use the GIN index). Threshold
    0.2.
 3. **Vector** — embed the query, cosine k-NN. Drop the whole list if the best
-   score is below 0.30, then drop rows below 0.90 × best. Drop-off is not
+   score is below `min-vector-score`, then drop rows below
+   `score-drop-off-ratio` × best (0.30 and 0.90 for `bge-m3`, 0.60 and 0.95 for
+   `gemini-embedding-2`). Drop-off is not
    applied to a keyword-only list, so a form-name hit stays.
 
 The two (or three) ranked lists are not mixed by raw score. Cosine 0.81 and
@@ -363,7 +365,7 @@ row is `0.2/61 ≈ 0.0033` (fused ≈ 0.0164). Vector rank 2 of another row is
 because its cosine was higher.
 
 Trigram-only ids are not unioned into a vector list that already survived
-the 0.45 floor. If vectors decided this is a semantic query, fuzzy keyword
+the no-keyword floor. If vectors decided this is a semantic query, fuzzy keyword
 hits do not get tacked on.
 
 Two empty-primary cases (no `websearch_to_tsquery` hit):
@@ -371,11 +373,13 @@ Two empty-primary cases (no `websearch_to_tsquery` hit):
 1. Embed unavailable (timeout, Ollama busy, `embed-concurrency` reject) →
    keyword ranking, including trigram if primary FTS was empty. `fallback`
    stays false.
-2. Embed succeeded, best vector below **0.45** → empty results. Gibberish
-   (`qwerty`) typically sits in 0.30–0.45 cosine. Random services are worse
-   than nothing. This does not fall through to trigram.
+2. Embed succeeded, best vector below `min-vector-score-without-keyword` →
+   empty results. With `bge-m3` the floor is **0.45** and gibberish (`qwerty`)
+   sits in 0.30–0.45 cosine; with `gemini-embedding-2` it is **0.63** and noise
+   sits in 0.47–0.62. Random services are worse than nothing. This does not
+   fall through to trigram.
 
-Do not lower 0.45 to recover a weak natural-language query whose metadata
+Do not lower the floor to recover a weak natural-language query whose metadata
 lacks the user’s words. Bump the prompt version and reindex so the helpers
 cover that phrasing.
 
@@ -578,6 +582,21 @@ without the 0.45 floor). Keyword on the same 20 was 9/20.
 English and Swedish sets of 7 scored 7/7 first. Two Swedish cases ranked 2nd
 (a related service above the intended one).
 
+The numbers above are `bge-m3` with `llama3.2` metadata.
+
+### Gemini on Vertex AI
+
+Local index of 258 documents (120 fi, 115 sv, 23 en), 25 Sep 2026,
+`gemini-embedding-2` at 1024 dimensions and `gemini-3.1-flash-lite` metadata,
+against the real search services. The query set is the local, gitignored
+`eval-queries.json` next to this file, now with 19 noise queries.
+
+With the Gemini thresholds (0.60 / 0.63 / 0.95): all 38 real queries first,
+including the two former Finnish misses and the two Swedish soft spots, about
+1.8 results per query, and none of the 19 noise queries returned anything.
+With the `bge-m3` thresholds all 19 noise queries returned results. A full
+reindex took 109 s at indexing concurrency 4, against hours on CPU Ollama.
+
 ## Limits
 
 Single tenant (`cockpit_id` is not on the documents). Only `en` / `fi` / `sv`
@@ -585,6 +604,7 @@ have stemmers. Metadata generation on CPU is tens of seconds to minutes per
 document; a few hundred documents against CPU Ollama takes hours. Disabled /
 `inHouse` / non-dev `devMode` workflows never reach the site JSON.
 Login-required services are indexed; opening the form is still gated.
-Gibberish with no keyword hit is rejected below 0.45 — bump the prompt version
-rather than lowering the floor. Trigram fallback is a sequential scan and only
+Gibberish with no keyword hit is rejected below the no-keyword floor (0.45 for
+`bge-m3`, 0.63 for `gemini-embedding-2`) — bump the prompt version rather than
+lowering the floor. Trigram fallback is a sequential scan and only
 runs when primary FTS is empty.

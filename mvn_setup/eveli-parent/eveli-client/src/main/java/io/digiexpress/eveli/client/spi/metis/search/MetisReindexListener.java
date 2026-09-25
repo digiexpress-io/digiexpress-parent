@@ -44,11 +44,17 @@ public class MetisReindexListener {
     }
     search.index().getIndexStatus().subscribe().with(indexStatus -> {
       if (indexStatus.getIndexedDocuments() > 0) {
-        log.info("Metis index already holds {} document(s), skipping the startup reindex",
-            indexStatus.getIndexedDocuments());
-        return;
+        if (search.index().isIndexCurrent()) {
+          log.info("Metis index already holds {} document(s), skipping the startup reindex",
+              indexStatus.getIndexedDocuments());
+          return;
+        }
+        log.info("Metis index holds {} document(s) but no completed job used the current embedding model, "
+            + "last job model: {}, starting a reindex in the background",
+            indexStatus.getIndexedDocuments(), indexStatus.getEmbeddingModel());
+      } else {
+        log.info("Metis index is empty, starting the first reindex in the background");
       }
-      log.info("Metis index is empty, starting the first reindex in the background");
       trigger.startNow(false, false).subscribe().with(jobStatus -> {
         if (!jobStatus.getAccepted()) {
           log.info("Metis skipped the reindex, job: {} is already running", jobStatus.getJobId());
