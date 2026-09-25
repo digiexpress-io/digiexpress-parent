@@ -174,7 +174,7 @@ const CurrencyInput: React.FC<GInputBaseAnyProps & GInputCurrencyProps> = (props
       inputMode="decimal"
       slotProps={{
         input: {
-          startAdornment: props.currency ? <InputAdornment position="start">{props.currency}</InputAdornment> : undefined,
+          endAdornment: props.currency ? <InputAdornment position="start">{props.currency}</InputAdornment> : undefined,
         }
       }}
     />

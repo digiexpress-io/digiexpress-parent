@@ -56,10 +56,7 @@ export const GInputCurrencyRoot = styled("div", {
   return {
     '& .MuiInputAdornment-positionStart': {
       marginLeft: theme.spacing(1),
-    },
-    '& .MuiInputBase-input': {
-      paddingLeft:0,
-    },
+    }
   };
 
 });
