@@ -62,7 +62,7 @@
     <autoservice.version>1.1.1</autoservice.version>
     <uuidcreator.version>5.3.7</uuidcreator.version>
     <sqlformatter.version>2.0.5</sqlformatter.version>
-    <tika-core.version>1.18</tika-core.version>
+    <tika-core.version>3.2.2</tika-core.version>
   </properties>
 
   <build>
