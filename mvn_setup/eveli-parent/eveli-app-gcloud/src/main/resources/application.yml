@@ -16,7 +16,8 @@ spring:
     locations: classpath:db/postgresql
     validate-on-migrate: true
   ai:
-    # Metis needs these; set both to ollama together with eveli.metis.enabled.
+    # Metis needs these; set each to ollama or google-genai together with eveli.metis.enabled.
+    # They are independent: chat on google-genai with embedding on ollama is supported.
     model:
       chat: none
       embedding: none
@@ -118,10 +119,26 @@ eveli.org.service-url:
 eveli.envir.cache-expirations.short-deployment: PT30M
 eveli.envir.cache-expirations.long-runtime: PT60M
 
-# metis: also set spring.ai.model.chat/embedding to ollama when enabling
+# metis: also set spring.ai.model.chat/embedding to ollama or google-genai when enabling
 eveli.metis.enabled: false
+
+# Gemini on Vertex AI, used for whichever of spring.ai.model.chat/embedding is google-genai.
+# Authenticates with Application Default Credentials (Workload Identity on GKE).
+# project-id and location are required once selected; the rest are the defaults.
+#eveli.metis.google-genai.project-id: ${GCP_PROJECT_ID}
+#eveli.metis.google-genai.location: eu
+#eveli.metis.google-genai.chat.model: gemini-3.1-flash-lite
+#eveli.metis.google-genai.chat.temperature: 0.2
+#eveli.metis.google-genai.chat.thinking-level: MINIMAL
+#eveli.metis.google-genai.embedding.model: gemini-embedding-2
+#eveli.metis.google-genai.embedding.dimensions: 1024
 
 eveli.metis.search.enabled: false
 eveli.metis.search.locales: en, fi, sv
 eveli.metis.search.auto-reindex-on-startup: true
 eveli.metis.search.reindex-on-deployment: true
+# Score thresholds calibrated for gemini-embedding-2 on 2026-09-25, see metis-parent/README.md.
+# The Java defaults (0.30 / 0.45 / 0.90) are the bge-m3 calibration; use those with Ollama.
+eveli.metis.search.query.min-vector-score: 0.60
+eveli.metis.search.query.min-vector-score-without-keyword: 0.63
+eveli.metis.search.query.score-drop-off-ratio: 0.95

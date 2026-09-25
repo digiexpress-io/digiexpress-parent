@@ -88,6 +88,20 @@ public interface MetisSearchReindexJobTable {
         SELECT id, status, embedding_model, total_count, processed_count, skipped_count,
                started_at, finished_at, duration_ms, error, publication_id, bundle_hash
         FROM {metis_search_reindex_job}
+        WHERE status = 'COMPLETED'
+        ORDER BY id DESC
+        LIMIT 1
+        """,
+      rowMapper = StatusMapper.class
+  )
+  Sql findLatestCompleted();
+
+  @TenantSql.Find(
+      optional = true,
+      sql = """
+        SELECT id, status, embedding_model, total_count, processed_count, skipped_count,
+               started_at, finished_at, duration_ms, error, publication_id, bundle_hash
+        FROM {metis_search_reindex_job}
         WHERE id = $1
         """,
       rowMapper = StatusMapper.class
@@ -106,10 +120,11 @@ public interface MetisSearchReindexJobTable {
       sql = """
         SELECT COUNT(*) AS count FROM {metis_search_reindex_job}
         WHERE publication_id = $1 AND status IN ('RUNNING', 'CANCELLING', 'COMPLETED')
+          AND embedding_model = $2
         """,
       rowMapper = CountMapper.class
   )
-  SqlTuple countByPublication(String publicationId);
+  SqlTuple countByPublication(String publicationId, String embeddingModel);
 
   @TenantSql.Find(
       optional = false,
@@ -117,10 +132,11 @@ public interface MetisSearchReindexJobTable {
         SELECT COUNT(*) AS count FROM {metis_search_reindex_job}
         WHERE publication_id = $1 AND status IN ('RUNNING', 'CANCELLING', 'COMPLETED')
           AND bundle_hash = $2
+          AND embedding_model = $3
         """,
       rowMapper = CountMapper.class
   )
-  SqlTuple countByPublicationAndBundle(String publicationId, String bundleHash);
+  SqlTuple countByPublicationAndBundle(String publicationId, String bundleHash, String embeddingModel);
 
   @TenantSql.Find(
       optional = false,

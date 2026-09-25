@@ -65,14 +65,23 @@ public interface MetisSearchClient {
 
     Uni<MetisSearchIndexStatus> getIndexStatus();
 
-    /** True when a completed or still in-flight job already covers this live publication at the current bundle hash. */
+    /**
+     * True when a completed or still in-flight job already covers this live publication at the
+     * current bundle hash, with the current embedding model.
+     */
     boolean isPublicationIndexed(String publicationId);
 
     /** True while any replica holds a RUNNING or CANCELLING job. */
     boolean isReindexInFlight();
 
-    /** True only after a job has COMPLETED. Until then the portal serves keyword search. */
+    /**
+     * True only when the latest job has COMPLETED with the current embedding model. Until then
+     * the portal serves keyword search.
+     */
     boolean isIndexReadyForPortal();
+
+    /** True when the latest completed job used the current embedding model. False after a model switch. */
+    boolean isIndexCurrent();
 
     long countIndexedDocuments();
   }

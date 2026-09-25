@@ -81,6 +81,7 @@ public class MetisReindexListenerTest {
     final var search = search();
     Mockito.when(search.index().getIndexStatus()).thenReturn(Uni.createFrom().item(
         ImmutableMetisSearchIndexStatus.builder().state(JobState.COMPLETED).indexedDocuments(12).build()));
+    Mockito.when(search.index().isIndexCurrent()).thenReturn(true);
     final var trigger = Mockito.mock(MetisLiveIndexTrigger.class);
     final var props = new EveliPropsMetisSearch();
     props.setAutoReindexOnStartup(true);
@@ -91,6 +92,24 @@ public class MetisReindexListenerTest {
     Mockito.verify(search.index(), Mockito.never()).startReindex(Mockito.anyBoolean());
     Mockito.verify(search.index(), Mockito.never()).startReindex(
         Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.any());
+  }
+
+  @Test
+  void startupReindexesWhenTheIndexWasBuiltWithAnotherEmbeddingModel() {
+    final var search = search();
+    Mockito.when(search.index().getIndexStatus()).thenReturn(Uni.createFrom().item(
+        ImmutableMetisSearchIndexStatus.builder()
+            .state(JobState.COMPLETED).embeddingModel("bge-m3").indexedDocuments(12).build()));
+    Mockito.when(search.index().isIndexCurrent()).thenReturn(false);
+    final var trigger = Mockito.mock(MetisLiveIndexTrigger.class);
+    Mockito.when(trigger.startNow(false, false)).thenReturn(Uni.createFrom().item(
+        ImmutableMetisSearchIndexStatus.builder().accepted(true).state(JobState.RUNNING).jobId(2L).build()));
+    final var props = new EveliPropsMetisSearch();
+    props.setAutoReindexOnStartup(true);
+
+    listener(search, props, trigger).onApplicationReady();
+
+    Mockito.verify(trigger, Mockito.timeout(1_000)).startNow(false, false);
   }
 
   private static MetisReindexListener listener(
