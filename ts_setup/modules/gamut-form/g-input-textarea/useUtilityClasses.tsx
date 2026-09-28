@@ -52,7 +52,7 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
     slotProps: {
       error: { id, errors },
       input: { name: id, onChange, value: value ?? '', rows, multiline: true, errors: props.errors, disabled: props.disabled, inputProps: charLimit !== undefined ? { maxLength: charLimit } : undefined },
-      label: { id, children: label ?? '', labelPosition, required: initProps.required, errors: visibleErrors },
+      label: { id, children: label ?? '', labelPosition, required: initProps.required, errors: props.errors },
       adornment: { id, children: props.description, title: label ?? '', disabled: props.disabled }
     }
   }
