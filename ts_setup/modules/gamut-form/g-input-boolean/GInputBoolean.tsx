@@ -11,6 +11,7 @@ import { GInputAdornment } from '../g-input-adornment';
 import { useUtilityClasses, MUI_NAME, GInputBooleanRoot } from './useUtilityClasses';
 import { ReadOnlyYesAndNoCheckbox } from './ReadOnlyYesAndNoCheckbox';
 import { YesAndNoCheckbox } from './YesAndNoCheckBox';
+import { SingleCheckbox, ReadOnlySingleCheckbox } from './SingleCheckbox';
 
 
 // extension hook for adding custom input types
@@ -40,6 +41,7 @@ export interface GInputBooleanProps {
     React.ElementType>; 
 
   readOnly?: boolean;
+  singleCheckbox?: boolean;
 
   component?: React.ElementType<GInputBooleanProps>;
 }
@@ -62,7 +64,7 @@ export const GInputBoolean: React.FC<GInputBooleanProps> = (initProps) => {
     slots: {
       error: GInputError,
       label: GInputLabel,
-      input: props.readOnly ? ReadOnlyYesAndNoCheckbox : YesAndNoCheckbox,
+      input: resolveInputComponent(props.singleCheckbox, props.readOnly),
       adornment: GInputAdornment
     },
     slotProps: {
@@ -76,6 +78,14 @@ export const GInputBoolean: React.FC<GInputBooleanProps> = (initProps) => {
   return (<GInputBooleanRoot className={classes.root} ownerState={ownerState} as={props.component}>
     <GInputBase id={props.id} slots={slots.slots} slotProps={slots.slotProps} />
   </GInputBooleanRoot>);
+}
+
+
+function resolveInputComponent(isSingle: boolean | undefined, isReadOnly: boolean | undefined) {
+  if (isSingle) {
+    return isReadOnly ? ReadOnlySingleCheckbox : SingleCheckbox;
+  }
+  return isReadOnly ? ReadOnlyYesAndNoCheckbox : YesAndNoCheckbox;
 }
 
 
