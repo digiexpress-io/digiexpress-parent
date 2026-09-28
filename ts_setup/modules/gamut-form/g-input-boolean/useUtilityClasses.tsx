@@ -10,7 +10,7 @@ export const MUI_NAME = 'GInputBoolean';
 interface OwnerState {
   variant: string,
   disabled: boolean,
-  readOnly?: boolean
+  readOnly?: boolean,
 }
 
 
@@ -19,6 +19,7 @@ export const useUtilityClasses = (itemId: string, variant: string | undefined) =
     root: ['root', variant, itemId],
     input: ['input'],
     optionTitle: ['optionTitle'],
+    singleCheckboxTitle: ['singleCheckboxTitle'],
     optionIcon: ['optionIcon'],
     option: ['option']
     
@@ -43,14 +44,14 @@ export const GInputBooleanRoot = styled("div", {
 
   return {
     ...(ownerState.disabled) ? {
-      '.MuiSvgIcon-root': {
+      '& .MuiSvgIcon-root': {
         color: theme.palette.info.main
       },
-      '.MuiButtonBase-root': {
+      '& .MuiButtonBase-root.Mui-disabled': {
         color: theme.palette.info.main,
         backgroundColor: theme.palette.background.paper,
         border: `1px solid ${theme.palette.action.disabled}`,
-        '.MuiTypography-root': {
+        '& .MuiTypography-root': {
           color: theme.palette.info.main,
         }
       },
@@ -62,6 +63,20 @@ export const GInputBooleanRoot = styled("div", {
       },
       '& .MuiButtonBase-root, & .MuiButtonBase-root *': {
         pointerEvents: 'none',
+      },
+    } : {},
+
+    ...(ownerState.variant === 'singleCheckbox') ? {
+      '& .GInputBase-label': {
+        display: 'none',
+      },
+      '& .GInputBase-root': {
+        justifyContent: 'flex-end',
+      },
+      '& .GInputBoolean-singleCheckboxTitle': {
+        ...theme.typography.body1,
+        textAlign: 'left',
+        width: '100%',
       },
     } : {},
 
@@ -83,7 +98,7 @@ export const GInputBooleanRoot = styled("div", {
     },
 
     '& .GInputBoolean-option:last-of-type': {
-      marginLeft: theme.spacing(1),
+      marginLeft: ownerState.variant === 'singleCheckbox' ? 0 : theme.spacing(1),
     },
   };
 });

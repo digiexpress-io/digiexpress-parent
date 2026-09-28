@@ -14,7 +14,6 @@ import { YesAndNoCheckbox } from './YesAndNoCheckBox';
 import { SingleCheckbox, ReadOnlySingleCheckbox } from './SingleCheckbox';
 
 
-// extension hook for adding custom input types
 export interface GInputBooleanPropsVariantOverrides { };
 
 export interface GInputBooleanProps {
@@ -31,17 +30,16 @@ export interface GInputBooleanProps {
   required: boolean;
 
   variant: OverridableStringUnion<
-    'checkbox',
+    'checkbox' | 'singleCheckbox',
     GInputBooleanPropsVariantOverrides
   > | undefined;
 
   slots?: Record<OverridableStringUnion<
     'checkbox',
     GInputBooleanPropsVariantOverrides>,
-    React.ElementType>; 
+    React.ElementType>;
 
   readOnly?: boolean;
-  singleCheckbox?: boolean;
 
   component?: React.ElementType<GInputBooleanProps>;
 }
@@ -64,13 +62,13 @@ export const GInputBoolean: React.FC<GInputBooleanProps> = (initProps) => {
     slots: {
       error: GInputError,
       label: GInputLabel,
-      input: resolveInputComponent(props.singleCheckbox, props.readOnly),
+      input: resolveInputComponent(variant, props.readOnly),
       adornment: GInputAdornment
     },
     slotProps: {
       error: { id, errors },
       input: { ...ownerState, name: id },
-      label: { id, children: label ?? '', labelPosition, required: props.required, errors: props.errors },
+      label: { id, children: label ?? '', labelPosition: variant === 'singleCheckbox' ? 'label-left' : labelPosition, required: props.required, errors: props.errors },
       adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }
@@ -81,8 +79,8 @@ export const GInputBoolean: React.FC<GInputBooleanProps> = (initProps) => {
 }
 
 
-function resolveInputComponent(isSingle: boolean | undefined, isReadOnly: boolean | undefined) {
-  if (isSingle) {
+function resolveInputComponent(variant: string, isReadOnly: boolean | undefined) {
+  if (variant === 'singleCheckbox') {
     return isReadOnly ? ReadOnlySingleCheckbox : SingleCheckbox;
   }
   return isReadOnly ? ReadOnlyYesAndNoCheckbox : YesAndNoCheckbox;

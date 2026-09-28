@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
 import { CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@mui/icons-material';
 
@@ -14,22 +14,20 @@ export const ReadOnlySingleCheckbox: React.FC<GInputBaseAnyProps & GInputBoolean
 
   return (
     <div className={classes.input}>
-      <div className={classes.option}>
-        {isChecked
-          ? <CheckBoxIcon className={classes.optionIcon} />
-          : <CheckBoxOutlineBlankIcon className={classes.optionIcon} />
-        }
-      </div>
+      <Button disabled fullWidth className={classes.option} variant='outlined'
+        startIcon={isChecked ? <CheckBoxIcon className={classes.optionIcon} /> : <CheckBoxOutlineBlankIcon className={classes.optionIcon} />}>
+        <Typography className={classes.singleCheckboxTitle}>{props.label}</Typography>
+      </Button>
     </div>
   );
 }
 
 
 export const SingleCheckbox: React.FC<GInputBaseAnyProps & GInputBooleanProps> = (props) => {
-  const { id, variant, value, disabled } = props;
+  const { id, variant, value, disabled, label } = props;
   const classes = useUtilityClasses(id, variant);
   const ref = React.useRef<HTMLInputElement>(null);
-  const [inputValue, setInputValue] = React.useState<string>(value === undefined || value === null ? 'false' : value + '');
+  const [inputValue, setInputValue] = React.useState<string>(value === undefined ? '' : value + '');
   const [sync, setSync] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -47,25 +45,24 @@ export const SingleCheckbox: React.FC<GInputBaseAnyProps & GInputBooleanProps> =
     }
   }, [sync, inputValue]);
 
-  function handleChange() {
+  function handleToggle() {
     setInputValue(inputValue === 'true' ? 'false' : 'true');
     setSync(true);
   }
 
   function doNothing() {}
 
-  const isChecked = inputValue === 'true';
+  function startIcon() {
+    return inputValue === 'true'
+      ? <CheckBoxIcon className={classes.optionIcon} />
+      : <CheckBoxOutlineBlankIcon className={classes.optionIcon} />;
+  }
 
   return (
     <div className={classes.input}>
-      <div className={classes.option}>
-        <Checkbox
-          disabled={disabled}
-          checked={isChecked}
-          onChange={handleChange}
-          className={classes.optionIcon}
-        />
-      </div>
+      <Button disabled={disabled} fullWidth className={classes.option} variant='outlined' onClick={handleToggle} startIcon={startIcon()}>
+        <Typography className={classes.singleCheckboxTitle}>{label}</Typography>
+      </Button>
       <input hidden value={inputValue} ref={ref} onChange={doNothing} />
     </div>
   );

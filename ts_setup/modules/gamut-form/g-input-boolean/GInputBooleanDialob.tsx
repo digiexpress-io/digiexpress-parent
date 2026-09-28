@@ -8,9 +8,7 @@ export const GInputBooleanDialob: React.FC<GFormBaseElementProps> = ({ disabled,
   const errors = store.form.toErrors(element.id);
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
-
-  console.log("element", element)
-
+  const isSingleBox = element.props?.variant === 'singleCheckbox';
 
   function onChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const newValue: 'true' | 'false' | '' = event.target.value + '' as any;
@@ -23,6 +21,7 @@ export const GInputBooleanDialob: React.FC<GFormBaseElementProps> = ({ disabled,
       store.setAnswer(element.id, undefined);
     }
   }
+
   return (
     <>
       <div ref={navRef} id={navRefId} />
@@ -31,14 +30,13 @@ export const GInputBooleanDialob: React.FC<GFormBaseElementProps> = ({ disabled,
         disabled={disabled}
         label={store.form.toLabel(element.id)}
         description={desc}
-        variant='checkbox'
+        variant={isSingleBox ? 'singleCheckbox' : 'checkbox'}
         required={!!element.required}
         errors={errors}
         value={element.value}
         onChange={onChange}
         labelPosition={labelPosition}
         readOnly={element.readOnly}
-        singleCheckbox={element.props?.singleCheckbox}
       />
     </>
   );
