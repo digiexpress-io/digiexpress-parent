@@ -223,23 +223,59 @@ and pick the no-keyword floor between the highest noise score and the lowest rea
 
 ### Cost
 
-List prices checked 2026-09-25, 1 USD ≈ 0.87 EUR, VAT excluded. Vertex prices:
-`gemini-3.1-flash-lite` $0.25 / $1.50 per 1M input / output tokens on `global`, taken here as
-+10% for `eu` like regional endpoints (not separately published, verify);
-`gemini-embedding-2` $0.20 per 1M text tokens. Example site: 900 documents (300 workflows × 3
-locales), about 450 + 350 chat tokens and 600 embedded tokens each.
+The Vertex figures are measured, not estimated. Prices are Google's Cloud Billing Catalog list
+prices for the Vertex AI service (USD, effective 2026-09-27, no tax, before any credits or
+discounts). Token counts are Google's own Cloud Monitoring metrics
+(`aiplatform.googleapis.com/publisher/online_serving/token_count` and `model_invocation_count`)
+for reindex job 9 on 2026-09-25: 258 documents, exactly 258 successful chat calls (no retries) and
+259 embedding calls (258 documents plus the width probe). Query tokens are the `usageMetadata`
+Vertex returned for the 38 eval queries; Monitoring reported the same totals.
 
-| | Ollama on GPU | Ollama on CPU | Vertex AI (`eu`) |
+**Unit prices**
+
+| Model | SKU | Price per token | Per 1M tokens |
 | --- | --- | --- | --- |
-| Fixed cost per month | ≈ €410–550 per always-on node (spot ≈ €200), ×2 for HA | ≈ €80–120 of node capacity | €0 |
-| One full reindex, 900 documents | included | included (takes hours) | ≈ €0.65 |
-| Publish with 10% changed | included | included | ≈ €0.06 |
-| 50,000 unique searches | included | included, often misses the 2 s query budget | ≈ €0.07 |
-| 5,000 feedbacks classified and embedded | included | included | ≈ €3 |
-| Typical month | ≈ €410–550 | ≈ €80–120 | **under €5** |
+| `gemini-embedding-2`, text input | Gemini MM Embedding - Text Input (`EBBD-6991-B1BB`) | $0.0000002 | $0.20 |
+| `gemini-embedding-2`, output | – | not charged | – |
+| `gemini-3.1-flash-lite`, text input | Regional Text Input - Predictions (`35D1-0973-0F96`) | $0.000000275 | $0.275 |
+| `gemini-3.1-flash-lite`, text output | Regional Text Output - Predictions (`4476-E8B6-F0E6`) | $0.00000165 | $1.65 |
 
-A fractional GPU node costs as much as about 800 full reindexes a month on Vertex. Self-hosting
-pays off only when data residency or contract terms rule out a managed model.
+The catalog has one embedding price for every location. For Flash-Lite it has only *Global* and
+*Regional* SKUs, no separate multi-region one; `eu` is not `global`, so the Regional SKUs are used
+here. On `global` Flash-Lite costs $0.25 / $1.50 per 1M input / output tokens. The billing export
+shows which SKU `eu` traffic is charged to.
+
+**Tokens and cost per call**
+
+| Call | When | Tokens per call (average) | Cost per call |
+| --- | --- | --- | --- |
+| Metadata chat (`MetadataGenerator`, `gemini-3.1-flash-lite`) | Once per new or changed document during a reindex | 372.9 input + 251.6 output | $0.0005178 ($0.0001026 input + $0.0004152 output) |
+| Document embedding (`gemini-embedding-2`) | Once per new or changed document during a reindex | 252.2 | $0.0000504 |
+| Search query embedding (`gemini-embedding-2`) | Once per uncached portal search | 9.42 (4–16; fi 10.8, sv 8.2, en 6.6) | $0.0000019 |
+
+A document therefore costs $0.000568 to (re)index, and the chat output tokens are 73% of that.
+The metadata prompt itself is only about 140 tokens; most of the 373 input tokens are the
+JSON-schema format instructions Spring AI's `.entity(...)` appends to it. With `thinking-level: MINIMAL` Gemini spends no thinking
+tokens (Vertex reports none), so the output figure is the whole billed output; a higher level
+adds thinking tokens at the output price.
+A repeated search costs nothing: each pod keeps the last 1,000 query vectors. An unchanged document
+costs nothing either; its content hash skips it.
+
+**What that adds up to**
+
+| | Vertex AI (`eu`) | Ollama on GPU | Ollama on CPU |
+| --- | --- | --- | --- |
+| Fixed cost per month | $0 | ≈ €410–550 per always-on node, estimate (spot ≈ €200), ×2 for HA | ≈ €80–120 of node capacity, estimate |
+| Full reindex, 258 documents (measured, job 9) | $0.147 | included | included (takes hours) |
+| Full reindex, 900 documents | $0.51 | included | included |
+| Publish that changes 10% of 258 documents | $0.015 | included | included |
+| 50,000 uncached searches | $0.094 | included | included, often misses the 2 s query budget |
+| 1,000,000 uncached searches | $1.88 | included | included |
+
+A GPU node at the low end of that estimate (about $470) costs as much as roughly 900 full reindexes
+of a 900-document site a month on Vertex. Self-hosting pays off only when data residency or contract
+terms rule out a managed model. Feedback classification is not wired into `eveli-client` yet and is
+not included.
 
 ## Endpoints
 
