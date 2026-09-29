@@ -20,5 +20,5 @@ git config --global user.email "$BOT_EMAIL";
 pnpm install
 pnpm release-all
 
-git pull origin dev
-git push origin dev
+git pull origin prod-maintenance
+git push origin prod-maintenance
