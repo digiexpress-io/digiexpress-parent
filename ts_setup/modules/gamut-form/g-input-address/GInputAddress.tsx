@@ -19,6 +19,10 @@ import { InputProvider } from './InputProvider'
 
 // extension hook for adding custom input types
 export interface GInputAddressPropsVariantOverrides { }
+export interface GInputAddressClasses {
+  root: string;
+}
+export type GInputAddressClassKey = keyof GInputAddressClasses;
 
 export interface GInputAddressProps {
   id: string;

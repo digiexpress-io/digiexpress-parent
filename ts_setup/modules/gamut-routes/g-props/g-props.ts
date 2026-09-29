@@ -35,7 +35,7 @@ import { GLogoutClassKey, GLogoutProps } from '@dxs-ts/gamut-primitives';
 
 import { GMarkdownClassKey, GMarkdownProps } from '@dxs-ts/gamut-md';
 import { GLayoutClassKey, GLayoutProps } from '@dxs-ts/gamut-primitives';
-import { GFormBaseClassKey, GFormBaseProps } from '@dxs-ts/gamut-form';
+import { GFormBaseClassKey, GFormBaseProps, GInputAddressClassKey, GInputAddressProps } from '@dxs-ts/gamut-form';
 
 import { GFormGroupClassKey, GFormGroupProps } from '@dxs-ts/gamut-form';
 import { GInputMultilistClassKey, GInputMultilistProps } from '@dxs-ts/gamut-form';
@@ -147,6 +147,7 @@ export interface GComponentsPropsList {
 
   GFormGroup: GFormGroupProps;
   GInputMultilist: GInputMultilistProps;
+  GInputAddress: GInputAddressProps;
 
   GAppBar: GAppBarProps;
   GArticle: GArticleProps;
@@ -247,6 +248,7 @@ export interface GComponentNameToClassKey {
 
   GFormGroup: GFormGroupClassKey;
   GInputMultilist: GInputMultilistClassKey;
+  GInputAddress: GInputAddressClassKey;
 
   GSort: GSortClassKey;
 
@@ -463,6 +465,12 @@ export interface GComponents<Theme = unknown> {
     defaultProps?: GComponentsProps['GInputMultilist'];
     styleOverrides?: GComponentsOverrides<Theme>['GInputMultilist'];
     variants?: GComponentsVariants['GInputMultilist'];
+  },
+
+  GInputAddress?: {
+    defaultProps?: GComponentsProps['GInputAddress'];
+    styleOverrides?: GComponentsOverrides<Theme>['GInputAddress'];
+    variants?: GComponentsVariants['GInputAddress'];
   },
 
   GSort?: {
