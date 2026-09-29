@@ -1,14 +1,14 @@
 {
   "lib-gamut": {
     "moduleName": "@dxs-ts/gamut",
-    "version": "2.0.104",
-    "srcHash": "717a6d18f0d2352b2df0061439b232c6985b04e7f399f7fde99f77d642990a9f",
-    "lastPublished": "2026-09-29T13:02:29.897Z"
+    "version": "2.0.105",
+    "srcHash": "d00eada11e22f350983afb2e8af6d62d24dd7531b5a0cf1a66e7484d019d168b",
+    "lastPublished": "2026-09-29T13:12:39.832Z"
   },
   "lib-eveli": {
     "moduleName": "@dxs-ts/eveli-ide",
-    "version": "2.0.104",
-    "srcHash": "9f850ba96c99672cc4f30e23b87d23b5785f60da5a1750a972e0d4169de5b04e",
-    "lastPublished": "2026-09-29T13:02:29.897Z"
+    "version": "2.0.105",
+    "srcHash": "1e59b327536599de460985338b81749f1b6514c6d66874b65801d4d2bd77ac0d",
+    "lastPublished": "2026-09-29T13:12:39.831Z"
   }
 }
