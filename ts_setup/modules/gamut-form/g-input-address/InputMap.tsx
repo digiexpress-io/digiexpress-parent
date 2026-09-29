@@ -14,7 +14,7 @@ import { useInput } from './InputProvider'
 
 
 
-export const InputMap: React.FC<GInputBaseAnyProps & GInputAddressProps> = ({ options, value: backendValue }) => {
+export const InputMap: React.FC<GInputBaseAnyProps & GInputAddressProps> = ({ options, readOnly, value: backendValue }) => {
   
   const input = useInput();
   const { getOne, findAll } = useMap();
@@ -51,11 +51,12 @@ export const InputMap: React.FC<GInputBaseAnyProps & GInputAddressProps> = ({ op
         <Leaflet.TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          referrerPolicy="strict-origin-when-cross-origin"
         />
 
         <Center position={position} />
 
-        <Leaflet.Marker draggable position={position} ref={markerRef} eventHandlers={{ dragend }}>
+        <Leaflet.Marker draggable={!readOnly} position={position} ref={markerRef} eventHandlers={{ dragend }}>
           <Leaflet.Popup minWidth={dimensions.width}></Leaflet.Popup>
         </Leaflet.Marker>
       </Leaflet.MapContainer>)}
