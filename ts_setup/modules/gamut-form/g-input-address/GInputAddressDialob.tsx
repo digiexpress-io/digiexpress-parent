@@ -8,6 +8,7 @@ export const GInputAddressDialob: React.FC<GFormBaseElementProps> = ({ disabled,
   const errors = store.form.toErrors(element.id);
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
+  const initialPos = element.props? {defaultValue:{lat: element.props?.lat, lng: element.props?.lng}} : undefined;
 
   function onChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const newValue = event.target.value;
@@ -29,6 +30,7 @@ export const GInputAddressDialob: React.FC<GFormBaseElementProps> = ({ disabled,
         onChange={onChange}
         labelPosition={labelPosition}
         readOnly={element.readOnly}
+        options={initialPos}
       />
     </>
   );
