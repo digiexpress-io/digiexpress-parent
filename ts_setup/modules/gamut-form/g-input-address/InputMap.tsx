@@ -14,7 +14,7 @@ import { useInput } from './InputProvider'
 
 
 
-export const InputMap: React.FC<GInputBaseAnyProps & GInputAddressProps> = ({ options, value: backendValue }) => {
+export const InputMap: React.FC<GInputBaseAnyProps & GInputAddressProps> = ({ options, readOnly, value: backendValue }) => {
   
   const input = useInput();
   const { getOne, findAll } = useMap();
@@ -56,7 +56,7 @@ export const InputMap: React.FC<GInputBaseAnyProps & GInputAddressProps> = ({ op
 
         <Center position={position} />
 
-        <Leaflet.Marker draggable position={position} ref={markerRef} eventHandlers={{ dragend }}>
+        <Leaflet.Marker draggable={!readOnly} position={position} ref={markerRef} eventHandlers={{ dragend }}>
           <Leaflet.Popup minWidth={dimensions.width}></Leaflet.Popup>
         </Leaflet.Marker>
       </Leaflet.MapContainer>)}
