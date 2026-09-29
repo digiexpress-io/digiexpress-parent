@@ -11,9 +11,12 @@
   },
   "peerDependencies": {
     "react": "*",
+    "react-intl": "*",
+    "@monaco-editor/react": "*",
     "@mui/material": "*",
     "@mui/icons-material": "*",
-    "@mui/utils": "*"
+    "@mui/utils": "*",
+    "@uiw/react-md-editor": "*"
   },
   "keywords": ["filesystem", "tree", "components"],
   "private": true
