@@ -30,6 +30,7 @@ export const YearFieldContainer: React.FC<YearFieldContainerProps> = ({ value, i
         onChange={onChange}
         inputMode='numeric'
         maxLength={4}
+        placeholder={intl.formatMessage({ id: 'xui.calendarInput.mask.placeholder.year', defaultMessage: 'yyyy' })}
       />
       <Box display='flex' alignItems='center' ml={0.5}>
         <IconButton size='small' onClick={onClear} disabled={disabled} aria-label={intl.formatMessage({ id: 'xui.datetime.button.clearDate', defaultMessage: 'Clear date' })}>
