@@ -7,9 +7,10 @@ export const UNDEFINED_SELECTION_VALUE = 'gamut.forms.selectionUndefined';
 
 export type GFormBaseSlotVariant = (
   'text' |
-  'text-fileUpload' | 
+  'text-fileUpload' |
   'text-textBox'|
   'text-address' |
+  'text-currency' |
 
   'decimal' |
   'number' |
@@ -46,6 +47,9 @@ export function useSlotVariant(element: DialobApi.ActionItem, store: DialobApi.F
   }
   if(element.type === 'text' && element.view === 'text' && element.props?.controlType === 'fileUpload') {
     return { variant: 'text-fileUpload' };
+  }
+  if(element.type === 'text' && element.view === 'text' && element.props?.currency) {
+    return { variant: 'text-currency' };
   }
   if(element.type === 'text' && element.view === 'text') {
     return { variant: 'text' };
