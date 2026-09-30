@@ -240,3 +240,25 @@ Example from `manifest.json`:
 ```
 
 - Please refer to this link for further info on ['manifest.json'](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest)
+
+# Customization of specific components
+
+
+## Addresss map customization
+
+Address map customization allows to specify initial point where location marker is placed. In can be customized by overriding Gamut component (in this case this is applied for all maps in this application) or by providing location coordinates in form field props (it will override then Gamut component's or default coordinates). Currently default coordinates are coded in `GInputAddress` component.
+Overriding coordinates in Gamut component looks like this:
+``` 
+  GInputAddress: {
+    defaultProps: {
+      options: {
+        defaultValue: {
+          lat: 60.3,
+          lng: 25.0
+        }
+      }
+    }
+  },
+```
+
+To specify coordinates in Dialob form add `lat` and `lng` properties to given address field.
