@@ -106,6 +106,17 @@ By default renders a plain text input. The following properties transform it int
 
 ---
 
+## Date _(GInputDate)_
+
+### Properties
+
+| Key | Value | What it produces | Default |
+|-----|-------|-----------------|---------|
+| `variant` | `date` | Standard date picker — day, month, year selection | X |
+| `variant` | `year` | Year-only picker; day and month are automatically set to 01/01 | |
+
+---
+
 ## Choice _(GInputList)_
 
 ### Properties

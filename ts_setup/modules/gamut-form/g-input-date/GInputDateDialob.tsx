@@ -21,7 +21,7 @@ export const GInputDateDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
       <GInputDate
         disabled={disabled}
         id={element.id}
-        variant='date'
+        variant={element.props?.variant === 'year' ? 'year' : 'date'}
         label={store.form.toLabel(element.id)}
         description={desc}
         errors={errors}
