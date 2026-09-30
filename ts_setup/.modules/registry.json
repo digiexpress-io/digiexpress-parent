@@ -786,6 +786,7 @@
           "react": "*",
           "@tanstack/react-query": "*",
           "@mui/material": "*",
+          "@mui/utils": "*",
           "notistack": "*",
           "react-intl": "*"
         },
@@ -816,6 +817,7 @@
         "react",
         "@tanstack/react-query",
         "@mui/material",
+        "@mui/utils",
         "notistack",
         "react-intl"
       ],
@@ -823,6 +825,7 @@
         "react",
         "@tanstack/react-query",
         "@mui/material",
+        "@mui/utils",
         "notistack",
         "react-intl"
       ],
@@ -830,6 +833,7 @@
         "react",
         "@tanstack/react-query",
         "@mui/material",
+        "@mui/utils",
         "notistack",
         "react-intl"
       ],
@@ -861,6 +865,7 @@
         "react-intl",
         "@dxs-ts/eveli-intl",
         "@mui/material",
+        "@mui/utils",
         "@dxs-ts/gamut-theme",
         "notistack",
         "@dxs-ts/stencil-api",
@@ -878,6 +883,7 @@
         "@tanstack/react-query",
         "react-intl",
         "@mui/material",
+        "@mui/utils",
         "notistack"
       ],
       "actualInternalDependencies": [
@@ -4662,6 +4668,6 @@
       ]
     }
   },
-  "checksum": "820c7d2f479781243ebe4557dce1afd22a335bb604f7612421493e574d25a97f",
-  "generatedAt": "2026-09-09T10:54:22.141Z"
+  "checksum": "a9013462a332b6c368958a322d3ff07d10cf6612495498fa8050882cd62a0c97",
+  "generatedAt": "2026-09-29T09:13:53.010Z"
 }

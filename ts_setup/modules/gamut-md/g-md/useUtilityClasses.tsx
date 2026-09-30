@@ -1,5 +1,5 @@
 
-import { generateUtilityClass, styled } from '@mui/material';
+import { generateUtilityClass, styled, Theme } from '@mui/material';
 import { GMarkdownProps } from './GMarkdown';
 import composeClasses from '@mui/utils/composeClasses';
 
@@ -12,7 +12,7 @@ export interface GMarkdownClasses {
 export type GMarkdownClassKey = keyof GMarkdownClasses;
 
 
-export const GMarkdownRoot = styled("div", {
+export const GMarkdownRootDiv = styled("div", {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
@@ -21,6 +21,23 @@ export const GMarkdownRoot = styled("div", {
     ];
   },
 })<{ ownerState: GMarkdownProps }>(({ theme }) => {
+  return _defaultStyles(theme);
+});
+
+export const GMarkdownRootSpan = styled("span", {
+  name: MUI_NAME + "Span",
+  slot: 'Root',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.root
+    ];
+  },
+})<{ ownerState: GMarkdownProps }>(({ theme }) => {
+  return _defaultStyles(theme);
+});
+
+
+function _defaultStyles(theme: Theme) {
   return {
     'ul': {
       paddingLeft: theme.spacing(3),
@@ -36,7 +53,7 @@ export const GMarkdownRoot = styled("div", {
       margin: 0,
     }
   };
-});
+}
 
 export const useUtilityClasses = () => {
   const slots = {

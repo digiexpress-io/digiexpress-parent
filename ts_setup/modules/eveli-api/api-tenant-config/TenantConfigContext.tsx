@@ -1,6 +1,7 @@
 
 import React, { createContext, PropsWithChildren, useContext } from 'react';
 import { ThemeOptions } from '@mui/material';
+import { deepmerge } from '@mui/utils';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { GThemeOptions } from '@dxs-ts/gamut-theme';
 import { EveliFeatureMapping, EveliFeatureType } from './EveliFeatureMapping';
@@ -77,7 +78,7 @@ const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>
 
     const hardcodedFeatures = Array.from(new Set([...(tenantConfig?.features ?? []), ...(_features ?? [])]));
 
-    const mergedTheme = gamutThemeOptions ?? GThemeOptions;
+    const mergedTheme = _mergeGamut(gamutThemeOptions);
     const features = Array.from(new Set([ ...(tenantConfig?.features ?? []), ...(_features ?? []), ...(userTenantConfig ?? []) ]));
 
     return Object.freeze({ gamutThemeOptions: mergedTheme, ...tenantConfig, features, hardcodedFeatures, userTenantConfig, setUserTenantConfig })
@@ -110,4 +111,6 @@ export const useTenantConfigFeatures = () => {
   }  
 }
 
-
+function _mergeGamut(gamutThemeOptions?: ThemeOptions | undefined) {
+  return deepmerge(GThemeOptions, gamutThemeOptions ?? {});
+}

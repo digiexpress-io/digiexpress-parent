@@ -26,6 +26,7 @@
     "react": "*",
     "@tanstack/react-query": "*",
     "@mui/material": "*",
+    "@mui/utils": "*",
     "notistack": "*",
     "react-intl": "*"
   },
