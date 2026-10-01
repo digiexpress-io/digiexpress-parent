@@ -64,7 +64,7 @@ export const GInputDateInput = styled('div', {
     '& .XuiYearPicker-input': {
       border: 'unset',
       borderRadius: 'unset',
-      paddingLeft: theme.spacing(1),
+      paddingLeft: theme.spacing(2),
       '&:focus-within': {
         border: `2px solid ${theme.palette.primary.main}`,
         borderRadius: theme.spacing(0.5)
