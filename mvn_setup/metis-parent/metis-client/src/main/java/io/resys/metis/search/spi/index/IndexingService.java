@@ -43,6 +43,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class IndexingService {
 
+  public static final String WIDTH_PROBE = "Metis embedding width probe";
+
   private final SiteContentReader contentReader;
   private final MetadataGenerator metadataGenerator;
   private final EmbeddingService embeddingService;
@@ -61,6 +63,7 @@ public class IndexingService {
         return;
       }
       assertEmbeddingColumnWidth();
+      assertEmbeddingModelWidth();
 
       final var documents = contentReader.readDocuments();
       final var bundleHash = contentReader.currentBundleHash();
@@ -208,6 +211,20 @@ public class IndexingService {
           "eveli.metis.search.indexing.embedding-dimension is " + config.getEmbeddingDimension()
           + " but metis_search_index.embedding is " + columnType
           + ". The column width is created when search is enabled, not by this property.");
+    }
+  }
+
+  /**
+   * The column check does not cover what the model returns. Without this a wrong dimension
+   * setting fails every document separately at upsert time.
+   */
+  private void assertEmbeddingModelWidth() {
+    final var width = embeddingService.embed(WIDTH_PROBE).length;
+    if (width != config.getEmbeddingDimension()) {
+      throw new IllegalStateException(
+          "The embedding model returned " + width + " dimensions but eveli.metis.search.indexing.embedding-dimension is "
+          + config.getEmbeddingDimension() + ". Configure the model to return " + config.getEmbeddingDimension()
+          + " dimensions, for example eveli.metis.google-genai.embedding.dimensions.");
     }
   }
 

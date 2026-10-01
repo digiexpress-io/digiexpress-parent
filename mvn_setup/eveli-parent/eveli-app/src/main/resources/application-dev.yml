@@ -17,9 +17,11 @@ spring:
   ai:
     # Repeated from application.yml because spring-boot:run pins spring.config.location
     # to the profile files only, so the base application.yml is not read locally.
+    # ollama: the ollama service from eveli-local-docker. google-genai: Gemini on Vertex AI, see
+    # eveli.metis.google-genai below. Chat and embedding can be set independently.
     model:
-      chat: ollama
-      embedding: ollama
+      chat: ollama        # or google-genai
+      embedding: ollama   # or google-genai
     ollama:
       base-url: http://localhost:11434
       chat:
@@ -137,5 +139,22 @@ eveli.tagomi.service-url: http://localhost:8085
 eveli.tagomi.task-pdf-service-name: task-pdf
 eveli.tagomi.task-pdf-default-locale: en
 
-# metis: needs the ollama service from eveli-local-docker
+# metis: needs the ollama service from eveli-local-docker, or Vertex AI as described below
 eveli.metis.enabled: false
+
+# Gemini on Vertex AI instead of Ollama: set both spring.ai.model keys above to google-genai,
+# set eveli.metis.enabled above to true and uncomment below. Credentials come from Application
+# Default Credentials: gcloud auth application-default login, or GOOGLE_APPLICATION_CREDENTIALS
+# pointing at a metis-vertex service-account key kept outside the repository. Search needs the
+# pgvector postgresql from eveli-local-docker. See metis-parent/README.md#google-genai-vertex-ai.
+#eveli.metis.search.enabled: true
+#eveli.metis.google-genai.project-id: <gcp-project>
+# eu: the EU multi-region endpoint, the only EU location serving both gemini-3.1-flash-lite and
+# gemini-embedding-2 (checked 2026-09-25).
+#eveli.metis.google-genai.location: eu
+# Vertex calls do not queue on one local process like CPU Ollama does.
+#eveli.metis.search.indexing.concurrency: 4
+# Score thresholds calibrated for gemini-embedding-2; the Java defaults are for bge-m3.
+#eveli.metis.search.query.min-vector-score: 0.60
+#eveli.metis.search.query.min-vector-score-without-keyword: 0.63
+#eveli.metis.search.query.score-drop-off-ratio: 0.95
