@@ -71,6 +71,14 @@ Here are given properties which depend from environment and require customizatio
 ## Service properties
 
 * `eveli.feedback.enabled` - boolean flag to enable feedback functionality. 
+* `eveli.feedback.forms` - name of form for which feedback is enabled
+* `eveli.feedback.categoryMain` - name of field(s) specifying main category, comma separated
+* `eveli.feedback.categorySub` - name of field(s) specifying subcategory of feedback, comma separated
+* `eveli.feedback.questionTitle` - name of title field
+* `eveli.feedback.question` - name of feedback main field
+* `eveli.feedback.username` - name of user name field/context variable
+* `eveli.feedback.usernameAllowed` - name of field which asks user agreement for feedback publication
+
 
 ## Metis AI platform properties
 
