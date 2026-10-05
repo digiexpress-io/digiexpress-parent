@@ -59,8 +59,9 @@ public class EveliAutoConfigBatches {
   }
 
   @Bean
-  public BatchDefinition tasksCleanUpStaleDataJob(TaskClient taskClient, FormDb dialobClient) {
-    return BatchJob_RejectStaleForms_Definition.create(taskClient, dialobClient);
+  public BatchDefinition tasksCleanUpStaleDataJob(TaskClient taskClient, FormDb dialobClient, EveliPropsBatch props) {
+    return BatchJob_RejectStaleForms_Definition.create(taskClient, dialobClient, props.getStaleData());
+
   }
   
   @Bean

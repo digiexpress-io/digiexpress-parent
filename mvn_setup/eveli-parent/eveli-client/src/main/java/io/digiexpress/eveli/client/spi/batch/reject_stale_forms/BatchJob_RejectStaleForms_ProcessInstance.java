@@ -21,11 +21,13 @@ package io.digiexpress.eveli.client.spi.batch.reject_stale_forms;
  */
 
 import java.time.OffsetDateTime;
+import java.time.Period;
 import java.util.Optional;
 
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
+import io.digiexpress.eveli.client.config.EveliPropsBatch;
 import io.digiexpress.eveli.client.spi.batch.reject_stale_forms.BatchJob_RejectStaleForms_ProcessInstance.ProcAndQuestionnaireToReject;
 import io.digiexpress.eveli.client.spi.batch.reject_stale_forms.BatchJob_RejectStaleForms_ProcessInstance.RejectStaleFormsConfig;
 import io.digiexpress.thena.batch.client.api.executor.Executor;
@@ -50,20 +52,20 @@ public class BatchJob_RejectStaleForms_ProcessInstance implements Executor<ProcA
 
   private final TaskClient taskClient;
   private final FormDb dialobClient;
+  private final EveliPropsBatch.StaleDataConfig props;
 
   @Override
   public ExecutorQuery<ProcAndQuestionnaireToReject, RejectStaleFormsConfig> before(ExecutorContext context) {
     return new ExecutorQuery<ProcAndQuestionnaireToReject, RejectStaleFormsConfig>() {
       @Override
       public RejectStaleFormsConfig getConfig() {
-        // 6 months old tasks
-        return new RejectStaleFormsConfig(6);
+        return new RejectStaleFormsConfig(props.maxPeriod());
       }
       @Override
       public Multi<ProcAndQuestionnaireToReject> findAll() {
         final var config = getConfig();
         return taskClient.queryTaskProcesess()
-            .findAllStaleWithoutTasks(OffsetDateTime.now().minusMonths(config.getAgeInMonths()))
+            .findAllStaleWithoutTasks(OffsetDateTime.now().minus(config.getMaxAge()))
             .onItem().transform(proc -> {
               try {
                 final var questionnaire = dialobClient.withTenant().formInstanceQuery().findOneSync(proc.getQuestionnaireId()).map(e -> e.getQuestionnaire());
@@ -88,7 +90,7 @@ public class BatchJob_RejectStaleForms_ProcessInstance implements Executor<ProcA
   public Uni<ExecutorEntity> accept(ProcAndQuestionnaireToReject entity, RejectStaleFormsConfig config, ExecutorContext context) {
     return taskClient.modifyProcess()
         .commitAuthor(BatchJob_RejectStaleForms_ProcessInstance.class.getSimpleName())
-        .commitMessage("Older then: " + config.getAgeInMonths() + " months")
+        .commitMessage("Older than: " + config.getMaxAge())
         .id(entity.getProcess().getId().toString())
         .merge((current, merger) -> merger.status(GrimProcessStatus.EXPIRED).build())
         .build()
@@ -117,7 +119,7 @@ public class BatchJob_RejectStaleForms_ProcessInstance implements Executor<ProcA
   @Data
   public static class RejectStaleFormsConfig implements ExecutorConfig {
     private static final long serialVersionUID = 7079554536966522627L;
-    private final int ageInMonths;
+    private final Period maxAge;
   }
 
 

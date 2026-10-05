@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.spi.batch.reject_stale_forms;
  */
 
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.config.EveliPropsBatch;
 import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
 import io.digiexpress.thena.batch.client.api.ImmutableBatchDefinition;
 import io.digiexpress.thena.batch.client.api.ImmutableBatchStepDefinition;
@@ -28,14 +29,15 @@ import io.resys.limaone.spi.dialob.FormDb;
 
 public class BatchJob_RejectStaleForms_Definition {
 
-  public static BatchDefinition create(TaskClient taskClient, FormDb dialobClient) {
+  public static BatchDefinition create(TaskClient taskClient, FormDb dialobClient, 
+      EveliPropsBatch.StaleDataConfig props) {
     return ImmutableBatchDefinition.builder()
         .batchName("stale-data-clean-up")
-        .comment("Cleanes up data oleder then 6 months")
+        .comment("Cleans up data for uncompleted forms")
         .addSteps(ImmutableBatchStepDefinition.builder()
             .name("reject stale questionnaires")
             .comment("Mark all stale proc-s to rejected state")
-            .executor(new BatchJob_RejectStaleForms_ProcessInstance(taskClient, dialobClient))
+            .executor(new BatchJob_RejectStaleForms_ProcessInstance(taskClient, dialobClient, props))
             .build())
         .build();
   }
