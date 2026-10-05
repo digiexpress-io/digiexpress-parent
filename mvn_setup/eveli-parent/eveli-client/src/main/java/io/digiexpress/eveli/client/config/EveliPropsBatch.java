@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import java.time.Period;
+
 import org.springframework.beans.factory.annotation.Value;
 
 /*-
@@ -34,4 +36,7 @@ public class EveliPropsBatch {
   @Value("${app-id:eveli-app}")
   private String appId;
 
+  public record StaleDataConfig(Period maxPeriod) {}
+  
+  private StaleDataConfig staleData = new StaleDataConfig(Period.ofMonths(6));
 }
