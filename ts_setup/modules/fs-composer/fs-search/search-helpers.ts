@@ -14,37 +14,35 @@ export function filterTreeDirents(
 
   const typeFilters = visibleFilters.filter((f): f is AssetTypeFilter => f.type === 'asset');
   const labelFilters = visibleFilters.filter((f): f is LabelFilter => f.type === 'label');
-  const isNoFiltersSelected = visibleFilters.length === 0;
   const isSearchTermEmpty = !searchTerm.trim();
 
-  if (isSearchTermEmpty && isNoFiltersSelected) {
+  if (isSearchTermEmpty && visibleFilters.length === 0) {
     return dirents;
   }
 
   const labelValues = labelFilters.map(f => f.value);
   const filtered: Fs.DirentBase[] = [];
 
-
   for (const dirent of dirents) {
     const direntEntry = getDirent(dirent.id);
     const widget = createWidget(direntEntry!);
 
-    const extension = widget.meta.extension ?? '';
-    const displayName = dirent.name + extension;
+    const displayName = dirent.name + (widget.meta.extension ?? '');
     const nameMatches = displayName.toLowerCase().includes(searchTerm.toLowerCase());
     const descriptionMatches = direntEntry?.props?.assetDescription?.toLowerCase().includes(searchTerm.toLowerCase());
     const direntType = dirent.type === 'DIALOB_FORM_META' ? 'DIALOB_FORM' : dirent.type;
     const typeMatches = typeFilters.length === 0 || typeFilters.some(f => f.value === direntType);
     const labelMatches = labelFilters.length === 0 || (direntEntry?.props?.labels ?? []).some(l => labelValues.includes(l.key));
-    const childMatches = dirent.children ? filterTreeDirents(dirent.children, searchTerm, visibleFilters, getDirent) : [];
+    const childMatches = dirent.children?.length
+      ? filterTreeDirents(dirent.children, searchTerm, visibleFilters, getDirent)
+      : [];
 
-    const showBySearch = isSearchTermEmpty || nameMatches || descriptionMatches;
+    const selfMatches = (isSearchTermEmpty || nameMatches || descriptionMatches) && typeMatches && labelMatches;
 
-    if ((showBySearch && typeMatches && labelMatches) || childMatches.length > 0) {
-      filtered.push({
-        ...dirent,
-        children: childMatches
-      });
+    if (selfMatches) {
+      filtered.push({ ...dirent, children: childMatches });
+    } else {
+      filtered.push(...childMatches);
     }
   }
 
