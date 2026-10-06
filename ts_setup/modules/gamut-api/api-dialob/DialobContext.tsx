@@ -38,7 +38,7 @@ export function useDialobReview(props: { id: string }): {
   const { id } = props;
   const { fetchReviewGet } = useDialob();
 
-  const { data: review, error, refetch, isPending } = useQuery({
+  const { data: review, error, isPending } = useQuery({
     staleTime: 5000,
     queryKey: ['reviews/' + id],
     queryFn: () => fetchReviewGet(props.id)

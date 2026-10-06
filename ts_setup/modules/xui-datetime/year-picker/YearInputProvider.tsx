@@ -1,7 +1,6 @@
 import React from 'react';
 
-const START_YEAR = 1925;
-const END_YEAR = new Date().getFullYear() + 75;
+
 
 export interface YearInputContextType {
   disabled: boolean;
@@ -42,19 +41,13 @@ export const YearInputProvider: React.FC<{
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const digits = event.target.value.replace(/\D/g, '').slice(0, 4);
     setInputValue(digits);
-    if (digits.length === 4) {
-      const year = parseInt(digits, 10);
-      if (year >= START_YEAR && year <= END_YEAR) {
-        setIsError(false);
-        onChange(year);
-      } else {
-        setIsError(true);
-      }
-    } else if (digits.length === 0) {
+    if (digits.length === 0) {
       setIsError(false);
       onChange(null);
     } else {
-      setIsError(true);
+      const year = parseInt(digits, 10);
+      setIsError(false);
+      onChange(year);
     }
   }
 
