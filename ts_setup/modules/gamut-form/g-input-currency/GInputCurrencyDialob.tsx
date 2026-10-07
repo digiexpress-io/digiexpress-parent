@@ -1,36 +1,34 @@
 import React from 'react';
 import { GFormBaseElementProps } from '../g-form-base-element';
-import { GInputDate } from './GInputDate';
+import { GInputCurrency } from './GInputCurrency';
 
 
-
-export const GInputDateDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store, disabled, navRef, navRefId }) => {
-
+export const GInputCurrencyDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store, navRef, navRefId }) => {
   const errors = store.form.toErrors(element.id);
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
 
   function onChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const newValue = event.target.value;
-    store.setAnswer(element.id, newValue ? newValue : undefined);
+    store.setAnswer(element.id, event.target.value);
   }
 
   return (
     <>
       <div ref={navRef} id={navRefId} />
-      <GInputDate
+      <GInputCurrency
         disabled={disabled}
         id={element.id}
-        variant={element.props?.variant === 'year' ? 'year' : 'date'}
         label={store.form.toLabel(element.id)}
         description={desc}
         errors={errors}
-        value={element.value}
-        labelPosition={labelPosition}
-        format={undefined}
         required={!!element.required}
+        value={element.value}
+        variant='currency'
+        currency={element.props?.currency}
+        labelPosition={labelPosition}
         onChange={onChange}
         readOnly={element.readOnly}
       />
-    </>);
+    </>
+  );
 }

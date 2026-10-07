@@ -6,6 +6,7 @@ import { UnknownSlot } from './UnknownSlot';
 
 import { GInputUploadDialob } from '../g-input-upload';
 import { GInputTextDialob } from '../g-input-text';
+import { GInputCurrencyDialob } from '../g-input-currency';
 import { GInputTextAreaDialob } from '../g-input-textarea';
 import { GInputBooleanDialob} from '../g-input-boolean';
 import { GInputAddressDialob } from '../g-input-address';
@@ -52,6 +53,7 @@ const Slots: Record<GFormBaseSlotVariant, React.ElementType<GFormBaseElementProp
   'time': GInputTimeDialob,
   'text': GInputTextDialob,
   'text-fileUpload': GInputUploadDialob,
+  'text-currency': GInputCurrencyDialob,
   'text-textBox': GInputTextAreaDialob,
   'text-address': GInputAddressDialob,
   'decimal': GInputDecimalDialob,

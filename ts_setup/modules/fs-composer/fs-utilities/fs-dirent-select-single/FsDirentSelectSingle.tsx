@@ -20,7 +20,7 @@ export const FsDirentSelectSingle: React.FC<FsDirentSelectSingleProps> = (props)
         onChange={(e) => props.onChange(e.target.value as string)}
         input={<OutlinedInput />}
       >
-        {props.allowNone && <MenuItem value=''>—</MenuItem>}
+        {props.allowNone && <MenuItem value=''>{intl.formatMessage({ id: 'fs.direntSelectSingle.none' })}</MenuItem>}
         {props.options.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}

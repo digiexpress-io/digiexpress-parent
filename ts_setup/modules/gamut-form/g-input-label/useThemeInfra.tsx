@@ -14,10 +14,9 @@ export function useThemeInfra(initProps: GInputLabelProps) {
     name: MUI_NAME,
   })
   
-  const { braced = false } = props;
+  const { braced = false, labelMarkdown = true } = props;
+  const ownerState = { ...props, braced, labelMarkdown }
 
-  const ownerState = {...props, braced }
-  
   const classes = useUtilityClasses(ownerState);
   return { classes, ownerState, props };
 }
@@ -36,7 +35,7 @@ const useUtilityClasses = (ownerState: GInputLabelProps) => {
 export const GInputLabelRoot = styled("div", {
   name: MUI_NAME,
   slot: 'Root',
-  overridesResolver: (props, styles) => {
+  overridesResolver: (_props, styles) => {
     return [
       styles.root,
     ];
@@ -57,6 +56,7 @@ export const GInputLabelRoot = styled("div", {
     },
 
     '& .MuiTypography-root': {
+      marginBottom: '0px', //override gMarkdown 16px margin-bottom
       paddingTop: (ownerState.braced && ownerState.labelPosition === 'label-left') ? theme.spacing(5.5) : undefined,
       alignSelf: (ownerState.braced && ownerState.labelPosition === 'label-left') ? undefined : 'center',
     }

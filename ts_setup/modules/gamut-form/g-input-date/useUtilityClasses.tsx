@@ -60,6 +60,15 @@ export const GInputDateInput = styled('div', {
         border: `2px solid ${theme.palette.primary.main}`,
         borderRadius: theme.spacing(0.5)
       }
+    },
+    '& .XuiYearPicker-input': {
+      border: 'unset',
+      borderRadius: 'unset',
+      paddingLeft: theme.spacing(2),
+      '&:focus-within': {
+        border: `2px solid ${theme.palette.primary.main}`,
+        borderRadius: theme.spacing(0.5)
+      }
     }
 
   };

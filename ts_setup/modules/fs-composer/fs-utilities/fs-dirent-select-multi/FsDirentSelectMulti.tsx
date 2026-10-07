@@ -46,11 +46,14 @@ export const FsDirentSelectMulti: React.FC<FsDirentSelectMultiProps> = (props) =
           </div>
         )}
       >
-        {props.options.map((option) => (
-          <MenuItem key={option.value} value={option.value} className={classes.menuItem}>
-            {option.label}
-          </MenuItem>
-        ))}
+        {props.options.length === 0 && props.noOptionsMessage
+          ? <MenuItem disabled>{props.noOptionsMessage}</MenuItem>
+          : props.options.map((option) => (
+            <MenuItem key={option.value} value={option.value} className={classes.menuItem}>
+              {option.label}
+            </MenuItem>
+          ))
+        }
       </Select>
     </FsDirentSelectMultiRoot>
   );

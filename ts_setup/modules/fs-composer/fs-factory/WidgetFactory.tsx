@@ -58,6 +58,27 @@ export interface DirentWidget {
 };
 
 
+export function createIconWidget(dirent: Fs.DirentBase): DirentWidget {
+  if (dirent.type !== 'FOLDER') {
+    return createWidget(dirent);
+  }
+  const contentType = _findContentType(dirent);
+  return contentType ? createWidget({ type: contentType }) : createWidget(dirent);
+}
+
+function _findContentType(dirent: Fs.DirentBase): Fs.BodyType | undefined {
+  for (const child of (dirent.children ?? [])) {
+    if (child.type !== 'FOLDER') {
+      return child.type;
+    }
+    const deeper = _findContentType(child);
+    if (deeper !== undefined) {
+      return deeper;
+    }
+  }
+  return undefined;
+}
+
 export function createWidget(dirent: { type: Fs.BodyType }): DirentWidget {
   switch (dirent.type) {
     case 'ARTICLE': return ArticleWidget;

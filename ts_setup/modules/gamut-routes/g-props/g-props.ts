@@ -40,6 +40,8 @@ import { GFormBaseClassKey, GFormBaseProps, GInputAddressClassKey, GInputAddress
 import { GFormGroupClassKey, GFormGroupProps } from '@dxs-ts/gamut-form';
 import { GInputMultilistClassKey, GInputMultilistProps } from '@dxs-ts/gamut-form';
 
+import { GInputLabelClassKey, GInputLabelProps } from '@dxs-ts/gamut-form';
+
 import { GFooterClassKey, GFooterProps } from '@dxs-ts/gamut-primitives';
 import { GUserOverviewMenuClassKey, GUserOverviewMenuProps } from '@dxs-ts/gamut-primitives';
 import {
@@ -148,6 +150,7 @@ export interface GComponentsPropsList {
   GFormGroup: GFormGroupProps;
   GInputMultilist: GInputMultilistProps;
   GInputAddress: GInputAddressProps;
+  GInputLabel: GInputLabelProps;
 
   GAppBar: GAppBarProps;
   GArticle: GArticleProps;
@@ -247,6 +250,7 @@ export interface GComponentNameToClassKey {
   GFormReviewMultiChoice: GFormReviewMultiChoiceClassKey;
 
   GFormGroup: GFormGroupClassKey;
+  GInputLabel: GInputLabelClassKey
   GInputMultilist: GInputMultilistClassKey;
   GInputAddress: GInputAddressClassKey;
 
@@ -459,6 +463,12 @@ export interface GComponents<Theme = unknown> {
     defaultProps?: GComponentsProps['GFormGroup'];
     styleOverrides?: GComponentsOverrides<Theme>['GFormGroup'];
     variants?: GComponentsVariants['GFormGroup'];
+  },
+
+  GInputLabel?: {
+    defaultProps?: GComponentsProps['GInputLabel'];
+    styleOverrides?: GComponentsOverrides<Theme>['GInputLabel'];
+    variants?: GComponentsVariants['GInputLabel'];
   },
 
   GInputMultilist?: {

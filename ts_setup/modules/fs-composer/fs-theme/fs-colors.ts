@@ -29,15 +29,16 @@ export const FsColors = {
   direntTypes: {
       folder: '#333333',       // Dark gray for containers (same as text)
       article: '#8b008b',      // Dark magenta for content (articles and flows merged)
-      service: '#1f5f3f',      // Dark green for services/systems
+      service: '#1a237e',      // Dark navy for decision tables
       form: '#0056b3',         // Dark blue for forms/dialobs
-      flow: '#8b008b',         // Dark magenta for workflows (merged with content)
+      flow: '#00695c',         // Dark teal for workflows
       link: '#228b22',         // Forest green for external links (same as semantic.success)
       document: '#5d2f0a',     // Brown for documents (template)
       language: '#455a64',     // Dark blue-grey for global language definitions
       printout: '#5d4037',     // Brown for printout documents
       asset: '#663399',        // Dark purple for assets/images - changed from red
-      phone: '#880e4f',        // Dark rose for phone numbers
+      workflow: '#827717',      // Dark olive for article workflows
+      phone: '#e65100',        // Dark orange for phone numbers
       page: '#00838f',         // Dark cyan for pages (localised markdown content)
 
   }

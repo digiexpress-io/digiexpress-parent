@@ -8,7 +8,7 @@ import { useOwnerState } from './useOwnerState';
 
 import { ConfigOptionIcons, FsDirentName, DirentDecorator } from './Supports';
 import { FsDiffIndicator } from '../fs-diff-indicator';
-import { createWidget } from '../fs-factory';
+import { createIconWidget } from '../fs-factory';
 import { useFsuIsChanged } from '@dxs-ts/fs-api';
 
 
@@ -18,7 +18,7 @@ export const FsDirent: React.FC<FsDirentProps> = React.memo((props) => {
   const isExpanded = props.isExpanded(props.dirent.id);
   const isUnsavedChanges = useFsuIsChanged(props.dirent.id);
 
-  const widget = createWidget(ownerState.dirent)
+  const widget = createIconWidget(ownerState.dirent)
 
   function handleClick() {
     if (ownerState.isChildren) {

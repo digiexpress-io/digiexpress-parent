@@ -5,12 +5,12 @@ import { createWidget } from '../fs-factory';
 
 
 export interface CreateOwnerState {
-  parentArticle: Fs.DirentBase | undefined;
-  parentArticlePath: string | undefined;
   isDirty: boolean;
+  parentId: string;
   name: string;
   orderNumber: string;
   configOptions: Fs.ConfigOption[];
+  onChangeParentId: (value: string) => void;
   onChangeName: (value: string) => void;
   onChangeOrderNumber: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
@@ -35,6 +35,7 @@ class _CreateState implements FsuCreateChange {
   }
 
   get bodyType() { return this._current.bodyType; }
+  get parentId() { return this._current.parentId; }
   get name() { return this._current.name; }
   get orderNumber() { return String(this._current.order); }
   get configOptions() { return this._current.configOptions; }
@@ -54,6 +55,9 @@ class _CreateState implements FsuCreateChange {
     };
   }
 
+  withParentId(parentId: string | undefined): _CreateState {
+    return new _CreateState({ ...this._current, parentId }, this._origin);
+  }
   withName(name: string): _CreateState {
     return new _CreateState({ ...this._current, name }, this._origin);
   }
@@ -69,26 +73,25 @@ class _CreateState implements FsuCreateChange {
 
 export const useCreateOwnerState = (): CreateOwnerState => {
   const { createDirent } = useFsDirent();
-  const { activeTabPath, openTabs, activeTabIndex, openAsset } = useFsNav();
+  const { openTabs, activeTabIndex, openAsset } = useFsNav();
 
   const activeTab = openTabs[activeTabIndex];
   const parentFolder = activeTab?.type === 'create' ? activeTab.parentFolder : undefined;
-  const parentArticle = parentFolder?.type === 'ARTICLE' ? parentFolder : undefined;
-  const parentArticlePath = parentArticle ? activeTabPath : undefined;
-  const parentId = parentArticle?.id;
+  const initialParentId = parentFolder?.type === 'ARTICLE' ? parentFolder.id : undefined;
 
-
-  const _init: _CreateStateProps = {
+  const _initProps: _CreateStateProps = {
     bodyType: 'ARTICLE',
     name: '',
-    parentId,
+    parentId: initialParentId,
     order: 0,
     configOptions: [],
   }
-  const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_init));
+  const [state, setState] = React.useState<_CreateState>(() => new _CreateState(_initProps));
   const isChangesPresent = state.isDirty;
 
-
+  function onChangeParentId(value: string) {
+    setState(prev => prev.withParentId(value || undefined));
+  }
   function onChangeName(value: string) {
     setState(prev => prev.withName(value));
   }
@@ -105,12 +108,12 @@ export const useCreateOwnerState = (): CreateOwnerState => {
   }
 
   return ({
-    parentArticle,
-    parentArticlePath,
     isDirty: isChangesPresent,
+    parentId: state.parentId ?? '',
     name: state.name,
     orderNumber: state.orderNumber,
     configOptions: state.configOptions,
+    onChangeParentId,
     onChangeName,
     onChangeOrderNumber,
     onChangeConfigOptions,

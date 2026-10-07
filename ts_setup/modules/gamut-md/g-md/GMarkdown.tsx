@@ -1,13 +1,14 @@
 import React from 'react';
 import { Typography, useThemeProps } from '@mui/material';
 import ReactMarkdown, { Components } from 'react-markdown';
-import { useUtilityClasses, GMarkdownRoot, MUI_NAME } from './useUtilityClasses';
+import { useUtilityClasses, MUI_NAME, GMarkdownRootDiv, GMarkdownRootSpan } from './useUtilityClasses';
 import { GOverridableComponent } from '@dxs-ts/gamut-api';
 
 
 
 export interface GMarkdownProps {
   children: string | undefined;
+  span?: true | undefined; 
   remarkPlugins?: any[] | undefined;
   overrides?: Components
   component?: GOverridableComponent<GMarkdownProps>;
@@ -20,7 +21,7 @@ export const GMarkdown: React.FC<GMarkdownProps> = (initProps) => {
   });
 
   const classes = useUtilityClasses();
-  const Root = props.component ?? GMarkdownRoot;
+  const Root = props.component ?? (props.span ? GMarkdownRootSpan : GMarkdownRootDiv);
   return (
     <Root ownerState={props} className={classes.root}>
       <ReactMarkdown

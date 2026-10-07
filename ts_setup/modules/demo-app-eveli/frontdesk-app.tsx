@@ -114,15 +114,27 @@ export const FrontdeskApp: React.FC = () => {
                   'worker/rest/api/tasks/$taskId/files.POST': fetchOverrideForAttachments
                 }}>
                 <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
-                  <TenantConfigContextProvider features={[
-                    'visual_accommodation',
-                    'stencil_locale_filter',
-                    'eveli_publication_only',
-                    'smart_tables',
-                    'user_profile',
-                    'batches',
-                    'metis',
-                    'tagomi'
+                  <TenantConfigContextProvider
+                    gamutThemeOptions={{
+
+                      components: {
+                        // @ts-ignore
+                        GInputLabel: {
+                          defaultProps: {
+                            requiredSoft: true
+                          }
+                        }
+                      }
+                    }}
+                    features={[
+                      'visual_accommodation',
+                      'stencil_locale_filter',
+                      'eveli_publication_only',
+                      'smart_tables',
+                      'user_profile',
+                      'batches',
+                      'metis',
+                      'tagomi'
                   ]}>
 
                     <IamBackendProvider onExpire={handleExpire}>

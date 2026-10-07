@@ -16,6 +16,12 @@ export const themeOptions: ThemeOptions = {
   components: {
     ...GThemeOptions.components,
     ...components_g,
+
+    GInputLabel: {
+      defaultProps: {
+        requiredSoft: true
+      }
+    }
   }
 }
 
@@ -26,6 +32,12 @@ export const themeOptionsAlt1: ThemeOptions = {
     ...GThemeOptionsAlt1.components,
     ...components_g,
     ...components_g_alt_1,
+
+    GInputLabel: {
+      defaultProps: {
+        requiredSoft: true
+      }
+    }
   }
 }
 

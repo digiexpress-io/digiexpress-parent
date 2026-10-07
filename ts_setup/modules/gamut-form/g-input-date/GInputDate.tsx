@@ -12,6 +12,7 @@ import { GInputAdornment } from '../g-input-adornment';
 
 import { GInputDateRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 import { DateAndCalendar, ReadOnlyDateAndCalendar } from './DateAndCalendar';
+import { YearAndCalendar, ReadOnlyYearAndCalendar } from './YearAndCalendar';
 
 
 
@@ -35,12 +36,12 @@ export interface GInputDateProps {
   setExtendedErrors?: (extendedErrors: DialobApi.ActionError[]) => void;
 
   variant: OverridableStringUnion<
-    'date',
+    'date' | 'year',
     GInputDatePropsVariantOverrides
   > | undefined;
 
   slots?: Record<OverridableStringUnion<
-    'date',
+    'date' | 'year',
     GInputDatePropsVariantOverrides>,
     React.ElementType>;
 
@@ -74,7 +75,9 @@ export const GInputDate: React.FC<GInputDateProps> = (initProps) => {
     slots: {
       error: GInputError,
       label: GInputLabel,
-      input: props.readOnly ? ReadOnlyDateAndCalendar : DateAndCalendar,
+      input: variant === 'year'
+        ? (props.readOnly ? ReadOnlyYearAndCalendar : YearAndCalendar)
+        : (props.readOnly ? ReadOnlyDateAndCalendar : DateAndCalendar),
       adornment: GInputAdornment
     },
     slotProps: {

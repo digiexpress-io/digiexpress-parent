@@ -27,15 +27,20 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
   const {
     variant = 'textBox',
     rows = 10,
+    charLimit,
   } = props;
+
+  const { id, onChange, value, label, labelPosition, errors } = props;
+  const currentLength = (value ?? '').length;
+  const isAtLimit = charLimit !== undefined && currentLength >= charLimit;
 
   const ownerState = {
     ...props,
     variant,
-    visibleErrors
+    visibleErrors,
+    isAtLimit
   }
 
-  const { id, onChange, value, label, labelPosition, errors } = props;
   const slots: GInputBaseProps<TextFieldProps> = {
     id,
     slots: {
@@ -46,13 +51,14 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
     },
     slotProps: {
       error: { id, errors },
-      input: { name: id, onChange, value: value ?? '', rows, multiline: true, errors: props.errors, disabled: props.disabled },
-      label: { id, children: label ?? '', labelPosition, required: initProps.required, errors: visibleErrors },
+      input: { name: id, onChange, value: value ?? '', rows, multiline: true, errors: props.errors, disabled: props.disabled, inputProps: charLimit !== undefined ? { maxLength: charLimit } : undefined },
+      label: { id, children: label ?? '', labelPosition, required: initProps.required, errors: props.errors },
       adornment: { id, children: props.description, title: label ?? '', disabled: props.disabled }
     }
   }
+  const isCharLimitVisible = !!charLimit && !props.disabled;
   const classes = useUtilityClasses(props.id, variant);
-  return { classes, ownerState, props, slots };
+  return { classes, ownerState, props, slots, isCharLimitVisible, charLimit, currentLength, isAtLimit };
 }
 
 
@@ -68,7 +74,6 @@ const ReadOnlyTextArea: React.FC<GInputBaseAnyProps & TextFieldProps & { errors?
 }
 
 
-// ------------------- MATERIAL INFRA, ALLOWS STYLE OVERRIDES --------------
 const GInput = styled(TextField, {
   name: MUI_NAME,
   slot: 'Input',
@@ -81,9 +86,9 @@ const GInput = styled(TextField, {
   },
 })<GInputBaseAnyProps & TextFieldProps & { errors?: any }>(({ theme, errors }) => {
 
-  const hasErrors = !!errors && (Array.isArray(errors) ? errors.length > 0 : true);
+  const isErrors = !!errors && (Array.isArray(errors) ? errors.length > 0 : true);
 
-  return hasErrors ? {
+  return isErrors ? {
     '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
       borderColor: theme.palette.error.main,
     }
@@ -97,9 +102,9 @@ interface OwnerState {
   disabled: boolean;
   readOnly?: boolean;
   visibleErrors?: any;
+  isAtLimit?: boolean;
 }
 
-// ------------------- MATERIAL INFRA, ALLOWS STYLE OVERRIDES --------------
 export const GInputTextAreaRoot = styled("div", {
   name: MUI_NAME,
   slot: 'Root',
@@ -145,19 +150,20 @@ export const GInputTextAreaRoot = styled("div", {
         color: theme.palette.error.main,
       },
     }),
+    '& .GInputTextArea-charCount': {
+      display: 'block',
+      textAlign: 'right',
+      color: ownerState.isAtLimit ? theme.palette.error.main : theme.palette.text.secondary,
+    },
   };
 
 });
 
 
-// ------------------- MATERIAL INFRA, CSS CLASS NAMES FOR SELECTORS -------
 const useUtilityClasses = (itemId: string, variant: string) => {
   const slots = {
-    root: [
-      'root',
-      variant,
-      itemId
-    ],
+    root: ['root', variant, itemId],
+    charCount: ['charCount'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});

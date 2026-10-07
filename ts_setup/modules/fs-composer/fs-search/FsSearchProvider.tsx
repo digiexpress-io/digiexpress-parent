@@ -26,30 +26,32 @@ export const FsSearchProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [activeFilters, setActiveFilters] = useState<FilterData[]>([]);
   const [open, setOpen] = useState(false);
 
-  const handleFilterSelectChange = (selectedValues: string[]) => {
-    const newTypeFilters = allAvailableTypeFilters.filter(f => selectedValues.includes(f.value));
-    const currentLabelFilters = activeFilters.filter((f): f is LabelFilter => f.type === 'label');
-    setActiveFilters([...currentLabelFilters, ...newTypeFilters]);
-  };
+  const contextValue = useMemo(() => {
+    function handleFilterSelectChange(selectedValues: string[]) {
+      const newTypeFilters = allAvailableTypeFilters.filter(f => selectedValues.includes(f.value));
+      const currentLabelFilters = activeFilters.filter((f): f is LabelFilter => f.type === 'label');
+      setActiveFilters([...currentLabelFilters, ...newTypeFilters]);
+    }
 
-  const handleLabelFilterSelectChange = (selectedValues: string[]) => {
-    const newLabelFilters: LabelFilter[] = selectedValues.map(v => ({ type: 'label', label: v, value: v }));
-    const currentTypeFilters = activeFilters.filter((f): f is AssetTypeFilter => f.type === 'asset');
-    setActiveFilters([...currentTypeFilters, ...newLabelFilters]);
-  };
+    function handleLabelFilterSelectChange(selectedValues: string[]) {
+      const newLabelFilters: LabelFilter[] = selectedValues.map(v => ({ type: 'label', label: v, value: v }));
+      const currentTypeFilters = activeFilters.filter((f): f is AssetTypeFilter => f.type === 'asset');
+      setActiveFilters([...currentTypeFilters, ...newLabelFilters]);
+    }
 
-  const contextValue = useMemo(() => ({
-    searchTerm,
-    activeFilters,
-    open,
-    allAvailableTypeFilters,
-    availableLabelOptions: selectOptions.labels,
-    setSearchTerm,
-    setActiveFilters,
-    setOpen,
-    handleFilterSelectChange,
-    handleLabelFilterSelectChange,
-  }), [searchTerm, activeFilters, open, selectOptions.labels]);
+    return {
+      searchTerm,
+      activeFilters,
+      open,
+      allAvailableTypeFilters,
+      availableLabelOptions: selectOptions.labels,
+      setSearchTerm,
+      setActiveFilters,
+      setOpen,
+      handleFilterSelectChange,
+      handleLabelFilterSelectChange,
+    };
+  }, [searchTerm, activeFilters, open, selectOptions.labels]);
 
   return (
     <FsSearchContext.Provider value={contextValue}>

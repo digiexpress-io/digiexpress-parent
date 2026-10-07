@@ -48,32 +48,21 @@ export const useOwnerState = (): OwnerState => {
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<Fs.ContextMenuData | undefined>();
 
-  const isExpandedRef = React.useRef(isExpanded);
-  isExpandedRef.current = isExpanded;
-
-  const openAssetRef = React.useRef(openAsset);
-  openAssetRef.current = openAsset;
-
   const filteredTreeData = React.useMemo(() => {
     return filterTreeDirents(dirents, search.searchTerm, search.activeFilters, getDirent);
   }, [dirents, search.searchTerm, search.activeFilters, getDirent]);
 
   React.useEffect(() => {
-    const hasSearchTerm = !!search.searchTerm.trim();
-    const hasFilters = search.activeFilters.length > 0;
-    if (hasSearchTerm || hasFilters) {
+    const isSearchTerm = !!search.searchTerm.trim();
+    const isFilters = search.activeFilters.length > 0;
+    if (isSearchTerm || isFilters) {
       setExpandedBatch(collectParentIds(filteredTreeData), true);
     }
   }, [filteredTreeData]);
 
-  const stableOpenAsset = React.useCallback((asset: Fs.DirentBase) => {
-    openAssetRef.current(asset);
-  }, []);
-
   const stableToggleDirent = React.useCallback((direntId: string) => {
-    const current = isExpandedRef.current(direntId);
-    setExpanded(direntId, !current);
-  }, [setExpanded]);
+    setExpanded(direntId, !isExpanded(direntId));
+  }, [setExpanded, isExpanded]);
 
   const stableOnContextMenu = React.useCallback((event: React.MouseEvent, dirent: Fs.DirentBase) => {
     event.preventDefault();
@@ -96,7 +85,7 @@ export const useOwnerState = (): OwnerState => {
   function onDoubleClick(dirent: Fs.DirentBase) {
     const fullDirent = getDirent(dirent.id);
     if (fullDirent) {
-      openAssetRef.current(fullDirent);
+      openAsset(fullDirent);
     }
   }
 
@@ -108,7 +97,7 @@ export const useOwnerState = (): OwnerState => {
   return {
     isAnyDirentExpanded,
     activeDirentId: activeDirent?.id,
-    openAsset: stableOpenAsset,
+    openAsset,
     isSearchExpanded: search.open,
     isContextMenuOpen: contextMenuOpen,
 

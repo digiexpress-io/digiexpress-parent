@@ -1,12 +1,12 @@
 import React from 'react';
 import { OverridableStringUnion } from '@mui/types';
+import { Typography } from '@mui/material';
 
 import { GInputBase } from '../g-input-base';
 import { DialobApi } from '@dxs-ts/gamut-api';
-import { useThemeInfra, GInputTextAreaRoot } from './useThemeInfra';
+import { useThemeInfra, GInputTextAreaRoot } from './useUtilityClasses';
 
 
-// extension hook for adding custom input types
 export interface GInputTextAreaPropsVariantOverrides { };
 
 export interface GInputTextAreaProps {
@@ -23,6 +23,7 @@ export interface GInputTextAreaProps {
   invalid?: boolean | undefined;
   required: boolean;
   rows?: number | undefined;
+  charLimit?: number | undefined;
 
 
   variant: OverridableStringUnion<
@@ -39,11 +40,18 @@ export interface GInputTextAreaProps {
 }
 
 export const GInputTextArea: React.FC<GInputTextAreaProps> = (initProps) => {
-  const { classes, slots, ownerState, props } = useThemeInfra(initProps);
+  const { classes, slots, ownerState, props, isCharLimitVisible, charLimit, currentLength } = useThemeInfra(initProps);
 
-  return (<GInputTextAreaRoot className={classes.root} ownerState={ownerState} as={props.component}>
-    <GInputBase id={props.id} slots={slots.slots} slotProps={slots.slotProps} />
-  </GInputTextAreaRoot>);
+  return (
+    <GInputTextAreaRoot className={classes.root} ownerState={ownerState} as={props.component}>
+      <GInputBase id={props.id} slots={slots.slots} slotProps={slots.slotProps} />
+      {isCharLimitVisible && (
+        <Typography variant="caption" className={classes.charCount}>
+          {currentLength} / {charLimit}
+        </Typography>
+      )}
+    </GInputTextAreaRoot>
+  );
 }
 
 

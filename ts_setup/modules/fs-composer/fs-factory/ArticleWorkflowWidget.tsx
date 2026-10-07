@@ -19,11 +19,11 @@ export const ArticleWorkflowWidget: DirentWidget = {
     }
   },
   colors: {
-    dirent: FsColors.direntTypes.article
+    dirent: FsColors.direntTypes.workflow
   },
   classNames: {
     dirent: '',
-    icon: 'iconArticle'
+    icon: 'iconWorkflow'
   },
   meta: {
     type: 'ARTICLE_WORKFLOW',

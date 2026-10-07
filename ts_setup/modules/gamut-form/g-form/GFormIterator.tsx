@@ -3,7 +3,7 @@ import { useForm, useFormTip } from '@dxs-ts/gamut-api';
 import { GFormBase } from '../g-form-base';
 
 
-export const GFormIterator: React.FC<{}> = (props) => {
+export const GFormIterator: React.FC<{}> = (_props) => {
   const tip = useFormTip();
   return (<>{tip?.items?.map((item) => <GFormItem key={item}>{item}</GFormItem>)}</>);
 }
