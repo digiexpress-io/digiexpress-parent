@@ -3,7 +3,6 @@ import { Box, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { usePanelProperties } from '../fs-panel-properties';
-import { createWidget } from '../fs-factory';
 
 
 export interface FsPropertiesArticleProps {
@@ -27,6 +26,9 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent
     .filter(p => p.type === 'ARTICLE_LINK' && (p as Fs.LinkProps).articles?.includes(dirent.id))
     .map(p => getDirent(p.id)?.name ?? p.id);
   const configOptionsEnabled = dirent.props?.configOptions ?? [];
+  const associatedWorkflows = Object.values(selectOptions.direntProps)
+    .filter(p => p.type === 'ARTICLE_WORKFLOW' && (p as Fs.WorkflowProps).articles.includes(dirent.id))
+    .map(p => getDirent(p.id)?.name ?? p.id);
 
   return (
     <>
@@ -48,20 +50,24 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent
           </ul>
         </div>
       )}
-      <div className={classes.propertyRow}>
-        <Typography className={classes.childPropertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
-        <div className={classes.childContainer}>
-          {descendants.map(({ dirent: child, depth }) => {
-            const widget = createWidget({ type: child.type });
-            return (
-              <Box key={child.id} className={classes.childRow} sx={{ paddingLeft: `${depth * 16}px` }}> {/* TODO remove sx */}
-                <widget.icons.dirent.Expanded small />
-                <Typography className={classes.propertyValue}>{child.type === 'ARTICLE' ? getDirentName(child.id) : child.name}</Typography>
-              </Box>
-            )
-          })}
+      {associatedWorkflows.length > 0 && (
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.associatedWorkflows' })}</Typography>
+          <ul className={classes.propertyBulletList}>
+            {associatedWorkflows.map((name, index) => <li key={index}><Typography className={classes.propertyValue}>{name}</Typography></li>)}
+          </ul>
         </div>
-      </div>
+      )}
+      {descendants.length > 0 && (
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
+          <ul className={classes.propertyBulletList}>
+            {descendants.map(({ dirent: child }) => (
+              <li key={child.id}><Typography className={classes.propertyValue}>{child.type === 'ARTICLE' ? getDirentName(child.id) : child.name}</Typography></li>
+            ))}
+          </ul>
+        </div>
+      )}
     </>
   );
 };

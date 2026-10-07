@@ -5,7 +5,7 @@ import { createWidget } from '../fs-factory';
 import { useUtilityClasses, FsDirentArticleRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentArticleProps } from './FsDirentArticleProps';
-import { FsDirentSelectMulti, FsDirentTextField, FsDirentFormField, FsDirentSelectGrouped, FsDirentSelectGroup } from '../fs-utilities';
+import { FsDirentSelectMulti, FsDirentSelectSingle, FsDirentTextField, FsDirentFormField, FsDirentSelectGrouped, FsDirentSelectGroup } from '../fs-utilities';
 import { Fs, useFsDirent } from '@dxs-ts/fs-api';
 import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 
@@ -14,11 +14,14 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleProps> = (props) => 
   const intl = useIntl();
   const ownerState = useUpdateOwnerState(props);
   const classes = useUtilityClasses();
-  const { selectOptions, getDirent } = useFsDirent();
+  const { selectOptions, getDirent, getDirentName } = useFsDirent();
   const configOptions = createWidget({ type: 'ARTICLE' }).meta.configOptions.map(opt => ({
     value: opt,
     label: intl.formatMessage({ id: `fs.dirent.configOption.${opt}` }),
   }));
+  const articleOptions = selectOptions.articles
+    .filter(item => item.value !== props.direntId)
+    .map(item => ({ value: item.value, label: getDirentName(item.value) ?? item.label }));
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
@@ -63,6 +66,10 @@ export const FsDirentArticleUpdate: React.FC<FsDirentArticleProps> = (props) => 
             placeholder={intl.formatMessage({ id: 'fs.dirent.article.nameField.placeholder' })}
             onChange={ownerState.onChangeName}
           />
+        </FsDirentFormField>
+
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.article.parentArticleField.label' })}>
+          <FsDirentSelectSingle allowNone options={articleOptions} value={ownerState.parentId} onChange={ownerState.onChangeParentId} />
         </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.article.orderNumberField.label' })}>

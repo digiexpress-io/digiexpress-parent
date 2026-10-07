@@ -10,10 +10,12 @@ export interface UpdateOwnerState {
   dirent: Fs.DirentBase | undefined;
   id: string;
   isDirty: boolean;
+  parentId: string;
   name: string;
   orderNumber: string;
   configOptions: Fs.ConfigOption[];
   links: string[];
+  onChangeParentId: (value: string) => void;
   onChangeName: (value: string) => void;
   onChangeOrderNumber: (value: string) => void;
   onChangeConfigOptions: (value: string[]) => void;
@@ -24,6 +26,7 @@ type _ChangeStateProps = {
   articleId: string;
   bodyType: Fs.BodyType;
   name: string;
+  parentId: string | undefined;
   order: number;
   configOptions: Fs.ConfigOption[];
   treeId: string;
@@ -41,6 +44,9 @@ class _ChangeState implements FsuChange {
 
   get id() {
     return this._current.articleId;
+  }
+  get parentId() {
+    return this._current.parentId;
   }
   get name() {
     return this._current.name;
@@ -77,6 +83,7 @@ class _ChangeState implements FsuChange {
       changes: {
         articleId: c.articleId,
         name: c.name,
+        parentId: c.parentId,
         order: c.order,
         devMode: c.configOptions.includes('DEV_MODE') || undefined,
         authOnly: c.configOptions.includes('AUTH_ONLY_MODE') || undefined,
@@ -84,6 +91,9 @@ class _ChangeState implements FsuChange {
     };
   }
 
+  withParentId(parentId: string | undefined): _ChangeState {
+    return new _ChangeState({ ...this._current, parentId }, this._origin);
+  }
   withName(name: string): _ChangeState {
     return new _ChangeState({ ...this._current, name }, this._origin);
   }
@@ -108,17 +118,22 @@ class _ChangeState implements FsuChange {
 
 export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerState => {
   const { activeTabPath } = useFsNav();
-  const { getDirent, getDirentName, selectOptions } = useFsDirent();
+  const { getDirent, getDirentName, getParentDirent, selectOptions } = useFsDirent();
   const fsu = useFsu();
 
   const dirent = getDirent(props.direntId);
   const articleProps = dirent?.type === 'ARTICLE' ? dirent.props as Fs.ArticleProps : undefined;
+
+  const containerFolder = getParentDirent(props.direntId);
+  const grandparentFolder = containerFolder ? getParentDirent(containerFolder.id) : undefined;
+  const initialParentId = grandparentFolder?.children.find(c => c.type === 'ARTICLE')?.id;
 
   const { state, update } = useFsuChange(props.direntId, () => new _ChangeState({
     articleId: props.direntId,
     bodyType: dirent!.type,
     treeId: dirent?.commitIndex?.treeId!,
     name: getDirentName(props.direntId) ?? '',
+    parentId: initialParentId,
     order: articleProps?.orderNumber ?? 0,
     configOptions: (articleProps?.configOptions ?? []) as Fs.ConfigOption[],
     linkState: new ArticleLinkChangeState(
@@ -151,6 +166,9 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     }
   }, [state.linkState]);
 
+  function onChangeParentId(value: string) {
+    update(prev => prev.withParentId(value || undefined));
+  }
   function onChangeName(value: string) {
     update(prev => prev.withName(value));
   }
@@ -169,10 +187,12 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     dirent,
     id: state.id,
     isDirty: state.isDirty,
+    parentId: state.parentId ?? '',
     name: state.name,
     orderNumber: state.orderNumber,
     configOptions: state.configOptions,
     links: state.links,
+    onChangeParentId,
     onChangeName,
     onChangeOrderNumber,
     onChangeConfigOptions,
