@@ -53,9 +53,9 @@ export const useOwnerState = (): OwnerState => {
   }, [dirents, search.searchTerm, search.activeFilters, getDirent]);
 
   React.useEffect(() => {
-    const hasSearchTerm = !!search.searchTerm.trim();
-    const hasFilters = search.activeFilters.length > 0;
-    if (hasSearchTerm || hasFilters) {
+    const isSearchTerm = !!search.searchTerm.trim();
+    const isFilters = search.activeFilters.length > 0;
+    if (isSearchTerm || isFilters) {
       setExpandedBatch(collectParentIds(filteredTreeData), true);
     }
   }, [filteredTreeData]);

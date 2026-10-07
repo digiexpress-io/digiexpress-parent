@@ -42,6 +42,7 @@ export const FsSearch: React.FC<FsSearchProps> = (props) => {
             value={ownerState.visibleFilters.filter(f => f.type === 'label').map(f => f.value)}
             onChange={ownerState.handleLabelFilterSelectChange}
             placeholder={intl.formatMessage({ id: 'fs.search.labelFilter.placeholder' })}
+            noOptionsMessage={intl.formatMessage({ id: 'fs.search.labelFilter.noOptions' })}
             onClearAll={() => ownerState.handleLabelFilterSelectChange([])}
           />
 
