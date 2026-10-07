@@ -114,8 +114,6 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
       return { id: p.id, localeName };
     });
 
-  console.log(connectedPages)
-
   function onChangeServiceName(value: string) {
     setState(prev => prev.withServiceName(value));
   }

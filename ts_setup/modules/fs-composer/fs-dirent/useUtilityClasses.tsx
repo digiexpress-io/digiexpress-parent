@@ -1,7 +1,7 @@
 import { generateUtilityClass, styled, alpha, ListItem } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
-import { createWidget } from '../fs-factory';
+import { createIconWidget } from '../fs-factory';
 import { Fs } from '@dxs-ts/fs-api';
 
 
@@ -32,7 +32,7 @@ export const useUtilityClasses = (dirent: Fs.DirentBase) => {
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return {
     ...composeClasses(slots, getUtilityClass, {}),
-    direntIcon: generateUtilityClass(MUI_NAME, createWidget(dirent).classNames.icon),
+    direntIcon: generateUtilityClass(MUI_NAME, createIconWidget(dirent).classNames.icon),
   };
 };
 
@@ -41,7 +41,7 @@ export const FsDirentRoot = styled(ListItem, {
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState'
 })<{ ownerState: any }>(({ theme, ownerState }) => {
-  const widget = createWidget(ownerState.dirent)
+  const widget = createIconWidget(ownerState.dirent)
 
   return {
 
