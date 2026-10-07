@@ -28,11 +28,11 @@ import io.digiexpress.thena.batch.client.api.ImmutableBatchDefinition;
 import io.digiexpress.thena.batch.client.api.ImmutableBatchStepDefinition;
 
 public class BatchJob_RejectStaleForms_Definition {
-
+  public static final String STALE_DATA_BATCH = "stale-data-clean-up";
   public static BatchDefinition create(TaskClient taskClient, DialobClient dialobClient, 
       EveliPropsBatch.StaleDataConfig props) {
     return ImmutableBatchDefinition.builder()
-        .batchName("stale-data-clean-up")
+        .batchName(STALE_DATA_BATCH)
         .comment("Cleans up data for uncompleted forms")
         .addSteps(ImmutableBatchStepDefinition.builder()
             .name("reject stale questionnaires")
