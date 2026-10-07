@@ -62,8 +62,8 @@ export const FsPropertiesArticle: React.FC<FsPropertiesArticleProps> = ({ dirent
         <div className={classes.propertyRow}>
           <Typography className={classes.propertyLabel}>{intl.formatMessage({ id: 'fs.properties.propertyLabel.children' })}</Typography>
           <ul className={classes.propertyBulletList}>
-            {descendants.map(({ dirent: child }) => (
-              <li key={child.id}><Typography className={classes.propertyValue}>{child.type === 'ARTICLE' ? getDirentName(child.id) : child.name}</Typography></li>
+            {descendants.map(({ dirent: child, depth }) => (
+              <li key={child.id} style={{ marginLeft: depth * 16 }}><Typography className={classes.propertyValue}>{child.type === 'ARTICLE' ? getDirentName(child.id) : child.name}</Typography></li>
             ))}
           </ul>
         </div>
@@ -83,6 +83,6 @@ function collectDescendants(items: Fs.DirentBase[], excludeId: string, depth: nu
       return [{ dirent: child, depth }];
     }
     const nextDepth = child.children.some(c => c.type === 'ARTICLE') ? depth + 1 : depth;
-    return [{ dirent: child, depth }, ...collectDescendants(child.children, excludeId, nextDepth)];
+    return collectDescendants(child.children, excludeId, nextDepth);
   });
 }
