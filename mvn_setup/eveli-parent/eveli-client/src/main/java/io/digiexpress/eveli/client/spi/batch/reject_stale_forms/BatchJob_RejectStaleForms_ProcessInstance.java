@@ -64,8 +64,10 @@ public class BatchJob_RejectStaleForms_ProcessInstance implements Executor<ProcA
       @Override
       public Multi<ProcAndQuestionnaireToReject> findAll() {
         final var config = getConfig();
+        OffsetDateTime expirationThreshold = OffsetDateTime.now().minus(config.getMaxAge());
+
         return taskClient.queryTaskProcesess()
-            .findAllStaleWithoutTasks(OffsetDateTime.now().minus(config.getMaxAge()))
+            .findAllStaleWithoutTasks(expirationThreshold)
             .onItem().transform(proc -> {
               try {
                 final var questionnaire = dialobClient.withTenant().formInstanceQuery().findOneSync(proc.getQuestionnaireId()).map(e -> e.getQuestionnaire());
@@ -78,9 +80,8 @@ public class BatchJob_RejectStaleForms_ProcessInstance implements Executor<ProcA
               if(e.getQuestionnaire().isEmpty()) {
                 return true;
               }
-
-              final var updated = e.getQuestionnaire().get().getMetadata().getLastAnswer();
-              return updated.compareTo(e.getProcess().getUpdated().toInstant()) <= 0;
+              final var lastUpdated = e.getQuestionnaire().get().getMetadata().getLastAnswer();
+              return lastUpdated.isBefore(expirationThreshold.toInstant());
             });
       }
     };
