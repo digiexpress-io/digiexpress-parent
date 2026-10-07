@@ -87,7 +87,9 @@ public class UserActivityVisitor {
     
     
     // Resolve commits
-    final List<UserActivity> changes = commits.getObjects().getCommits().values().stream().map(entry -> {
+    final List<UserActivity> changes = commits.getObjects().getCommits().values().stream()
+        .filter(entry -> entry.getMissionId() != null) // skip commits not related to tasks
+        .map(entry -> {
       taskIds.add(entry.getMissionId());
       
       final var trees = treesByCommit.getOrDefault(entry.getCommitId(), Collections.emptyList());
