@@ -89,3 +89,51 @@ Renders interactive Dialob form sessions as a tree of MUI-styled React component
 - **`GInputBase` slot layout**: Input components compose their UI by passing typed `slots` and `slotProps` to `GInputBase`, which renders label, adornment, input, error, and secondary slots in a responsive MUI `Grid`.
 - **Error visibility**: `GFormErrorVisibilityProvider` (mounted per page) tracks whether validation errors should be shown. `GFormBaseElement` registers each item's DOM ref; `useScrollTo` scrolls to the first invalid field when errors become visible.
 - **`component` prop override**: Top-level components accept an optional `component` prop of type `GOverridableComponent`, allowing full component substitution at render time.
+
+## Error Handling
+
+Validation errors surface as `DialobApi.ActionError[]` values on each item, read from `DialobApi.FormStore` via `store.form.toErrors(id)`. They are rendered by `GInputError`, which displays one MUI `FormHelperText` per error entry. `GInputError` suppresses rendering until `useGFormErrorVisibility` reports that errors should be visible for the given field.
+
+Visibility is controlled per page by `GFormErrorVisibilityProvider` (in `g-form-error-visibility/GFormErrorVisibility.tsx`). The context type is `GFormErrorVisibilityContextType`, with `isErrorsVisible` and `setErrorsVisible` as its primary surface. Errors become visible either when `setErrorsVisible` is called explicitly (e.g. on a next-page navigation attempt) or when a field has already been edited (`store.form.isItemEdited(controlId)` returns `true`).
+
+Scroll-to-first-error is handled by `RefState` (in `g-form-error-visibility/useScrollTo.ts`), which maintains a `@tanstack/react-store` `Store` of per-page DOM refs. On `setErrorsVisible`, the store triggers `scrollTo()` after a 250 ms `setTimeout`, resolving to the item identified by `DialobApi.ControlPage.firstErrorControlId`.
+
+Unknown item types do not throw. `GFormBaseElement` falls through to `UnknownSlot` (in `g-form-base-element/UnknownSlot.tsx`), which logs the element via `console.error` and renders a plain `<div>` displaying the item id.
+
+There is no loading-state error boundary in this module. The loading state in `GForm` is a `CircularProgress` spinner shown while `useFormTip()` returns a falsy tip value; no error UI is rendered if the tip never resolves.
+
+## Bootstrapping
+
+`GForm` mounts `FormProvider` from `@dxs-ts/gamut-api` internally. A consuming application does not need to wrap `GForm` in `FormProvider` manually — `GForm` does this itself using the `executionId`, `variant`, `onAfterComplete`, `onCancel`, `debugFormId`, and `formUnavailable` props it receives.
+
+The address input (`GInputAddressDialob`) depends on `MapProvider` from `@dxs-ts/gamut-api` being present in the React tree above `GForm`. If `MapProvider` is absent, `useMap()` inside `InputAddress` will fail at runtime. `MapProvider` must be configured with a geocoding backend before `GForm` is mounted if address fields are used.
+
+`GFormErrorVisibilityProvider` is mounted automatically per page by `GFormPageDialob`; no external setup is required.
+
+MUI theme overrides for gamut-form components are registered by the consuming application's MUI theme under the `components` key, using each component's `MUI_NAME` constant (e.g. `GFormBaseElement`, `GInputError`, `GInputLabel`, etc.). This is optional; components function without theme overrides.
+
+## TypeScript Extension Points
+
+None identified. The module contains no `declare module` augmentations and no interface merging. MUI theme integration is done via `useThemeProps` and `useDefaultProps` at runtime using string-keyed `MUI_NAME` constants, not via TypeScript module augmentation within this package. Theme augmentation (registering gamut-form components in MUI's `Components` interface) is performed by `@dxs-ts/gamut-routes` via `GComponentsPropsList` and `GComponentNameToClassKey` in its `g-props` sub-module, outside this package.
+
+## Known Limitations and Gotchas
+
+**`currency` prop empty string falls back to plain text.** `useSlotVariant` routes to `text-currency` only when `element.props?.currency` is truthy. If the `currency` key is present in Dialob Composer but its value is empty, the item renders as a plain `GInputTextDialob` with no currency formatting. This is documented in `DIALOB_FILL_PROPS.md` but contradicts the expectation that setting the key at all enables currency mode.
+
+**Boolean props in Dialob Composer must be strings, not booleans.** Props such as `border`, `collapsible`, and `columns` are read from `element.props` as strings. Passing a native boolean `true` from the Dialob form definition will not match the expected string `'true'` and will fall back to the default. Documented in `DIALOB_FILL_PROPS.md`.
+
+**`variant`, `controlType`, and `currency` props reroute the rendered component entirely.** Setting any of these on a Dialob item changes which component class is instantiated by `GFormBaseElement`, not just its appearance. Misconfiguring these produces an `UnknownSlot` render (visible `unknown = <id>` text in the UI plus a `console.error`).
+
+**`rows` on `GInputTextArea` is clamped to 1–20.** `GInputTextAreaDialob` applies `safeParseRows` which silently clamps any out-of-range value; values outside the range produce no warning.
+
+**Scroll-to-error uses a fixed 250 ms `setTimeout`.** `RefState.consumed` in `useScrollTo.ts` schedules the scroll with `setTimeout(() => this.scrollTo(), 250)`. If the DOM has not painted by then (e.g. on slow devices or under heavy re-render), the scroll target coordinates may be stale.
+
+**`list-radio` slot variant is commented out.** In `useSlotVariant.tsx`, the `list-radio` branch is wrapped in a block comment. A `type=list, view=radio` item will fall through to the generic `variant = element.type + '-' + element.view` path, producing `'list-radio'`, which has no entry in the `Slots` record and will render as `UnknownSlot`.
+
+**Address geocoding depends on `MapProvider`'s external service.** `InputAddress` calls `map.findAll(newValue)` via debounce. Network failures or misconfigured `MapProvider` produce unhandled promise rejections; there is no error state or fallback UI in `InputAddress`.
+
+**`GInputUpload` stores only a text value.** `GInputUploadDialob` calls `store.setAnswer(element.id, event.target.value)` — the file content itself is not transmitted through the form store. Actual file upload handling must be wired externally.
+
+## Scope Boundaries
+
+This module is responsible only for rendering Dialob form sessions as a React component tree. It does not manage session lifecycle (creation, submission, or cancellation of Dialob sessions), network communication with the Dialob API, authentication, routing, form definition authoring, or theme registration in MUI's `Components` interface. It does not implement a file upload transport — `GInputUpload` captures a text value only. Geocoding service configuration and the `MapProvider` connection are the responsibility of the consuming application. Multi-language message loading is delegated to `react-intl`; this module provides no `IntlProvider`.

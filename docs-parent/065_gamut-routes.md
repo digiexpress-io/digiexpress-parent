@@ -78,3 +78,65 @@ Defines the TanStack Router route tree for the Gamut portal. Provides the `route
 - `ChooseComponent` dispatch: `secured.$locale.views.$viewId.index.tsx` maps the `$viewId` path parameter to a specific router component (`GRouterSecuredServices`, `GRouterInbox`, `GRouterBookings`, etc.) using a chain of `if/else` guards on `GUserOverviewMenuView` values
 - MUI theme integration: each router component (`GRouterProduct`, `GRouterSecuredServices`, etc.) calls `useThemeProps` with its `MUI_NAME` constant; `g-props/g-props.ts` registers all component names in `GComponentsPropsList` and `GComponentNameToClassKey` for declaration merging into the MUI `Components` interface
 - Utility classes pattern: each sub-module contains a `useUtilityClasses.tsx` file that defines a styled root component (e.g. `GRouterProductRoot`, `GRouterSecuredServicesRoot`) and an `OwnerState` type; styling is applied through MUI `generateUtilityClasses` and `composeClasses`
+
+## Error Handling
+
+Route-level errors are handled by two components registered on the root route in `routes/__root.tsx`:
+
+- `GErrorNotFound` (from `@dxs-ts/gamut-primitives`) — assigned to `notFoundComponent`; renders for unmatched routes
+- `GError` (from `@dxs-ts/gamut-primitives`) — assigned to `errorComponent`; renders for thrown errors caught by TanStack Router's error boundary
+
+Additional error rendering occurs inline within route components:
+
+- `GErrorNotTranslated` — rendered in `public.$locale.pages.$pageId.tsx` when a page ID is not found in the current locale's site views
+- `GErrorNotFound` — rendered in `secured.$locale.views.$viewId.index.tsx` when the `$viewId` parameter does not match any known `GUserOverviewMenuView` value
+- `GErrorLogin` — rendered in `public.$locale.login.tsx`
+
+Authorization failures are handled in `RouteComponent` (`routes/__root.tsx`) via `IamBackendProvider`'s `onAuthorizationFail` callback, which navigates to `/public/$locale/login`.
+
+Loading states: `SearchResults.tsx` in `g-router-secured-services/` reads `backend.loading` from `SearchApi.useBackendSearch` and conditionally renders a `CircularProgress` (MUI) with `aria-busy`. No global loading primitive is mounted at the route level; individual router components delegate loading state to their backing primitives and API hooks.
+
+No validation error types are defined within this module; form validation is delegated to `@dxs-ts/gamut-form` and `@dxs-ts/gamut-api`.
+
+## Bootstrapping
+
+A consuming application must wrap the TanStack `RouterProvider` with the following providers, in this order:
+
+1. `QueryClientProvider` (from `@tanstack/react-query`) — required by all API hooks; must be the outermost wrapper
+2. `LocaleProvider` (from `@dxs-ts/gamut`) — provides locale context consumed by `useLocale` and `react-intl`
+3. MUI theme provider (e.g. `ThemeProvider`) — required for `useThemeProps` calls in each router component
+4. `ConfigProvider` (from `@dxs-ts/gamut`) — provides the configuration object consumed by `useConfig`; must receive `handleExpire`, `iamLiveness`, and `staleTime` options
+
+The `router` instance exported from this module is registered for type safety via `declare module '@tanstack/react-router' { interface Register { router: typeof router } }` in `router.ts`. The consuming application must extend the MUI `Components` interface with `GComponents<Theme>` to enable theme `components` configuration for all Gamut components:
+
+```ts
+declare module "@mui/material" {
+  export interface Components<Theme = unknown> extends GComponents<Theme> { }
+}
+```
+
+All backend-specific providers (`IamBackendProvider`, `SiteBackendProvider`, `DialobProvider`, `OfferProvider`, `ContractProvider`, `CommsProvider`, `BookingProvider`) are mounted internally by the root route and its `SecuredSetup`/`PublicSetup` components — the consuming application does not mount them directly.
+
+## TypeScript Extension Points
+
+- `declare module '@tanstack/react-router' { interface Register { router: typeof router } }` in `router.ts` — registers the `router` instance for full type inference across TanStack Router hooks and link components
+- `declare module '@tanstack/react-router' { interface FileRoutesByPath { ... } }` in `routeTree.gen.ts` — auto-generated; maps every route path string to its ID, preloader, and parent route types; not manually edited
+- `GComponentsPropsList` in `g-props/g-props.ts` — interface that consuming apps extend via `declare module "@mui/material" { interface Components<Theme> extends GComponents<Theme> {} }` to register all Gamut component prop types in the MUI theme `components` object
+- `GComponentNameToClassKey` in `g-props/g-props.ts` — interface mapping each Gamut component name to its class-key union type, enabling typed `styleOverrides` in MUI theme configuration
+- `GComponents<Theme>` in `g-props/g-props.ts` — the concrete interface passed to the MUI module augmentation; aggregates `defaultProps`, `styleOverrides`, and `variants` entries for every registered component
+
+No interface merging for custom route context or search params is performed within this module.
+
+## Known Limitations and Gotchas
+
+- **`useRouteToOffer` falls back to `alert()`** — `g-router-offer/useRouteToOffer.ts` line 35 contains `// TODO: polite error msgs` above an `alert('Form not available!')` call. This fires when an offer has no `productId` and no usable `otherLocales` entry, producing a native browser alert with no styling or i18n.
+- **`productId` substitution with `'__search_topic'`** — in `useRouteToOffer.ts`, when an assigned offer has no `productId`, the literal string `'__search_topic'` is injected as the `productId` route parameter. This is a sentinel value, not a real product identifier.
+- **`routeTree.gen.ts` is auto-generated** — this file must not be edited manually; it is regenerated by the TanStack Router CLI. Any manual change will be overwritten on the next generation run.
+- **Auth-type detection is binary** — `AuthSetup` in `routes/__root.tsx` branches only on `iam.authType === 'ANON'`; any non-`ANON` value activates `SecuredSetup` with the full provider stack. There is no intermediate partially-authenticated state.
+- **`ChooseComponent` dispatch is stringly typed at the call site** — `secured.$locale.views.$viewId.index.tsx` casts `viewId` as `any` before passing it to `ChooseComponent`, which accepts `GUserOverviewMenuView`. Unrecognized `$viewId` values render `GErrorNotFound` silently without logging.
+- **`GComponentsPropsList` contains no `GRouterOfferSummaryRps` entry** — `g-router-offer-summary-rps/` (`FormFillRpsRating`) exists as a sub-module but its props and class-key types are not registered in `GComponentsPropsList` or `GComponentNameToClassKey`, so it cannot be configured via MUI theme `components`.
+- **`GInboxMessageNotAllowed` class-key mapped to `GInboxMessagesClassKey`** — in `GComponentNameToClassKey`, the entry `GInboxMessageNotAllowed: GInboxMessagesClassKey` reuses the messages class key rather than a dedicated one. This appears to be an oversight; the prop type correctly uses `GInboxMessageNotAllowedProps`.
+
+## Scope Boundaries
+
+This module is responsible only for defining the TanStack Router route tree, the `router` instance, the route-level layout components that compose primitives and API hooks into full-page views, and the MUI theme-integration interfaces (`GComponentsPropsList`, `GComponentNameToClassKey`, `GComponents`, `GComponentsProps`, `GComponentsVariants`, `GComponentsOverrides`). It does not own authentication logic, API fetch implementations, form rendering engines, theming tokens, markdown rendering, or i18n message catalogs — those responsibilities belong to `@dxs-ts/gamut-api`, `@dxs-ts/gamut-form`, `@dxs-ts/gamut-theme`, `@dxs-ts/gamut-md`, and `@dxs-ts/gamut-intl` respectively. It does not expose a standalone application entry point; the consuming application is responsible for mounting `RouterProvider` and the outer provider stack.

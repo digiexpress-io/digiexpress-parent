@@ -122,3 +122,77 @@ xui-datetime ──────────────────────�
 - `useThemeProps`: each component calls `useThemeProps({ name: MUI_NAME })` to merge theme `defaultProps`
 - Context provider nesting in `__root.tsx`: all backend data contexts are composed in `SecuredSetup` and `PublicSetup`; auth mode determines which provider tree is active
 - `CockpitStore` as optional multi-tenant switch: presence of a stored cockpit activates an alternative `ThemeOptions` and a cockpit dropdown in `GRouterCockpits`
+
+## Error Handling
+
+**Route-level errors** — `__root.tsx` passes `GError` (from `gamut-primitives`) as the `errorComponent` prop to `createRootRoute`, and `GErrorNotFound` as `notFoundComponent`. These components render a full-page error or 404 screen with a "Go back to home" button.
+
+**API/fetch failures** — TanStack Query is used throughout `gamut-api`. Providers such as `SiteBackendProvider` log API failures to `console.error` (e.g., "site not available", "feedback not available") but do not throw; downstream consumers receive `undefined` data. Loading state is tracked via `useQuery.isPending` (e.g., `siteQuery.isPending` in `SiteBackendProvider`).
+
+**Dialob action queue errors** — `impl-actions-queue.ts` defines two error classes: `ActionsQueueError` and `ActionsQueueRequestError`. `ActionsQueueRequestError` is thrown on non-2xx HTTP responses during action sync. Errors are broadcast to registered listeners via `ActionsQueueErrorEvent` (type discriminants: `'SYNC'` and `'SYNC-REPEATED'`). Network errors are suppressed if `error.name === 'NetworkError'`.
+
+**Form validation errors** — Dialob server-side validation messages are rendered in-form by `GFormNoteValidation` (styled MUI `Alert`). `GFormNoteValidationDialob` is the slot variant wired in by `useSlotVariant` when `element.type === 'note' && element.view === 'validation'`. `GFormErrorVisibility` scrolls the viewport to the first validation error on submit.
+
+**Loading indicator** — `GLoader` (from `gamut-primitives`) renders a `CircularProgress` spinner with a localised "loading" message. It is the standard loading placeholder used by feature components while data is pending.
+
+**Session expiry** — The `handleExpire` callback in `ConfigApi.Options` is invoked by `IamBackendProvider` on liveness failure. The default implementation calls `alert('sessionExpired')`; consuming apps are expected to override it.
+
+**Navigation errors** — `useRouteToOffer` (`gamut-routes`) falls back to `alert('Form not available!')` when an offer route cannot be resolved (marked `TODO: polite error msgs`).
+
+## Bootstrapping
+
+A consuming app must compose the following providers in this order before rendering `RouterProvider`:
+
+1. **`QueryClientProvider`** (`@tanstack/react-query`) — TanStack Query client; all `gamut-api` providers depend on it.
+2. **`LocaleProvider`** (`gamut-api`) — wraps `react-intl` `IntlProvider`; must wrap everything that calls `useIntl` or `useLocale`.
+3. **`GThemeProvider`** (`gamut-theme`) — wraps MUI `ThemeProvider`; reads `CockpitStore` at init to select secondary theme. Must be inside `LocaleProvider`.
+4. **`ConfigProvider`** (`gamut-api`) — accepts a `ConfigApi.Options` object (all fields optional; defaults are no-op fetch factories pointing at relative `/portal/*` paths). Must override `handleExpire`, `iamLiveness`, and `staleTime` for production.
+5. **`RouterProvider`** (`@tanstack/react-router`) — mounts the pre-built `router` instance exported from `gamut-routes`. The `InnerWrap` prop is used to inject the provider tree from steps 1–4 inside the router boundary.
+
+The router itself must be created with `routeTree` from `gamut-routes`, `scrollRestoration: true`, and `scrollToTopSelectors: ['.${GShellClassName}']`. The `IamBackendProvider`, domain providers (`SiteBackendProvider`, `DialobProvider`, `OfferProvider`, `ContractProvider`, `CommsProvider`, `BookingProvider`), and route-level cockpit selection (`GRouterCockpits`) are all composed internally by `__root.tsx` — the consuming app does not mount them directly.
+
+The consuming app must also augment MUI's `Components` interface to enable `theme.components.GXxx` overrides:
+
+```ts
+declare module "@mui/material" {
+  export interface Components<Theme = unknown> extends GComponents<Theme> { }
+}
+```
+
+`gamut-intl` exports a `messages` record keyed by locale code (`bs`, `en`, `fi`, `my`, `sv`). The consuming app passes the appropriate locale's message map to its `IntlProvider` (or `LocaleProvider`).
+
+## TypeScript Extension Points
+
+| Name | Location | Description |
+|---|---|---|
+| `GComponentsPropsList` | `gamut-routes/g-props.ts` | Interface listing every Gamut component's props type by component name; consumers extend MUI's `Components` interface via `GComponents<Theme>` to enable `theme.components.GXxx` overrides |
+| `GComponentNameToClassKey` | `gamut-routes/g-props.ts` | Maps each Gamut component name to its class-key union; used by `GComponentsOverrides` for typed `styleOverrides` in a `ThemeOptions` object |
+| `GComponents<Theme>` | `gamut-routes/g-props.ts` | Convenience type merging `GComponentsPropsList`, `GComponentNameToClassKey`, and variant support; consumed via `declare module "@mui/material" { interface Components<Theme> extends GComponents<Theme> {} }` in the host app |
+| `Register` (router) | `gamut-routes/router.ts` | `declare module '@tanstack/react-router' { interface Register { router: typeof router } }` — registers the Gamut router instance for TanStack Router global type inference |
+| `FileRoutesByPath` | `gamut-routes/routeTree.gen.ts` | Auto-generated `declare module '@tanstack/react-router'` augmentation produced by TanStack Router's route-tree generator; not manually edited |
+
+No `declare module` augmentations exist within `gamut-api`, `gamut-form`, `gamut-form-review`, `gamut-md`, `gamut-shell`, `gamut-theme`, `gamut-cockpit-store`, or `gamut-intl`.
+
+## Known Limitations and Gotchas
+
+**Map address format is not customisable** — `api-map/_formatRaw.ts` formats geocoded addresses in European postal-code-after-street order. A `TODO` comment on line 27 marks the format as hardcoded; there is no configuration point to change the order or separator.
+
+**Offer navigation errors use `alert()`** — `g-router-offer/useRouteToOffer.ts` falls back to `alert('Form not available!')` when the offer route cannot be resolved. The `TODO: polite error msgs` comment on line 35 confirms this is a known gap; no structured error UI is rendered.
+
+**`GFormReviewContext` child items are not passed as props** — `GFormReviewContext.tsx` line 110 contains `// TODO: Give child items as props`. Currently, when a review item has `childrenRequired` set, children are created via recursive `createItem()` calls but not passed as explicit props to the component; the component must re-read them from context.
+
+**`GLinkFormUnlocked` may be dead code** — Both the `useUtilityClasses` function and the `GLinkFormUnlocked` component in `g-link/GLinkFormUnlocked.tsx` carry `// TODO Perhaps this can be deleted, but let's wait and see`. The component is still exported but its necessity is unconfirmed.
+
+**`GLayout` `fill-session-start-end` variant may be obsolete** — `GLayout.tsx` line 87 marks the `variant === 'fill-session-start-end'` branch with `//TODO is this variant needed anymore?`. The variant is still handled but its active usage is uncertain.
+
+**`.GInboxFormReview-reviewTitle` style is incomplete** — `g-inbox-form-review/useUtilityClasses.tsx` defines `.GInboxFormReview-reviewTitle` twice: first as an empty block (marked `//TODO`), then overridden with `...theme.typography.h1`. The empty first declaration is a stub left from incomplete styling work.
+
+**Dialob component props are strings, not booleans** — As documented in `gamut-form/DIALOB_FILL_PROPS.md`, boolean Dialob Composer props (`border`, `collapsible`) must be passed as the string `'true'`, not as native TypeScript booleans. Passing `true` directly will not activate the feature.
+
+**`currency` prop with empty value falls back silently** — If the `currency` key is present on a Dialob text item but its value is an empty string, `GInputText` renders as a plain text input with no adornment and no currency formatting. This is documented in `DIALOB_FILL_PROPS.md` but contradicts the expectation that presence of the key activates currency mode.
+
+**Session expiry default is a browser alert** — `ConfigApi.default_config.handleExpire` is `() => alert('sessionExpired')`. Any app that does not override `handleExpire` in `ConfigProvider` options will display a raw browser alert on session expiry.
+
+## Scope Boundaries
+
+Gamut is a customer portal frontend. It does not implement any backend services, authentication logic, workflow engines, or data persistence beyond `CockpitStore`'s single `localStorage` key. It does not provide a CMS authoring interface (Stencil content is consumed read-only), a form builder (Dialob forms are consumed as rendered fill-in experiences only), or an administrative dashboard. It does not expose a public REST API, WebSocket layer, or server-side rendering entry point. Theming is limited to MUI v5 `ThemeOptions`; it does not support CSS-in-JS approaches outside of MUI's `styled`/`sx` system (and `sx` props are explicitly excluded from component API by project convention). Multi-language support covers exactly five locales (`bs`, `en`, `fi`, `my`, `sv`) defined in `gamut-intl`; adding a new locale requires changes to that sub-module.

@@ -65,3 +65,73 @@ Provides the API layer for the Gamut customer portal: type definitions, fetch fa
 - **Namespace + declare namespace split** — every domain uses `export namespace XxxApi { }` for runtime values (mapper references, factory instances) and `export declare namespace XxxApi { }` for types. This keeps types and values in the same namespace identifier without runtime cost.
 - **`ActionsQueue` debounced sync** — Dialob form actions are accumulated in `ActionsQueue` and flushed on a `syncWait` timer, coalescing rapid user input into fewer round-trips.
 - **Cockpit-scoped queries** — TanStack Query keys include `cockpitId` from `CockpitStore.get()`, ensuring queries re-fetch when the active cockpit changes.
+
+## Error Handling
+
+Errors surface through several distinct mechanisms depending on the domain.
+
+**HTTP 401 responses** are handled by `assertAuthenticatedResponse` (`api-iam/IamBackendProvider.tsx`), which throws `UnauthorizedRequestError`. Consuming hooks call `useAssertAuthentication(error)` (also in `IamBackendProvider.tsx`) to intercept this error and route it to `onAuthorizationFail` from `IamBackendContextType`. This pattern is used in `api-offer/usePopulateContext.ts`, `api-contract/usePopulateContext.ts`, and `api-dialob/DialobContext.tsx`.
+
+**Session expiry** is handled by `IamLiveness` (`api-iam/IamLiveness.tsx`), which polls `fetchUserLivenessGET` on a configurable `timeout` interval (default 60000 ms). When the server returns `expiresIn <= 1000`, it calls `onExpire`. The default `handleExpire` in `ConfigApi.default_config` calls `alert('sessionExpired')` — consuming apps must override this.
+
+**Dialob sync errors** are reported via `ActionsQueueErrorEvent` (`api-dialob/impl-actions-queue.ts`). `ActionsQueue` fires `error` event handlers with type `'SYNC'` on first failure and `'SYNC-REPEATED'` after three consecutive failures. The error class is `ActionsQueueRequestError` (for HTTP-level failures) or `ActionsQueueError` (for queue-level failures). `FormStore.pendingError` (exposed by `useFormStore`) is set to `true` when the initial `pull()` fails; `FormProvider` renders the `formUnavailable` component in that case.
+
+**Site fetch failures** fall back silently: `SiteBackendProvider` logs a `console.error` and substitutes `maintainace_en` (from `api-site/fallback-content.ts`) when the site fetch returns a non-OK response.
+
+**Forced login** is handled by `IamForcedLogin` (`api-iam/IamForcedLogin.tsx`), a non-component function that opens a popup window and polls until the user authenticates or a 60-second timeout rejects the promise.
+
+There are no validation error types defined inside this module. Dialob field-level validation errors arrive from the backend as `ActionError` objects (fields: `id`, `code`, `description`) and are stored in `FormState.errors`.
+
+## Bootstrapping
+
+A consuming app must mount providers in the following order (outer to inner):
+
+1. **`LocaleProvider`** (`api-locale/LocaleProvider.tsx`) — must be the outermost provider because `SiteBackendProvider` and `SearchProvider` call `useLocale()` and `useIntl()`. Accepts `options` (`LocaleApi.Localizations`) for per-locale message overrides, `enabledLocales`, and an optional `defaultLocale` factory. If `defaultLocale` is not supplied, locale is inferred from `window.location.pathname` (expects `/secured/<locale>/` or `/public/<locale>/` path segments) with a fallback to `navigator.language`.
+
+2. **`ConfigProvider`** (`api-config/ConfigProvider.tsx`) — wraps all domain providers; supplies `ConfigApi.ConfigContextType` via `ConfigApi.mergeOptions(options)`. Pass a `ConfigApi.Options` object overriding only the fetch factories or scalar values that differ from `ConfigApi.default_config`. All `create*Fetch` factories default to relative URLs; override individual methods to point at non-default endpoints.
+
+3. **`IamBackendProvider`** (`api-iam/IamBackendProvider.tsx`) — requires `fetchUserGET`, `fetchUserRolesGET`, `fetchUserProductsGET`, `fetchUserLivenessGET`, `onAuthorizationFail`, and `onExpire`. Blocks rendering with `<>I'm loading...</>` until the first IAM response is received.
+
+4. **`SiteBackendProvider`** (`api-site/SiteBackendProvider.tsx`) — requires `fetchCockpitsGet`, `fetchSiteGet`, `fetchFeedbackGet`, and `fetchFeedbackRatingPut`. Must be inside `LocaleProvider` (reads locale) and inside a TanStack `QueryClientProvider`.
+
+5. **`SearchProvider`** (`api-search/SearchContext.tsx`) — must be inside `SiteBackendProvider` (reads `views` and `pending` from `useSite()`).
+
+6. **Domain providers** (`OfferContext`, `ContractContext`, `CommsContext`, `BookingContext`) — each wraps its `usePopulateContext` hook and exposes a typed context. Must be inside `IamBackendProvider` and `SiteBackendProvider`. These are typically assembled by `gamut-routes` in `SecuredSetup`.
+
+7. **`MapProvider`** (`api-map/MapProvider.tsx`) — requires `options.countrycodes` and `options.locale`; independent of other domain providers.
+
+8. **`DialobProvider`** (`api-dialob/DialobContext.tsx`) — required only within form-rendering subtrees. Accepts `fetchActionPost`, `fetchActionGet`, `fetchReviewGet`, `fetchAttachmentPost`, and optional `syncWait` (ms; defaults to 250 in `useFormStore`).
+
+All providers require `@tanstack/react-query`'s `QueryClientProvider` to be present in the tree above them.
+
+## TypeScript Extension Points
+
+No `declare module` augmentations or interface merging are present in this module.
+
+The module uses the `export namespace` / `export declare namespace` split pattern (e.g. `ConfigApi`, `SiteApi`, `IamApi`, `DialobApi`, `OfferApi`, `ContractApi`, `CommsApi`, `BookingApi`, `SearchApi`, `MapApi`, `LocaleApi`, `ProductApi`, `LegacyProcessApi`) to co-locate runtime values and type declarations under a single identifier. These namespaces are not designed to be extended by consumers via declaration merging.
+
+`OverrideProps<T>` and `GOverridableComponent<T>` in `api-override/index.ts` provide the MUI slot-override extension pattern for consuming modules, but these are structural utilities, not extension points in the TypeScript augmentation sense.
+
+## Known Limitations and Gotchas
+
+**`handleExpire` default calls `alert()`** — `ConfigApi.default_config.handleExpire` in `api-config/config-types.ts` is `() => alert('sessionExpired')`. Consuming apps that do not override this will display a browser alert dialog on session timeout.
+
+**`mergeOptions` uses `@ts-ignore` for dynamic key assignment** — `ConfigApi.mergeOptions` in `api-config/config-types.ts` uses three `@ts-ignore` comments to suppress TypeScript errors when setting keys on the merged config object. The merge is a shallow loop over `Object.entries`; nested fetch objects receive method-level merges but there is no deep-merge for arbitrary nesting beyond two levels.
+
+**Address formatting in `_formatRaw` is hardcoded to a European postal format** — `api-map/_formatRaw.ts` combines Nominatim address fields into `[street, postcode, city]` order with a `// TODO: make it customizable` comment. The format is not configurable without forking the function.
+
+**`IamBackendProvider` renders a plain string during first load** — When `isFirstLoad` is `true`, the provider renders `<>I'm loading...</>` (a bare string with no styling or translation) instead of a proper loading state component. Consuming apps cannot inject a custom loading element.
+
+**`IamForcedLogin` uses a module-level variable for the popup window** — `api-iam/IamForcedLogin.tsx` stores the login popup in `var __login_window`, a module-level singleton. Multiple simultaneous calls will share the same window reference.
+
+**`useDialobReview` returns untyped `any` for `form` and `session`** — The return type in `api-dialob/DialobContext.tsx` is `{ form: any, session: any }`. Consumers receive no TypeScript safety on the review payload shape.
+
+**`FormProvider` falls back to a bare string on missing offer** — When `FormProvider` cannot resolve an offer by `executionId`, it renders `<>Failed to load form...</>` (a bare string) and logs a `console.error`. There is no `formUnavailable` prop used at this fallback path; `formUnavailable` is only rendered when `store.pendingError` is `true`.
+
+**Cockpit-scoped query keys do not include cockpit ID for contracts** — `api-contract/usePopulateContext.ts` uses `queryKey: [queryKey]` without appending `cockpitId`, unlike `api-offer/usePopulateContext.ts`. Contract queries do not re-fetch automatically when the active cockpit changes.
+
+**`SiteBackendProvider` exposes `SiteBackendContextType` locally but not via the module index** — `SiteBackendContextType` is defined and exported from `api-site/SiteBackendProvider.tsx` but is not re-exported from `api-site/index.ts`. Consumers importing from the package root cannot reference this type without a deep import.
+
+## Scope Boundaries
+
+This module provides API types, fetch factory configuration, React context providers, and in-memory state implementations for the Gamut portal domains (IAM, site, offers, contracts, communications, bookings, search, map, locale, Dialob forms). It does not render any UI components beyond minimal loading/error fallback strings, does not own routing logic, does not implement authentication flows (it delegates session expiry and authorization failure handling to callbacks supplied by the consuming app), and does not perform data persistence. Form rendering, markdown rendering, route tree definition, and shell layout are the responsibility of consuming modules (`gamut-form`, `gamut-md`, `gamut-routes`, `gamut-shell`).

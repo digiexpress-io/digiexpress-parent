@@ -50,3 +50,35 @@ Provides the top-level page shell layout component (`GShell`) for the Gamut port
 - MUI `useThemeProps` integration: `GShell` registers under MUI name `GShell`, allowing theme-level prop overrides via `components.GShell.defaultProps`.
 - `overridesResolver` on `GShellRoot` enables theme-level style overrides for the `root` slot.
 - `ownerState` pattern: layout-affecting values are passed as a typed `ownerState` object into the styled component rather than as direct props, keeping MUI conventions consistent with the rest of the Gamut component set.
+
+## Error Handling
+
+None identified. The module contains no error boundaries, no validation logic, no API calls, and no loading states. `GShellContext` is initialised with `{} as any` as the default context value (`GShellContext.tsx`, line 10), so calling `useGShell` outside of a `GShellProvider` will return an empty object without throwing — `open` and `fullscreen` will be `undefined` and `toggleDrawer`/`toggleFullscreen` will be missing, causing runtime errors silently rather than surfacing a clear failure.
+
+## Bootstrapping
+
+`GShell` is self-bootstrapping: it renders `GShellProvider` and `CssBaseline` internally. A consuming app wraps its layout tree in `<GShell>` and passes no additional providers. The only configuration surface is `GShellProps` (passed directly to `GShell`) and optional MUI theme-level overrides via `components.GShell.defaultProps` in the MUI theme object.
+
+Required order:
+1. An MUI `ThemeProvider` must be present above `GShell` in the tree — `GShell` calls `useThemeProps`, `useTheme`, and `useMediaQuery`, all of which depend on MUI's theme context.
+2. Place `<GShell>` below `ThemeProvider` and above all layout children. No other provider setup is required from the consumer.
+
+## TypeScript Extension Points
+
+- `GShellClasses` / `GShellClassKey` (`GShellProps.tsx`) — defines the `root` slot. Consumers can augment MUI's `Components` interface to add `GShell` to `components.GShell.defaultProps` and `components.GShell.styleOverrides` using the standard MUI theme augmentation pattern, keyed on `GShellClassKey` for style overrides.
+- `GOverridableComponent` (from `@dxs-ts/gamut-api`) — the `component` prop on `GShellProps` accepts any type satisfying `GOverridableComponent<GShellProps>`, allowing consumers to substitute the root element.
+
+No `declare module` blocks are present in the module source.
+
+## Known Limitations and Gotchas
+
+- **`useGShell` outside provider gives silent empty object**: `GShellContext` is created with `{} as any` as its default value. Calling `useGShell` outside a `GShellProvider` returns `{}` typed as `GShellContextType` — no error is thrown, but all properties are `undefined` at runtime.
+- **`drawerOpen` prop is initial state only**: `GShellProps.drawerOpen` seeds `GShellProvider`'s `useState` initial value. After mount, drawer state is owned by `GShellProvider` and `drawerOpen` prop changes are ignored — there is no `useEffect` to synchronise external state changes.
+- **Drawer hidden below `md` via CSS only**: The drawer is hidden on small viewports via `display: none` in `GShellRoot`'s scoped CSS for `.GShellBase .MuiDrawer-paper` at breakpoints below `md`. The drawer is still mounted in the DOM; it is not conditionally rendered.
+- **`drawerOpen: false` leaves a `calc(100% - undefinedpx)` width**: In `useUtilityClasses.tsx` lines 84 and 93, when `drawerOpen` is `false`, `drawerWidth` is passed as `undefined` to template literals (`${drawerOpen ? drawerWidth : undefined}px`), producing the string `"undefinedpx"` in the generated CSS for `.MuiContainer-root` width and `.GFooter-root` margin.
+- **No `useEffect` sync for `useToolbarHeight` when no breakpoint matches**: `useToolbarHeight` falls through all breakpoint checks and returns `options['xs'] ?? 0` as default, but only because `currentBreakpoint` is initialised to `'xs'`. If none of the five media queries fires (unlikely in practice), the fallback is `'xs'` height, not `0`.
+
+## Scope Boundaries
+
+`@dxs-ts/gamut-shell` provides only the outermost page-level layout shell. It does not implement the appbar, toolbar, drawer, footer, navigation, routing, authentication, or any content area. It does not fetch data, manage user session state, or define any MUI theme. Consumer modules (`@dxs-ts/gamut-primitives`, `@dxs-ts/gamut-routes`) are responsible for rendering the actual appbar, drawer, and footer components inside the shell's child slots.
+

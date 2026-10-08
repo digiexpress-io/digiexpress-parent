@@ -75,3 +75,42 @@ Maps Dialob item types to components:
 - Context-driven rendering: `GFormReviewContextType` is the single source of truth for answer lookup, translation, value-set resolution, and item instantiation. Components read it via `React.useContext(GFormReviewContext)`.
 - Configurable item registry: `ItemconfigType` and `ItemConfigEntry` allow callers to pass a custom `itemConfig` to `GFormReview`, replacing or extending the default matcher/component pairs.
 - Null suppression: `createItem` returns `null` for unanswered items (when `answerRequired` is true) and for groups with no renderable children (when `childrenRequired` is true), so the rendered output contains only answered content.
+
+## Error Handling
+
+Loading state: `GFormReview` checks the `isPending` boolean returned by `useDialobReview`. While `isPending` is true, a `CircularProgress` spinner is rendered inside a `GFormReview-loader`-classed div.
+
+Unavailable session: if `useDialobReview` resolves with no data (`review` is falsy), `GFormReview` renders a bare `<>Unavailable</>` string. There is no typed error state, no error boundary, and no distinction between a network failure and a missing session.
+
+Missing item config entry: `GFormReviewContextType.createItem` emits a `console.warn` if a matched config entry has no component defined. It then returns `null`, silently suppressing the item from the output.
+
+No validation errors surface in this module — it is read-only; form submission and validation are handled upstream by Dialob and `@dxs-ts/gamut-api`.
+
+## Bootstrapping
+
+None — leaf node. `GFormReview` requires only a `formId` string prop. It internally constructs `GFormReviewContextType` and mounts `GFormReviewContext.Provider`. The consuming app must ensure `useDialobReview` (from `@dxs-ts/gamut-api`) is configured to reach the Dialob API, but that configuration is part of `gamut-api` bootstrapping, not this module. No additional providers, theme registration, or initialization calls are required by the consumer.
+
+If MUI theme overrides are desired, the consumer's MUI theme can target the component names `GFormReview`, `GFormReviewGroup`, `GFormReviewQuestionnaire`, `GFormReviewRowGroup`, `GFormReviewSurveyGroup`, and their class keys via `styleOverrides`.
+
+## TypeScript Extension Points
+
+None identified. The module contains no `declare module` augmentations and no interface merging. The `ItemconfigType` / `ItemConfigEntry` pair in `GFormReviewContext.tsx` is the intended runtime extension point (pass a custom `itemConfig` to `GFormReview`), but it is not a TypeScript module-level declaration — it is a prop.
+
+## Known Limitations and Gotchas
+
+**TODO: child items not passed as props to group components** — In `GFormReviewContextType.createItem` (`GFormReviewContext.tsx`, line 110), when `childrenRequired` is true, the resolved child items are computed and checked for emptiness, but the comment `// TODO: Give child items as props` marks that they are not forwarded to the rendered component. The component re-derives children internally, causing a second traversal.
+
+**TODO END marker on `substituteVariables`** — The `substituteVariables` method is bracketed by `// TODO END` (`GFormReviewContext.tsx`, line 69). This indicates the method or its surrounding block is considered incomplete or provisional.
+
+**`survey` type is commented out of `DEFAULT_ITEM_CONFIG`** — The `itemConfig.ts` file contains a commented-out entry for Dialob type `survey`, with the note that survey items are handled within `GFormReviewSurveyGroup`. If a `survey`-type item appears at top level (outside a `surveygroup`), `createItem` will find no matching config entry and silently return `null`.
+
+**`GFormReviewContext` default value is cast from `undefined`** — The context is initialized as `(undefined as unknown) as GFormReviewContextType` (`GFormReviewContext.tsx`, line 130). Any component that reads `GFormReviewContext` outside a `GFormReviewContext.Provider` will receive `undefined` and throw at runtime with no descriptive error.
+
+**`GFormReviewClasses` interface is incomplete** — `useUtilityClasses.tsx` declares `GFormReviewClasses` with only a `root` key, but the `slots` object also includes `loader`. The `loader` slot is not reflected in the exported `GFormReviewClasses` interface or `GFormReviewClassKey` type.
+
+**`package.json` description is wrong** — The `description` field reads "Gamut form UI primitives - basic building blocks, form inputs, buttons", which describes `gamut-primitives`, not this module.
+
+## Scope Boundaries
+
+This module renders a completed, read-only Dialob questionnaire session. It does not submit forms, validate answers, manage form state, navigate between pages, or fetch anything beyond what `useDialobReview` returns. It does not own routing, authentication, or session lifecycle. Localization is limited to selecting a pre-baked translated string from the session data by language code — it does not integrate with `react-intl` beyond listing it as a peer dependency. File upload fields, signature fields, and any Dialob item types not enumerated in `DEFAULT_ITEM_CONFIG` are not rendered.
+

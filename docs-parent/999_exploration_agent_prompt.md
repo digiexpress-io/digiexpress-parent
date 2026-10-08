@@ -2,21 +2,20 @@
 
 ## Task
 
-Document a DigiExpress module by scanning its source code and writing a module overview file directly to `/Users/jocelyn/Development/projects/digiexpress-parent/docs-parent/`. The agent is responsible for both the research and the file creation.
+Scan a DigiExpress module's source code and write a module overview file to `/Users/jocelyn/Development/projects/digiexpress-parent/docs-parent/`. The agent handles both research and file creation.
 
 ## Output
 
-Write a file named `0XX_<module>.md` in `/Users/jocelyn/Development/projects/digiexpress-parent/docs-parent/`.
-
-Also add a one-sentence entry for the module under the `## Modules` section of `001_intro.md`.
+- `0XX_<module>.md` in `/Users/jocelyn/Development/projects/digiexpress-parent/docs-parent/`
+- One-sentence entry under `## Modules` in `001_intro.md`
 
 ## File naming
 
-Files are named `NNN_<module>.md` where `NNN` is a 3-digit numeric prefix. Rules:
-- No two files may share the same prefix.
-- Leave gaps of at least 5 between prefixes to allow future files to be inserted in between.
+`NNN_<module>.md`, where `NNN` is a 3-digit numeric prefix. Rules:
+- No two files share the same prefix.
+- Leave gaps of at least 5 for future insertion.
 - `001` is reserved for the intro. `999` is reserved for this prompt.
-- Top-level modules start at round numbers (010, 100, 200, ...). Sub-modules of a top-level module occupy the range immediately following it (015, 020, 025, ...).
+- Top-level modules start at round numbers (010, 100, 200, ...). Sub-modules occupy the range immediately following (015, 020, 025, ...).
 
 ## File structure
 
@@ -54,21 +53,98 @@ Files are named `NNN_<module>.md` where `NNN` is a 3-digit numeric prefix. Rules
 
 **Patterns:**
 - <pattern name and description>
+
+## Error Handling
+
+<How errors surface in this module: validation errors, API failures, loading states. Name the actual types, hooks, or components involved.>
+
+## Bootstrapping
+
+<What a consuming app must do to wire up this module. List required providers, their order in the provider tree, and required configuration. State "None" if this is a leaf node.>
+
+## TypeScript Extension Points
+
+<List any augmentation patterns, interface merging, or extension records (e.g. GComponentsPropsList). Include name + what it extends and why.>
+
+## Known Limitations and Gotchas
+
+<Named gotchas with explanations. Check inline NOTE/TODO/FIXME comments, existing .md files in the module, and non-obvious constraints.>
+
+## Scope Boundaries
+
+<What this module explicitly does NOT do.>
+
 ```
 
 ## Rules
 
-- Neutral, descriptive language only. No adjectives like "powerful", "polished", "comprehensive".
-- Name actual classes, components, hooks, and files found in the code — not generic descriptions.
-- If the module has no frontend, omit that section.
-- If the module has no backend, omit that section.
-- Keep each section to the point. No padding.
+- No promotional adjectives. Neutral, factual language only.
+- Name actual classes, hooks, and files — not generic descriptions.
+- Omit Frontend if none; omit Backend if none.
+- Never omit "Error handling", "Bootstrapping", "Extension points", "Known limitations", or "Scope boundaries" — use "None identified" or "Not applicable" when empty.
+
+## Already documented
+
+Check this list before writing to avoid duplicating work.
+
+| Prefix | File | Module |
+|---|---|---|
+| 001 | `001_intro.md` | Top-level module index |
+| 010 | `010_gamut.md` | Gamut — top-level overview |
+| 015 | `015_envir-util.md` | `@dxs-ts/envir-util` |
+| 020 | `020_gamut.md` | `@dxs-ts/gamut` — umbrella re-export barrel |
+| 025 | `025_gamut-cockpit-store.md` | `@dxs-ts/gamut-cockpit-store` |
+| 030 | `030_gamut-api.md` | `@dxs-ts/gamut-api` |
+| 035 | `035_gamut-md.md` | `@dxs-ts/gamut-md` |
+| 040 | `040_gamut-primitives.md` | `@dxs-ts/gamut-primitives` |
+| 045 | `045_gamut-form-review.md` | `@dxs-ts/gamut-form-review` |
+| 050 | `050_gamut-form.md` | `@dxs-ts/gamut-form` |
+| 055 | `055_gamut-shell.md` | `@dxs-ts/gamut-shell` |
+| 060 | `060_gamut-intl.md` | `@dxs-ts/gamut-intl` |
+| 065 | `065_gamut-routes.md` | `@dxs-ts/gamut-routes` |
+| 070 | `070_gamut-theme.md` | `@dxs-ts/gamut-theme` |
+| 075 | `075_xui-datetime.md` | `@dxs-ts/xui-datetime` |
+| 080 | `080_gamut_architecture.md` | Gamut — architecture overview and data flow |
+| 085 | `085_gamut_form_how_to_add_component.md` | Gamut form — how to add a new component |
+| 100 | *(reserved)* | Next top-level module (metis) |
+| 998 | `998_gamut_form_component_agent_prompt.md` | Agent prompt — gamut-form component authoring |
+| 999 | `999_exploration_agent_prompt.md` | This file |
+
+**Next available prefix:** `090` (within Gamut range) or `100` (next top-level module — metis).
 
 ## How to scan
 
-1. Find and read the module's `package.json` — list all `dependencies` and `peerDependencies`.
-2. List the module directory structure.
-3. Identify sub-modules or packages.
-4. Read entry points, key service/controller classes, and 2-3 representative UI components.
-5. Note all imports from other `@dxs-ts/*` modules and what is used from each.
-6. Do not read every file — sample enough to understand the shape.
+1. Read `package.json` — list `dependencies` and `peerDependencies`.
+2. List the directory structure; identify sub-modules or packages.
+3. Read entry points, key service/controller classes, and 2-3 representative UI components.
+4. Note all `@dxs-ts/*` imports and what is used from each.
+5. Sample enough files to understand the shape — do not read every file.
+
+## What to capture (beyond the template)
+
+### Error handling patterns
+
+Name the actual types, hooks, or components involved: validation errors, API fetch failures, loading states. Note the absence explicitly if no error UI exists.
+
+### Host application bootstrapping
+
+Answer: "how does a consuming app wire this module up from scratch?" List required providers, their order in the provider tree, and required configuration. Note if it is a leaf node.
+
+### TypeScript extension points
+
+Look for `declare module`, interface merging, or records like `GComponentsPropsList` / `GComponentNameToClassKey`. List by name with a one-line description of what each extends and why.
+
+### Known limitations and gotchas
+
+Look for:
+- Inline `NOTE:`, `TODO:`, `FIXME:`, or `HACK:` comments
+- Existing `.md` files inside the module directory
+- Unusual constraints (e.g. "boolean props must be passed as the string `'true'`", non-obvious required ordering)
+- Props or behaviors that contradict what the name implies
+
+List each as a named gotcha with a short explanation.
+
+### Scope boundaries
+
+Include a short statement of what this module explicitly does NOT do.
+

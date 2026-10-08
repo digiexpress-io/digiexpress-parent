@@ -102,3 +102,43 @@ Provides the concrete React component implementations for the Gamut customer por
 - The `component` prop (`GOverridableComponent<Props>`) on each public component allows the root element to be replaced with an arbitrary component while preserving `ownerState` passing.
 - `slots` / `slotProps` props on composite components (e.g., `GInbox`, `GArticle`) allow consumers to inject or replace inner components without forking the parent.
 - Authentication state (`authType`, `useIam`) determines conditional rendering of login/logout controls and identity labels throughout nav components.
+
+## Error Handling
+
+There are no validation error types or API failure types defined inside `gamut-primitives` itself. Error states are surfaced through dedicated display components rather than thrown exceptions or error boundaries:
+
+- `GError` — generic error page; reads `useIam` to route the "back to home" button to either the public or secured route depending on `authType`.
+- `GErrorLogin` — authentication failure page; renders `GAuthFormStart` so the user can retry login directly from the error screen.
+- `GErrorNotFound` — 404 state; same `authType`-conditional navigation as `GError`.
+- `GErrorNotTranslated` — missing-translation state; uses `router.history.back()` rather than a home-page redirect.
+- `GLoader` — loading state; renders a `CircularProgress` spinner with a `react-intl` formatted label (`gamut.loading`); used by consumers while async data is pending.
+- `GInboxMessages` — if `subject`, `site`, or `contract` resolves to `undefined`, the component logs `console.error("no site / contract", ...)` and renders a plain text fallback (`...no site / contract`) instead of crashing.
+- `GInboxMessageNotAllowed` — rendered in place of `GInboxNewMessage` when the contract status is `COMPLETED` or `REJECTED`, or when the exchange list is empty, preventing message submission in terminal states.
+
+No dedicated error-boundary components, error context, or typed error classes are defined in this module. All error data originates from `@dxs-ts/gamut-api` context hooks (`useIam`, `useComms`, `useContracts`, `useOffers`, `useSite`); this module only handles how those states are displayed.
+
+## Bootstrapping
+
+None — leaf node.
+
+`gamut-primitives` exports only presentational components. It does not register any React context providers, initialize any global state, or require a setup call. All required context (`useIam`, `useSite`, `useOffers`, `useContracts`, `useComms`, `useBookings`, `useLocale`, `useSearchApi`) must be provided by the consuming application through `@dxs-ts/gamut-api` providers, mounted above the component tree that uses these primitives. MUI theme configuration (including `components[MUI_NAME].defaultProps` overrides) must be applied via a standard MUI `ThemeProvider`. TanStack Router context must be present for components that call `useNavigate` or `useRouter` (`GError`, `GErrorLogin`, `GErrorNotFound`, `GErrorNotTranslated`). `react-intl`'s `IntlProvider` must be present for all components that call `useIntl`.
+
+## TypeScript Extension Points
+
+None identified.
+
+No `declare module` augmentations, interface merging, or extension records are present anywhere in the module source. MUI theme overrides for these components follow the standard MUI pattern — adding entries to the `components` key of the theme object under the component's `MUI_NAME` string constant — but this is a runtime convention, not a TypeScript extension point declared in this module.
+
+## Known Limitations and Gotchas
+
+- **`GLinkFormUnlocked` may be dead code** (`g-link/GLinkFormUnlocked.tsx` line 33): A `//TODO Perhaps this can be deleted, but let's wait and see` comment marks the entire component as potentially unused. Consumers should not rely on it remaining in the module.
+- **`GLayout` variant `fill-session-start-end` may be obsolete** (`g-layout/GLayout.tsx` line 87): `//TODO is this variant needed anymore?` annotates the `fill-session-start-end` branch. Using this variant carries a risk of removal in a future cleanup.
+- **`GInboxFormReview-reviewTitle` styling is incomplete** (`g-inbox-form-review/useUtilityClasses.tsx` line 63): The `.GInboxFormReview-reviewTitle` style block carries a bare `//TODO` with no body. The slot applies `theme.typography.h1` as a placeholder; final typography intent is unresolved.
+- **`GInboxMessages` silent failure on missing data**: When `subject`, `site`, or `contract` is `undefined`, the component renders a plain string `...no site / contract` instead of delegating to `GError` or throwing. This is a non-standard fallback with no i18n key.
+- **`GInboxProps.slotProps` is required, not optional**: `GInboxProps.slotProps` is typed without `?`, meaning callers must always pass the full `slotProps` object even when overriding nothing. In contrast, `slots` is optional. This asymmetry is present in both `GInboxProps` and `GInboxMessagesProps`.
+- **`onClick` is non-null asserted in `GInbox`**: `props.slotProps.item.onClick!` uses a non-null assertion (`g-inbox/GInbox.tsx` line 83), so omitting `slotProps.item.onClick` will cause a runtime failure, not a type error at the call site.
+- **`package.json` version is a Maven placeholder**: The `"version"` field is `"${project.version}"`, not a semver string. The package is `"private": true` and version resolution happens at build time through the parent Maven project.
+
+## Scope Boundaries
+
+`gamut-primitives` does not own any data-fetching, state management, routing configuration, authentication logic, or form-engine integration. It does not define API types, context providers, or global stores. It does not contain the Dialob form rendering engine — that responsibility belongs to `@dxs-ts/gamut-form-review`, which this module consumes as a dependency. It does not assemble pages or define URL routes — that is the responsibility of `@dxs-ts/gamut-routes`. It does not provide a theme or design tokens — consumers must supply a MUI theme. Its scope is limited to implementing the visual layer: taking typed props and context-hook return values from `@dxs-ts/gamut-api` and rendering them as MUI-styled components.
