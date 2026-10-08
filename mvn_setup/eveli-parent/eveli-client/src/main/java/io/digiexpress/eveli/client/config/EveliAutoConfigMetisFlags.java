@@ -37,7 +37,7 @@ public class EveliAutoConfigMetisFlags {
       throw new IllegalStateException(
           "eveli.metis.search.enabled is true but eveli.metis.enabled is not. "
               + "Set both flags, and set spring.ai.model.chat and spring.ai.model.embedding "
-              + "to a provider (for example ollama), not none.");
+              + "to ollama or google-genai, not none.");
     }
   }
 }

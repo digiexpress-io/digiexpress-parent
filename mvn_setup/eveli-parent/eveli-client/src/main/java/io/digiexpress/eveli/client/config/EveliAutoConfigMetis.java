@@ -59,21 +59,37 @@ public class EveliAutoConfigMetis {
     if (embeddingModel == null || chatClient == null) {
       throw new IllegalStateException(
           "eveli.metis.enabled is true but Spring AI did not create EmbeddingModel / ChatClient beans. "
-              + "Set spring.ai.model.chat and spring.ai.model.embedding to a provider (for example ollama), not none.");
+              + "Set spring.ai.model.chat and spring.ai.model.embedding to ollama or google-genai, not none.");
     }
     final var chatModel = chatModels.getIfAvailable();
     return ImmutableMetisConfig.builder()
         .provider(environment.getProperty("spring.ai.model.embedding", ""))
         .chatModelId(firstNonBlank(
             modelIdFromAiBean(chatModel),
-            environment.getProperty("spring.ai.ollama.chat.options.model"),
-            environment.getProperty("spring.ai.openai.chat.options.model")))
+            configuredModelId(environment, "spring.ai.model.chat", "chat")))
         .embeddingModelId(firstNonBlank(
             modelIdFromAiBean(embeddingModel),
-            environment.getProperty("spring.ai.ollama.embedding.options.model"),
-            environment.getProperty("spring.ai.openai.embedding.options.model"),
+            configuredModelId(environment, "spring.ai.model.embedding", "embedding"),
             embeddingModel.getClass().getSimpleName()))
         .build();
+  }
+
+  /**
+   * Reads only the properties of the provider the key selects: leftover spring.ai.ollama.* values
+   * must not name the model when google-genai is selected. GoogleGenAiTextEmbeddingModel has no
+   * getDefaultOptions(), so this is where its id comes from. The id feeds every content hash and
+   * metis_search_reindex_job.embedding_model.
+   */
+  private static String configuredModelId(Environment environment, String selectorKey, String kind) {
+    final var provider = environment.getProperty(selectorKey, "");
+    return switch (provider) {
+      case "ollama" -> environment.getProperty("spring.ai.ollama." + kind + ".options.model", "");
+      case "openai" -> environment.getProperty("spring.ai.openai." + kind + ".options.model", "");
+      case EveliPropsMetisGoogleGenAi.PROVIDER -> environment.getProperty(
+          "eveli.metis.google-genai." + kind + ".model",
+          "chat".equals(kind) ? EveliPropsMetisGoogleGenAi.DEFAULT_CHAT_MODEL : EveliPropsMetisGoogleGenAi.DEFAULT_EMBEDDING_MODEL);
+      default -> "";
+    };
   }
 
   private static String modelIdFromAiBean(Object bean) {

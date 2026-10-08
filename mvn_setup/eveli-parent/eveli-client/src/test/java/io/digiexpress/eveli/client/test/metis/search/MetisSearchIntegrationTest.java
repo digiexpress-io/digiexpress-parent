@@ -349,28 +349,28 @@ public class MetisSearchIntegrationTest {
 
   @Test
   void aPublicationIdIsRecordedAndCountsAsIndexedUntilTheJobFails() {
-    Assertions.assertFalse(jobService.isPublicationIndexed("pub-a"));
-    Assertions.assertFalse(jobService.isPublicationIndexed(null));
+    Assertions.assertFalse(jobService.isPublicationIndexed("pub-a", null, "stub"));
+    Assertions.assertFalse(jobService.isPublicationIndexed(null, null, "stub"));
 
     final var running = jobService.tryStart("stub", "pub-a").orElseThrow();
-    Assertions.assertTrue(jobService.isPublicationIndexed("pub-a"));
+    Assertions.assertTrue(jobService.isPublicationIndexed("pub-a", null, "stub"));
     Assertions.assertEquals("pub-a", jobService.latest().orElseThrow().getPublicationId());
 
     jobService.markCompleted(running, 0, 0, 1);
-    Assertions.assertTrue(jobService.isPublicationIndexed("pub-a"),
+    Assertions.assertTrue(jobService.isPublicationIndexed("pub-a", null, "stub"),
         "a completed job still counts so the reconciler does not start another");
     jobService.setBundleHash(running, "hash-aaa");
-    Assertions.assertTrue(jobService.isPublicationIndexed("pub-a", "hash-aaa"));
-    Assertions.assertFalse(jobService.isPublicationIndexed("pub-a", "hash-bbb"),
+    Assertions.assertTrue(jobService.isPublicationIndexed("pub-a", "hash-aaa", "stub"));
+    Assertions.assertFalse(jobService.isPublicationIndexed("pub-a", "hash-bbb", "stub"),
         "a completed job against a stale Runtime world must be retried");
 
     jobService.markFailed(jobService.tryStart("stub", "pub-b").orElseThrow(), "boom");
-    Assertions.assertFalse(jobService.isPublicationIndexed("pub-b"),
+    Assertions.assertFalse(jobService.isPublicationIndexed("pub-b", null, "stub"),
         "a failed go-live must be retried");
 
     final var cancelled = jobService.tryStart("stub", "pub-c").orElseThrow();
     jobService.markCancelled(cancelled, 0, 0, 1);
-    Assertions.assertFalse(jobService.isPublicationIndexed("pub-c"),
+    Assertions.assertFalse(jobService.isPublicationIndexed("pub-c", null, "stub"),
         "a cancelled job must be retried when the publication is still live");
   }
 
@@ -520,6 +520,9 @@ public class MetisSearchIntegrationTest {
     final var embeddingService = Mockito.mock(EmbeddingService.class);
     Mockito.when(embeddingService.embed(Mockito.anyString()))
         .thenThrow(new RuntimeException("embed down"));
+    // The width probe at job start must pass so that the documents themselves fail.
+    Mockito.doReturn(new float[StubEmbeddingModel.DIMENSIONS])
+        .when(embeddingService).embed(IndexingService.WIDTH_PROBE);
     final var jobId = jobService.tryStart("stub").orElseThrow();
     new IndexingService(
         contentReader(finnishSite(true)),
@@ -532,6 +535,63 @@ public class MetisSearchIntegrationTest {
     Assertions.assertEquals("FAILED", status.getState().name());
     Assertions.assertTrue(status.getError().contains("Incomplete reindex"));
     Assertions.assertEquals(3L, countRows(), "a partial failure must not remove the previous index");
+  }
+
+  @Test
+  void aModelWidthThatDoesNotMatchTheColumnFailsTheJobBeforeAnyDocument() {
+    reindex(finnishSite(true), false);
+    Assertions.assertEquals(3L, countRows());
+
+    final var embeddingService = Mockito.mock(EmbeddingService.class);
+    Mockito.when(embeddingService.embed(Mockito.anyString())).thenReturn(new float[768]);
+    final var jobId = jobService.tryStart("stub").orElseThrow();
+    new IndexingService(
+        contentReader(finnishSite(true)),
+        metadataGenerator(),
+        embeddingService,
+        jobService, db, DIRECT, INDEXING)
+        .runReindex(jobId, true);
+
+    final var status = jobService.latest().orElseThrow();
+    Assertions.assertEquals("FAILED", status.getState().name());
+    Assertions.assertTrue(status.getError().contains("returned 768 dimensions"), status.getError());
+    Mockito.verify(embeddingService, Mockito.times(1)).embed(Mockito.anyString());
+    Assertions.assertEquals(3L, countRows(), "a width mismatch must not touch the index");
+  }
+
+  /**
+   * Vectors of two models have the same width, so pgvector would rank them against each other
+   * without error. A job run with another model must not count as indexed or ready.
+   */
+  @Test
+  void aCompletedJobWithAnotherEmbeddingModelDoesNotCountAsIndexed() {
+    final var previous = jobService.tryStart("model-a", "pub-1").orElseThrow();
+    jobService.markCompleted(previous, 0, 0, 1);
+
+    final var sameModel = new MetisSearchClientImpl(
+        CONFIG, hybridSearch, vectorSearch, ftsSearch,
+        indexingService(finnishSite(true)), jobService, DIRECT, DIRECT, "model-a");
+    Assertions.assertTrue(sameModel.index().isIndexReadyForPortal());
+    Assertions.assertTrue(sameModel.index().isPublicationIndexed("pub-1"));
+    Assertions.assertTrue(sameModel.index().isIndexCurrent());
+
+    final var switched = new MetisSearchClientImpl(
+        CONFIG, hybridSearch, vectorSearch, ftsSearch,
+        indexingService(finnishSite(true)), jobService, DIRECT, DIRECT, "model-b");
+    Assertions.assertFalse(switched.index().isIndexReadyForPortal());
+    Assertions.assertFalse(switched.index().isPublicationIndexed("pub-1"));
+    Assertions.assertFalse(switched.index().isIndexCurrent());
+
+    jobService.markFailed(jobService.tryStart("model-b", "pub-1").orElseThrow(), "embed down");
+    Assertions.assertTrue(sameModel.index().isIndexCurrent(),
+        "only completed jobs decide which model the index was built with");
+    Assertions.assertFalse(switched.index().isIndexCurrent());
+
+    jobService.markCompleted(jobService.tryStart("model-b", "pub-1").orElseThrow(), 0, 0, 1);
+    Assertions.assertTrue(switched.index().isIndexReadyForPortal());
+    Assertions.assertTrue(switched.index().isPublicationIndexed("pub-1"));
+    Assertions.assertTrue(switched.index().isIndexCurrent());
+    Assertions.assertFalse(sameModel.index().isIndexCurrent());
   }
 
   @Test

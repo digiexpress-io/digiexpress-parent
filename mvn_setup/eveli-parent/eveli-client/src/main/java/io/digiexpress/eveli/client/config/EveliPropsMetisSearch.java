@@ -88,7 +88,7 @@ public class EveliPropsMetisSearch {
     /** When even the best vector match is below this, the query has no semantic answer. */
     private Double minVectorScore = 0.30;
 
-    /** Floor when FTS found nothing. Gibberish typically scores 0.30–0.45. */
+    /** Floor when FTS found nothing. Defaults are the bge-m3 calibration, where gibberish scores 0.30–0.45; gemini-embedding-2 uses 0.63. */
     private Double minVectorScoreWithoutKeyword = 0.45;
   }
 

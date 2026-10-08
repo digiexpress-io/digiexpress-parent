@@ -152,7 +152,8 @@ public class MetisSearchClientImpl implements MetisSearchClient {
 
     @Override
     public boolean isPublicationIndexed(String publicationId) {
-      return jobService.isPublicationIndexed(publicationId, indexingService.currentBundleHash().orElse(null));
+      return jobService.isPublicationIndexed(
+          publicationId, indexingService.currentBundleHash().orElse(null), embeddingModel);
     }
 
     @Override
@@ -175,7 +176,12 @@ public class MetisSearchClientImpl implements MetisSearchClient {
 
     @Override
     public boolean isIndexReadyForPortal() {
-      return jobService.isIndexReadyForPortal();
+      return jobService.isIndexReadyForPortal(embeddingModel);
+    }
+
+    @Override
+    public boolean isIndexCurrent() {
+      return jobService.isIndexCurrent(embeddingModel);
     }
 
     @Override
