@@ -107,14 +107,13 @@ Check this list before writing to avoid duplicating work.
 | 070 | `070_gamut-theme.md` | `@dxs-ts/gamut-theme` |
 | 075 | `075_xui-datetime.md` | `@dxs-ts/xui-datetime` |
 | 080 | `080_gamut_architecture.md` | Gamut — architecture overview and data flow |
-| 085 | `085_gamut_form_how_to_add_component.md` | Gamut form — how to add a new component |
 | 090 | `090_tanstack.md` | TanStack Router + Query usage across Gamut |
 | 100 | *(reserved)* | Next top-level module (metis) |
 | 900 | `900_agent_rules.md` | Shared rules for all agents |
 | 995 | `995_agent_creation_prompt.md` | Agent prompt — create a new agent prompt |
 | 996 | `996_gamut_primitives_component_agent_prompt.md` | Agent prompt — create a new gamut-primitive component |
 | 997 | `997_doc_nitpicker_agent_prompt.md` | Agent prompt — documentation nitpicker |
-| 998 | `998_gamut_form_component_agent_prompt.md` | Agent prompt — gamut-form component authoring |
+| 998 | `998_gamut_form_component_agent_prompt.md` | Agent prompt — create a new gamut-form component |
 | 999 | `999_exploration_agent_prompt.md` | This file |
 
 **Next available prefix:** `091` (within Gamut range) or `100` (next top-level module — metis).
