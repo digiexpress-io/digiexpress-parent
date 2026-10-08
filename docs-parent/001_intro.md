@@ -18,3 +18,7 @@ Customer portal. Displays localised content (markdown). Manages form submissions
 - **`@dxs-ts/gamut-shell`** (`modules/gamut-shell`) — top-level page shell layout component (`GShell`) that manages responsive toolbar height, collapsible drawer state, and fullscreen state via a React context and a single MUI styled root.
 - **`@dxs-ts/gamut-theme`** (`modules/gamut-theme`) — MUI theme provider (`GThemeProvider`) with runtime theme switching, two bundled `ThemeOptions` sets (`GThemeOptions`, `GThemeOptionsAlt1`), and MUI component overrides for both Gamut-specific and standard MUI components.
 - **`@dxs-ts/xui-datetime`** (`modules/xui-datetime`) — date and year picker input components built on an immutable `DateInputStateMachine`, with a segmented day/month/year text input, interactive calendar popover, standalone year picker, and luxon-based date formatting utilities.
+
+### TanStack
+
+- **`090_tanstack.md`** — documents how `@tanstack/react-router`, `@tanstack/react-query`, and `@tanstack/react-store` are used across the Gamut modules: file-based route structure, the provider-context data flow pattern, query key conventions, the absence of loaders and `useMutation`, and key constraints a developer must know before adding a route or query.

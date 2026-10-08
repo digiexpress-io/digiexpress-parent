@@ -6,7 +6,7 @@ Explore the `@dxs-ts/gamut-form` module and produce step-by-step instructions fo
 
 ## Location
 
-`/Users/jocelyn/Development/projects/digiexpress-parent/ts_setup/modules/gamut-form/`
+`digiexpress-parent/ts_setup/modules/gamut-form/`
 
 ## What to investigate
 
@@ -54,7 +54,7 @@ For each component sub-directory, identify the standard set of files. Read at le
 
 ## Output
 
-Write the output to `/Users/jocelyn/Development/projects/digiexpress-parent/docs-parent/085_gamut_form_how_to_add_component.md`.
+Write the output to `digiexpress-parent/docs-parent/085_gamut_form_how_to_add_component.md`.
 
 The document must be a step-by-step guide with the following structure:
 

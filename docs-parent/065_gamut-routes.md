@@ -140,3 +140,88 @@ No interface merging for custom route context or search params is performed with
 ## Scope Boundaries
 
 This module is responsible only for defining the TanStack Router route tree, the `router` instance, the route-level layout components that compose primitives and API hooks into full-page views, and the MUI theme-integration interfaces (`GComponentsPropsList`, `GComponentNameToClassKey`, `GComponents`, `GComponentsProps`, `GComponentsVariants`, `GComponentsOverrides`). It does not own authentication logic, API fetch implementations, form rendering engines, theming tokens, markdown rendering, or i18n message catalogs — those responsibilities belong to `@dxs-ts/gamut-api`, `@dxs-ts/gamut-form`, `@dxs-ts/gamut-theme`, `@dxs-ts/gamut-md`, and `@dxs-ts/gamut-intl` respectively. It does not expose a standalone application entry point; the consuming application is responsible for mounting `RouterProvider` and the outer provider stack.
+
+## TanStack Integration
+
+### Packages Used
+
+This module uses one TanStack package directly:
+
+| Package | Role |
+|---|---|
+| `@tanstack/react-router` | File-based routing, `router` instance, search param typing, navigation |
+
+`@tanstack/react-query` and `@tanstack/react-store` are used by `@dxs-ts/gamut-api` and `@dxs-ts/gamut-form` respectively. `gamut-routes` does not call `useQuery`, `useMutation`, or `Store` itself.
+
+`@tanstack/react-table` and `@tanstack/react-form` are not used in any Gamut module.
+
+### File-Based Routing
+
+All route files live under `routes/` and use `createFileRoute`. The root route (`routes/__root.tsx`) uses `createRootRoute`. No code-based `createRoute` is used anywhere in this module.
+
+File naming follows TanStack Router's dot-separator convention for nested routes. Example path segments: `public.$locale`, `secured.$locale.views.$viewId`. The TanStack Router CLI reads these files and writes the assembled tree into `routeTree.gen.ts` via `._addFileChildren()` calls. `routeTree.gen.ts` must not be edited manually — any manual change is overwritten on the next generation run.
+
+### `Register` Interface Augmentation
+
+The `Register` augmentation is declared in `router.ts`:
+
+```ts
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+```
+
+This wires up the `router` instance exported from this module so that TanStack Router hooks (`useNavigate`, `useSearch`, `Link`, etc.) infer types from the full route tree without requiring explicit generic parameters. `routeTree.gen.ts` separately augments `FileRoutesByPath` inside the same module declaration — that augmentation is auto-generated and maps every route path string to its ID, preloader, and parent route types.
+
+### Search Param Typing
+
+One route uses `validateSearch`: `routes/secured.$locale.views.$viewId.index.tsx`.
+
+```ts
+export interface ViewRouteSearchParams {
+  topicId?: string | undefined;
+}
+
+export const Route = createFileRoute('/secured/$locale/views/$viewId/')({
+  component: Component,
+  validateSearch: (search: Record<string, unknown>): ViewRouteSearchParams =>
+    parseViewRouteSearchParams(search),
+})
+```
+
+The param is consumed inside the component via `Route.useSearch()`. `zodSearchValidator` is not used. No other route in this module defines `validateSearch`; adding search params to any other route requires adding it explicitly.
+
+### Error and Not-Found Components
+
+`GErrorNotFound` and `GError` (both from `@dxs-ts/gamut-primitives`) are registered on the root route in `routes/__root.tsx`:
+
+```ts
+export const Route = createRootRoute({
+  component: RouteComponent,
+  notFoundComponent: GErrorNotFound,
+  errorComponent: GError,
+})
+```
+
+`GErrorNotFound` handles unmatched routes. `GError` handles thrown errors caught by TanStack Router's error boundary. No child route defines its own `errorComponent` or `notFoundComponent`.
+
+### Navigation Pattern
+
+`useNavigate` is imported directly from `@tanstack/react-router` at each call site. There is no wrapper hook or abstraction. It appears in:
+
+- `routes/__root.tsx` — redirects to `/public/$locale/login` on auth failure via `IamBackendProvider`'s `onAuthorizationFail` callback
+- `routes/secured.$locale.forms.$formId.index.tsx` and `routes/secured.$locale.forms.$formId.review.tsx` — cancel navigation
+- `g-router-offer/GRouterOffer.tsx` — navigates to summary after form completion, or to home on cancel
+- `g-router-secured-services/Nav.tsx` — breadcrumb navigation between secured views using MUI `Link` with `onClick` calling the `nav` function returned by `useNavigate`
+
+`Navigate` (component redirect) is used in `routes/index.tsx` to redirect from `/` to either the public or secured landing based on `authType`. TanStack `Link` is not used; breadcrumbs use MUI `Link` with imperative navigation.
+
+### What This Module Does Not Use
+
+- **No `loader` or `beforeLoad`** — no route file defines either option. All data fetching starts when provider components mount inside route components, not in route lifecycle hooks.
+- **No router context** — `createRouter` in `router.ts` has no `context` option set. `QueryClient` is not in the router context and is not accessible from any route lifecycle.
+- **No `zodSearchValidator`** — search param parsing in `secured.$locale.views.$viewId.index.tsx` uses a plain function, not a Zod schema validator.
+- **No child-route error boundaries** — `errorComponent` and `notFoundComponent` are defined only on the root route.
+- **No TanStack `Link`** — all navigable elements use MUI `Link` with imperative `useNavigate` calls.

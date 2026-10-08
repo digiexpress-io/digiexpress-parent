@@ -137,3 +137,25 @@ None identified. The module contains no `declare module` augmentations and no in
 ## Scope Boundaries
 
 This module is responsible only for rendering Dialob form sessions as a React component tree. It does not manage session lifecycle (creation, submission, or cancellation of Dialob sessions), network communication with the Dialob API, authentication, routing, form definition authoring, or theme registration in MUI's `Components` interface. It does not implement a file upload transport — `GInputUpload` captures a text value only. Geocoding service configuration and the `MapProvider` connection are the responsibility of the consuming application. Multi-language message loading is delegated to `react-intl`; this module provides no `IntlProvider`.
+
+## TanStack Integration
+
+**Packages in use:** `@tanstack/react-store` only. `@tanstack/react-query` and `@tanstack/react-router` are not used by any component in this module.
+
+### Dialob form writes bypass TanStack Query entirely
+
+All user interactions that mutate form state — `setAnswer`, `next`, `previous`, `complete`, `addRow`, etc. — are dispatched through `ActionsQueue` (`api-dialob/impl-actions-queue.ts` in `@dxs-ts/gamut-api`). `ActionsQueue` is a plain class: it batches and debounces actions, POSTs them via `fetchActionPost`, and applies server-returned updates to local `FormImpl` state. `useMutation` from `@tanstack/react-query` is not called anywhere in this module. There is no query invalidation or `refetch()` call triggered from `gamut-form` components.
+
+### `@tanstack/react-store` in `useScrollTo.ts`
+
+`@tanstack/react-store` is used in one file: `g-form-error-visibility/useScrollTo.ts`. The `RefState` class instantiates `new Store(...)` directly as a plain class field to maintain a map of per-page DOM refs keyed by Dialob control id. The store is not shared across components — it is scoped to a single `useScrollTo` call inside `GFormErrorVisibilityProvider`. The reactive hooks `useStore` and `useSelector` from `@tanstack/react-store` are not used; `RefState` reads and writes the store via its `.state` property directly. On `setErrorsVisible`, `RefState.consumed` schedules `this.scrollTo()` after a 250 ms `setTimeout`, resolving the scroll target from `DialobApi.ControlPage.firstErrorControlId`.
+
+### Components do not call `useQuery` directly
+
+No component in `gamut-form` calls `useQuery`. Form session data — `tip`, `items`, `errors`, `pages` — is read from `DialobApi.FormStore` via `useForm` and `useFormTip`, which are context hooks provided by `FormProvider` in `@dxs-ts/gamut-api`. `FormProvider` is mounted by `GForm` itself. The query that backs `DialobContext` is owned by `gamut-api`; `gamut-form` components consume it only through these typed context hooks.
+
+### TanStack packages not used in this module
+
+- `@tanstack/react-query` — no `useQuery`, `useSuspenseQuery`, `useMutation`, `QueryClient`, or `QueryClientProvider` calls
+- `@tanstack/react-router` — no `useNavigate`, `createFileRoute`, `Link`, or search param hooks; routing is the responsibility of `@dxs-ts/gamut-routes`
+- `@tanstack/react-table` and `@tanstack/react-form` — not used anywhere in Gamut

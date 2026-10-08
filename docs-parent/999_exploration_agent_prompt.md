@@ -2,11 +2,11 @@
 
 ## Task
 
-Scan a DigiExpress module's source code and write a module overview file to `/Users/jocelyn/Development/projects/digiexpress-parent/docs-parent/`. The agent handles both research and file creation.
+Scan a DigiExpress module's source code and write a module overview file to `digiexpress-parent/docs-parent/`. The agent handles both research and file creation.
 
 ## Output
 
-- `0XX_<module>.md` in `/Users/jocelyn/Development/projects/digiexpress-parent/docs-parent/`
+- `0XX_<module>.md` in `digiexpress-parent/docs-parent/`
 - One-sentence entry under `## Modules` in `001_intro.md`
 
 ## File naming
@@ -106,7 +106,9 @@ Check this list before writing to avoid duplicating work.
 | 075 | `075_xui-datetime.md` | `@dxs-ts/xui-datetime` |
 | 080 | `080_gamut_architecture.md` | Gamut — architecture overview and data flow |
 | 085 | `085_gamut_form_how_to_add_component.md` | Gamut form — how to add a new component |
+| 090 | `090_tanstack.md` | TanStack Router + Query usage across Gamut |
 | 100 | *(reserved)* | Next top-level module (metis) |
+| 997 | `997_doc_nitpicker_agent_prompt.md` | Agent prompt — documentation nitpicker |
 | 998 | `998_gamut_form_component_agent_prompt.md` | Agent prompt — gamut-form component authoring |
 | 999 | `999_exploration_agent_prompt.md` | This file |
 

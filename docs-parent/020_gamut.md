@@ -196,3 +196,57 @@ No `declare module` augmentations exist within `gamut-api`, `gamut-form`, `gamut
 ## Scope Boundaries
 
 Gamut is a customer portal frontend. It does not implement any backend services, authentication logic, workflow engines, or data persistence beyond `CockpitStore`'s single `localStorage` key. It does not provide a CMS authoring interface (Stencil content is consumed read-only), a form builder (Dialob forms are consumed as rendered fill-in experiences only), or an administrative dashboard. It does not expose a public REST API, WebSocket layer, or server-side rendering entry point. Theming is limited to MUI v5 `ThemeOptions`; it does not support CSS-in-JS approaches outside of MUI's `styled`/`sx` system (and `sx` props are explicitly excluded from component API by project convention). Multi-language support covers exactly five locales (`bs`, `en`, `fi`, `my`, `sv`) defined in `gamut-intl`; adding a new locale requires changes to that sub-module.
+
+## TanStack Integration
+
+The `@dxs-ts/gamut` umbrella barrel re-exports components from sub-modules that use both TanStack Router and TanStack Query. Consuming apps take on all three TanStack packages as peer dependencies.
+
+### Packages in use
+
+| Package | Layer | Role |
+|---|---|---|
+| `@tanstack/react-router` | `gamut-routes` | File-based route tree, navigation, search param typing |
+| `@tanstack/react-query` | `gamut-api` | Server state fetching inside all domain provider hooks |
+| `@tanstack/react-store` | `gamut-form` | In-memory reactive `Store` instance for scroll-to-error ref tracking in `useScrollTo` |
+
+`@tanstack/react-table` and `@tanstack/react-form` are not used.
+
+### Required provider nesting order
+
+The consuming app must compose providers in this order at the app root:
+
+1. **`QueryClientProvider`** (`@tanstack/react-query`) — outermost; all `gamut-api` providers call `useQuery` and must be descendants.
+2. **`LocaleProvider`** (`gamut-api`) — wraps `react-intl` `IntlProvider`; must enclose everything that calls `useIntl` or `useLocale`.
+3. **`GThemeProvider`** (`gamut-theme`) — wraps MUI `ThemeProvider`; must be inside `LocaleProvider`.
+4. **`ConfigProvider`** (`gamut-api`) — supplies fetch factories and per-query `staleTime` to all domain providers.
+5. **`RouterProvider`** (`@tanstack/react-router`) — innermost; mounts the pre-built `router` instance from `gamut-routes`.
+
+`QueryClientProvider` must be the outermost wrapper because `RouterProvider` and all route-mounted provider components (`IamBackendProvider`, `SiteBackendProvider`, `OfferProvider`, etc.) are descendants and all call `useQuery` internally.
+
+### Required augmentations in the consuming app
+
+Two `declare module` augmentations are required:
+
+**TanStack Router — `Register`:**
+
+```ts
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+```
+
+This enables global type inference for `useNavigate`, `useSearch`, `Link`, and all router hooks. The declaration also exists in `gamut-routes/router.ts` to support library-level type checking; the app-level declaration is the one that takes effect at runtime.
+
+**MUI theme — `GComponentsPropsList`:**
+
+```ts
+declare module "@mui/material" {
+  export interface Components<Theme = unknown> extends GComponents<Theme> { }
+}
+```
+
+This registers all Gamut components with MUI's `Components` interface so that `theme.components.GXxx` overrides are type-checked. `GComponents<Theme>` is exported from `gamut-routes/g-props.ts` and merges `GComponentsPropsList`, `GComponentNameToClassKey`, and variant support.
+
+Both augmentations must be present; omitting either disables the corresponding layer of type inference.

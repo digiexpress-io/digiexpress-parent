@@ -366,7 +366,7 @@ Components that are purely internal to the Dialob rendering pipeline (their Dial
 
 This step is required only when the component needs to be themeable from outside the `gamut-form` module — i.e., consumers must be able to set `theme.components.GInputAbc.defaultProps` or `styleOverrides`.
 
-**File:** `/Users/jocelyn/Development/projects/digiexpress-parent/ts_setup/modules/gamut-routes/g-props/g-props.ts`
+**File:** `digiexpress-parent/ts_setup/modules/gamut-routes/g-props/g-props.ts`
 
 Three additions are required in this file:
 

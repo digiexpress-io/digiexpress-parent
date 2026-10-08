@@ -142,3 +142,26 @@ No `declare module` augmentations, interface merging, or extension records are p
 ## Scope Boundaries
 
 `gamut-primitives` does not own any data-fetching, state management, routing configuration, authentication logic, or form-engine integration. It does not define API types, context providers, or global stores. It does not contain the Dialob form rendering engine — that responsibility belongs to `@dxs-ts/gamut-form-review`, which this module consumes as a dependency. It does not assemble pages or define URL routes — that is the responsibility of `@dxs-ts/gamut-routes`. It does not provide a theme or design tokens — consumers must supply a MUI theme. Its scope is limited to implementing the visual layer: taking typed props and context-hook return values from `@dxs-ts/gamut-api` and rendering them as MUI-styled components.
+
+## TanStack Integration
+
+### TanStack Router
+
+Four components in `gamut-primitives` use TanStack Router directly:
+
+- `GError` — calls `useNavigate` to redirect to the home route (public or secured, conditional on `authType`).
+- `GErrorLogin` — calls `useNavigate`; renders `GAuthFormStart` to allow login retry inline.
+- `GErrorNotFound` — calls `useNavigate` for the same `authType`-conditional home redirect as `GError`.
+- `GErrorNotTranslated` — calls `useRouter` and invokes `router.history.back()` instead of redirecting to a home route.
+
+All four import `useNavigate` or `useRouter` directly from `@tanstack/react-router`. There is no project-level wrapper hook or abstraction.
+
+`Link` from `@tanstack/react-router` is not used anywhere in `gamut-primitives`. The `g-link` / `g-links` / `g-links-page` sub-modules (`GLink`, `GLinks`, `GLinksPage`) use MUI `Link` (or plain anchor elements), not TanStack `Link`. Where clickable navigation elements need programmatic routing, the `onClick` handler calls the `nav` function returned by `useNavigate`.
+
+### TanStack Query
+
+No component in `gamut-primitives` calls `useQuery` directly. All data — offers, contracts, comms, bookings, IAM state, site content — arrives through provider context hooks (`useOffers`, `useContracts`, `useComms`, `useBookings`, `useIam`, `useSite`) supplied by `@dxs-ts/gamut-api`. The query lifecycle (fetching, caching, `isPending` guards) is entirely owned by the provider layer above this module.
+
+### TanStack Store and TanStack Query Mutations
+
+`@tanstack/react-store` and `useMutation` are not used in `gamut-primitives`. Both belong to other modules (`gamut-form` uses `@tanstack/react-store` for scroll-to-error ref tracking; provider components in `gamut-api` handle all write operations via plain async functions and `refetch()`).
