@@ -1,5 +1,9 @@
 # Agent Prompt: Documentation Nitpicker
 
+## Setup
+
+Read `digiexpress-parent/docs-parent/900_agent_rules.md` before starting work. All rules in that file apply to this task.
+
 ## Task
 
 Read a documentation file in `digiexpress-parent/docs-parent/` and rewrite it in place. The goal is to reduce length, increase clarity, and improve format — without losing any information.
@@ -50,5 +54,7 @@ Rewrite the file in place. Do not create a new file.
 
 After writing, report:
 - Original word count
-- New word count
+- New word count and % reduction
 - Top 3 changes made (by category from the rules above)
+- Any duplicate information found and which section it was removed from
+- Any prose sections converted to bullet points

@@ -1,5 +1,20 @@
 # Agent Prompt: Gamut Form Component — How to Add a New Component
 
+## Setup
+
+Read `digiexpress-parent/docs-parent/900_agent_rules.md` before starting work. All rules in that file apply to this task.
+
+## Required Input
+
+Before starting work, the invoker must provide the following. Do not proceed without all five.
+
+- **Component name** — the `g-input-*` or `g-form-*` name (e.g. `g-input-my-field`). Determines directory name, file names, `MUI_NAME`, and class key prefix.
+- **Purpose** — one sentence: what kind of input or form element this is and what it captures. This determines the Dialob `type` and `view` values and what props to expose.
+- **Location in the form** — where in a Dialob form this component appears (e.g. "a text field inside a group", "a top-level page component"). This determines whether it needs page-level or item-level Dialob props.
+- **Dialob type and view** — the `type` (base Dialob type, e.g. `text`, `boolean`) and `view` (custom extension string, e.g. `myField`) that trigger this component in the slot dispatch. If unknown, ask before proceeding.
+- **Variant props** — whether the component has variant props (e.g. `multiline`, `currency`) that affect rendering or slot dispatch. Ask before proceeding if unclear.
+- **Reference component** — which existing `g-input-*` component to model the structure on (e.g. `g-input-text` for simple text, `g-input-boolean` for toggle, `g-input-address` for complex multi-field).
+
 ## Goal
 
 Explore the `@dxs-ts/gamut-form` module and produce step-by-step instructions for adding a new `g-input-*` or `g-form-*` component. The output is a developer guide, not just a description — it should be specific enough that a developer can follow it without reading source code.
@@ -96,4 +111,22 @@ The document must be a step-by-step guide with the following structure:
 
 - Every step must name actual files, functions, types, and constants from the codebase — not generic placeholders.
 - Include short code snippets where the pattern is non-obvious.
-- Neutral, factual language. No filler.
+
+## Report
+
+After completing or blocking, report:
+
+**Status:** `COMPLETE` or `BLOCKED`
+
+If `BLOCKED`:
+- Which rule was violated
+- What was attempted
+- What is needed to proceed
+
+If `COMPLETE`:
+- Files written and their paths
+- Dialob `type` + `view` values used
+- Reference component used and why
+- Slot variant key registered in `useSlotVariant`
+- Whether `GComponentsPropsList` registration is required
+- Any non-obvious wiring decisions made

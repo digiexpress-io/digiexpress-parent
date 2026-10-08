@@ -1,5 +1,9 @@
 # Agent Prompt: DigiExpress Module Documentation
 
+## Setup
+
+Read `digiexpress-parent/docs-parent/900_agent_rules.md` before starting work. All rules in that file apply to this task.
+
 ## Task
 
 Scan a DigiExpress module's source code and write a module overview file to `digiexpress-parent/docs-parent/`. The agent handles both research and file creation.
@@ -78,9 +82,7 @@ Scan a DigiExpress module's source code and write a module overview file to `dig
 
 ## Rules
 
-- No promotional adjectives. Neutral, factual language only.
-- Name actual classes, hooks, and files — not generic descriptions.
-- Omit Frontend if none; omit Backend if none.
+- Omit Frontend Architecture if the module has no frontend; omit Backend Architecture if no backend.
 - Never omit "Error handling", "Bootstrapping", "Extension points", "Known limitations", or "Scope boundaries" — even if nothing was found. Do not write "None identified." or "Not applicable." alone. Instead, write one sentence explaining *why* it does not apply (e.g. "Leaf node with no providers — no bootstrapping required." or "No async paths exist — errors surface only via synchronous throws in builder methods."). The sentence must prove the agent looked, not just assert the absence.
 
 ## Already documented
@@ -108,11 +110,14 @@ Check this list before writing to avoid duplicating work.
 | 085 | `085_gamut_form_how_to_add_component.md` | Gamut form — how to add a new component |
 | 090 | `090_tanstack.md` | TanStack Router + Query usage across Gamut |
 | 100 | *(reserved)* | Next top-level module (metis) |
+| 900 | `900_agent_rules.md` | Shared rules for all agents |
+| 995 | `995_agent_creation_prompt.md` | Agent prompt — create a new agent prompt |
+| 996 | `996_gamut_primitives_component_agent_prompt.md` | Agent prompt — create a new gamut-primitive component |
 | 997 | `997_doc_nitpicker_agent_prompt.md` | Agent prompt — documentation nitpicker |
 | 998 | `998_gamut_form_component_agent_prompt.md` | Agent prompt — gamut-form component authoring |
 | 999 | `999_exploration_agent_prompt.md` | This file |
 
-**Next available prefix:** `090` (within Gamut range) or `100` (next top-level module — metis).
+**Next available prefix:** `091` (within Gamut range) or `100` (next top-level module — metis).
 
 ## How to scan
 
@@ -121,6 +126,14 @@ Check this list before writing to avoid duplicating work.
 3. Read entry points, key service/controller classes, and 2-3 representative UI components.
 4. Note all `@dxs-ts/*` imports and what is used from each.
 5. Sample enough files to understand the shape — do not read every file.
+
+## Report
+
+After writing, report:
+- File written (path + prefix)
+- Sections where nothing was found, and the one-sentence explanation written for each
+- Key gotchas or non-obvious findings worth flagging
+- Whether `001_intro.md` was updated
 
 ## What to capture (beyond the template)
 

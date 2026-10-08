@@ -1,0 +1,36 @@
+# Agent Rules — DigiExpress Documentation
+
+All agents working in this project must follow these rules. Read this file before starting any task.
+
+## Language
+
+- Neutral, factual language only. No promotional adjectives ("powerful", "polished", "comprehensive", "robust").
+- Name actual classes, hooks, files, types, and constants — not generic descriptions.
+- Active voice. No passive voice where active is possible.
+- No filler phrases: "it is worth noting that", "in order to", "it should be noted that", "note that", "as mentioned above".
+
+## Code and styling
+
+- Never use webkit-specific CSS (`-webkit-*`). Never use browser-specific styling unless explicitly instructed.
+- Do not deviate from existing patterns in the codebase. Do not invent new naming conventions.
+- Follow the barrel export structure exactly as found in the existing `index.ts`.
+
+## Blockers
+
+If completing any part of a task requires breaking a rule, do NOT break the rule. Instead:
+1. Stop work on the affected part.
+2. Mark the task `BLOCKED`.
+3. State which rule is at issue, what was attempted, and what information or decision is needed to proceed.
+
+A partially completed task marked `BLOCKED` is correct. A fully completed task that broke a rule is not.
+
+## Reporting
+
+Every agent must report its status at the end of every task:
+
+**Status:** `COMPLETE` or `BLOCKED`
+
+If `BLOCKED`:
+- Which rule was violated
+- What was attempted
+- What is needed to proceed
