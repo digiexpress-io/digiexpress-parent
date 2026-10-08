@@ -22,15 +22,13 @@ Provides date and year picker input components for MUI-based UIs. Includes a seg
 
 **Direct consumer: `@dxs-ts/gamut-form`**
 
-`gamut-form` imports `DatePicker` and `YearPicker`. They are used inside `GFormBaseElement`: when `useSlotVariant` resolves an `ActionItem` with a date or year type, the resulting slot renders the corresponding `xui-datetime` component. The Dialob wrapper around each picker calls an `ANSWER` action creator on change, pushing the value to `ActionsQueue`.
+`gamut-form` imports `DatePicker` and `YearPicker` and renders them inside `GFormBaseElement`: when `useSlotVariant` resolves an `ActionItem` with a date or year type, the resulting slot renders the corresponding `xui-datetime` component. The Dialob wrapper around each picker calls an `ANSWER` action creator on change, pushing the value to `ActionsQueue`.
 
 **Indirect consumers (via `gamut-form`)**
 
 - `@dxs-ts/gamut-primitives` — depends on `gamut-form` for `GForm` and related components; does not import `xui-datetime` directly.
 - `@dxs-ts/gamut-routes` — composes `gamut-form` inside `GRouterOffer` and `GRouterProduct`; does not import `xui-datetime` directly.
 - `@dxs-ts/gamut` (umbrella) — aggregates all modules including `gamut-form`.
-
-**Position in the dependency graph**
 
 ```
 xui-datetime ───► gamut-form ───► gamut-primitives ───► gamut-routes ───► gamut (umbrella)
@@ -61,28 +59,28 @@ No module below `gamut-form` in the graph (e.g. `gamut-api`, `gamut-intl`, `gamu
 
 ## Error Handling
 
-Validation errors are handled entirely within `DateInputStateMachine`. When all three fields (`day`, `month`, `year`) are non-empty, `tryValidateComplete()` runs range checks (day 1–31, month 1–12, year 1926–2099) and constructs a `Date` to verify the combination is real (e.g. 31 February). On failure it sets `DateInputState` to `'error'` and populates `data.error` with a plain string (`'Invalid date range'` or `'Invalid date'`). The machine also holds an `'empty'`, `'typing'`, and `'validating'` state, but only `'error'` and `'valid'` are observable externally.
+`DateInputStateMachine` owns all validation. When all three fields (`day`, `month`, `year`) are non-empty, `tryValidateComplete()` runs range checks (day 1–31, month 1–12, year 1926–2099) and constructs a `Date` to verify the combination is real (e.g. 31 February). On failure it sets `DateInputState` to `'error'` and populates `data.error` with a plain string (`'Invalid date range'` or `'Invalid date'`). The machine also holds `'empty'`, `'typing'`, and `'validating'` states, but only `'error'` and `'valid'` are observable externally.
 
 Validation state surfaces to the consumer through two paths:
 
 1. `DateFieldContainer` reads `machine.isValid` and the field-filled flags directly from the context provided by `useCalendarInput()`. It derives `isError: boolean` locally and calls the `onValidity(isError: boolean)` callback (passed as `DatePickerProps.onValidity`) via `useEffect` whenever the error state changes. The same pattern is replicated in `YearFieldContainer` using `useYearInput()` and `YearPickerProps.onValidity`.
 2. `XuiDateFieldInput` and `XuiYearPickerInput` styled components receive `ownerState={{ isError }}` and apply a red border via MUI's `shouldForwardProp` / styled-component theming.
 
-No API call layer exists in this module. There are no loading states or async error surfaces. `DateTimeFormatter` and `formatAnyDateShort` return a fallback string (`"-"` and `"--"` respectively) when `value` is `undefined` or falsy; they do not throw.
+`DateTimeFormatter` and `formatAnyDateShort` return a fallback string (`"-"` and `"--"` respectively) when `value` is `undefined` or falsy; they do not throw.
 
 `useCalendarInput` and `useYearInput` both throw a plain `Error` if called outside their respective providers — this is a programming error, not a runtime one.
 
 ## Bootstrapping
 
-None — leaf node. `DatePicker`, `YearPicker`, `DateTimeFormatter`, and `formatAnyDateShort` / `FormatAnyDateTimeShort` can be imported and rendered directly. The only peer-dependency setup the consuming app must provide is a `react-intl` `IntlProvider` ancestor in the tree (required by `DateFieldContainer` and `YearFieldContainer` for ARIA label formatting). `CalendarProvider` (rendered inside the `DatePicker` popover) mounts its own nested `IntlProvider` scoped to the popover, using the locale string passed by `DatePicker` from `useIntl()`. No app-level MUI theme extension or custom provider is required.
+None — leaf node. `DatePicker`, `YearPicker`, `DateTimeFormatter`, and `formatAnyDateShort` / `FormatAnyDateTimeShort` can be imported and rendered directly. The consuming app must provide a `react-intl` `IntlProvider` ancestor in the tree (`DateFieldContainer` and `YearFieldContainer` require it for ARIA label formatting). `CalendarProvider` (rendered inside the `DatePicker` popover) mounts its own nested `IntlProvider` scoped to the popover, using the locale string `DatePicker` reads from `useIntl()`. No app-level MUI theme extension or custom provider is required.
 
 ## TypeScript Extension Points
 
-None identified. The module contains no `declare module` augmentations, no interface merging, and no extension record patterns.
+No `declare module` augmentations, interface merging, or extension record patterns exist in any file across all six sub-modules — every exported name is a plain type alias, interface, or React component with no augmentation hooks.
 
 ## Known Limitations and Gotchas
 
-**Hardcoded `console.log` in `blurField`**: `DateInputStateMachine.blurField()` (line 131) contains `console.log('next value', newData.month)` left from development. This will emit to the browser console on every month-field blur.
+**Hardcoded `console.log` in `blurField`**: `DateInputStateMachine.blurField()` (line 131) contains `console.log('next value', newData.month)` left from development. It emits to the browser console on every month-field blur.
 
 **Date construction sets hours to 15**: Both `CalendarInputProvider` (line 99, `finalDate.setHours(15)`) and `DayGrid.handleDateClick` (line 59, `new Date(year, month, day, 15)`) hard-code the time component to 15:00. The resulting `Date` objects passed to `onChange` are not midnight-normalised and are not in UTC. Callers storing ISO strings should be aware the time will be `T15:00:00` in local time.
 
@@ -98,4 +96,9 @@ None identified. The module contains no `declare module` augmentations, no inter
 
 ## Scope Boundaries
 
-`@dxs-ts/xui-datetime` provides only client-side date and year input UI. It does not perform any API calls, manage form state, integrate with Dialob or any questionnaire engine, provide time-of-day input, handle timezone conversion, expose a date range picker, or manage validation at the form level. Integration with Dialob action creators and form state management is the responsibility of the consuming module (`@dxs-ts/gamut-form`).
+Client-side date and year input UI only. This module does not:
+
+- perform API calls or manage loading state
+- manage form state or validation at the form level
+- integrate with Dialob or any questionnaire engine (that is `@dxs-ts/gamut-form`'s responsibility)
+- provide time-of-day input, timezone conversion, or a date range picker

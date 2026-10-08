@@ -28,7 +28,7 @@ declare module '@tanstack/react-router' {
 }
 ```
 
-The `routeTree.gen.ts` file additionally augments `FileRoutesByPath` inside the same module declaration.
+`routeTree.gen.ts` additionally augments `FileRoutesByPath` inside the same module declaration.
 
 **Search params:** Manual typing via `validateSearch`. One route uses it: `secured.$locale.views.$viewId.index.tsx`.
 
@@ -71,7 +71,7 @@ export const Route = createRootRoute({
 
 `Link` from `@tanstack/react-router` is not used. Navigation breadcrumbs in `Nav.tsx` use MUI `Link` with `onClick` calling `useNavigate`.
 
-**Router context:** No `context` is passed to `createRouter`. The router has no `context` option set. `QueryClient` is not in the router context.
+**Router context:** No `context` is passed to `createRouter`. `QueryClient` is not in the router context.
 
 ---
 
@@ -100,7 +100,7 @@ Per-query `staleTime` and `refetchInterval` are passed in from `ConfigProvider` 
 
 There is no shared key factory. Keys are constructed inline at each `useQuery` call site.
 
-**Mutations:** `useMutation` is not used anywhere in Gamut. All write operations (create offer, cancel offer, reply to subject, append contract attachment, cancel booking, vote on feedback) are implemented as plain `async` functions that call the fetch function and then call `refetch()` on the relevant query to update cached data.
+**Mutations:** `useMutation` is not used anywhere in Gamut. All write operations (create offer, cancel offer, reply to subject, append contract attachment, cancel booking, vote on feedback) are plain `async` functions that call the fetch function and then call `refetch()` on the relevant query to update cached data.
 
 **Provider integration — end-to-end trace (`OfferProvider`):**
 
@@ -118,7 +118,7 @@ The pattern is identical across `BookingProvider`, `ContractProvider`, and `Comm
 
 ## Component Data Flow
 
-**Pattern:** Provider context is dominant. Components do not call `useQuery` directly. They consume data via typed context hooks:
+Components do not call `useQuery` directly. They consume data via typed context hooks:
 
 - `useSite()` — reads from `SiteBackendContext`
 - `useOffers()` — reads from `OfferContext`
@@ -141,15 +141,15 @@ The one exception is `useDialobReview` in `api-dialob/DialobContext.tsx`, which 
 
 ## Router + Query Integration
 
-The two are not directly integrated. `QueryClient` is not passed through router context and is not accessible inside route loaders (no loaders are defined). The `QueryClientProvider` wraps the entire app in `DemoApp.tsx` and the router is instantiated separately in `index.tsx`. There is no query prefetching in route lifecycle hooks. All data fetching begins when provider components mount as part of the route component tree.
+The two are not directly integrated. `QueryClient` is not passed through router context and is not accessible inside route loaders (no loaders are defined). `QueryClientProvider` wraps the entire app in `DemoApp.tsx` and the router is instantiated separately in `index.tsx`. There is no query prefetching in route lifecycle hooks. All data fetching begins when provider components mount as part of the route component tree.
 
 ---
 
 ## Key Constraints and Gotchas
 
-- **No loaders or beforeLoad.** Route-level data fetching does not exist. All data dependencies are handled by provider mounts inside route components. Adding a loader that accesses `QueryClient` would require passing it through router context, which is not currently configured.
+- **No loaders or beforeLoad.** Route-level data fetching does not exist. All data dependencies are handled by provider mounts inside route components. Adding a loader that accesses `QueryClient` requires passing it through router context, which is not configured.
 - **`staleTime` is per-query, not global.** `QueryClient` has no global `staleTime`. Each provider passes its own value from `ConfigProvider`. The default is `60_000` ms. The cockpits query hardcodes `staleTime: Infinity`.
-- **No `useMutation`.** All write+invalidate cycles use `refetch()` called on the original `useQuery` reference. If you add a mutation, you must manually call `refetch()` (or `queryClient.invalidateQueries`) — the existing pattern does not use `invalidateQueries`.
+- **No `useMutation`.** All write+invalidate cycles use `refetch()` called on the original `useQuery` reference. Adding a mutation requires manually calling `refetch()` or `queryClient.invalidateQueries` — the existing pattern does not use `invalidateQueries`.
 - **`useSuspenseQuery` is not used.** Adding Suspense boundaries around new routes or components will not interact with existing query calls, which all use `useQuery` with `isPending` guards.
 - **`validateSearch` is used in only one route.** Only `secured.$locale.views.$viewId.index.tsx` validates search params. Adding search params to any other route requires adding `validateSearch` explicitly — the router does not infer types from usage of `Route.useSearch()` without it.
 - **`@tanstack/react-store`'s `Store` is used directly as a class instance**, not via `useStore` / `useSelector`. The `RefState` class in `gamut-form/g-form-error-visibility/useScrollTo.ts` instantiates `new Store(...)` internally. This store is not shared across components — it is scoped to a single `useScrollTo` call.

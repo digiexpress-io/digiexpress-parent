@@ -55,11 +55,11 @@
 
 1. **Boot**: The host app mounts `GThemeProvider` (reads `CockpitStore.get()` to select the secondary `ThemeOptions`), then `ConfigProvider` (assembles `ConfigApi.default_config` from fetch factory instances).
 
-2. **Route entry**: `__root.tsx` (in `@dxs-ts/gamut-routes`) mounts `IamBackendProvider`. Based on `useIam().authType`, it wraps the outlet in either `SecuredSetup` or `PublicSetup`, each of which composes the relevant backend context providers from `@dxs-ts/gamut-api` (`SiteBackendProvider`, `OfferProvider`, etc.).
+2. **Route entry**: `__root.tsx` (in `@dxs-ts/gamut-routes`) mounts `IamBackendProvider`. Based on `useIam().authType`, it wraps the outlet in either `SecuredSetup` or `PublicSetup`, each composing the relevant backend context providers from `@dxs-ts/gamut-api` (`SiteBackendProvider`, `OfferProvider`, etc.).
 
-3. **Site data fetch**: `SiteBackendProvider` internally calls the `usePopulateContext` hook for `api-site`. That hook issues a TanStack Query request via the `createSiteFetch` factory (targeting `GamutSiteController`'s `/portal/site` endpoint). The raw response is mapped to `SiteApi.Topic[]` / `SiteApi.TopicView[]` and stored in the `SiteBackendContext`.
+3. **Site data fetch**: `SiteBackendProvider` internally calls the `usePopulateContext` hook for `api-site`. The hook issues a TanStack Query request via the `createSiteFetch` factory (targeting `GamutSiteController`'s `/portal/site` endpoint). The raw response is mapped to `SiteApi.Topic[]` / `SiteApi.TopicView[]` and stored in the `SiteBackendContext`.
 
-4. **Locale selection**: The active locale is held in `LocaleContextType` (from `api-locale`). The host app passes the resolved locale code to `react-intl`'s `IntlProvider`, supplying `messages[locale]` from `@dxs-ts/gamut-intl`.
+4. **Locale selection**: `LocaleContextType` (from `api-locale`) holds the active locale. The host app passes the resolved locale code to `react-intl`'s `IntlProvider`, supplying `messages[locale]` from `@dxs-ts/gamut-intl`.
 
 5. **Route render**: A public route (e.g. `public.$locale.index`) renders `GRouterUnsecured`, which composes `GShell` (layout shell), `GAppBar` (navigation bar with `GLocales` locale switcher), and `GArticle`.
 
@@ -71,7 +71,7 @@
 
 1. **Form initiation**: A user selects an offer or product. `GRouterOffer` (in `@dxs-ts/gamut-routes`) activates and calls `useRouteToOffer`. The router renders `GForm` (from `@dxs-ts/gamut-form`) inside the `DialobProvider` context.
 
-2. **Form session hydration**: `DialobProvider` (from `api-dialob` in `@dxs-ts/gamut-api`) fetches the form session via `FetchActionGET`, targeting `GamutUserActionsController`'s `/portal/secured/actions` endpoint. The raw response is parsed by `FormImpl.parsePage` and `FormImpl.parseInputRow` into `DialobApi.FormStore`, which is held in a `@tanstack/react-store` store.
+2. **Form session hydration**: `DialobProvider` (from `api-dialob` in `@dxs-ts/gamut-api`) fetches the form session via `FetchActionGET`, targeting `GamutUserActionsController`'s `/portal/secured/actions` endpoint. The raw response is parsed by `FormImpl.parsePage` and `FormImpl.parseInputRow` into `DialobApi.FormStore`, held in a `@tanstack/react-store` store.
 
 3. **Form rendering**: `GForm` wraps the store in `FormProvider` and renders `GFormTip` and `GFormIterator`. `GFormIterator` maps `tip.items` (the current page's item IDs) to `GFormBase` nodes. Each `GFormBase` reads its `ActionItem` from the store via `useForm`, resolves theme props via `useThemeInfra`, and renders via `GFormBaseElement`.
 
@@ -141,11 +141,11 @@ xui-datetime ──────────────────────�
 - In `api-config/config-types.ts` (`ConfigApi.mergeOptions`) and `api-offer/usePopulateContext.ts`, where `cockpitId` is injected into TanStack Query cache keys so queries re-fetch on cockpit change.
 - In `GThemeProvider` (init), where the cockpit `aliasName` selects the initial entry from the `secondaryThemeOptions` map.
 
-`window.GamutCockpit.enable()` / `.disable()` call `CockpitStore.save()`/`clear()` then `window.location.reload()`, which causes both the theme and all queries to reinitialise from the new store value.
+`window.GamutCockpit.enable()` / `.disable()` call `CockpitStore.save()`/`clear()` then `window.location.reload()`, causing both the theme and all queries to reinitialise from the new store value.
 
 ### gamut-api → feature components (context hooks)
 
-Each domain context provider (`IamBackendProvider`, `SiteBackendProvider`, `DialobProvider`, `OfferProvider`, `ContractProvider`, `CommsProvider`, `BookingProvider`) is mounted by `SecuredSetup` or `PublicSetup` in `__root.tsx` (gamut-routes). Feature components access domain data exclusively through hooks:
+`SecuredSetup` or `PublicSetup` in `__root.tsx` (gamut-routes) mounts each domain context provider (`IamBackendProvider`, `SiteBackendProvider`, `DialobProvider`, `OfferProvider`, `ContractProvider`, `CommsProvider`, `BookingProvider`). Feature components access domain data through hooks:
 
 - `useIam()` — auth state, `authType`, `isFormLinkEnabled()`
 - `useSite()` — `TopicView[]`, `getTopicGroups()`, `getLink()`
@@ -157,7 +157,7 @@ Each domain context provider (`IamBackendProvider`, `SiteBackendProvider`, `Dial
 - `useForm()` / `useFormTip()` — live Dialob `FormStore` and current page tip (gamut-form)
 - `useDialobReview()` — completed session data (gamut-form-review)
 
-None of the feature modules below `gamut-routes` call `window.fetch` directly; all network access flows through the fetch factory functions (`createSiteFetch`, `createDialobFetch`, etc.) assembled by `ConfigApi`.
+No feature module below `gamut-routes` calls `window.fetch` directly; all network access flows through the fetch factory functions (`createSiteFetch`, `createDialobFetch`, etc.) assembled by `ConfigApi`.
 
 ### gamut-form: FormProvider → GFormBase → GFormBaseElement
 
@@ -165,22 +165,22 @@ None of the feature modules below `gamut-routes` call `window.fetch` directly; a
 
 ### gamut-form-review: GFormReview → GFormReviewContextType → leaf components
 
-`GFormReview` calls `useDialobReview(formId)` (from `gamut-api`), receives completed session data, and constructs a `GFormReviewContextType` instance. This context object is the only source of truth for the entire review tree: `getAnswer(id)`, `findValueSet(id)`, `getTranslated(item, lang)`, `substituteVariables(text, session)`, and `createItem(id, ...)` (which resolves the item's component from `ItemconfigType`). Components do not receive data as props; they call `React.useContext(GFormReviewContext)`.
+`GFormReview` calls `useDialobReview(formId)` (from `gamut-api`), receives completed session data, and constructs a `GFormReviewContextType` instance. This context object is the only source of truth for the entire review tree: `getAnswer(id)`, `findValueSet(id)`, `getTranslated(item, lang)`, `substituteVariables(text, session)`, and `createItem(id, ...)` (which resolves the item's component from `ItemconfigType`). Components call `React.useContext(GFormReviewContext)` rather than receiving data as props.
 
 ### gamut-shell → gamut-primitives and gamut-routes (layout anchoring)
 
-`GShellClassName` (a string constant exported by `gamut-shell`) is used in two places:
+`GShellClassName` (a string constant exported by `gamut-shell`) appears in two places:
 - `GAppBar` (gamut-primitives) applies it to the `Toolbar` so that `GShellRoot`'s scoped CSS selectors can apply toolbar-height layout calculations.
 - `router.ts` (gamut-routes) passes it to `scrollToTopSelectors` in `createRouter`, making scroll restoration target the shell container on route navigation.
 
 ### gamut-theme: GThemeProvider and component default props
 
-`GThemeProvider` wraps MUI's `ThemeProvider`. The bundled `ThemeOptions` in `g-theme-options` and `g-theme-options-alt-1` include a `components` map that supplies `defaultProps` for Gamut components (`GShell`, `GMarkdown`, `GUserOverview`, `GUserOverviewMenu`, `GArticleFeedback`) via module-local `INTERNAL_TYPE_PropsList` interfaces. Each component calls `useThemeProps({ props, name: MUI_NAME })` to merge these defaults at render time. `GComponentsPropsList` and `GComponentNameToClassKey` (gamut-routes `g-props`) extend MUI's `Components` interface so that all Gamut components can be configured in a single MUI `ThemeOptions` object by consuming applications.
+`GThemeProvider` wraps MUI's `ThemeProvider`. The bundled `ThemeOptions` in `g-theme-options` and `g-theme-options-alt-1` include a `components` map that supplies `defaultProps` for Gamut components (`GShell`, `GMarkdown`, `GUserOverview`, `GUserOverviewMenu`, `GArticleFeedback`) via module-local `INTERNAL_TYPE_PropsList` interfaces. Each component calls `useThemeProps({ props, name: MUI_NAME })` to merge these defaults at render time. `GComponentsPropsList` and `GComponentNameToClassKey` (gamut-routes `g-props`) extend MUI's `Components` interface so that consuming applications can configure all Gamut components in a single MUI `ThemeOptions` object.
 
 ### gamut-primitives: GInboxFormReview as the cross-layer bridge
 
-`GInboxFormReview` (gamut-primitives) embeds `GFormReview` (gamut-form-review), linking the inbox feature (data from `useOffers`, `useContracts`, `CommsApi`) with the form review rendering layer. This is the only point where the primitives layer directly mounts a gamut-form-review component. The `formId` is sourced from the `OfferApi.Offer` associated with the selected inbox item.
+`GInboxFormReview` (gamut-primitives) embeds `GFormReview` (gamut-form-review), linking the inbox feature (data from `useOffers`, `useContracts`, `CommsApi`) with the form review rendering layer. This is the only point where the primitives layer directly mounts a gamut-form-review component. The `formId` comes from the `OfferApi.Offer` associated with the selected inbox item.
 
 ### GRouterCockpits: runtime multi-tenant switching
 
-`GRouterCockpits` (gamut-routes) listens for `Ctrl+Shift+D` and renders a `Dialog` containing `GCockpitDropdown`. Selecting a cockpit calls `CockpitStore.save()` and reloads the page, which causes `GThemeProvider` to re-read the store and activate the matching secondary theme, and all TanStack Query keys scoped to `cockpitId` to invalidate and refetch.
+`GRouterCockpits` (gamut-routes) listens for `Ctrl+Shift+D` and renders a `Dialog` containing `GCockpitDropdown`. Selecting a cockpit calls `CockpitStore.save()` and reloads the page, causing `GThemeProvider` to re-read the store and activate the matching secondary theme, and all TanStack Query keys scoped to `cockpitId` to invalidate and refetch.

@@ -28,7 +28,7 @@ Create a new directory under `gamut-form/` named after the component (e.g., `g-i
 | File | Purpose |
 |---|---|
 | `g-input-abc-types.ts` | Props interface, classes interface, class key type. Create this file when the types are referenced from `g-props.ts`; for simpler components you may co-locate the interface in `GInputABC.tsx`. |
-| `useUtilityClasses.tsx` | `MUI_NAME` constant, `OwnerState` interface, `GInputABCRoot` styled component, `useUtilityClasses` function. |
+| `useUtilityClasses.tsx` | `MUI_NAME` constant, `OwnerState` interface, `GInputAbcRoot` styled component, `useUtilityClasses` function. |
 | `GInputABC.tsx` | Presentational component. Imports from `useUtilityClasses`, `g-input-base`, `g-input-error`, `g-input-label`, `g-input-adornment`. |
 | `GInputABCDialob.tsx` | Dialob bridge. Props: `GFormBaseElementProps`. Reads from `formStore`, renders `<GInputABC>`. |
 | `index.ts` | Re-exports everything from the above files. |
@@ -39,7 +39,7 @@ Create a new directory under `gamut-form/` named after the component (e.g., `g-i
 
 **File:** `g-input-abc/g-input-abc-types.ts` (or inline in `GInputABC.tsx` for simple cases)
 
-Required fields that every `g-input-*` component must declare:
+Required fields every `g-input-*` component must declare:
 
 ```ts
 import { OverridableStringUnion } from '@mui/types';
@@ -155,10 +155,10 @@ export const useUtilityClasses = (itemId: string, variant: string | undefined) =
 ```
 
 Key points:
-- `MUI_NAME` is the MUI component name string. It must be `'GInput<Abc>'` (exact PascalCase). This string is used by `useThemeProps` to look up `theme.components.GInputAbc.defaultProps` and by `styled` to generate BEM-style class names (`GInputAbc-root`, `GInputAbc-input`, etc.).
+- `MUI_NAME` must be `'GInput<Abc>'` (exact PascalCase). `useThemeProps` uses it to look up `theme.components.GInputAbc.defaultProps`; `styled` uses it to generate BEM-style class names (`GInputAbc-root`, `GInputAbc-input`, etc.).
 - `useVariantOverride` (from `@dxs-ts/gamut-api`) applies `theme.components.GInputAbc.styleOverrides` keyed by variant.
-- `ownerState` in the styled component is the spread of the component props plus the resolved variant. Only include fields that affect styles.
-- `useUtilityClasses` always includes `itemId` and `variant` in the root slot array so per-item and per-variant CSS selectors work.
+- `ownerState` spreads the component props plus the resolved variant. Include only fields that affect styles.
+- `useUtilityClasses` includes `itemId` and `variant` in the root slot array so per-item and per-variant CSS selectors work.
 
 ---
 
@@ -224,10 +224,10 @@ const ReadOnlyAbcInput: React.FC<GInputBaseAnyProps & GInputAbcProps> = (props) 
 
 Key points:
 - `useThemeProps({ props: initProps, name: MUI_NAME })` is always the first call. It merges `theme.components.GInputAbc.defaultProps` over `initProps`.
-- `ownerState` is always `{ ...props, variant }` with the resolved default. This object is passed to `GInputAbcRoot` and determines which style branch is active.
-- `GInputBase` handles the label / error / adornment layout. The component only needs to provide the four slot types and their props.
-- Input sub-components (`AbcInput`, `ReadOnlyAbcInput`) are declared in the same file and are not exported.
-- `as={props.component}` makes the root element replaceable via the `component` prop, following MUI's overridable component convention. There is no `GOverridableComponent` wrapper in this codebase — the `as` prop on the styled root is the mechanism used.
+- `ownerState` is always `{ ...props, variant }` with the resolved default. Pass it to `GInputAbcRoot` to determine which style branch is active.
+- `GInputBase` handles label / error / adornment layout. The component only provides the four slot types and their props.
+- Input sub-components (`AbcInput`, `ReadOnlyAbcInput`) are declared in the same file and not exported.
+- `as={props.component}` makes the root element replaceable via the `component` prop, following MUI's overridable component convention. There is no `GOverridableComponent` wrapper in this codebase — the `as` prop on the styled root is the mechanism.
 
 ---
 
@@ -278,9 +278,9 @@ export const GInputAbcDialob: React.FC<GFormBaseElementProps> = ({
 
 What to read from `GFormBaseElementProps`:
 - `actionItem` (`DialobApi.ActionItem`) — `id`, `value`, `required`, `readOnly`, `type`, `view`, `props` (component-specific metadata like `currency`, `variant`, `border`).
-- `formStore` (`DialobApi.FormStore`) — provides `store.form.toLabel`, `toErrors`, `toDescription`, `toLabelPosition`, `toValueSet` (for list-type components). Write back via `store.setAnswer(element.id, newValue)`.
-- `disabled` — passed in from the parent, reflects overall form disabled state.
-- `navRef` / `navRefId` — passed through unchanged. Always render `<div ref={navRef} id={navRefId} />` as the first child for form navigation.
+- `formStore` (`DialobApi.FormStore`) — `store.form.toLabel`, `toErrors`, `toDescription`, `toLabelPosition`, `toValueSet` (for list-type components). Write back via `store.setAnswer(element.id, newValue)`.
+- `disabled` — reflects overall form disabled state, passed in from the parent.
+- `navRef` / `navRefId` — always render `<div ref={navRef} id={navRefId} />` as the first child for form navigation.
 
 `element.props` carries arbitrary string metadata set in the Dialob form definition. Access it as `element.props?.someKey`. Convert booleans using `DialobApi.isTrue(element.props?.someFlag)`.
 
@@ -358,7 +358,7 @@ Add an export line only if the presentational component or its types need to be 
 export * from './g-input-abc';
 ```
 
-Components that are purely internal to the Dialob rendering pipeline (their Dialob bridge is the only consumer) do not need to be exported from the top-level `index.ts`. Check the existing entries: `g-input-text`, `g-input-boolean`, `g-input-date`, etc., are internal-only and are not in the top-level export list. Only `g-form`, `g-form-base`, `g-form-group`, `g-input-multilist`, `g-input-currency`, `g-input-label`, and `g-input-address` are exported.
+Components used only internally (their Dialob bridge is the only consumer) do not need a top-level export. `g-input-text`, `g-input-boolean`, `g-input-date`, etc. are internal-only and absent from the top-level export list. Only `g-form`, `g-form-base`, `g-form-group`, `g-input-multilist`, `g-input-currency`, `g-input-label`, and `g-input-address` are exported.
 
 ---
 
@@ -394,13 +394,13 @@ export interface GComponentNameToClassKey {
 }
 ```
 
-The `GComponents` interface further down the file synthesizes `defaultProps`, `styleOverrides`, and `variants` entries automatically from these two interfaces via mapped types (`GComponentsProps`, `GComponentsOverrides`, `GComponentsVariants`), so no manual addition is needed there.
+The `GComponents` interface synthesizes `defaultProps`, `styleOverrides`, and `variants` entries automatically from these two interfaces via mapped types (`GComponentsProps`, `GComponentsOverrides`, `GComponentsVariants`), so no manual addition is needed there.
 
 ---
 
 ## Step 8: Configure the Dialob form definition
 
-The frontend dispatches to your component based on `ActionItem.type` and `ActionItem.view`, which come directly from the Dialob form definition JSON. No backend Dialob changes are needed — you only configure the form definition.
+The frontend dispatches to your component based on `ActionItem.type` and `ActionItem.view`, which come from the Dialob form definition JSON. No backend Dialob changes are needed — you only configure the form definition.
 
 A Dialob form item looks like this:
 
@@ -417,7 +417,7 @@ A Dialob form item looks like this:
 
 **`type`** maps to `ActionItem.type`. Use an existing Dialob base type (`text`, `group`, `boolean`, `list`, `multichoice`, `note`, `date`, `time`, `decimal`, `integer`, `rowgroup`). You cannot invent new types — only `view` and `props` are custom.
 
-**`view`** maps to `ActionItem.view`. This is your extension point. Set it to whatever string you added in `useSlotVariant` (e.g. `'abc'`). If you are not using `view`, leave it absent and rely on `props` keys for dispatch (as `currency` and `controlType` do for `GInputText`).
+**`view`** maps to `ActionItem.view`. Set it to the string you added in `useSlotVariant` (e.g. `'abc'`). If you are not using `view`, omit it and rely on `props` keys for dispatch (as `currency` and `controlType` do for `GInputText`).
 
 **`props`** maps to `ActionItem.props`. Set any key/value metadata your component reads via `element.props?.someKey`. Boolean props must be the string `'true'`, not a native boolean.
 

@@ -10,11 +10,11 @@ Provides static translation message maps for the Gamut customer portal. Exports 
 
 **peerDependencies:** none
 
-The module declares no runtime or peer dependencies. It is `"private": true` and consumed only within the monorepo.
+`"private": true` — consumed only within the monorepo.
 
 ## Module Relationships
 
-`gamut-intl` sits at the foundation layer — it has no `@dxs-ts/*` dependencies and is consumed by modules above it.
+`gamut-intl` sits at the foundation layer with no `@dxs-ts/*` dependencies.
 
 **Direct consumer: `@dxs-ts/gamut-api`**
 
@@ -42,8 +42,6 @@ gamut-intl (leaf)
                                       (all consume translations via useIntl())
 ```
 
-`gamut-intl` is a pure data leaf. No module in the graph below `gamut-api` imports it directly.
-
 ## Frontend Architecture
 
 **Stack:** TypeScript (ESM, no framework dependency)
@@ -59,32 +57,39 @@ gamut-intl (leaf)
 
 **Patterns:**
 
-- Each locale file exports a single named `const` typed as a plain object literal with string keys and string values. No type alias or interface is declared; the shape is inferred structurally.
+- Each locale file exports a single named `const` as a plain object literal with string keys and string values.
 - Keys follow a dot-separated namespace convention: `gamut.<section>.<element>` (e.g. `gamut.forms.status.OPEN`, `gamut.inbox.title`, `gamut.rps.rating.excellent`). Keys outside the `gamut.*` namespace include `booleanValue.*`, `cust.*`, `header.*`, `footer.*`, and `dialob.*`.
 - Some values use ICU-style positional placeholders: `{userName}`, `{subject}`, `{nextPageTitle}`, `{start}`, `{end}`, `{stepNumber}`, `{totalSteps}`.
 - The `messages` export in `index.ts` uses the locale code as the key (`messages.en`, `messages.fi`, etc.), matching the locale identifier passed to an `IntlProvider`.
-- All five locale records cover the same key set. No fallback or merge logic exists in this module; that responsibility is left to the consumer.
+- All five locale records cover the same key set. No fallback or merge logic exists in this module; that responsibility belongs to the consumer.
 
 ## Error Handling
 
-None identified. `gamut-intl` is a pure data module — it exports static object literals and performs no I/O, validation, or async operations. No error types, error boundaries, loading states, or failure hooks exist in the module source.
+None. `gamut-intl` exports static object literals and performs no I/O, validation, or async operations. No error types, error boundaries, loading states, or failure hooks exist in the module.
 
 ## Bootstrapping
 
-None — leaf node. `gamut-intl` exports a single `messages` constant. The consuming app (via `gamut-api`) is responsible for selecting the active locale from `LocaleContextType` and passing `messages[locale]` to `react-intl`'s `IntlProvider`. No provider, context, or initialization call exists inside this module.
+None. `gamut-intl` exports a single `messages` constant. The consuming app (via `gamut-api`) selects the active locale from `LocaleContextType` and passes `messages[locale]` to `react-intl`'s `IntlProvider`. No provider, context, or initialization call exists inside this module.
 
 ## TypeScript Extension Points
 
-None identified. The module contains no `declare module` augmentations, no interface merging, and no extension records. Each locale file (`en.ts`, `fi.ts`, `sv.ts`, `bs.ts`, `my.ts`) exports a plain inferred object literal; no named type alias or interface is declared for the message shape.
+None. The module contains no `declare module` augmentations, no interface merging, and no extension records. No named type alias or interface is declared for the message shape; each locale file exports a plain inferred object literal.
 
 ## Known Limitations and Gotchas
 
-- **No type contract on the message shape.** The locale exports (`en`, `fi`, `sv`, `bs`, `my`) are untyped plain object literals. TypeScript infers the shape structurally per file. There is no shared interface or `Record<string, string>` alias enforcing that all locales carry identical keys, so a missing key in one locale file will not produce a compile error.
-- **No fallback logic.** If a key is missing from the selected locale record, `react-intl` will fall back to its own default behavior (typically rendering the key string). This module does not merge locale records or provide a fallback chain.
+- **No type contract on the message shape.** The locale exports (`en`, `fi`, `sv`, `bs`, `my`) are untyped plain object literals. TypeScript infers the shape structurally per file. No shared interface or `Record<string, string>` alias enforces that all locales carry identical keys, so a missing key in one locale file will not produce a compile error.
+- **No fallback logic.** If a key is missing from the selected locale record, `react-intl` falls back to its own default behavior (typically rendering the key string). This module does not merge locale records or provide a fallback chain.
 - **Placeholder values in `cust.*` and `footer.*` keys.** Several keys in `en.ts` contain placeholder contact data (e.g. `cust.phone: 'Phone: 123 456 7890'`, `cust.email: 'info@lifeDigital.com'`, `footer.column4.email: 'Email: info@digiExpress.io'`). These are not production values and must be overridden at the `IntlProvider` level by the deploying application.
-- **`"version": "${project.version}"`** in `package.json` is a Maven property placeholder, not a resolved semver string. The field is unresolved in source and is expected to be substituted during the build pipeline.
+- **`"version": "${project.version}"`** in `package.json` is a Maven property placeholder, not a resolved semver string. The build pipeline is expected to substitute it.
 - No inline `NOTE`, `TODO`, `FIXME`, or `HACK` comments were found in any source file.
 
 ## Scope Boundaries
 
-`gamut-intl` provides only the static translation string maps for the five supported locales (`en`, `fi`, `sv`, `bs`, `my`). It does not perform locale detection, locale switching, ICU message formatting, pluralization, date/number formatting, or any runtime logic. It does not wrap or configure `react-intl` or any other i18n library. It does not define translation key types or enforce key parity between locales. All of those responsibilities belong to consumers, primarily `@dxs-ts/gamut-api`.
+`gamut-intl` provides only the static translation string maps for the five supported locales (`en`, `fi`, `sv`, `bs`, `my`). It does not:
+
+- perform locale detection, locale switching, or fallback chaining
+- handle ICU message formatting, pluralization, date/number formatting, or any runtime logic
+- wrap or configure `react-intl` or any other i18n library
+- define translation key types or enforce key parity between locales
+
+All of those responsibilities belong to consumers, primarily `@dxs-ts/gamut-api`.

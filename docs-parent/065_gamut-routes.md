@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Defines the TanStack Router route tree for the Gamut portal. Provides the `router` instance, generated `routeTree`, page-level route components for both `public` and `secured` route hierarchies, and per-view layout components that compose primitives, API hooks, and form modules into full-page layouts. Also exports `GComponentsPropsList`, `GComponentNameToClassKey`, `GComponents`, `GComponentsProps`, `GComponentsVariants`, and `GComponentsOverrides` — the MUI theme-integration interfaces that enumerate prop and class-key types for every Gamut component across all sub-modules.
+Defines the TanStack Router route tree for the Gamut portal. Exports the `router` instance, generated `routeTree`, page-level route components for both `public` and `secured` route hierarchies, and per-view layout components that compose primitives, API hooks, and form modules into full-page layouts. Also exports `GComponentsPropsList`, `GComponentNameToClassKey`, `GComponents`, `GComponentsProps`, `GComponentsVariants`, and `GComponentsOverrides` — the MUI theme-integration interfaces that enumerate prop and class-key types for every Gamut component across all sub-modules.
 
 ## Dependencies
 
@@ -34,7 +34,7 @@ Defines the TanStack Router route tree for the Gamut portal. Provides the `route
 
 - `@dxs-ts/gamut-cockpit-store` — `CockpitStore` (called via `CockpitStore.save()` in `GRouterCockpits` on cockpit selection); `GCockpitDropdown` rendered inside the cockpit-switcher `Dialog`
 - `@dxs-ts/gamut-api` — `useConfig`, `useLocale`, `useIam`, `useSite`, `usePopulateContext`; provider components `IamBackendProvider`, `SiteBackendProvider`, `DialobProvider`, `OfferProvider`, `ContractProvider`, `CommsProvider`, `BookingProvider`; namespace `SearchApi.SearchProvider`; types `SiteApi.TopicView`, `SearchApi.LinkToForm`
-- `@dxs-ts/gamut-shell` — `GShell`, `GShellClassName` (used as the scroll restoration selector in `router.ts` and as the drawer anchor in layout components)
+- `@dxs-ts/gamut-shell` — `GShell`, `GShellClassName` (scroll restoration selector in `router.ts` and drawer anchor in layout components)
 - `@dxs-ts/gamut-theme` — `GComponentsPropsList` and `GComponentNameToClassKey` exported from `g-props/g-props.ts` extend MUI's `Components` interface, enabling consuming applications to configure all Gamut component default props inside a single `ThemeOptions` object alongside `GThemeProvider`
 - `@dxs-ts/gamut-primitives` — layout and navigation components (`GAppBar`, `GLayout`, `GFooter`, `GLogo`), display components (`GArticle`, `GArticleFeedback`, `GInbox`, `GContracts`, `GBookings`, `GOffers`), auth components (`GAuth`, `GAuthUn`, `GLogin`, `GLogout`), link variants (`GLinkFormLocked`, `GLinkFormUnlocked`, `GLinkHyper`, `GLinkPhone`), utility components (`GConfirm`, `GLoader`, `GLocales`), error components (`GErrorNotFound`, `GError`), type `GUserOverviewMenuView`
 - `@dxs-ts/gamut-form` — `GForm`, `GFormBase`, `GFormGroup`, `GInputMultilist`, `GInputAddress`, `GInputLabel`; class keys and props types for MUI theme registration
@@ -94,9 +94,9 @@ Additional error rendering occurs inline within route components:
 
 Authorization failures are handled in `RouteComponent` (`routes/__root.tsx`) via `IamBackendProvider`'s `onAuthorizationFail` callback, which navigates to `/public/$locale/login`.
 
-Loading states: `SearchResults.tsx` in `g-router-secured-services/` reads `backend.loading` from `SearchApi.useBackendSearch` and conditionally renders a `CircularProgress` (MUI) with `aria-busy`. No global loading primitive is mounted at the route level; individual router components delegate loading state to their backing primitives and API hooks.
+`SearchResults.tsx` in `g-router-secured-services/` reads `backend.loading` from `SearchApi.useBackendSearch` and conditionally renders a `CircularProgress` (MUI) with `aria-busy`. No global loading primitive is mounted at the route level; individual router components delegate loading state to their backing primitives and API hooks.
 
-No validation error types are defined within this module; form validation is delegated to `@dxs-ts/gamut-form` and `@dxs-ts/gamut-api`.
+Form validation is delegated to `@dxs-ts/gamut-form` and `@dxs-ts/gamut-api`. No validation error types are defined in this module.
 
 ## Bootstrapping
 
@@ -107,7 +107,7 @@ A consuming application must wrap the TanStack `RouterProvider` with the followi
 3. MUI theme provider (e.g. `ThemeProvider`) — required for `useThemeProps` calls in each router component
 4. `ConfigProvider` (from `@dxs-ts/gamut`) — provides the configuration object consumed by `useConfig`; must receive `handleExpire`, `iamLiveness`, and `staleTime` options
 
-The `router` instance exported from this module is registered for type safety via `declare module '@tanstack/react-router' { interface Register { router: typeof router } }` in `router.ts`. The consuming application must extend the MUI `Components` interface with `GComponents<Theme>` to enable theme `components` configuration for all Gamut components:
+The `router` instance is registered for type safety via `declare module '@tanstack/react-router' { interface Register { router: typeof router } }` in `router.ts`. The consuming application must extend the MUI `Components` interface with `GComponents<Theme>` to enable theme `components` configuration for all Gamut components:
 
 ```ts
 declare module "@mui/material" {
@@ -122,7 +122,7 @@ All backend-specific providers (`IamBackendProvider`, `SiteBackendProvider`, `Di
 - `declare module '@tanstack/react-router' { interface Register { router: typeof router } }` in `router.ts` — registers the `router` instance for full type inference across TanStack Router hooks and link components
 - `declare module '@tanstack/react-router' { interface FileRoutesByPath { ... } }` in `routeTree.gen.ts` — auto-generated; maps every route path string to its ID, preloader, and parent route types; not manually edited
 - `GComponentsPropsList` in `g-props/g-props.ts` — interface that consuming apps extend via `declare module "@mui/material" { interface Components<Theme> extends GComponents<Theme> {} }` to register all Gamut component prop types in the MUI theme `components` object
-- `GComponentNameToClassKey` in `g-props/g-props.ts` — interface mapping each Gamut component name to its class-key union type, enabling typed `styleOverrides` in MUI theme configuration
+- `GComponentNameToClassKey` in `g-props/g-props.ts` — maps each Gamut component name to its class-key union type, enabling typed `styleOverrides` in MUI theme configuration
 - `GComponents<Theme>` in `g-props/g-props.ts` — the concrete interface passed to the MUI module augmentation; aggregates `defaultProps`, `styleOverrides`, and `variants` entries for every registered component
 
 No interface merging for custom route context or search params is performed within this module.
@@ -139,13 +139,13 @@ No interface merging for custom route context or search params is performed with
 
 ## Scope Boundaries
 
-This module is responsible only for defining the TanStack Router route tree, the `router` instance, the route-level layout components that compose primitives and API hooks into full-page views, and the MUI theme-integration interfaces (`GComponentsPropsList`, `GComponentNameToClassKey`, `GComponents`, `GComponentsProps`, `GComponentsVariants`, `GComponentsOverrides`). It does not own authentication logic, API fetch implementations, form rendering engines, theming tokens, markdown rendering, or i18n message catalogs — those responsibilities belong to `@dxs-ts/gamut-api`, `@dxs-ts/gamut-form`, `@dxs-ts/gamut-theme`, `@dxs-ts/gamut-md`, and `@dxs-ts/gamut-intl` respectively. It does not expose a standalone application entry point; the consuming application is responsible for mounting `RouterProvider` and the outer provider stack.
+Owns: the TanStack Router route tree, the `router` instance, route-level layout components that compose primitives and API hooks into full-page views, and the MUI theme-integration interfaces (`GComponentsPropsList`, `GComponentNameToClassKey`, `GComponents`, `GComponentsProps`, `GComponentsVariants`, `GComponentsOverrides`).
+
+Does not own: authentication logic, API fetch implementations, form rendering engines, theming tokens, markdown rendering, or i18n message catalogs — those belong to `@dxs-ts/gamut-api`, `@dxs-ts/gamut-form`, `@dxs-ts/gamut-theme`, `@dxs-ts/gamut-md`, and `@dxs-ts/gamut-intl` respectively. Does not expose a standalone application entry point; the consuming application mounts `RouterProvider` and the outer provider stack.
 
 ## TanStack Integration
 
 ### Packages Used
-
-This module uses one TanStack package directly:
 
 | Package | Role |
 |---|---|
@@ -173,7 +173,7 @@ declare module '@tanstack/react-router' {
 }
 ```
 
-This wires up the `router` instance exported from this module so that TanStack Router hooks (`useNavigate`, `useSearch`, `Link`, etc.) infer types from the full route tree without requiring explicit generic parameters. `routeTree.gen.ts` separately augments `FileRoutesByPath` inside the same module declaration — that augmentation is auto-generated and maps every route path string to its ID, preloader, and parent route types.
+This wires up the `router` instance so that TanStack Router hooks (`useNavigate`, `useSearch`, `Link`, etc.) infer types from the full route tree without requiring explicit generic parameters. `routeTree.gen.ts` separately augments `FileRoutesByPath` inside the same module declaration — that augmentation is auto-generated and maps every route path string to its ID, preloader, and parent route types.
 
 ### Search Param Typing
 

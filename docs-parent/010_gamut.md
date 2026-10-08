@@ -6,7 +6,7 @@ Gamut is the customer-facing portal. It displays localised content to users via 
 
 ## Dependencies
 
-**dependencies:**
+**Direct:**
 - `@dxs-ts/envir-util`
 - `@dxs-ts/gamut`
 - `@dxs-ts/gamut-cockpit-store`
@@ -21,7 +21,7 @@ Gamut is the customer-facing portal. It displays localised content to users via 
 - `@dxs-ts/gamut-theme`
 - `@dxs-ts/xui-datetime`
 
-**peerDependencies:**
+**Peer:**
 - `react`
 - `react-dom`
 - `react-intl`

@@ -16,11 +16,11 @@ No dependencies or peerDependencies.
 
 | Module | What it uses |
 |---|---|
-| `@dxs-ts/gamut` (umbrella) | `VersionInfoApi`, `VersionInfoBuilder` — called once at application startup to render build metadata to the browser console |
+| `@dxs-ts/gamut` (umbrella) | `VersionInfoApi`, `VersionInfoBuilder` — renders build metadata to the browser console once at application startup |
 
 **Position in the dependency graph**
 
-`envir-util` sits in the foundation layer alongside `@dxs-ts/gamut-cockpit-store` and `@dxs-ts/gamut-intl`. None of the intermediate modules (`gamut-api`, `gamut-theme`, `gamut-shell`, `gamut-md`, `gamut-form`, `gamut-form-review`, `gamut-primitives`, `gamut-routes`) import from it. Only the top-level umbrella package `@dxs-ts/gamut` depends on it, which is consistent with its role: diagnostic console output, not runtime data flow.
+`envir-util` sits in the foundation layer alongside `@dxs-ts/gamut-cockpit-store` and `@dxs-ts/gamut-intl`. None of the intermediate modules (`gamut-api`, `gamut-theme`, `gamut-shell`, `gamut-md`, `gamut-form`, `gamut-form-review`, `gamut-primitives`, `gamut-routes`) import from it. Only the top-level umbrella package `@dxs-ts/gamut` depends on it.
 
 ## Key Exports
 
@@ -39,7 +39,7 @@ No dependencies or peerDependencies.
 
 ## Error Handling
 
-Errors surface through two mechanisms:
+Errors surface through three mechanisms:
 
 1. **Validation errors thrown at `render()` time** — `VersionInfoBuilder.render()` throws `Error('Missing required fields: logo, projectName, version, and releaseDate must be set')` if any of those four fields are unset. This throw is not caught internally; the caller is responsible for wrapping `render()` in a try/catch if silent failure is required at startup.
 
@@ -47,7 +47,7 @@ Errors surface through two mechanisms:
 
 3. **Invalid logo key** — `setLogo(logoKey)` throws `Error("Logo '<key>' not found")` immediately if the key is absent from the `LOGOS` record.
 
-There are no loading states, async operations, React error boundaries, or validation error types — all error paths are synchronous.
+All error paths are synchronous. There are no loading states, async operations, React error boundaries, or validation error types.
 
 ## Bootstrapping
 
@@ -55,7 +55,7 @@ None — leaf node. `VersionInfoApi.builder()` is a plain factory function. No R
 
 ## TypeScript Extension Points
 
-None identified. The module uses no `declare module` augmentation, no interface merging, and no extension records. `VersionInfoApi.ThemeColors` and `VersionInfoApi.ProjectInfo` are declared inside a namespace and are not designed for external augmentation. The `LOGOS` and `THEMES` records are module-local exports typed as `Record<string, string>` and `Record<'purple' | 'red', VersionInfoApi.ThemeColors>` respectively — new entries cannot be added without modifying the source files.
+None. The module uses no `declare module` augmentation, no interface merging, and no extension records. `VersionInfoApi.ThemeColors` and `VersionInfoApi.ProjectInfo` are declared inside a namespace and are not designed for external augmentation. The `LOGOS` and `THEMES` records are module-local exports typed as `Record<string, string>` and `Record<'purple' | 'red', VersionInfoApi.ThemeColors>` respectively — new entries cannot be added without modifying the source files.
 
 ## Known Limitations and Gotchas
 
@@ -71,4 +71,12 @@ None identified. The module uses no `declare module` augmentation, no interface 
 
 ## Scope Boundaries
 
-`envir-util` handles only one-time diagnostic output to the browser console at application startup. It does not manage application state, expose React components or hooks, participate in any data flow, handle routing, perform HTTP requests, manage internationalization, or provide any runtime utility functions beyond the ASCII art rendering pipeline. It has no opinion on when `render()` is called — that is the consuming application's responsibility.
+`envir-util` handles only one-time diagnostic output to the browser console at application startup. It does not:
+
+- manage application state
+- expose React components or hooks
+- participate in any data flow
+- handle routing
+- perform HTTP requests
+- manage internationalization
+- provide runtime utility functions beyond the ASCII art rendering pipeline

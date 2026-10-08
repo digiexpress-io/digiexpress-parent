@@ -42,7 +42,7 @@ Provides the concrete React component implementations for the Gamut customer por
 ### Consumers (what depends on `@dxs-ts/gamut-primitives`)
 
 - `@dxs-ts/gamut-routes` — the sole direct consumer. Route components in `gamut-routes` compose primitives components to build every page: `GAppBar` and `GLayout` / `GFooter` / `GFlex` for shell structure; `GArticle` in public routes; `GInbox`, `GOffers`, `GContracts`, `GBookings` in secured routes; `GAuth*` family for authentication flows; `GLocales`, `GLogin`, `GLogout`, `GLogo` in navigation; `GError*` variants for error states; `GUserOverview` and `GUserOverviewMenu` for identity display.
-- `@dxs-ts/gamut` (umbrella package) — re-exports all modules including `gamut-primitives`; not a runtime consumer beyond aggregating exports.
+- `@dxs-ts/gamut` (umbrella package) — re-exports all modules including `gamut-primitives`. Not a runtime consumer beyond aggregating exports.
 
 ## Frontend Architecture
 
@@ -105,7 +105,7 @@ Provides the concrete React component implementations for the Gamut customer por
 
 ## Error Handling
 
-There are no validation error types or API failure types defined inside `gamut-primitives` itself. Error states are surfaced through dedicated display components rather than thrown exceptions or error boundaries:
+`gamut-primitives` defines no validation error types, API failure types, error-boundary components, error context, or typed error classes. Error states are surfaced through dedicated display components. All error data originates from `@dxs-ts/gamut-api` context hooks (`useIam`, `useComms`, `useContracts`, `useOffers`, `useSite`); this module handles only how those states are displayed.
 
 - `GError` — generic error page; reads `useIam` to route the "back to home" button to either the public or secured route depending on `authType`.
 - `GErrorLogin` — authentication failure page; renders `GAuthFormStart` so the user can retry login directly from the error screen.
@@ -115,19 +115,18 @@ There are no validation error types or API failure types defined inside `gamut-p
 - `GInboxMessages` — if `subject`, `site`, or `contract` resolves to `undefined`, the component logs `console.error("no site / contract", ...)` and renders a plain text fallback (`...no site / contract`) instead of crashing.
 - `GInboxMessageNotAllowed` — rendered in place of `GInboxNewMessage` when the contract status is `COMPLETED` or `REJECTED`, or when the exchange list is empty, preventing message submission in terminal states.
 
-No dedicated error-boundary components, error context, or typed error classes are defined in this module. All error data originates from `@dxs-ts/gamut-api` context hooks (`useIam`, `useComms`, `useContracts`, `useOffers`, `useSite`); this module only handles how those states are displayed.
-
 ## Bootstrapping
 
-None — leaf node.
+None — leaf node. `gamut-primitives` exports only presentational components: no React context providers, no global state initialization, no setup call. Consuming applications must provide:
 
-`gamut-primitives` exports only presentational components. It does not register any React context providers, initialize any global state, or require a setup call. All required context (`useIam`, `useSite`, `useOffers`, `useContracts`, `useComms`, `useBookings`, `useLocale`, `useSearchApi`) must be provided by the consuming application through `@dxs-ts/gamut-api` providers, mounted above the component tree that uses these primitives. MUI theme configuration (including `components[MUI_NAME].defaultProps` overrides) must be applied via a standard MUI `ThemeProvider`. TanStack Router context must be present for components that call `useNavigate` or `useRouter` (`GError`, `GErrorLogin`, `GErrorNotFound`, `GErrorNotTranslated`). `react-intl`'s `IntlProvider` must be present for all components that call `useIntl`.
+- `@dxs-ts/gamut-api` context providers, mounted above the component tree, supplying `useIam`, `useSite`, `useOffers`, `useContracts`, `useComms`, `useBookings`, `useLocale`, and `useSearchApi`.
+- A standard MUI `ThemeProvider` with `components[MUI_NAME].defaultProps` overrides as needed.
+- TanStack Router context for `GError`, `GErrorLogin`, `GErrorNotFound`, and `GErrorNotTranslated`, which call `useNavigate` or `useRouter`.
+- `react-intl`'s `IntlProvider` for all components that call `useIntl`.
 
 ## TypeScript Extension Points
 
-None identified.
-
-No `declare module` augmentations, interface merging, or extension records are present anywhere in the module source. MUI theme overrides for these components follow the standard MUI pattern — adding entries to the `components` key of the theme object under the component's `MUI_NAME` string constant — but this is a runtime convention, not a TypeScript extension point declared in this module.
+None. No `declare module` augmentations, interface merging, or extension records are present anywhere in the module source. MUI theme overrides follow the standard MUI runtime convention — adding entries to the `components` key of the theme object under the component's `MUI_NAME` string constant — but this is not a TypeScript extension point declared in this module.
 
 ## Known Limitations and Gotchas
 
@@ -141,7 +140,13 @@ No `declare module` augmentations, interface merging, or extension records are p
 
 ## Scope Boundaries
 
-`gamut-primitives` does not own any data-fetching, state management, routing configuration, authentication logic, or form-engine integration. It does not define API types, context providers, or global stores. It does not contain the Dialob form rendering engine — that responsibility belongs to `@dxs-ts/gamut-form-review`, which this module consumes as a dependency. It does not assemble pages or define URL routes — that is the responsibility of `@dxs-ts/gamut-routes`. It does not provide a theme or design tokens — consumers must supply a MUI theme. Its scope is limited to implementing the visual layer: taking typed props and context-hook return values from `@dxs-ts/gamut-api` and rendering them as MUI-styled components.
+`gamut-primitives` implements the visual layer: it takes typed props and context-hook return values from `@dxs-ts/gamut-api` and renders them as MUI-styled components. It does not own:
+
+- Data-fetching, state management, routing configuration, or authentication logic.
+- API types, context providers, or global stores.
+- Dialob form rendering — that belongs to `@dxs-ts/gamut-form-review`, which this module consumes.
+- Page assembly or URL route definitions — those belong to `@dxs-ts/gamut-routes`.
+- A theme or design tokens — consumers must supply a MUI theme.
 
 ## TanStack Integration
 
@@ -160,8 +165,8 @@ All four import `useNavigate` or `useRouter` directly from `@tanstack/react-rout
 
 ### TanStack Query
 
-No component in `gamut-primitives` calls `useQuery` directly. All data — offers, contracts, comms, bookings, IAM state, site content — arrives through provider context hooks (`useOffers`, `useContracts`, `useComms`, `useBookings`, `useIam`, `useSite`) supplied by `@dxs-ts/gamut-api`. The query lifecycle (fetching, caching, `isPending` guards) is entirely owned by the provider layer above this module.
+No component calls `useQuery` directly. All data — offers, contracts, comms, bookings, IAM state, site content — arrives through provider context hooks (`useOffers`, `useContracts`, `useComms`, `useBookings`, `useIam`, `useSite`) supplied by `@dxs-ts/gamut-api`. The query lifecycle (fetching, caching, `isPending` guards) is owned by the provider layer above this module.
 
 ### TanStack Store and TanStack Query Mutations
 
-`@tanstack/react-store` and `useMutation` are not used in `gamut-primitives`. Both belong to other modules (`gamut-form` uses `@tanstack/react-store` for scroll-to-error ref tracking; provider components in `gamut-api` handle all write operations via plain async functions and `refetch()`).
+`@tanstack/react-store` and `useMutation` are not used. `gamut-form` uses `@tanstack/react-store` for scroll-to-error ref tracking; provider components in `gamut-api` handle all write operations via plain async functions and `refetch()`.

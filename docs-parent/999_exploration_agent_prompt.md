@@ -81,7 +81,7 @@ Scan a DigiExpress module's source code and write a module overview file to `dig
 - No promotional adjectives. Neutral, factual language only.
 - Name actual classes, hooks, and files — not generic descriptions.
 - Omit Frontend if none; omit Backend if none.
-- Never omit "Error handling", "Bootstrapping", "Extension points", "Known limitations", or "Scope boundaries" — use "None identified" or "Not applicable" when empty.
+- Never omit "Error handling", "Bootstrapping", "Extension points", "Known limitations", or "Scope boundaries" — even if nothing was found. Do not write "None identified." or "Not applicable." alone. Instead, write one sentence explaining *why* it does not apply (e.g. "Leaf node with no providers — no bootstrapping required." or "No async paths exist — errors surface only via synchronous throws in builder methods."). The sentence must prove the agent looked, not just assert the absence.
 
 ## Already documented
 

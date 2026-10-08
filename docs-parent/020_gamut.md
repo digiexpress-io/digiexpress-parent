@@ -149,9 +149,9 @@ A consuming app must compose the following providers in this order before render
 4. **`ConfigProvider`** (`gamut-api`) — accepts a `ConfigApi.Options` object (all fields optional; defaults are no-op fetch factories pointing at relative `/portal/*` paths). Must override `handleExpire`, `iamLiveness`, and `staleTime` for production.
 5. **`RouterProvider`** (`@tanstack/react-router`) — mounts the pre-built `router` instance exported from `gamut-routes`. The `InnerWrap` prop is used to inject the provider tree from steps 1–4 inside the router boundary.
 
-The router itself must be created with `routeTree` from `gamut-routes`, `scrollRestoration: true`, and `scrollToTopSelectors: ['.${GShellClassName}']`. The `IamBackendProvider`, domain providers (`SiteBackendProvider`, `DialobProvider`, `OfferProvider`, `ContractProvider`, `CommsProvider`, `BookingProvider`), and route-level cockpit selection (`GRouterCockpits`) are all composed internally by `__root.tsx` — the consuming app does not mount them directly.
+The router must be created with `routeTree` from `gamut-routes`, `scrollRestoration: true`, and `scrollToTopSelectors: ['.${GShellClassName}']`. `IamBackendProvider`, domain providers (`SiteBackendProvider`, `DialobProvider`, `OfferProvider`, `ContractProvider`, `CommsProvider`, `BookingProvider`), and `GRouterCockpits` are composed internally by `__root.tsx` — the consuming app does not mount them directly.
 
-The consuming app must also augment MUI's `Components` interface to enable `theme.components.GXxx` overrides:
+The consuming app must also augment MUI's `Components` interface:
 
 ```ts
 declare module "@mui/material" {
@@ -179,7 +179,7 @@ No `declare module` augmentations exist within `gamut-api`, `gamut-form`, `gamut
 
 **Offer navigation errors use `alert()`** — `g-router-offer/useRouteToOffer.ts` falls back to `alert('Form not available!')` when the offer route cannot be resolved. The `TODO: polite error msgs` comment on line 35 confirms this is a known gap; no structured error UI is rendered.
 
-**`GFormReviewContext` child items are not passed as props** — `GFormReviewContext.tsx` line 110 contains `// TODO: Give child items as props`. Currently, when a review item has `childrenRequired` set, children are created via recursive `createItem()` calls but not passed as explicit props to the component; the component must re-read them from context.
+**`GFormReviewContext` child items are not passed as props** — `GFormReviewContext.tsx` line 110 contains `// TODO: Give child items as props`. When a review item has `childrenRequired` set, children are created via recursive `createItem()` calls but not passed as explicit props to the component; the component must re-read them from context.
 
 **`GLinkFormUnlocked` may be dead code** — Both the `useUtilityClasses` function and the `GLinkFormUnlocked` component in `g-link/GLinkFormUnlocked.tsx` carry `// TODO Perhaps this can be deleted, but let's wait and see`. The component is still exported but its necessity is unconfirmed.
 
@@ -199,7 +199,7 @@ Gamut is a customer portal frontend. It does not implement any backend services,
 
 ## TanStack Integration
 
-The `@dxs-ts/gamut` umbrella barrel re-exports components from sub-modules that use both TanStack Router and TanStack Query. Consuming apps take on all three TanStack packages as peer dependencies.
+`@dxs-ts/gamut` re-exports components from sub-modules that use TanStack Router, TanStack Query, and TanStack Store. Consuming apps take on all three packages as peer dependencies.
 
 ### Packages in use
 
@@ -213,19 +213,17 @@ The `@dxs-ts/gamut` umbrella barrel re-exports components from sub-modules that 
 
 ### Required provider nesting order
 
-The consuming app must compose providers in this order at the app root:
-
 1. **`QueryClientProvider`** (`@tanstack/react-query`) — outermost; all `gamut-api` providers call `useQuery` and must be descendants.
 2. **`LocaleProvider`** (`gamut-api`) — wraps `react-intl` `IntlProvider`; must enclose everything that calls `useIntl` or `useLocale`.
 3. **`GThemeProvider`** (`gamut-theme`) — wraps MUI `ThemeProvider`; must be inside `LocaleProvider`.
 4. **`ConfigProvider`** (`gamut-api`) — supplies fetch factories and per-query `staleTime` to all domain providers.
 5. **`RouterProvider`** (`@tanstack/react-router`) — innermost; mounts the pre-built `router` instance from `gamut-routes`.
 
-`QueryClientProvider` must be the outermost wrapper because `RouterProvider` and all route-mounted provider components (`IamBackendProvider`, `SiteBackendProvider`, `OfferProvider`, etc.) are descendants and all call `useQuery` internally.
+`QueryClientProvider` must be outermost because `RouterProvider` and all route-mounted provider components (`IamBackendProvider`, `SiteBackendProvider`, `OfferProvider`, etc.) are descendants and all call `useQuery` internally.
 
 ### Required augmentations in the consuming app
 
-Two `declare module` augmentations are required:
+Two `declare module` augmentations are required. Omitting either disables the corresponding layer of type inference.
 
 **TanStack Router — `Register`:**
 
@@ -237,7 +235,7 @@ declare module '@tanstack/react-router' {
 }
 ```
 
-This enables global type inference for `useNavigate`, `useSearch`, `Link`, and all router hooks. The declaration also exists in `gamut-routes/router.ts` to support library-level type checking; the app-level declaration is the one that takes effect at runtime.
+This enables global type inference for `useNavigate`, `useSearch`, `Link`, and all router hooks. The declaration also exists in `gamut-routes/router.ts` for library-level type checking; the app-level declaration is the one that takes effect at runtime.
 
 **MUI theme — `GComponentsPropsList`:**
 
@@ -248,5 +246,3 @@ declare module "@mui/material" {
 ```
 
 This registers all Gamut components with MUI's `Components` interface so that `theme.components.GXxx` overrides are type-checked. `GComponents<Theme>` is exported from `gamut-routes/g-props.ts` and merges `GComponentsPropsList`, `GComponentNameToClassKey`, and variant support.
-
-Both augmentations must be present; omitting either disables the corresponding layer of type inference.

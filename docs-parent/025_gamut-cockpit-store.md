@@ -6,7 +6,7 @@ Persists and retrieves a `Cockpit` selection in `localStorage` under the key `ga
 
 ## Dependencies
 
-No `dependencies` or `peerDependencies` declared. The `package.json` notes this as the foundation layer with no internal dependencies.
+No `dependencies` or `peerDependencies` declared. Foundation layer with no internal dependencies.
 
 ## Module Relationships
 
@@ -31,7 +31,7 @@ gamut-cockpit-store ──► gamut-api ──► gamut-shell ──► gamut-ro
                     └──► gamut-theme ───────────────► gamut-routes
 ```
 
-`gamut-cockpit-store` is the only foundation-layer module that affects both the theme layer and the API/query layer simultaneously. Calling `CockpitStore.save()` or `CockpitStore.clear()` followed by `window.location.reload()` (as `window.GamutCockpit` does) causes `GThemeProvider` to reinitialise the secondary theme and all TanStack Query keys scoped to `cockpitId` to invalidate and refetch.
+`gamut-cockpit-store` is the only foundation-layer module that affects both the theme layer and the API/query layer. Calling `CockpitStore.save()` or `CockpitStore.clear()` followed by `window.location.reload()` (as `window.GamutCockpit` does) causes `GThemeProvider` to reinitialise the secondary theme and all TanStack Query keys scoped to `cockpitId` to invalidate and refetch.
 
 ## Frontend Architecture
 
@@ -41,8 +41,8 @@ gamut-cockpit-store ──► gamut-api ──► gamut-shell ──► gamut-ro
 
 - `Cockpit` — interface with fields `id: string`, `aliasName: string`, `aliasDesc: string`
 - `CockpitStore` — static class with four methods:
-  - `get(): Cockpit | null` — reads and JSON-parses `localStorage` entry; returns `null` on missing or malformed data
-  - `save(cockpit: Cockpit | null | undefined): void` — serializes and writes to `localStorage`; removes the entry if `cockpit` is falsy
+  - `get(): Cockpit | null` — parses `localStorage` entry; returns `null` on missing or malformed data
+  - `save(cockpit: Cockpit | null | undefined): void` — writes to `localStorage`; removes the entry if `cockpit` is falsy
   - `clear(): void` — removes the `localStorage` entry
   - `isEnabled(): boolean` — returns `true` when a stored cockpit exists
 
@@ -52,11 +52,11 @@ gamut-cockpit-store ──► gamut-api ──► gamut-shell ──► gamut-ro
 
 ## Error Handling
 
-`CockpitStore.get()` wraps `JSON.parse` in a `try/catch` block. A malformed `localStorage` entry under the key `gamut_cockpit` is silently swallowed and `null` is returned. No error is thrown, logged, or surfaced to the caller. There are no loading states, validation error types, or React error boundaries in this module — it contains no React components or hooks.
+`CockpitStore.get()` wraps `JSON.parse` in a `try/catch` block. A malformed `localStorage` entry under the key `gamut_cockpit` is silently swallowed and `null` is returned. No error is thrown, logged, or surfaced to the caller. This module contains no React components or hooks, so there are no loading states, validation error types, or React error boundaries.
 
 ## Bootstrapping
 
-None — leaf node. The module registers `window.GamutCockpit` automatically at import time (guarded by `typeof window !== 'undefined'`). No provider, context, or configuration step is required by the consuming app. Consumers call `CockpitStore` methods directly.
+None — leaf node. The module registers `window.GamutCockpit` automatically at import time (guarded by `typeof window !== 'undefined'`). No provider, context, or configuration step is required. Consumers call `CockpitStore` methods directly.
 
 ## TypeScript Extension Points
 
@@ -74,4 +74,4 @@ No inline `NOTE`, `TODO`, `FIXME`, or `HACK` comments are present in the source.
 
 ## Scope Boundaries
 
-This module does not manage cockpit lifecycle beyond persistence. It does not fetch cockpit data from any API, validate that a stored cockpit ID exists in any backend catalog, react to storage events from other browser tabs, emit any events or observables, or provide any React components, hooks, or context providers. All of that responsibility lies in consuming modules such as `@dxs-ts/gamut-api`, `@dxs-ts/gamut-theme`, and `@dxs-ts/gamut-routes`.
+`gamut-cockpit-store` does not manage cockpit lifecycle beyond persistence. It does not fetch cockpit data from any API, validate that a stored cockpit ID exists in any backend catalog, react to storage events from other browser tabs, emit any events or observables, or provide any React components, hooks, or context providers. All of that responsibility lies in consuming modules such as `@dxs-ts/gamut-api`, `@dxs-ts/gamut-theme`, and `@dxs-ts/gamut-routes`.
