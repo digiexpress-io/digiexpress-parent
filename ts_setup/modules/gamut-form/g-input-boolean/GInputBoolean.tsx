@@ -10,7 +10,7 @@ import { GInputAdornment } from '../g-input-adornment';
 
 import { useUtilityClasses, MUI_NAME, GInputBooleanRoot } from './useUtilityClasses';
 import { ReadOnlyYesAndNoCheckbox } from './ReadOnlyYesAndNoCheckbox';
-import { YesAndNoCheckbox } from './YesAndNoCheckBox';
+import { YesAndNoCheckbox } from './YesAndNoCheckbox';
 import { SingleCheckbox, ReadOnlySingleCheckbox } from './SingleCheckbox';
 
 
