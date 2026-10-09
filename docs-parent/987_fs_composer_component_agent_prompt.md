@@ -15,15 +15,15 @@ Before starting work, the invoker must provide the following. Do not proceed wit
 
 ## Task / Goal
 
-Using the required input and the pattern reference in `digiexpress-parent/docs-parent/116_fs-composer-add-field.md`, implement the new field across all layers in order: database schema, persistence entity, backend model and authoring, REST endpoint, frontend fetch hook, provider and context, TypeScript types, and UI component. Edit or create files at each layer. Do not write a guide — make the actual changes.
+Using the required input and the pattern reference in `digiexpress-parent/docs-parent/116_fs_composer_add_field.md`, implement the new field across all layers in order: database schema, persistence entity, backend model and authoring, REST endpoint, frontend fetch hook, provider and context, TypeScript types, and UI component. Edit or create files at each layer. Do not write a guide — make the actual changes.
 
 ## Reference
 
-Read `digiexpress-parent/docs-parent/116_fs-composer-add-field.md` in full before touching any files. This document describes the established patterns for every layer. Use it as the sole source of truth for naming conventions, code shapes, and ordering constraints. Do not deviate from the patterns it describes.
+Read `digiexpress-parent/docs-parent/116_fs_composer_add_field.md` in full before touching any files. This document describes the established patterns for every layer. Use it as the sole source of truth for naming conventions, code shapes, and ordering constraints. Do not deviate from the patterns it describes.
 
 ## Blockers
 
-If completing any part of this task requires breaking a rule or inventing a pattern not present in `116_fs-composer-add-field.md`, do NOT proceed. Instead:
+If completing any part of this task requires breaking a rule or inventing a pattern not present in `116_fs_composer_add_field.md`, do NOT proceed. Instead:
 1. Stop work on the affected part.
 2. Mark the task `BLOCKED`.
 3. State which layer is at issue, what was attempted, and what information or decision is needed to proceed.

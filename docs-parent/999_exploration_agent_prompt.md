@@ -93,24 +93,24 @@ Check this list before writing to avoid duplicating work.
 |---|---|---|
 | 001 | `001_intro.md` | Top-level module index |
 | 010 | `010_gamut.md` | Gamut — top-level overview |
-| 015 | `015_envir-util.md` | `@dxs-ts/envir-util` |
+| 015 | `015_envir_util.md` | `@dxs-ts/envir-util` |
 | 020 | `020_gamut.md` | `@dxs-ts/gamut` — umbrella re-export barrel |
-| 025 | `025_gamut-cockpit-store.md` | `@dxs-ts/gamut-cockpit-store` |
-| 030 | `030_gamut-api.md` | `@dxs-ts/gamut-api` |
-| 035 | `035_gamut-md.md` | `@dxs-ts/gamut-md` |
-| 040 | `040_gamut-primitives.md` | `@dxs-ts/gamut-primitives` |
-| 045 | `045_gamut-form-review.md` | `@dxs-ts/gamut-form-review` |
-| 050 | `050_gamut-form.md` | `@dxs-ts/gamut-form` |
-| 055 | `055_gamut-shell.md` | `@dxs-ts/gamut-shell` |
-| 060 | `060_gamut-intl.md` | `@dxs-ts/gamut-intl` |
-| 065 | `065_gamut-routes.md` | `@dxs-ts/gamut-routes` |
-| 070 | `070_gamut-theme.md` | `@dxs-ts/gamut-theme` |
-| 075 | `075_xui-datetime.md` | `@dxs-ts/xui-datetime` |
+| 025 | `025_gamut_cockpit_store.md` | `@dxs-ts/gamut-cockpit-store` |
+| 030 | `030_gamut_api.md` | `@dxs-ts/gamut-api` |
+| 035 | `035_gamut_md.md` | `@dxs-ts/gamut-md` |
+| 040 | `040_gamut_primitives.md` | `@dxs-ts/gamut-primitives` |
+| 045 | `045_gamut_form_review.md` | `@dxs-ts/gamut-form-review` |
+| 050 | `050_gamut_form.md` | `@dxs-ts/gamut-form` |
+| 055 | `055_gamut_shell.md` | `@dxs-ts/gamut-shell` |
+| 060 | `060_gamut_intl.md` | `@dxs-ts/gamut-intl` |
+| 065 | `065_gamut_routes.md` | `@dxs-ts/gamut-routes` |
+| 070 | `070_gamut_theme.md` | `@dxs-ts/gamut-theme` |
+| 075 | `075_xui_datetime.md` | `@dxs-ts/xui-datetime` |
 | 080 | `080_gamut_architecture.md` | Gamut — architecture overview and data flow |
 | 090 | `090_tanstack.md` | TanStack Router + Query usage across Gamut |
 | 100 | *(reserved)* | Next top-level module (metis) |
 | 900 | `900_agent_rules.md` | Shared rules for all agents |
-| 987 | `987_fs-composer-component_agent_prompt.md` | Agent prompt — add a new field to fs-composer end-to-end |
+| 987 | `987_fs_composer_component_agent_prompt.md` | Agent prompt — add a new field to fs-composer end-to-end |
 | 992 | `992_gamut_route_component_agent_prompt.md` | Agent prompt — create a new gamut-route component |
 | 995 | `995_agent_creation_prompt.md` | Agent prompt — create a new agent prompt |
 | 996 | `996_gamut_primitives_component_agent_prompt.md` | Agent prompt — create a new gamut-primitive component |
