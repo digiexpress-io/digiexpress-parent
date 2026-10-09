@@ -1485,6 +1485,7 @@ export const en = {
   'fs.dirent.link.urlValueField.label': 'URL or phone number',
   'fs.dirent.link.urlValueField.placeholder': 'Enter link URL or phone number',
   'fs.dirent.link.sectionTitle.localeLabels': 'Labels by language',
+  'fs.dirent.link.localeField.label': 'Language',
   'fs.dirent.locales.labelField': 'Display text in language: {localeCode}',
   'fs.dirent.link.articlesField.label': 'Connected to Articles',
   'fs.dirent.phone.sectionTitle.createNew': 'Create new phone number',

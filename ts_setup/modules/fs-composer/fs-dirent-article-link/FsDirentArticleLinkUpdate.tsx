@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { useFsDirent } from '@dxs-ts/fs-api';
 import { createWidget } from '../fs-factory';
 import { FsDirentSelectMulti, FsDirentTextField, FsDirentFormField, FsDirentSelectSingle } from '../fs-utilities';
+import { FsDirentLocaleSelect } from '../fs-dirent-locale-select';
 import { useUtilityClasses, FsDirentArticleLinkRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentArticleLinkProps } from './FsDirentArticleLinkProps';
@@ -46,11 +47,35 @@ export const FsDirentArticleLinkUpdate: React.FC<FsDirentArticleLinkProps> = (pr
         </FsDirentFormField>
 
 
-        {ownerState.locales.map((locale) => (
-          <FsDirentFormField key={locale.value} label={intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}>
-            <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''} onChange={(value) => ownerState.onChangeIntlValue(locale.value, value)} />
-          </FsDirentFormField>
-        ))}
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.link.localeField.label' })}>
+          {ownerState.localeEntries.map((entry, index) => {
+            const usedCodes = ownerState.localeEntries
+              .filter((e, entryIndex) => entryIndex !== index && e.localeCode !== '')
+              .map((e) => e.localeCode);
+            const availableCodes = selectOptions.languages
+              .map((lang) => lang.label)
+              .filter((code) => !usedCodes.includes(code));
+
+            return (
+              <div key={index} className={classes.localeRow}>
+                <div className={classes.localeSelectContainer}>
+                  <FsDirentLocaleSelect
+                    value={entry.localeCode}
+                    allowedCodes={availableCodes}
+                    onChange={(code) => ownerState.onChangeLocaleEntry(index, code)}
+                  />
+                </div>
+                {entry.localeCode !== '' && (
+                  <FsDirentTextField
+                    value={entry.labelValue}
+                    required
+                    onChange={(value) => ownerState.onChangeLabelEntry(index, value)}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.link.articlesField.label' })}>
           <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />

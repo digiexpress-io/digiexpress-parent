@@ -9,10 +9,8 @@ export interface FsDirentArticleLinkClasses {
   titleRow: string;
   title: string;
   formContainer: string;
-  localeLabel: string;
-  sectionTitle: string;
-  sectionBox: string;
-  sectionContent: string;
+  localeRow: string;
+  localeSelectContainer: string;
 }
 
 export type FsDirentArticleLinkClassKey = keyof FsDirentArticleLinkClasses;
@@ -23,10 +21,8 @@ export const useUtilityClasses = () => {
     titleRow: ['titleRow'],
     title: ['title'],
     formContainer: ['formContainer'],
-    localeLabel: ['localeLabel'],
-    sectionTitle: ['sectionTitle'],
-    sectionBox: ['sectionBox'],
-    sectionContent: ['sectionContent'],
+    localeRow: ['localeRow'],
+    localeSelectContainer: ['localeSelectContainer'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -59,28 +55,25 @@ export const FsDirentArticleLinkRoot = styled('div', {
     flexDirection: 'column',
   },
 
-  [`& .${MUI_NAME}-localeLabel`]: {
-    ...theme.typography.subtitle2,
-    fontWeight: 500,
-    color: FsColors.base.text,
+  [`& .${MUI_NAME}-localeRow`]: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing(1),
+    alignItems: 'flex-start',
   },
 
-  [`& .${MUI_NAME}-sectionTitle`]: {
-    ...theme.typography.subtitle2,
-    color: FsColors.base.text,
-    display: 'block',
+  [`& .${MUI_NAME}-localeSelectContainer`]: {
+    width: '25%',
+    flexShrink: 0,
+    '& .MuiFormControl-root': {
+      width: '100%',
+      marginTop: '0 !important',
+      marginBottom: '0 !important',
+    },
   },
 
-  [`& .${MUI_NAME}-sectionBox`]: {
-    backgroundColor: FsColors.base.border,
-    border: `1px solid ${FsColors.base.textSecondary}`,
-    borderRadius: '4px',
-    marginTop: '0px !important',
-  },
-
-  [`& .${MUI_NAME}-sectionContent`]: {
-    ...theme.typography.subtitle2,
-    color: FsColors.base.textSecondary,
+  [`& .${MUI_NAME}-localeRow + .${MUI_NAME}-localeRow`]: {
+    marginTop: theme.spacing(1),
   },
 
 

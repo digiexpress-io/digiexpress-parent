@@ -21,6 +21,17 @@ Fix every issue listed in the compliance report. Work through the three sections
 
 Read each file before editing it. Make only the changes required by the report — do not refactor, reformat, or touch unrelated code.
 
+## Additional Scrutiny
+
+After fixing all report items, review the modified files for the following and fix anything found:
+
+- **Redundant styles** — CSS properties that are set but have no visible effect (e.g. overridden immediately by a more specific rule, or duplicated in two places).
+- **Unused styles** — class slots defined in `useUtilityClasses` or rules in the styled root component that are not referenced anywhere in the component files.
+- **Redundant `useState`** — local state that duplicates something already tracked elsewhere, or state that is set but never read, or state that could be replaced with a derived value.
+- **Overly verbose statements** — multi-step variable chains that can be expressed more directly without changing behaviour.
+
+Only remove or simplify what is clearly redundant or unused. Do not restructure logic or change behaviour.
+
 ## Reference
 
 - `/Users/jocelyn/Development/projects/digiexpress-parent/claude-brains/CODING_STANDARDS.md` — project-wide coding rules

@@ -110,7 +110,6 @@ Check this list before writing to avoid duplicating work.
 | 090 | `090_tanstack.md` | TanStack Router + Query usage across Gamut |
 | 100 | *(reserved)* | Next top-level module (metis) |
 | 900 | `900_agent_rules.md` | Shared rules for all agents |
-| 972 | `972_fs_composer_orchestrator_agent_prompt.md` | Agent prompt — orchestrates creation → compliance → cleanup pipeline |
 | 977 | `977_fs_composer_cleanup_agent_prompt.md` | Agent prompt — fix issues found by the compliance agent |
 | 982 | `982_fs_composer_compliance_agent_prompt.md` | Agent prompt — code compliance review for fs-composer changes |
 | 987 | `987_fs_composer_component_agent_prompt.md` | Agent prompt — add a new field to fs-composer end-to-end |
@@ -121,7 +120,7 @@ Check this list before writing to avoid duplicating work.
 | 998 | `998_gamut_form_component_agent_prompt.md` | Agent prompt — create a new gamut-form component |
 | 999 | `999_exploration_agent_prompt.md` | This file |
 
-**Next available prefix:** `091` (within Gamut range), `982` (agent range, gap of 5 below 987), or `100` (next top-level module — metis).
+**Next available prefix:** `091` (within Gamut range), `972` (agent range — freed when 972 orchestrator was removed), or `100` (next top-level module — metis).
 
 ## How to scan
 

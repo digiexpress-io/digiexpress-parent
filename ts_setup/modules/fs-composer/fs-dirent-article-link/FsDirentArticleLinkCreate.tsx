@@ -7,6 +7,7 @@ import { useUtilityClasses, FsDirentArticleLinkRoot } from './useUtilityClasses'
 import { useCreateOwnerState } from './useCreateOwnerState';
 import { FsDirentSelectMulti, FsDirentTextField, FsDirentFormField, FsDirentSelectSingle } from '../fs-utilities';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
+import { FsDirentLocaleSelect } from '../fs-dirent-locale-select';
 
 export const FsDirentArticleLinkCreate: React.FC = () => {
   const intl = useIntl();
@@ -28,7 +29,7 @@ export const FsDirentArticleLinkCreate: React.FC = () => {
     <FsDirentArticleLinkRoot className={classes.root}>
       <div className={classes.titleRow}>
         <Typography className={classes.title}>{intl.formatMessage({ id: 'fs.dirent.link.sectionTitle.createNew' })}</Typography>
-        <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty} />
+        <FsDirentButtonSave onClick={ownerState.onSave} disabled={!ownerState.isDirty || ownerState.isLocaleEntryIncomplete} />
       </div>
       <div className={classes.formContainer}>
 
@@ -47,11 +48,35 @@ export const FsDirentArticleLinkCreate: React.FC = () => {
           <FsDirentSelectSingle options={linkTypeOptions} value={ownerState.contentType} onChange={ownerState.onChangeContentType} />
         </FsDirentFormField>
 
-        {ownerState.locales.map((locale) => (
-          <FsDirentFormField key={locale.value} label={intl.formatMessage({ id: 'fs.dirent.locales.labelField' }, { localeCode: locale.label })}>
-            <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''} onChange={(value) => ownerState.onChangeIntlValue(locale.value, value)} />
-          </FsDirentFormField>
-        ))}
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.link.localeField.label' })}>
+          {ownerState.localeEntries.map((entry, index) => {
+            const usedCodes = ownerState.localeEntries
+              .filter((e, i) => i !== index && e.localeCode !== '')
+              .map((e) => e.localeCode);
+            const availableCodes = selectOptions.languages
+              .map((lang) => lang.label)
+              .filter((code) => !usedCodes.includes(code));
+
+            return (
+              <div key={index} className={classes.localeRow}>
+                <div className={classes.localeSelectContainer}>
+                  <FsDirentLocaleSelect
+                    value={entry.localeCode}
+                    allowedCodes={availableCodes}
+                    onChange={(code) => ownerState.onChangeLocaleEntry(index, code)}
+                  />
+                </div>
+                {entry.localeCode !== '' && (
+                  <FsDirentTextField
+                    value={entry.labelValue}
+                    required
+                    onChange={(value) => ownerState.onChangeLabelEntry(index, value)}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </FsDirentFormField>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.link.articlesField.label' })}>
           <FsDirentSelectMulti options={articles} value={ownerState.articles} onChange={ownerState.onChangeArticles} />

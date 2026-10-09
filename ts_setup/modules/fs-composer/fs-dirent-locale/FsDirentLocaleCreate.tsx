@@ -2,8 +2,9 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentFormField, FsDirentTextField } from '../fs-utilities';
+import { FsDirentFormField } from '../fs-utilities';
 import { FsDirentButtonSave } from '../fs-dirent-button-save';
+import { FsDirentLocaleSelect } from '../fs-dirent-locale-select';
 import { useUtilityClasses, FsDirentLocaleRoot } from './useUtilityClasses';
 import { useCreateOwnerState } from './useCreateOwnerState';
 
@@ -22,10 +23,7 @@ export const FsDirentLocaleCreate: React.FC = () => {
         <div className={classes.formContainer}>
 
           <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.label' })}>
-            <FsDirentTextField required value={ownerState.locale}
-              placeholder={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.placeholder' })}
-              onChange={ownerState.onChangeLocale}
-            />
+            <FsDirentLocaleSelect value={ownerState.locale} onChange={ownerState.onChangeLocale} />
           </FsDirentFormField>
 
         </div>

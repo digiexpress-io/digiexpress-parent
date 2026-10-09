@@ -1,7 +1,8 @@
 import React from 'react';
 import { Radio, RadioGroup, FormControlLabel, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FsDirentFormField, FsDirentTextField } from '../fs-utilities';
+import { FsDirentFormField } from '../fs-utilities';
+import { FsDirentLocaleSelect } from '../fs-dirent-locale-select';
 import { useUtilityClasses, FsDirentLocaleRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentLocaleProps } from './FsDirentLocaleProps';
@@ -18,9 +19,8 @@ export const FsDirentLocaleUpdate: React.FC<FsDirentLocaleProps> = (props) => {
       <div className={classes.formContainer}>
 
         <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.label' })}>
-          <FsDirentTextField
+          <FsDirentLocaleSelect
             value={ownerState.localeCode}
-            placeholder={intl.formatMessage({ id: 'fs.dirent.language.localeCodeField.placeholder' })}
             disabled
           />
         </FsDirentFormField>

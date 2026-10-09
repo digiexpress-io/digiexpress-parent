@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Fs,
   useFsDirent,
@@ -6,6 +7,11 @@ import {
 } from '@dxs-ts/fs-api';
 import { useFsNav } from '@dxs-ts/fs-nav';
 import { createWidget } from '../fs-factory';
+
+export type LocaleEntry = {
+  localeCode: string;
+  labelValue: string;
+};
 
 export interface UpdateOwnerState {
   assetPath: string | undefined;
@@ -18,6 +24,10 @@ export interface UpdateOwnerState {
   intlValues: Record<string, string>;
   articles: string[];
   configOptions: Fs.ConfigOption[];
+  localeEntries: LocaleEntry[];
+  isLocaleEntryIncomplete: boolean;
+  onChangeLocaleEntry: (index: number, localeCode: string) => void;
+  onChangeLabelEntry: (index: number, labelValue: string) => void;
   onChangeContentType: (value: string) => void;
   onChangeUrlValue: (value: string) => void;
   onChangeIntlValue: (locale: string, value: string) => void;
@@ -92,6 +102,9 @@ class _ChangeState implements FsuChange {
     const widget = createWidget({ type: 'ARTICLE_LINK' });
     return new _ChangeState({ ...this._current, configOptions: widget.meta.configOptions.filter(opt => value.includes(opt)) }, this._origin);
   }
+  withAllLabels(labels: { locale: string; labelValue: string }[]): _ChangeState {
+    return new _ChangeState({ ...this._current, labels }, this._origin);
+  }
 }
 
 
@@ -134,9 +147,67 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     articles: linkProps?.articles ?? [],
   }));
 
-  const isChangesPresent = state.isDirty;
-
   const setState = (callback: (prev: _ChangeState) => _ChangeState) => update(callback);
+
+  const [localeEntries, setLocaleEntries] = React.useState<LocaleEntry[]>(() => {
+    const existingLabels = Object.entries(linkProps?.intlValues ?? {}).map(([locale, labelValue]) => ({ locale, labelValue }));
+    const existing = existingLabels.map((label) => ({
+      localeCode: selectOptions.languages.find((lang) => lang.value === label.locale)?.label ?? label.locale,
+      labelValue: label.labelValue,
+    }));
+    const usedCodes = existing.map((entry) => entry.localeCode);
+    const remainingCodes = selectOptions.languages.map((lang) => lang.label).filter((code) => !usedCodes.includes(code));
+    if (remainingCodes.length > 0) {
+      existing.push({ localeCode: '', labelValue: '' });
+    }
+    return existing;
+  });
+
+  const isLocaleEntryIncomplete = localeEntries.some(
+    (entry) => entry.localeCode !== '' && entry.labelValue === ''
+  );
+
+  function syncLabelsToState(entries: LocaleEntry[]) {
+    const completedLabels = entries
+      .filter((entry) => entry.localeCode !== '' && entry.labelValue !== '')
+      .map((entry) => {
+        const direntId = selectOptions.languages.find((lang) => lang.label === entry.localeCode)?.value ?? entry.localeCode;
+        return { locale: direntId, labelValue: entry.labelValue };
+      });
+    setState((prev) => prev.withAllLabels(completedLabels));
+  }
+
+  function onChangeLocaleEntry(index: number, localeCode: string) {
+    const next = localeEntries.map((entry, entryIndex) =>
+      entryIndex === index ? { localeCode, labelValue: localeCode === '' ? '' : entry.labelValue } : entry
+    );
+    const last = next[next.length - 1];
+    if (last.localeCode !== '' && last.labelValue !== '') {
+      const usedCodes = next.filter((entry) => entry.localeCode !== '').map((entry) => entry.localeCode);
+      const remainingCodes = selectOptions.languages.map((lang) => lang.label).filter((code) => !usedCodes.includes(code));
+      if (remainingCodes.length > 0) {
+        next.push({ localeCode: '', labelValue: '' });
+      }
+    }
+    setLocaleEntries(next);
+    syncLabelsToState(next);
+  }
+
+  function onChangeLabelEntry(index: number, labelValue: string) {
+    const next = localeEntries.map((entry, entryIndex) =>
+      entryIndex === index ? { ...entry, labelValue } : entry
+    );
+    const last = next[next.length - 1];
+    if (last.localeCode !== '' && last.labelValue !== '') {
+      const usedCodes = next.filter((entry) => entry.localeCode !== '').map((entry) => entry.localeCode);
+      const remainingCodes = selectOptions.languages.map((lang) => lang.label).filter((code) => !usedCodes.includes(code));
+      if (remainingCodes.length > 0) {
+        next.push({ localeCode: '', labelValue: '' });
+      }
+    }
+    setLocaleEntries(next);
+    syncLabelsToState(next);
+  }
 
   function onChangeContentType(value: string) {
     setState(prev => prev.withContentType(value as Fs.LinkType));
@@ -161,16 +232,20 @@ export const useUpdateOwnerState = (props: { direntId: string }): UpdateOwnerSta
     dirent,
     locales,
     id: state.id,
-    isDirty: isChangesPresent,
+    isDirty: state.isDirty,
     contentType: state.contentType,
     urlValue: state.urlValue,
     intlValues: state.intlValues,
     articles: state.articles,
     configOptions: state.configOptions,
+    localeEntries,
+    isLocaleEntryIncomplete,
     onChangeContentType,
     onChangeUrlValue,
     onChangeIntlValue,
     onChangeArticles,
     onChangeConfigOptions,
+    onChangeLocaleEntry,
+    onChangeLabelEntry,
   });
 };
