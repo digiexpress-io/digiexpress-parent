@@ -19,6 +19,15 @@ Customer portal. Displays localised content (markdown). Manages form submissions
 - **`@dxs-ts/gamut-theme`** (`modules/gamut-theme`) — MUI theme provider (`GThemeProvider`) with runtime theme switching, two bundled `ThemeOptions` sets (`GThemeOptions`, `GThemeOptionsAlt1`), and MUI component overrides for both Gamut-specific and standard MUI components.
 - **`@dxs-ts/xui-datetime`** (`modules/xui-datetime`) — date and year picker input components built on an immutable `DateInputStateMachine`, with a segmented day/month/year text input, interactive calendar popover, standalone year picker, and luxon-based date formatting utilities.
 
+### Eveli
+
+Worker-facing task management and process orchestration module. Provides the backend REST API (Spring Boot, Vert.x Mutiny, Thena) for tasks, Dialob form integration, process execution, feedback, queues, and asset publishing, plus the React worker shell (`EveliShell`, `EveliApp`), TanStack Router route tree, and all worker-facing page components.
+
+- **`fs` domain** (`modules/fs-api`, `modules/fs-composer`, `modules/fs-nav`) — worker-facing File Explorer for managing typed content assets (articles, flows, decision tables, Dialob forms, printouts, locales, links, and folders) via a multi-tab editor shell, hierarchical tree explorer, search with type/label filtering, and an immutable unsaved-change store backed by TanStack Store. See `105_fs.md`.
+  - **`@dxs-ts/fs-api`** (`modules/fs-api`) — foundational type namespace (`Fs`), React context providers (`FsDirentProvider`, `FsDirentBodyProvider`), and TanStack Store-backed unsaved-change layer (`useFsu`, `useFsuChange`, `FsuWorld`) shared by all fs domain packages. See `110_fs-api.md`.
+  - **`@dxs-ts/fs-composer`** (`modules/fs-composer`) — React component library implementing the full fs editor shell: multi-tab layout (`FsSetup.Main`/`FsSetup.Secondary`), hierarchical dirent tree explorer with search and label filtering, per-dirent-type create/update/properties/help views dispatched via a `DirentWidget` factory, and a switchable right-panel system (properties, preview, history, errors, debug, stats, changes, article-order, article-locale-overview, references). See `115_fs-composer.md`.
+  - **`@dxs-ts/fs-nav`** (`modules/fs-nav`) — URL-serialised navigation state for the fs editor: encodes open tabs, active tab, and tree-node expansion as TanStack Router search params; exposes `useFsNav` (facade hook) and `FsNavProvider` for consuming applications. See `120_fs-nav.md`.
+
 ### TanStack
 
 - **`090_tanstack.md`** — documents how `@tanstack/react-router`, `@tanstack/react-query`, and `@tanstack/react-store` are used across the Gamut modules: file-based route structure, the provider-context data flow pattern, query key conventions, the absence of loaders and `useMutation`, and key constraints a developer must know before adding a route or query.
