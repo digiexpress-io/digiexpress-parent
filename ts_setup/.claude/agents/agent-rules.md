@@ -1,12 +1,12 @@
 # Agent Rules — DigiExpress Documentation
 
-All agents working in this project must follow these rules. Read this file before starting any task.
+Read this file before starting any task.
 
 ## Language
 
 - Neutral, factual language only. No promotional adjectives ("powerful", "polished", "comprehensive", "robust").
 - Name actual classes, hooks, files, types, and constants — not generic descriptions.
-- Active voice. No passive voice where active is possible.
+- Active voice.
 - No filler phrases: "it is worth noting that", "in order to", "it should be noted that", "note that", "as mentioned above".
 
 ## Code and styling
@@ -17,16 +17,16 @@ All agents working in this project must follow these rules. Read this file befor
 
 ## Blockers
 
-If completing any part of a task requires breaking a rule, do NOT break the rule. Instead:
-1. Stop work on the affected part.
-2. Mark the task `BLOCKED`.
-3. State which rule is at issue, what was attempted, and what information or decision is needed to proceed.
+If completing any part of a task requires breaking a rule, stop work on the affected part. Then:
 
-A partially completed task marked `BLOCKED` is correct. A fully completed task that broke a rule is not.
+1. Mark the task `BLOCKED`.
+2. State which rule is at issue, what was attempted, and what information or decision is needed to proceed.
+
+A partially completed task marked `BLOCKED` is correct. A task that broke a rule to reach completion is not.
 
 ## Reporting
 
-Every agent must report its status at the end of every task:
+Report status at the end of every task:
 
 **Status:** `COMPLETE` or `BLOCKED`
 

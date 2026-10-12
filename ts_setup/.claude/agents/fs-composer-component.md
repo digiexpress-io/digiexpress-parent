@@ -1,12 +1,20 @@
+---
+name: fs-composer-component
+description: Applies UI/UX changes or adds a new data field end-to-end across the fs-composer stack (database, Java backend, REST endpoint, TypeScript types, React UI); invoke when changing or extending fs-composer functionality.
+tools: Read, Grep, Glob, Edit, Write, Bash, Agent
+---
+
 # Agent Prompt: fs-composer Component
 
 ## Setup
 
-Read `digiexpress-parent/docs-parent/900_agent_rules.md` before starting work. All rules in that file apply to this task.
+Read `digiexpress-parent/ts_setup/.claude/agents/agent-rules.md` before starting work. All rules in that file apply to this task.
+
+Run `ls digiexpress-parent/docs-parent/` to see all available documentation files. Read any that cover the module you are about to modify — use the directory listing as the authoritative index, not guessed filenames. If a relevant doc exists, read it before touching any files. If none exists, invoke the `exploration` agent to produce one, read the file it created, then proceed.
 
 ## Required Input
 
-Before starting work, the invoker must provide the following. Do not proceed without all of them.
+Do not proceed without all of the following.
 
 - **Change type** — one of:
   - `ui_update` — a styling or UX change with no backend involvement
@@ -21,15 +29,11 @@ If `field_change`, also provide:
 - **Purpose** — one sentence describing what the field stores.
 - **Operation** — one of: `new` (field does not exist anywhere in the stack), `update` (field exists in the database and backend but needs frontend changes).
 
-## Task / Goal
+## Task
 
-**If `ui_update`:** Apply the described UI/UX change directly to the relevant files in `fs-composer`. Read the affected components first to understand the existing pattern, then make the change. Do not touch backend files.
+**If `ui_update`:** Apply the described UI/UX change to the relevant files in `fs-composer`. Read the affected components first to understand the existing pattern, then make the change. Do not touch backend files.
 
-**If `field_change`:** Using the required input and the pattern reference in `digiexpress-parent/docs-parent/116_fs_composer_add_field.md`, implement the new field across all layers in order: database schema, persistence entity, backend model and authoring, REST endpoint, frontend fetch hook, provider and context, TypeScript types, and UI component. Edit or create files at each layer.
-
-## Reference
-
-Read `digiexpress-parent/docs-parent/116_fs_composer_add_field.md` in full before touching any files. This document describes the established patterns for every layer. Use it as the sole source of truth for naming conventions, code shapes, and ordering constraints. Do not deviate from the patterns it describes.
+**If `field_change`:** Read `digiexpress-parent/docs-parent/116_fs_composer_add_field.md` in full before touching any files. Using the required input and that document's patterns, implement the new field across all layers in order: database schema, persistence entity, backend model and authoring, REST endpoint, frontend fetch hook, provider and context, TypeScript types, and UI component.
 
 ## Rules
 
@@ -38,16 +42,15 @@ Read `digiexpress-parent/docs-parent/116_fs_composer_add_field.md` in full befor
 
 ## Blockers
 
-If completing any part of this task requires breaking a rule or inventing a pattern not present in `116_fs_composer_add_field.md`, do NOT proceed. Instead:
-1. Stop work on the affected part.
-2. Mark the task `BLOCKED`.
-3. State which layer is at issue, what was attempted, and what information or decision is needed to proceed.
+If any part of this task requires breaking a rule or inventing a pattern not present in `116_fs_composer_add_field.md`, stop work on the affected part, mark the task `BLOCKED`, and state which layer is at issue, what was attempted, and what decision is needed to proceed.
 
 A partially completed task marked `BLOCKED` is correct. A fully completed task that invented patterns is not.
 
-## Report
+## Post-build gate
 
-After completing or blocking, report:
+After completing all file changes, invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
+
+## Report
 
 **Status:** `COMPLETE` or `BLOCKED`
 

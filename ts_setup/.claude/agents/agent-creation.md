@@ -1,15 +1,21 @@
+---
+name: agent-creation
+description: Creates a new Claude Code agent prompt file by first running exploration to discover patterns, then writing a structured agent prompt to the agents directory; invoke when you need to scaffold a new agent for a task type that doesn't yet have one.
+tools: Read, Grep, Glob, Edit, Write, Agent
+---
+
 # Agent Prompt: Create a New Agent Prompt
 
 ## Setup
 
-Read `digiexpress-parent/docs-parent/900_agent_rules.md` before starting work. All rules in that file apply to this task.
+Read `digiexpress-parent/ts_setup/.claude/agents/agent-rules.md` before starting work. All rules in that file apply to this task.
 
 ## Required Input
 
-Before starting work, the invoker must provide the following. Do not proceed without all of them.
+Do not proceed without all of the following.
 
 - **Agent name** — a short kebab-case name (e.g. `fs-composer-field`). Used in the output filename.
-- **Goal** — one sentence: what should invoking this agent accomplish? Frame it as an action (e.g. "Add a new field across all layers of the fs-composer stack").
+- **Goal** — one sentence: what invoking this agent accomplishes. Frame it as an action (e.g. "Add a new field across all layers of the fs-composer stack").
 - **Agent type** — one of:
   - `exploration` — reads source code, writes a documentation file
   - `creation` — reads source code and/or reference docs, creates or modifies code files
@@ -22,23 +28,23 @@ This agent runs in two phases.
 
 **Phase 1 — Explore**
 
-Run `999_exploration_agent_prompt.md` against the provided starting points. The goal of this exploration is to determine:
+Run `exploration.md` against the provided starting points to determine:
 - What files a real invocation would need to read as reference (patterns, conventions, existing implementations).
 - What files a real invocation would need to create or modify.
 - What information the invoker must supply per run (e.g. field name, component name, type) — infer this from what varies between existing instances of the same operation.
 - Any ordering constraints, naming conventions, or gotchas that must be baked into the agent prompt.
 
-Do not write a module doc. Use `999_exploration_agent_prompt.md` for scanning only — the output of Phase 1 is internal findings, not a file.
+Use `999_exploration_agent_prompt.md` for scanning only. The output of Phase 1 is internal findings, not a file.
 
 **Phase 2 — Write the agent prompt**
 
-Using the findings from Phase 1, write a new agent prompt file to `digiexpress-parent/docs-parent/` following the structure below exactly.
+Write a new agent prompt file to `digiexpress-parent/ts_setup/.claude/agents/` following the structure below exactly.
 
 Before writing:
-1. Read the "Already documented" table in `digiexpress-parent/docs-parent/999_exploration_agent_prompt.md` to identify all used prefixes in the 901–999 range.
+1. Read the "Already documented" table in `digiexpress-parent/ts_setup/.claude/agents/exploration.md` to identify all used prefixes in the 901–999 range.
 2. Select an unused prefix between 901 and 999. Leave gaps of at least 5 between existing entries where possible.
-3. Write the file as `{prefix}_{agent-name}_agent_prompt.md`.
-4. Add an entry for the new file to the "Already documented" table in `999_exploration_agent_prompt.md` and update the "Next available prefix" line.
+3. Write the file as `{agent-name}.md`.
+4. Add an entry for the new file to the "Already documented" table in `exploration.md` and update the "Next available prefix" line.
 
 ## Output structure
 
@@ -49,11 +55,11 @@ The generated agent prompt must follow this structure exactly. Omit sections mar
 
 ## Setup
 
-Read `digiexpress-parent/docs-parent/900_agent_rules.md` before starting work. All rules in that file apply to this task.
+Read `digiexpress-parent/ts_setup/.claude/agents/agent-rules.md` before starting work. All rules in that file apply to this task.
 
 ## Required Input                     ← omit if the agent needs no per-invocation context
 
-Before starting work, the invoker must provide the following. Do not proceed without all of them.
+Do not proceed without all of the following.
 
 - **<field>** — <what it is and why it is needed>
 
@@ -101,13 +107,12 @@ If `COMPLETE`:
 
 ## Rules
 
-- The output file must follow the structure above exactly — no extra sections, no reordered sections.
 - Omit `## Required Input` if the agent needs no per-invocation context.
 - Omit `## Reference` for exploration agents — they read source directly via `## What to investigate`.
 - Omit `## What to investigate` for creation and analysis agents — they read from `## Reference`.
 - Omit `## Blockers` for exploration and analysis agents.
 - The Reference section must list only files discovered during Phase 1 exploration — not files the invoker specified.
-- The Required Input section must contain only what varies per invocation and cannot be baked in. File paths and patterns go in Reference, not Required Input.
+- Required Input must contain only what varies per invocation and cannot be baked in. File paths and patterns go in Reference, not Required Input.
 - Prefix must be unique, between 901 and 999 inclusive.
 
 ## Report

@@ -1,17 +1,23 @@
+---
+name: exploration
+description: Scans a DigiExpress module's source code and writes a structured module overview file to the agents directory; invoke when a module has no documentation entry or when its existing doc needs to be rebuilt from source.
+tools: Read, Grep, Glob, Write
+---
+
 # Agent Prompt: DigiExpress Module Documentation
 
 ## Setup
 
-Read `digiexpress-parent/docs-parent/900_agent_rules.md` before starting work. All rules in that file apply to this task.
+Read `digiexpress-parent/ts_setup/.claude/agents/agent-rules.md` before starting work. All rules in that file apply to this task.
 
 ## Task
 
-Scan a DigiExpress module's source code and write a module overview file to `digiexpress-parent/docs-parent/`. The agent handles both research and file creation.
+Scan a DigiExpress module's source code and write a module overview file to `digiexpress-parent/ts_setup/.claude/agents/`. The agent handles both research and file creation.
 
 ## Output
 
-- `0XX_<module>.md` in `digiexpress-parent/docs-parent/`
-- One-sentence entry under `## Modules` in `001_intro.md`
+- `0XX_<module>.md` in `digiexpress-parent/ts_setup/.claude/agents/`
+- One-sentence entry under `## Modules` in `digiexpress-parent/docs-parent/001_intro.md`
 
 ## File naming
 
@@ -83,7 +89,7 @@ Scan a DigiExpress module's source code and write a module overview file to `dig
 ## Rules
 
 - Omit Frontend Architecture if the module has no frontend; omit Backend Architecture if no backend.
-- Never omit "Error handling", "Bootstrapping", "Extension points", "Known limitations", or "Scope boundaries" — even if nothing was found. Do not write "None identified." or "Not applicable." alone. Instead, write one sentence explaining *why* it does not apply (e.g. "Leaf node with no providers — no bootstrapping required." or "No async paths exist — errors surface only via synchronous throws in builder methods."). The sentence must prove the agent looked, not just assert the absence.
+- Never omit "Error handling", "Bootstrapping", "Extension points", "Known limitations", or "Scope boundaries" — even if nothing was found. Write one sentence explaining *why* it does not apply (e.g. "Leaf node with no providers — no bootstrapping required." or "No async paths exist — errors surface only via synchronous throws in builder methods."). The sentence must prove the agent looked, not just assert the absence.
 
 ## Already documented
 
@@ -109,16 +115,16 @@ Check this list before writing to avoid duplicating work.
 | 080 | `080_gamut_architecture.md` | Gamut — architecture overview and data flow |
 | 090 | `090_tanstack.md` | TanStack Router + Query usage across Gamut |
 | 100 | *(reserved)* | Next top-level module (metis) |
-| 900 | `900_agent_rules.md` | Shared rules for all agents |
-| 977 | `977_fs_composer_cleanup_agent_prompt.md` | Agent prompt — fix issues found by the compliance agent |
-| 982 | `982_fs_composer_compliance_agent_prompt.md` | Agent prompt — code compliance review for fs-composer changes |
-| 987 | `987_fs_composer_component_agent_prompt.md` | Agent prompt — add a new field to fs-composer end-to-end |
-| 992 | `992_gamut_route_component_agent_prompt.md` | Agent prompt — create a new gamut-route component |
-| 995 | `995_agent_creation_prompt.md` | Agent prompt — create a new agent prompt |
-| 996 | `996_gamut_primitives_component_agent_prompt.md` | Agent prompt — create a new gamut-primitive component |
-| 997 | `997_doc_nitpicker_agent_prompt.md` | Agent prompt — documentation nitpicker |
-| 998 | `998_gamut_form_component_agent_prompt.md` | Agent prompt — create a new gamut-form component |
-| 999 | `999_exploration_agent_prompt.md` | This file |
+| 900 | `agent-rules.md` | Shared rules for all agents |
+| 977 | `fs-composer-cleanup.md` | Agent prompt — fix issues found by the compliance agent |
+| 982 | `ui-compliance.md` | Agent prompt — code compliance review for fs-composer changes |
+| 987 | `fs-composer-component.md` | Agent prompt — add a new field to fs-composer end-to-end |
+| 992 | `gamut-route-component.md` | Agent prompt — create a new gamut-route component |
+| 995 | `agent-creation.md` | Agent prompt — create a new agent prompt |
+| 996 | `gamut-primitives-component.md` | Agent prompt — create a new gamut-primitive component |
+| 997 | `doc-nitpicker.md` | Agent prompt — documentation nitpicker |
+| 998 | `gamut-form-component.md` | Agent prompt — create a new gamut-form component |
+| 999 | `exploration.md` | This file |
 
 **Next available prefix:** `091` (within Gamut range), `972` (agent range — freed when 972 orchestrator was removed), or `100` (next top-level module — metis).
 
@@ -142,15 +148,15 @@ After writing, report:
 
 ### Error handling patterns
 
-Name the actual types, hooks, or components involved: validation errors, API fetch failures, loading states. Note the absence explicitly if no error UI exists.
+Name the actual types, hooks, or components involved: validation errors, API fetch failures, loading states. Name the absence explicitly if no error UI exists.
 
 ### Host application bootstrapping
 
-Answer: "how does a consuming app wire this module up from scratch?" List required providers, their order in the provider tree, and required configuration. Note if it is a leaf node.
+List required providers, their order in the provider tree, and required configuration. Note if the module is a leaf node.
 
 ### TypeScript extension points
 
-Look for `declare module`, interface merging, or records like `GComponentsPropsList` / `GComponentNameToClassKey`. List by name with a one-line description of what each extends and why.
+Look for `declare module`, interface merging, or records like `GComponentsPropsList` / `GComponentNameToClassKey`. List each by name with a one-line description of what it extends and why.
 
 ### Known limitations and gotchas
 
@@ -164,5 +170,5 @@ List each as a named gotcha with a short explanation.
 
 ### Scope boundaries
 
-Include a short statement of what this module explicitly does NOT do.
+State what this module explicitly does NOT do.
 

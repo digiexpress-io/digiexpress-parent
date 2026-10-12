@@ -1,17 +1,25 @@
+---
+name: gamut-form-component
+description: Creates a new Dialob form input component in gamut-form, including the presentational component, Dialob bridge, slot variant registration, and optional g-props registration; invoke when a new Dialob field type or view needs a custom React component.
+tools: Read, Grep, Glob, Edit, Write, Bash, Agent
+---
+
 # Agent Prompt: Create a New Gamut Form Component
 
 ## Setup
 
-Read `digiexpress-parent/docs-parent/900_agent_rules.md` before starting work. All rules in that file apply to this task.
+Read `digiexpress-parent/ts_setup/.claude/agents/agent-rules.md` before starting work. All rules in that file apply to this task.
+
+Run `ls digiexpress-parent/docs-parent/` to see all available documentation files. Read any that cover the module you are about to modify — use the directory listing as the authoritative index, not guessed names. If a relevant doc exists, read it in full before touching any files. If none exists, invoke the `exploration` agent first to produce one, read the file it created, then proceed.
 
 ## Required Input
 
-Before starting work, the invoker must provide the following. Do not proceed without all of them.
+Do not proceed without all of the following.
 
 - **Component name** — the `g-input-*` or `g-form-*` name (e.g. `g-input-my-field`). Determines directory name, file names, `MUI_NAME`, and class key prefix.
 - **Purpose** — one sentence: what kind of input or form element this is and what it captures.
 - **Location in the form** — where in a Dialob form this component appears (e.g. "a text field inside a group", "a top-level page component").
-- **Dialob type and view** — the `type` (base Dialob type, e.g. `text`, `boolean`) and `view` (custom extension string, e.g. `myField`) that trigger this component in the slot dispatch. If unknown, ask before proceeding.
+- **Dialob type and view** — the `type` (base Dialob type, e.g. `text`, `boolean`) and `view` (custom extension string, e.g. `myField`) that trigger this component in the slot dispatch. Ask before proceeding if unknown.
 - **Variant props** — whether the component has variant props that affect rendering or slot dispatch. Ask before proceeding if unclear.
 - **Reference component** — which existing `g-input-*` component to model the structure on (e.g. `g-input-text` for simple text, `g-input-boolean` for toggle, `g-input-address` for complex multi-field).
 
@@ -305,12 +313,12 @@ export * from './GInputABCDialob'
 export * from './g-input-abc-types'   // only if types are in a separate file
 ```
 
-**`gamut-form/index.ts`** — add only if the component needs to be accessible outside the module for theming:
+**`gamut-form/index.ts`** — add only if the component must be accessible outside the module for theming:
 ```ts
 export * from './g-input-abc';
 ```
 
-Components used only internally (bridge is the only consumer) do not need a top-level export.
+Components used only internally do not need a top-level export.
 
 ---
 
@@ -358,13 +366,13 @@ No backend Dialob changes needed — configure the form definition JSON only.
 - `view` — the string added in `useSlotVariant`. Omit if using `props` keys for dispatch instead.
 - `props` — arbitrary metadata read via `element.props?.someKey`. Boolean props must be the string `'true'`, not a native boolean.
 
-If `props` keys are used for dispatch, document them in `gamut-form/DIALOB_FILL_PROPS.md`.
+If `props` keys drive dispatch, document them in `gamut-form/DIALOB_FILL_PROPS.md`.
 
 ---
 
 ## Step 9: Testing
 
-No storybook or fixture files exist. Testing is done against the live demo app.
+No storybook or fixture files exist. Test against the live demo app.
 
 **Start the dev server:**
 ```
@@ -400,6 +408,10 @@ Create a Dialob form in the backend with the correct `type`/`view`/`props`. Navi
 - [ ] Tested via `pnpm start-gamut` — render, onChange, disabled, readOnly verified
 
 ---
+
+## Post-build gate
+
+After completing all file changes, invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
 
 ## Report
 

@@ -1,12 +1,18 @@
+---
+name: doc-nitpicker
+description: Rewrites a single documentation file in place to reduce length and improve clarity without removing content; invoke when a doc in the agents directory is verbose, redundant, or poorly formatted.
+tools: Read, Edit
+---
+
 # Agent Prompt: Documentation Nitpicker
 
 ## Setup
 
-Read `digiexpress-parent/docs-parent/900_agent_rules.md` before starting work. All rules in that file apply to this task.
+Read `digiexpress-parent/ts_setup/.claude/agents/agent-rules.md` before starting work. All rules in that file apply to this task.
 
 ## Task
 
-Read a documentation file in `digiexpress-parent/docs-parent/` and rewrite it in place. The goal is to reduce length, increase clarity, and improve format — without losing any information.
+Read a documentation file in `digiexpress-parent/ts_setup/.claude/agents/` and rewrite it in place. The goal is to reduce length, increase clarity, and improve format — without losing any information.
 
 Do not remove content. Do not add content. Restructure and reword only.
 

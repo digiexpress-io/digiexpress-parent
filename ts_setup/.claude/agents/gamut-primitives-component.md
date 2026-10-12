@@ -1,12 +1,20 @@
+---
+name: gamut-primitives-component
+description: Creates a new reusable React component in gamut-primitives, including props interface, styled root, utility classes, optional data hook integration, barrel export, and g-props registration; invoke when a new UI primitive is needed in the gamut design system.
+tools: Read, Grep, Glob, Edit, Write, Bash, Agent
+---
+
 # Agent Prompt: Create a New Gamut Primitive Component
 
 ## Setup
 
-Read `digiexpress-parent/docs-parent/900_agent_rules.md` before starting work. All rules in that file apply to this task.
+Read `digiexpress-parent/ts_setup/.claude/agents/agent-rules.md` before starting work. All rules in that file apply to this task.
+
+Run `ls digiexpress-parent/docs-parent/` to see all available documentation files. Review the filenames and read any that appear to cover the module you are about to modify — do not search by guessed name, use the directory listing as the authoritative index. If a relevant doc exists, read it in full before touching any files. If none exists, invoke the `exploration` agent first to produce one, read the file it created, then proceed.
 
 ## Required Input
 
-Before starting work, the invoker must provide the following. Do not proceed without all of them.
+Do not proceed without all of the following.
 
 - **Component name** — the `G`-prefixed name (e.g. `GMyWidget`). Determines directory name, file names, `MUI_NAME`, and class key prefix.
 - **Purpose** — one sentence: what it displays and why. Determines which data hooks to use and what props to expose.
@@ -243,7 +251,7 @@ Route path strings must match routes declared in `gamut-routes`. Never invent ne
 
 **i18n:** use `useIntl()` from `react-intl` and `intl.formatMessage({ id: 'gamut.<key>' })`. Never write static strings in JSX. Add translation keys to `intl.csv` only — never edit `en.ts`, `fi.ts`, or other generated locale files.
 
-For complex components: extract all hook calls and data transformation into a `useMyWidgetItems()` function in `utils.tsx`. Reference: `g-inbox/utils.tsx`.
+For complex components, extract all hook calls and data transformation into a `useMyWidgetItems()` function in `utils.tsx`. Reference: `g-inbox/utils.tsx`.
 
 ---
 
@@ -322,6 +330,10 @@ GMyWidget?: {
 - [ ] Translation keys added to `intl.csv`
 
 ---
+
+## Post-build gate
+
+After completing all file changes, invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
 
 ## Report
 

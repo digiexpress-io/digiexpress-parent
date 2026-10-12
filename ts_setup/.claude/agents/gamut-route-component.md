@@ -1,16 +1,24 @@
+---
+name: gamut-route-component
+description: Creates a new page-level route component in gamut-routes, including utility classes, the route React component, optional types file and sub-components, barrel export, g-props registration, and TanStack Router route file wiring; invoke when a new application page or view is needed.
+tools: Read, Grep, Glob, Edit, Write, Bash, Agent
+---
+
 # Agent Prompt: Create a New Gamut Route Component
 
 ## Setup
 
-Read `digiexpress-parent/docs-parent/900_agent_rules.md` before starting work. All rules in that file apply to this task.
+Read `digiexpress-parent/ts_setup/.claude/agents/agent-rules.md` before starting work. All rules in that file apply to this task.
+
+Run `ls digiexpress-parent/docs-parent/` to see all available documentation files. Review the filenames and read any that appear to cover the module you are about to modify — use the directory listing as the authoritative index, not guessed names. If a relevant doc exists, read it in full before touching any files. If none exists, invoke the `exploration` agent first to produce one, read the file it created, then proceed.
 
 ## Required Input
 
-Before starting work, the invoker must provide the following. Do not proceed without all of them.
+The invoker must provide all of the following before work begins.
 
 - **Component name** — the `g-router-*` directory name (e.g. `g-router-my-view`). Determines directory name, file names, `MUI_NAME`, props interface name, root styled component name, and class key prefix.
 - **Purpose** — one sentence: what this route renders and which data it reads.
-- **Route hierarchy** — which route file in `routes/` will mount this component. Either an existing file (e.g. `secured.$locale.views.$viewId.index.tsx`) or a new file (provide the full TanStack dot-separated path).
+- **Route hierarchy** — which route file in `routes/` mounts this component. Either an existing file (e.g. `secured.$locale.views.$viewId.index.tsx`) or a new file (provide the full TanStack dot-separated path).
 - **Auth context** — `public` (no auth required) or `secured` (requires `SecuredSetup` provider stack). Determines which providers are available.
 - **Props** — the props the component receives from the route file. At minimum: `locale: string`. Secured view components also receive `viewId: GUserOverviewMenuView`.
 - **Layout variant** — which `GLayout` variant the component uses (e.g. `secured-1-row-1-column`, `fill-session-start-end`, `toolbar-n-rows-2-columns`). If unknown, check `GLayout` in `@dxs-ts/gamut-primitives`.
@@ -19,7 +27,7 @@ Before starting work, the invoker must provide the following. Do not proceed wit
 
 ## Task
 
-Create a new route component in `digiexpress-parent/ts_setup/modules/gamut-routes/` following the steps below exactly. A route component is a page-level view that assembles primitives from `@dxs-ts/gamut-primitives`, API hooks from `@dxs-ts/gamut-api`, and shell infrastructure from `@dxs-ts/gamut-shell`. It does not contain form rendering or Dialob integration — those belong to `@dxs-ts/gamut-form`.
+Create a new route component in `digiexpress-parent/ts_setup/modules/gamut-routes/` following the steps below exactly. A route component assembles primitives from `@dxs-ts/gamut-primitives`, API hooks from `@dxs-ts/gamut-api`, and shell infrastructure from `@dxs-ts/gamut-shell`. It does not contain form rendering or Dialob integration — those belong to `@dxs-ts/gamut-form`.
 
 ---
 
@@ -27,8 +35,8 @@ Create a new route component in `digiexpress-parent/ts_setup/modules/gamut-route
 
 Every route component has two layers:
 
-1. **Utility classes layer** (`useUtilityClasses.ts` or `useUtilityClasses.tsx`) — defines `MUI_NAME`, the `Classes` interface, the `ClassKey` type, `useUtilityClasses()`, and the `GRouter<Name>Root` styled component. Also contains private sub-components (breadcrumbs, section titles) that are too small to warrant their own file.
-2. **Route component** (`GRouter<Name>.tsx`) — the exported React component. Calls `useThemeProps` with `MUI_NAME`, calls `useUtilityClasses()`, assembles `GShell`, `GAppBar`, `GLayout`, `GFooter`, and any view-specific primitives.
+1. **Utility classes layer** (`useUtilityClasses.ts` or `useUtilityClasses.tsx`) — defines `MUI_NAME`, the `Classes` interface, the `ClassKey` type, `useUtilityClasses()`, and the `GRouter<Name>Root` styled component. Also contains private sub-components (breadcrumbs, section titles) too small to warrant their own file.
+2. **Route component** (`GRouter<Name>.tsx`) — the exported React component. Calls `useThemeProps` with `MUI_NAME`, calls `useUtilityClasses()`, and assembles `GShell`, `GAppBar`, `GLayout`, `GFooter`, and any view-specific primitives.
 
 For complex routes, additional sub-component files (e.g. `GRouter<Name>Content.tsx`, `GRouter<Name>Actions.tsx`) sit alongside these two. A types file (`g-router-<name>-types.ts`) holds the `OwnerState` interface and its hook when state derivation logic does not belong in the main component.
 
@@ -146,7 +154,7 @@ export const GRouter<Name>Root = styled('div', {
 - `ClassKey` type: `GRouter<Name>ClassKey`.
 - Root styled component: `GRouter<Name>Root`.
 
-**When the file is `.tsx`**, add private sub-components after the styled component. They are not exported from `index.ts` but may be exported from `useUtilityClasses.tsx` for use in the main component file:
+When the file is `.tsx`, add private sub-components after the styled component. They are not exported from `index.ts` but may be exported from `useUtilityClasses.tsx` for use in the main component file:
 
 ```tsx
 import { Avatar, Box, Breadcrumbs, generateUtilityClass, Link, styled, Typography } from '@mui/material';
@@ -301,11 +309,11 @@ export const GRouter<Name>: React.FC<GRouter<Name>Props> = (initProps) => {
 **Key rules:**
 - `useThemeProps({ props: initProps, name: MUI_NAME })` is always the first call inside the component body (after hooks that do not depend on props).
 - `useNavigate()` and `useUtilityClasses()` may be called before `useThemeProps`; all three appear unconditionally at the top of the component.
-- For secured views, wrap content in `<GShell>`. For public views, also wrap in `<GShell drawerOpen={false}>`.
+- For secured views, wrap content in `<GShell>`. For public views, use `<GShell drawerOpen={false}>`.
 - `GAppBar` always receives `locale`, `onLocale`, and `onLogoClick`. Secured views also receive `viewId`.
 - `GUserOverviewMenu` receives `onClick` (the navigation handler, named `handleClick`) and `defaultView` set to the `GUserOverviewMenuView` string for this view.
 - Navigation handlers guard against `undefined` viewId with `if (!viewId) { return; }`.
-- `props.locale` and `props.viewId` are accessed directly from the `useThemeProps` result — do not destructure them into local variables before use.
+- Access `props.locale` and `props.viewId` directly from the `useThemeProps` result — do not destructure them into local variables before use.
 - `<main role='main'>` and `<footer role='footer'>` are always present.
 
 **Public (unauthenticated) route variant:**
@@ -424,8 +432,6 @@ const Layout: React.FC<GRouter<Name>Props> = (props) => {
 
 **File:** `g-router-<name>/g-router-<name>-types.ts`
 
-Create this file only when the component derives state from multiple API hooks and distributes it to sub-components.
-
 ```ts
 import { IamApi, useIam, SiteApi, useSite } from '@dxs-ts/gamut-api';
 
@@ -508,7 +514,7 @@ export * from './g-router-<name>';
 
 **File:** `digiexpress-parent/ts_setup/modules/gamut-routes/g-props/g-props.ts`
 
-Every route component is registered in `g-props.ts`. Make four additions.
+Make four additions.
 
 **1. Import at the top (grouped with other router imports):**
 
@@ -552,7 +558,7 @@ export interface GComponents<Theme = unknown> {
 
 `GComponentsProps`, `GComponentsVariants`, and `GComponentsOverrides` are derived types that update automatically when `GComponentsPropsList` and `GComponentNameToClassKey` change.
 
-**Note:** `GRouterOfferSummaryRps` (`FormFillRpsRating`) exists in the codebase but is not registered in `g-props.ts`. All new route components must be registered — do not omit this step.
+`GRouterOfferSummaryRps` (`FormFillRpsRating`) exists in the codebase but is not registered in `g-props.ts`. All new route components must be registered — do not omit this step.
 
 ---
 
@@ -560,7 +566,7 @@ export interface GComponents<Theme = unknown> {
 
 **Existing `secured.$locale.views.$viewId.index.tsx` — adding a new `$viewId` dispatch:**
 
-When the new route is mounted as a secured view dispatched by `$viewId`, add a branch to `ChooseComponent` in `routes/secured.$locale.views.$viewId.index.tsx`:
+When the new route mounts as a secured view dispatched by `$viewId`, add a branch to `ChooseComponent` in `routes/secured.$locale.views.$viewId.index.tsx`:
 
 ```ts
 import { GRouter<Name> } from '../g-router-<name>';
@@ -593,7 +599,7 @@ function ChooseComponent(props: { viewId: GUserOverviewMenuView, locale: string,
 
 **New route file:**
 
-If the route is not dispatched by `$viewId` but mounts on a dedicated path, create a new file in `routes/` using TanStack Router dot-separator naming. The file must export a `Route` constant created via `createFileRoute`:
+If the route mounts on a dedicated path rather than dispatched by `$viewId`, create a new file in `routes/` using TanStack Router dot-separator naming. The file must export a `Route` constant created via `createFileRoute`:
 
 ```tsx
 import { createFileRoute } from '@tanstack/react-router';
@@ -632,6 +638,10 @@ After creating the file, run the TanStack Router CLI to regenerate `routeTree.ge
 - [ ] Tested via `pnpm start-gamut` — renders at expected URL, navigation works, `useThemeProps` applies theme overrides
 
 ---
+
+## Post-build gate
+
+After completing all file changes, invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
 
 ## Report
 
