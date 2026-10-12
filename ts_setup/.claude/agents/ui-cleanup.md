@@ -31,10 +31,10 @@ Read each file before editing it. Make only the changes required by the report. 
 
 After fixing all report items, review the modified files for the following and fix anything found:
 
-- **Redundant styles** — CSS properties overridden immediately by a more specific rule, or duplicated in two places.
-- **Unused styles** — class slots defined in `useUtilityClasses` or rules in the styled root component not referenced in the component files.
-- **Redundant `useState`** — local state that duplicates something already tracked elsewhere, state that is set but never read, or state replaceable with a derived value.
-- **Overly verbose statements** — multi-step variable chains expressible more directly without changing behaviour.
+- **Redundant styles** — any property overridden by a more specific rule in the same block, or duplicated across two slots?
+- **Unused styles** — any slot in `useUtilityClasses` never referenced in a `className` assignment?
+- **Redundant `useState`** — any state never read, or derivable from existing state without storing?
+- **Overly verbose statements** — any multi-step chain expressible in fewer steps without changing behaviour?
 
 Remove or simplify only what is clearly redundant or unused. Do not restructure logic or change behaviour.
 

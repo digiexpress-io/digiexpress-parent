@@ -10,7 +10,9 @@ tools: Read, Grep, Glob, Edit, Write, Bash, Agent
 
 Read `digiexpress-parent/ts_setup/.claude/agents/agent-rules.md` before starting work. All rules in that file apply to this task.
 
-Run `ls digiexpress-parent/docs-parent/` to see all available documentation files. Read any that cover the module you are about to modify — use the directory listing as the authoritative index, not guessed names. If a relevant doc exists, read it in full before touching any files. If none exists, invoke the `exploration` agent first to produce one, read the file it created, then proceed.
+Read `digiexpress-parent/docs-parent/999_ui_coding_standards.md` before writing any code. All rules in that file apply to this task.
+
+Run `ls digiexpress-parent/docs-parent/` to see all available documentation files. Read any that cover the module you are about to modify — use the directory listing as the authoritative index, not guessed names. If a relevant doc exists, read it in full before touching any files. If you are uncertain whether a file covers the module you are about to modify, ask before reading it or invoking the `exploration` agent — do not guess. If none exists, invoke the `exploration` agent first to produce one, read the file it created, then proceed.
 
 ## Required Input
 

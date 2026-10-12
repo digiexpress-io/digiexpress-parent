@@ -11,6 +11,14 @@
 
 If no doc exists for the module, invoke the `exploration` agent to produce one before starting work.
 
+## Invoking agents
+
+When invoking any building agent, the brief must include:
+- The user's exact request verbatim
+- All required input fields for that agent — no paraphrasing, no omissions
+
+If any required field is unclear, ask the user before invoking. Do not fill in missing fields with assumptions.
+
 ## Agent pipeline
 
 UI work follows this chain:
