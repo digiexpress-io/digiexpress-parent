@@ -50,10 +50,6 @@ If any part of this task requires breaking a rule or inventing a pattern not pre
 
 A partially completed task marked `BLOCKED` is correct. A fully completed task that invented patterns is not.
 
-## Post-build gate
-
-After completing all file changes, invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
-
 ## Report
 
 **Status:** `COMPLETE` or `BLOCKED`

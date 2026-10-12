@@ -24,6 +24,10 @@ If completing any part of a task requires breaking a rule, stop work on the affe
 
 A partially completed task marked `BLOCKED` is correct. A task that broke a rule to reach completion is not.
 
+## Post-build gate
+
+After completing all file changes, invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
+
 ## Reporting
 
 Report status at the end of every task:

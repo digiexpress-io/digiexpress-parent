@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FsDirentFormField, FsDirentSelectSingle, FsDirentTextField } from '../fs-utilities';
+import { FsDirentLocaleSelect } from '../fs-dirent-locale-select';
 import { useUtilityClasses, FsDirentPrintoutRoot } from './useUtilityClasses';
 import { useUpdateOwnerState } from './useUpdateOwnerState';
 import { FsDirentPrintoutProps } from './FsDirentPrintoutProps';
@@ -31,11 +32,26 @@ export const FsDirentPrintoutUpdate: React.FC<FsDirentPrintoutProps> = ({ dirent
           />
         </FsDirentFormField>
 
-        {ownerState.locales.map((locale) => (
-          <FsDirentFormField key={locale.value} label={intl.formatMessage({ id: 'fs.dirent.printout.locales.labelField' }, { localeCode: locale.label })}>
-            <FsDirentTextField value={ownerState.intlValues[locale.value] ?? ''} onChange={(value) => ownerState.onChangeIntlValue(locale.value, value)} />
-          </FsDirentFormField>
-        ))}
+        <FsDirentFormField label={intl.formatMessage({ id: 'fs.dirent.printout.sectionTitle.localeLabels' })}>
+          {ownerState.localeEntries.map((entry, index) => (
+            <div key={index} className={classes.localeRow}>
+              <div className={classes.localeSelectContainer}>
+                <FsDirentLocaleSelect
+                  value={entry.localeCode}
+                  allowedCodes={ownerState.availableCodes(index)}
+                  onChange={(code) => ownerState.onChangeLocaleEntry(index, code)}
+                />
+              </div>
+              {entry.localeCode !== '' && (
+                <FsDirentTextField
+                  value={entry.labelValue}
+                  required
+                  onChange={(value) => ownerState.onChangeLabelEntry(index, value)}
+                />
+              )}
+            </div>
+          ))}
+        </FsDirentFormField>
 
       </div>
     </FsDirentPrintoutRoot>
