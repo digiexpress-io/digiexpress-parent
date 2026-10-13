@@ -8,7 +8,7 @@ Sub-module of `@dxs-ts/fs-composer` that implements the four standard dirent vie
 
 ## Dependencies
 
-This sub-module is not a standalone package. It ships inside `@dxs-ts/fs-composer` and inherits all of its parent's dependencies and peerDependencies. For the full list see `115_fs_composer.md`.
+This sub-module is not a standalone package. It ships inside `@dxs-ts/fs-composer` and inherits all of its parent's dependencies and peerDependencies. For the full list see `114_fs_composer_modules.md`.
 
 Direct internal imports used by this sub-module:
 
@@ -56,7 +56,7 @@ No error boundary, loading spinner, or error state type is present in this sub-m
 
 ## Bootstrapping
 
-This sub-module is a leaf: it is mounted by the `DirentWidget` dispatch in `fs-factory` and `fs-main`, which are already inside `FsSetup.Main`. No additional providers are required beyond what `@dxs-ts/fs-composer` already requires (see `115_fs_composer.md` Bootstrapping section). The `FsPropertiesWorkflow` component is registered in the properties panel and is instantiated by `fs-panel-properties`; no consumer wiring is needed.
+This sub-module is a leaf: it is mounted by the `DirentWidget` dispatch in `fs-factory` and `fs-main`, which are already inside `FsSetup.Main`. No additional providers are required beyond what `@dxs-ts/fs-composer` already requires (see `114_fs_composer_modules.md` Bootstrapping section). The `FsPropertiesWorkflow` component is registered in the properties panel and is instantiated by `fs-panel-properties`; no consumer wiring is needed.
 
 ## TypeScript Extension Points
 

@@ -57,7 +57,7 @@ No error boundary, error display component, or loading spinner exists within thi
 
 ## Bootstrapping
 
-This sub-module is a leaf node rendered by the `DirentWidget` dispatch in `fs-factory`. A consuming application must have all `@dxs-ts/fs-composer` bootstrapping in place (see `115_fs_composer.md`):
+This sub-module is a leaf node rendered by the `DirentWidget` dispatch in `fs-factory`. A consuming application must have all `@dxs-ts/fs-composer` bootstrapping in place (see `114_fs_composer_modules.md`):
 
 1. `react-intl` `IntlProvider` with `fs.dirent.article.*` and `fs.dirent.configOption.*` message keys.
 2. `FsDirentProvider` and `FsDirentBodyProvider` from `@dxs-ts/fs-api`.
