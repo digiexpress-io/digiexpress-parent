@@ -13,9 +13,7 @@ Read this file before starting any task.
 
 ## Code and styling
 
-- Never use webkit-specific CSS (`-webkit-*`). Never use browser-specific styling unless explicitly instructed.
-- Do not deviate from existing patterns in the codebase. Do not invent new naming conventions.
-- Follow the barrel export structure exactly as found in the existing `index.ts`.
+Follow all rules in `digiexpress-parent/docs-parent/999_ui_coding_standards.md`.
 
 ## Blockers
 

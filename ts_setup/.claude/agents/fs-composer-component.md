@@ -46,6 +46,11 @@ If `field_change`, also provide:
 - Never use hardcoded hex color values. All colors must come from `fs-theme` or `eveli-theme`. If no suitable token exists, use MUI color manipulation functions (`alpha`, `lighten`, `darken`) applied to an existing theme token.
 - Never use `sx` props or inline `style` props. All styling must go through `useUtilityClasses` and the module's styled components. For portal-rendered content (Tooltip, Popover, Dialog internals) where ancestor-scoped CSS cannot reach: use a CSS `:hover` sibling approach to keep elements in the component tree, or export a named `styled('element')` from `useUtilityClasses.ts`. If a MUI component needs internal slot overrides, use `componentsProps`/`slotProps` with a `className` (not `style`), and define the class in the module's styled component.
 
+## Before finishing
+
+1. Run `corepack pnpm build-eveli` and fix all TypeScript errors before proceeding.
+2. Invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
+
 ## Blockers
 
 If any part of this task requires breaking a rule or inventing a pattern not present in `116_fs_composer_add_field.md`, stop work on the affected part, mark the task `BLOCKED`, and state which layer is at issue, what was attempted, and what decision is needed to proceed.

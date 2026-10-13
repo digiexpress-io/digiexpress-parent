@@ -35,7 +35,7 @@ import { FsIcons } from '../fs-theme';
 // <FsIcons.Close />, <FsIcons.Search />, etc.
 ```
 
-If the icon isn't in `FsIcons` yet, add it there first.
+If the icon isn't in `FsIcons` yet, add it there first. Read `ts_setup/modules/fs-composer/fs-theme/fs-icons.tsx` to understand the structure before adding.
 
 ---
 
@@ -49,6 +49,8 @@ When re-implementing a feature from an existing codebase (e.g. migrating a compo
 - **Never guess at types, props, field names, or logic.** If the original source wasn't read, go read it first.
 - **Never add fields, types, or behaviors that weren't in the original** — even if they seem useful or "correct."
 - **If you are unsure about any detail, stop and ask.** Do not proceed with a guess.
+
+If no existing pattern exists for the task at hand, mark the task `BLOCKED` and ask before proceeding.
 
 This rule applies to: type definitions, interface fields, optional/required markers, prop names, state shapes, function signatures, and component logic.
 
@@ -79,26 +81,13 @@ For portal-rendered content (Tooltip, Popover, Dialog internals) where ancestor-
 
 ---
 
-## 6. When copying or re-implementing existing code, never invent anything
-
-When re-implementing a feature from an existing codebase (e.g. migrating a component from one module to another):
-
-- **Every line of code must be traceable to the original source.** If it wasn't in the original, it must not appear in the new version.
-- **Never guess at types, props, field names, or logic.** If the original source wasn't read, go read it first.
-- **Never add fields, types, or behaviors that weren't in the original** — even if they seem useful or "correct."
-- **If you are unsure about any detail, stop and ask.** Do not proceed with a guess.
-
-This rule applies to: type definitions, interface fields, optional/required markers, prop names, state shapes, function signatures, and component logic.
-
----
-
-## 7. Never use "has" for booleans
+## 6. Never use "has" for booleans
 
 All boolean variable and prop names use an `is` prefix (`isOpen`, `isError`, `isLoading`). Never `has`.
 
 ---
 
-## 8. useUtilityClasses rules
+## 7. useUtilityClasses rules
 
 Slot names must not be MUI reserved global-state names: `active`, `checked`, `completed`, `disabled`, `error`, `expanded`, `focused`, `focusVisible`, `open`, `readOnly`, `required`, `selected`. Using any of these causes `generateUtilityClass` to silently return `Mui-{slot}` instead of `{MUI_NAME}-{slot}`, so the stylesheet selector never matches.
 
@@ -110,7 +99,7 @@ Never define a `Classes` interface or `ClassKey` type alias in `useUtilityClasse
 
 ---
 
-## 9. Component folder structure
+## 8. Component folder structure
 
 Every component folder must contain:
 - `ComponentName.tsx` — the component
@@ -119,15 +108,17 @@ Every component folder must contain:
 
 Optional (only when applicable):
 - `ComponentNameProps.ts` — props interface (when the interface is non-trivial)
-- `useCreateOwnerState.ts` — create-flow state (only when the component manages create-flow form state)
-- `useUpdateOwnerState.ts` — update-flow state (only when the component manages update-flow form state)
-- `useOwnerState.ts` — derived/computed state for stateless components (only when needed)
+- `useCreateOwnerState.ts` — use when the component manages state for creating a new asset
+- `useUpdateOwnerState.ts` — use when the component manages state for updating an existing asset
+- `useOwnerState.ts` — use for all other stateful components that are not create or update flows
 
-Do **not** create `useCreateOwnerState` / `useUpdateOwnerState` for read-only display components.
+Use exactly one of the three state hooks per component. If unsure which applies, ask before creating the file.
+
+Do **not** create any state hook for read-only display components.
 
 ---
 
-## 10. Barrel (index.ts) rules
+## 9. Barrel (index.ts) rules
 
 - Only re-export the component(s) and their public prop/option types.
 - Never re-export `useUtilityClasses`, styled roots, or `ownerState` types.
@@ -136,22 +127,29 @@ Do **not** create `useCreateOwnerState` / `useUpdateOwnerState` for read-only di
 
 ---
 
-## 11. State management
+## 10. State management
 
-A component's local state must go through a dedicated `useXxxOwnerState` hook — never raw `useState` calls in the component body.
+No raw `useState` calls in the component body — all state goes in the `useXxxOwnerState` hook.
 
-Any `.filter()`, `.sort()`, `.map()`, grouping, or branching-on-a-field computation that produces what the component renders belongs in the hook, returned as an already-derived value. It must never appear inline in the component body above the `return`.
+No data transformation in the component body. If you need to filter, sort, or map data to derive what gets rendered, do it in the hook and return the already-computed result. The component body receives and renders it.
 
-Purely presentational per-item formatting calls made directly inside JSX (e.g. `intl.formatMessage(...)`) are fine inline.
+Exception: formatting calls directly inside JSX (e.g. `intl.formatMessage(...)`) are fine inline — these control how something is displayed, not what is rendered.
 
 ---
 
-## 12. TypeScript rules
+## 11. TypeScript rules
 
 - No `null` — use `undefined`. Exception: `useRef<T>(null)` is the correct React 19 initialisation pattern; the declared type must be `React.RefObject<T | null>`, not `React.RefObject<T>`.
 - Underscore-prefixed types/interfaces (e.g. `_XxxState`, `_XxxStateProps`, `_XxxOwnerState`) are module-local — never export them.
 - Descriptive parameter names only — no single-character names (`v`, `e`, `k`, etc.).
 - No unused declarations — any type alias, interface, variable, or constant defined in a file but never referenced within that file or re-exported for external use is a violation.
+- Never use `unknown` as a type — if the correct type is genuinely unclear, stop and ask.
+
+---
+
+## 12. No browser-specific CSS
+
+Never use webkit-specific CSS (`-webkit-*`) or any other browser-specific styling unless explicitly instructed.
 
 ---
 

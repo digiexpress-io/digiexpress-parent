@@ -42,3 +42,4 @@ ui-builder → ui-compliance → ui-cleanup (only if FAIL)
 | `exploration` | Explore source code and produce a module documentation file |
 | `doc-nitpicker` | Review and tighten existing documentation files |
 | `agent-creation` | Create a new agent prompt file |
+| `gaps-manager` | Add or update entries in the gaps work queue in `docs-parent/gaps.md` |

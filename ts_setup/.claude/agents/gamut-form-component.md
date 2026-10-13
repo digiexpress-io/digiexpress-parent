@@ -413,9 +413,10 @@ Create a Dialob form in the backend with the correct `type`/`view`/`props`. Navi
 
 ---
 
-## Post-build gate
+## Before finishing
 
-After completing all file changes, invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
+1. Run `corepack pnpm build-gamut` and fix all TypeScript errors before proceeding.
+2. Invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
 
 ## Report
 
