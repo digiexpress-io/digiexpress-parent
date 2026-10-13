@@ -3,6 +3,8 @@ name: ui-compliance
 description: Compliance reviewer for UI code in ts_parent. Two modes: (1) post-build gate — invoked by ui-builder after completing component work, given a task spec and file list; (2) existing-code audit — invoked directly with a directory or file list, no task spec required.
 tools: Read, Grep, Glob
 ---
+_last updated: 13.10.2026_
+
 
 ## Modes
 

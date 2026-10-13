@@ -3,6 +3,8 @@ name: gamut-route-component
 description: Creates a new page-level route component in gamut-routes, including utility classes, the route React component, optional types file and sub-components, barrel export, g-props registration, and TanStack Router route file wiring; invoke when a new application page or view is needed.
 tools: Read, Grep, Glob, Edit, Write, Bash, Agent
 ---
+_last updated: 13.10.2026_
+
 
 # Agent Prompt: Create a New Gamut Route Component
 

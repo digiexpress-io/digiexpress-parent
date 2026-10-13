@@ -1,3 +1,5 @@
+_last updated: 13.10.2026_
+
 # fs-dirent-article
 
 ## Purpose

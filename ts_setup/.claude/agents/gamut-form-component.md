@@ -3,6 +3,8 @@ name: gamut-form-component
 description: Creates a new Dialob form input component in gamut-form, including the presentational component, Dialob bridge, slot variant registration, and optional g-props registration; invoke when a new Dialob field type or view needs a custom React component.
 tools: Read, Grep, Glob, Edit, Write, Bash, Agent
 ---
+_last updated: 13.10.2026_
+
 
 # Agent Prompt: Create a New Gamut Form Component
 

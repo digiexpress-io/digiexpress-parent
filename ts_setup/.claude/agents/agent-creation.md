@@ -3,6 +3,8 @@ name: agent-creation
 description: Creates a new Claude Code agent prompt file by first running exploration to discover patterns, then writing a structured agent prompt to the agents directory; invoke when you need to scaffold a new agent for a task type that doesn't yet have one.
 tools: Read, Grep, Glob, Edit, Write, Agent
 ---
+_last updated: 13.10.2026_
+
 
 # Agent Prompt: Create a New Agent Prompt
 

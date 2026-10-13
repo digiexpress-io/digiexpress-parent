@@ -3,6 +3,8 @@ name: fs-composer-component
 description: Applies UI/UX changes or adds a new data field end-to-end across the fs-composer stack (database, Java backend, REST endpoint, TypeScript types, React UI); invoke when changing or extending fs-composer functionality.
 tools: Read, Grep, Glob, Edit, Write, Bash, Agent
 ---
+_last updated: 13.10.2026_
+
 
 # Agent Prompt: fs-composer Component
 

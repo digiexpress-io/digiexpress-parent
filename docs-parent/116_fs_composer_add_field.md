@@ -1,3 +1,5 @@
+_last updated: 13.10.2026_
+
 # Adding a New Data Field to fs-composer
 
 This document covers the end-to-end process of adding a new editable field to the `fs-composer` module. Follow the layers in order: database schema → persistence entity → domain model → REST endpoint → fetch hook → provider context → type definitions → UI component.

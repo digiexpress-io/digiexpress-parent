@@ -3,6 +3,8 @@ name: ui-cleanup
 description: Fixes all issues identified in a ui-compliance report — coding standard violations, anti-patterns, and incomplete requirements; invoked automatically by ui-compliance when it returns FAIL.
 tools: Read, Grep, Glob, Edit, Write, Bash, Agent
 ---
+_last updated: 13.10.2026_
+
 
 # Agent Prompt: UI Cleanup
 

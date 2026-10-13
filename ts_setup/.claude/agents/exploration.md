@@ -3,6 +3,8 @@ name: exploration
 description: Scans a DigiExpress module's source code and writes a structured module overview file to the agents directory; invoke when a module has no documentation entry or when its existing doc needs to be rebuilt from source.
 tools: Read, Grep, Glob, Write
 ---
+_last updated: 13.10.2026_
+
 
 # Agent Prompt: DigiExpress Module Documentation
 

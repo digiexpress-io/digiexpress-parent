@@ -3,6 +3,8 @@ name: doc-nitpicker
 description: Rewrites a single documentation file in place to reduce length and improve clarity without removing content; invoke when a doc in the agents directory is verbose, redundant, or poorly formatted.
 tools: Read, Edit
 ---
+_last updated: 13.10.2026_
+
 
 # Agent Prompt: Documentation Nitpicker
 

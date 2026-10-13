@@ -1,3 +1,5 @@
+_last updated: 13.10.2026_
+
 # Gamut Architecture Overview
 
 ## 1. Layer Diagram

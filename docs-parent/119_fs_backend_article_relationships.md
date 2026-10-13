@@ -1,3 +1,5 @@
+_last updated: 13.10.2026_
+
 # Backend: Article, ArticleLink, and ArticleWorkflow Domain
 
 Source module: `limaone-compiler`

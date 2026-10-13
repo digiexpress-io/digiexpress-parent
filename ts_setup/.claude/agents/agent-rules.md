@@ -1,3 +1,5 @@
+_last updated: 13.10.2026_
+
 # Agent Rules — DigiExpress Documentation
 
 Read this file before starting any task.

@@ -3,6 +3,8 @@ name: gamut-primitives-component
 description: Creates a new reusable React component in gamut-primitives, including props interface, styled root, utility classes, optional data hook integration, barrel export, and g-props registration; invoke when a new UI primitive is needed in the gamut design system.
 tools: Read, Grep, Glob, Edit, Write, Bash, Agent
 ---
+_last updated: 13.10.2026_
+
 
 # Agent Prompt: Create a New Gamut Primitive Component
 
