@@ -47,6 +47,7 @@ Before writing:
 2. Select an unused prefix between 901 and 999. Leave gaps of at least 5 between existing entries where possible.
 3. Write the file as `{agent-name}.md`.
 4. Add an entry for the new file to the "Already documented" table in `exploration.md` and update the "Next available prefix" line.
+5. Invoke the `doc-nitpicker` agent on the file you just wrote.
 
 ## Output structure
 
