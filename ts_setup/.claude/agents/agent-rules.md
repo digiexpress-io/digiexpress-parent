@@ -19,21 +19,29 @@ Read `digiexpress-parent/docs-parent/000_architecture.md` before starting any ta
 
 Follow all rules in `digiexpress-parent/docs-parent/999_ui_coding_standards.md`.
 
+## Reference fidelity
+
+When a reference component or file is provided, match it pattern-for-pattern. Do not add logic, validation, formatting, state, event handling, or CSS that the reference does not have. If you believe something is needed that the reference does not demonstrate, stop, mark the task `BLOCKED`, and state what you think is missing and why. Do not invent a solution.
+
 ## Blockers
 
-If completing any part of a task requires breaking a rule, stop work on the affected part. Then:
+If completing any part of a task requires breaking a rule or adding logic not present in the reference, stop work on the affected part. Then:
 
 1. Mark the task `BLOCKED`.
 2. State which rule is at issue, what was attempted, and what information or decision is needed to proceed.
 
-A partially completed task marked `BLOCKED` is correct. A task that broke a rule to reach completion is not.
+A partially completed task marked `BLOCKED` is correct. A task that broke a rule or invented patterns to reach completion is not.
 
 ## Post-build gate
 
-After completing all file changes:
+Run these steps in order after completing all file changes. Do not skip or reorder them. Do not report `COMPLETE` until every applicable item is checked off.
 
-1. Invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
-2. If the module you modified has a doc in `docs-parent/` (check the Doc column in `000_architecture.md`), invoke the `doc-sync` agent. Pass it the module name, the doc path, and the list of files you created or modified.
+You have the Agent tool available. Use it for each step — a self-review is never an acceptable substitute.
+
+- [ ] **ui-compliance** — Invoke the `ui-compliance` agent using the Agent tool. Pass it the task spec and the full list of files created or modified.
+  - [ ] If `FAIL`: invoke `ui-cleanup`, then invoke `ui-compliance` a second time.
+  - [ ] If still `FAIL`: mark the task `BLOCKED` and stop. Do not proceed.
+- [ ] **doc-sync** — Check the Doc column in `digiexpress-parent/docs-parent/000_architecture.md` for the module you modified. If a doc exists, invoke the `doc-sync` agent with the module name, doc path, and list of files. If no doc exists, check this off and skip it.
 
 ## Reporting
 

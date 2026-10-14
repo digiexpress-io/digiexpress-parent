@@ -645,8 +645,13 @@ After creating the file, run the TanStack Router CLI to regenerate `routeTree.ge
 
 ## Before finishing
 
-1. Run `corepack pnpm build-gamut` and fix all TypeScript errors before proceeding.
-2. Invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
+Do not report `COMPLETE` until every applicable item is checked off. Use the Agent tool for each agent invocation — a self-review is never an acceptable substitute.
+
+- [ ] Run `corepack pnpm build-gamut` and fix all TypeScript errors before proceeding.
+- [ ] **ui-compliance** — Invoke the `ui-compliance` agent. Pass it the task spec and the full list of files created or modified.
+  - [ ] If `FAIL`: invoke `ui-cleanup`, then invoke `ui-compliance` a second time.
+  - [ ] If still `FAIL`: mark the task `BLOCKED` and stop.
+- [ ] **doc-sync** — Check the Doc column in `digiexpress-parent/docs-parent/000_architecture.md` for the module you modified. If a doc exists, invoke the `doc-sync` agent with the module name, doc path, and list of files. If no doc exists, check this off and skip it.
 
 ## Report
 

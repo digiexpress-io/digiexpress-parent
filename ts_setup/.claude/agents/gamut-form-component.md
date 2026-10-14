@@ -209,6 +209,7 @@ const ReadOnlyAbcInput: React.FC<GInputBaseAnyProps & GInputAbcProps> = (props) 
 - `GInputBase` handles label / error / adornment layout.
 - Input sub-components are private to this file — not exported.
 - `as={props.component}` makes the root element replaceable. No `GOverridableComponent` wrapper — `as` on the styled root is the mechanism in `gamut-form`.
+- If the component must restrict input characters (e.g. numeric only), do it in `handleChange` using a regexp on `event.target.value`. Pass a synthetic event with the sanitized value to `props.onChange`. Do not use `onKeyDown` filtering.
 
 ---
 
@@ -257,17 +258,67 @@ export const GInputAbcDialob: React.FC<GFormBaseElementProps> = ({
 };
 ```
 
-What to read from `GFormBaseElementProps`:
-- `actionItem` — `id`, `value`, `required`, `readOnly`, `type`, `view`, `props` (component-specific metadata).
-- `formStore` — `toLabel`, `toErrors`, `toDescription`, `toLabelPosition`, `toValueSet`. Write back via `store.setAnswer(element.id, newValue)`.
-- `disabled` — reflects overall form disabled state.
-- `navRef` / `navRefId` — always render `<div ref={navRef} id={navRefId} />` as the first child.
+### How the bridge fields are wired
 
-`element.props` carries arbitrary string metadata. Access as `element.props?.someKey`. Convert booleans via `DialobApi.isTrue(element.props?.someFlag)`.
+**`element.value`** (`any` at runtime, treat as `string | undefined`)
+The user's current answer. Comes from the Dialob backend via the `ActionVisitor` and is stored in `FormState.items`. Pass directly to the presentational component's `value` prop. Do not transform — the reference component defines any formatting.
+
+**`element.props`** (`any` at runtime, treat as `Record<string, string> | undefined`)
+Flat key-value metadata from the Dialob form definition JSON. Values are always strings. Booleans are encoded as the string `"true"` — check with `DialobApi.isTrue(element.props?.flag)`, not `=== true`. Numeric values are strings — parse with `parseInt`/`parseFloat` when needed. Access with optional chaining: `element.props?.key`.
+
+The prop key used here must match the key checked in the dispatch branch in `useSlotVariant.tsx`. Both must use the same string. If the dispatch checks `element.props?.unit`, the bridge reads `element.props?.unit`.
+
+**`variant='abc'`** (hardcoded string in the bridge)
+Has nothing to do with slot dispatch. It feeds the presentational component's `useUtilityClasses` for MUI class name generation and theme override lookup. Always hardcode it to the component's default variant name — the same string used as the default in `const { variant = 'abc' } = props` in the presentational component.
+
+**`store.form.toLabel(id)`** → `string | undefined`
+**`store.form.toErrors(id)`** → `DialobApi.ActionError[]` (always an array, never undefined)
+**`store.form.toDescription(id)`** → `string | undefined`
+**`store.form.toLabelPosition(id)`** → `'label-left' | 'label-top'`
+
+**`store.setAnswer(id, value)`** — queues an ANSWER action, debounced 250ms, coalesces duplicate answers for the same field. Accepts any type; text components pass `event.target.value` as a string.
+
+**`disabled`** — reflects the overall form disabled state, not the field's own disabled flag.
+
+**`navRef` / `navRefId`** — always render `<div ref={navRef} id={navRefId} />` as the first child of the return.
 
 ---
 
 ## Step 5: Register the slot variant
+
+### How dispatch works
+
+`GFormBaseElement` calls `useSlotVariant(element, store)` to get a `GFormBaseSlotVariant` key, then looks that key up in the `Slots` record. If the key is missing, `UnknownSlot` renders instead — showing `unknown = {id}` in the UI and `console.error` in the console. This is always a misconfiguration, never expected behaviour.
+
+**Three dispatch patterns exist — read `useSlotVariant.tsx` to confirm which applies:**
+
+1. **Props-based** (standard for `type='text'`): branch checks `element.type === 'text' && element.view === 'text' && element.props?.abc`. The props key (`abc`) must be truthy — an empty string does NOT trigger it. Branch must be placed before the generic `text` fallback.
+
+2. **View-based**: branch checks `element.view === 'something'` with no props condition. Used for `page`, `note-validation`, `survey`.
+
+3. **Type-only fallback** (last line of `useSlotVariant`): `element.type + (element.view ? '-' + element.view : '')`. Safe for types with no variants (`date`, `time`, `decimal`, `boolean`, etc.). Risky for `text` — a `text` field without `view: 'text'` falls into this and likely hits `UnknownSlot`.
+
+**Props that reroute the component entirely** (adding any of these changes which class renders):
+
+| Prop key | Value | Routes to |
+|----------|-------|-----------|
+| `controlType` | `'fileUpload'` | `GInputUploadDialob` |
+| `currency` | any truthy string | `GInputCurrencyDialob` |
+| `unit` | any truthy string | `GInputUnitDialob` |
+
+These are checked in priority order — `controlType` first, then `currency`, then `unit`, then the generic `text` fallback. Adding `currency` to a field that also has `controlType: 'fileUpload'` has no effect; the file upload branch wins.
+
+**Props that affect presentation only** (do NOT change which component renders):
+
+| Prop key | Affects | Example values |
+|----------|---------|----------------|
+| `variant` | Boolean display mode, date picker mode, list display | `'checkbox'`, `'year'`, `'autocomplete'` |
+| `style` | Note styling | `'error'`, `'warning'`, `'info'` |
+| `border` | Group border | `'true'`, `'false'` |
+| `columns` | Layout columns | `'2'`, `'3'` |
+| `rows`, `charLimit` | TextArea sizing | `'4'`, `'200'` |
+
+Note: `variant` inside `element.props` (presentation) is unrelated to the `variant` prop on the presentational component (CSS class generation). They are different concepts sharing the same name.
 
 ### 5a. `g-form-base-element/useSlotVariant.tsx`
 
@@ -281,15 +332,15 @@ export type GFormBaseSlotVariant = (
 )
 ```
 
-Add a dispatch branch:
+Add the dispatch branch using the pattern that matches your case. For a new `type='text'` component (standard pattern):
 
 ```ts
-if (element.type === 'text' && element.view === 'abc') {
+if (element.type === 'text' && element.view === 'text' && element.props?.abc) {
   return { variant: 'text-abc' };
 }
 ```
 
-The existing fallback (`element.type + '-' + element.view`) covers simple cases. Only add an explicit branch when custom matching logic is needed.
+Place it before the generic `text` branch. The prop key used here (`abc`) must be the same key the bridge reads (`element.props?.abc`) and the same key set in the Dialob form JSON (`"props": {"abc": "value"}`).
 
 ### 5b. `g-form-base-element/GFormBaseElement.tsx`
 
@@ -357,20 +408,38 @@ GInputAbc: GInputAbcClassKey;
 
 No backend Dialob changes needed — configure the form definition JSON only.
 
+### Dispatch is determined by type + view + props together
+
+`useSlotVariant` reads `element.type`, `element.view`, and `element.props` to select a component. A misconfigured field renders `UnknownSlot` — visible as `unknown = {id}` in the UI with a `console.error`. Getting this wrong is silent until runtime.
+
+**Standard pattern for new `type='text'` components:**
+
 ```json
 {
   "id": "myField",
   "type": "text",
-  "view": "abc",
-  "props": { "someKey": "someValue" }
+  "view": "text",
+  "props": { "abc": "someValue" }
 }
 ```
 
-- `type` — existing Dialob base type (`text`, `group`, `boolean`, `list`, `multichoice`, `note`, `date`, `time`, `decimal`, `integer`, `rowgroup`). Do not invent new types.
-- `view` — the string added in `useSlotVariant`. Omit if using `props` keys for dispatch instead.
-- `props` — arbitrary metadata read via `element.props?.someKey`. Boolean props must be the string `'true'`, not a native boolean.
+The prop key (`abc`) must be the same string in all three places: the dispatch branch in `useSlotVariant`, the bridge's `element.props?.abc` read, and the form JSON `"props"` object. If any of the three differ, a different component renders (or `UnknownSlot`).
 
-If `props` keys drive dispatch, document them in `gamut-form/DIALOB_FILL_PROPS.md`.
+**Existing dispatch-triggering props — do not reuse these keys:**
+
+| JSON props key | Triggers |
+|---|---|
+| `"controlType": "fileUpload"` | `GInputUploadDialob` |
+| `"currency": "<symbol>"` | `GInputCurrencyDialob` |
+| `"unit": "<symbol>"` | `GInputUnitDialob` |
+
+Adding one of these accidentally to a field you are building will silently reroute it to the wrong component.
+
+**Type reference:**
+- `type` — must be an existing Dialob base type: `text`, `group`, `boolean`, `list`, `multichoice`, `note`, `date`, `time`, `decimal`, `integer`, `rowgroup`. Do not invent new types.
+- `props` values are always strings. Booleans must be `"true"` / `"false"`, not native booleans. Numbers must be string-encoded (`"2"`, not `2`).
+
+Document all new `props` keys in `gamut-form/DIALOB_FILL_PROPS.md`.
 
 ---
 
@@ -415,8 +484,13 @@ Create a Dialob form in the backend with the correct `type`/`view`/`props`. Navi
 
 ## Before finishing
 
-1. Run `corepack pnpm build-gamut` and fix all TypeScript errors before proceeding.
-2. Invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
+Do not report `COMPLETE` until every applicable item is checked off. Use the Agent tool for each agent invocation — a self-review is never an acceptable substitute.
+
+- [ ] Run `corepack pnpm build-gamut` and fix all TypeScript errors before proceeding.
+- [ ] **ui-compliance** — Invoke the `ui-compliance` agent. Pass it the task spec and the full list of files created or modified.
+  - [ ] If `FAIL`: invoke `ui-cleanup`, then invoke `ui-compliance` a second time.
+  - [ ] If still `FAIL`: mark the task `BLOCKED` and stop.
+- [ ] **doc-sync** — Check the Doc column in `digiexpress-parent/docs-parent/000_architecture.md` for the module you modified. If a doc exists, invoke the `doc-sync` agent with the module name, doc path, and list of files. If no doc exists, check this off and skip it.
 
 ## Report
 

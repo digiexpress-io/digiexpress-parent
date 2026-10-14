@@ -11,6 +11,7 @@ export type GFormBaseSlotVariant = (
   'text-textBox'|
   'text-address' |
   'text-currency' |
+  'text-unit' |
 
   'decimal' |
   'number' |
@@ -50,6 +51,9 @@ export function useSlotVariant(element: DialobApi.ActionItem, store: DialobApi.F
   }
   if(element.type === 'text' && element.view === 'text' && element.props?.currency) {
     return { variant: 'text-currency' };
+  }
+  if(element.type === 'text' && element.view === 'text' && element.props?.unitLabel) {
+    return { variant: 'text-unit' };
   }
   if(element.type === 'text' && element.view === 'text') {
     return { variant: 'text' };

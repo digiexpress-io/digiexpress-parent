@@ -4,5 +4,6 @@ export * from './g-form-group'
 export * from './g-input-multilist'
 export * from './g-input-survey'
 export * from './g-input-currency'
+export * from './g-input-unit'
 export * from './g-input-label'
 export * from './g-input-address';

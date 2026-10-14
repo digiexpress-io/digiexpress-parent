@@ -104,6 +104,10 @@ By default renders a plain text input. The following properties transform it int
 
 **Note:** If `currency` key is present but the value is empty, the input renders as a plain text box with no adornment and no currency formatting.
 
+| `value` | `kg`, `m`, `€/h`, etc. | Routes to unit input (`view: unit`); shows the unit symbol as an end adornment; accepts numeric input only (non-numeric keystrokes are blocked) | |
+
+**Note:** `value` is the Dialob `props.value` field, not the answer value. Set `view: unit` on the item to activate this component. If `value` is empty or absent, no end adornment is shown.
+
 ---
 
 ## Date _(GInputDate)_
