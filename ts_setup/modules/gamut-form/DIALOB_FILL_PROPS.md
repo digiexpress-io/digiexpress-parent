@@ -88,6 +88,7 @@
 |-----|-------|-----------------|---------|
 | `rows` | `4`, `10`, etc. | Sets visible height. Clamped 1–20 | 10 |
 | `charLimit` | `200`, `500`, etc. | Shows live counter below the input; blocks input at limit; counter turns red when limit is reached | |
+| `charCount` | `true` | Shows a plain character count below the input (current length only, no maximum). Ignored when `charLimit` is also set. | |
 
 ---
 

@@ -23,7 +23,7 @@ Do not proceed without all of the following.
 - **Component name** — the `g-input-*` or `g-form-*` name (e.g. `g-input-my-field`). Determines directory name, file names, `MUI_NAME`, and class key prefix.
 - **Purpose** — one sentence: what kind of input or form element this is and what it captures.
 - **Location in the form** — where in a Dialob form this component appears (e.g. "a text field inside a group", "a top-level page component").
-- **Dialob type and view** — the `type` (base Dialob type, e.g. `text`, `boolean`) and `view` (custom extension string, e.g. `myField`) that trigger this component in the slot dispatch. Ask before proceeding if unknown.
+- **Render condition** — a plain-language description of when this component should appear in the form (e.g. "when a text field has a `unitLabel` property set", "when the item type is `boolean`"). The agent derives the `type`, `view`, and `props` dispatch keys from this description using the dispatch patterns documented in Step 5.
 - **Variant props** — whether the component has variant props that affect rendering or slot dispatch. Ask before proceeding if unclear.
 - **Reference component** — which existing `g-input-*` component to model the structure on (e.g. `g-input-text` for simple text, `g-input-boolean` for toggle, `g-input-address` for complex multi-field).
 

@@ -24,6 +24,7 @@ export interface GInputTextAreaProps {
   required: boolean;
   rows?: number | undefined;
   charLimit?: number | undefined;
+  charCount?: boolean | undefined;
 
 
   variant: OverridableStringUnion<
@@ -40,7 +41,7 @@ export interface GInputTextAreaProps {
 }
 
 export const GInputTextArea: React.FC<GInputTextAreaProps> = (initProps) => {
-  const { classes, slots, ownerState, props, isCharLimitVisible, charLimit, currentLength } = useThemeInfra(initProps);
+  const { classes, slots, ownerState, props, isCharLimitVisible, charLimit, currentLength, isCharCountVisible } = useThemeInfra(initProps);
 
   return (
     <GInputTextAreaRoot className={classes.root} ownerState={ownerState} as={props.component}>
@@ -48,6 +49,11 @@ export const GInputTextArea: React.FC<GInputTextAreaProps> = (initProps) => {
       {isCharLimitVisible && (
         <Typography variant="caption" className={classes.charCount}>
           {currentLength} / {charLimit}
+        </Typography>
+      )}
+      {isCharCountVisible && (
+        <Typography variant="caption" className={classes.charCount}>
+          {currentLength}
         </Typography>
       )}
     </GInputTextAreaRoot>

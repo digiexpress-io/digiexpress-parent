@@ -28,6 +28,7 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
     variant = 'textBox',
     rows = 10,
     charLimit,
+    charCount,
   } = props;
 
   const { id, onChange, value, label, labelPosition, errors } = props;
@@ -57,8 +58,9 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
     }
   }
   const isCharLimitVisible = !!charLimit && !props.disabled;
+  const isCharCountVisible = !!charCount && !charLimit && !props.disabled;
   const classes = useUtilityClasses(props.id, variant);
-  return { classes, ownerState, props, slots, isCharLimitVisible, charLimit, currentLength, isAtLimit };
+  return { classes, ownerState, props, slots, isCharLimitVisible, charLimit, currentLength, isAtLimit, isCharCountVisible };
 }
 
 

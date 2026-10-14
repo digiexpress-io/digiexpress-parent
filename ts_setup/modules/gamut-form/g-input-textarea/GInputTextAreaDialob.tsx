@@ -50,7 +50,9 @@ export const GInputTextAreaDialob: React.FC<GFormBaseElementProps> = ({
   const rows = safeParseRows(element.props?.rows);
   const rawCharLimit = element.props?.charLimit;
   const charLimit = rawCharLimit ? Math.floor(Number(rawCharLimit)) || undefined : undefined;
+  const charCount = element.props?.charCount === 'true';
 
+  console.log(element)
   return (
     <>
       <div ref={navRef} id={navRefId} />
@@ -67,6 +69,7 @@ export const GInputTextAreaDialob: React.FC<GFormBaseElementProps> = ({
         labelPosition={labelPosition}
         rows={rows}
         charLimit={charLimit}
+        charCount={charCount}
         readOnly={element.readOnly}
       />
     </>
