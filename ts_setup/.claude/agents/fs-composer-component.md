@@ -14,7 +14,7 @@ Read `digiexpress-parent/ts_setup/.claude/agents/agent-rules.md` before starting
 
 Read `digiexpress-parent/docs-parent/999_ui_coding_standards.md` before writing any code. All rules in that file apply to this task.
 
-Run `ls digiexpress-parent/docs-parent/` to see all available documentation files. Read any that cover the module you are about to modify — use the directory listing as the authoritative index, not guessed filenames. If a relevant doc exists, read it before touching any files. If you are uncertain whether a file covers the module you are about to modify, ask before reading it or invoking the `exploration` agent — do not guess. If none exists, invoke the `exploration` agent to produce one, read the file it created, then proceed.
+`agent-rules.md` instructs you to read `digiexpress-parent/docs-parent/000_architecture.md` — follow the Doc column for the module you are about to touch. If the Doc column is blank, invoke the `exploration` agent to produce one, read the file it created, then proceed.
 
 ## Required Input
 

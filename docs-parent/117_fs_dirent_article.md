@@ -6,6 +6,22 @@ _last updated: 13.10.2026_
 
 Implements the create, update, properties, and help views for the `ARTICLE` dirent type within the `@dxs-ts/fs-composer` editor shell. An article is a portal site-hierarchy node that can contain article pages, links, and workflows, and can be nested inside folders or other articles.
 
+## Quick Navigation
+
+| Concept | File | Key Exports |
+|---------|------|-------------|
+| Public API (barrel) | `fs-dirent-article/index.ts` | `FsDirentArticleProps`, `FsDirentArticleCreate`, `FsDirentArticleUpdate`, `FsPropertiesArticle`, `FsHelpArticle` |
+| Create form component | `fs-dirent-article/FsDirentArticleCreate.tsx` | `FsDirentArticleCreate` |
+| Update form component | `fs-dirent-article/FsDirentArticleUpdate.tsx` | `FsDirentArticleUpdate` |
+| Properties panel component | `fs-dirent-article/FsPropertiesArticle.tsx` | `FsPropertiesArticle`, `FsPropertiesArticleProps` |
+| Help panel component | `fs-dirent-article/FsHelpArticle.tsx` | `FsHelpArticle` |
+| Shared props interface | `fs-dirent-article/FsDirentArticleProps.ts` | `FsDirentArticleProps` |
+| Create form state hook | `fs-dirent-article/useCreateOwnerState.ts` | `useCreateOwnerState`, `CreateOwnerState` |
+| Update form state hook | `fs-dirent-article/useUpdateOwnerState.ts` | `useUpdateOwnerState`, `UpdateOwnerState` |
+| Link diff tracking | `fs-dirent-article/ArticleLinkChangeState.ts` | `ArticleLinkChangeState` |
+| MUI class utilities | `fs-dirent-article/useUtilityClasses.ts` | `useUtilityClasses`, `FsDirentArticleRoot`, `FsDirentArticleClasses`, `FsDirentArticleClassKey` |
+| Help markdown content | `fs-dirent-article/help-article.ts` | `helpArticle` |
+
 ## Dependencies
 
 This sub-module does not have its own `package.json`; it is part of `@dxs-ts/fs-composer` and inherits its dependencies. Relevant packages consumed within this sub-module:
@@ -70,6 +86,23 @@ No additional providers are required by this sub-module beyond those already req
 
 No `declare module` augmentation, interface merging, or extension records are present in this sub-module. `FsDirentArticleClasses` and `FsDirentArticleClassKey` are exported for potential MUI theme override use, but no `GComponentsPropsList`-style registration pattern is used here.
 
+## Common Tasks
+
+### Add a new field to the article update form
+
+- **`fs-dirent-article/useUpdateOwnerState.ts`** — add the field to `_ChangeStateProps`, expose a getter on `_ChangeState`, implement a `with*` method that returns a new `_ChangeState`, add a handler function in `useUpdateOwnerState`, and include the field in the returned `UpdateOwnerState` object. Update `getCurrentProps` if the field must be persisted to the backend.
+- **`fs-dirent-article/FsDirentArticleUpdate.tsx`** — read the new field and handler from `useUpdateOwnerState`, add the corresponding `FsDirentFormField` + input component inside the `formContainer` div.
+- **`react-intl` message catalogue** — add `fs.dirent.article.<fieldName>.label` (and a placeholder key if needed); mirror the same addition to the create form if the field also belongs there (`useCreateOwnerState.ts` + `FsDirentArticleCreate.tsx`).
+
+### Change how links are displayed in the update view
+
+- **`fs-dirent-article/FsDirentArticleUpdate.tsx`** — the saved-links chip list is rendered inside the `FsDirentFormField` for `fs.dirent.article.linksField.label`. Modify the `savedLinks.map(...)` block to change icons (`FsIcon`, `FsIcons.Link`), colors (`FsColors.direntTypes.link`), or typography. Import additional MUI or theme tokens at the top of the file as needed.
+- **`fs-dirent-article/useUtilityClasses.ts`** — if the change requires a new CSS class, add it to the `slots` object, the `FsDirentArticleClasses` interface, and the `FsDirentArticleRoot` styled component.
+
+### Change what the properties panel displays
+
+- **`fs-dirent-article/FsPropertiesArticle.tsx`** — add or remove data derived from `getDirent`, `getParentDirent`, `selectOptions.direntProps`, or the local `collectDescendants` helper. Each displayed section follows the `propertyRow` / `propertyLabel` / `propertyList` class pattern provided by `usePanelProperties` from `../fs-panel-properties`.
+
 ## Known Limitations and Gotchas
 
 - **`isDirty` uses `JSON.stringify` equality.** `_CreateState` and `_ChangeState` compare origin and current via `JSON.stringify`. Field ordering is assumed stable; this breaks if object keys are inserted in different orders across `with*` calls. In practice the spread operator preserves insertion order, but this is a non-obvious invariant.
@@ -77,6 +110,16 @@ No `declare module` augmentation, interface merging, or extension records are pr
 - **`initialParentId` in the update form is derived from the grandparent folder.** `useUpdateOwnerState` resolves the initial parent article by walking two levels up the tree (`getParentDirent` twice) and finding the first `ARTICLE`-type sibling of the container folder. This heuristic fails if the article has no grandparent or if the grandparent folder contains no article siblings — `initialParentId` becomes `undefined` and the parent-article field renders empty.
 - **`FsDirentSelectGrouped` dialog title is hard-coded.** The string `"Article links"` in `FsDirentArticleUpdate` is not passed through `intl.formatMessage`. It is the only non-localised user-facing string in this sub-module.
 - **Config option `AUTH_ONLY_MODE` is mapped in `getCurrentProps` but not present in `help-article.ts`.** The help text documents only `DEV_MODE`. `AUTH_ONLY_MODE` is available in the form but undocumented to the end-user.
+
+## Open Questions
+
+| Item | Current State | Risk | Action Needed |
+|------|--------------|------|---------------|
+| `isDirty` uses `JSON.stringify` equality | `_CreateState` and `_ChangeState` compare origin vs. current via `JSON.stringify`; field ordering is assumed stable across `with*` calls | Dirty detection silently breaks if object keys are inserted in different orders (e.g. after a refactor of `with*` methods) | Replace with a field-by-field equality check, or add a test that exercises key-order stability |
+| Link association side effects fire in `useEffect` | `useUpdateOwnerState` modifies sibling link dirent records in a `useEffect` dependent on `state.linkState` | If the parent re-renders the component with the same `direntId` before the effect runs, pending deltas may be double-applied despite the `addedFromPrevious`/`removedFromPrevious` diff design | Add an integration test for rapid re-render scenarios; consider moving the side-effect write into the `onChangeLinks` handler instead |
+| `initialParentId` heuristic in the update form | Resolved by walking two levels up the tree and finding the first `ARTICLE`-type sibling of the grandparent folder | Returns `undefined` (field renders empty) when the article has no grandparent or the grandparent folder contains no article siblings | Replace with an explicit parent-id stored on the article's own props, or document the tree-structure contract this heuristic relies on |
+| `FsDirentSelectGrouped` dialog title is hard-coded | The string `"Article links"` in `FsDirentArticleUpdate` is not passed through `intl.formatMessage` | Breaks localisation; the string will not translate | Extract to a `react-intl` message key (e.g. `fs.dirent.article.linksDialog.title`) and pass through `intl.formatMessage` |
+| `AUTH_ONLY_MODE` is undocumented in help text | `getCurrentProps` maps `AUTH_ONLY_MODE` to `authOnly`, but `help-article.ts` documents only `DEV_MODE` | End-users and integrators are unaware that `AUTH_ONLY_MODE` exists as a config option | Add `AUTH_ONLY_MODE` documentation to `help-article.ts` |
 
 ## Scope Boundaries
 

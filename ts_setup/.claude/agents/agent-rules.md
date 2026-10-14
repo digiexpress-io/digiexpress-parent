@@ -4,6 +4,10 @@ _last updated: 13.10.2026_
 
 Read this file before starting any task.
 
+## Architecture index
+
+Read `digiexpress-parent/docs-parent/000_architecture.md` before starting any task. Use the cross-reference table to find where to look for your task, and the Doc column to locate the deep-dive doc for the module you are about to touch. If the Doc column is blank for that module, invoke the `exploration` agent to produce one before proceeding.
+
 ## Language
 
 - Neutral, factual language only. No promotional adjectives ("powerful", "polished", "comprehensive", "robust").
@@ -26,7 +30,10 @@ A partially completed task marked `BLOCKED` is correct. A task that broke a rule
 
 ## Post-build gate
 
-After completing all file changes, invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
+After completing all file changes:
+
+1. Invoke the `ui-compliance` agent. Pass it the task spec you received and the list of files you created or modified.
+2. If the module you modified has a doc in `docs-parent/` (check the Doc column in `000_architecture.md`), invoke the `doc-sync` agent. Pass it the module name, the doc path, and the list of files you created or modified.
 
 ## Reporting
 

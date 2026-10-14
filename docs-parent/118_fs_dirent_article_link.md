@@ -6,6 +6,21 @@ _last updated: 13.10.2026_
 
 Implements the create, update, properties, and help views for the `ARTICLE_LINK` dirent type within `@dxs-ts/fs-composer`. An article link is a navigable URL entry associated with one or more articles; it can be internal, external, or a telephone number, and carries per-locale display labels.
 
+## Quick Navigation
+
+| Concept | File | Key Exports |
+|---------|------|-------------|
+| Create form component | `fs-dirent-article-link/FsDirentArticleLinkCreate.tsx` | `FsDirentArticleLinkCreate` |
+| Update form component | `fs-dirent-article-link/FsDirentArticleLinkUpdate.tsx` | `FsDirentArticleLinkUpdate` |
+| Properties panel | `fs-dirent-article-link/FsPropertiesLink.tsx` | `FsPropertiesLink` |
+| Help panel | `fs-dirent-article-link/FsHelpArticleLink.tsx` | `FsHelpArticleLink` |
+| Shared props interface | `fs-dirent-article-link/FsDirentArticleLinkProps.ts` | `FsDirentArticleLinkProps` |
+| Create form state hook | `fs-dirent-article-link/useCreateOwnerState.ts` | `useCreateOwnerState`, `CreateOwnerState`, `LocaleEntry` |
+| Update form state hook | `fs-dirent-article-link/useUpdateOwnerState.ts` | `useUpdateOwnerState`, `UpdateOwnerState`, `createLinkFsuChange`, `LinkArticleChange`, `LocaleEntry` |
+| MUI styling utilities | `fs-dirent-article-link/useUtilityClasses.ts` | `useUtilityClasses`, `FsDirentArticleLinkRoot`, `FsDirentArticleLinkClasses`, `FsDirentArticleLinkClassKey` |
+| Help content string | `fs-dirent-article-link/help-article-link.ts` | (default export: markdown string) |
+| Barrel | `fs-dirent-article-link/index.ts` | re-exports all public symbols above |
+
 ## Dependencies
 
 This sub-module lives inside `@dxs-ts/fs-composer` and inherits its package-level dependencies. It does not have its own `package.json`.
@@ -56,6 +71,25 @@ This sub-module is consumed exclusively through `ArticleLinkWidget` in `fs-facto
 
 No `declare module` augmentation, interface merging, or extension records are defined in this sub-module. `FsDirentArticleLinkClasses` and `FsDirentArticleLinkClassKey` are exported from `useUtilityClasses.ts` for MUI theme-override use, but no global augmentation wires them into a theme interface.
 
+## Common Tasks
+
+### Add a new locale label to a link (create path)
+
+- `fs-dirent-article-link/useCreateOwnerState.ts` — no code changes needed; locale rows auto-grow via `onChangeLocaleEntry` / `onChangeLabelEntry`. To change how locale codes are resolved to dirent IDs, update `syncLabelsToState`.
+- `fs-dirent-article-link/FsDirentArticleLinkCreate.tsx` — if the locale row UI needs a new field, add it here and wire it through `CreateOwnerState`.
+- Locale options come from `selectOptions.languages` (supplied by `useFsDirent` from `@dxs-ts/fs-api`); no changes to this module are needed to support additional locales already present in that list.
+
+### Add a new locale label to a link (update path)
+
+- `fs-dirent-article-link/useUpdateOwnerState.ts` — same auto-grow logic as the create path; changes flow through `onChangeLocaleEntry` / `onChangeLabelEntry` → `syncLabelsToState` → `_ChangeState.withAllLabels`. To change ID-to-label resolution on read, update the `localeEntries` initialiser (the `React.useState` lazy init).
+- `fs-dirent-article-link/FsDirentArticleLinkUpdate.tsx` — update the UI rendering if a new locale-row field is required.
+
+### Change the link type options
+
+- `fs-dirent-article-link/useCreateOwnerState.ts` — `onChangeContentType` calls `_CreateState.withContentType`; the allowed values are constrained by `Fs.LinkType` in `@dxs-ts/fs-api`. To add or remove a type, update `Fs.LinkType` in `@dxs-ts/fs-api` and then update any switch/map in `FsDirentArticleLinkCreate.tsx` that renders the type selector.
+- `fs-dirent-article-link/useUpdateOwnerState.ts` — `onChangeContentType` mirrors the create path; update `_ChangeState.withContentType` if validation logic is added.
+- `fs-dirent-article-link/FsDirentArticleLinkCreate.tsx` and `FsDirentArticleLinkUpdate.tsx` — update the rendered link-type select options to match any new `Fs.LinkType` values.
+
 ## Known Limitations and Gotchas
 
 - **`createLinkFsuChange` is a public cross-module export.** `fs-dirent-article/useUpdateOwnerState.ts` imports `createLinkFsuChange` and `LinkArticleChange` directly from `../fs-dirent-article-link/useUpdateOwnerState` (bypassing the barrel). This function constructs a `_ChangeState` from a dirent and an articles array so that the article editor can drive link state for co-editing. The coupling is intentional but creates a hidden dependency between `fs-dirent-article` and `fs-dirent-article-link` internals.
@@ -63,6 +97,16 @@ No `declare module` augmentation, interface merging, or extension records are de
 - **`FsHelpArticleLink` ignores its `direntId` prop.** The prop is declared (`direntId: string`) and accepted by the component signature, but the help content is static markdown — the prop has no effect.
 - **`devMode` config option is mapped asymmetrically.** On write, `DEV_MODE` in `configOptions` is serialised as `devMode: true` in `changes` (or `undefined` if absent). The read path reconstructs `configOptions` from `linkProps.configOptions`, not from `linkProps.devMode`. These two representations must remain in sync with the backend.
 - **`treeId` is accessed with a non-null assertion.** `dirent?.commitIndex?.treeId!` in `useUpdateOwnerState` will be `undefined` at runtime if the dirent has no commit index, silently producing an invalid change state.
+
+## Open Questions
+
+| Item | Current State | Risk | Action Needed |
+|------|--------------|------|---------------|
+| `createLinkFsuChange` is a public cross-module export | `fs-dirent-article/useUpdateOwnerState.ts` imports `createLinkFsuChange` and `LinkArticleChange` directly from `../fs-dirent-article-link/useUpdateOwnerState`, bypassing the barrel | Hidden inter-module coupling; a rename or refactor of `_ChangeState` internals silently breaks `fs-dirent-article` | Decide whether to formalise the coupling (add to barrel, document as stable API) or decouple via a shared interface in `@dxs-ts/fs-api` |
+| `localeEntries` is local React state, not persisted in `FsuChange` | Re-mounting the component (e.g., tab switch) re-initialises `localeEntries` from `linkProps.intlValues`, discarding any partially entered row | In-progress locale edits are silently lost on tab switch | Persist the in-progress locale row in `FsuChange`, or warn the user before navigation |
+| `FsHelpArticleLink` ignores its `direntId` prop | The prop is declared and accepted but has no effect; help content is static markdown | API contract is misleading; callers may expect dynamic help | Remove the prop from the signature, or implement dynamic help keyed by `direntId` |
+| `devMode` config option is mapped asymmetrically | On write, `DEV_MODE` is serialised as `devMode: true` in `changes`; on read, `configOptions` is reconstructed from `linkProps.configOptions` | If the backend diverges from this dual representation, `devMode` state will silently desync | Align serialisation with the backend contract and add a test that round-trips the `devMode` flag |
+| `treeId` accessed with a non-null assertion | `dirent?.commitIndex?.treeId!` in `useUpdateOwnerState.ts` produces `undefined` at runtime when the dirent has no commit index | Invalid change state is silently constructed; downstream save calls may fail or corrupt data | Guard the assertion with an explicit runtime check and surface a clear error if `treeId` is missing |
 
 ## Scope Boundaries
 

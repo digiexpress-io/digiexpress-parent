@@ -6,6 +6,68 @@ _last updated: 13.10.2026_
 
 Provides the concrete React component implementations for the Gamut customer portal. Each sub-module exports one or more MUI-themed components covering navigation, authentication, content display, inbox/messaging, user identity, and utility layout primitives. Components follow the MUI `useThemeProps` / `useUtilityClasses` styling pattern and expose an optional `component` prop (`GOverridableComponent`) for root element substitution.
 
+## Quick Navigation
+
+| Concept | File | Key Exports |
+|---------|------|-------------|
+| Top navigation bar | `g-app-bar/GAppBar.tsx` | `GAppBar`, `GAppBarSpacer`, `GAppBarProps`, `GNavSlotProps`, `GSearchSlotProps` |
+| App bar class types | `g-app-bar/index.ts` | `GAppBarClassKey`, `GAppBarClasses` |
+| Multi-variant grid layout | `g-layout/GLayout.tsx` | `GLayout`, `GLayoutProps`, `GLayoutClasses`, `GLayoutClassKey` |
+| Flex wrapper | `g-flex/GFlex.tsx` | `GFlex`, `GFlexHeader`, `GFlexBody`, `GFlexHidden` |
+| Authentication form wrapper | `g-auth/GAuth.tsx` | `GAuth` |
+| Auth with forced-login | `g-auth-form-start/GAuthFormStart.tsx` | `GAuthFormStart`, `GAuthFormStartClassKey` |
+| Auth — rep (company) | `g-auth-rep-company/GAuthRepCompany.tsx` | `GAuthRepCompany` |
+| Auth — rep (person) | `g-auth-rep-person/GAuthRepPerson.tsx` | `GAuthRepPerson` |
+| Auth — unauthenticated | `g-auth-un/GAuthUn.tsx` | `GAuthUn` |
+| Auth — unauth rep (company) | `g-auth-un-rep-company/GAuthUnRepCompany.tsx` | `GAuthUnRepCompany` |
+| Auth — unauth rep (person) | `g-auth-un-rep-person/GAuthUnRepPerson.tsx` | `GAuthUnRepPerson` |
+| Article / topic view | `g-article/GArticle.tsx` | `GArticle`, `GPage` |
+| Article class types | `g-article/index.ts` | `GArticleClassKey`, `GArticleClasses` |
+| Article feedback widget | `g-article-feedback/GArticleFeedback.tsx` | `GArticleFeedback`, `GArticleFeedbackList`, `GArticleFeedbackTableHead`, `GArticleFeedbackTableToolbar` |
+| Article feedback viewer | `g-article-feedback-viewer/GArticleFeedbackViewer.tsx` | `GArticleFeedbackViewer` |
+| Inbox list | `g-inbox/GInbox.tsx` | `GInbox`, `GInboxAttachmentCount`, `GInboxProps` |
+| Inbox item | `g-inbox/GInboxItem.tsx` | `GInboxItem`, `GInboxItemProps` |
+| Inbox class types | `g-inbox/index.ts` | `GInboxClasses`, `GInboxClassKey` |
+| Inbox messaging thread | `g-inbox-messages/index.ts` | `GInboxMessages`, `GInboxMessage`, `GInboxNewMessage`, `GInboxMessageNotAllowed`, `GInboxMessagesClassKey`, `GInboxMessagesClasses` |
+| Inbox attachments | `g-inbox-attachments/GInboxAttachments.tsx` | `GInboxAttachments`, `GInboxAttachmentsProps` |
+| Inbox form review | `g-inbox-form-review/GInboxFormReview.tsx` | `GInboxFormReview`, `GInboxFormReviewProps` |
+| Inbox form assigned not complete | `g-inbox-form-assigned-not-complete/GInboxFormAssignedNotComplete.tsx` | `GInboxFormAssignedNotComplete` |
+| Offers list | `g-offers/GOffers.tsx` | `GOffers`, `GOffersClassKey`, `GOffersClasses` |
+| Offer item | `g-offers/GOfferItem.tsx` | `GOfferItem` |
+| Contracts list | `g-contracts/GContracts.tsx` | `GContracts`, `GContractsClasses`, `GContractsClassKey` |
+| Contract item | `g-contracts/GContractItem.tsx` | `GContractItem` |
+| Bookings list | `g-bookings/GBookings.tsx` | `GBookings`, `GBookingsClassKey`, `GBookingsClasses` |
+| User overview summary/detail | `g-user-overview/GUserOverview.tsx` | `GUserOverview`, `GUserOverviewClassKey`, `GUserOverviewClasses` |
+| User overview detail | `g-user-overview/GUserOverviewDetail.tsx` | `GUserOverviewDetail`, `GUserOverviewDetailClassKey`, `GUserOverviewDetailClasses` |
+| User account menu | `g-user-overview-menu/GUserOverviewMenu.tsx` | `GUserOverviewMenuView`, `GUserOverviewMenuClassKey`, `GUserOverviewMenuClasses` |
+| Secured services search | `g-secured-services-search/GSecuredServicesSearch.tsx` | `GSecuredServicesSearch` |
+| Locale selector | `g-locales/GLocales.tsx` | `GLocales`, `GLocalesClassKey`, `GLocalesClasses` |
+| Login trigger | `g-login/GLogin.tsx` | `GLogin` |
+| Logout trigger | `g-logout/GLogout.tsx` | `GLogout` |
+| Site logo | `g-logo/GLogo.tsx` | `GLogo`, `GLogoClassKey`, `GLogoClasses` |
+| Hyperlink primitive | `g-link/GLinkHyper.tsx` | `GLinkHyper` |
+| Phone link | `g-link/GLinkPhone.tsx` | `GLinkPhone` |
+| Info link | `g-link/GLinkInfo.tsx` | `GLinkInfo` |
+| Grouped link list | `g-links/GLinks.tsx` | `GLinks` |
+| Links page (article links) | `g-links-page/GLinksPage.tsx` | `GLinksPage`, `GLinksPageClassKey`, `GLinksPageClasses` |
+| Article links hook | `g-links-page/useGArticleLinks.tsx` | `useGArticleLinks` |
+| Popover button | `g-popover-button/GPopoverButton.tsx` | `GPopoverButton`, `GPopoverButtonClassKey`, `GPopoverButtonClasses` |
+| Popover anchor hook | `g-popover-button/useAnchor.tsx` | `useAnchor` |
+| Popover search | `g-popover-search/GPopoverSearch.tsx` | `GPopoverSearch`, `GPopoverSearchClassKey`, `GPopoverSearchClasses` |
+| Popover topics | `g-popover-topics/GPopoverTopics.tsx` | `GPopoverTopics` |
+| Confirmation dialog | `g-confirm/GConfirm.tsx` | `GConfirm`, `GConfirmClassKey`, `GConfirmClasses` |
+| Loading indicator | `g-loader/GLoader.tsx` | `GLoader`, `GLoaderClassKey`, `GLoaderClasses` |
+| Sort control | `g-sort/GSort.tsx` | `GSort` |
+| Date display | `g-date/GDate.tsx` | `GDate` |
+| Tooltip | `g-tooltip/GTooltip.tsx` | `GTooltip` |
+| Divider | `g-divider/GDivider.tsx` | `GDivider` |
+| Page footer | `g-footer/GFooter.tsx` | `GFooter`, `GFooterClassKey`, `GFooterClasses` |
+| Generic error view | `g-error/GError.tsx` | `GError` |
+| Auth failure error view | `g-error-login/GErrorLogin.tsx` | `GErrorLogin` |
+| 404 error view | `g-error-not-found/GErrorNotFound.tsx` | `GErrorNotFound` |
+| Missing-translation error view | `g-error-not-translated/GErrorNotTranslated.tsx` | `GErrorNotTranslated` |
+| Form unavailable message | `g-form-unavailable/GFormUnavailable.tsx` | `GFormUnavailable` |
+
 ## Dependencies
 
 ### dependencies
@@ -130,6 +192,34 @@ None — leaf node. `gamut-primitives` exports only presentational components: n
 
 None. No `declare module` augmentations, interface merging, or extension records are present anywhere in the module source. MUI theme overrides follow the standard MUI runtime convention — adding entries to the `components` key of the theme object under the component's `MUI_NAME` string constant — but this is not a TypeScript extension point declared in this module.
 
+## Common Tasks
+
+### Add a new primitive component
+
+- Create a new sub-directory under `modules/gamut-primitives/` using the `g-<name>` naming convention.
+- Add a `useUtilityClasses.tsx` file defining `MUI_NAME`, `useUtilityClasses`, and the styled root component (`G<Name>Root`) using `generateUtilityClasses` and `useThemeProps`.
+- Add a `G<Name>.tsx` file that:
+  - Defines and exports a `G<Name>Props` interface including an optional `component?: GOverridableComponent<G<Name>Props>` prop.
+  - Calls `useThemeProps({ props, name: MUI_NAME })` at the top of the component function.
+  - Calls `useUtilityClasses()` to obtain CSS class keys.
+  - Renders `props.component ?? G<Name>Root` as the root element, passing `ownerState` and `className={classes.root}`.
+- Add an `index.ts` that re-exports `*` from the component file and named class-type exports (`G<Name>ClassKey`, `G<Name>Classes`) from `useUtilityClasses`.
+- Add the new sub-module export to the top-level `index.ts` at `modules/gamut-primitives/index.ts`.
+
+### Add a new prop to an existing component
+
+- Open the target component file (e.g., `g-<name>/G<Name>.tsx`) and add the new prop to the `G<Name>Props` interface.
+- If the prop requires a new CSS class, add the class key to the `generateUtilityClasses` call in `g-<name>/useUtilityClasses.tsx` and add the corresponding style rule to the styled root component in the same file.
+- If the new prop needs a theme-level default, consumers add it under `components[MUI_NAME].defaultProps` in their MUI theme — no code change in this module is required for that.
+- Verify that `ownerState` passed to the root element includes the new prop if the styled component's `shouldForwardProp` or style functions depend on it.
+
+### Add a slot to a composite component
+
+- Open the target composite component (e.g., `g-inbox/GInbox.tsx` or `g-article/GArticle.tsx`) and extend the `slots` and `slotProps` fields on the props interface with the new slot name and its props type.
+- Inside the component body, resolve the slot element: `const SlotComp = props.slots?.newSlot ?? DefaultComponent`.
+- Render `<SlotComp {...props.slotProps?.newSlot} />` at the appropriate position in the JSX tree.
+- If `slotProps` for the new slot must be required (matching the existing pattern in `GInboxProps`), declare it without `?`; otherwise declare it optional to avoid forcing callers to supply it.
+
 ## Known Limitations and Gotchas
 
 - **`GLinkFormUnlocked` may be dead code** (`g-link/GLinkFormUnlocked.tsx` line 33): A `//TODO Perhaps this can be deleted, but let's wait and see` comment marks the entire component as potentially unused. Consumers should not rely on it remaining in the module.
@@ -172,3 +262,15 @@ No component calls `useQuery` directly. All data — offers, contracts, comms, b
 ### TanStack Store and TanStack Query Mutations
 
 `@tanstack/react-store` and `useMutation` are not used. `gamut-form` uses `@tanstack/react-store` for scroll-to-error ref tracking; provider components in `gamut-api` handle all write operations via plain async functions and `refetch()`.
+
+## Open Questions
+
+| Item | Current State | Risk | Action Needed |
+|------|--------------|------|---------------|
+| `GLinkFormUnlocked` may be dead code | `g-link/GLinkFormUnlocked.tsx` carries a `//TODO Perhaps this can be deleted, but let's wait and see` comment; component is exported but may have no live consumers | Consumers relying on it could break if it is removed without notice | Audit callers in `gamut-routes` and the umbrella package; delete if unused or add a deprecation notice |
+| `GLayout` variant `fill-session-start-end` may be obsolete | `g-layout/GLayout.tsx` annotates the branch with `//TODO is this variant needed anymore?`; the variant is still rendered | Variant may be silently removed in a future cleanup, breaking any route that uses it | Confirm whether any route in `gamut-routes` passes `variant="fill-session-start-end"`; remove or retain and drop the TODO accordingly |
+| `GInboxFormReview-reviewTitle` styling is incomplete | `g-inbox-form-review/useUtilityClasses.tsx` has a bare `//TODO` with no body; slot falls back to `theme.typography.h1` | Final typography intent is unresolved; a future theme change may expose the placeholder | Decide the intended typography token and replace the placeholder style |
+| `GInboxMessages` silent failure on missing data | When `subject`, `site`, or `contract` is `undefined`, the component renders the plain string `...no site / contract` with no i18n key and no delegation to `GError` | Non-standard fallback; difficult to detect in testing and untranslatable | Replace with a proper error state: delegate to `GError` or introduce an i18n message key |
+| `GInboxProps.slotProps` is required, not optional | `GInboxProps.slotProps` is typed without `?`; callers must always pass the full object even when overriding nothing; same asymmetry in `GInboxMessagesProps` | Unnecessary burden on callers; inconsistent with `slots` which is optional | Make `slotProps` (and each of its sub-keys) optional (`slotProps?: { item?: ...; ... }`) |
+| `onClick` non-null assertion in `GInbox` | `props.slotProps.item.onClick!` in `g-inbox/GInbox.tsx` suppresses the type error; omitting `onClick` causes a runtime crash, not a compile-time error | Silent runtime failure; not caught by TypeScript | Either make `onClick` required in `GInboxItemProps` or remove the non-null assertion and add a runtime guard |
+| `package.json` version is a Maven placeholder | `"version": "${project.version}"` in the package manifest; the package is `"private": true` | Tooling that reads the version field (e.g., bundler metadata, audit tools) will receive a literal placeholder string | Document the Maven build step that substitutes the value; no code change needed unless the package becomes public |
