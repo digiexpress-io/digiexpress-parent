@@ -52,7 +52,6 @@ export const GInputTextAreaDialob: React.FC<GFormBaseElementProps> = ({
   const charLimit = rawCharLimit ? Math.floor(Number(rawCharLimit)) || undefined : undefined;
   const charCount = element.props?.charCount === 'true';
 
-  console.log(element)
   return (
     <>
       <div ref={navRef} id={navRefId} />
