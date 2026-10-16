@@ -57,6 +57,17 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>metis-client</artifactId>
     </dependency>
+    <!-- Optional: only apps that select google-genai put these on the runtime classpath. -->
+    <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-google-genai</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-google-genai-embedding</artifactId>
+      <optional>true</optional>
+    </dependency>
 
     
     <dependency>

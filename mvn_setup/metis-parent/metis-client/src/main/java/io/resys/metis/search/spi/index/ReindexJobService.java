@@ -21,6 +21,7 @@ package io.resys.metis.search.spi.index;
  */
 
 import java.time.Duration;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalLong;
 
@@ -62,23 +63,32 @@ public class ReindexJobService {
     return id.map(OptionalLong::of).orElse(OptionalLong.empty());
   }
 
-  public boolean isPublicationIndexed(String publicationId) {
-    return isPublicationIndexed(publicationId, null);
-  }
-
-  public boolean isPublicationIndexed(String publicationId, String bundleHash) {
+  /** A job run with another embedding model does not count, so a model switch reindexes the live publication. */
+  public boolean isPublicationIndexed(String publicationId, String bundleHash, String embeddingModel) {
     if (publicationId == null || publicationId.isBlank()) {
       return false;
     }
     if (bundleHash == null || bundleHash.isBlank()) {
-      return MetisSearchSql.await(jobs().countByPublication(publicationId)) > 0;
+      return MetisSearchSql.await(jobs().countByPublication(publicationId, embeddingModel)) > 0;
     }
-    return MetisSearchSql.await(jobs().countByPublicationAndBundle(publicationId, bundleHash)) > 0;
+    return MetisSearchSql.await(jobs().countByPublicationAndBundle(publicationId, bundleHash, embeddingModel)) > 0;
   }
 
-  public boolean isIndexReadyForPortal() {
+  /**
+   * Vectors of another model have the same width, so pgvector would rank them without error.
+   * The latest job must have completed with the current model.
+   */
+  public boolean isIndexReadyForPortal(String embeddingModel) {
     return latest()
-        .map(status -> status.getState() == JobState.COMPLETED)
+        .map(status -> status.getState() == JobState.COMPLETED
+            && Objects.equals(status.getEmbeddingModel(), embeddingModel))
+        .orElse(false);
+  }
+
+  /** True when the latest completed job used this embedding model. */
+  public boolean isIndexCurrent(String embeddingModel) {
+    return MetisSearchSql.await(jobs().findLatestCompleted())
+        .map(status -> Objects.equals(status.getEmbeddingModel(), embeddingModel))
         .orElse(false);
   }
 
