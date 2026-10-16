@@ -29,6 +29,7 @@
     <module>thena-contract-client</module>
     <module>thena-ledger-client</module>
     <module>thena-fs-client</module>
+    <module>thena-jackson-2</module>
   </modules>
 
 </project>
